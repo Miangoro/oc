@@ -52,8 +52,8 @@ $customizerHidden = 'customizer-hide';
     <!-- Login -->
     <div class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-sm-12 px-12 py-6">
       <div class="w-px-400 mx-auto pt-5 pt-lg-0">
-        <h4 class="mb-1">Welcome to {{config('variables.templateName')}}! 👋</h4>
-        <p class="mb-5">Please sign-in to your account and start the adventure</p>
+        <h4 class="mb-1">{{ __('Welcome to') }} {{config('variables.templateName')}}! 👋</h4>
+        <p class="mb-5">{{ __('Please sign-in to your account and start the adventure') }}</p>
 
         <form id="formAuthentication" class="mb-5" action="{{url('/')}}" method="GET">
           <div class="form-floating form-floating-outline mb-5">
@@ -75,7 +75,7 @@ $customizerHidden = 'customizer-hide';
             <div class="form-check mt-2">
               <input class="form-check-input" type="checkbox" id="remember-me">
               <label class="form-check-label" for="remember-me">
-                Remember Me
+                {{ __('Remember Me') }}
               </label>
             </div>
             <a href="{{url('auth/forgot-password-cover')}}" class="float-end mb-1 mt-2">
