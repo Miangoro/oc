@@ -14,22 +14,6 @@ $customizerHidden = 'customizer-hide';
 @endsection
 
 @section('content')
-<<<<<<< HEAD
-=======
-
-<style>
-  video {
-          position: fixed;
-          right: 0;
-          bottom: 0;
-          min-width: 105%;
-          min-height: 100%;
-          transform: translateX(calc((100% - 100vw) / 2));
-          z-index: -2;
-
-        }
-</style>
->>>>>>> 5bcf738e1e588772595fd47552f8afecc299e9f9
 <div class="authentication-wrapper authentication-cover">
   <!-- Logo -->
   <a href="{{url('/')}}" class="auth-cover-brand d-flex align-items-center gap-2">
@@ -107,10 +91,10 @@ $customizerHidden = 'customizer-hide';
         </form>
 
         <p class="text-center">
-          <span>¿Nuevo en nuestra plataforma?</span>
+          <span>New on our platform?</span>
           @if (Route::has('register'))
             <a href="{{ route('register') }}">
-              <span>Crear una cuenta</span>
+              <span>Create an account</span>
             </a>
           @endif
         </p>
