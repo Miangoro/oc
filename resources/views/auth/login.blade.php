@@ -24,6 +24,7 @@ $customizerHidden = 'customizer-hide';
           min-height: 100%;
           transform: translateX(calc((100% - 100vw) / 2));
           z-index: -2;
+
         }
 </style>
 <div class="authentication-wrapper authentication-cover">
@@ -106,10 +107,10 @@ $customizerHidden = 'customizer-hide';
         </form>
 
         <p class="text-center">
-          <span>New on our platform?</span>
+          <span>¿Nuevo en nuestra plataforma?</span>
           @if (Route::has('register'))
             <a href="{{ route('register') }}">
-              <span>Create an account</span>
+              <span>Crear una cuenta</span>
             </a>
           @endif
         </p>
