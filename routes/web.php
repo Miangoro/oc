@@ -156,7 +156,7 @@ use App\Http\Controllers\tables\DatatableExtensions;
 use App\Http\Controllers\charts\ApexCharts;
 use App\Http\Controllers\charts\ChartJs;
 use App\Http\Controllers\maps\Leaflet;
-
+use App\Http\Controllers\solicitudCliente\solicitudClienteController;
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/', function () {
@@ -368,3 +368,7 @@ Route::middleware([
         return view('content.dashboard.dashboards-analytics');
     })->name('dashboard');
 });
+
+
+//Solicitud de Cliente
+Route::get('/solicitud-cliente', [solicitudClienteController::class, 'index'])->name('solicitud-cliente');
