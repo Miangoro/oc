@@ -32,3 +32,11 @@
 @livewireStyles
 
 @livewireStyles
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+
+@livewireStyles
+=======
+>>>>>>> 5bcf738e1e588772595fd47552f8afecc299e9f9
+>>>>>>> 4dcaafcf09947273f4879de9ac09e26b655bd55a
