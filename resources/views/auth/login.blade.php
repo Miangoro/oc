@@ -24,7 +24,6 @@ $customizerHidden = 'customizer-hide';
           min-height: 100%;
           transform: translateX(calc((100% - 100vw) / 2));
           z-index: -2;
-
         }
 </style>
 <div class="authentication-wrapper authentication-cover">
@@ -92,7 +91,7 @@ $customizerHidden = 'customizer-hide';
             <div class="form-check mt-2">
               <input class="form-check-input" type="checkbox" id="remember-me">
               <label class="form-check-label" for="remember-me">
-                Recuerdame
+                Recuérdame
               </label>
             </div>
             @if (Route::has('password.request'))
@@ -115,7 +114,7 @@ $customizerHidden = 'customizer-hide';
           @endif
         </p>
 
-        <div class="divider my-5">
+        <!--<div class="divider my-5">
           <div class="divider-text">or</div>
         </div>
 
@@ -135,7 +134,7 @@ $customizerHidden = 'customizer-hide';
           <a href="javascript:;" class="btn btn-icon rounded-circle btn-text-google-plus">
             <i class="tf-icons ri-google-fill"></i>
           </a>
-        </div>
+        </div>-->
       </div>
     </div>
     <!-- /Login -->
