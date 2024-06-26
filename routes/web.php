@@ -157,7 +157,7 @@ use App\Http\Controllers\charts\ApexCharts;
 use App\Http\Controllers\charts\ChartJs;
 use App\Http\Controllers\maps\Leaflet;
 use App\Http\Controllers\solicitudCliente\solicitudClienteController;
-use App\Http\Controllers\cartaAsignacion\CartaAsignacionController;
+use App\Http\Controllers\pdfscontrollers\CartaAsignacionController;
 
 
 // Main Page Route
@@ -377,4 +377,5 @@ Route::middleware([
 Route::get('/solicitud-cliente', [solicitudClienteController::class, 'index'])->name('solicitud-cliente');
 
 //Solicitud PDFs
-Route::get('/pdf_prueba', [CartaAsignacionController::class, 'index'])->name('pdf_prueba');
+Route::get('/carta-asignacion', [CartaAsignacionController::class, 'index']);
+Route::get('/solicitud-info-cliente', [CartaAsignacionController::class, 'info']);
