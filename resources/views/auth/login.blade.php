@@ -108,8 +108,8 @@ $customizerHidden = 'customizer-hide';
         <p class="text-center">
           <span>¿Nuevo en nuestra plataforma?</span>
           @if (Route::has('register'))
-            <a href="{{ route('register') }}">
-              <span>Crear una cuenta</span>
+            <a href="{{ route('solicitud-cliente') }}">
+              <span>Llenar solicitud de información de cliente</span>
             </a>
           @endif
         </p>
