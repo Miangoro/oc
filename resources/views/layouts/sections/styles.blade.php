@@ -25,8 +25,3 @@
 <!-- Page Styles -->
 @yield('page-style')
 
-<<<<<<< HEAD
-@livewireStyles
-=======
-@livewireStyles
->>>>>>> f8a8539a228479fd2d832d5f0790f393996eb2f7
