@@ -26,3 +26,16 @@
 @yield('page-style')
 
 @livewireStyles
+<<<<<<< HEAD
+=======
+
+@livewireStyles
+
+@livewireStyles
+
+@livewireStyles
+
+
+@livewireStyles
+
+>>>>>>> da59f82e2d97f12cb06d2982d8744d7122e61755

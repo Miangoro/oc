@@ -156,9 +156,10 @@ use App\Http\Controllers\tables\DatatableExtensions;
 use App\Http\Controllers\charts\ApexCharts;
 use App\Http\Controllers\charts\ChartJs;
 use App\Http\Controllers\maps\Leaflet;
-use App\Http\Controllers\solicitudCliente\solicitudClienteController; 
-use App\Http\Controllers\pdf_pruebaController;
-use App\Http\Controllers\solicitudes\solicitudesController;
+use App\Http\Controllers\solicitudCliente\solicitudClienteController;
+use App\Http\Controllers\cartaAsignacion\CartaAsignacionController;
+
+
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/', function () {
@@ -374,6 +375,6 @@ Route::middleware([
 
 //Solicitud de Cliente
 Route::get('/solicitud-cliente', [solicitudClienteController::class, 'index'])->name('solicitud-cliente');
-Route::get('/solicitudes', [solicitudesController::class, 'index'])->name('solicitudes');
 
-Route::get('/pdf', [pdf_pruebaController::class, 'ver_pdf'])->name('pdf');
+//Solicitud PDFs
+Route::get('/pdf_prueba', [CartaAsignacionController::class, 'index'])->name('pdf_prueba');
