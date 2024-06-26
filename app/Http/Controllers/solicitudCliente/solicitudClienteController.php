@@ -12,3 +12,6 @@ class solicitudClienteController extends Controller
       return view('solicitudes.solicitudCliente');
     }
 }
+
+
+
