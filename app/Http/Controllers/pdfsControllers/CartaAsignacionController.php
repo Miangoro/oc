@@ -17,7 +17,7 @@ class CartaAsignacionController extends Controller
     public function info()
     {
         $pdf = Pdf::loadView('pdfs.SolicitudInfoCliente');
-        return $pdf->stream('F7.1-01-02  Solicitud de Información del Cliente NOM-070-SCFI-2016 y NMX-V-052-NORMEX-2016 Ed');
+        return $pdf->stream('F7.1-01-02  Solicitud de Información del Cliente NOM-070-SCFI-2016 y NMX-V-052-NORMEX-2016 Ed.pdf');
 
     }
     
