@@ -378,8 +378,7 @@ Route::middleware([
 Route::get('/solicitud-cliente', [solicitudClienteController::class, 'index'])->name('solicitud-cliente');
 
 
-
 //Solicitud PDFs
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
-Route::get('/solicitud_cliente', [CartaAsignacionController::class, 'info'])->name('solicitud_cliente');
+Route::get('/solicitudinfo_cliente', [CartaAsignacionController::class, 'info'])->name('solicitud_cliente');
 
