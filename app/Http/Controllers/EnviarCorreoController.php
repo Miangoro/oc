@@ -15,7 +15,7 @@ class EnviarCorreoController extends Controller
             'body' => 'Este es un correo de prueba enviado desde Laravel.'
         ];
 
-        //Destinataria a quien se enviara el correo
+        // Destinatario a quien se enviará el correo
         Mail::to('carloszarco888@gmail.com')->send(new CorreoEjemplo($details));
 
         return 'Correo enviado';

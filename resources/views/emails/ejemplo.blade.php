@@ -3,107 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Correo de Notificación</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .header {
-            background-color: #00587A;
-            color: #ffffff;
-            padding: 20px;
-            text-align: center;
-        }
-        .header img {
-            height: 50px;
-        }
-        .container {
-            background-color: #ffffff;
-            margin: 20px auto;
-            padding: 20px;
-            max-width: 600px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .primary-headline {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #333333;
-        }
-        .content {
-            font-size: 16px;
-            line-height: 1.6;
-            color: #333333;
-        }
-        .button-container {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .button {
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 16px;
-            color: #ffffff;
-            background-color: #00587A;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .footer {
-            background-color: #00587A;
-            color: #ffffff;
-            text-align: center;
-            padding: 20px;
-            font-size: 14px;
-        }
-        .social-media a {
-            margin: 0 10px;
-            text-decoration: none;
-        }
-        .social-media img {
-            height: 20px;
-        }
-        img{
-            width: 160px;
-
-        }
-    </style>
+    <title>Email Template</title>
 </head>
-<body>
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-            <td bgcolor="#00587A" align="center" style="padding: 20px; color: #ffffff;">
-                <img src="https://cidam.org/sitio/recursos/img/logo_cidam_new.png" alt="Logo">
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#ffffff" style="padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-                <h1 style="font-size: 24px; margin-bottom: 10px; color: #333333;">NOTIFICACIÓN</h1>
-                <p style="font-size: 16px; line-height: 1.6; color: #333333;">
-                    Estimado(a) <strong>Miguel Ángel Gómez Romero</strong>,
-                    <br>
-                    Se te ha asignado un certificado para Segunda revisión. Puedes entrar a la Plataforma para realizar la revisión en el siguiente link. Recuerda que debes de tener la sesión abierta para entrar correctamente:
-                </p>
-                <div style="text-align: center; margin-top: 20px;">
-                    <a href="#" style="display: inline-block; padding: 15px 30px; font-size: 16px; color: #ffffff; background-color: #00587A; text-align: center; text-decoration: none; border-radius: 5px;">Clic aquí</a>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td bgcolor="#00587A" align="center" style="padding: 20px; color: #ffffff;">
-                <p>CIDAM - Agroinnovación, transformando ideas...</p>
-                
-                <div class="social-media">
-                    <a href="#"><img src="{{ url('public/img_correo/facebook-icon.png') }}" alt="Facebook" style="height: 20px;"></a>
-                    <a href="#"><img src="{{ url('public/img_correo/twitter-icon.png') }}" alt="Twitter" style="height: 20px;"></a>
-                    <a href="#"><img src="{{ url('public/img_correo/youtube-icon.png') }}" alt="YouTube" style="height: 20px;"></a>
-                    <a href="#"><img src="{{ url('public/img_correo/instagram-icon.png') }}" alt="Instagram" style="height: 20px;"></a>
-                </div>
-            </td>
-        </tr>
-    </table>
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+
+<div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 10px;">
+    <div style="background-color: #17905E; padding: 20px; text-align: center; border-radius: 10px 10px 0 0;">
+        <a href="https://oc.erpcidam.com" style="display: block; width: 100%; height: auto;">
+            <img src="https://oc.erpcidam.com/apps/usuarios/img/logo.png" alt="Logo" style="width: 300px; display: block; margin: 0 auto; border-radius: 10px;">
+        </a>
+        <h1 style="color: #17202A; font-size: 18px; font-weight: bold; margin: 10px 0;">PLATAFORMA DEL ORGANISMO CERTIFICADOR DEL CIDAM</h1>
+    </div>
+    
+    <div style="padding: 20px; text-align: center;">
+        <h2 style="color: #333333;">NOTIFICACIÓN</h2>
+        <p style="color: #555555; margin-bottom: 10px;">Estimado(a) <strong>Miguel Ángel Gómez Romero</strong>,</p>
+        <p style="color: #555555; margin-bottom: 10px;">Se te ha asignado un certificado para Segunda revisión. Puedes entrar a la Plataforma para realizar la revisión en el siguiente link. Recuerda que debes de tener la sesión abierta para entrar correctamente:</p>
+        <a href="https://oc.erpcidam.com" style="display: block; width: 100%; height: auto;">
+            <img src="https://oc.erpcidam.com/apps/usuarios/img/empresas_certificadas_cidam.png" alt="Empresas Certificadas CIDAM" style="width: 300px; margin: 20px auto; display: block; border-radius: 10px;">
+        </a>
+    </div>
+    
+    <div style="background-color: #17905E; padding: 0 20px 20px; text-align: center; font-size: 12px; color: #ffffff; border-radius: 0 0 10px 10px;">
+        <a href="https://oc.erpcidam.com" style="display: block; width: 100%; height: auto;">
+            <img src="https://ci3.googleusercontent.com/meips/ADKq_NZYMS4OAqKcQS39YmpEYuUXJQbJtnkf0PhGOk1oBXoRfZiopnXTGxYHOutmPFT6VPaqFUUeklEqpM6WUtOZ5jdA4-Z4ROT0D-q-aGDP=s0-d-e1-ft#" alt="Agroinnovación" style="width: 150px; margin: 10px auto; display: block; border-radius: 50%;">
+        </a>
+        <p style="color: #000000; margin: 10px 0;">Agroinnovación, transformando ideas...</p>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="#"><img src="https://img.icons8.com/?size=100&id=13912&format=png&color=000000" alt="Facebook" style="width: 40px; margin: 0 10px; background-color: #ffffff; border-radius: 50%; padding: 5px;"></a>
+            <a href="#"><img src="https://img.icons8.com/?size=100&id=5MQ0gPAYYx7a&format=png&color=000000" alt="Twitter" style="width: 40px; margin: 0 10px; background-color: #ffffff; border-radius: 50%; padding: 5px;"></a>
+            <a href="#"><img src="https://img.icons8.com/?size=100&id=19318&format=png&color=000000" alt="YouTube" style="width: 40px; margin: 0 10px; background-color: #ffffff; border-radius: 50%; padding: 5px;"></a>
+            <a href="#"><img src="https://img.icons8.com/?size=100&id=32323&format=png&color=000000" alt="Instagram" style="width: 40px; margin: 0 10px; background-color: #ffffff; border-radius: 50%; padding: 5px;"></a>
+        </div>
+    </div>
+
+</div>
+
 </body>
 </html>
