@@ -54,6 +54,7 @@
             margin-right: 10px;
             /* Márgen derecho entre los spans */
         }
+
     </style>
     <div class="header">
         <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM">
@@ -84,51 +85,80 @@
                         <td>Correo Electrónico:</td>
                         <td>Teléfono:</td>
                     </tr>
+
                     <tr>
-                        <td>Domicilio Fiscal:</td>
-                        <td class="spaced-text">
+                        <td rowspan="2" class="custom-table-cell" style="vertical-align: top; border-right: 1px solid black;">
+                            <!-- Contenido del lado izquierdo -->
+                            <p>Domicilio Fiscal:</p>
+                        </td>
+                        <td class="custom-table-cell spaced-text">
+                            <!-- Contenido del lado derecho, primer elemento -->
                             <span>Calle:</span>
                             <span>Numero:</span>
                             <span>Colonia:</span>
+
                             <br>
                             <span>Localidad/Municipio/Ciudad/Estado:</span>
                             <span>C.P.:</span>
                         </td>
                     </tr>
                     <tr>
-                        <td>Domicilio de: <br> __________________ </td>
-                        <td class="spaced-text">
-                            <span>Calle:</span>
-                            <span>Numero:</span>
-                            <span>Colonia:</span>
-                            <br>
+                        <td class="custom-table-cell spaced-text" >
+                            <!-- Contenido del lado derecho, segundo elemento -->
                             <span>Localidad/Municipio/Ciudad/Estado:</span>
                             <span>C.P.:</span>
                         </td>
                     </tr>
                     <tr>
-                        <td>Domicilio de: <br> __________________ </td>
-                        <td class="spaced-text">
+                        <td rowspan="2" class="custom-table-cell" style="vertical-align: top; border-right: 1px solid black;">
+                            <!-- Contenido del lado izquierdo -->
+                            <p>Domicilio de: <br> __________________ </p>
+                        </td>
+                        <td class="custom-table-cell spaced-text">
+                            <!-- Contenido del lado derecho, primer elemento -->
                             <span>Calle:</span>
                             <span>Numero:</span>
                             <span>Colonia:</span>
-                            <br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="custom-table-cell spaced-text" >
+                            <!-- Contenido del lado derecho, segundo elemento -->
                             <span>Localidad/Municipio/Ciudad/Estado:</span>
                             <span>C.P.:</span>
                         </td>
                     </tr>
 
+                    <tr>
+                        <td rowspan="2" class="custom-table-cell" style="vertical-align: top; border-right: 1px solid black;">
+                            <!-- Contenido del lado izquierdo -->
+                            <p>Domicilio de: <br> __________________ </p>
+                        </td>
+                        <td class="custom-table-cell spaced-text">
+                            <!-- Contenido del lado derecho, primer elemento -->
+                            <span>Calle:</span>
+                            <span>Numero:</span>
+                            <span>Colonia:</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="custom-table-cell spaced-text" >
+                            <!-- Contenido del lado derecho, segundo elemento -->
+                            <span>Localidad/Municipio/Ciudad/Estado:</span>
+                            <span>C.P.:</span>
+                        </td>
+                    </tr>
                 </table>
-                <div>
-                    <table>
-                        <tr>
-                            <td>En caso de contar con más instalaciones en domicilios diferentes donde lleve a cabo su
-                                actividad (planta de producción, envasado, bodega de maduración u otro) agregar las
-                                tablas necesarias y especificar domicilios* </td>
-                        </tr>
-                    </table>
-                </div>
+
+
             </div>
+                <table>
+                    <tr>
+                        <td>En caso de contar con más instalaciones en domicilios diferentes donde lleve a cabo su
+                            actividad (planta de producción, envasado, bodega de maduración u otro) agregar las
+                            tablas necesarias y especificar domicilios* </td>
+                    </tr>
+                </table>
             <div class="col-md-6">
 
                 <table class="table">
