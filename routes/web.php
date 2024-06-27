@@ -385,5 +385,4 @@ Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->na
 
 Route::get('/solicitudinfo_cliente', [CartaAsignacionController::class, 'info'])->name('solicitud_cliente');
 
-Route::get('/solicitudinfo_cliente', [CartaAsignacionController::class, 'info'])->name('solicitud_cliente');
 
