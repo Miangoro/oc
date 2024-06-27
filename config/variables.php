@@ -1,8 +1,8 @@
 <?php
 // Variables
 return [
-  "creatorName" => "Pixinvent",
-  "creatorUrl" => "https://pixinvent.com",
+  "creatorName" => "CIDAM A.C.",
+  "creatorUrl" => "https://cidam.org",
   "templateName" => "OC CIDAM",
   "templateSuffix" => "Plataforma",
   "templateVersion" => "1.3.0",

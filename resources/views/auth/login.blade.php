@@ -106,10 +106,10 @@ $customizerHidden = 'customizer-hide';
         </form>
 
         <p class="text-center">
-          <span>¿Nuevo en nuestra plataforma?</span>
+          <span>¿No estás certificado?</span>
           @if (Route::has('register'))
             <a href="{{ route('solicitud-cliente') }}">
-              <span>Llenar solicitud de información de cliente</span>
+              <span class="text-info">¡Quiero certificarme!</span>
             </a>
           @endif
         </p>
