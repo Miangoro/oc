@@ -90,19 +90,19 @@ $isNavbar = false;
           <small>información del cliente.</small>
         </div>
         <div class="row g-5">
-          <div class="col-sm-6">
+          <div class="col">
             <div class="form-floating form-floating-outline">
               <input type="text" id="username" name="nameCliente" class="form-control" placeholder="johndoe" required />
               <label for="username">Nombre del Cliente</label>
             </div>
           </div>      
-          <div class="col-sm-6">
+          <div class="col">
             <div class="form-floating form-floating-outline">
               <input type="email" id="email" name="emailCliente" class="form-control" placeholder="john.doe@email.com" aria-label="john.doe" required />
               <label for="email">Correo Electrónico</label>
             </div>
           </div>
-          <div class="col-sm-6">
+          <div class="col">
             <div class="form-floating form-floating-outline">
               <input type="tel" id="telefono" name="telCliente" class="form-control" placeholder="4351225559" pattern="[0-9]{10}" required title="El teléfono debe tener 10 dígitos numéricos." />
               <label for="username">Telefono</label>
@@ -117,14 +117,15 @@ $isNavbar = false;
             <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Siguiente</span> <i class="ri-arrow-right-line"></i></button>
           </div>
         </div>
+        
       </div>
 
 
       <!-- Social Links -->
       <div id="social-links" class="content">
         <!-- 1. Delivery Type -->
-        <h5 class="my-4">Producto(s) que se va a certificar</h5>
-        <h5>Alcance del Organismo Certificador</h5>
+        <h6>Producto(s) que se va a certificar</h6>
+        <h6>Alcance del Organismo Certificador</h6>
         <div class="row gy-3 align-items-start">
           <div class="col-md">
             <div class="form-check custom-option custom-option-icon">
@@ -175,7 +176,7 @@ $isNavbar = false;
         <hr>
 
         <!-- 2. Delivery Type -->
-        <h5 class="my-4">Documentos normativos para los cuales busca la certificación:</h5>
+        <h6 class="my-4">Documentos normativos para los cuales busca la certificación:</h6>
         <div class="row gy-3 align-items-start">
             <div class="col-md">
                 <div class="form-check custom-option custom-option-icon">
@@ -211,7 +212,7 @@ $isNavbar = false;
         <hr>
 
         <!-- 3. Delivery Type -->
-        <h5 class="my-4">Actividad del cliente NOM-070-SCFI-2016:</h5>
+        <h6 class="my-4">Actividad del cliente NOM-070-SCFI-2016:</h6>
         <div class="row gy-3 align-items-start">
             <div class="col-md">
                 <div class="form-check custom-option custom-option-icon">
@@ -261,7 +262,7 @@ $isNavbar = false;
         <hr>
 
         <!-- 4. Delivery Type -->
-        <h5 class="my-4">Actividad del cliente NMX-V-052-NORMEX-2016:</h5>
+        <h6 class="my-4">Actividad del cliente NMX-V-052-NORMEX-2016:</h6>
         <div class="row gy-3 align-items-start">
             <div class="col-md">
                 <div class="form-check custom-option custom-option-icon">
