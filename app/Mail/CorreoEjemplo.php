@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -29,7 +30,8 @@ class CorreoEjemplo extends Mailable
      */
     public function build()
     {
-        return $this->subject('Asunto del correo')
-                    ->view('emails.ejemplo');
+        return $this->view('emails.ejemplo')
+                    ->subject($this->details['title'])
+                    ->with('details', $this->details);
     }
 }
