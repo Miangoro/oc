@@ -159,6 +159,7 @@ use App\Http\Controllers\maps\Leaflet;
 use App\Http\Controllers\solicitudCliente\solicitudClienteController;
 use App\Http\Controllers\pdfscontrollers\CartaAsignacionController;
 use App\Http\Controllers\EnviarCorreoController;
+use App\Http\Controllers\clientes\clientesProspectoController;
 
 
 // Main Page Route
@@ -384,3 +385,7 @@ Route::get('/enviar-correo', [EnviarCorreoController::class, 'enviarCorreo']);
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
 
 Route::get('/solicitudinfo_cliente', [CartaAsignacionController::class, 'info'])->name('solicitud_cliente');
+
+//Clientes prospecto y confirmado
+Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');
+Route::resource('/empresas-list', clientesProspectoController::class);
