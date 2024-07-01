@@ -24,4 +24,9 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.AsignacionUsuario');
         return $pdf->stream('F7.1-01-46 Carta de asignación de usuario y contraseña para plataforma del OC Ed. 0, Vigente.pdf');
     }
+    public function dictamen()
+    {
+        $pdf = Pdf::loadView('pdfs.DictamenProductor');
+        return $pdf->stream('Dictamen de productor de mezcal.pdf');
+    }
 }
