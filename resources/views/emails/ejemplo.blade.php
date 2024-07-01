@@ -19,25 +19,22 @@
         <h2 style="color: #333333;">NOTIFICACIÓN</h2>
         <p style="color: #555555; margin-bottom: 10px;">Estimado(a) <strong>Miguel Ángel Gómez Romero</strong>,</p>
         <p style="color: #555555; margin-bottom: 10px;">Se te ha asignado un certificado para Segunda revisión. Puedes entrar a la Plataforma para realizar la revisión en el siguiente link. Recuerda que debes de tener la sesión abierta para entrar correctamente:</p>
-        <a href="https://oc.erpcidam.com" style="display: block; width: 100%; height: auto;">
-            <img src="https://oc.erpcidam.com/apps/usuarios/img/empresas_certificadas_cidam.png" alt="Empresas Certificadas CIDAM" style="width: 300px; margin: 20px auto; display: block; border-radius: 10px;">
-        </a>
+        <a href="https://oc.erpcidam.com" style="display: block; width: 200px; height: 50px; background-color: #0C1444; color: #ffffff; text-align: center; line-height: 50px; text-decoration: none; border-radius: 25px; margin: 20px auto;">Click aquí</a>
     </div>
     
-    <div style="background-color: #17905E; padding: 0 20px 20px; text-align: center; font-size: 12px; color: #ffffff; border-radius: 0 0 10px 10px;">
+    <div style="background-color: #17905E; padding: 20px; text-align: center; font-size: 12px; color: #ffffff; border-radius: 0 0 10px 10px;">
         <a href="https://oc.erpcidam.com" style="display: block; width: 100%; height: auto;">
             <img src="https://ci3.googleusercontent.com/meips/ADKq_NZYMS4OAqKcQS39YmpEYuUXJQbJtnkf0PhGOk1oBXoRfZiopnXTGxYHOutmPFT6VPaqFUUeklEqpM6WUtOZ5jdA4-Z4ROT0D-q-aGDP=s0-d-e1-ft#" alt="Agroinnovación" style="width: 150px; margin: 10px auto; display: block; border-radius: 50%;">
         </a>
         <p style="color: #000000; margin: 10px 0;">Agroinnovación, transformando ideas...</p>
         
         <div style="text-align: center; margin-top: 20px;">
-            <a href="#"><img src="https://img.icons8.com/?size=100&id=13912&format=png&color=000000" alt="Facebook" style="width: 40px; margin: 0 10px; background-color: #ffffff; border-radius: 50%; padding: 5px;"></a>
-            <a href="#"><img src="https://img.icons8.com/?size=100&id=5MQ0gPAYYx7a&format=png&color=000000" alt="Twitter" style="width: 40px; margin: 0 10px; background-color: #ffffff; border-radius: 50%; padding: 5px;"></a>
-            <a href="#"><img src="https://img.icons8.com/?size=100&id=19318&format=png&color=000000" alt="YouTube" style="width: 40px; margin: 0 10px; background-color: #ffffff; border-radius: 50%; padding: 5px;"></a>
-            <a href="#"><img src="https://img.icons8.com/?size=100&id=32323&format=png&color=000000" alt="Instagram" style="width: 40px; margin: 0 10px; background-color: #ffffff; border-radius: 50%; padding: 5px;"></a>
+            <a href="https://www.facebook.com/CIDAM.Agroinnovacion" target="_blank"><img src="https://img.icons8.com/?size=100&id=13912&format=png&color=000000" alt="Facebook" style="width: 30px; margin: 0 10px; background-color: #ffffff; border-radius: 50%; padding: 5px;"></a>
+            <a href="https://twitter.com/cidam_ac?t=2VPEV2R2vH7fuqp3GBVOZg&s=08" target="_blank"><img src="https://img.icons8.com/?size=100&id=5MQ0gPAYYx7a&format=png&color=000000" alt="Twitter" style="width: 30px; margin: 0 10px; background-color: #ffffff; border-radius: 50%; padding: 5px;"></a>
+            <a href="https://www.youtube.com/@CIDAM.Agroinnovacion" target="_blank"><img src="https://img.icons8.com/?size=100&id=19318&format=png&color=000000" alt="YouTube" style="width: 30px; margin: 0 10px; background-color: #ffffff; border-radius: 50%; padding: 5px;"></a>
+            <a href="https://www.instagram.com/cidam.agroinnovacion/" target="_blank"><img src="https://img.icons8.com/?size=100&id=32323&format=png&color=000000" alt="Instagram" style="width: 30px; margin: 0 10px; background-color: #ffffff; border-radius: 50%; padding: 5px;"></a>
         </div>
     </div>
-
 </div>
 
 </body>

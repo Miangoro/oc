@@ -16,7 +16,8 @@ class EnviarCorreoController extends Controller
         ];
 
         // Destinatario a quien se enviará el correo
-        Mail::to('sergiocasarrubias500@gmail.com')->send(new CorreoEjemplo($details));
+        Mail::to('mromero@cidam.org')->send(new CorreoEjemplo($details));
+
 
         return 'Correo enviado';
     }

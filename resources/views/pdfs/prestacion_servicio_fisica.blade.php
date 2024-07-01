@@ -8,7 +8,7 @@
     body {
         font-family: Arial, sans-serif;
         margin: 30px;
-        font-size: 13px;
+        font-size: 14px;
     }
 
     .header {
@@ -29,10 +29,22 @@
 
     td {
         border: 1px solid rgb(189, 189, 189); 
-        padding: 38px;
+        padding: 20px;
         text-align: justify;
         vertical-align: top;
-        word-spacing: 0.5em;  
+        line-height: 1.5; /* Ajustado para separación normal */
+    }
+
+    .texto{
+        font-size: 14px;
+        border: 1px solid rgb(189, 189, 189); 
+        text-align: justify;
+        line-height: 1.5; /* Ajustado para separación normal */
+    }
+
+    .containers{
+        padding: 15px;
+        border: 1px solid rgb(189, 189, 189); 
     }
 
     .si{
@@ -71,7 +83,17 @@
     p + p {
         margin-top: 5px; /* Ajusta este valor según sea necesario */
     }
+    ul.custom-list {
+        line-height: 1.2; /* Ajustado para separación normal */
+       /*  list-style-position: inside; */ /* Coloca la viñeta dentro del contenido de la lista */
+        padding-left: 0; /* Elimina el relleno adicional del ul */
+    }
 
+    ul.custom-list li {
+        margin-bottom: 5px; /* Ajusta la separación vertical entre los elementos de la lista */
+        text-indent: 1.5em; /* Ajusta el valor para separar la viñeta del texto */
+        margin-left: 1em; /* Aumenta el margen izquierdo para crear espacio adicional */
+    }
     </style>
 
 
@@ -132,14 +154,12 @@
                                             con la autorización de forma indefinida mientras se mantenga la Acreditación Número: 144/18 otorgada por la EMA, A.C.
                                             <br>
                                            <p style="text-align: center;"> <strong>DECLARACIONES</strong></p>
-                                            <br></p>
-
+                                            </p>
                             </td>
                         </tr>
                     </tbody>
-
                 </table>
-                <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
+                <p style="text-align: center; margin-top: 15px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
                     puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
                     </p>
@@ -150,13 +170,13 @@
         </div>
     </div>
 
-
 {{-- seccion 2/10 --}}
 <div class="header">
     <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
     Contrato de prestación de servicios F4.1-01-01 <br> NOM-070-SCFI-2016 <br> Edición 4 <br>
         Entrada en vigor 10/04/2024<br>  <div class="line"></div>
 </div>
+
     <div class="container mt-3">
         <div class="row">
             <div class="col-md-12">
@@ -258,7 +278,6 @@
                       
                         </tr>
                     </tbody>
-
                 </table>
                 <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
@@ -381,9 +400,7 @@
                   
                     </tr>
                 </tbody>
-
             </table>
-            <br>
             <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
                 Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
                 puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
@@ -431,7 +448,7 @@
                     </tr>
                 </tbody>
             </table>
-            <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
+            <p style="text-align: center; margin-top: 15px; font-size: 10.5px;">
                 Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
                 puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
                 </p>
@@ -441,7 +458,7 @@
         </div>
     </div>
 </div>
-<br>
+
 
 
 {{-- seccion 5/10 --}}
@@ -568,7 +585,6 @@
             </div>
         </div>
     </div>
-    <br>
 
 
 
@@ -672,8 +688,6 @@
                                     esquema de certificación exige la
                                     evaluación del sistema de gestión del
                                     cliente.
-                                    
-                                    
                                 </p>
                                 <p>
                                     k) <strong>“EL CIDAM, A.C.”</strong> se obliga a no
@@ -689,17 +703,17 @@
                     </tbody>
 
                 </table>
+
                 <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
                     puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
                     </p>
-                    <p style="text-align: right; margin-top: 20px; font-size: 12px;">
+                    <p style="text-align: right; margin-top: 15px; font-size: 12px;">
                     6/10
                     </p>
             </div>
         </div>
     </div>
-    <br>
 
 {{-- seccion 7/10 --}}
 <div class="header">
@@ -707,6 +721,7 @@
     Contrato de prestación de servicios F4.1-01-01 <br> NOM-070-SCFI-2016 <br> Edición 4 <br>
         Entrada en vigor 10/04/2024<br>  <div class="line"></div>
 </div>
+<br>
     <div class="container mt-3">
         <div class="row">
             <div class="col-md-12">
@@ -803,7 +818,7 @@
                     </tbody>
 
                 </table>
-                <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
+                <p style="text-align: center; margin-top: 15px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
                     puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
                     </p>
@@ -813,8 +828,166 @@
             </div>
         </div>
     </div>
+
+
+
+    
+{{-- seccion 8/10 --}}
+<div class="header">
+    <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
+    Contrato de prestación de servicios F4.1-01-01 <br> NOM-070-SCFI-2016 <br> Edición 4 <br>
+    Entrada en vigor 10/04/2024<br>
+    <div class="line"></div>
+</div>
+<br>
+<br>
+
+    <p style="text-align: center; font-size: 19px;">ANEXOS</p>
+    <br>
+    <br>
+    <div style="text-align: left;">
+        <strong><p>PO-UGII-011 Política de venta de hologramas</p></strong>
+    </div>
+
+<div class="container mt-3">
+            <div style="text-align: center; margin-top: 10px;">
+                <img src="{{ public_path('img_pdf/anexo1-.png') }}" alt="Anexo 1" style="max-width: 78%; margin: 0 auto;">
+            </div>
+            <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
+                Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+            </p>
+            <p style="text-align: right; margin-top: 15px; font-size: 12px;">
+                8/10
+            </p>
+</div>
     <br>
 
 
+            
+    {{-- seccion 9/10 --}}
+    <div class="header">
+        <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
+        Contrato de prestación de servicios F4.1-01-01 <br> NOM-070-SCFI-2016 <br> Edición 4 <br>
+        Entrada en vigor 10/04/2024<br>
+        <div class="line"></div>
+    </div>
+    <br>
+
+    <div class="containers">
+        <p style="text-align: center;">ANEXOS</p>
+<br>
+        <div style="text-align: left; padding: 5px;">
+            <p>Carta de aceptación de términos y condiciones.</p>
+        </div>
+        <div style="text-align: right;">
+            <p style="font-size: 12px;">F4.1-01-08 Edición 1</p>
+            <p></p>
+            <p style="font-size: 12px;">Entrada en vigor 15/02/2024</p>
+        </div>
+        <br>
+        <br>
+        <p>
+            Organismo Certificador del Centro de Innovación y
+        </p>
+        <p></p>
+        <p>
+            Desarrollo Agroalimentario de Michoacán A.C.
+        </p>
+        <p></p>
+        <p>
+            P R E S E N T E.
+        </p>
+        <p></p>
+        <p class="texto">
+            Por medio de la presente, yo la C. XXXXXX me permito notificar al OC CIDAM de la aceptación
+            de los términos y condiciones que se describen en el contrato de prestación de servicios, así
+            como también hago de su conocimiento el haber leído detenidamente los documentos
+            señalados en dicho instrumento jurídico, con código I4.1-01-01 Instructivo para el uso de
+            certificados y marcas y F4.1-01-02 Manual de identidad corporativa del OC CIDAM, que me
+            fueron enviados por algún medio electrónico.
+            
+        </p>
+        <p></p>
+        <p class="texto">
+            Además de lo anterior, me comprometo a realizar y mantener actualizados antes las instancias
+            correspondientes los siguientes documentos:
+        </p>
+        <p>
+            <ul  class="custom-list">
+                <li><p>     Constancia de Situación Fiscal emitida por el SAT.</p></li>
+                <li><p>     Inscripción al Padrón de Bebidas alcohólicas y/o Inscripción al padrón de exportadores, según aplique.</p></li>
+                <li><p>     Opinión de cumplimiento al corriente, utilizando el formato 32D.</p></li>
+                <li><p>     Acta constitutiva actualizada, en caso de que hubiesen surgido cambios en sus representantes legales o cambio en su denominación, se firmará de nueva cuenta un contrato de prestación de servicios.</p></li>
+                <li><p>     Contrato de arrendamiento, se deberá actualizar en caso de que ya no esté vigente.</p></li>
+                <li><p>     Domicilio de instalaciones actualizado, en caso de que haya surgido alguna modificación a éste.</p></li>
+            </ul>
+        </p>
+        <p class="texto">
+            Asimismo, manifiesto que es mi responsabilidad el mantener actualizados cada uno de los
+            trámites mencionados anteriormente, y que eximo de toda responsabilidad al Organismo
+            Certificador del CIDAM (OC CIDAM), comprometiéndome a presentar cada uno de los
+        </p>
+        
+    </div>
+    <br>
+    <br><br>
+                <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
+                    Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                </p>
+                <p style="text-align: right; margin-top: 15px; font-size: 12px;">
+                    9/10
+                </p>
+    </div>
+        <br>
+    <br>
+    <br>
+    <br>
+           
+    {{-- seccion 10/10 --}}
+    <div class="header">
+        <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
+        Contrato de prestación de servicios F4.1-01-01 <br> NOM-070-SCFI-2016 <br> Edición 4 <br>
+        Entrada en vigor 10/04/2024<br>
+        <div class="line"></div>
+    </div>
+    <br>
+
+    <div class="containers">
+    
+        <p class="texto">
+            documentos actualizados y acepto entregar toda la documentación requerida por el OC
+            CIDAM, de no cumplir con dichos requisitos, acepto se tomen las medidas pertinentes
+            referentes al proceso de certificación del producto, si no cumplo con ello.
+        </p>
+        <p></p>
+        <p class="texto">
+            Esta carta de aceptación de términos y condiciones entrara en vigor a partir de la fecha de
+            firma de la misma, teniendo en cuenta que las fechas de vigencia serán las equivalentes tanto
+            en el contrato como en el presente documento, a partir del día XXXXX y será por tiempo
+            indefinido, hasta que el cliente deje de cumplir con los requisitos de la certificación como se
+            señala en el contrato.
+        </p>
+        <br><br><br>
+        <p>
+        </p>
+        <p class="texto">
+            Atentamente
+        </p>
+        <br><br><br><br>
+        <p class="texto">
+            XXXXXXXXXX
+        </p>
+        <br>
+    </div>
+                <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
+                    Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                </p>
+                <p style="text-align: right; margin-top: 15px; font-size: 12px;">
+                    9/10
+                </p>
+    </div>
+        <br>
+
+    
 </body>
 </html>
