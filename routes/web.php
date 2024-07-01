@@ -392,10 +392,13 @@ Route::get('/asignacion_usuario', [CartaAsignacionController::class, 'access_use
 
 
 
+
 //contrato servicio cliente fisica 
 Route::get('/prestacion_servicio_fisica', [CartaAsignacionController::class, 'ServicioPersonaFisica'])->name('prestacion_servicio_fisica');
 
 
+
+Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamen'])->name('dictamen_productor');
 
 
 //Clientes prospecto y confirmado
