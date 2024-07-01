@@ -6,7 +6,7 @@
     <title>Tabla de Información del Cliente</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', Arial, sans-serif;
             margin: 30px;
             font-size: 10px;
         }
