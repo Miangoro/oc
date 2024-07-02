@@ -27,6 +27,7 @@ class CartaAsignacionController extends Controller
     return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 persona fisica VIGENTE.pdf');
     }
 
+<<<<<<< HEAD
     //vista servicio persona vigente 
     public function ServicioPersonaVigente()
     {
@@ -41,11 +42,31 @@ class CartaAsignacionController extends Controller
     }
 
 
+=======
+>>>>>>> a6376fcce60600ef8f9d292514c7f2e936abe664
     public function access_user()
     {
         $pdf = Pdf::loadView('pdfs.AsignacionUsuario');
         return $pdf->stream('F7.1-01-46 Carta de asignación de usuario y contraseña para plataforma del OC Ed. 0, Vigente.pdf');
     }
+    
+    //PDF Dictamen de instalaciones
+    public function dictamenp()
+    {
+        $pdf = Pdf::loadView('pdfs.DictamenProductor');
+        return $pdf->stream('Dictamen de productor de mezcal.pdf');
+    }
+    public function dictamene()
+    {
+        $pdf = Pdf::loadView('pdfs.DictamenEnvasado');
+        return $pdf->stream('Dictamen de envasador.pdf');
+    }
+    public function dictamenc()
+    {
+        $pdf = Pdf::loadView('pdfs.DictamenComercializador');
+        return $pdf->stream('Dictamen de Comercializador.pdf');
+    }
+
     public function solicitudservi()
     {
         $pdf = Pdf::loadView('pdfs.SolicitudDeServicio');

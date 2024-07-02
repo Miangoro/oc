@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Dictamen de productor de mezcal</title>
+    <title>Dictamen de envasador</title>
 
     <style>
         .header img {
@@ -97,7 +97,6 @@
         }
 
         .uvem {
-            font-family: Arial, sans-serif;
             font-size: 7.5px;
             margin-left: 25px;
             margin-right: 25px;
@@ -140,60 +139,63 @@
         <br><br><br><br><br><br>
     </div>
     <div class="description">
-        <p>No.: UMC-075/2024</p>
-        <p>Constancia de cumplimiento con la NOM-070-SCFI-2016</p>
+        <p>No.:UMC-074/2024</p>
+        <p>Dictamen de cumplimiento de Instalaciones</p>
         <p>como</p>
         <div class="title">
-            Productor de Mezcal
+            Envasador de Mezcal
         </div>
     </div>
     <div class="text">
-        <p>De acuerdo a lo establecido en los procedimientos internos de la Unidad de Inspección <strong>No.UVNOM 129</strong> de la
+        <p>De acuerdo a lo establecido en los procedimientos internos de la Unidad de Inspección <strong>No. UVNOM 129</strong> de la
             Universidad Michoacana de San Nicolás de Hidalgo, con domicilio en Francisco J. Múgica s/n Col. Felicitas del
-            Rio, Morelia Michoacán para la revisión de procesos de producción del producto Mezcal, su envasado y
+            Rio, Morelia,Michoacá para la revisión de procesos de producción del producto Mezcal, su envasado y
             comercialización; y con fundamento en los artículos 56 Fracción I y 60 fracción I de la Ley de Infraestructura de la
             Calidad que establece el funcionamiento de las Unidades de Inspección. Después de realizar la inspección de las
-            instalaciones en fecha del <u>25 de Junio del 2024</u> partiendo del acta circunstanciada o número de inspección:
-            <u>UMS-1113/2024</u></p>
+            instalaciones en fecha del <u>24 de Junio del 2024</u> partiendo del acta circunstanciada o número de inspección:
+             <u>UMS-1090/2024</u>
+            </p>
             <center><strong>A:</strong></center>
             <div class="header-text">
-                <strong>GAO TAMLEI S.A DE C.V.</strong>
+                <strong>HECTOR MEJIA ALFARO</strong>
             </div>
             <br>
-            <strong>Domicilio Fiscal: </strong>Gaspar De Villadiego, 117, Nueva Valladolid , C.P. 58190, Morelia, Michoacán. <br>
-            <strong>Domicilio de la unidad de producción: </strong>Prolongación Melchor Ocampo, 29, Centro, C.P. 58480, Etúcuaro, Madero, Michoacán de Ocampo.<br>
-            <strong>Categorías de mezcal: </strong>Mezcal Artesanal<br>
-            <strong>Clases de mezcal que produce: </strong>Blanco o Joven<br>
+            <strong>Domicilio Fiscal: </strong><span style="font-size: 13.5px;">PASEO SAN ARTURO, N. 2365 INT. 26, VALLE REAL, ZAPOPAN, JALISCO, C.P. 45019</span><br>
+            <strong>Domicilio de la unidad de envasado: </strong>Ricardo Flores Magón, MZA.1 LT.5 , Francisco Villa, Chilpancingo de los
+            Bravo, Guerrero, C.P. 39010.<br>
+            <strong>Categorías de mezcal: </strong>Mezcal, Mezcal Artesanal, Mezcal Ancestral<br>
+            <strong>Clases de mezcal que envasa: </strong><span style="word-spacing: -2px; font-size: 14.2px">Blanco o Joven, Madurado en Vidrio, Reposado, Añejo, Abocado con, Destilado con</span><br>
             <strong>Fecha de emisión del dictamen: </strong>26 de Junio del 2024<br>
             <strong>Fecha de vigencia del dictamen: </strong>26 de Junio del 2025<br>
     </div> 
     <div class="text2">
-        <p>El presente dictamen ampara exclusivamente la producción del producto mezcal que se elabora en las instalaciones
-            referidas en el presente documento. Dichas Instalaciones de producción cuentan con la infraestructura y
-            equipamiento requerido para la producción de mezcal indicados en la NOM-070-SCFI-2016, Bebidas alcohólicasMezcal- Especificaciones y se encuentran dentro de los estados y municipios que contempla la resolución mediante
-            el cual se otorga la protección prevista a la denominación de origen Mezcal, para ser aplicada a la bebida alcohólica
-            del mismo nombre, publicada el 28 de noviembre de 1994, así como sus modificaciones subsecuentes.</p>
-    </div><br><br>
+        <p>El presente dictamen ampara exclusivamente el envasado del producto mezcal que se realiza en las instalaciones
+            referidas en el presente documento. Dichas Instalaciones de envasado cuentan con la infraestructura y equipamiento
+            requerido para el envasado de mezcal indicados en la NOM-070-SCFI-2016, Bebidas alcohólicas-MezcalEspecificaciones.
+            </p>
+            <p>Las instalaciones se encuentran en región de los estados y municipios que contempla la resolución mediante el cual
+                se otorga la protección prevista a la denominación de origen Mezcal, para ser aplicada a la bebida alcohólica del
+                mismo nombre, publicada el 28 de noviembre de 1994, así como sus modificaciones subsecuentes.</p>
+    </div><br>
     <div class="footer">
         <strong>AUTORIZÓ                     Gerente Técnico Sustituto de la Unidad de Inspección | QFB. Mario Villanueva Flores</strong><br>
-        <strong>Cadena Original              UMC-075/2024|2024-06-26|UMS-1113/2024</strong><br>
+        <strong>Cadena Original              UMC-074/2024|2024-06-26|UMS-1090/2024</strong><br>
         <strong>Sello Digita</strong>
     </div>
     <div class="code">
-        <p>WWjgdR2Ues6u2YPQcMFqcFqLQ3LA+dYVXpnB0g30TgQa6S5YkiVbK2w3UcTeAk7YQDvTKs6TKBssf5FdtbhTOifzF219tHjKHvJh1mt8c2QlQAhQWLvJeSl4K6Yd3jbV</p>
-        <p>kV5p/e8n1RDjexuBeuTFASQ57nb359trB/o1i5P+LV+2/pK6IPGxEt01n5UkQoc0VI8k76G1DP7Yk4JXSLzv0k4Eis/UeWZ24hQJbtYzyedjQCFk7cZxW03Wn6fztg3BUVFCg</p>
-        <p>XlksjVklcbi3RvLSfxCgZSFT8jmVYnWzlUQoI7NI2or/o2G3ZN7/OJiRfas1tQHesExVAem0LGYS9bNhA==</p>
-            <img src="{{ public_path('img_pdf/qr_umc-075.png') }}" alt="QR" width="90px" class="code-img">
+        <p>QQF/7eDAQWAJSotcd4qtddykwz7P1gZg3/fYFBIUNZ1+RVtaP+IAR3OwaSkHtUjXJXxxNKKbpuczQ7F2/oIMh4sGALg3JyjALDcWH0N8zqopbQKl1vPwialGZGh0a8lGTa</p>
+        <p>cc9qW2cHwF6ssK7GAwtuFf2tXnq/sXIRQNaZap06jKJCZNZCD0XJV060CH9zS4wy+eRn4OfOZigl3XZGdK7fNoA9dJk77/H4En4W4Lz1jrByR1CcpKbZzOIZDwSsMkV7</p>
+        <p>RUC0Awz3ESCOPQSuTikbuALjytXo63BLfA+8S3R2WgzJJYDwuroKT4MbAT9xsT8zDBo1KRTpYOoy7CYwQ0FQ==</p>
+            <img src="{{ public_path('img_pdf/qr_umc-074.png') }}" alt="QR" width="90px" class="code-img">
     </div>
     <div class="uvem">
-        <p>C.c.p. Dirección General de Normas, DGN.</p>
-        <p>C.c.p. Gerente del Organismo Certificador del CIDAM A.C.</p>
-        <p>C.c.p. Expediente de la Unidad de Verificación del UMSNH.</p>
-        <img src="{{ public_path('img_pdf/sello_uvem.png') }}" alt="Logo UVEM" width="125px" class="uvem-img"><br><br>
-        <p>_________________________________________________________________________________________________________________</p>
-        <center><p>Fin del documento</p></center>
-        <p style="text-align: right; font-size: 10px;">Entrada en vigor: 22-06-2024</p>
-        <p style="text-align: right; font-size: 10px;">F-UV-02-04 Ver 11 Página 1 de 1</p>
+        <strong><p>C.c.p Gerente del Organismo Certificador del CIDAM A.C.</p></strong>
+        <strong><p>C.c.p Expediente de la Unidad de Inspección del UMSNH.</p></strong>
+        <img src="{{ public_path('img_pdf/sello_uvem.png') }}" alt="Logo UVEM" width="125px" class="uvem-img"><br>
+        <p>_______________________________________________________________________________________________________________</p>
+        <strong><center>Fin del documento</center></strong>
+        <p style="text-align: right; font-size: 10px;">Entrada en vigor: 03-09-2022</p>
+        <p style="text-align: right; font-size: 10px;">F-UV-02-11 Ver 4 Página 1 de 1</p>
     </div>
     <div class="footer-bar">
         <p>Francisco J. Múgica S/N · Col. Felicitas del Rio · CP. 58040 · Morelia Mich. · Tel. 443 322 3500 · Ext. 4124 · unidadverificacion@cidam.org</p>
