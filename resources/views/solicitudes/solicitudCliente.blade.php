@@ -8,7 +8,7 @@ $isNavbar = false;
 
 @extends('layouts.layoutMaster')
 
-@section('title', 'solicitud-cliente')
+@section('title', 'Solicitud de información del cliente')
 
 
 <!-- Vendor Styles -->
@@ -90,40 +90,62 @@ $isNavbar = false;
 
 
   <div class="bs-stepper-content">
-    
-    <form onSubmit="return false" >
+      <form action="{{ url('/solicitud-cliente-registrar') }}" method="POST" role="form" enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
       <!-- información del cliente -->
       <div id="account-details" class="content">
         <div class="content-header mb-4">
-          <h6 class="mb-0">Informacion del cliente</h6>
+          <h6 class="mb-0">Información del cliente</h6>
           <small>información del cliente.</small>
         </div>
         <div class="row g-5">
-          <div class="col">
+          <div class="col-lg-6 col-md-6 col-sm-12">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="username" name="nameCliente" class="form-control" placeholder="Introduce tu nombre completo" required />
-              <label for="username">Nombre del Cliente</label>
+             <select class="form-control" name="regimen" id="regimen">
+                <option value="Persona física">Persona física</option>
+                <option value="Persona moral">Persona moral</option>
+             </select>
+              <label for="username">Régimen fiscal</label>
+            </div>
+          </div> 
+          <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="form-floating form-floating-outline">
+              <input maxlength="13" type="text" name="rfc" class="form-control" placeholder="Introduce el RFC" required />
+              <label for="username">RFC</label>
+            </div>
+          </div> 
+          <div style="display: none" id="representante" class="col-lg-12 col-md-12 col-sm-12">
+            <div class="form-floating form-floating-outline">
+              <input id="nombreRepresentante" type="text" name="representante" class="form-control" placeholder="Introduce el nombre del representante legal"  />
+              <label for="username">Representante legal</label>
+            </div>
+          </div> 
+          <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="form-floating form-floating-outline">
+              <input type="text" id="username" name="razon_social" class="form-control" placeholder="Introduce tu nombre completo" required />
+              <label for="username">Nombre del cliente/empresa</label>
             </div>
           </div>      
-          <div class="col">
+          <div class="col-lg-4 col-md-4 col-sm-12">
             <div class="form-floating form-floating-outline">
-              <input type="email" id="email" name="emailCliente" class="form-control" placeholder="Introduce tu correo electrónico" aria-label="john.doe" required />
+              <input type="email" id="email" name="correo" class="form-control" placeholder="Introduce tu correo electrónico" aria-label="john.doe" required />
               <label for="email">Correo Electrónico</label>
             </div>
           </div>
-          <div class="col">
+          <div class="col-lg-4 col-md-4 col-sm-12">
             <div class="form-floating form-floating-outline">
-              <input type="tel" id="telefono" name="telCliente" class="form-control" placeholder="Introduce tu numero de telefono" pattern="[0-9]{10}" required title="El teléfono debe tener 10 dígitos numéricos." />
-              <label for="username">Telefono</label>
+              <input  maxlength="10" type="tel" id="telefono" name="telefono" class="form-control" placeholder="Introduce tu numero de telefono" pattern="[0-9]{10}" required title="El teléfono debe tener 10 dígitos numéricos." />
+              <label for="username">Teléfono</label>
             </div>
           </div>
           <hr>
           <!-- botones  -->
           <div class="col-12 d-flex justify-content-between">
-            <button class="btn btn-outline-secondary btn-prev" disabled> <i class="ri-arrow-left-line me-sm-1"></i>
+            <button type="button" class="btn btn-outline-danger btn-prev" disabled> <i class="ri-arrow-left-line me-sm-1"></i>
               <span class="align-middle d-sm-inline-block d-none">Anterior</span>
             </button>
-            <button class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Siguiente</span> <i class="ri-arrow-right-line"></i></button>
+            <button type="button" class="btn btn-primary btn-next"> <span class="align-middle d-sm-inline-block d-none me-sm-1">Siguiente</span> <i class="ri-arrow-right-line"></i></button>
           </div>
         </div>
         
@@ -142,7 +164,7 @@ $isNavbar = false;
                     <i class="ri-ink-bottle-fill"></i>
                     <small>Mezcal.</small>
                   </span>
-                  <input name="customMezcal" class="form-check-input" type="checkbox" value="" id="customRadioIcon1" />
+                  <input name="producto[]" value="1" class="form-check-input" type="checkbox" value="" id="customRadioIcon1" />
                 </label>
               </div>
             </div>
@@ -153,7 +175,7 @@ $isNavbar = false;
                     <i class="ri-ink-bottle-fill"></i>
                     <small>Bebida alcohólica preparada que contiene Mezcal</small>
                   </span>
-                  <input name="customBebidaMezcal" class="form-check-input" type="checkbox" value="" id="customRadioIcon2" />
+                  <input name="producto[]" value="2" class="form-check-input" type="checkbox" value="" id="customRadioIcon2" />
                 </label>
               </div>
             </div>
@@ -164,7 +186,7 @@ $isNavbar = false;
                     <i class="ri-goblet-fill"></i>
                     <small>Cóctel que contiene Mezcal</small>
                   </span>
-                  <input name="customCoctelMezcal" class="form-check-input" type="checkbox" value="" id="customRadioIcon3" />
+                  <input name="producto[]" value="3" class="form-check-input" type="checkbox" value="" id="customRadioIcon3" />
                 </label>
               </div>
             </div>
@@ -175,7 +197,7 @@ $isNavbar = false;
                     <i class="ri-goblet-2-fill"></i>
                     <small>Licor y/o crema que contiene Mezcal</small>
                   </span>
-                  <input name="customLicorMezcal" class="form-check-input" type="checkbox" value="" id="customRadioIcon4" />
+                  <input name="producto[]" value="4" class="form-check-input" type="checkbox" value="" id="customRadioIcon4" />
                 </label>
               </div>
             </div>
@@ -191,7 +213,7 @@ $isNavbar = false;
                   <span class="custom-option-body">
                     <small>NOM-070-SCFI-2016</small>
                   </span>
-                  <input name="customNOM-070" class="form-check-input" type="checkbox" value="" id="customRadioIcon5" />
+                  <input name="norma[]" class="form-check-input" type="checkbox" value="1" id="customRadioIcon5" />
                 </label>
               </div>
             </div>
@@ -201,7 +223,7 @@ $isNavbar = false;
                   <span class="custom-option-body">
                     <small>NOM-251-SSA1-2009</small>
                   </span>
-                  <input name="customNOM-251" class="form-check-input" type="checkbox" value="" id="customRadioIcon6" />
+                  <input name="norma[]" class="form-check-input" type="checkbox" value="2" id="customRadioIcon6" />
                 </label>
               </div>
             </div>
@@ -211,18 +233,18 @@ $isNavbar = false;
                   <span class="custom-option-body">
                     <small>NMX-V-052-NORMEX-2016</small>
                   </span>
-                  <input name="customNMX-V" class="form-check-input" type="checkbox" value="" id="customRadioIcon7" />
+                  <input name="norma[]" class="form-check-input" type="checkbox" value="3" id="customRadioIcon7" />
                 </label>
               </div>
             </div>
           </div>
           <hr>
           <div class="col-12 d-flex justify-content-between mt-3">
-            <button class="btn btn-outline-secondary btn-prev">
+            <button type="button" class="btn btn-outline-danger btn-prev">
               <i class="ri-arrow-left-line me-sm-1"></i>
               <span class="align-middle d-sm-inline-block d-none">Anterior</span>
             </button>
-            <button class="btn btn-primary btn-next">
+            <button type="button" class="btn btn-primary btn-next">
               <span class="align-middle d-sm-inline-block d-none">Siguiente</span>
               <i class="ri-arrow-right-line"></i>
             </button>
@@ -234,7 +256,7 @@ $isNavbar = false;
       <!-- Address -->
       <div id="address" class="content">
         <div class="content-header mb-4">
-            <h6 class="mb-0">Domicilio</h6>
+            <h6 class="mb-0">Domicilio Fiscal</h6>
             <small>Ingrese los datos del primer domicilio fiscal</small>
         </div>
         <div class="row g-3">
@@ -264,7 +286,7 @@ $isNavbar = false;
             </div>
             <div class="col-md-2">
                 <div class="form-floating form-floating-outline">
-                    <input type="text" class="form-control" id="cp1" name="cp1" required placeholder="" pattern="[0-5]{6}" required title="El codigo postal debe tener 5 dígitos numéricos.">
+                    <input type="text" class="form-control" id="cp1" name="cp1"  placeholder=""  title="El codigo postal debe tener 5 dígitos numéricos.">
                     <label for="cp1">C.P.</label>
                 </div>
             </div>
@@ -308,7 +330,7 @@ $isNavbar = false;
             </div>
             <div class="col-md-2">
                 <div class="form-floating form-floating-outline">
-                    <input type="text" class="form-control" id="cp2" name="cp2" placeholder=" " required placeholder="" pattern="[0-5]{6}" required title="El codigo postal debe tener 5 dígitos numéricos.">
+                    <input type="text" class="form-control" id="cp2" name="cp2" placeholder=" "  title="El codigo postal debe tener 5 dígitos numéricos.">
                     <label for="cp2">C.P.</label>
                 </div>
             </div>
@@ -327,11 +349,11 @@ $isNavbar = false;
 
         <hr>
         <div class="col-12 d-flex justify-content-between mt-3">
-            <button class="btn btn-outline-secondary btn-prev">
+            <button type="button" class="btn btn-outline-danger btn-prev">
                 <i class="ri-arrow-left-line me-sm-1"></i>
                 <span class="align-middle d-sm-inline-block d-none">Anterior</span>
             </button>
-            <button class="btn btn-primary btn-next">
+            <button type="button" class="btn btn-primary btn-next">
                 <span class="align-middle d-sm-inline-block d-none">Siguiente</span>
                 <i class="ri-arrow-right-line"></i>
             </button>
@@ -348,7 +370,7 @@ $isNavbar = false;
             <div class="row g-5">
               <div class="col-12">
                 <div class="form-floating form-floating-outline mb-6">
-                  <textarea class="form-control h-px-100" id="certification-details" name="detallesCertificado" required placeholder=""></textarea>
+                  <textarea maxlength="2000" class="form-control h-px-100" id="certification-details" name="info_procesos" required placeholder=""></textarea>
                   <label for="certification-details">Describa los procesos y productos a certificar</label>
                 </div>
               </div>
@@ -356,10 +378,10 @@ $isNavbar = false;
             <hr>
           <!-- botones  -->
             <div class="col-12 d-flex justify-content-between">
-              <button class="btn btn-outline-secondary btn-prev"> <i class="ri-arrow-left-line me-sm-1"></i>
+              <button type="button" class="btn btn-outline-danger btn-prev"> <i class="ri-arrow-left-line me-sm-1"></i>
                 <span class="align-middle d-sm-inline-block d-none">Anterior</span>
               </button>
-              <button class="btn btn-primary btn-submit">Enviar</button>
+              <button type="submit" class="btn btn-primary btn-submit">Enviar solicitud</button>
             </div>
           <!--   -->
         </div>
@@ -373,4 +395,3 @@ $isNavbar = false;
 @section('page-script')
 
 @vite(['resources/assets/js/solicitud-cliente.js'])
-
