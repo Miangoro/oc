@@ -67,8 +67,8 @@
         </svg>
     </div>
     <h1 class="title">Registro exitoso.</h1>
-    <p class="message">El proceso se ha realizado correctamente. Le hemos enviado un correo electrónico con el enlace para verificar su cuenta antes de ingresar a la plataforma.</p>
-    <a class="button" href="{{ route('login') }}">Ir al login</a> <!-- Enlace al login usando la ruta de Laravel -->
+    <p class="message">Su solicitud se ha registrado exitosamente. Nos pondremos en contacto con usted lo más pronto posible para dar seguimiento a su proceso de certificación de mezcal.</p>
+    <a class="button" href="{{ route('login') }}">Ir al inicio de sesión</a> <!-- Enlace al login usando la ruta de Laravel -->
 </div>
 
 </body>

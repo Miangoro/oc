@@ -7,6 +7,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\empresa;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 class clientesProspectoController extends Controller
 {
@@ -27,6 +29,21 @@ class clientesProspectoController extends Controller
       'userDuplicates' => $userDuplicates,
     ]);
   }
+
+  public function info($id)
+    {   
+      $res = DB::select('SELECT e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
+      e.calle, e.num, e.colonia, e.municipio, e.estado, e.cp
+      FROM empresa e 
+      JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
+      JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
+      JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
+      JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
+      WHERE e.id_empresa='.$id);
+        $pdf = Pdf::loadView('pdfs.SolicitudInfoCliente',['datos'=>$res]);
+        return $pdf->stream('F7.1-01-02  Solicitud de Información del Cliente NOM-070-SCFI-2016 y NMX-V-052-NORMEX-2016 Ed.pdf');
+    }
+
   public function index(Request $request)
   {
     $columns = [

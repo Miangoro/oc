@@ -379,11 +379,11 @@ $(function () {
 
     // sweetalert for confirmation of delete
     Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      title: '¿Está seguro?',
+      text: "No podrá revertir este evento",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Si, eliminar',
       customClass: {
         confirmButton: 'btn btn-primary me-3',
         cancelButton: 'btn btn-label-secondary'
@@ -406,16 +406,16 @@ $(function () {
         // success sweetalert
         Swal.fire({
           icon: 'success',
-          title: 'Deleted!',
-          text: 'The user has been deleted!',
+          title: '¡Eliminado!',
+          text: '¡La solicitud ha sido eliminada correctamente!',
           customClass: {
             confirmButton: 'btn btn-success'
           }
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
-          title: 'Cancelled',
-          text: 'The User is not deleted!',
+          title: 'Cancelado',
+          text: 'La solicitud no ha sido eliminada',
           icon: 'error',
           customClass: {
             confirmButton: 'btn btn-success'
@@ -429,7 +429,7 @@ $(function () {
         var id = $(this).data('id');
         var registro = $(this).data('registro');
             var iframe = $('#pdfViewer');
-            iframe.attr('src', '../solicitudinfo_cliente');
+            iframe.attr('src', '../solicitudinfo_cliente/'+id);
 
             $("#titulo_modal").text("Solicitud de información del cliente");
             $("#subtitulo_modal").text(registro);
