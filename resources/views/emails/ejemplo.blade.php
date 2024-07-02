@@ -16,9 +16,9 @@
     </div>
     
     <div style="padding: 20px; text-align: center;">
-        <h2 style="color: #333333;">NOTIFICACIÓN</h2>
-        <p style="color: #555555; margin-bottom: 10px;">Estimado(a) <strong>Miguel Ángel Gómez Romero</strong>,</p>
-        <p style="color: #555555; margin-bottom: 10px;">Se te ha asignado un certificado para Segunda revisión. Puedes entrar a la Plataforma para realizar la revisión en el siguiente link. Recuerda que debes de tener la sesión abierta para entrar correctamente:</p>
+        <h2 style="color: #333333;">{{$details['title']}}</h2>
+        <p style="color: #555555; margin-bottom: 10px;">Estimado(a) <strong>{{$details['nombre']}}</strong>,</p>
+        <p style="color: #555555; margin-bottom: 10px;">{{$details['contenido']}}</p>
         <a href="https://oc.erpcidam.com" style="display: block; width: 200px; height: 50px; background-color: #0C1444; color: #ffffff; text-align: center; line-height: 50px; text-decoration: none; border-radius: 25px; margin: 20px auto;">Click aquí</a>
     </div>
     

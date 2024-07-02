@@ -9,6 +9,8 @@ use App\Models\empresa_producto;
 use App\Models\empresa_norma;
 use App\Models\empresa_actividad;
 use App\Models\solicitud_informacion;
+use App\Mail\correoEjemplo;
+use Illuminate\Support\Facades\Mail;
 
 class solicitudClienteController extends Controller
 {
@@ -26,8 +28,13 @@ class solicitudClienteController extends Controller
 
       $empresa = new empresa();
       $empresa->razon_social = $request->razon_social;
-      $empresa->domicilio_fiscal = $request->calle1." ".$request->numero1;
-      $empresa->estado = $request->localidad1;
+      $empresa->domicilio_fiscal = $request->calle1." ".$request->numero1." ".$request->colonia1." ".$request->municipio1." ".$request->cp1;
+      $empresa->estado = $request->municipio1;
+      $empresa->calle = $request->calle1;
+      $empresa->num = $request->numero1;
+      $empresa->colonia = $request->colonia1;
+      $empresa->municipio = $request->municipio1;
+      $empresa->cp = $request->cp1;
       $empresa->regimen = $request->regimen;
       $empresa->correo = $request->correo;
       $empresa->telefono = $request->telefono;
@@ -63,9 +70,15 @@ class solicitudClienteController extends Controller
         $solicitud->id_empresa = $id_empresa;
         $solicitud->info_procesos = $request->info_procesos;
         $solicitud->save();
+
+        $details = [
+          'title' => "Solicitud de información al cliente",
+          'nombre' => $empresa->razon_social,
+          'contenido' => "Tu solicitud fué enviada con éxito, a la brevedad posible un miembro del equipo se contactará contigo."
+        ];
       
 
-      
+        Mail::to($request->correo)->send(new correoEjemplo($details));
 
       
 
