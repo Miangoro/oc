@@ -377,6 +377,7 @@ Route::middleware([
 
 //Solicitud de Cliente
 Route::get('/solicitud-cliente', [solicitudClienteController::class, 'index'])->name('solicitud-cliente');
+Route::post('/solicitud-cliente-registrar', [solicitudClienteController::class, 'registrar'])->name('solicitud-cliente-registrar');
 
 //Enviar Correo
 Route::get('/enviar-correo', [EnviarCorreoController::class, 'enviarCorreo']);

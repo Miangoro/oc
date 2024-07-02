@@ -46,7 +46,7 @@ $navbarDetached = ($navbarDetached ?? '');
           <div class="nav-item navbar-search-wrapper mb-0">
             <a class="nav-item nav-link search-toggler fw-normal px-0" href="javascript:void(0);">
               <i class="ri-search-line ri-22px scaleX-n1-rtl me-3"></i>
-              <span class="d-none d-md-inline-block text-muted">Search (Ctrl+/)</span>
+              <span class="d-none d-md-inline-block text-muted">Buscar (Ctrl+/)</span>
             </a>
           </div>
         </div>
@@ -64,35 +64,6 @@ $navbarDetached = ($navbarDetached ?? '');
             <!-- /Search -->
           @endif
 
-          <!-- Language -->
-          <li class="nav-item dropdown-language dropdown">
-            <a class="nav-link btn btn-text-secondary rounded-pill btn-icon dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-              <i class='ri-translate-2 ri-22px'></i>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li>
-                <a class="dropdown-item {{ app()->getLocale() === 'en' ? 'active' : '' }}" href="{{url('lang/en')}}" data-language="en" data-text-direction="ltr">
-                  <span class="align-middle">English</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item {{ app()->getLocale() === 'fr' ? 'active' : '' }}" href="{{url('lang/fr')}}" data-language="fr" data-text-direction="ltr">
-                  <span class="align-middle">French</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item {{ app()->getLocale() === 'ar' ? 'active' : '' }}" href="{{url('lang/ar')}}" data-language="ar" data-text-direction="rtl">
-                  <span class="align-middle">Arabic</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item {{ app()->getLocale() === 'de' ? 'active' : '' }}" href="{{url('lang/de')}}" data-language="de" data-text-direction="ltr">
-                  <span class="align-middle">German</span>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <!--/ Language -->
 
           @if($configData['hasCustomizer'] == true)
             <!-- Style Switcher -->
@@ -212,7 +183,7 @@ $navbarDetached = ($navbarDetached ?? '');
             <ul class="dropdown-menu dropdown-menu-end py-0">
               <li class="dropdown-menu-header border-bottom py-50">
                 <div class="dropdown-header d-flex align-items-center py-2">
-                  <h6 class="mb-0 me-auto">Notification</h6>
+                  <h6 class="mb-0 me-auto">Notificaciones</h6>
                   <div class="d-flex align-items-center">
                     <span class="badge rounded-pill bg-label-primary fs-xsmall me-2">8 New</span>
                     <a href="javascript:void(0)" class="btn btn-text-secondary rounded-pill btn-icon dropdown-notifications-all" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark all as read"><i class="ri-mail-open-line text-heading ri-20px"></i></a>
@@ -430,7 +401,7 @@ $navbarDetached = ($navbarDetached ?? '');
               </li>
               <li>
                 <a class="dropdown-item" href="{{ Route::has('profile.show') ? route('profile.show') : url('pages/profile-user') }}">
-                  <i class="ri-user-3-line ri-22px me-3"></i><span class="align-middle">My Profile</span>
+                  <i class="ri-user-3-line ri-22px me-3"></i><span class="align-middle">Mi perfil</span>
                 </a>
               </li>
 
@@ -501,7 +472,7 @@ $navbarDetached = ($navbarDetached ?? '');
                 <li>
                   <div class="d-grid px-4 pt-2 pb-1">
                     <a class="btn btn-sm btn-danger d-flex" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                      <small class="align-middle">Logout</small>
+                      <small class="align-middle">Cerrar sesión</small>
                       <i class="ri-logout-box-r-line ms-2 ri-16px"></i>
                     </a>
                   </div>
@@ -519,7 +490,7 @@ $navbarDetached = ($navbarDetached ?? '');
                   </div>
                 </li>
               @endif
-            </ul>
+             </ul>
           </li>
           <!--/ User -->
         </ul>
@@ -527,7 +498,7 @@ $navbarDetached = ($navbarDetached ?? '');
 
       <!-- Search Small Screens -->
       <div class="navbar-search-wrapper search-input-wrapper {{ isset($menuHorizontal) ? $containerNav : '' }} d-none">
-        <input type="text" class="form-control search-input {{ isset($menuHorizontal) ? '' : $containerNav }} border-0" placeholder="Search..." aria-label="Search...">
+        <input type="text" class="form-control search-input {{ isset($menuHorizontal) ? '' : $containerNav }} border-0" placeholder="Buscar..." aria-label="Buscar...">
         <i class="ri-close-fill search-toggler cursor-pointer"></i>
       </div>
       <!--/ Search Small Screens -->
