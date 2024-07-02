@@ -397,6 +397,9 @@ Route::get('/asignacion_usuario', [CartaAsignacionController::class, 'access_use
 //contrato servicio cliente fisica 
 Route::get('/prestacion_servicio_fisica', [CartaAsignacionController::class, 'ServicioPersonaFisica'])->name('prestacion_servicio_fisica');
 
+//contrato servicio vigente
+Route::get('/prestacion_servicios_vigente', [CartaAsignacionController::class, 'ServicioPersonaVigente'])->name('prestacion_servicios_vigente');
+
 
 
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamen'])->name('dictamen_productor');

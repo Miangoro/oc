@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contrato de prestación de servicios</title>
+    <title>Contrato de prestación de servicios NOM 070 Ed 4 persona fisica VIGENTE</title>
     <style>
     body {
         font-family: Arial, sans-serif;
@@ -152,7 +152,7 @@
                 </table>
                 <p style="text-align: center; margin-top: 10px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                     </p>
                     <p style="text-align: right; margin-top: 10px; font-size: 12px;">
                     1/10
@@ -269,7 +269,7 @@
                 </table>
                 <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                     </p>
                     <p style="text-align: right; margin-top: 20px; font-size: 12px;">
                     2/10
@@ -390,7 +390,7 @@
             </table>
             <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
                 Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-                puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                 </p>
                 <p style="text-align: right; margin-top: 20px; font-size: 12px;">
                 3/10
@@ -437,7 +437,7 @@
             </table>
             <p style="text-align: center; margin-top: 15px; font-size: 10.5px;">
                 Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-                puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                 </p>
                 <p style="text-align: right; margin-top: 20px; font-size: 12px;">
                 4/10
@@ -561,7 +561,7 @@
                 </table>
                 <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                     </p>
                     <p style="text-align: right; margin-top: 20px; font-size: 12px;">
                     5/10
@@ -680,7 +680,7 @@
                 </table>
                 <p style="text-align: center; margin-top: 3px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                     </p>
                     <p style="text-align: right; margin-top: 10px; font-size: 12px;">
                     6/10
@@ -796,7 +796,7 @@
                 </table>
                 <p style="text-align: center; margin-top: 15px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                     </p>
                     <p style="text-align: right; margin-top: 20px; font-size: 12px;">
                     7/10
@@ -830,7 +830,7 @@
                 <img src="{{ public_path('img_pdf/anexo1-.png') }}" alt="Anexo 1" style="max-width: 78%; margin: 0 auto;">
             </div>
             <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
-                Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
             </p>
             <p style="text-align: right; margin-top: 15px; font-size: 12px;">
                 8/10
@@ -907,7 +907,7 @@
     <br>
     <br><br>
                 <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
-                    Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                    Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                 </p>
                 <p style="text-align: right; margin-top: 15px; font-size: 12px;">
                     9/10
@@ -954,7 +954,7 @@
         </p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     </div>
                 <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
-                    Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                    Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                 </p>
                 <p style="text-align: right; margin-top: 15px; font-size: 12px;">
                     10/10
