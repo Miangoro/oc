@@ -377,6 +377,11 @@ Route::middleware([
 
 //Solicitud de Cliente
 Route::get('/solicitud-cliente', [solicitudClienteController::class, 'index'])->name('solicitud-cliente');
+Route::post('/solicitud-cliente-registrar', [solicitudClienteController::class, 'registrar'])->name('solicitud-cliente-registrar');
+
+//Vista formulario registro exitoso 
+Route::get('/Registro_exitoso', [solicitudClienteController::class, 'RegistroExitoso'])->name('Registro_exitoso');
+
 
 //Enviar Correo
 Route::get('/enviar-correo', [EnviarCorreoController::class, 'enviarCorreo']);
@@ -385,7 +390,17 @@ Route::get('/enviar-correo', [EnviarCorreoController::class, 'enviarCorreo']);
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
 Route::get('/solicitudinfo_cliente', [CartaAsignacionController::class, 'info'])->name('solicitud_cliente');
 Route::get('/asignacion_usuario', [CartaAsignacionController::class, 'access_user'])->name('asignacion_usuario');
-Route::get('/solicitudservi',[CartaAsignacionController::class, 'solicitudservi'])->name('solicitudservi');
+
+
+
+
+//contrato servicio cliente fisica 
+Route::get('/prestacion_servicio_fisica', [CartaAsignacionController::class, 'ServicioPersonaFisica'])->name('prestacion_servicio_fisica');
+
+
+
+Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamen'])->name('dictamen_productor');
+
 
 //Clientes prospecto y confirmado
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');

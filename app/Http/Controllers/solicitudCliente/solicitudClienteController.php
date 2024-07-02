@@ -11,6 +11,10 @@ class solicitudClienteController extends Controller
     {
       return view('solicitudes.solicitudCliente');
     }
+
+    public function RegistroExitoso(){
+      return view('solicitudes.Registro_exitoso');
+    }
 }
 
 
