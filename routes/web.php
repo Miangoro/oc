@@ -384,9 +384,9 @@ Route::get('/enviar-correo', [EnviarCorreoController::class, 'enviarCorreo']);
 //Solicitud PDFs
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
 Route::get('/solicitudinfo_cliente', [CartaAsignacionController::class, 'info'])->name('solicitud_cliente');
+Route::get('/asignacion_usuario', [CartaAsignacionController::class, 'access_user'])->name('asignacion_usuario');
+Route::get('/solicitudservi',[CartaAsignacionController::class, 'solicitudservi'])->name('solicitudservi');
 
 //Clientes prospecto y confirmado
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');
 Route::resource('/empresas-list', clientesProspectoController::class);
-
-
