@@ -280,7 +280,7 @@ $isNavbar = false;
             </div>
             <div class="col-md-6">
                 <div class="form-floating form-floating-outline">
-                    <input type="text" class="form-control" id="localidad1" name="localidad1" required placeholder="">
+                    <input type="text" class="form-control" id="localidad1" name="municipio1" required placeholder="">
                     <label for="localidad1">Localidad/Municipio/Ciudad/Estado</label>
                 </div>
             </div>
