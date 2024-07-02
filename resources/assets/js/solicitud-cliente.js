@@ -128,6 +128,22 @@ document.addEventListener('DOMContentLoaded', function() {
           }
       }
 
+      function mostrarRepresentante(){
+
+        var regimen = document.getElementById("regimen").value;
+        var representante = document.getElementById('representante');
+        var nombreRepresentante = document.getElementById('nombreRepresentante');
+        if(regimen=="Persona moral"){ 
+            representante.style.display = "block";
+            nombreRepresentante.setAttribute("required", "required");
+        }
+        if(regimen=="Persona física"){
+            representante.style.display = "none";
+            nombreRepresentante.removeAttribute("required");
+        }
+
+      }
+
       function crearNOM070Section() {
           const nom070Section = document.createElement('div');
           nom070Section.id = 'nom070-section';
@@ -142,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                   <i class="ri-ink-bottle-fill"></i>
                                   <small>Productor de Agave</small>
                               </span>
-                              <input name="customProductoAgave" class="form-check-input" type="checkbox" value="" id="customRadioIcon8" />
+                              <input name="actividad[]" class="form-check-input" type="checkbox" value="1" id="customRadioIcon8" />
                           </label>
                       </div>
                   </div>
@@ -153,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                   <i class="ri-ink-bottle-fill"></i>
                                   <small>Envasador de Mezcal</small>
                               </span>
-                              <input name="customEnvasadorMezcal" class="form-check-input" type="checkbox" value="" id="customRadioIcon9" />
+                              <input name="actividad[]" class="form-check-input" type="checkbox" value="2" id="customRadioIcon9" />
                           </label>
                       </div>
                   </div>
@@ -164,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                   <i class="ri-ink-bottle-fill"></i>
                                   <small>Productor de Mezcal</small>
                               </span>
-                              <input name="customProductorMezcal" class="form-check-input" type="checkbox" value="" id="customRadioIcon10" />
+                              <input name="actividad[]" class="form-check-input" type="checkbox" value="3" id="customRadioIcon10" />
                           </label>
                       </div>
                   </div>
@@ -175,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                   <i class="ri-ink-bottle-fill"></i>
                                   <small>Comercializador de Mezcal</small>
                               </span>
-                              <input name="customComercializadorMezcal" class="form-check-input" type="checkbox" value="" id="customRadioIcon11" />
+                              <input name="actividad[]" class="form-check-input" type="checkbox" value="4" id="customRadioIcon11" />
                           </label>
                       </div>
                   </div>
@@ -200,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                   <i class="ri-ink-bottle-fill"></i>
                                   <small>Productor de bebidas alcohólicas que contienen Mezcal</small>
                               </span>
-                              <input name="Productor_bebidas_alcoholic" class="form-check-input" type="checkbox" value="" id="customRadioIcon12" />
+                              <input name="actividad[]" class="form-check-input" type="checkbox" value="5" id="customRadioIcon12" />
                           </label>
                       </div>
                   </div>
@@ -211,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                   <i class="ri-ink-bottle-fill"></i>
                                   <small>Envasador de bebidas alcohólicas que contienen Mezcal</small>
                               </span>
-                              <input name="Envasador_bebidas_alcoholic" class="form-check-input" type="checkbox" value="" id="customRadioIcon13" />
+                              <input name="actividad[]" class="form-check-input" type="checkbox" value="6" id="customRadioIcon13" />
                           </label>
                       </div>
                   </div>
@@ -222,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                   <i class="ri-ink-bottle-fill"></i>
                                   <small>Productor de Mezcal</small>
                               </span>
-                              <input name="Productor_mezcal" class="form-check-input" type="checkbox" value="" id="customRadioIcon14" />
+                              <input name="actividad[]" class="form-check-input" type="checkbox" value="3" id="customRadioIcon14" />
                           </label>
                       </div>
                   </div>
@@ -233,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                   <i class="ri-ink-bottle-fill"></i>
                                   <small>Comercializador de Mezcal</small>
                               </span>
-                              <input name="Comer_mezcal" class="form-check-input" type="checkbox" value="" id="customRadioIcon15" />
+                              <input name="actividad[]" class="form-check-input" type="checkbox" value="4" id="customRadioIcon15" />
                           </label>
                       </div>
                   </div>
@@ -256,6 +272,11 @@ document.addEventListener('DOMContentLoaded', function() {
           });
       });
 
+      document.getElementById('regimen').addEventListener('change', function() {
+        mostrarRepresentante();
+      
+    });
+  
       mostrarSecciones();
     });
 
@@ -284,10 +305,9 @@ if (typeof wizardIcons !== undefined && wizardIcons !== null) {
       });
     });
   }
-  if (wizardIconsBtnSubmit) {
+  /*if (wizardIconsBtnSubmit) {
     wizardIconsBtnSubmit.addEventListener('click', event => {
       alert('Submitted..!!');
     });
-  }
+  }*/
 }
-
