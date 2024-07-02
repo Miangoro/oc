@@ -33,4 +33,10 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.AsignacionUsuario');
         return $pdf->stream('F7.1-01-46 Carta de asignación de usuario y contraseña para plataforma del OC Ed. 0, Vigente.pdf');
     }
+    public function solicitudservi()
+    {
+        $pdf = Pdf::loadView('pdfs.SolicitudDeServicio');
+        return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
+    }
+    
 }

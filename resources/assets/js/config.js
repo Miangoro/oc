@@ -9,6 +9,7 @@
 
 // JS global variables
 window.config = {
+
   colors: {
     primary: '#666cff',
     secondary: '#6d788d',
@@ -43,7 +44,9 @@ window.config = {
     textMuted: '#7b7d95',
     borderColor: '#464964'
   },
-  enableMenuLocalStorage: true // Enable menu state with local storage support
+  enableMenuLocalStorage: true, // Enable menu state with local storage support
+  displayCustomizer: false,
+  defaultTheme: 2
 };
 
 window.assetsPath = document.documentElement.getAttribute('data-assets-path');
