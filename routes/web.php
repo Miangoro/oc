@@ -406,8 +406,6 @@ Route::get('/prestacion_servicios_vigente', [CartaAsignacionController::class, '
 Route::get('/Contrato_NMX-052', [CartaAsignacionController::class, 'CONTRATO_NMX_052'])->name('Contrato_NMX-052');
 
 
-
-
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamen'])->name('dictamen_productor');
 
 
