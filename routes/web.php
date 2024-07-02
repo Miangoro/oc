@@ -401,6 +401,11 @@ Route::get('/prestacion_servicio_fisica', [CartaAsignacionController::class, 'Se
 Route::get('/prestacion_servicios_vigente', [CartaAsignacionController::class, 'ServicioPersonaVigente'])->name('prestacion_servicios_vigente');
 
 
+//F4.1-01-12 CONTRATO NMX-052 Ed 0
+Route::get('/Contrato_NMX-052', [CartaAsignacionController::class, 'CONTRATO_NMX_052'])->name('Contrato_NMX-052');
+
+
+
 
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamen'])->name('dictamen_productor');
 

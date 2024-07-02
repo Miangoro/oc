@@ -27,11 +27,17 @@ class CartaAsignacionController extends Controller
     return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 persona fisica VIGENTE.pdf');
     }
 
-
+    //vista servicio persona vigente 
     public function ServicioPersonaVigente()
     {
       $pdf = Pdf::loadView('pdfs.prestacion_servicios_vigente');
     return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 VIGENTE.pdf');
+    }
+
+    public function Contrato_NMX_052()
+    {
+      $pdf = Pdf::loadView('pdfs.CONTRATO_NMX-052');
+    return $pdf->stream('F4.1-01-12 CONTRATO NMX-052 Ed 0.pdf');
     }
 
 
