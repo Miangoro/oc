@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>F4.1-01-12 CONTRATO NMX-052 Ed 0</title>
+    <title>F4.1-01-07 Contrato Prestación de Servicios NOM-199 Ed 5 VIGENTE</title>
     <style>
     body {
         font-family: Arial, sans-serif;
@@ -12,7 +12,7 @@
     }
 
     .header {
-       /*  padding: 10px; */
+        padding: 15px;
         text-align: right;
         
     }
@@ -23,15 +23,15 @@
     }
 
     td {
-        padding: 15px;
+        padding: 50px;
         text-align: justify;
         vertical-align: top;
         line-height: 1.5; /* Ajustado para separación normal */
-        border: solid #000000 2px; 
+        border: solid #d4d0d0 2px; 
     }
     .table{
 
-        border: solid #000000 2px; 
+        border: solid #dad7d7 2px; 
     }
 
     .texto{
@@ -212,8 +212,8 @@
 {{-- seccion 2/11 --}}
 <div class="header">
     <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
-    Contrato de prestación de servicios F4.1-01-12 <br> NMX-V-052-NORMEX-2016 <br> Edición 0 <br>
-    Entrada en vigor 03/10/22<br>  <div class="line"></div>
+    Contrato de prestación de servicios <br> NOM-199 F4.1-01-07 <br> Edición 5 <br>
+    Entrada en vigor 09/04/2024<br>  <div class="line"></div>
 </div>
 
     <div class="container mt-3">
