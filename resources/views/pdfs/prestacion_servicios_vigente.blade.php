@@ -404,7 +404,7 @@
                                 lo señalado en la cláusula OCTAVA del
                                 presente documento. Este Manual de
                                 certificación, lo podrá consultar en el sitio
-                                web <b style="color: blue;">www.cidam.org.</b>
+                                web <a href="https://www.cidam.org/sitio/"><b style="color: blue;">www.cidam.org.</a></b>
                             </p>                              
                             <p>c) Que el producto dictaminado y
                                 certificado continúe cumpliendo con los

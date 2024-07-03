@@ -8,11 +8,11 @@
     body {
         font-family: Arial, sans-serif;
         margin: 30px;
-        font-size: 14px;
+        font-size: 12px;
     }
 
     .header {
-        padding: 10px;
+       /*  padding: 10px; */
         text-align: right;
         
     }
@@ -23,14 +23,19 @@
     }
 
     td {
-        padding: 20px;
+        padding: 15px;
         text-align: justify;
         vertical-align: top;
         line-height: 1.5; /* Ajustado para separación normal */
+        border: solid #000000 2px; 
+    }
+    .table{
+
+        border: solid #000000 2px; 
     }
 
     .texto{
-        font-size: 14px;
+        font-size: 12px;
         text-align: justify;
         line-height: 1.5; /* Ajustado para separación normal */
     }
@@ -39,9 +44,6 @@
         padding: 15px;
     }
 
-    .si{
-        padding: 15px;
-    }
 
     .bold {
         font-weight: bold;
@@ -89,7 +91,6 @@
         Contrato de prestación de servicios F4.1-01-12 <br> NMX-V-052-NORMEX-2016 <br> Edición 0 <br>
         Entrada en vigor 03/10/22<br>  <div class="line"></div>
     </div>
-    <br>
     <div class="container mt-3">
         <div class="row">
             <div class="col-md-12">
@@ -97,87 +98,106 @@
                     <tbody>
                         <tr >
                             <td style="width: 50%;">
-                                <p class="bold" style="font-size: 13px;">CONTRATO DE PRESTACIÓN DE SERVICIOS
-                                    QUE CELEBRAN POR UNA PARTE EL CENTRO
-                                    DE INNOVACIÓN Y DESARROLLO
-                                    AGROALIMENTARIO DE MICHOACÁN, A.C. A
-                                    QUIEN EN LO SUCESIVO SE LE DENOMINARÁ
-                                    “EL CIDAM, A.C.”, REPRESENTADO EN ESTE
-                                    ACTO POR SU REPRESENTANTE LEGAL LA
-                                    MTRA. SYLVANA FIGUEROA SILVA Y POR LA
-                                    OTRA “--------”, REPRESENTADO EN ESTE
-                                    ACTO POR SU REPRESENTANTE LEGAL EL C.
-                                    ------- Y A QUIEN EN LO SUCESIVO SE LE
-                                    DENOMINARÁ “EL CLIENTE”, AL TENOR DE
-                                    LOS ANTECEDENTES, DECLARACIONES Y
-                                    CLÁUSULAS SIGUIENTES:</p>
+                                <p class="bold" style="font-size: 11px;">CONTRATO DE PRESTACIÓN DE SERVICIOS QUE
+                                    CELEBRAN POR UNA PARTE EL CENTRO DE
+                                    INNOVACIÓN Y DESARROLLO AGROALIMENTARIO DE
+                                    MICHOACÁN, A.C. A QUIEN EN LO SUCESIVO SE LE
+                                    DENOMINARÁ “EL CIDAM, A.C.”, REPRESENTADO EN
+                                    ESTE ACTO POR SU REPRESENTANTE LEGAL LA MTRA.
+                                    SYLVANA FIGUEROA SILVA Y POR OTRA “----------”,
+                                    REPRESENTADO EN ESTE ACTO POR SU
+                                    REPRESENTANTE LEGAL EL C. ------------- Y A QUIEN
+                                    EN LO SUCESIVO SE LE DENOMINARÁ “EL CLIENTE”,
+                                    AL TENOR DE LOS ANTECEDENTES, DECLARACIONES Y
+                                    CLÁUSULAS SIGUIENTES:
+                                    </p>
                                     <br>
                                     <strong><p style="text-align: center;">ANTECEDENTES</p></strong>
-                                    <p>
-                                        Con fecha del día 31 de enero de 2017 la
-                                        Universidad Michoacana de San Nicolás de
-                                        Hidalgo recibió la acreditación indefinida
-                                        de parte de la Entidad Mexicana de
-                                        Acreditación, Asociación Civil (en lo
-                                        conducente <strong>EMA, A.C.</strong>) bajo la norma
-                                        NMX-EC-17020-IMNC-2014                                       
+                                    <p></p>
+                                    <p><strong>“EL CIDAM, A.C.”</strong>, cuenta con la acreditación por la
+                                        EMA A.C. bajo la norma NMX-EC-17065-IMNC-2014
+                                        ISO/IEC 17065:2012. Evaluación de la conformidad -
+                                        requisitos para organismos que certifican productos,
+                                        procesos y servicios, para el programa de
+                                        Productos, con la Acreditación Número: 144/18 de
+                                        fecha 2018/12/06 y con Fecha de actualización:
+                                        2019/05/16, y aprobados por la DGN en su oficio:
+                                        Of. No. DGN.312.01.2018.3927 de fecha 11 de
+                                        diciembre de 2018 con la autorización de forma
+                                        indefinida mientras se mantenga la Acreditación
+                                        Número: 144/18 otorgada por la ema a.c., con
+                                        alcance a la NOM-199-SCFI-2017.                                                                              
                                     </p>
+                                    <strong><p style="text-align: center;">DECLARACIONES</p></strong>
                                     <p>
-                                        ISO/IEC17020:2012. Requisitos para el
-                                        funcionamiento de diferentes tipos de
-                                        unidades (organismos) que realizan la
-                                        verificación (inspección), para la materia
-                                        de Producto con numero de Acreditación
-                                        Número: UVNOM 129, Número de
-                                        referencia: 17UV2010 y con fecha de
-                                        actualización: 2017/07/10, y con
-                                        aprobación por la Dirección General de
-                                        Normas en su oficio: DGN.312.01.2019.1446
-                                    </p>
+                                        <strong>I. DECLARA “EL CIDAM, A.C.”</strong></p>
+                                    <p>
+                                        <strong>I.I</strong> Mediante las escrituras públicas número
+                                        2,551, volumen 73, de fecha 11 de enero del año
+                                        2012 y número 4304, vol.104, de fecha 25 de febrero
+                                        del 2015, pasadas ante la fe de la Lic. Columba
+                                        Arias Solís, Notario Público número 128, en el estado.
+                                        Se hizo constar la constitución de la asociación civil
+                                        denominada “Centro de Innovación y Desarrollo
+                                        Agroalimentario de Michoacán, Asociación Civil”
+                                    </p>        
                             </td>   
                   
                             <td>
-                                <p>de fecha 06 de mayo de 2019 de manera
-                                    indefinida mientras se mantenga la
-                                    acreditación No. UVNOM 145 otorgada por
-                                    la EMA, A.C. con alcance a la
-                                    NMX-V-052-NORMEX-2016, Bebidas
-                                    Alcohólicas- Bebidas Alcohólicas que
-                                    contienen Mezcal - Denominación,
-                                    Etiquetado y Especificaciones. Por otro
-                                    lado, la Universidad Michoacana de San
-                                    Nicolás de Hidalgo es Asociado Propietario
-                                    del <strong>“CIDAM, A.C.”</strong> según se establece en la
-                                    escritura pública número 2,551, volumen 73,
-                                    de fecha 11 de enero del año 2012.
-                                    Además, se tiene firmado un contrato de
-                                    colaboración vigente para operar la
-                                    Unidad de verificación UVEM NOM 129 de
-                                    la UMSNH en las Instalaciones del CIDAM.
-                                    <strong>“EL CIDAM, A.C.”</strong> solicitará a la Unidad de
-                                    Verificación de la UMSNH el servicio de
-                                    Verificación cada vez que lo requiera.</p>
-                                    <br>
-                                    <strong>“EL CIDAM, A.C.”</strong>, cuenta con la
-                                    acreditación por la EMA, A.C. bajo la
-                                    norma NMX-EC-17065-IMNC-2014 ISO/IEC
-                                    17065:2012. Evaluación de la conformidad -
-                                    requisitos para organismos que certifican
-                                    productos, procesos y servicios, para el
-                                    programa de Productos, con la
-                                    Acreditación Número: 144/18 de fecha
-                                    2018/12/06 y con Fecha de actualización:
-                                    2019/05/16, y aprobados por la DGN en su
-                                    oficio: Of. No. DGN.312.01.2018.3927 de
-                                    fecha 11 de diciembre de 2018 con la
-                                    autorización de forma indefinida mientras
-                                    <br>
+                                <p>bajo la figura de asociación estratégica de
+                                    acuerdo a la ley de ciencia y tecnología, para
+                                    realizar un fin lícito y no lucrativo, cuyo objeto social
+                                    es el fungir como una organización articuladora del
+                                    conocimiento cuyo quehacer será definido por la
+                                    problemática de las cadenas agroalimentarias del
+                                    estado de Michoacán.
+                                </p>
+                                <p>
+                                    <strong>I.II</strong> Que su apoderada legal la Mtra. Sylvana
+                                    Figueroa Silva, Directora Ejecutiva; acredita su
+                                    personalidad con el nombramiento otorgado a su
+                                    favor por la Asamblea de Asociados propietarios
+                                    del “CIDAM, A.C.”, de fecha 03 de marzo de 2022,
+                                    mismo que es protocolizado en la Escritura Publica
+                                    número 20,803, volumen número 618, ante Notario
+                                    Público no. 30 el Lic. Juan Carlos Bolaños Abraham,
+                                    en el cual se le otorgan las facultades suficientes
+                                    para representar al “Centro de Innovación y
+                                    Desarrollo Agroalimentario de Michoacán, A. C.”,                                    
+                                </p>
+                                <p>
+                                    <strong>I.III.</strong> Así mismo manifiesta <strong>“EL CIDAM A.C.”</strong> que tiene
+                                    como domicilio social el ubicado en Kilómetro 8
+                                    antigua carretera a Pátzcuaro s/n Col. Otra no
+                                    especificada en el catálogo C.P. 58341 Morelia,
+                                    Michoacán.
+                                </p>
+                                <p>
+                                    <strong>II.- DECLARA “EL CLIENTE”:</strong>
+                                </p>
+                                <p>
+                                    <strong>II.I.</strong> Que es una sociedad ------- “-------” constituida
+                                    como lo indica el instrumento público número ----,
+                                    de fecha -- ------, a cargo del Licenciado -----,
+                                    Notario público número ---- de la Ciudad de ------.                                                    
+                                </p>
+                                <p>
+                                    <strong>II.II.</strong> Que su representante legal es el <strong>C. -------</strong>
+                                    acredita su personalidad con el instrumento público
+                                    número ----, de fecha -- ------, a cargo del
+                                    Licenciado -----, Notario público número ---- de la
+                                    Ciudad de ------., con la cual se les otorgan
+                                    facultades suficientes para representar a <strong>“EL CLIENTE”</strong>.                                    
+                                </p>
+                                <p>
+                                    <strong>II.III.</strong> Que su registro federal de causantes es: -------.
+                                </p>
                             </td>
                         </tr>
                     </tbody>
                 </table>
                 <br>
-                <p style="text-align: center; margin-top: 10px; font-size: 10.5px;">
+                <p style="text-align: center; margin-top: 5px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
                     puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                     </p>

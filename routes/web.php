@@ -402,6 +402,9 @@ Route::get('/prestacion_servicios_vigente', [CartaAsignacionController::class, '
 //F4.1-01-12 CONTRATO NMX-052 Ed 0
 Route::get('/Contrato_NMX-052', [CartaAsignacionController::class, 'CONTRATO_NMX_052'])->name('Contrato_NMX-052');
 
+//F4.1-01-07 Contrato Prestación de Servicios NOM-199 Ed 5 VIGENTE
+Route::get('/Contrato_prestacion_servicio_NOM-199', [CartaAsignacionController::class, 'Contrato_prestacion_servicio_NOM_199'])->name('Contrato_prestacion_servicio_NOM-199');
+
 
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamen'])->name('dictamen_productor');
 

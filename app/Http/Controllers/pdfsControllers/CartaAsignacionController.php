@@ -41,8 +41,13 @@ class CartaAsignacionController extends Controller
     return $pdf->stream('F4.1-01-12 CONTRATO NMX-052 Ed 0.pdf');
     }
 
+    public function Contrato_prestacion_servicio_NOM_199()
+    {
+      $pdf = Pdf::loadView('pdfs.Contrato_prestacion_servicio_NOM_199');
+    return $pdf->stream('F4.1-01-07 Contrato Prestación de Servicios NOM-199 Ed 5 VIGENTE.pdf');
+    }
 
-
+    
 
     public function access_user()
     {
