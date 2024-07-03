@@ -113,10 +113,15 @@ $(function () {
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $verified = full['regimen'];
+            if($verified=='Persona física'){
+              var $colorRegimen = 'info';
+            }else{
+              var $colorRegimen = 'warning';
+            }
             return `${
               $verified
-                ? '<span class="badge rounded-pill  bg-label-danger">' + $verified + '</span>'
-                : '<span class="badge rounded-pill  bg-label-danger">' + $verified + '</span>'
+                ? '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
+                : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
             }`;
           }
         },

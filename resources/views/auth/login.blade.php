@@ -29,7 +29,7 @@ $customizerHidden = 'customizer-hide';
 <div class="authentication-wrapper authentication-cover">
   <!-- Logo -->
   <a href="{{url('/')}}" class="auth-cover-brand d-flex align-items-center gap-2">
-    <span class="app-brand-logo demo"><img height="150px" src="{{ asset('assets/img/branding/logo.png')}}" alt=""></span>
+    <span class="app-brand-logo demo"><img height="150px" src="{{ asset('assets/img/branding/logo_oc.png')}}" alt=""></span>
     <!--<span class="app-brand-text demo text-heading fw-semibold">{{config('variables.templateName')}}</span>-->
   </a>
   <!-- /Logo -->
