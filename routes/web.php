@@ -382,7 +382,6 @@ Route::post('/solicitud-cliente-registrar', [solicitudClienteController::class, 
 //Vista formulario registro exitoso 
 Route::get('/Registro_exitoso', [solicitudClienteController::class, 'RegistroExitoso'])->name('Registro_exitoso');
 
-
 //Enviar Correo
 Route::get('/enviar-correo', [EnviarCorreoController::class, 'enviarCorreo']);
 
@@ -391,11 +390,7 @@ Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->na
 Route::get('/solicitudinfo_cliente', [CartaAsignacionController::class, 'info'])->name('solicitud_cliente');
 Route::get('/asignacion_usuario', [CartaAsignacionController::class, 'access_user'])->name('asignacion_usuario');
 Route::get('/solicitudservi', [CartaAsignacionController::class, 'solicitudservi'])->name('solicitudservi');
-
-//contrato servicio cliente fisica 
 Route::get('/prestacion_servicio_fisica', [CartaAsignacionController::class, 'ServicioPersonaFisica'])->name('prestacion_servicio_fisica');
-
-//PDF Dictamen de instalaciones
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamenp'])->name('dictamen_productor');
 Route::get('/dictamen_envasador', [CartaAsignacionController::class, 'dictamene'])->name('dictamen_envasador');
 Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dictamenc'])->name('dictamen_comercializador');
