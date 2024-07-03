@@ -91,6 +91,18 @@
           "slug": "laravel-example-user-management"
         }
       ]
+    },
+    {
+      "name": "Catalogo",
+      "icon": "menu-icon ri-book-open-fill",
+      "slug": "laravel-example",
+      "submenu": [
+        {
+          "url": "laravel/user-management",
+          "name": "Marcas",
+          "slug": "laravel-example-user-management"
+        }
+      ]
     }
   ]
 }
