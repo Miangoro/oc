@@ -95,12 +95,12 @@
                 </div>
                 <table class="table, no-top-border">
                     <tr>
-                        <td colspan="2" style="font-weight: bold;">Nombre del cliente:</td>
-                        <td style="font-weight: bold">Fecha de solicitud:</td>
+                        <td colspan="2" style="font-weight: bold;">Nombre del cliente: {{$datos[0]->razon_social}}</td>
+                        <td style="font-weight: bold">Fecha de solicitud: {{$datos[0]->fecha_registro}}</td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="font-weight: bold">Correo Electrónico:</td>
-                        <td style="font-weight: bold">Teléfono:</td>
+                        <td colspan="2" style="font-weight: bold">Correo Electrónico: {{$datos[0]->correo}}</td>
+                        <td style="font-weight: bold">Teléfono: {{$datos[0]->telefono}}</td>
                     </tr>
 
                     <tr>
@@ -112,17 +112,17 @@
                         </td>
                         <td class="custom-table-cell spaced-text" colspan="2">
                             <!-- Contenido del lado derecho, primer elemento -->
-                            <span style="margin-right: 200px;">Calle:</span>
-                            <span style="margin-right: 30px;">Número:</span>
-                            <span style="margin-right: 20px;">Colonia:</span>
+                            <span style="margin-right: 90px;">Calle: {{$datos[0]->calle}}</span>
+                            <span style="margin-right: 20px;">Número: {{$datos[0]->num}}</span>
+                            <span style="margin-right: 90px;">Colonia: {{$datos[0]->colonia}}</span>
 
                         </td>
                     </tr>
                     <tr>
                         <td class="custom-table-cell spaced-text" colspan="2">
                             <!-- Contenido del lado derecho, segundo elemento -->
-                            <span style="margin-right: 200px">Localidad/Municipio/Ciudad/Estado:</span>
-                            <span>C.P.:</span>
+                            <span style="margin-right: 200px">Localidad/Municipio/Ciudad/Estado: {{$datos[0]->municipio}}</span>
+                            <span>C.P.: {{$datos[0]->cp}}</span>
                         </td>
                     </tr>
                     <tr>
@@ -187,20 +187,99 @@
                 </tr>
 
             </table>
+            @php
+                
+            
+
+                $primera = "-----";
+                $segunda = "-----";
+                $tercera = "-----";
+                $cuarta = "-----";
+                $norma070 = "-----";
+                $norma251 = "-----";
+                $norma052 = "-----";
+                $actividad1 = "-----";
+                $actividad2 = "-----";
+                $actividad3 = "-----";
+                $actividad4 = "-----";
+                $actividad5 = "-----";
+                $actividad6 = "-----";
+                $actividad7 = "-----";
+                $producto = [];
+                $norma = [];
+                $actividad = [];
+                @endphp
+
+            @foreach ($datos as $dato)
+                
+            @php array_push($producto,$dato->id_producto); 
+                array_push($norma,$dato->id_norma);
+                array_push($actividad,$dato->id_actividad); @endphp
+                
+            @endforeach
+
+            @php
+                if(in_array("1",$producto)){
+                    $primera = "X";
+                }
+                if(in_array("2",$producto)){
+                    $segunda = "X";
+                }
+                if(in_array("3",$producto)){
+                    $tercera = "X";
+                }
+                if(in_array("4",$producto)){
+                    $cuarta = "X";
+                }
+
+                if(in_array("1",$norma)){
+                    $norma070 = "X";
+                }
+                if(in_array("2",$norma)){
+                    $norma251 = "X";
+                }
+
+                if(in_array("3",$norma)){
+                    $norma052 = "X";
+                }
+
+                if(in_array("1",$actividad)){
+                    $actividad1 = "X";
+                }
+                if(in_array("2",$actividad)){
+                    $actividad2 = "X";
+                }   
+                if(in_array("3",$actividad)){
+                    $actividad3 = "X";
+                }
+                if(in_array("4",$actividad)){
+                    $actividad4 = "X";
+                }
+                if(in_array("5",$actividad)){
+                    $actividad5 = "X";
+                }
+                if(in_array("6",$actividad)){
+                    $actividad6 = "X";
+                }
+                if(in_array("7",$actividad)){
+                    $actividad7 = "X";
+                }
+             @endphp
+
             <table class="no-top-border">
                 <tr>
                     <td>Mezcal</td>
-                    <td style="width: 20px;">&nbsp;</td>
+                    <td style="width: 20px;">&nbsp;{{$primera}}</td>
                     <td>Bebida alcohólica <br> preparada que contiene <br> Mezcal</td>
-                    <td style="width: 20px;">&nbsp;</td>
+                    <td style="width: 20px;">&nbsp;{{$segunda}}</td>
                     <td>Cóctel que <br> contiene Mezcal</td>
-                    <td style="width: 20px;">&nbsp;</td>
+                    <td style="width: 20px;">&nbsp;{{$tercera}}</td>
                     <td style="width: 50px;">&nbsp;</td>
 
                 </tr>
                 <tr>
                     <td>Licor y/o crema que <br>contiene Mezcal </td>
-                    <td>&nbsp;</td>
+                    <td>&nbsp;{{$cuarta}}</td>
                     <td colspan="5">&nbsp;</td>
                 </tr>
             </table>
@@ -217,15 +296,15 @@
             <table class="no-top-border">
                 <tr>
                     <td>NOM-070-SCFI-2016</td>
-                    <td>&nbsp;</td>
+                    <td>&nbsp;{{$norma070}}</td>
                     <td>NOM-251-SSA1-2009</td>
-                    <td>&nbsp;</td>
+                    <td>&nbsp;{{$norma251}}</td>
                     <td style="width: 50px;">&nbsp;</td>
 
                 </tr>
                 <tr>
                     <td>NMX-V-052-NORMEX-2016</td>
-                    <td>&nbsp;</td>
+                    <td>&nbsp;{{$norma052}}</td>
                     <td colspan="3">&nbsp;</td>
                 </tr>
             </table>
@@ -241,24 +320,24 @@
             <table class="no-top-border">
                 <tr>
                     <td>Productor de Agave</td>
-                    <td>&nbsp;</td>
+                    <td>&nbsp;{{$actividad1}}</td>
                     <td>Envasador de Mezcal</td>
-                    <td>&nbsp;</td>
+                    <td>&nbsp;{{$actividad2}}</td>
                     <td>&nbsp;</td>
 
 
                 </tr>
                 <tr>
                     <td>Productor de Mezcal</td>
-                    <td>&nbsp;</td>
+                    <td>&nbsp;{{$actividad3}}</td>
                     <td>Comercializador de Mezcal</td>
-                    <td>&nbsp;</td>
+                    <td>&nbsp;{{$actividad4}}</td>
                     <td style="width: 50px;">&nbsp;</td>
 
                 </tr>
             </table>
             <br>
-            <p style="text-align: center; margin-top: 70px;">
+            <p style="text-align: center; margin-top: 60px;">
                 Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
                 puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
             </p>
@@ -280,9 +359,9 @@
             <table class="no-top-border">
                 <tr>
                     <td style="font-weight: bold">Productor de bebidas <br> alcohólicas que contienen <br> Mezcal</td>
-                    <td>&nbsp;</td>
+                    <td>&nbsp;{{$actividad5}}</td>
                     <td style="font-weight: bold">Envasador de bebidas <br> alcohólicas que contienen <br> Mezcal</td>
-                    <td style="width: 20px;">&nbsp;</td>
+                    <td style="width: 20px;">&nbsp;{{$actividad6}}</td>
                     <td style="width: 50px;" colspan="2">&nbsp;</td>
 
 
@@ -290,7 +369,7 @@
                 <tr>
                     <td style="font-weight: bold">Comercializador de bebidas <br> alcohólicas que contienen <br> Mezcal
                     </td>
-                    <td style="width: 20px;">&nbsp;</td>
+                    <td style="width: 20px;">&nbsp;{{$actividad7}}</td>
                     <td></td>
                     <td colspan="3">&nbsp;</td>
 
@@ -302,6 +381,7 @@
                     <!-- Contenido del lado izquierdo -->
                     <br>
                     <p style="text-align: center; font-weight: bold; margin-top: 0px">Información sobre los Procesos y productos a certificar por el cliente:</p>
+                    <p style="text-align: center; ">{{$datos[0]->info_procesos}}</p>
                 </td>
             </table>
 
@@ -309,9 +389,10 @@
                 <tr>
                     <td style="text-align: center; font-weight: bold;">NOMBRE DEL CLIENTE SOLICITANTE:</td>
                 </tr>
+                <tr> <td style="text-align: center; font-weight: bold; font-size:16px">{{$datos[0]->representante ?? $datos[0]->razon_social}}</td></tr>
             </table>
             <table class="no-top-border">
-                <td style="height: 40px; text-align: center; vertical-align: middle; font-weight: bold">
+                <td style="height: 5px; text-align: center; vertical-align: middle; font-weight: bold">
                     Quien queda enterado de todos los requisitos que debe cumplir para proseguir su proceso de
                     certificación.
                 </td>
@@ -371,7 +452,7 @@
             </table>
 
 
-            <p style="text-align: center; margin-top: 120px;">
+            <p style="text-align: center; margin-top: 100px;">
                 Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
                 puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
             </p>

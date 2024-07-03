@@ -3,7 +3,7 @@
 @import './_theme/libs';
 @import './_theme/pages';
 
-$primary-color: #666cff;
+$primary-color: #2eac6b;
 $body-bg: #f7f7f9;
 
 body {
@@ -34,7 +34,7 @@ body {
 // ---------------------------------------------------------------------------
 @include template-menu-style(
   '.bg-menu-theme',
-  #282a42,
+  #0C1444,
   $color: #d7d8ee,
   $active-color: #d7d8ee,
   $active-bg: $primary-color

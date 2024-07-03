@@ -10,7 +10,7 @@ class solicitud_informacion extends Model
     use HasFactory;
     protected $table = 'solicitud_informacion';
     protected $fillable = [
-        'id',
+        'i',
         'id_empresa',
       ];
 }

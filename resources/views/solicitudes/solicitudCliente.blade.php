@@ -135,7 +135,7 @@ $isNavbar = false;
           </div>
           <div class="col-lg-4 col-md-4 col-sm-12">
             <div class="form-floating form-floating-outline">
-              <input  maxlength="10" type="tel" id="telefono" name="telefono" class="form-control" placeholder="Introduce tu numero de telefono" pattern="[0-9]{10}" required title="El teléfono debe tener 10 dígitos numéricos." />
+              <input  maxlength="10" type="tel" id="telefono" name="telefono" class="form-control" placeholder="Introduce tu numero de teléfono" required title="El teléfono debe tener 10 dígitos numéricos." />
               <label for="username">Teléfono</label>
             </div>
           </div>
@@ -280,7 +280,7 @@ $isNavbar = false;
             </div>
             <div class="col-md-6">
                 <div class="form-floating form-floating-outline">
-                    <input type="text" class="form-control" id="localidad1" name="localidad1" required placeholder="">
+                    <input type="text" class="form-control" id="localidad1" name="municipio1" required placeholder="">
                     <label for="localidad1">Localidad/Municipio/Ciudad/Estado</label>
                 </div>
             </div>

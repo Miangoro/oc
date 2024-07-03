@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contrato de prestación de servicios</title>
+    <title>Contrato de prestación de servicios NOM 070 Ed 4 persona fisica VIGENTE</title>
     <style>
     body {
         font-family: Arial, sans-serif;
@@ -12,39 +12,38 @@
     }
 
     .header {
+       /*  border: 1px solid rgb(214, 214, 214); */
         padding: 10px;
         text-align: right;
-      
+        
     }
 
     .header img {
         width: 150px;
         float: left;
     }
-
-    table {
+/*     table {
         border: 1px solid rgb(214, 214, 214);
-
     }
-
+ */
     td {
-        border: 1px solid rgb(189, 189, 189); 
+/*         border: 1px solid rgb(226, 222, 222);  */
         padding: 20px;
         text-align: justify;
         vertical-align: top;
-        line-height: 1.5; /* Ajustado para separación normal */
+        line-height: 1.4; /* Ajustado para separación normal */
     }
 
     .texto{
         font-size: 14px;
-        border: 1px solid rgb(189, 189, 189); 
+/*       border: 1px solid rgb(227, 227, 227);  */
         text-align: justify;
         line-height: 1.5; /* Ajustado para separación normal */
     }
 
     .containers{
         padding: 15px;
-        border: 1px solid rgb(189, 189, 189); 
+/*         border: 1px solid rgb(189, 189, 189);  */
     }
 
     .si{
@@ -57,20 +56,12 @@
 
     .line {
             position: absolute;
-            top: 105px; /* Ajuste la posición vertical */
+            top: 110px; /* Ajuste la posición vertical */
             right: 26px; /* Ajusta la posición derecha */
-            width: 70%; /* Largo*/
+            width: 68%; /* Largo*/
             border-bottom: 1.5px solid black; /* Estilo de la línea */
         }
-                /* Ajusta el espaciado entre letras */
-/*         p, td {
-            letter-spacing: 0.1em; 
-        } */
 
-        /* Ajusta el espaciado entre palabras */
-/*         p, td {
-            word-spacing: 0.4em; 
-        } */
     .small-column {
         width: 50%;
      }
@@ -112,7 +103,7 @@
             <div class="col-md-12">
                 <table class="table">
                     <tbody>
-                        <tr>
+                        <tr >
                             <td>
                                 <p class="bold">CONTRATO DE PRESTACIÓN DE SERVICIOS QUE 
                                 CELEBRAN POR UNA PARTE EL CENTRO DE INNOVACIÓN
@@ -159,11 +150,11 @@
                         </tr>
                     </tbody>
                 </table>
-                <p style="text-align: center; margin-top: 15px; font-size: 10.5px;">
+                <p style="text-align: center; margin-top: 10px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                     </p>
-                    <p style="text-align: right; margin-top: 20px; font-size: 12px;">
+                    <p style="text-align: right; margin-top: 10px; font-size: 12px;">
                     1/10
                     </p>
             </div>
@@ -225,7 +216,6 @@
                             <td>
 
                                                 
-                          
                                 <p>
                                     <strong>I. III</strong> Así mismo manifiesta 
                                     <strong>“EL CIDAM, A.C.”</strong> que tiene como domicilio
@@ -273,15 +263,13 @@
                                     <strong>III.II </strong>
                                     Que, en virtud de las anteriores
                                     declaraciones, las partes manifiestan que                                    
-                           
                             </td>
-                      
                         </tr>
                     </tbody>
                 </table>
                 <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                     </p>
                     <p style="text-align: right; margin-top: 20px; font-size: 12px;">
                     2/10
@@ -348,14 +336,13 @@
                                     implementación de los cambios
                                     adecuados cuando sean comunicados por
                                     parte del <strong>“CIDAM, A.C.”.</strong>
+                                    <p></p>
                                     b) <strong>“EL CLIENTE”</strong> deberá sujetarse al
                                     formato F7.1-01-01 Manual de certificación </p>
 
                               
                         </td>      
-                        <td>
-
-                                            
+                        <td>               
                       
                             <p>
                                 NOM-070-SCFI-2016, para no incumplir con
@@ -369,7 +356,7 @@
                                 lo señalado en la cláusula OCTAVA del
                                 presente documento. Este Manual de
                                 certificación, lo podrá consultar en el sitio
-                                web <b style="color: blue;">www.cidam.org.</b>
+                                web <a href="https://www.cidam.org/sitio/"><b style="color: blue;">www.cidam.org.</a>.</b>
                                 <br>
                                 c) Que el producto dictaminado y
                                 certificado continúe cumpliendo con los
@@ -403,7 +390,7 @@
             </table>
             <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
                 Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-                puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                 </p>
                 <p style="text-align: right; margin-top: 20px; font-size: 12px;">
                 3/10
@@ -450,7 +437,7 @@
             </table>
             <p style="text-align: center; margin-top: 15px; font-size: 10.5px;">
                 Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-                puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                 </p>
                 <p style="text-align: right; margin-top: 20px; font-size: 12px;">
                 4/10
@@ -517,10 +504,7 @@
                                             Certificación del CIDAM.
                                             </p>                                 
                             </td>      
-                            <td>
-
-                                                
-                          
+                            <td>                       
                                 <p>
                                     v) <strong>“El CLIENTE”</strong> reconoce y acepta
                                     que la falsedad de documentos o
@@ -577,7 +561,7 @@
                 </table>
                 <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                     </p>
                     <p style="text-align: right; margin-top: 20px; font-size: 12px;">
                     5/10
@@ -585,10 +569,6 @@
             </div>
         </div>
     </div>
-
-
-
-
 
 {{-- seccion 6/10 --}}
 <div class="header">
@@ -602,7 +582,6 @@
                 <table class="table">
                     <tbody>
                         <tr>
-                            
                             <td class="small-column">
                                 <p>confianza de que sus datos no serán
                                     divulgados. En caso contrario “EL CLIENTE”
@@ -621,8 +600,7 @@
                                         algún cambio en lo relativo a los servicios
                                         del “EL CIDAM, A.C.”, así como a recibir y
                                         resolver quejas y apelaciones.                                   
-                                    </p>
-                                    
+                                    </p>                                   
                                     <p>f) <strong>“EL CIDAM, A.C.” </strong>se obliga a que la
                                         información acerca de las actividades de
                                         certificación del producto mediante la
@@ -649,8 +627,6 @@
                                             </p>                                 
                             </td>      
                             <td>
-              
-                          
                                 <p>
                                     exportación vigentes y cancelados, así
                                     como la descripción de los productos
@@ -701,14 +677,12 @@
                             </td>
                         </tr>
                     </tbody>
-
                 </table>
-
-                <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
+                <p style="text-align: center; margin-top: 3px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                     </p>
-                    <p style="text-align: right; margin-top: 15px; font-size: 12px;">
+                    <p style="text-align: right; margin-top: 10px; font-size: 12px;">
                     6/10
                     </p>
             </div>
@@ -816,11 +790,13 @@
                             </td>
                         </tr>
                     </tbody>
-
+            <br>
+            <br>
+            <br>
                 </table>
                 <p style="text-align: center; margin-top: 15px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                    puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                     </p>
                     <p style="text-align: right; margin-top: 20px; font-size: 12px;">
                     7/10
@@ -854,7 +830,7 @@
                 <img src="{{ public_path('img_pdf/anexo1-.png') }}" alt="Anexo 1" style="max-width: 78%; margin: 0 auto;">
             </div>
             <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
-                Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
             </p>
             <p style="text-align: right; margin-top: 15px; font-size: 12px;">
                 8/10
@@ -884,8 +860,7 @@
             <p></p>
             <p style="font-size: 12px;">Entrada en vigor 15/02/2024</p>
         </div>
-        <br>
-        <br>
+        <br><br>
         <p>
             Organismo Certificador del Centro de Innovación y
         </p>
@@ -932,7 +907,7 @@
     <br>
     <br><br>
                 <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
-                    Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                    Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                 </p>
                 <p style="text-align: right; margin-top: 15px; font-size: 12px;">
                     9/10
@@ -976,18 +951,15 @@
         <br><br><br><br>
         <p class="texto">
             XXXXXXXXXX
-        </p>
-        <br>
+        </p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     </div>
                 <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
-                    Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
+                    Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
                 </p>
                 <p style="text-align: right; margin-top: 15px; font-size: 12px;">
-                    9/10
+                    10/10
                 </p>
     </div>
-        <br>
-
-    
+        <br> 
 </body>
 </html>
