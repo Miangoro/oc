@@ -382,7 +382,6 @@ Route::post('/solicitud-cliente-registrar', [solicitudClienteController::class, 
 //Vista formulario registro exitoso 
 Route::get('/Registro_exitoso', [solicitudClienteController::class, 'RegistroExitoso'])->name('Registro_exitoso');
 
-
 //Enviar Correo
 Route::get('/enviar-correo', [EnviarCorreoController::class, 'enviarCorreo']);
 
@@ -391,13 +390,10 @@ Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->na
 Route::get('/solicitudinfo_cliente/{id}', [clientesProspectoController::class, 'info'])->name('solicitud_cliente');
 Route::get('/asignacion_usuario', [CartaAsignacionController::class, 'access_user'])->name('asignacion_usuario');
 Route::get('/solicitudservi', [CartaAsignacionController::class, 'solicitudservi'])->name('solicitudservi');
-
-//contrato servicio cliente fisica 
 Route::get('/prestacion_servicio_fisica', [CartaAsignacionController::class, 'ServicioPersonaFisica'])->name('prestacion_servicio_fisica');
 
 //contrato servicio vigente
 Route::get('/prestacion_servicios_vigente', [CartaAsignacionController::class, 'ServicioPersonaVigente'])->name('prestacion_servicios_vigente');
-
 
 //F4.1-01-12 CONTRATO NMX-052 Ed 0
 Route::get('/Contrato_NMX-052', [CartaAsignacionController::class, 'CONTRATO_NMX_052'])->name('Contrato_NMX-052');
@@ -405,15 +401,9 @@ Route::get('/Contrato_NMX-052', [CartaAsignacionController::class, 'CONTRATO_NMX
 //F4.1-01-07 Contrato Prestación de Servicios NOM-199 Ed 5 VIGENTE
 Route::get('/Contrato_prestacion_servicio_NOM-199', [CartaAsignacionController::class, 'Contrato_prestacion_servicio_NOM_199'])->name('Contrato_prestacion_servicio_NOM-199');
 
-
-Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamen'])->name('dictamen_productor');
-
-
-//PDF Dictamen de instalaciones
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamenp'])->name('dictamen_productor');
 Route::get('/dictamen_envasador', [CartaAsignacionController::class, 'dictamene'])->name('dictamen_envasador');
 Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dictamenc'])->name('dictamen_comercializador');
-
 
 //Clientes prospecto y confirmado
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');
