@@ -14,5 +14,6 @@ class empresa extends Model
         'id_empresa',
         'razon_social',
         'domicilio_fiscal',
+        'tipo',
       ];
 }

@@ -98,7 +98,7 @@
       "slug": "laravel-example",
       "submenu": [
         {
-          "url": "laravel/user-management",
+          "url": "/catalogo/marcas",
           "name": "Marcas",
           "slug": "laravel-example-user-management"
         }
