@@ -16,3 +16,4 @@ class catalogoMarca extends Model
     protected $fillable = ['folio','marca','id_empresa']; // Campos que pueden ser asignados en masa
 
 }
+
