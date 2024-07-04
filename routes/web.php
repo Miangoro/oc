@@ -418,4 +418,6 @@ Route::resource('/empresas-list', clientesProspectoController::class);
 //Catalogo de marcas
 Route::controller(catalogoMarcasController::class) ->group(function(){
 Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catalogoMarcas');
+Route::resource('/marcas-list', clientesProspectoController::class);
+
 });

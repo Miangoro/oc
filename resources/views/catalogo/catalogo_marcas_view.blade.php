@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Clientes prospecto')
+@section('title', 'Catalogo Marcas')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
@@ -48,33 +48,60 @@
                 <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Add User</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-
-
-
-
             <div class="offcanvas-body mx-0 flex-grow-0 h-100">
                 <form class="add-new-user pt-0" id="addNewUserForm">
                     <input type="hidden" name="id" id="user_id">
                     <!-- muestra clientes tipo2 -->
                     <div class="form-floating form-floating-outline mb-5">
-                        <select id="marca" name="marca" class="select2 form-select">
-                            <option value=""></option>
+                        <select id="cliente" name="cliente" class="select2 form-select">
+                            <option value="">Selecciona cliente</option>
                             @foreach ($clientes as $cliente)
                                 <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
                             @endforeach
                         </select>
-                        <label for="marca">Cliente</label>
+                        <label for="cliente">Cliente</label>
                     </div>
-                    <br>
-                    <!-- muestra nombre marcas -->
+
+                    
+
+                    <!-- nombre marcas -->
                     <div class="form-floating form-floating-outline mb-5">
                         <input type="text" id="add-user-company" name="company" class="form-control"
                             placeholder="Web Developer" aria-label="jdoe1" />
                         <label for="add-user-company">Nombre de la marca</label>
                     </div>
+                    
+                    <!-- muestra nombre marcas -->
+                    <div class="form-floating form-floating-outline mb-5">
+                        <select id="marca-nombre" name="marca" class="select2 form-select">
+                            <option value="">Nombre de la marca</option>
+                            @foreach ($opciones as $opcion)
+                                <option value="{{ $opcion->id_marca }}">{{ $opcion->marca }}</option>
+                            @endforeach
+                        </select>
+                        <label for="marca-nombre">Marca</label>
+                    </div>
+               <!-- folio -->
+               <div class="form-floating form-floating-outline mb-5">
+                <input type="text" id="add-user-company" name="company" class="form-control"
+                    placeholder="Web Developer" aria-label="jdoe1" />
+                <label for="add-user-company">Folio</label>
+            </div>
 
-                    <br>
-
+                    <!-- Campo para subir PDF -->
+                    <div class="form-floating form-floating-outline mb-5">
+                        <input type="file" id="formato_pdf" name="formato_pdf" class="form-control"
+                            aria-label="PDF Formato">
+                        <label for="formato_pdf">Formato de solicitud (PDF)</label>
+                    </div>
+                    <!-- Campo para seleccionar fecha de vigencia -->
+                    <div class="form-floating form-floating-outline mb-5">
+                        <input type="text" id="vigencia" name="vigencia" class="form-control" placeholder="YYYY-MM-DD"
+                            aria-label="Fecha de Vigencia" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                        <label for="vigencia">Fecha de vigencia</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Submit</button>
+                    <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
 
 
                 </form>

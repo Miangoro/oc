@@ -11,15 +11,31 @@ $(function () {
     select2 = $('.select2'),
     userView = baseUrl + 'app/user/view/account',
     offCanvasForm = $('#offcanvasAddUser');
-
-  if (select2.length) {
-    var $this = select2;
-    select2Focus($this);
-    $this.wrap('<div class="position-relative"></div>').select2({
-      placeholder: 'Selecciona marca',
-      dropdownParent: $this.parent()
+/*PLACEHOLDER DE SELECTS*/
+    $(document).ready(function() {
+      var select2 = $('.select2');
+    
+      if (select2.length) {
+        select2.each(function() {
+          var $this = $(this);
+          var placeholder = '';
+    
+          if ($this.attr('id') === 'marca-nombre') {
+            placeholder = 'Nombre de la marca';
+          } else if ($this.attr('id') === 'cliente') {
+            placeholder = 'Selecciona cliente';
+          }
+    
+          select2Focus($this);
+          $this.wrap('<div class="position-relative"></div>').select2({
+            placeholder: placeholder,
+            dropdownParent: $this.parent()
+          });
+        });
+      }
     });
-  }
+    
+  
 
   // ajax setup
   $.ajaxSetup({
