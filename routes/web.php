@@ -100,6 +100,8 @@ use App\Http\Controllers\cards\CardStatistics;
 use App\Http\Controllers\cards\CardAnalytics;
 use App\Http\Controllers\cards\CardGamifications;
 use App\Http\Controllers\cards\CardActions;
+use App\Http\Controllers\catalogo_marcas\catalogoMarcas;
+use App\Http\Controllers\catalogo_marcas\catalogoMarcasController;
 use App\Http\Controllers\user_interface\Accordion;
 use App\Http\Controllers\user_interface\Alerts;
 use App\Http\Controllers\user_interface\Badges;
@@ -160,6 +162,7 @@ use App\Http\Controllers\solicitudCliente\solicitudClienteController;
 use App\Http\Controllers\pdfscontrollers\CartaAsignacionController;
 use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
+
 
 
 // Main Page Route
@@ -408,3 +411,9 @@ Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dict
 //Clientes prospecto y confirmado
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');
 Route::resource('/empresas-list', clientesProspectoController::class);
+
+
+//Catalogo de marcas
+Route::controller(catalogoMarcasController::class) ->group(function(){
+Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catalogoMarcas');
+});
