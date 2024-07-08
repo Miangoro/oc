@@ -393,7 +393,7 @@
     <br><br>
     <div class="footer">
         <p>Entrada en vigor: 16-09-2021</p>
-        <p>Página 1 de 4</p>
+        <p>Página 2 de 4</p>
 </div>
 
 
@@ -551,7 +551,7 @@
 
     <div class="footer">
         <p>Entrada en vigor: 16-09-2021</p>
-        <p>Página 1 de 4</p>
+        <p>Página 3 de 4</p>
     </div>
 
 {{-- seccion 4 --}}
@@ -617,7 +617,7 @@
      <br>
             <div class="footer">
             <p>Entrada en vigor: 16-09-2021</p>
-            <p>Página 1 de 4</p>
+            <p>Página 4 de 4</p>
         </div>
 
 

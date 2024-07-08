@@ -408,6 +408,9 @@ Route::get('/Contrato_prestacion_servicio_NOM-199', [CartaAsignacionController::
 //Acta Circunstanciada Para unidades de producción
 Route::get('/acta_circunstanciada_unidades_produccion', [CartaAsignacionController::class, 'acta_circunstanciada_produccion'])->name('acta_circunstanciada_unidades_produccion');
 
+//solicitud informacion cliente NOM-199
+Route::get('/solicitud_Info_ClienteNOM-199', [CartaAsignacionController::class, 'solicitudInfoNOM_199'])->name('solicitud_Info_ClienteNOM-199');
+
 
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamenp'])->name('dictamen_productor');
 Route::get('/dictamen_envasador', [CartaAsignacionController::class, 'dictamene'])->name('dictamen_envasador');
