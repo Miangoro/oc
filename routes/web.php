@@ -394,22 +394,12 @@ Route::get('/solicitudinfo_cliente/{id}', [clientesProspectoController::class, '
 Route::get('/asignacion_usuario', [CartaAsignacionController::class, 'access_user'])->name('asignacion_usuario');
 Route::get('/solicitudservi', [CartaAsignacionController::class, 'solicitudservi'])->name('solicitudservi');
 Route::get('/prestacion_servicio_fisica', [CartaAsignacionController::class, 'ServicioPersonaFisica'])->name('prestacion_servicio_fisica');
-
-//contrato servicio vigente
 Route::get('/prestacion_servicios_vigente', [CartaAsignacionController::class, 'ServicioPersonaVigente'])->name('prestacion_servicios_vigente');
-
-//F4.1-01-12 CONTRATO NMX-052 Ed 0
 Route::get('/Contrato_NMX-052', [CartaAsignacionController::class, 'CONTRATO_NMX_052'])->name('Contrato_NMX-052');
-
-
-//F4.1-01-07 Contrato Prestación de Servicios NOM-199 Ed 5 VIGENTE
 Route::get('/Contrato_prestacion_servicio_NOM-199', [CartaAsignacionController::class, 'Contrato_prestacion_servicio_NOM_199'])->name('Contrato_prestacion_servicio_NOM-199');
-
-//Acta Circunstanciada Para unidades de producción
 Route::get('/acta_circunstanciada_unidades_produccion', [CartaAsignacionController::class, 'acta_circunstanciada_produccion'])->name('acta_circunstanciada_unidades_produccion');
-
-//solicitud informacion cliente NOM-199
 Route::get('/solicitud_Info_ClienteNOM-199', [CartaAsignacionController::class, 'solicitudInfoNOM_199'])->name('solicitud_Info_ClienteNOM-199');
+
 
 
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamenp'])->name('dictamen_productor');
