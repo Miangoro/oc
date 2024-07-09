@@ -420,10 +420,8 @@ Route::post('/catalogo-marcas', [catalogoMarcasController::class, 'store'])->nam
 Route::get('/catalogo/marcas/{id}/edit', [catalogoMarcasController::class, 'edit'])->name('catalogoMarcas.edit');
 Route::post('/catalogo/marcas/store', [catalogoMarcasController::class, 'store'])->name('catalogoMarcas.store');
 Route::put('/catalogo/marcas/update/{id}', [catalogoMarcasController::class, 'store'])->name('catalogoMarcas.update');
-
-
-
 });
+
 //Marcas y catalogo
 Route::get('/marcas/catalogo', [marcasCatalogoController::class, 'UserManagement'])->name('marcas-catalogo');
 Route::resource('/catalago-list', marcasCatalogoController::class);

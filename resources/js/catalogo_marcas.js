@@ -275,7 +275,7 @@ $(function () {
                 }
               }
             },
-           /* {
+           {
               extend: 'pdf',
               title: 'Users',
               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
@@ -299,7 +299,7 @@ $(function () {
                   }
                 }
               }
-            },*/
+            },
             {
               extend: 'copy',
               title: 'Users',
