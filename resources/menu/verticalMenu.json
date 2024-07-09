@@ -99,8 +99,7 @@
         {
           "url": "marcas/catalogo",
           "name": "Marcas",
-          "slug": "marcas-catalogo"
-
+          "slug": "catalogo-marcas"
         }
       ]
     }

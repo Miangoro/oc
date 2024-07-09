@@ -1,9 +1,6 @@
-<div>
-    <!-- Happiness is not something readymade. It comes from your own actions. - Dalai Lama -->
-</div>
 @extends('layouts/layoutMaster')
 
-@section('title', 'Clientes prospecto')
+@section('title', 'Marcas')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
