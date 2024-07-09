@@ -5,11 +5,12 @@ namespace App\Http\Controllers\marcasCatalogo;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\marcas;
+use App\Models\empresa;
+
 
 
 class marcasCatalogoController extends Controller
 {
-  
 
   public function RegistroExitoso()
   {
@@ -35,6 +36,7 @@ class marcasCatalogoController extends Controller
   public function UserManagement()
   {
     // dd('UserManagement');
+    
     $marcas = marcas::all();
     $userCount = $marcas->count();
     $verified = 5;

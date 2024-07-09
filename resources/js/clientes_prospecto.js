@@ -10,7 +10,7 @@ $(function () {
   var dt_user_table = $('.datatables-users'),
     select2 = $('.select2'),
     userView = baseUrl + 'app/user/view/account',
-    offCanvasForm = $('#offcanvasAddUser');
+    offCanvasForm = $('#offcanvasValidarSolicitud');
 
   if (select2.length) {
     var $this = select2;
@@ -149,8 +149,8 @@ $(function () {
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
               userView +
-              '" class="dropdown-item">View</a>' +
-              '<a data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item"><i class="ri-checkbox-circle-fill"></i> Validar solicitud</a>' +
+              `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud fw-bold"><i class="text-info ri-search-eye-line"></i> Validar solicitud</a>` +
+              `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud fw-bold"><i class="text-success ri-checkbox-circle-fill"></i> Aceptar cliente</a>` +
               '</div>' +
               '</div>'
             );
@@ -399,7 +399,7 @@ $(function () {
         // delete the data
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}empresas-list/${user_id}`,
+          url: `${baseUrl}empresas-list/${id_empresa}`,
           success: function () {
             dt_user.draw();
           },
@@ -443,8 +443,8 @@ $(function () {
   });
 
   // edit record
-  $(document).on('click', '.edit-record', function () {
-    var user_id = $(this).data('id'),
+  $(document).on('click', '.edit-record', function () { 
+    var id_empresa = $(this).data('id_empresa'),
       dtrModal = $('.dtr-bs-modal.show');
 
     // hide responsive modal in small screen
@@ -463,10 +463,26 @@ $(function () {
     });
   });
 
+    // Validar solicitud
+    $(document).on('click', '.validar-solicitud', function () { 
+      var id_empresa = $(this).data('id'),
+        dtrModal = $('.dtr-bs-modal.show');
+        
+      // hide responsive modal in small screen
+      if (dtrModal.length) {
+        dtrModal.modal('hide');
+      }
+  
+      // changing the title of offcanvas
+    //  $('#offcanvasAddUserLabel').html('Edit User');
+  
+      $('#empresa_id').val(id_empresa);
+    });
+
   // changing the title
   $('.add-new').on('click', function () {
     $('#user_id').val(''); //reseting input field
-    $('#offcanvasAddUserLabel').html('Add User22222');
+    $('#offcanvasAddUserLabel').html('Add User');
   });
 
   // validating form and updating user's data
@@ -535,14 +551,15 @@ $(function () {
         // sweetalert
         Swal.fire({
           icon: 'success',
-          title: `Successfully ${status}!`,
-          text: `User ${status} Successfully.`,
+          title: `${status} Exitosamente`,
+          text: `Solicitud ${status} Exitosamente.`,
           customClass: {
             confirmButton: 'btn btn-success'
           }
         });
       },
       error: function (err) {
+        
         offCanvasForm.offcanvas('hide');
         Swal.fire({
           title: 'Duplicate Entry!',

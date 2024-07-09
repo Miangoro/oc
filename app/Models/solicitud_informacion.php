@@ -12,5 +12,9 @@ class solicitud_informacion extends Model
     protected $fillable = [
         'i',
         'id_empresa',
+        'medios',
+        'competencia',
+        'capacidad',
+        'comentarios'
       ];
 }

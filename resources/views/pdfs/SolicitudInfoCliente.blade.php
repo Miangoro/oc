@@ -264,6 +264,28 @@
                 if(in_array("7",$actividad)){
                     $actividad7 = "X";
                 }
+
+                if($dato->medios == "Si"){
+                    $medios = "X";
+                    $medios2 = "";
+                }else{
+                    $medios = "";
+                    $medios2 = "X";
+                }
+                if($dato->competencia == "Si"){
+                    $competencia = "X";
+                    $competencia2 = "";
+                }else{
+                    $competencia = "";
+                    $competencia2 = "X";
+                }
+                if($dato->capacidad == "Si"){
+                    $capacidad = "X";
+                    $capacidad2 = "";
+                }else{
+                    $capacidad = "";
+                    $capacidad2 = "X";
+                }
              @endphp
 
             <table class="no-top-border">
@@ -412,22 +434,22 @@
                 <tr>
                     <td style="width: 500px;">Se cuenta con todos los medios para realizar todas las actividades de
                         evaluación para la <br> Certificación </td>
-                    <td></td>
-                    <td></td>
+                    <td>{{$medios}}</td>
+                    <td>{{$medios2}}</td>
 
                 </tr>
                 <tr>
                     <td style="width: 500px;">El organismo de Certificación tiene la competencia para realizar la
                         Certificación :</td>
-                    <td></td>
-                    <td></td>
+                    <td>{{$competencia}}</td>
+                    <td>{{$competencia2}}</td>
 
                 </tr>
                 <tr>
                     <td style="width: 500px;">El organismo de Certificación tiene la capacidad para llevar a cabo las
                         actividades de <br> certificación.</td>
-                    <td></td>
-                    <td></td>
+                    <td>{{$capacidad}}</td>
+                    <td>{{$capacidad2}}</td>
 
                 </tr>
                 <tr>
