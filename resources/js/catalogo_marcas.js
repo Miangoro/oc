@@ -39,9 +39,10 @@ $(function () {
       columns: [
         // columns according to JSON
         { data: '' },
+        { data: 'id_marca' },
         { data: 'folio' },
         { data: 'marca' },
-        { data: 'id_marca' },
+        { data: 'id_empresa' },
         { data: 'action' }
       ],
       columnDefs: [
@@ -129,8 +130,8 @@ $(function () {
           targets: 5,
           className: 'text-center',
           render: function (data, type, full, meta) {
-            var $id = full['id_empresa'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_empresa']}" data-registro="${full['razon_social']} "></i>`;
+            var $id = full['id_marca'];
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_marca']}" data-registro="${full['folio']} "></i>`;
           }
         },*/
           {

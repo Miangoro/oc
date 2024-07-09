@@ -10,10 +10,6 @@ use App\Models\marcas;
 class marcasCatalogoController extends Controller
 {
   
-    public function index2()
-    {
-        return view('solicitudes.solicitudCliente');
-    }
 
   public function RegistroExitoso()
   {
@@ -107,6 +103,7 @@ class marcasCatalogoController extends Controller
         $nestedData['fake_id'] = ++$ids;
         $nestedData['folio'] = $user->folio;
         $nestedData['marca'] = $user->marca;
+        $nestedData['id_empresa'] = $user->id_empresa;
 
         $data[] = $nestedData;
       }

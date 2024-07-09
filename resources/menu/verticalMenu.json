@@ -97,9 +97,16 @@
       "slug": "catalogo",
       "submenu": [
         {
+<<<<<<< HEAD
           "url": "catalogo/marcas",
           "name": "Marcas",
           "slug": "catalogo-marcas"
+=======
+          "url": "marcas/catalogo",
+          "name": "Marcas",
+          "slug": "marcas-catalogo"
+
+>>>>>>> 56b150e8a437c6e91aee2ae17a83ce3757142d51
         }
       ]
     }
