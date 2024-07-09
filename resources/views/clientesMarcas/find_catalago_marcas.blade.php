@@ -54,6 +54,7 @@
           <th>Id</th>
           <th>Folio</th>
           <th>Marca</th>
+          <th>Clientes</th>
           <th>Acciones</th>
         </tr>
       </thead>

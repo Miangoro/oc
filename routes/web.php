@@ -164,6 +164,7 @@ use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
 use App\Http\Controllers\marcasCatalogo\marcasCatalogoController;
 
+
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/', function () {
@@ -423,8 +424,8 @@ Route::put('/catalogo/marcas/update/{id}', [catalogoMarcasController::class, 'st
 
 
 });
-//nuevo marcas
-Route::get('/marcas/catalogo', [marcasCatalogoController::class, 'UserManagement'])->name('clientes-prospecto');
+//Marcas y catalogo
+Route::get('/marcas/catalogo', [marcasCatalogoController::class, 'UserManagement'])->name('marcas-catalogo');
 Route::resource('/catalago-list', marcasCatalogoController::class);
 
 
