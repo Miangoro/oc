@@ -101,6 +101,11 @@
           "url": "/catalogo/marcas",
           "name": "Marcas",
           "slug": "laravel-example-user-management"
+        },
+        {
+          "url": "/categorias",
+          "name": "Categorias",
+          "slug": "laravel-example-user-management"
         }
       ]
     }

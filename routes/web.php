@@ -162,7 +162,7 @@ use App\Http\Controllers\solicitudCliente\solicitudClienteController;
 use App\Http\Controllers\pdfscontrollers\CartaAsignacionController;
 use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
-
+use App\Http\Controllers\catalogo_categoria\catalogoController;
 
 
 // Main Page Route
@@ -414,8 +414,11 @@ Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dict
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');
 Route::resource('/empresas-list', clientesProspectoController::class);
 
-
 //Catalogo de marcas
 Route::controller(catalogoMarcasController::class) ->group(function(){
 Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catalogoMarcas');
 });
+
+//Clientes prospecto y confirmado
+Route::get('/categorias', [catalogoController::class, 'UserManagement'])->name('categorias');
+Route::resource('/categorias-list', catalogoController::class);
