@@ -9,29 +9,29 @@
     {
       "name": "Usuarios",
       "icon": "menu-icon ri-group-fill",
-      "slug": "laravel-example",
+      "slug": "usuarios",
       "submenu": [
         {
           "url": "laravel/user-management",
           "name": "User Management",
-          "slug": "laravel-example-user-management"
+          "slug": "usuarios-lista"
         }
       ]
     },
     {
       "name": "Clientes",
       "icon": "menu-icon ri-user-follow-fill",
-      "slug": "laravel-example",
+      "slug": "clientes",
       "submenu": [
         {
           "url": "clientes/prospecto",
           "name": "Prospectos",
-          "slug": "clientes/prospecto"
+          "slug": "clientes-prospecto"
         },
         {
           "url": "laravel/user-management",
           "name": "Activos",
-          "slug": "laravel-example-user-management"
+          "slug": "clientes-activos"
         }
       ]
     },
@@ -57,7 +57,6 @@
         }
       ]
     },
-    
     {
       "name": "Requisitos documentales",
       "icon": "menu-icon ri-folder-check-fill",
@@ -93,14 +92,20 @@
       ]
     },
     {
-      "name": "Catalogo",
+      "name": "Catálogos",
       "icon": "menu-icon ri-book-open-fill",
-      "slug": "laravel-example",
+      "slug": "catalogo",
       "submenu": [
         {
+<<<<<<< HEAD
           "url": "marcas/catalogo",
           "name": "Marcas",
           "slug": "marcas/catalogo"
+=======
+          "url": "catalogo/marcas",
+          "name": "Marcas",
+          "slug": "catalogo-marcas"
+>>>>>>> 4a5c24d069d2103a9831354d801c35c076768bd8
         }
       ]
     }

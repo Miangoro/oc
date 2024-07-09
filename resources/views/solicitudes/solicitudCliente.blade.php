@@ -135,7 +135,7 @@ $isNavbar = false;
           </div>
           <div class="col-lg-4 col-md-4 col-sm-12">
             <div class="form-floating form-floating-outline">
-              <input  maxlength="10" type="tel" id="telefono" name="telefono" class="form-control" placeholder="Introduce tu numero de teléfono" required title="El teléfono debe tener 10 dígitos numéricos." />
+              <input type="text" id="telefono" name="telefono" class="form-control phone-number-mask" placeholder="Introduce tu numero de teléfono" required title="El teléfono debe tener 10 dígitos numéricos." />
               <label for="username">Teléfono</label>
             </div>
           </div>
@@ -394,4 +394,6 @@ $isNavbar = false;
 
 @section('page-script')
 
+@vite(['resources/assets/vendor/libs/cleavejs/cleave.js'])
+@vite(['resources/assets/vendor/libs/cleavejs/cleave-phone.js'])
 @vite(['resources/assets/js/solicitud-cliente.js'])

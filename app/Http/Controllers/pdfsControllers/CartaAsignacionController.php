@@ -47,8 +47,21 @@ class CartaAsignacionController extends Controller
     return $pdf->stream('F4.1-01-07 Contrato Prestación de Servicios NOM-199 Ed 5 VIGENTE.pdf');
     }
 
-    
+    public function acta_circunstanciada_produccion()
+    {
+      $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion');
+    return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
+    }
 
+
+    public function solicitudInfoNOM_199()
+    {
+      $pdf = Pdf::loadView('pdfs.solicitudInfoClienteNOM-199');
+    return $pdf->stream('F7.1-03-02 Solicitud de Información al Cliente NOM-199-SCFI-2017 Ed. 4 VIGENTE.pdf');
+    }
+    
+    
+    
     public function access_user()
     {
         $pdf = Pdf::loadView('pdfs.AsignacionUsuario');

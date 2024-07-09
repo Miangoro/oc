@@ -41,7 +41,7 @@
 <!-- Users List Table -->
 <div class="card">
   <div class="card-header pb-0">
-    <h3 class="card-title mb-0">Clientes prospecto</h3>
+    <h1 class="card-title mb-0">Clientes prospecto</h1>
   </div>
   <div class="card-datatable table-responsive">
     <table class="datatables-users table">
@@ -69,7 +69,7 @@
         <input type="hidden" name="id" id="user_id">
         <div class="form-floating form-floating-outline mb-5">
           <input type="text" class="form-control" id="add-user-fullname" placeholder="John Doe" name="name" aria-label="John Doe" />
-          <label for="add-user-fullname">Full Name</label>
+          <label for="add-user-fullname">Full Name Editado</label>
         </div>
         <div class="form-floating form-floating-outline mb-5">
           <input type="text" id="add-user-email" class="form-control" placeholder="john.doe@example.com" aria-label="john.doe@example.com" name="email" />
@@ -134,6 +134,95 @@
         </div>
         <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Submit</button>
         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
+      </form>
+    </div>
+  </div>
+  <!-- Offcanvas to add new user -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasValidarSolicitud" aria-labelledby="offcanvasValidarSolicitudLabel">
+    <div class="offcanvas-header border-bottom">
+      <h5 id="offcanvasValidarSolicitudLabel" class="offcanvas-title">Validar solicitud</h5>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body mx-0 flex-grow-0 h-100">
+      <form class="add-new-user pt-0" id="addNewUserForm">
+        <input type="hidden" name="id" id="user_id">
+        <div class="row">
+         
+                    
+                      <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <span class="card-title">Se cuenta con todos los medios para realizar todas las actividades de evaluación para la
+                                      Certificación</span>
+                                    <p>
+                                        <label>
+                                            <input name="pregunta1" type="radio" value="si" />
+                                            <span><strong>Sí</strong></span>
+                                        </label>
+                                    </p>
+                                    <p>
+                                        <label>
+                                            <input name="pregunta1" type="radio" value="no" />
+                                            <span><strong>No</strong></span>
+                                        </label>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 pt-5">
+                          <div class="card">
+                              <div class="card-body">
+                                  <span class="card-title">El organismo de Certificación tiene la competencia para realizar la Certificación:</span>
+                                  <p>
+                                      <label>
+                                          <input name="pregunta1" type="radio" value="si" />
+                                          <span><strong>Sí</strong></span>
+                                      </label>
+                                  </p>
+                                  <p>
+                                      <label>
+                                          <input name="pregunta1" type="radio" value="no" />
+                                          <span><strong>No</strong></span>
+                                      </label>
+                                  </p>
+                              </div>
+                          </div>
+                      </div>
+
+                      <div class="col-md-12 pt-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <span class="card-title">El organismo de Certificación tiene la capacidad para llevar a cabo las actividades de
+                                  certificación.</span>
+                                <p>
+                                    <label>
+                                        <input name="pregunta1" type="radio" value="si" />
+                                        <span><strong>Sí</strong></span>
+                                    </label>
+                                </p>
+                                <p>
+                                    <label>
+                                        <input name="pregunta1" type="radio" value="no" />
+                                        <span><strong>No</strong></span>
+                                    </label>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <div class="form-floating form-floating-outline mb-6 mt-5">
+                      <textarea class="form-control h-px-100" id="exampleFormControlTextarea1" placeholder="Comments here..."></textarea>
+                      <label for="exampleFormControlTextarea1">Comentarios</label>
+                    </div>
+                        
+                   
+               
+        
+          
+        </div>
+        <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Valiar</button>
+        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
       </form>
     </div>
   </div>
