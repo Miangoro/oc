@@ -94,12 +94,12 @@
     {
       "name": "Catálogos",
       "icon": "menu-icon ri-book-open-fill",
-      "slug": "Catálogos",
+      "slug": "marcas",
       "submenu": [
         {
           "url": "marcas/catalogo",
           "name": "Marcas",
-          "slug": "catalogo-marcas"
+          "slug": "marcas-catalogo"
         }
       ]
     }

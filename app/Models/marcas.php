@@ -16,4 +16,6 @@ class marcas extends Model
         'marca',
         'id_empresa',
       ];
+
+      
 }
