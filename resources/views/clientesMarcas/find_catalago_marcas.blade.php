@@ -41,7 +41,7 @@
 <!-- Users List Table -->
 <div class="card">
   <div class="card-header pb-0">
-    <h3 class="card-title mb-0">Clientes prospecto</h3>
+    <h3 class="card-title mb-0">Marcas</h3>
   </div>
   <div class="card-datatable table-responsive">
     <table class="datatables-users table">
@@ -69,22 +69,29 @@
       <form class="add-new-user pt-0" id="addNewUserForm">
         <input type="hidden" name="id" id="user_id">
         <div class="form-floating form-floating-outline mb-5">
-          <input type="text" class="form-control" id="add-user-fullname" placeholder="John Doe" name="name" aria-label="John Doe" />
-          <label for="add-user-fullname">Full Name</label>
+          <input type="text" class="form-control" id="add-user-fullname" placeholder="A-B-C-D..." name="name" aria-label="John Doe" />
+          <label for="add-user-fullname">Folio</label>
         </div>
         <div class="form-floating form-floating-outline mb-5">
-          <input type="text" id="add-user-email" class="form-control" placeholder="john.doe@example.com" aria-label="john.doe@example.com" name="email" />
-          <label for="add-user-email">Email</label>
+          <input type="text" id="add-user-email" class="form-control" placeholder="Ingrese la marca" aria-label="john.doe@example.com" name="email" />
+          <label for="add-user-email">Marca</label>
         </div>
         <div class="form-floating form-floating-outline mb-5">
+          <select id="user-plan" class="form-select">
+            <option value="basic">Basic</option>
+            <option value="team">Team</option>
+          </select>
+          <label for="user-plan">Selecciona un cliente</label>
+        </div>
+        <!-- <div class="form-floating form-floating-outline mb-5">
           <input type="text" id="add-user-contact" class="form-control phone-mask" placeholder="+1 (609) 988-44-11" aria-label="john.doe@example.com" name="userContact" />
           <label for="add-user-contact">Contact</label>
-        </div>
-        <div class="form-floating form-floating-outline mb-5">
+        </div>-->
+        <!--<div class="form-floating form-floating-outline mb-5">
           <input type="text" id="add-user-company" name="company" class="form-control" placeholder="Web Developer" aria-label="jdoe1" />
           <label for="add-user-company">Company</label>
-        </div>
-        <div class="form-floating form-floating-outline mb-5">
+        </div>-->
+       <!-- <div class="form-floating form-floating-outline mb-5">
           <select id="country" class="select2 form-select">
             <option value="">Select</option>
             <option value="Australia">Australia</option>
@@ -113,8 +120,8 @@
             <option value="United States">United States</option>
           </select>
           <label for="country">Country</label>
-        </div>
-        <div class="form-floating form-floating-outline mb-5">
+        </div>-->
+        <!--<div class="form-floating form-floating-outline mb-5">
           <select id="user-role" class="form-select">
             <option value="subscriber">Subscriber</option>
             <option value="editor">Editor</option>
@@ -123,17 +130,9 @@
             <option value="admin">Admin</option>
           </select>
           <label for="user-role">User Role</label>
-        </div>
-        <div class="form-floating form-floating-outline mb-5">
-          <select id="user-plan" class="form-select">
-            <option value="basic">Basic</option>
-            <option value="enterprise">Enterprise</option>
-            <option value="company">Company</option>
-            <option value="team">Team</option>
-          </select>
-          <label for="user-plan">Select Plan</label>
-        </div>
-        <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Submit</button>
+        </div>-->
+
+        <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
       </form>
     </div>

@@ -39,9 +39,10 @@ $(function () {
       columns: [
         // columns according to JSON
         { data: '' },
-        { data: 'categoria' },
         { data: 'id_categoria' },
+        { data: 'categoria' },
         { data: 'action' }
+
       ],
       columnDefs: [
         {
@@ -74,8 +75,6 @@ $(function () {
             var stateNum = Math.floor(Math.random() * 6);
             var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
             var $state = states[stateNum];
-             
-          
 
             // Creates full output for row
             var $row_output =
@@ -96,14 +95,14 @@ $(function () {
             return $row_output;
           }
         },
-        {
+        /* {
           // User email
           targets: 3,
           render: function (data, type, full, meta) {
             var $email = full['categoria'];
             return '<span class="user-email">' + $email + '</span>';
           }
-        },
+        }, */
 /*         {
           // email verify
           targets: 4,
