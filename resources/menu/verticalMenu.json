@@ -94,13 +94,17 @@
     {
       "name": "Catálogos",
       "icon": "menu-icon ri-book-open-fill",
-      "slug": "catalogo",
+      "slug": "marcas",
       "submenu": [
         {
           "url": "marcas/catalogo",
           "name": "Marcas",
           "slug": "marcas-catalogo"
-
+        },
+        {
+          "url": "categorias",
+          "name": "Categorías de agave",
+          "slug": "marcas-catalogo"
         }
       ]
     }
