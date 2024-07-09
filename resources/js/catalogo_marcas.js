@@ -6,6 +6,7 @@
 
 // Datatable (jquery)
 $(function () {
+  
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
     select2 = $('.select2'),
@@ -275,7 +276,7 @@ $(function () {
                 }
               }
             },
-           /* {
+           {
               extend: 'pdf',
               title: 'Users',
               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
@@ -299,7 +300,7 @@ $(function () {
                   }
                 }
               }
-            },*/
+            },
             {
               extend: 'copy',
               title: 'Users',
@@ -466,7 +467,7 @@ $(function () {
   // changing the title
   $('.add-new').on('click', function () {
     $('#user_id').val(''); //reseting input field
-    $('#offcanvasAddUserLabel').html('Add User');
+    $('#offcanvasAddUserLabel').html('Añadir registro');
   });
 
   // validating form and updating user's data
@@ -492,13 +493,13 @@ $(function () {
           }
         }
       },
-      userContact: {
+      /*userContact: {
         validators: {
           notEmpty: {
             message: 'Please enter your contact'
           }
         }
-      },
+      },*/
       company: {
         validators: {
           notEmpty: {

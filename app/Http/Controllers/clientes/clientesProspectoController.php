@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\empresa;
+use App\Models\solicitud_informacion;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -32,7 +33,7 @@ class clientesProspectoController extends Controller
 
   public function info($id)
     {   
-      $res = DB::select('SELECT e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
+      $res = DB::select('SELECT s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
       e.calle, e.num, e.colonia, e.municipio, e.estado, e.cp
       FROM empresa e 
       JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
@@ -43,6 +44,36 @@ class clientesProspectoController extends Controller
         $pdf = Pdf::loadView('pdfs.SolicitudInfoCliente',['datos'=>$res]);
         return $pdf->stream('F7.1-01-02  Solicitud de Información del Cliente NOM-070-SCFI-2016 y NMX-V-052-NORMEX-2016 Ed.pdf');
     }
+
+  public function registrarValidacion(Request $request){
+      $solicitud = solicitud_informacion::find($request->id_solicitud);
+        $solicitud->medios = $request->medios;
+        $solicitud->competencia = $request->competencia;
+        $solicitud->capacidad =  $request->capacidad;
+        $solicitud->comentarios =  $request->comentarios;
+
+        $solicitud->update();
+  }
+
+  public function store(Request $request)
+  {
+ 
+
+      // create new one if email is unique
+   
+      $solicitud = solicitud_informacion::where('id_empresa', $request->id_empresa)->first();
+      $solicitud->medios = $request->medios;
+      $solicitud->competencia = $request->competencia;
+      $solicitud->capacidad =  $request->capacidad;
+      $solicitud->comentarios =  $request->comentarios;
+
+      $solicitud->update();
+
+        // user created
+        return response()->json('Validada');
+      
+    
+  }
 
   public function index(Request $request)
   {
