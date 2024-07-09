@@ -164,7 +164,6 @@ use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
 use App\Http\Controllers\catalogo_categoria\catalogoController;
 
-
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/', function () {
