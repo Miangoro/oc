@@ -106,24 +106,40 @@
         }
 
         .table-cell {
-            border: 1px solid black;
-            margin-left: 50px;
-            margin-right: 50px;
-            padding: 10px; /* Reducir el padding */
-            vertical-align: top;
-            font-size: 12px; /* Reducir el tamaño de la fuente */
-            text-align: center; /* Centrar el texto horizontalmente */
-            vertical-align: middle; /* Centrar el texto verticalmente */
-        }
-        .tablas{
-            margin-left: 30px;
-            margin-right: 30px;
-        }
-        .footer{
-            margin-left: 70px;
-            margin-right: 70px;
-        }
-    </style>
+        border: 1px solid black;
+        margin-left: 50px;
+        margin-right: 50px;
+        padding: 10px; /* Reducir el padding */
+        vertical-align: top;
+        font-size: 12px; /* Reducir el tamaño de la fuente */
+        text-align: center; /* Centrar el texto horizontalmente */
+        vertical-align: middle; /* Centrar el texto verticalmente */
+    }
+    .tablas{
+        margin-left: 30px;
+        margin-right: 30px;
+    }
+    .footer{
+        margin-left: 70px;
+        margin-right: 70px;
+    }
+
+        .custom-table {
+        margin: 0 auto; /* Centers the table horizontally */
+        border-collapse: collapse;
+        width: 552px; /* Adjust the width as needed */
+    }
+
+    .custom-table td, .custom-table th {
+        border: solid black 0.5px;
+        padding: 3px;
+        text-align: center; /* Center the text for a cleaner look */
+    }
+
+    .custom-table th {
+        font-weight: bold;
+    }
+        </style>
 </head>
 <body>
     {{-- encabezado --}}
@@ -285,64 +301,138 @@
         </td>
     </tr>
 </table> <br>
-{{--  --}}
-    <div class="container">
 
 
-        <div class="tablas">
-            <table>
-                      <tr>
-                          <td class="table-cell" style="border-bottom: none; "></td>
-                          <td class="table-cell" style="width: 120px;">Anís</td>
-                          <td class="table-cell" style="width: 30px;"></td>
-                          <td style="border: solid black 1px; border-bottom: none;"></td>
-                          <td class="table-cell">habanero</td>
-                          <td style="border: solid black 1px;"></td>
-                      </tr>
-                      <tr>
-                          <td class="table-cell" rowspan="6" style="border-top: none; width: 100px;"><strong>Licores o cremas (13.5% a 55% Alc. Vol.)</strong></td>
-                          <td class="table-cell">“_____Ale”</td>
-                          <td style="border: solid black 1px;"></td>
-                          <td class="table-cell" rowspan="6" style="border-top: none; width: 100px;"><strong>Bebidas Alcohólicas Destiladas (32% a 55% Alc. Vol.)</strong></td>
-                          <td class="table-cell">Armagnac</td>
-                          <td style="border: solid black 1px; width: 30px"></td>
-                      </tr>
-                      <tr>
-                          <td class="table-cell">Pulque</td>
-                          <td style="border: solid black 1px;"></td>
-                          <td class="table-cell">Bacanora</td>
-                          <td style="border: solid black 1px;"></td>
-                      </tr>
-                      <tr>
-                          <td class="table-cell">Sake</td>
-                          <td style="border: solid black 1px;"></td>
-                          <td class="table-cell">Brandy</td>
-                          <td style="border: solid black 1px;"></td>
-                      </tr>
-                      <tr>
-                          <td class="table-cell">Sidra</td>
-                          <td style="border: solid black 1px;"></td>
-                          <td class="table-cell">Cachaca</td>
-                          <td style="border: solid black 1px;"></td>
-                      </tr>
-                      <tr>
-                          <td class="table-cell">Vino</td>
-                          <td style="border: solid black 1px;"></td>
-                          <td class="table-cell">Comiteco</td>
-                          <td style="border: solid black 1px;"></td>
-                      </tr>
-                      <tr>
-                          <td class="table-cell">Otro (Especifique):</td>
-                          <td style="border: solid black 1px;"></td>
-                          <td class="table-cell">Ginebra</td>
-                          <td style="border: solid black 1px;"></td>
-                      </tr>
-          
-                         
-                  </table>
-              </div>
-        
+<div class="container" style="border-bottom: solid black 1px; padding-bottom: 10px; ">
+    <div class="tablas">
+        <table>
+            <tr>
+                <td class="table-cell" style="border-bottom: none;"></td>
+                <td class="table-cell" style="width: 100px;">Anís</td>
+                <td class="table-cell" style="width: 30px;"></td>
+                <td style="border: solid black 1px; border-bottom: none;"></td>
+                <td class="table-cell" style="width: 100px;">habanero</td>
+                <td class="table-cell" style="border: solid black 1px;">xd</td>
+            </tr>
+            <tr>
+                <td class="table-cell" rowspan="6" style="border-top: none; border-bottom: none; width: 90px;"><strong>Licores o cremas (13.5% a 55% Alc. Vol.)</strong></td>
+                <td class="table-cell">Amaretto</td>
+                <td style="border: solid black 1px;"></td>
+                <td class="table-cell" rowspan="6" style="border-top: none; border-bottom: none; width: 90px;"><strong>Bebidas Alcohólicas Destiladas (32% a 55% Alc. Vol.)</strong></td>
+                <td class="table-cell">Kirsch</td>
+                <td class="table-cell" style="border: solid black 1px;">xd</td>
+            </tr>
+            <tr>
+                <td class="table-cell">Crema o licor de cassis</td>
+                <td style="border: solid black 1px;"></td>
+                <td class="table-cell">Poire o Perry</td>
+                <td class="table-cell" style="border: solid black 1px;">xd</td>
+            </tr>
+            <tr>
+                <td class="table-cell">Crema o licor de café</td>
+                <td style="border: solid black 1px;"></td>
+                <td class="table-cell">Ron</td>
+                <td class="table-cell" style="border: solid black 1px;">xd</td>
+            </tr>
+            <tr>
+                <td class="table-cell">Crema o licor de cacao</td>
+                <td style="border: solid black 1px;"></td>
+                <td class="table-cell">Raicilla</td>
+                <td class="table-cell" style="border: solid black 1px;">xd</td>
+            </tr>
+            <tr>
+                <td class="table-cell">Crema o licor de menta</td>
+                <td style="border: solid black 1px;"></td>
+                <td class="table-cell">Sambuca</td>
+                <td class="table-cell" style="border: solid black 1px;">xd</td>
+            </tr>
+            <tr>
+                <td class="table-cell">Fernet</td>
+                <td style="border: solid black 1px;"></td>
+                <td class="table-cell">Sotol</td>
+                <td class="table-cell" style="border: solid black 1px;">xd</td>
+            </tr>
+            <tr>
+                <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
+                <td style="border: solid black 1px;">Irish cream</td>
+                <td style="border: solid black 1px;"></td>
+                <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
+                <td style="border: solid black 1px;">Vodka</td>
+                <td class="table-cell" style="border: solid black 1px;">xd</td>
+            </tr>
+            <tr>
+                <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
+                <td style="border: solid black 1px;">Licor amargo</td>
+                <td class="table-cell"></td>
+                <td style="border-top: none; border-bottom: none;"></td>
+                <td style="border: solid black 1px;">Whisky o Whiskey</td>
+                <td class="table-cell" style="border: solid black 1px;">xd</td>
+            </tr>
+            <tr>
+                <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
+                <td style="border: solid black 1px;">Licores de frutas</td>
+                <td class="table-cell"></td>
+                <td style="border-top: solid black 1px;"></td>
+                <td style="border: solid black 1px;">“Cóctel de _______”</td>
+                <td class="table-cell" style="border: solid black 1px;">xd</td>
+            </tr>
+            <tr>
+                <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
+                <td style="border: solid black 1px;">Sambuca</td>
+                <td style="border: solid black 1px;"></td>
+                <td></td>
+                <td style="border: solid black 1px;">“Cóctel sabor de___________”</td>
+                <td class="table-cell" style="border: solid black 1px;">xd</td>
+            </tr>
+            <tr>
+                <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
+                <td style="border: solid black 1px;">Xtabentún</td>
+                <td style="border: solid black 1px;"></td>
+                <td><strong>Cócteles (12% a 32% Alc. Vol.)</strong></td>
+                <td style="border: solid black 1px;">“Cóctel de o al ____________”</td>
+                <td class="table-cell" style="border: solid black 1px;">xd</td>
+            </tr>
+            <tr>
+                <td class="table-cell" style="border-top: none;"></td>
+                <td style="border: solid black 1px;">Otro (Especifique):</td>
+                <td style="border: solid black 1px;"></td>
+                <td style="border-bottom: solid black 1px;"></td>
+                <td style="border: solid black 1px;">“Cóctel con __________”</td>
+                <td class="table-cell" style="border: solid black 1px;">xd</td>
+            </tr>
+        </table>
+
     </div>
+<table class="custom-table">
+    <tr>
+        <th colspan="6">Bebidas alcohólicas preparadas (2% a 12% Alc. Vol.)</th>
+    </tr>
+    <tr>
+        <td colspan="2" style="width: 30px;">“Bebida alcohólica preparada de ___________________________”</td>
+        <td></td>
+        <td colspan="2" style="width: 30px;">“Bebida alcohólica preparada de o al ___________________________”</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="2">“Bebida alcohólica preparada sabor de ___________________________”</td>
+        <td></td>
+        <td colspan="2">“Bebida alcohólica preparada con ________________________”</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td colspan="2">Rompope</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td ></td>
+    </tr>
+</table>
+
+</div>
+    
+
+
+
 
 
 </body>
