@@ -100,11 +100,7 @@
           "url": "marcas/catalogo",
           "name": "Marcas",
           "slug": "marcas-catalogo"
-        },
-        {
-          "url": "categorias",
-          "name": "Categorías de agave",
-          "slug": "marcas-catalogo"
+
         }
       ]
     }
