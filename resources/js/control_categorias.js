@@ -10,7 +10,7 @@ $(function () {
   var dt_user_table = $('.datatables-users'),
     select2 = $('.select2'),
     userView = baseUrl + 'app/user/view/account',
-    offCanvasForm = $('#offcanvasValidarSolicitud');
+    offCanvasForm = $('#offcanvasAddUser');
 
   if (select2.length) {
     var $this = select2;
@@ -34,16 +34,13 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'empresas-list'
+        url: baseUrl + 'categorias-list'
       },
       columns: [
         // columns according to JSON
         { data: '' },
-        { data: 'razon_social' },
-        { data: 'domicilio_fiscal' },
-        { data: 'regimen' },
-        { data: 'regimen' },
-        { data: 'id_empresa' },
+        { data: 'categoria' },
+        { data: 'id_categoria' },
         { data: 'action' }
       ],
       columnDefs: [
@@ -67,11 +64,11 @@ $(function () {
           }
         },
         {
-          // Es la razón social
+          // User full name
           targets: 2,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
-            var $name = full['razon_social'];
+            var $name = full['categoria'];
 
             // For Avatar badge
             var stateNum = Math.floor(Math.random() * 6);
@@ -103,11 +100,11 @@ $(function () {
           // User email
           targets: 3,
           render: function (data, type, full, meta) {
-            var $email = full['domicilio_fiscal'];
+            var $email = full['categoria'];
             return '<span class="user-email">' + $email + '</span>';
           }
         },
-        {
+/*         {
           // email verify
           targets: 4,
           className: 'text-center',
@@ -124,8 +121,8 @@ $(function () {
                 : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
             }`;
           }
-        },
-        {
+        }, 
+        /* {
           // email verify
           targets: 5,
           className: 'text-center',
@@ -133,7 +130,7 @@ $(function () {
             var $id = full['id_empresa'];
             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_empresa']}" data-registro="${full['razon_social']} "></i>`;
           }
-        },
+        },*/
         {
           // Actions
           targets: -1,
@@ -143,19 +140,19 @@ $(function () {
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_empresa']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
               '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
               userView +
-              `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud fw-bold"><i class="text-info ri-search-eye-line"></i> Validar solicitud</a>` +
-              `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud fw-bold"><i class="text-success ri-checkbox-circle-fill"></i> Aceptar cliente</a>` +
+              '" class="dropdown-item">View</a>' +
+              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
               '</div>' +
               '</div>'
             );
           }
-        }
+        } 
       ],
       order: [[2, 'desc']],
       dom:
@@ -342,7 +339,7 @@ $(function () {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Detalles de ' + data['razon_social'];
+              return 'Detalles de ' + data['categoria'];
             }
           }),
           type: 'column',
@@ -399,7 +396,7 @@ $(function () {
         // delete the data
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}empresas-list/${id_empresa}`,
+          url: `${baseUrl}empresas-list/${user_id}`,
           success: function () {
             dt_user.draw();
           },
@@ -443,8 +440,8 @@ $(function () {
   });
 
   // edit record
-  $(document).on('click', '.edit-record', function () { 
-    var id_empresa = $(this).data('id_empresa'),
+  $(document).on('click', '.edit-record', function () {
+    var user_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
 
     // hide responsive modal in small screen
@@ -462,22 +459,6 @@ $(function () {
       $('#add-user-email').val(data.email);
     });
   });
-
-    // Validar solicitud
-    $(document).on('click', '.validar-solicitud', function () { 
-      var id_empresa = $(this).data('id'),
-        dtrModal = $('.dtr-bs-modal.show');
-        
-      // hide responsive modal in small screen
-      if (dtrModal.length) {
-        dtrModal.modal('hide');
-      }
-  
-      // changing the title of offcanvas
-    //  $('#offcanvasAddUserLabel').html('Edit User');
-  
-      $('#empresa_id').val(id_empresa);
-    });
 
   // changing the title
   $('.add-new').on('click', function () {
@@ -551,15 +532,14 @@ $(function () {
         // sweetalert
         Swal.fire({
           icon: 'success',
-          title: `${status} Exitosamente`,
-          text: `Solicitud ${status} Exitosamente.`,
+          title: `Successfully ${status}!`,
+          text: `User ${status} Successfully.`,
           customClass: {
             confirmButton: 'btn btn-success'
           }
         });
       },
       error: function (err) {
-        
         offCanvasForm.offcanvas('hide');
         Swal.fire({
           title: 'Duplicate Entry!',

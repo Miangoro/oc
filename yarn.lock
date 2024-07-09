@@ -6026,7 +6026,7 @@ svg.select.js@^3.0.1:
   dependencies:
     svg.js "^2.6.5"
 
-sweetalert2@11.10.8:
+sweetalert2@^11.10.8:
   version "11.10.8"
   resolved "https://registry.npmjs.org/sweetalert2/-/sweetalert2-11.10.8.tgz"
   integrity sha512-oAkYROBfXBY+4sVbQEIcN+ZxAx69lsmz5WEBwdEpyS4m59vOBNlRU5/fJpAI1MVfiDwFZiGwVzB/KBpOyfLNtg==
