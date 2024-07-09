@@ -138,7 +138,46 @@
 
     .custom-table th {
         font-weight: bold;
+        font-size: 12px;
     }
+
+    .certification-table {
+    margin: 0 auto; /* Centers the table horizontally */
+    border-collapse: collapse;
+    width: 95%;
+    font-family: Arial, sans-serif; /* Ensures a clean and readable font */
+}
+
+.certification-table td, .certification-table th {
+    border: solid black 0.5px;
+    padding: 8px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+    .certification-table th {
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .checkbox-cell-small {
+        width: 40px;
+        height: 20px;
+        border: solid black 1px;
+        display: inline-block;
+    }
+
+    .underline-cell {
+        display: inline-block;
+        border-bottom: solid black 1px;
+        width: 100px;
+    }
+
+    .full-width-cell {
+        width: 80%;
+    }
+
+
         </style>
 </head>
 <body>
@@ -216,7 +255,7 @@
         </table>
 
     </div>
-    <p style="border: solid black 1px; font-size: 11px;"><b>En caso de contar con más instalaciones en domicilios diferentes donde lleve a cabo su actividad (planta de producción, envasado, bodega de maduración u otro) agregar las tablas necesarias y especificar domicilios*</b></p>
+    <p style="border: solid black 1px; font-size: 11px; text-align: center;"><b>En caso de contar con más instalaciones en domicilios diferentes donde lleve a cabo su actividad (planta de producción, envasado, bodega de maduración u otro) agregar las tablas necesarias y especificar domicilios*</b></p>
     
         <div class="table-title">
             Clasificación de Bebida(s) Alcohólica(s) por su proceso de elaboración.
@@ -354,50 +393,50 @@
             </tr>
             <tr>
                 <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
-                <td style="border: solid black 1px;">Irish cream</td>
-                <td style="border: solid black 1px;"></td>
+                <td class="table-cell">Irish cream</td>
+                <td class="table-cell"></td>
                 <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
-                <td style="border: solid black 1px;">Vodka</td>
+                <td class="table-cell">Vodka</td>
                 <td class="table-cell" style="border: solid black 1px;">xd</td>
             </tr>
             <tr>
                 <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
-                <td style="border: solid black 1px;">Licor amargo</td>
+                <td class="table-cell">Licor amargo</td>
                 <td class="table-cell"></td>
                 <td style="border-top: none; border-bottom: none;"></td>
-                <td style="border: solid black 1px;">Whisky o Whiskey</td>
+                <td class="table-cell">Whisky o Whiskey</td>
                 <td class="table-cell" style="border: solid black 1px;">xd</td>
             </tr>
             <tr>
                 <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
-                <td style="border: solid black 1px;">Licores de frutas</td>
+                <td class="table-cell">Licores de frutas</td>
                 <td class="table-cell"></td>
                 <td style="border-top: solid black 1px;"></td>
-                <td style="border: solid black 1px;">“Cóctel de _______”</td>
+                <td class="table-cell">“Cóctel de _______”</td>
                 <td class="table-cell" style="border: solid black 1px;">xd</td>
             </tr>
             <tr>
                 <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
-                <td style="border: solid black 1px;">Sambuca</td>
-                <td style="border: solid black 1px;"></td>
+                <td class="table-cell">Sambuca</td>
+                <td class="table-cell"></td>
                 <td></td>
-                <td style="border: solid black 1px;">“Cóctel sabor de___________”</td>
+                <td class="table-cell">“Cóctel sabor de___________”</td>
                 <td class="table-cell" style="border: solid black 1px;">xd</td>
             </tr>
             <tr>
                 <td class="table-cell" style="border-top: none; border-bottom: none;"></td>
-                <td style="border: solid black 1px;">Xtabentún</td>
-                <td style="border: solid black 1px;"></td>
+                <td class="table-cell">Xtabentún</td>
+                <td class="table-cell"></td>
                 <td><strong>Cócteles (12% a 32% Alc. Vol.)</strong></td>
-                <td style="border: solid black 1px;">“Cóctel de o al ____________”</td>
+                <td class="table-cell">“Cóctel de o al ____________”</td>
                 <td class="table-cell" style="border: solid black 1px;">xd</td>
             </tr>
             <tr>
                 <td class="table-cell" style="border-top: none;"></td>
-                <td style="border: solid black 1px;">Otro (Especifique):</td>
+                <td class="table-cell">Otro (Especifique):</td>
                 <td style="border: solid black 1px;"></td>
                 <td style="border-bottom: solid black 1px;"></td>
-                <td style="border: solid black 1px;">“Cóctel con __________”</td>
+                <td class="table-cell">“Cóctel con __________”</td>
                 <td class="table-cell" style="border: solid black 1px;">xd</td>
             </tr>
         </table>
@@ -429,11 +468,88 @@
 </table>
 
 </div>
-    
+<div class="footer">
+    <p style="text-align: center; margin-top: 15px; font-size: 10.5px;">
+    Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
+    </p>
+    <p style="text-align: right; margin-top: 20px; font-size: 12px;">
+    2/3
+    </p>
+</div>
 
 
 
+{{-- encabezado --}}
+<table class="header-table">
+    <tr>
+        <td class="img" style="border: none;">
+            <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo UVEM">
+        </td>
+        <td class="text-titulo"  style="border: none;">
+            <div class="centro">
+                <p>Solicitud de Información al Cliente NOM-199-SCFI-2017 F7.1-03-02</p>
+                <p>Edición 4 Entrada en vigor. 20/06/2024</p>  
+                <div class="line"></div>      
+            </div>
+        </td>
+    </tr>
+</table> <br>
 
+    <div class="container">
+            <table class="certification-table">
+            <tr>
+                <th colspan="6" style="font-size: 12px;">Documentos normativos para los cuales busca la certificación:</th>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">NOM-199-SCFI-2017</td>
+                <td><div class="checkbox-cell-small"></div></td>
+                <td colspan="2">NOM-251-SSA1-2009</td>
+                <td colsnap="2"><div class="checkbox-cell-small"></div></td>
+            </tr>
+            <tr>
+                <th colspan="6" style="font-size: 12px;">¿Cuenta con una Certificación de Sistema de Gestión de Calidad?</th>
+            </tr>
+            <tr>
+                <td >SI: <div class="checkbox-cell-small"></div></td>
+                <td>NO: <div class="checkbox-cell-small"></div></td>
+                <td colspan="4">¿Cuál? <div class="underline-cell"></div></td>
+            </tr>
+            <tr>
+                <td colspan="6">¿Quién emite Certificación? <div class="underline-cell full-width-cell"></div></td>
+            </tr>
+          
+        </table>
+    </div>
+
+
+
+<br>
+<br>
+{{-- <tr>
+    <th colspan="5">Actividad del cliente:</th>
+</tr>
+<tr>
+    <td>Productor</td>
+    <td><div class="checkbox-cell-small"></div></td>
+    <td>Envasador</td>
+    <td><div class="checkbox-cell-small"></div></td>
+    <td>Importador</td>
+    <td><div class="checkbox-cell-small"></div></td>
+</tr>
+<tr>
+    <td>Comercializador</td>
+    <td><div class="checkbox-cell-small"></div></td>
+    <td colspan="4"></td>
+</tr>
+<tr>
+    <th colspan="5">NOMBRE Y FIRMA DEL SOLICITANTE:</th>
+</tr>
+<tr>
+    <td colspan="5"></td>
+</tr>
+<tr>
+    <td colspan="5">Para consulta del proceso de certificación, consultar la página <a href="http://www.cidam.org">www.cidam.org</a> que cuenta con el manual de certificación F7.1-03-01.</td>
+</tr> --}}
 
 </body>
 </html>

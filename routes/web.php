@@ -162,7 +162,7 @@ use App\Http\Controllers\solicitudCliente\solicitudClienteController;
 use App\Http\Controllers\pdfscontrollers\CartaAsignacionController;
 use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
-
+use App\Http\Controllers\marcasCatalogo\marcasCatalogoController;
 
 
 // Main Page Route
@@ -414,6 +414,18 @@ Route::resource('/empresas-list', clientesProspectoController::class);
 //Catalogo de marcas
 Route::controller(catalogoMarcasController::class) ->group(function(){
 Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catalogoMarcas');
-Route::resource('/marcas-list', clientesProspectoController::class);
+Route::resource('/marcas-list', catalogoMarcasController::class);
+Route::delete('/catalogo/marcas/{id}', 'destroy')->name('catalogoMarcas.destroy');
+Route::post('/catalogo-marcas', [catalogoMarcasController::class, 'store'])->name('catalogoMarcas.store');
+Route::get('/catalogo/marcas/{id}/edit', [catalogoMarcasController::class, 'edit'])->name('catalogoMarcas.edit');
+Route::post('/catalogo/marcas/store', [catalogoMarcasController::class, 'store'])->name('catalogoMarcas.store');
+Route::put('/catalogo/marcas/update/{id}', [catalogoMarcasController::class, 'store'])->name('catalogoMarcas.update');
+
+
 
 });
+//Marcas y catalogo
+Route::get('/marcas/catalogo', [marcasCatalogoController::class, 'UserManagement'])->name('marcas-catalogo');
+Route::resource('/catalago-list', marcasCatalogoController::class);
+
+

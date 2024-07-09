@@ -97,9 +97,10 @@
       "slug": "catalogo",
       "submenu": [
         {
-          "url": "catalogo/marcas",
+          "url": "marcas/catalogo",
           "name": "Marcas",
-          "slug": "catalogo-marcas"
+          "slug": "marcas-catalogo"
+
         }
       ]
     }
