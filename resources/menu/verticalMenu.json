@@ -94,12 +94,13 @@
     {
       "name": "Catálogos",
       "icon": "menu-icon ri-book-open-fill",
-      "slug": "catalogo",
+      "slug": "marcas",
       "submenu": [
         {
           "url": "marcas/catalogo",
           "name": "Marcas",
-          "slug": "laravel-example-user-management"
+          "slug": "marcas-catalogo"
+
         }
       ]
     }
