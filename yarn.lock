@@ -2446,7 +2446,7 @@ bloodhound-js@1.2.3:
     storage2 "^0.1.0"
     superagent "^3.8.3"
 
-bootstrap-datepicker@1.10.0:
+bootstrap-datepicker@^1.10.0:
   version "1.10.0"
   resolved "https://registry.npmjs.org/bootstrap-datepicker/-/bootstrap-datepicker-1.10.0.tgz"
   integrity sha512-lWxtSYddAQOpbAO8UhYhHLcK6425eWoSjb5JDvZU3ePHEPF6A3eUr51WKaFy4PccU19JRxUG6wEU3KdhtKfvpg==

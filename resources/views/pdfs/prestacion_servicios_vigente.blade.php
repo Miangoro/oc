@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contrato de prestación de servicios NOM 070 Ed 4 persona fisica VIGENTE</title>
+    <title>F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 VIGENTE</title>
     <style>
     body {
-        font-family: Arial, sans-serif;
+        font-family: 'Arial', 'Helvetica', sans-serif;
         margin: 30px;
         font-size: 14px;
     }
@@ -77,6 +77,47 @@
         text-indent: 1.5em; /* Ajusta el valor para separar la viñeta del texto */
         margin-left: 1em; /* Aumenta el margen izquierdo para crear espacio adicional */
     }
+
+
+
+    .content{
+        padding-top: 0px;
+        padding-bottom: 30px;
+        padding-left: 90px;
+        padding-right: 100px;
+    }
+
+        /* Estilos para el nuevo encabezado más pequeño */
+        .new-header {
+            margin-top: 0px;
+            padding: 10px; /* Menos padding para ser más pequeño */
+            text-align: right;
+            position: relative;
+        }
+
+        .new-header img {
+            margin-top: 0px;
+            width: 100px; /* Imagen más pequeña */
+            float: left;
+        }
+        .header-text {
+        line-height: 1.5;
+        font-size: 9px;
+        margin-top: 0; /* Eliminar margen */
+        padding: 0; /* Eliminar padding */
+    }
+    /* Estilos específicos para un td */
+        .td-especifico {
+            padding: 10px; /* Diferente padding */
+            text-align: justify; /* Diferente alineación de texto */
+            vertical-align: middle; /* Diferente alineación vertical */
+            line-height: 1.4; /* Diferente line-height */
+            word-spacing: normal; /* Diferente word-spacing */
+            width: 50%;
+            font-weight: lighter; /* Grosor de letra mas delgado */
+            font-size: 9px;
+        }
+
     </style>
 
 
@@ -953,26 +994,88 @@
     <br>
     <br>
     
-        <p style="text-align: center; font-size: 19px;">ANEXOS</p>
-        <br>
-        <div style="text-align: left;">
-            <strong>
-                <span style="font-size: 11px;">PO-UGII-011</span> Política de venta de hologramas
-            </strong>
-        </div>        
-    <div class="container mt-3">
-                <div style="text-align: center; margin-top: 10px;">
-                    <img src="{{ public_path('img_pdf/anexo2-.png') }}" alt="Anexo " style="max-width: 75%; margin: 0 auto;">
-                </div>
-                <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
-                    Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
-                </p>
-                <p style="text-align: right; margin-top: 15px; font-size: 12px;">
-                    9/10
-                </p>
+    <p style="text-align: center; font-size: 16px;">ANEXOS</p>
+    <br>
+    
+    <div style="text-align: left; padding-left: 10px;">
+        <b style="font-size: 13px;">PO-UGII-011 Política de venta de hologramas</b>
+    </div>  
+    
+    <div class="content">
+        <div class="new-header">
+            <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
+            <span class="header-text"> 
+                PO-UGII-011 Política de venta de hologramas <br> 
+                Ed 0, 31/08/2022 <br>
+            </span>
+        </div>
+    
+        <table>
+            <p></p><p></p>
+            <tr>
+                <td colspan="2" style="text-align: center; padding: 10px; font-size: 10.5px;"><b>PO-UGII-011 Política de venta de hologramas</b></td>
+            </tr>
+            <tr>
+                <td class="td-especifico">
+                    <p>
+                        La presente Política establece los términos y condiciones del uso, venta e Impresión de hologramas a los clientes del Organismo de Certificación CIDAM.
+                    </p>
+                    <p>
+                        Los hologramas que sean enviados son designados como generales y utilizables para uno o varios lotes (de la misma marca), ya que estos hologramas no se encuentran activados, para la activación de los mismos se deberá solicitar servicios de inspección de envasado e inspección de producto terminado.
+                    </p>
+                    <p>
+                        En caso de que la razón social cuente con 2 o más registros de marca se le asignará un folio especifico a cada una, los hologramas destinados a una marca no se deberán usar en otra.
+                    </p>
+                    <p>
+                        El pedido de hologramas se realizará de 3 a 5 días hábiles. Estando sujetos a tlempos de paquetería.
+                    </p>
+                    <p>
+                        Se deberá liquidar en su totalidad el precio de la cotización de los hologramas para que sea liberado el paquete.
+                    </p>
+                    <p>
+                        <strong style="font-size: 9px;">Stock de hologramas:</strong> Se podrá solicitar hologramas al personal del Organismo Certificador o por medio de plataforma OC CIDAM, resguardo para mantener en por el cliente, sólo Y únicamente cuando se cuente ya con un certificado de granel.
+                    </p>
+                    <p>
+                        <strong style="font-size: 9px;">Motivos de retorno definitivo de hologramas:</strong> En el caso de cancelación o suspensión de la certificación del cliente se deberá regresar en SU totalidad los hologramas al Organismo de Certificación.
+                    </p>
+                    <p>
+                        Para ser elegible para una devolución monetaria, los hologramas deben devolverse en perfecto estado. El artículo no se debió usar y deben mantener la misma condición en la que se recibió. De igual manera deben ser
+                        devueltos a CIDAM en el embalaje en el que fueron enviados. En caso de que los
+                    </p>
+                </td>
+                <td class="td-especifico">
+                    <p>
+                        hologramas hayan sido pegados, se tendrán que despegar e Igualmente ser regresados al Organismo Certificador. Para términos Y condiciones de reembolso consulte la Política de venta de servicios CIDAM PO-UGII-010, en su edición vigente.
+                    </p>
+                    <p>
+                        Dichos hologramas se entregarán al Organismo de Certificación haciéndolos llegar de forma personal O por paqueteria.
+                    </p>
+                    <p>
+                        <strong style="font-size: 9px;">Reposiciones de hologramas:</strong> En el caso de que la materia prima contenga mermas (comprobables) por error en la impresión se hará la reposición del material con un follo nuevo, el follo a reponer se cancelará a través de la plataforma del OC CIDAM. Quedando invalidado el código QR.. Una vez devueltos los hologramas haremos una revisión y análisis sobre el producto para poder definir si es sujeto a cambio por fallas en nuestra producción o si fue dañado o expuesto a un mal uso.
+                    </p>
+                    <p>
+                        <strong style="font-size: 9px;">Envíos:</strong> Los envíos de hologramas podrán ser a domicilio con la posibilidad también de enviarse a sucursales DHL. En el caso de que el envío sea a sucursal, el cliente tlene la responsabilidad de recoger el paquete el cuál se encontrará en resguardo por un plazo de 4 semanas, una vez transcurrido este tiempo se destruirá Y no sera seleccionable para la reposición ni del material ni del pago realizado.
+                    </p>
+                    <p>
+                        No nos hacemos responsables de daños al producto por parte de la paqueteria, el producto se envía con un embalaje óptimo para realizar el traslado, cualquier manejo y traslado inadecuado es responsabilidad de la paquetería que presta el servicio de envío. Nos reservamos el derecho de actualizar, cambiar reemplazar cualquier parte de estos Términos de Servicio mediante la publicación de actualizaciones y/o cambios en nuestro sitio web.
+                    </p>
+                </td>
+            </tr>
+        </table>
+    
+        <p style="text-align: center; margin-top: 0px; font-size: 7px;">
+            Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
+        </p>
     </div>
-        <br>
-            
+    <br>
+    <p style="text-align: center; margin-top: 10px; font-size: 10.5px;">
+        Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
+    </p>
+    
+    <p style="text-align: right; margin-top: 15px; font-size: 12px;">
+        9/11
+    </p>
+    <br>
 
     {{-- seccion 10/11  --}}
     <div class="header">
@@ -1079,7 +1182,7 @@
         <br><br><br><br>
         <p class="texto">
             XXXXXXXXXX
-        </p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        </p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     </div>
                 <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.

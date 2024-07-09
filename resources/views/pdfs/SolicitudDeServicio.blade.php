@@ -8,7 +8,7 @@
     <title>Document</title>
     <style>
         body img {
-            width: 200px;
+            width: 230px;
 
         }
 

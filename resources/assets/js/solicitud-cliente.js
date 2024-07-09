@@ -1,5 +1,7 @@
 
 document.addEventListener('DOMContentLoaded', function() {
+    
+
   // Contador para nuevas direcciones
   let addressCounter = 1;
 
@@ -311,3 +313,8 @@ if (typeof wizardIcons !== undefined && wizardIcons !== null) {
     });
   }*/
 }
+
+new Cleave(".phone-number-mask", {
+    phone: true,
+    phoneRegionCode: "US"
+  });

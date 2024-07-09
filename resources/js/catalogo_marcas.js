@@ -34,13 +34,15 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'categorias-list'
+        url: baseUrl + 'catalago-list'
       },
       columns: [
         // columns according to JSON
         { data: '' },
-        { data: 'categoria' },
-        { data: 'id_categoria' },
+        { data: 'id_marca' },
+        { data: 'folio' },
+        { data: 'marca' },
+        { data: 'id_empresa' },
         { data: 'action' }
       ],
       columnDefs: [
@@ -68,7 +70,7 @@ $(function () {
           targets: 2,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
-            var $name = full['categoria'];
+            var $name = full['folio'];
 
             // For Avatar badge
             var stateNum = Math.floor(Math.random() * 6);
@@ -100,11 +102,12 @@ $(function () {
           // User email
           targets: 3,
           render: function (data, type, full, meta) {
-            var $email = full['categoria'];
+            var $email = full['marca'];
             return '<span class="user-email">' + $email + '</span>';
           }
         },
-/*         {
+        
+        /*{
           // email verify
           targets: 4,
           className: 'text-center',
@@ -121,38 +124,38 @@ $(function () {
                 : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
             }`;
           }
-        }, 
-        /* {
+        },/
+       /* {
           // email verify
           targets: 5,
           className: 'text-center',
           render: function (data, type, full, meta) {
-            var $id = full['id_empresa'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_empresa']}" data-registro="${full['razon_social']} "></i>`;
+            var $id = full['id_marca'];
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_marca']}" data-registro="${full['folio']} "></i>`;
           }
         },*/
-        {
-          // Actions
-          targets: -1,
-          title: 'Acciones',
-          searchable: false,
-          orderable: false,
-          render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-              '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="' +
-              userView +
-              '" class="dropdown-item">View</a>' +
-              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-              '</div>' +
-              '</div>'
-            );
+          {
+            // Actions
+            targets: -1,
+            title: 'Acciones',
+            searchable: false,
+            orderable: false,
+            render: function (data, type, full, meta) {
+              return (
+                '<div class="d-flex align-items-center gap-50">' +
+                `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+                `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+                '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
+                '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                '<a href="' +
+                userView +
+                '" class="dropdown-item">View</a>' +
+                '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+                '</div>' +
+                '</div>'
+              );
+            }
           }
-        } 
       ],
       order: [[2, 'desc']],
       dom:
@@ -272,7 +275,7 @@ $(function () {
                 }
               }
             },
-            {
+           /* {
               extend: 'pdf',
               title: 'Users',
               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
@@ -296,7 +299,7 @@ $(function () {
                   }
                 }
               }
-            },
+            },*/
             {
               extend: 'copy',
               title: 'Users',
@@ -339,7 +342,7 @@ $(function () {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Detalles de ' + data['categoria'];
+              return 'Detalles de ' + data['folio'];
             }
           }),
           type: 'column',
@@ -427,7 +430,7 @@ $(function () {
     });
   });
 
-  $(document).on('click', '.pdf', function () {
+  /*$(document).on('click', '.pdf', function () {
         var id = $(this).data('id');
         var registro = $(this).data('registro');
             var iframe = $('#pdfViewer');
@@ -437,7 +440,7 @@ $(function () {
             $("#subtitulo_modal").text(registro);
             
           
-  });
+  });*/
 
   // edit record
   $(document).on('click', '.edit-record', function () {
