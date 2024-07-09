@@ -49,6 +49,8 @@
   <div class="card-datatable table-responsive">
     <table class="datatables-users table">
       <thead class="table-dark">
+        <!-- tablas a visualizar -->
+
         <tr>
           <th></th>
           <th>Id</th>
