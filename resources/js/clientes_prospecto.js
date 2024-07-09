@@ -67,7 +67,7 @@ $(function () {
           }
         },
         {
-          // User full name
+          // Es la razón social
           targets: 2,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
@@ -150,7 +150,7 @@ $(function () {
               '<a href="' +
               userView +
               '" class="dropdown-item">View</a>' +
-              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+              '<a data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item"><i class="ri-checkbox-circle-fill"></i> Validar solicitud</a>' +
               '</div>' +
               '</div>'
             );
@@ -466,7 +466,7 @@ $(function () {
   // changing the title
   $('.add-new').on('click', function () {
     $('#user_id').val(''); //reseting input field
-    $('#offcanvasAddUserLabel').html('Add User');
+    $('#offcanvasAddUserLabel').html('Add User22222');
   });
 
   // validating form and updating user's data
