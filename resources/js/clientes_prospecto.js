@@ -8,18 +8,11 @@
 $(function () {
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
-    select2 = $('.select2'),
+
     userView = baseUrl + 'app/user/view/account',
     offCanvasForm = $('#offcanvasValidarSolicitud');
 
-  if (select2.length) {
-    var $this = select2;
-    select2Focus($this);
-    $this.wrap('<div class="position-relative"></div>').select2({
-      placeholder: 'Select Country',
-      dropdownParent: $this.parent()
-    });
-  }
+
 
   // ajax setup
   $.ajaxSetup({
@@ -491,37 +484,13 @@ $(function () {
   // user form validation
   const fv = FormValidation.formValidation(addNewUserForm, {
     fields: {
-      name: {
+      medios: {
         validators: {
-          notEmpty: {
-            message: 'Please enter fullname'
-          }
+            notEmpty: {
+                message: 'Por favor selecciona una opción.'
+            }
         }
-      },
-      email: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter your email'
-          },
-          emailAddress: {
-            message: 'The value is not a valid email address'
-          }
-        }
-      },
-      userContact: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter your contact'
-          }
-        }
-      },
-      company: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter your company'
-          }
-        }
-      }
+    }
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
