@@ -415,14 +415,14 @@ Route::resource('/empresas-list', clientesProspectoController::class);
 Route::controller(catalogoMarcasController::class) ->group(function(){
 Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catalogoMarcas');
 });
-<<<<<<< HEAD
-=======
+
+
 
 
 //Marcas y catalogo
 Route::get('/marcas/catalogo', [marcasCatalogoController::class, 'UserManagement'])->name('marcas-catalogo');
 Route::resource('/catalago-list', marcasCatalogoController::class);
->>>>>>> 8d35acc45eee7cf91acf107fe7aed582dec25cf3
+
 
 Route::get('/categorias', [catalogoController::class, 'UserManagement'])->name('categorias');
 Route::resource('/categorias-list', catalogoController::class);
