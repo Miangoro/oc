@@ -12,31 +12,30 @@ use App\Models\empresa;
 class marcasCatalogoController extends Controller
 {
 
-  public function RegistroExitoso()
-  {
-    return view('solicitudes.Registro_exitoso');
-  }
+public function getEmpresas()
+{
+    // Obtener las empresas con su razon_social desde la relación
+    $empresas = Marcas::with('empresa')->select('id_empresa')->distinct()->get();
 
-  public function registrar(Request $request)
-  {
+    // Devolver los datos como respuesta JSON
+    return response()->json($empresas);
+}
+  
+//funcion para eliminar
+public function destroy($id_marca)
+{
+    $clase = marcas::findOrFail($id_marca);
+    $clase->delete();
 
-    $empresa = new marcas();
-    $empresa->folio = $request->folio;
-    $empresa->marca = $request->marca;
-    $empresa->save();
-    $id_marca = $empresa->id_marca;
+    return response()->json(['success' => 'Clase eliminada correctamente']);
+}
 
-
-
-
-
-    return view('solicitudes.Registro_exitoso');
-  }
-
+  
+  /*Crea la solicitud JSEON*/
   public function UserManagement()
   {
     // dd('UserManagement');
-    
+
     $marcas = marcas::all();
     $userCount = $marcas->count();
     $verified = 5;

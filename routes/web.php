@@ -420,6 +420,8 @@ Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catal
 //Marcas y catalogo
 Route::get('/marcas/catalogo', [marcasCatalogoController::class, 'UserManagement'])->name('marcas-catalogo');
 Route::resource('/catalago-list', marcasCatalogoController::class);
+Route::get('/get-empresas', [marcasCatalogoController::class, 'getEmpresas']);
+Route::delete('marcas/{id_marca}', [marcasCatalogoController::class, 'destroy'])->name('marcas.destroy');
 
 Route::get('/categorias', [catalogoController::class, 'UserManagement'])->name('categorias');
 Route::resource('/categorias-list', catalogoController::class);

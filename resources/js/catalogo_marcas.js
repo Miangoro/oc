@@ -1,12 +1,43 @@
 /**
  * Page User List
  */
-
 'use strict';
 
-// Datatable (jquery)
+//JS PARA ELIMINAR
+
+//OBTENER ID_EMPRESA JS
+$(document).ready(function () {
+  // Hacer petición AJAX para obtener las id_empresa con su razon_social
+  $.ajax({
+      url: '/get-empresas',
+      type: 'GET',
+      success: function (data) {
+          var select = $('#user-plan');
+          // Vaciar el select antes de llenarlo
+          select.empty();
+          select.append('<option value="">Selecciona un cliente</option>');
+          // Llenar el select con las id_empresa y su razon_social
+          $.each(data, function (key, empresa) {
+              select.append('<option value="' + empresa.id_empresa + '">' + empresa.empresa.razon_social + '</option>');
+          });
+      },
+      error: function () {
+          alert('Error al obtener las empresas.');
+      }
+  });
+});
+
+//DATE PICKER
+//Datepicker inicializador
+
+  $(document).ready(function () {
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd'
+    });
+
+  });
 $(function () {
-  
+  // Datatable (jquery)
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
     select2 = $('.select2'),
@@ -77,15 +108,15 @@ $(function () {
             var stateNum = Math.floor(Math.random() * 6);
             var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
             var $state = states[stateNum];
-             
-          
+
+
 
             // Creates full output for row
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center user-name">' +
               '<div class="avatar-wrapper">' +
               '<div class="avatar avatar-sm me-3">' +
-              
+
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
@@ -107,7 +138,7 @@ $(function () {
             return '<span class="user-email">' + $email + '</span>';
           }
         },
-        
+
         /*{
           // email verify
           targets: 4,
@@ -135,28 +166,29 @@ $(function () {
             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_marca']}" data-registro="${full['folio']} "></i>`;
           }
         },*/
-          {
-            // Actions
-            targets: -1,
-            title: 'Acciones',
-            searchable: false,
-            orderable: false,
-            render: function (data, type, full, meta) {
-              return (
-                '<div class="d-flex align-items-center gap-50">' +
-                `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-                `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-                '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
-                '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                '<a href="' +
-                userView +
-                '" class="dropdown-item">View</a>' +
-                '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-                '</div>' +
-                '</div>'
-              );
-            }
+
+        {
+          // Actions
+          targets: -1,
+          title: 'Acciones',
+          searchable: false,
+          orderable: false,
+          render: function (data, type, full, meta) {
+            return (
+              '<div class="d-flex align-items-center gap-50">' +
+              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+              '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
+              '<div class="dropdown-menu dropdown-menu-end m-0">' +
+              '<a href="' +
+              userView +
+              '" class="dropdown-item">View</a>' +
+              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+              '</div>' +
+              '</div>'
+            );
           }
+        }
       ],
       order: [[2, 'desc']],
       dom:
@@ -175,11 +207,11 @@ $(function () {
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
         paginate: {
-                "sFirst":    "Primero",
-                "sLast":     "Último",
-                "sNext":     "Siguiente",
-                "sPrevious": "Anterior"
-              }
+          "sFirst": "Primero",
+          "sLast": "Último",
+          "sNext": "Siguiente",
+          "sPrevious": "Anterior"
+        }
       },
       // Buttons with Dropdown
       buttons: [
@@ -276,7 +308,7 @@ $(function () {
                 }
               }
             },
-           {
+            {
               extend: 'pdf',
               title: 'Users',
               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
@@ -351,18 +383,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -400,7 +432,7 @@ $(function () {
         // delete the data
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}empresas-list/${user_id}`,
+          url: `${baseUrl}catalago-list/${user_id}`,
           success: function () {
             dt_user.draw();
           },
