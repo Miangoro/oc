@@ -140,10 +140,9 @@ $(function () {
               `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_empresa']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
               '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="' +
-              userView +
+              
               `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud fw-bold"><i class="text-info ri-search-eye-line"></i> Validar solicitud</a>` +
-              `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud fw-bold"><i class="text-success ri-checkbox-circle-fill"></i> Aceptar cliente</a>` +
+              `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud2 fw-bold"><i class="text-success ri-checkbox-circle-fill"></i> Aceptar cliente</a>` +
               '</div>' +
               '</div>'
             );
@@ -367,7 +366,7 @@ $(function () {
 
   // Delete Record
   $(document).on('click', '.delete-record', function () {
-    var user_id = $(this).data('id'),
+    var user_id = $(this).data('empresa_id'),
       dtrModal = $('.dtr-bs-modal.show');
 
     // hide responsive modal in small screen
@@ -450,7 +449,7 @@ $(function () {
 
     // get data
     $.get(`${baseUrl}empresas-list\/${user_id}\/edit`, function (data) {
-      $('#user_id').val(data.id);
+      $('#empresa_id').val(data.id);
       $('#add-user-fullname').val(data.name);
       $('#add-user-email').val(data.email);
     });
@@ -484,13 +483,25 @@ $(function () {
   // user form validation
   const fv = FormValidation.formValidation(addNewUserForm, {
     fields: {
-      medios: {
+        medios: {
+          validators: {
+              notEmpty: {
+                  message: 'Por favor selecciona una opción.'
+              }
+          }
+      },competencia: {
         validators: {
             notEmpty: {
                 message: 'Por favor selecciona una opción.'
             }
         }
-    }
+    },capacidad: {
+      validators: {
+          notEmpty: {
+              message: 'Por favor selecciona una opción.'
+          }
+      }
+  }
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
