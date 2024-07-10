@@ -72,7 +72,7 @@
          
                     
                       <div class="col-md-12">
-                            <div class="card">
+                            <div class="card mb-5">
                                 <div class="card-body">
                                     <span class="card-title">Se cuenta con todos los medios para realizar todas las actividades de evaluación para la
                                       Certificación</span>
@@ -93,7 +93,7 @@
                         </div>
 
                         <div class="col-md-12 pt-5">
-                          <div class="card">
+                          <div class="card mb-5">
                               <div class="card-body">
                                   <span class="card-title">El organismo de Certificación tiene la competencia para realizar la Certificación:</span>
                                   <p>
@@ -113,7 +113,7 @@
                       </div>
 
                       <div class="col-md-12 pt-5">
-                        <div class="card">
+                        <div class="card mb-5">
                             <div class="card-body">
                                 <span class="card-title">El organismo de Certificación tiene la capacidad para llevar a cabo las actividades de
                                   certificación.</span>
@@ -125,7 +125,7 @@
                                 </p>
                                 <p>
                                     <label>
-                                        <input name="capacidad" type="radio" value="No" />
+                                        <input name="capacidad" type="radio" value="So" />
                                         <span><strong>No</strong></span>
                                     </label>
                                 </p>
