@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\catalogo_categoria;
+namespace App\Http\Controllers\catalogo;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -8,7 +8,6 @@ use App\Models\categorias;
 
 class categoriasController extends Controller
 {
-
     public function UserManagement()
     {
         $empresas = categorias::all();
@@ -70,9 +69,9 @@ class categoriasController extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-                $nestedData['id_categoria'] = $user->id_categoria; // Ajusta el nombre de la columna según tu base de datos
+                $nestedData['id_categoria'] = $user->id_categoria;
                 $nestedData['fake_id'] = ++$ids;
-                $nestedData['categoria'] = $user->categoria; // Ajusta el nombre de la columna según tu base de datos
+                $nestedData['categoria'] = $user->categoria;
 
                 $data[] = $nestedData;
             }
@@ -94,4 +93,16 @@ class categoriasController extends Controller
             ]);
         }
     }
+    
+//funcion para eliminar
+public function destroy($id_categoria)
+{
+    $clase = categorias::findOrFail($id_categoria);
+    $clase->delete();
+
+    return response()->json(['success' => 'Clase eliminada correctamente']);
+}
+
+//funcion para agregar registro
+    
 }

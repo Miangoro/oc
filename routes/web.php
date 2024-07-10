@@ -162,9 +162,8 @@ use App\Http\Controllers\solicitudCliente\solicitudClienteController;
 use App\Http\Controllers\pdfscontrollers\CartaAsignacionController;
 use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
-use App\Http\Controllers\catalogo_categoria\categoriasController;
+use App\Http\Controllers\catalogo\categoriasController; 
 use App\Http\Controllers\marcasCatalogo\marcasCatalogoController;
-use App\Http\Controllers\catalago_clase\catalago_clase;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -407,7 +406,6 @@ Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dict
 //Clientes prospecto y confirmado
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');
 Route::resource('/empresas-list', clientesProspectoController::class);
-//Route::get('/empresas-list/{id}/edit', clientesProspectoController::class,'registrarValidacion');
 
 //Catalogo de marcas
 Route::controller(catalogoMarcasController::class) ->group(function(){
@@ -421,3 +419,4 @@ Route::resource('/catalago-list', marcasCatalogoController::class);
 //Categorias Agave
 Route::get('/categorias', [categoriasController::class, 'UserManagement'])->name('categorias');
 Route::resource('/categorias-list', categoriasController::class);
+Route::delete('categorias/{id_categoria}', [categoriasController::class, 'destroy'])->name('categorias.destroy');
