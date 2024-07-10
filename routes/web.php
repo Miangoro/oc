@@ -164,6 +164,8 @@ use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
 use App\Http\Controllers\catalogo_categoria\catalogoController;
 use App\Http\Controllers\marcasCatalogo\marcasCatalogoController;
+use App\Http\Controllers\catalago_clase\ClaseController;
+
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -415,14 +417,22 @@ Route::resource('/empresas-list', clientesProspectoController::class);
 Route::controller(catalogoMarcasController::class) ->group(function(){
 Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catalogoMarcas');
 });
-<<<<<<< HEAD
-=======
+
 
 
 //Marcas y catalogo
 Route::get('/marcas/catalogo', [marcasCatalogoController::class, 'UserManagement'])->name('marcas-catalogo');
 Route::resource('/catalago-list', marcasCatalogoController::class);
->>>>>>> 8d35acc45eee7cf91acf107fe7aed582dec25cf3
+
 
 Route::get('/categorias', [catalogoController::class, 'UserManagement'])->name('categorias');
 Route::resource('/categorias-list', catalogoController::class);
+
+
+/* ruta de clases catalogo */
+Route::get('/catalogo', [ClaseController::class, 'UserManagement'])->name('catalogo');
+Route::get('/clases-list', [ClaseController::class, 'index']);
+Route::delete('/clases-list/{id_clase}', [ClaseController::class, 'destroy'])->name('clases.destroy');
+
+
+
