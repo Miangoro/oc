@@ -4,14 +4,14 @@ namespace App\Http\Controllers\catalogo_categoria;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Models\catalogo;
+use App\Models\categorias;
 
-class CatalogoController extends Controller
+class categoriasController extends Controller
 {
 
     public function UserManagement()
     {
-        $empresas = catalogo::all();
+        $empresas = categorias::all();
         $userCount = $empresas->count();
         $verified = 5;
         $notVerified = 10;
@@ -35,7 +35,7 @@ class CatalogoController extends Controller
 
         $search = [];
 
-        $totalData = catalogo::count();
+        $totalData = categorias::count();
 
         $totalFiltered = $totalData;
 
@@ -45,21 +45,21 @@ class CatalogoController extends Controller
         $dir = $request->input('order.0.dir');
 
         if (empty($request->input('search.value'))) {
-            $users = catalogo::offset($start)
+            $users = categorias::offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
         } else {
             $search = $request->input('search.value');
 
-            $users = catalogo::where('id_categoria', 'LIKE', "%{$search}%")
+            $users = categorias::where('id_categoria', 'LIKE', "%{$search}%")
                 ->orWhere('categoria', 'LIKE', "%{$search}%")
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
 
-            $totalFiltered = catalogo::where('id_categoria', 'LIKE', "%{$search}%")
+            $totalFiltered = categorias::where('id_categoria', 'LIKE', "%{$search}%")
                 ->orWhere('categoria', 'LIKE', "%{$search}%")
                 ->count();
         }

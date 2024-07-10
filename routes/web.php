@@ -162,14 +162,15 @@ use App\Http\Controllers\solicitudCliente\solicitudClienteController;
 use App\Http\Controllers\pdfscontrollers\CartaAsignacionController;
 use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
-use App\Http\Controllers\catalogo_categoria\catalogoController;
+use App\Http\Controllers\catalogo_categoria\categoriasController;
+use App\Http\Controllers\marcasCatalogo\marcasCatalogoController;
+use App\Http\Controllers\catalago_clase\catalago_clase;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/', function () {
 	return redirect('/login');
 });
-
 
 Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm');
@@ -399,8 +400,6 @@ Route::get('/Contrato_prestacion_servicio_NOM-199', [CartaAsignacionController::
 Route::get('/acta_circunstanciada_unidades_produccion', [CartaAsignacionController::class, 'acta_circunstanciada_produccion'])->name('acta_circunstanciada_unidades_produccion');
 Route::get('/solicitud_Info_ClienteNOM-199', [CartaAsignacionController::class, 'solicitudInfoNOM_199'])->name('solicitud_Info_ClienteNOM-199');
 
-
-
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamenp'])->name('dictamen_productor');
 Route::get('/dictamen_envasador', [CartaAsignacionController::class, 'dictamene'])->name('dictamen_envasador');
 Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dictamenc'])->name('dictamen_comercializador');
@@ -415,10 +414,10 @@ Route::controller(catalogoMarcasController::class) ->group(function(){
 Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catalogoMarcas');
 });
 
-
 //Marcas y catalogo
 Route::get('/marcas/catalogo', [marcasCatalogoController::class, 'UserManagement'])->name('marcas-catalogo');
 Route::resource('/catalago-list', marcasCatalogoController::class);
 
-Route::get('/categorias', [catalogoController::class, 'UserManagement'])->name('categorias');
-Route::resource('/categorias-list', catalogoController::class);
+//Categorias Agave
+Route::get('/categorias', [categoriasController::class, 'UserManagement'])->name('categorias');
+Route::resource('/categorias-list', categoriasController::class);

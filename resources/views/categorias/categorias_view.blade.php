@@ -32,7 +32,7 @@
 
 <!-- Page Scripts -->
 @section('page-script')
-@vite(['resources/js/control_categorias.js'])
+@vite(['resources/js/categorias.js'])
 @endsection
 
 @section('content')
