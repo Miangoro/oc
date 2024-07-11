@@ -7,7 +7,7 @@
 // Agregar nuevo registro
 
 // Agregar nuevo registro
-$('#addNewUserForm').on('submit', function (e) {
+$('#addNewMarca').on('submit', function (e) {
   e.preventDefault();
   var formData = $(this).serialize();
 
@@ -16,8 +16,8 @@ $('#addNewUserForm').on('submit', function (e) {
       type: 'POST',
       data: formData,
       success: function (response) {
-          $('#offcanvasAddUser').offcanvas('hide');
-          $('#addNewUserForm')[0].reset();
+          //$('#offcanvasAddUser').offcanvas('hide');
+          //$('#addNewUserForm')[0].reset();
 
           // Actualizar la tabla sin reinicializar DataTables
           $('.datatables-users').DataTable().ajax.reload();
@@ -64,7 +64,7 @@ $(function () {
   var dt_user_table = $('.datatables-users'),
     select2 = $('.select2'),
     userView = baseUrl + 'app/user/view/account',
-    offCanvasForm = $('#offcanvasAddUser');
+    offCanvasForm = $('#addMarca');
 
   if (select2.length) {
     var $this = select2;
@@ -381,13 +381,14 @@ $(function () {
               }
             }
           ]
-        },
+        }, 
         {
           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo prospecto</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
-            'data-bs-toggle': 'offcanvas',
-            'data-bs-target': '#offcanvasAddUser'
+            'data-bs-toggle': 'modal',
+            'data-bs-dismiss': 'modal',
+            'data-bs-target': '#addMarca'
           }
         }
       ],
