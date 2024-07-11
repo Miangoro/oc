@@ -86,77 +86,73 @@ public function destroy($id_marca)
 
   public function index(Request $request)
   {
-    $columns = [
-      1 => 'id_marca',
-      2 => 'folio',
-      3 => 'marca',
-      4 => 'id_empresa',
-    ];
-
-    $search = [];
-
-    $totalData = marcas::count();
-
-    $totalFiltered = $totalData;
-
-    $limit = $request->input('length');
-    $start = $request->input('start');
-    $order = $columns[$request->input('order.0.column')];
-    $dir = $request->input('order.0.dir');
-
-    if (empty($request->input('search.value'))) {
-      $users = marcas::offset($start)
-        ->limit($limit)
-        ->orderBy($order, $dir)
-        ->get();
-    } else {
-      $search = $request->input('search.value');
-
-      $users = marcas::where('id_marca', 'LIKE', "%{$search}%")
-        ->orWhere('folio', 'LIKE', "%{$search}%")
-        ->orWhere('marca', 'LIKE', "%{$search}%")
-        ->offset($start)
-        ->limit($limit)
-        ->orderBy($order, $dir)
-        ->get();
-
-      $totalFiltered = marcas::where('id_marca', 'LIKE', "%{$search}%")
-        ->orWhere('folio', 'LIKE', "%{$search}%")
-        ->orWhere('marca', 'LIKE', "%{$search}%")
-        ->count();
-    }
-
-    $data = [];
-
-    if (!empty($users)) {
-      // providing a dummy id instead of database ids
-      $ids = $start;
-
-      foreach ($users as $user) {
-        $nestedData['id_marca'] = $user->id_marca;
-        $nestedData['fake_id'] = ++$ids;
-        $nestedData['folio'] = $user->folio;
-        $nestedData['marca'] = $user->marca;
-        $nestedData['id_empresa'] = $user->id_empresa;
-
-        $data[] = $nestedData;
+      $columns = [
+          1 => 'id_marca',
+          2 => 'folio',
+          3 => 'marca',
+          4 => 'id_empresa',
+      ];
+  
+      $search = [];
+  
+      $totalData = marcas::count();
+  
+      $totalFiltered = $totalData;
+  
+      $limit = $request->input('length');
+      $start = $request->input('start');
+      $order = $columns[$request->input('order.0.column')];
+      $dir = $request->input('order.0.dir');
+  
+      if (empty($request->input('search.value'))) {
+          $users = marcas::with('empresa') // Incluye la relación empresa
+              ->offset($start)
+              ->limit($limit)
+              ->orderBy($order, $dir)
+              ->get();
+      } else {
+          $search = $request->input('search.value');
+  
+          $users = marcas::with('empresa') // Incluye la relación empresa
+              ->where('id_marca', 'LIKE', "%{$search}%")
+              ->orWhere('folio', 'LIKE', "%{$search}%")
+              ->orWhere('marca', 'LIKE', "%{$search}%")
+              ->offset($start)
+              ->limit($limit)
+              ->orderBy($order, $dir)
+              ->get();
+  
+          $totalFiltered = marcas::where('id_marca', 'LIKE', "%{$search}%")
+              ->orWhere('folio', 'LIKE', "%{$search}%")
+              ->orWhere('marca', 'LIKE', "%{$search}%")
+              ->count();
       }
-    }
-
-    if ($data) {
+  
+      $data = [];
+  
+      if (!empty($users)) {
+          // providing a dummy id instead of database ids
+          $ids = $start;
+  
+          foreach ($users as $user) {
+              $nestedData['id_marca'] = $user->id_marca;
+              $nestedData['fake_id'] = ++$ids;
+              $nestedData['folio'] = $user->folio;
+              $nestedData['marca'] = $user->marca;
+              $nestedData['id_empresa'] = $user->id_empresa;
+              $nestedData['razon_social'] = $user->empresa ? $user->empresa->razon_social : ''; // Obtiene la razón social
+  
+              $data[] = $nestedData;
+          }
+      }
+  
       return response()->json([
-        'draw' => intval($request->input('draw')),
-        'recordsTotal' => intval($totalData),
-        'recordsFiltered' => intval($totalFiltered),
-        'code' => 200,
-        'data' => $data,
+          'draw' => intval($request->input('draw')),
+          'recordsTotal' => intval($totalData),
+          'recordsFiltered' => intval($totalFiltered),
+          'code' => 200,
+          'data' => $data,
       ]);
-    } else {
-      return response()->json([
-        'message' => 'Internal Server Error',
-        'code' => 500,
-        'data' => [],
-      ]);
-    }
   }
+  
 }

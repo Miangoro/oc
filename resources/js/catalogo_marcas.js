@@ -70,7 +70,7 @@ $(function () {
     var $this = select2;
     select2Focus($this);
     $this.wrap('<div class="position-relative"></div>').select2({
-      placeholder: 'Select Country',
+      placeholder: 'Selecciona cliente',
       dropdownParent: $this.parent()
     });
   }
@@ -96,7 +96,7 @@ $(function () {
         { data: 'id_marca' },
         { data: 'folio' },
         { data: 'marca' },
-        { data: 'id_empresa' },
+        { data: 'razon_social' }, // Nueva columna para la razón social
         { data: 'action' }
       ],
       columnDefs: [
@@ -178,8 +178,8 @@ $(function () {
                 : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
             }`;
           }
-        },/
-       /* {
+        },*/
+       /*{
           // email verify
           targets: 5,
           className: 'text-center',
