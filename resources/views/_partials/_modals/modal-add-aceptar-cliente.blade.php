@@ -8,7 +8,7 @@
           <h4 class="address-title mb-2">Aceptar cliente</h4>
           <p class="address-subtitle">Convertir a cliente confirmado del Organismo Certificador</p>
         </div>
-        <form id="addNewAddressForm" class="row g-5" onsubmit="return false">
+        <form id="addNewCliente" class="row g-5" onsubmit="return false">
 
          <!-- <div class="col-12">
             <div class="row g-5">
@@ -40,28 +40,28 @@
               </div>
             </div>
           </div>-->
-          <div class="col-12 col-md-12">
+          <div class="col-12 col-md-12 col-sm-12">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalAddressFirstName" name="modalAddressFirstName" class="form-control" placeholder="John" />
+              <input type="text" id="modalAddressFirstName" name="numero_cliente" class="form-control" placeholder="John" />
               <label for="modalAddressFirstName">Número de cliente</label>
             </div>
           </div>
           <hr class="my-6">
           <h5 class="mb-5">Información para el contrato</h5>
 
-          <div class="col-6">
+          <div class="col-md-6 col-sm-12">
             <div class="form-floating form-floating-outline">
-              <input type="date" id="modalAddressAddress1" name="modalAddressAddress1" class="form-control" placeholder="12, Business Park" />
+              <input type="date" id="modalAddressAddress1" name="fecha_cedula" class="form-control" placeholder="12, Business Park" />
               <label for="modalAddressAddress1">Fecha de Cédula de Identificación Fiscal</label>
             </div>
           </div>
-          <div class="col-6">
+          <div class="col-md-6 col-sm-12">
             <div class="form-floating form-floating-outline">
               <input type="text" id="modalAddressAddress2" name="modalAddressAddress2" class="form-control" placeholder="Mall Road" />
               <label for="modalAddressAddress2">idCIF del Servicio deAdministración Tributaria</label>
             </div>
           </div>
-          <div class="col-12 col-md-6">
+          <div class="col-md-6 col-sm-12">
             <div class="form-floating form-floating-outline">
               <input type="text" id="modalAddressLandmark" name="modalAddressLandmark" class="form-control" placeholder="Nr. Hard Rock Cafe" />
               <label for="modalAddressLandmark">Clave de elector del INE</label>

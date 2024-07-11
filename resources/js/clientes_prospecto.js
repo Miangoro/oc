@@ -480,7 +480,7 @@ $(function () {
   // validating form and updating user's data
   const addNewUserForm = document.getElementById('addNewUserForm');
 
-  // user form validation
+  // Validación del formulario de Validación de solicitud
   const fv = FormValidation.formValidation(addNewUserForm, {
     fields: {
         medios: {
@@ -553,9 +553,79 @@ $(function () {
     });
   });
 
+  // validating form and updating user's data
+  const addNewCliente = document.getElementById('addNewCliente');
+
+  // Validación del formulario de aceptar cliente
+  const fv2 = FormValidation.formValidation(addNewCliente, {
+    fields: {
+        numero_cliente: {
+          validators: {
+              notEmpty: {
+                  message: 'Por favor introdusca el número de cliente.'
+              }
+          }
+      },fecha_cedula: {
+        validators: {
+            notEmpty: {
+                message: 'Por favor introdusca la fecha de cédula de identificación fiscal.'
+            }
+        }
+    }
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        // Use this for enabling/changing valid/invalid class
+        eleValidClass: '',
+        rowSelector: function (field, ele) {
+          // field is the field name & ele is the field element
+          return '.col-sm-12';
+        }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      // Submit the form when all fields are valid
+      // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+    // adding or updating user when form successfully validate
+    $.ajax({
+      data: $('#addNewUserForm').serialize(),
+      url: `${baseUrl}empresas-list`,
+      type: 'POST',
+      success: function (status) {
+        dt_user.draw();
+        offCanvasForm.offcanvas('hide');
+
+        // sweetalert
+        Swal.fire({
+          icon: 'success',
+          title: `${status} Exitosamente`,
+          text: `Solicitud ${status} Exitosamente.`,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function (err) {
+        
+        offCanvasForm.offcanvas('hide');
+        Swal.fire({
+          title: 'Duplicate Entry!',
+          text: 'Your email should be unique.',
+          icon: 'error',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      }
+    });
+  });
+
   // clearing form data when offcanvas hidden
   offCanvasForm.on('hidden.bs.offcanvas', function () {
-    fv.resetForm(true);
+    fv2.resetForm(true);
   });
 
   const phoneMaskList = document.querySelectorAll('.phone-mask');

@@ -430,9 +430,6 @@ Route::post('/catalogo', [ClaseController::class, 'store'])->name('catalogo.stor
 Route::get('/clases-list/{id_clase}/edit', [ClaseController::class, 'edit'])->name('clases.edit');
 Route::put('/clases-list/{id_clase}', [ClaseController::class, 'update'])->name('clases.update');
 
-
-
-
 //Categorias Agave
 Route::get('/categorias', [categoriasController::class, 'UserManagement'])->name('categorias');
 Route::resource('/categorias-list', categoriasController::class);
