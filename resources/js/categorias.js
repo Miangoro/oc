@@ -178,7 +178,10 @@ $(function () {
                 "sPrevious": "Anterior"
               }
       },
-      // Buttons with Dropdown
+
+
+
+      // Exportar crud en documentos
       buttons: [
         {
           extend: 'collection',
@@ -373,7 +376,7 @@ $(function () {
 
 
   
-  // Delete Record
+  // Eliminar registro
   $(document).on('click', '.delete-record', function () {
     var id_categoria = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
@@ -431,7 +434,36 @@ $(function () {
     });
   });
 
+    // Edit category
+    $('.datatables-users').on('click', '.edit-record', function() {
+      var id = $(this).data('id');
+      $.get('{{ route("categorias.index") }}/' + id + '/edit', function(data) {
+          $('#user_id').val(data.id_categoria);
+          $('#add-user-fullname').val(data.categoria);
+          $('#offcanvasAddUserLabel').text('Editar Categoría');
+          $('#offcanvasAddUser').offcanvas('show');
+      });
+  });
 
+    // Add new category
+    $('#addNewUserForm').on('submit', function(e) {
+      e.preventDefault();
+      var formData = $(this).serialize();
+
+      $.ajax({
+          url: '{{ route("categorias.store") }}',
+          method: 'POST',
+          data: formData,
+          success: function(response) {
+              $('#offcanvasAddUser').offcanvas('hide');
+              table.ajax.reload();
+              alert(response.success);
+          },
+          error: function(response) {
+              alert('Hubo un error, por favor intente de nuevo.');
+          }
+      });
+  });
 
 
 

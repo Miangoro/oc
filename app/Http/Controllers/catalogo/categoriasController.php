@@ -104,5 +104,5 @@ public function destroy($id_categoria)
 }
 
 //funcion para agregar registro
-    
+
 }
