@@ -457,7 +457,9 @@
 
                 </tr>
                 <tr>
-                    <td colspan="3">Comentarios: </td>
+                    <td colspan="3">Comentarios: 
+                        {{$datos[0]->comentarios}}
+                    </td>
 
                 </tr>
 
