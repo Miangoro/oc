@@ -7,15 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class marcas extends Model
 {
-    use HasFactory;
-    protected $table = 'marcas';
-    protected $primaryKey = 'id_marca';
-    protected $fillable = [
-        'id_marca',
-        'folio',
-        'marca',
-        'id_empresa',
-      ];
 
+      use HasFactory;
+  
+      protected $table = 'marcas';
+      protected $primaryKey = 'id_marca';
+      protected $fillable = [
+          'id_marca',
+          'folio',
+          'marca',
+          'id_empresa',
+      ];
+  
+      public function empresa()
+      {
+          return $this->belongsTo(Empresa::class, 'id_empresa');
+      }
       
 }

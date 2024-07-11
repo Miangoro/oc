@@ -164,7 +164,7 @@ use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
 use App\Http\Controllers\catalogo\categoriasController; 
 use App\Http\Controllers\marcasCatalogo\marcasCatalogoController;
-use App\Http\Controllers\catalago_clase\ClaseController;
+use App\Http\Controllers\catalogo\ClaseController;
 
 
 // Main Page Route
@@ -414,9 +414,21 @@ Route::controller(catalogoMarcasController::class) ->group(function(){
 Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catalogoMarcas');
 });
 
+
 //Marcas y catalogo
 Route::get('/marcas/catalogo', [marcasCatalogoController::class, 'UserManagement'])->name('marcas-catalogo');
 Route::resource('/catalago-list', marcasCatalogoController::class);
+Route::get('/categorias', [catalogoController::class, 'UserManagement'])->name('categorias');
+Route::resource('/categorias-list', catalogoController::class);
+
+
+/* ruta de clases catalogo */
+Route::get('/catalogo', [ClaseController::class, 'UserManagement'])->name('catalogo');
+Route::get('/clases-list', [ClaseController::class, 'index']);
+Route::delete('/clases-list/{id_clase}', [ClaseController::class, 'destroy'])->name('clases.destroy');
+Route::post('/catalogo', [ClaseController::class, 'store'])->name('catalogo.store');
+Route::get('/clases-list/{id_clase}/edit', [ClaseController::class, 'edit'])->name('clases.edit');
+Route::put('/clases-list/{id_clase}', [ClaseController::class, 'update'])->name('clases.update');
 
 //Categorias Agave
 Route::get('/categorias', [categoriasController::class, 'UserManagement'])->name('categorias');

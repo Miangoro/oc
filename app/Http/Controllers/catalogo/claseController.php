@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\catalago_clase;
+namespace App\Http\Controllers\catalogo;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +19,7 @@ class ClaseController extends Controller
         $usersUnique = $empresas->unique(['clases']);
         $userDuplicates = 40;
 
-        return view('catalago_clases.Catalago_Clases', [
+        return view('catalogo.Catalogo_Clases', [
             'totalUser' => $userCount,
             'verified' => $verified,
             'notVerified' => $notVerified,
@@ -95,13 +95,66 @@ class ClaseController extends Controller
             ]);
         }
     }
-        //funcion para eliminar
-        public function destroy($id_clase)
-        {
+
+
+    // Función para eliminar una clase
+    public function destroy($id_clase)
+    {
+        try {
             $clase = clases::findOrFail($id_clase);
             $clase->delete();
 
             return response()->json(['success' => 'Clase eliminada correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al eliminar la clase'], 500);
         }
+    }
+
+    // Función para agregar una nueva clase
+    public function store(Request $request)
+    {
+        $request->validate([
+            'clase' => 'required|string|max:255',
+        ]);
+
+        try {
+            $clase = new clases();
+            $clase->clase = $request->clase;
+            $clase->save();
+
+            return response()->json(['success' => 'Clase agregada correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al agregar la clase'], 500);
+        }
+    }
+
+//funcion para llenar el campo del formulario
+    public function edit($id_clase)
+    {
+        try {
+            $clase = clases::findOrFail($id_clase);
+            return response()->json($clase);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener la clase'], 500);
+        }
+    }
+    // Función para actualizar una clase existente
+    public function update(Request $request, $id_clase)
+{
+    $request->validate([
+        'clase' => 'required|string|max:255',
+    ]);
+
+    try {
+        $clase = clases::findOrFail($id_clase);
+        $clase->clase = $request->clase;
+        $clase->save();
+
+        return response()->json(['success' => 'Clase actualizada correctamente']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al actualizar la clase'], 500);
+    }
+}
+    
 
 }
