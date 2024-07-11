@@ -12,14 +12,44 @@ use App\Models\empresa;
 class marcasCatalogoController extends Controller
 {
 
-public function getEmpresas()
-{
-    // Obtener las empresas con su razon_social desde la relación
-    $empresas = Marcas::with('empresa')->select('id_empresa')->distinct()->get();
+  public function store(Request $request)
+  {
+      $request->validate([
+          'cliente' => 'required|exists:empresa,id_empresa',
+          'company' => 'required|string|max:60',
+          'folio' => 'required|string|max:1',
+      ]);
+  
+      if ($request->id) {
+          // Actualizar marca existente
+          $marca = marcas::findOrFail($request->id);
+          $marca->id_empresa = $request->cliente;
+          $marca->marca = $request->company;
+          $marca->folio = $request->folio;
+          $marca->save();
+          return response()->json(['success' => 'Marca actualizada exitosamente.']);
+      } else {
+          // Crear nueva marca
+          $marca = new marcas();
+          $marca->id_empresa = $request->cliente;
+          $marca->marca = $request->company;
+          $marca->folio = $request->folio;
+          $marca->save();
+          return response()->json(['success' => 'Marca registrada exitosamente.']);
+      }
+  }
+  
 
-    // Devolver los datos como respuesta JSON
-    return response()->json($empresas);
-}
+
+  public function marcas()
+  {
+      $clientes = empresa::where('tipo', 1)->get();
+      $opciones = marcas::all();
+      return view('clientesMarcas.find_catalago_marcas', compact('opciones', 'clientes'));
+  }
+
+  
+
   
 //funcion para eliminar
 public function destroy($id_marca)
@@ -34,8 +64,10 @@ public function destroy($id_marca)
   /*Crea la solicitud JSEON*/
   public function UserManagement()
   {
-    // dd('UserManagement');
+    // Obtener listado de clientes (empresas)
+    $clientes = Empresa::all(); // Esto depende de cómo tengas configurado tu modelo Empresa
 
+    // Otros datos que puedas querer pasar a la vista
     $marcas = marcas::all();
     $userCount = $marcas->count();
     $verified = 5;
@@ -43,10 +75,11 @@ public function destroy($id_marca)
     $userDuplicates = 40;
 
     return view('clientesMarcas.find_catalago_marcas', [
-      'totalUser' => $userCount,
-      'verified' => $verified,
-      'notVerified' => $notVerified,
-      'userDuplicates' => $userDuplicates,
+        'totalUser' => $userCount,
+        'verified' => $verified,
+        'notVerified' => $notVerified,
+        'userDuplicates' => $userDuplicates,
+        'clientes' => $clientes, // Pasa la lista de clientes a la vista
     ]);
   }
 

@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       <div class="form-check custom-option custom-option-icon">
                           <label class="form-check-label custom-option-content" for="customRadioIcon8">
                               <span class="custom-option-body">
-                                  <i class="ri-ink-bottle-fill"></i>
+                                  <i class="icon-agave"></i>
                                   <small>Productor de Agave</small>
                               </span>
                               <input name="actividad[]" class="form-check-input" type="checkbox" value="1" id="customRadioIcon8" />
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       <div class="form-check custom-option custom-option-icon">
                           <label class="form-check-label custom-option-content" for="customRadioIcon9">
                               <span class="custom-option-body">
-                                  <i class="ri-ink-bottle-fill"></i>
+                                  <i class="icon-envasador"></i>
                                   <small>Envasador de Mezcal</small>
                               </span>
                               <input name="actividad[]" class="form-check-input" type="checkbox" value="2" id="customRadioIcon9" />
@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       <div class="form-check custom-option custom-option-icon">
                           <label class="form-check-label custom-option-content" for="customRadioIcon10">
                               <span class="custom-option-body">
-                                  <i class="ri-ink-bottle-fill"></i>
+                                  <i class="icon-productor-tequila"></i>
                                   <small>Productor de Mezcal</small>
                               </span>
                               <input name="actividad[]" class="form-check-input" type="checkbox" value="3" id="customRadioIcon10" />
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
                       <div class="form-check custom-option custom-option-icon">
                           <label class="form-check-label custom-option-content" for="customRadioIcon11">
                               <span class="custom-option-body">
-                                  <i class="ri-ink-bottle-fill"></i>
+                                  <i class="icon-comercializador"></i>
                                   <small>Comercializador de Mezcal</small>
                               </span>
                               <input name="actividad[]" class="form-check-input" type="checkbox" value="4" id="customRadioIcon11" />
@@ -235,23 +235,12 @@ document.addEventListener('DOMContentLoaded', function() {
                   </div>
                   <div class="col-md">
                       <div class="form-check custom-option custom-option-icon">
-                          <label class="form-check-label custom-option-content" for="customRadioIcon14">
-                              <span class="custom-option-body">
-                                  <i class="ri-ink-bottle-fill"></i>
-                                  <small>Productor de Mezcal</small>
-                              </span>
-                              <input name="actividad[]" class="form-check-input" type="checkbox" value="3" id="customRadioIcon14" />
-                          </label>
-                      </div>
-                  </div>
-                  <div class="col-md">
-                      <div class="form-check custom-option custom-option-icon">
                           <label class="form-check-label custom-option-content" for="customRadioIcon15">
                               <span class="custom-option-body">
                                   <i class="ri-ink-bottle-fill"></i>
-                                  <small>Comercializador de Mezcal</small>
+                                  <small>Comercializador de bebidas alcohólicas que contienen Mezcal</small>
                               </span>
-                              <input name="actividad[]" class="form-check-input" type="checkbox" value="4" id="customRadioIcon15" />
+                              <input name="actividad[]" class="form-check-input" type="checkbox" value="7" id="customRadioIcon15" />
                           </label>
                       </div>
                   </div>

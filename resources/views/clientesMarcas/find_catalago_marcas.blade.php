@@ -46,41 +46,43 @@
                 </thead>
             </table>
         </div>
-        <!-- Offcanvas to add new user -->
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
             <div class="offcanvas-header border-bottom">
-                <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Add User</h5>
+                <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Añadir Marca</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0 h-100">
                 <form class="add-new-user pt-0" id="addNewUserForm">
                     <input type="hidden" name="id" id="user_id">
+                    <!-- muestra clientes tipo2 -->
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="add-user-fullname" placeholder="A-B-C-D..."
-                            name="name" aria-label="John Doe" />
-                        <label for="add-user-fullname">Folio</label>
-                    </div>
-                    <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" id="add-user-email" class="form-control" placeholder="Ingrese la marca"
-                            aria-label="john.doe@example.com" name="email" />
-                        <label for="add-user-email">Marca</label>
-                    </div>
-                    <div class="form-floating form-floating-outline mb-5">
-                        <select id="user-plan" class="form-select">
-                            <option value="">Selecciona un cliente</option>
+                        <select id="cliente" name="cliente" class="select2 form-select" required>
+                            <option value="">Selecciona cliente</option>
+                            @foreach ($clientes as $cliente)
+                                <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
+                            @endforeach
                         </select>
-                        <label for="user-plan">Selecciona un cliente</label>
+                        <label for="cliente">Cliente</label>
                     </div>
+                    <!-- nombre marcas -->
+                    <div class="form-floating form-floating-outline mb-5">
+                        <input type="text" id="add-user-company" name="company" class="form-control" placeholder="Nombre de la marca" required />
+                        <label for="add-user-company">Nombre de la marca</label>
+                    </div>
+                    <!-- folio -->
+                    <div class="form-floating form-floating-outline mb-5">
+                        <input type="text" id="add-user-folio" name="folio" class="form-control" placeholder="Folio" required />
+                        <label for="add-user-folio">Folio</label>
 
-
-                    <!-- Boton para el modal del pdf y datepicker -->
-                    <div class="text-center mb-5 mt-5">
+                        
+                        <!-- Boton para el modal del pdf y datepicker -->
+                    <!-- <div class="text-center mb-5 mt-5">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#uploadModal">Subir Archivos</button>
-                    </div>
+                    </div>-->
 
                     <!-- Modal -->
-                    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel"
+                   <!--  <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel"
                         aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
@@ -118,10 +120,12 @@
                                 </div>
                             </div>
                         </div>
+                    </div> -->
                     </div>
                     <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
                     <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancel</button>
                 </form>
+                
             </div>
         </div>
     </div>
