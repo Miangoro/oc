@@ -58,8 +58,6 @@ class clientesProspectoController extends Controller
   public function store(Request $request)
   {
  
-
-      // create new one if email is unique
    
       $solicitud = solicitud_informacion::where('id_empresa', $request->id_empresa)->first();
       $solicitud->medios = $request->medios;

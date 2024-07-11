@@ -164,6 +164,8 @@ use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
 use App\Http\Controllers\catalogo_categoria\catalogoController;
 use App\Http\Controllers\marcasCatalogo\marcasCatalogoController;
+use App\Http\Controllers\catalago_clase\ClaseController;
+
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -415,8 +417,6 @@ Route::resource('/empresas-list', clientesProspectoController::class);
 Route::controller(catalogoMarcasController::class) ->group(function(){
 Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catalogoMarcas');
 });
-
-
 //Marcas y catalogo
 Route::get('/marcas/catalogo', [marcasCatalogoController::class, 'UserManagement'])->name('marcas-catalogo');
 Route::resource('/catalago-list', marcasCatalogoController::class);
