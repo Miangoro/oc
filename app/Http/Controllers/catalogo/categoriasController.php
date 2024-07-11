@@ -17,7 +17,7 @@ class categoriasController extends Controller
         $usersUnique = $empresas->unique(['CATEGORIA']);
         $userDuplicates = 40;
 
-        return view('categorias.categorias_view', [
+        return view('catalogo.categorias_view', [
             'totalUser' => $userCount,
             'verified' => $verified,
             'notVerified' => $notVerified,
@@ -104,5 +104,47 @@ public function destroy($id_categoria)
 }
 
 //funcion para agregar registro
+public function store(Request $request)
+{
+    $request->validate([
+        'categoria' => 'required|string|max:255',
+    ]);
+
+    $categoria = new categorias();
+    $categoria->categoria = $request->categoria;
+    $categoria->save();
+
+    return response()->json(['success' => 'Categoría agregada correctamente']);
+}
+
+//funcion para llenar el campo del formulario
+ public function edit($id_categoria)
+ {
+     try {
+         $categoria = categorias::findOrFail($id_categoria);
+         return response()->json($categoria);
+     } catch (\Exception $e) {
+         return response()->json(['error' => 'Error al obtener la categoría'], 500);
+     }
+ }
+
+ // Función para actualizar la categoría existente
+ public function update(Request $request, $id_categoria)
+ {
+     $request->validate([
+         'categoria' => 'required|string|max:255',
+     ]);
+
+     try {
+         $categoria = categorias::findOrFail($id_categoria);
+         $categoria->categoria = $request->categoria;
+         $categoria->save();
+
+         return response()->json(['success' => 'Categoría actualizada correctamente']);
+     } catch (\Exception $e) {
+         return response()->json(['error' => 'Error al actualizar la categoría'], 500);
+     }
+ }
+
 
 }

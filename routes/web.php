@@ -422,3 +422,6 @@ Route::resource('/catalago-list', marcasCatalogoController::class);
 Route::get('/categorias', [categoriasController::class, 'UserManagement'])->name('categorias');
 Route::resource('/categorias-list', categoriasController::class);
 Route::delete('categorias/{id_categoria}', [categoriasController::class, 'destroy'])->name('categorias.destroy');
+Route::post('/categorias', [categoriasController::class, 'store'])->name('categorias.store');
+Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit');
+Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
