@@ -142,7 +142,7 @@ $(function () {
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               
               `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud fw-bold"><i class="text-info ri-search-eye-line"></i> Validar solicitud</a>` +
-              `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud2 fw-bold"><i class="text-success ri-checkbox-circle-fill"></i> Aceptar cliente</a>` +
+              `<a data-id="${full['id_empresa']}"  data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#aceptarCliente" class="cursor-pointer dropdown-item validar-solicitud2 fw-bold"><i class="text-success ri-checkbox-circle-fill"></i> Aceptar cliente</a>` +
               '</div>' +
               '</div>'
             );

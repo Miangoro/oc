@@ -6,6 +6,8 @@
 
 // Datatable (jquery)
 $(function () {
+
+
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
     select2 = $('.select2'),
@@ -189,7 +191,7 @@ $(function () {
               text: '<i class="ri-printer-line me-1" ></i>Print',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5],
+                columns: [1, 2, 3],
                 // prevent avatar to be print
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -227,7 +229,7 @@ $(function () {
               text: '<i class="ri-file-text-line me-1" ></i>Csv',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5],
+                columns: [1, 2, 3],
                 // prevent avatar to be print
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -252,7 +254,7 @@ $(function () {
               text: '<i class="ri-file-excel-line me-1"></i>Excel',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5],
+                columns: [1, 2, 3],
                 // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -277,7 +279,7 @@ $(function () {
               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5],
+                columns: [1, 2, 3],
                 // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -302,7 +304,7 @@ $(function () {
               text: '<i class="ri-file-copy-line me-1"></i>Copy',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5],
+                columns: [1, 2, 3],
                 // prevent avatar to be copy
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -324,7 +326,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo prospecto</span>',
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Categoría</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'offcanvas',
@@ -368,9 +370,12 @@ $(function () {
     });
   }
 
+
+
+  
   // Delete Record
   $(document).on('click', '.delete-record', function () {
-    var user_id = $(this).data('id'),
+    var id_categoria = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
 
     // hide responsive modal in small screen
@@ -389,13 +394,13 @@ $(function () {
         confirmButton: 'btn btn-primary me-3',
         cancelButton: 'btn btn-label-secondary'
       },
-      buttonsStyling: false
+      buttonsStyling: false 
     }).then(function (result) {
       if (result.value) {
         // delete the data
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}empresas-list/${user_id}`,
+          url: `${baseUrl}categorias-list/${id_categoria}`,
           success: function () {
             dt_user.draw();
           },
@@ -426,146 +431,8 @@ $(function () {
     });
   });
 
-  $(document).on('click', '.pdf', function () {
-        var id = $(this).data('id');
-        var registro = $(this).data('registro');
-            var iframe = $('#pdfViewer');
-            iframe.attr('src', '../solicitudinfo_cliente/'+id);
 
-            $("#titulo_modal").text("Solicitud de información del cliente");
-            $("#subtitulo_modal").text(registro);
-            
-          
-  });
 
-  // edit record
-  $(document).on('click', '.edit-record', function () {
-    var user_id = $(this).data('id'),
-      dtrModal = $('.dtr-bs-modal.show');
 
-    // hide responsive modal in small screen
-    if (dtrModal.length) {
-      dtrModal.modal('hide');
-    }
 
-    // changing the title of offcanvas
-    $('#offcanvasAddUserLabel').html('Edit User');
-
-    // get data
-    $.get(`${baseUrl}empresas-list\/${user_id}\/edit`, function (data) {
-      $('#user_id').val(data.id);
-      $('#add-user-fullname').val(data.name);
-      $('#add-user-email').val(data.email);
-    });
-  });
-
-  // changing the title
-  $('.add-new').on('click', function () {
-    $('#user_id').val(''); //reseting input field
-    $('#offcanvasAddUserLabel').html('Add User');
-  });
-
-  // validating form and updating user's data
-  const addNewUserForm = document.getElementById('addNewUserForm');
-
-  // user form validation
-  const fv = FormValidation.formValidation(addNewUserForm, {
-    fields: {
-      name: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter fullname'
-          }
-        }
-      },
-      email: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter your email'
-          },
-          emailAddress: {
-            message: 'The value is not a valid email address'
-          }
-        }
-      },
-      userContact: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter your contact'
-          }
-        }
-      },
-      company: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter your company'
-          }
-        }
-      }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        // Use this for enabling/changing valid/invalid class
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          // field is the field name & ele is the field element
-          return '.mb-5';
-        }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      // Submit the form when all fields are valid
-      // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    // adding or updating user when form successfully validate
-    $.ajax({
-      data: $('#addNewUserForm').serialize(),
-      url: `${baseUrl}empresas-list`,
-      type: 'POST',
-      success: function (status) {
-        dt_user.draw();
-        offCanvasForm.offcanvas('hide');
-
-        // sweetalert
-        Swal.fire({
-          icon: 'success',
-          title: `Successfully ${status}!`,
-          text: `User ${status} Successfully.`,
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function (err) {
-        offCanvasForm.offcanvas('hide');
-        Swal.fire({
-          title: 'Duplicate Entry!',
-          text: 'Your email should be unique.',
-          icon: 'error',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      }
-    });
-  });
-
-  // clearing form data when offcanvas hidden
-  offCanvasForm.on('hidden.bs.offcanvas', function () {
-    fv.resetForm(true);
-  });
-
-  const phoneMaskList = document.querySelectorAll('.phone-mask');
-
-  // Phone Number
-  if (phoneMaskList) {
-    phoneMaskList.forEach(function (phoneMask) {
-      new Cleave(phoneMask, {
-        phone: true,
-        phoneRegionCode: 'US'
-      });
-    });
-  }
 });
