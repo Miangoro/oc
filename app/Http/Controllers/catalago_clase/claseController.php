@@ -95,6 +95,8 @@ class ClaseController extends Controller
             ]);
         }
     }
+
+
         //funcion para eliminar
         public function destroy($id_clase)
         {
@@ -104,4 +106,17 @@ class ClaseController extends Controller
             return response()->json(['success' => 'Clase eliminada correctamente']);
         }
 
+                //funcion para crear
+                public function store(Request $request)
+                {
+                    $request->validate([
+                        'clase' => 'required|string|max:255',
+                    ]);
+                
+                    $clase = new Clase();
+                    $clase->clase = $request->input('clase');
+                    $clase->save();
+                
+                    return response()->json(['success' => 'Clase agregada correctamente']);
+                }
 }

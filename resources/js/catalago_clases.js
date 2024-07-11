@@ -27,6 +27,8 @@ $(function () {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+    
     
     // Users datatable
     if (dt_user_table.length) {
@@ -336,8 +338,8 @@ $(function () {
         });
     }
 
-
     /* funciones de los botones */
+/* funcion de insertar datos a la tabla */
 
 // Delete Record
 $(document).on('click', '.delete-record', function () {
