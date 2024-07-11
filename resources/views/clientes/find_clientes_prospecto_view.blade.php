@@ -152,5 +152,6 @@
 
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
+@include('_partials/_modals/modal-add-aceptar-cliente')
 <!-- /Modal -->
 @endsection

@@ -166,8 +166,6 @@ use App\Http\Controllers\catalogo\categoriasController;
 use App\Http\Controllers\marcasCatalogo\marcasCatalogoController;
 use App\Http\Controllers\catalago_clase\ClaseController;
 
-use App\Http\Controllers\catalogo\tiposController;
-
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -431,8 +429,3 @@ Route::resource('/categorias-list', catalogoController::class);
 Route::get('/categorias', [categoriasController::class, 'UserManagement'])->name('categorias');
 Route::resource('/categorias-list', categoriasController::class);
 Route::delete('categorias/{id_categoria}', [categoriasController::class, 'destroy'])->name('categorias.destroy');
-
-
-///tipo agave
-Route::get('/tipos', [tiposController::class, 'UserManagement'])->name('alias');
-Route::resource('/tipo-list', tiposController::class);

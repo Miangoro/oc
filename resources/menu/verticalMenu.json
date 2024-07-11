@@ -111,11 +111,6 @@
           "url": "catalogo",
           "name": "Catalogo clases",
           "slug": "marcas-categorias"
-        },
-        {
-          "url": "tipos",
-          "name": "Tipos de agave o maguey",
-          "slug": "catalogo-tipos"
         }
 
       ]

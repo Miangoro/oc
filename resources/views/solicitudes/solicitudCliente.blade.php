@@ -14,7 +14,7 @@ $isNavbar = false;
 <!-- Vendor Styles -->
 @section('vendor-style')
 @vite([
-  'resources/assets/vendor/libs/bs-stepper/bs-stepper.scss',
+  'resources/assets/vendor/libs/bs-stepper/bs-stepper.scss', 'resources/assets/vendor/fonts/personalizados/style.css',
 ])
 
 
@@ -28,27 +28,36 @@ $isNavbar = false;
 @section('content')
 
 <style>
-  img{ 
-    border-start-start-radius: 10px;
-    border-start-end-radius: 10px; 
-    width: 100%;
-    height: 170px;
+  body{
+    background-image: url(assets/img/branding/fondo.png);
   }
-  
 
+  .bs-stepper-header{
+    background-color: #0c1444;
+    color: white;
+  }
+
+  .bs-stepper .step-trigger{
+    color: white;
+  }
+
+  .light-style .bs-stepper.wizard-icons .bs-stepper-header .bs-stepper-label{
+    color: white;
+  }
 </style>
 
-<div class="bs-stepper wizard-icons wizard-icons-example mt-2">
 
-  <div class="">
-    <img src="\assets\img\branding\validacion_certificacion.png" alt="validacion de certificacion">
-  </div>
+
+<div class="card">
+    <img alt="Organismo de certificación" src="{{asset('assets/img/branding/Banner solicitud_información.png')}}" alt="timeline-image" class="card-img-top " style="object-fit: cover;">
+<div class="bs-stepper wizard-icons wizard-icons-example">
+
 
   <div class="bs-stepper-header">
     <div class="step" data-target="#account-details">
       <button type="button" class="step-trigger">
         <span class="bs-stepper-icon">
-          <i class="ri-user-fill fs-2"></i>
+          <i class="ri-user-fill fs-1"></i>
         </span>
         <span class="bs-stepper-label">Información del cliente</span>
       </button>
@@ -59,7 +68,7 @@ $isNavbar = false;
     <div class="step" data-target="#social-links">
       <button type="button" class="step-trigger">
         <span class="bs-stepper-icon">
-          <i class="ri-ink-bottle-fill fs-2"></i>
+          <i class="icon-produto-certificado fs-1"></i>
         </span>
         <span class="bs-stepper-label">Producto a certificar</span>
       </button>
@@ -70,7 +79,7 @@ $isNavbar = false;
     <div class="step" data-target="#address">
       <button type="button" class="step-trigger">
         <span class="bs-stepper-icon">
-          <i class="ri-map-pin-fill fs-2"></i>
+          <i class="ri-map-pin-fill fs-1"></i>
         </span>
         <span class="bs-stepper-label">Dirección</span>
       </button>
@@ -161,7 +170,7 @@ $isNavbar = false;
               <div class="form-check custom-option custom-option-icon">
                 <label class="form-check-label custom-option-content" for="customRadioIcon1">
                   <span class="custom-option-body">
-                    <i class="ri-ink-bottle-fill"></i>
+                    <i class="icon-mezcal fs-1"></i>
                     <small>Mezcal.</small>
                   </span>
                   <input name="producto[]" value="1" class="form-check-input" type="checkbox" value="" id="customRadioIcon1" />
@@ -172,8 +181,8 @@ $isNavbar = false;
               <div class="form-check custom-option custom-option-icon">
                 <label class="form-check-label custom-option-content" for="customRadioIcon2">
                   <span class="custom-option-body">
-                    <i class="ri-ink-bottle-fill"></i>
-                    <small>Bebida alcohólica preparada que contiene Mezcal</small>
+                    <i class="icon-bebida-mezcal"></i>
+                    <small>Bebida preparada con Mezcal</small>
                   </span>
                   <input name="producto[]" value="2" class="form-check-input" type="checkbox" value="" id="customRadioIcon2" />
                 </label>
@@ -194,7 +203,7 @@ $isNavbar = false;
               <div class="form-check custom-option custom-option-icon">
                 <label class="form-check-label custom-option-content" for="customRadioIcon4">
                   <span class="custom-option-body">
-                    <i class="ri-goblet-2-fill"></i>
+                    <i class="icon-licor"></i>
                     <small>Licor y/o crema que contiene Mezcal</small>
                   </span>
                   <input name="producto[]" value="4" class="form-check-input" type="checkbox" value="" id="customRadioIcon4" />
@@ -389,6 +398,7 @@ $isNavbar = false;
     </form>
   </div>
   
+</div>
 </div>
 @endsection
 
