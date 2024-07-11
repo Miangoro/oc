@@ -295,7 +295,7 @@ $(function () {
                     ]
                 },
                 {
-                    text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar nuevo prospecto</span>',
+                    text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar Clase</span>',
                     className: 'add-new btn btn-primary waves-effect waves-light',
                     attr: {
                         'data-bs-toggle': 'offcanvas',
@@ -432,7 +432,7 @@ $(document).on('click', '.delete-record', function () {
 });
 
 //editar un campo de la tabla
-// Editar registro
+// mostrar el registro en el campo
 $(document).ready(function() {
     // Abrir el modal y cargar datos para editar
     $('.datatables-users').on('click', '.edit-record', function() {

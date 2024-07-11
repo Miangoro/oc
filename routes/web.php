@@ -421,7 +421,6 @@ Route::resource('/catalago-list', marcasCatalogoController::class);
 Route::get('/categorias', [catalogoController::class, 'UserManagement'])->name('categorias');
 Route::resource('/categorias-list', catalogoController::class);
 
-
 /* ruta de clases catalogo */
 Route::get('/catalogo', [ClaseController::class, 'UserManagement'])->name('catalogo');
 Route::get('/clases-list', [ClaseController::class, 'index']);
