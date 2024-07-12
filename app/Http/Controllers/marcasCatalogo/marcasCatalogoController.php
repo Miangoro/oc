@@ -15,25 +15,25 @@ class marcasCatalogoController extends Controller
   public function store(Request $request)
   {
       $request->validate([
-          'cliente' => 'required|exists:empresa,id_empresa',
-          'company' => 'required|string|max:60',
-          'folio' => 'required|string|max:1',
+         
+          'marca' => 'required|string|max:60',
+          
       ]);
   
       if ($request->id) {
           // Actualizar marca existente
           $marca = marcas::findOrFail($request->id);
           $marca->id_empresa = $request->cliente;
-          $marca->marca = $request->company;
-          $marca->folio = $request->folio;
+          $marca->marca = $request->marca;
+          //$marca->folio = $request->folio;
           $marca->save();
           return response()->json(['success' => 'Marca actualizada exitosamente.']);
       } else {
           // Crear nueva marca
           $marca = new marcas();
-          $marca->id_empresa = $request->cliente;
-          $marca->marca = $request->company;
-          $marca->folio = $request->folio;
+          $marca->id_empresa = 11;
+          $marca->marca = $request->marca;
+          $marca->folio = 'A';
           $marca->save();
           return response()->json(['success' => 'Marca registrada exitosamente.']);
       }
@@ -82,6 +82,7 @@ public function destroy($id_marca)
         'clientes' => $clientes, // Pasa la lista de clientes a la vista
     ]);
   }
+
 
 
   public function index(Request $request)
