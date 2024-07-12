@@ -82,9 +82,9 @@ $(function () {
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center user-name">' +
               '<div class="avatar-wrapper">' +
-              '<div class="avatar avatar-sm me-3">' +
+/*               '<div class="avatar avatar-sm me-3">' + */
               
-              '</div>' +
+              '</d iv>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
               '<a href="' +
