@@ -7,17 +7,25 @@
 // Agregar nuevo registro
 
 // Agregar nuevo registro
-$('#addNewMarca').on('submit', function (e) {
+  // validating form and updating user's data
+  const addNewMarca = document.getElementById('addNewMarca');
+
+  // Validación del formulario de Validación de solicitud
+$("#addNewMarca").on('submit', function (e) {
   e.preventDefault();
-  var formData = $(this).serialize();
+  var formData = new FormData(this);
 
   $.ajax({
       url: '/catalago-list',
       type: 'POST',
       data: formData,
+      processData: false, // Evita la conversión automática de datos a cadena
+      contentType: false, // Evita que se establezca el tipo de contenido
       success: function (response) {
-          //$('#offcanvasAddUser').offcanvas('hide');
+          $('#addMarca').modal('hide');
           //$('#addNewUserForm')[0].reset();
+
+          
 
           // Actualizar la tabla sin reinicializar DataTables
           $('.datatables-users').DataTable().ajax.reload();

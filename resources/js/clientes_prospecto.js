@@ -471,6 +471,14 @@ $(function () {
       $('#empresa_id').val(id_empresa);
     });
 
+        // aceptar cliente
+        $(document).on('click', '.validar-solicitud2', function () {  
+          var id_empresa = $(this).data('id');
+ 
+      
+          $('#empresaID').val(id_empresa);
+        });
+
   // changing the title
   $('.add-new').on('click', function () {
     $('#user_id').val(''); //reseting input field
@@ -591,8 +599,8 @@ $(function () {
   }).on('core.form.valid', function () {
     // adding or updating user when form successfully validate
     $.ajax({
-      data: $('#addNewUserForm').serialize(),
-      url: `${baseUrl}empresas-list`,
+      data: $('#addNewCliente').serialize(),
+      url: `${baseUrl}aceptar-cliente`,
       type: 'POST',
       success: function (status) {
         dt_user.draw();

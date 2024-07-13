@@ -1,6 +1,6 @@
 <!-- Add New Address Modal -->
 <div class="modal fade" id="addMarca" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
       <div class="modal-content">
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="modal-body p-0">
@@ -8,7 +8,7 @@
             <h4 class="address-title mb-2">Registrar nueva marca</h4>
             <p class="address-subtitle"></p>
           </div>
-          <form id="addNewMarca" class="row g-5" onsubmit="return false">
+          <form  method="POST" enctype="multipart/form-data" id="addNewMarca" class="row g-5" onsubmit="return false">
   
            
 
@@ -32,24 +32,28 @@
             <hr class="my-6">
             <h5 class="mb-5">Documentación de la marca</h5>
   
-            @for ($i = 0; $i < 5; $i++)
+            @foreach ($documentos as $documento)
               <div class="row mb-3">
-                  <div class="col-md-6">
-                      <label for="file{{ $i }}" class="form-label">Subir archivo
-                          *</label>
-                      <input class="form-control" type="file" id="file{{ $i }}"
-                          name="files[]">
+                  <div class="col-md-9">
+                      <label for="file{{ $documento->id_documento }}" class="form-label">{{ $documento->nombre }}
+                          </label>
+                      <input class="form-control" type="file" id="file{{ $documento->id_documento }}"
+                          name="url[]">
+                      <input value="{{ $documento->id_documento }}" class="form-control" type="hidden"
+                          name="id_documento[]">
+                      <input value="{{ $documento->nombre }}" class="form-control" type="hidden"
+                          name="nombre_documento[]">
                   </div>
-                  <div class="col-md-6">
-                      <label for="date{{ $i }}" class="form-label">Fecha de
-                          vigencia *</label>
+                  <div class="col-md-3">
+                      <label for="date{{ $documento->id_documento }}" class="form-label">Fecha de
+                          vigencia</label>
                       <div class="input-group">
                           <input type="date" class="form-control datepicker"
-                              id="date{{ $i }}" name="dates[]">
+                              id="date{{ $documento->id_documento }}" name="fecha_vigencia[]">
                       </div>
                   </div>
               </div>
-          @endfor
+          @endforeach
             
            
             

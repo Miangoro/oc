@@ -408,6 +408,7 @@ Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dict
 //Clientes prospecto y confirmado
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');
 Route::resource('/empresas-list', clientesProspectoController::class);
+Route::post('/aceptar-cliente', [clientesProspectoController::class,'aceptarCliente']);
 
 //Catalogo de marcas
 Route::controller(catalogoMarcasController::class) ->group(function(){
@@ -419,7 +420,7 @@ Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catal
 Route::get('/marcas/catalogo', [marcasCatalogoController::class, 'UserManagement'])->name('marcas-catalogo');
 Route::resource('/catalago-list', marcasCatalogoController::class);
 Route::get('/categorias', [catalogoController::class, 'UserManagement'])->name('categorias');
-Route::resource('/categorias-list', catalogoController::class);
+Route::resource('/categorias-list', catalogoController::class)->middleware('auth');
 
 /* ruta de clases catalogo */
 Route::get('/catalogo', [ClaseController::class, 'UserManagement'])->name('catalogo');

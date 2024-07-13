@@ -9,6 +9,7 @@
           <p class="address-subtitle">Convertir a cliente confirmado del Organismo Certificador</p>
         </div>
         <form id="addNewCliente" class="row g-5" onsubmit="return false">
+          <input name="id_empresa" type="hidden" id="empresaID">
 
          <!-- <div class="col-12">
             <div class="row g-5">
@@ -42,7 +43,7 @@
           </div>-->
           <div class="col-12 col-md-12 col-sm-12">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalAddressFirstName" name="numero_cliente" class="form-control" placeholder="John" />
+              <input type="text" id="modalAddressFirstName" name="numero_cliente" class="form-control" placeholder="Introducir el número de cliente" />
               <label for="modalAddressFirstName">Número de cliente</label>
             </div>
           </div>
@@ -57,19 +58,19 @@
           </div>
           <div class="col-md-6 col-sm-12">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalAddressAddress2" name="modalAddressAddress2" class="form-control" placeholder="Mall Road" />
+              <input type="text" id="modalAddressAddress2" name="idcif" class="form-control" placeholder="Mall Road" />
               <label for="modalAddressAddress2">idCIF del Servicio deAdministración Tributaria</label>
             </div>
           </div>
           <div class="col-md-6 col-sm-12">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalAddressLandmark" name="modalAddressLandmark" class="form-control" placeholder="Nr. Hard Rock Cafe" />
+              <input type="text" id="modalAddressLandmark" name="clave_ine" class="form-control" placeholder="Nr. Hard Rock Cafe" />
               <label for="modalAddressLandmark">Clave de elector del INE</label>
             </div>
           </div>
           <div class="col-12">
             <div class="form-floating form-floating-outline">
-              <select id="modalAddressCountry" name="modalAddressCountry" class="select2 form-select" data-allow-clear="true">
+              <select id="modalAddressCountry" name="sociedad_mercantil" class="select2 form-select" data-allow-clear="true">
                 <option value="">Selecciona la opción</option>
                 <option value="Sociedad de responsabilidad limitada">Sociedad de responsabilidad limitada</option>
                 <option value="Sociedad por acciones simplificada">Sociedad por acciones simplificada</option>
@@ -82,32 +83,32 @@
           </div>
           <div class="col-12 col-md-4">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalAddressCity" name="modalAddressCity" class="form-control" placeholder="Los Angeles" />
+              <input type="text" id="modalAddressCity" name="num_instrumento" class="form-control" placeholder="Los Angeles" />
               <label for="modalAddressCity">Número de instrumento público</label>
             </div>
           </div>
           <div class="col-12 col-md-4">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalAddressState" name="modalAddressState" class="form-control" placeholder="California" />
+              <input type="text" id="modalAddressState" name="vol_instrumento" class="form-control" placeholder="California" />
               <label for="modalAddressLandmark">Volúmen de instrumento público</label>
             </div>
           </div>
           <div class="col-12 col-md-4">
             <div class="form-floating form-floating-outline">
-              <input type="date" id="modalAddressZipCode" name="modalAddressZipCode" class="form-control" placeholder="99950" />
+              <input type="date" id="modalAddressZipCode" name="fecha_instrumento" class="form-control" placeholder="99950" />
               <label for="modalAddressZipCode">Fecha instrumento público</label>
             </div>
           </div>
           <div class="col-12 col-md-6">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalAddressZipCode" name="modalAddressZipCode" class="form-control" placeholder="99950" />
+              <input type="text" id="modalAddressZipCode" name="num_notario" class="form-control" placeholder="99950" />
               <label for="modalAddressZipCode">Número de notario público</label>
             </div>
           </div>
 
           <div class="col-12 col-md-6">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalAddressZipCode" name="modalAddressZipCode" class="form-control" placeholder="99950" />
+              <input type="text" id="modalAddressZipCode" name="num_permiso" class="form-control" placeholder="99950" />
               <label for="modalAddressZipCode">Número de permiso</label>
               <div id="floatingInputHelp" class="form-text">(Clave única del documento) emitido por la Secretaria de Economía.</div>
             </div>

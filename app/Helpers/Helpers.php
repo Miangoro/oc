@@ -4,13 +4,21 @@ namespace App\Helpers;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
+use App\Models\marcas;
 
 class Helpers
 {
+  public static function generarFolioMarca($id_empresa)
+  {
+      $count = marcas::where('id_empresa', $id_empresa)->count();
+      return chr(65 + ($count % 26)); // 65 es el código ASCII para 'A'
+  }
   public static function appClasses()
   {
 
     $data = config('custom.custom');
+
+
 
 
     // default data array

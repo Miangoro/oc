@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\empresa;
+use App\Models\empresaContrato;
+use App\Models\empresaNumCliente;
 use App\Models\solicitud_informacion;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -31,6 +33,33 @@ class clientesProspectoController extends Controller
     ]);
   }
 
+  public function aceptarCliente(Request $request){
+
+        $cliente = new empresaNumCliente();
+        $cliente->numero_cliente = $request->numero_cliente;
+        $cliente->id_norma = 1;
+        $cliente->save();
+
+        $contrato = new empresaContrato();
+        $contrato->id_empresa = $request->id_empresa;
+        $contrato->fecha_cedula = $request->fecha_cedula;
+        $contrato->idcif = $request->idcif;
+        $contrato->clave_ine = $request->clave_ine;
+        $contrato->sociedad_mercantil = $request->sociedad_mercantil;
+        $contrato->num_instrumento = $request->	num_instrumento;
+        $contrato->vol_instrumento = $request->vol_instrumento;
+        $contrato->fecha_instrumento = $request->fecha_instrumento;
+        $contrato->num_notario = $request->num_notario;
+        $contrato->num_permiso = $request->num_permiso;
+        $contrato->save();
+
+        $contrato = empresa::find($request->id_empresa);
+        $contrato->tipo = 2;
+        $contrato->update();
+
+    return response()->json('Validada');
+  }
+
   public function info($id)
     {   
       $res = DB::select('SELECT s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
@@ -46,7 +75,7 @@ class clientesProspectoController extends Controller
     }
 
   public function registrarValidacion(Request $request){
-      $solicitud = solicitud_informacion::find($request->id_solicitud);
+        $solicitud = solicitud_informacion::find($request->id_solicitud);
         $solicitud->medios = $request->medios;
         $solicitud->competencia = $request->competencia;
         $solicitud->capacidad =  $request->capacidad;
