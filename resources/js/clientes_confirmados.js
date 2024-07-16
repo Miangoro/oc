@@ -27,11 +27,12 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'empresas-list'
+        url: baseUrl + 'clientes-list'
       },
       columns: [
         // columns according to JSON
         { data: '' },
+        { data: 'numero_cliente' },
         { data: 'razon_social' },
         { data: 'domicilio_fiscal' },
         { data: 'regimen' },
@@ -60,8 +61,43 @@ $(function () {
           }
         },
         {
+            // User email
+            targets: 2,
+            render: function (data, type, full, meta) {
+                var numero_cliente = full['numero_cliente'];
+               
+               
+               
+                 
+                var array = numero_cliente.split("<br>");
+                var $row_output = "";
+                array.forEach(function(numero) {
+                    
+              
+    
+                // Creates full output for row
+              
+                $row_output +=  '<div class="d-flex justify-content-start align-items-center user-name">' +
+                  '<div class="avatar-wrapper">' +
+                  '<div class="avatar avatar-sm me-3">' +
+                  
+                  '</div>' +
+                  '</div>' +
+                  '<div class="d-flex flex-column">' +
+                  '<a id="pdf" data-bs-target="#mostrarPdf" href="javascript:;" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="'+numero+'" data-registro="'+numero+'" class="text-truncate text-heading"><span class="fw-medium">' +
+                  numero +
+                  '</span></a>' +
+                  '</div>' +
+                  '</div>';
+                
+
+                });
+                return $row_output;
+              }
+          },
+        {
           // Es la razón social
-          targets: 2,
+          targets: 3,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $name = full['razon_social'];
@@ -94,7 +130,7 @@ $(function () {
         },
         {
           // User email
-          targets: 3,
+          targets: 4,
           render: function (data, type, full, meta) {
             var $email = full['domicilio_fiscal'];
             return '<span class="user-email">' + $email + '</span>';
@@ -102,7 +138,7 @@ $(function () {
         },
         {
           // email verify
-          targets: 4,
+          targets: 5,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $verified = full['regimen'];
@@ -120,7 +156,7 @@ $(function () {
         },
         {
           // email verify
-          targets: 5,
+          targets: 6,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $id = full['id_empresa'];
@@ -429,13 +465,13 @@ $(function () {
 
 
 
-  $(document).on('click', '.pdf', function () {
+  $(document).on('click', '#pdf', function () {
         var id = $(this).data('id');
         var registro = $(this).data('registro');
             var iframe = $('#pdfViewer');
-            iframe.attr('src', '../solicitudinfo_cliente/'+id);
+            iframe.attr('src', '../carta_asignacion/'+id);
 
-            $("#titulo_modal").text("Solicitud de información del cliente");
+            $("#titulo_modal").text("Carta de asignación de número de cliente");
             $("#subtitulo_modal").text(registro);
             
           

@@ -95,14 +95,25 @@
 
     <div class="section">
         <strong>C. REPRESENTANTE LEGAL</strong>
-        <p class="font-weight-bold">__________________________</p>
+        <p class="font-weight-bold" style="text-decoration: underline;">{{$datos[0]->razon_social}}</p>
         <strong>PRESENTE</strong>
     </div>
 
     <div class="section">
-        <p style="text-align: justify;">Por medio de la presente el Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. acreditado como Organismo de Certificación de Producto, con número 144/18 ante la Entidad Mexicana de Acreditación, A.C. de acuerdo con los criterios establecidos en la Norma Mexicana NMX-EC-17065-IMNC-2014/ISO/IEC 17065:2012 para las actividades de certificación. Se le informa que a partir de esta fecha queda inscrito como cliente del Organismo Certificador del CIDAM, como parte de la cadena productiva Agave-Mezcal en los eslabones __________________________ por consiguiente se le designa el número:</p>
+        <p style="text-align: justify;">Por medio de la presente el Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. acreditado como Organismo de Certificación de Producto, con número 144/18 ante la Entidad Mexicana de Acreditación, A.C. de acuerdo con los criterios establecidos en la Norma Mexicana NMX-EC-17065-IMNC-2014/ISO/IEC 17065:2012 para las actividades de certificación. Se le informa que a partir de esta fecha queda inscrito como cliente del Organismo Certificador del CIDAM, como parte de la cadena productiva Agave-Mezcal en los eslabones 
+            @php
+                $total = count($datos);
+                $i = 0;
+            @endphp
+            @foreach ($datos as $eslabon)@if ($i > 0), @endif<strong>{{$eslabon->actividad}}</strong>
+            @php
+            $i++;
+        @endphp
+            @endforeach
+            
+            por consiguiente se le designa el número:</p>
         <div class=" text-center">
-            <strong>NOM-070-341C</strong>
+            <strong>{{$datos[0]->numero_cliente}}</strong>
         </div>
         <div style="margin-bottom: 50px;">
             <p>Sin otro en particular le envío un cordial saludo.</p>
@@ -117,6 +128,7 @@
     </div>
     <div style="margin-bottom: 70px;">
         <p class="text_al text-center">GERENTE TÉCNICO DEL ORGANISMO</p>
+        <img src="{{ route('file.show', ['filename' => 'firma_mayra.png']) }}" alt="Imagen">
         <p class="text_al text-center">CERTIFICADOR CIDAM A.C.</p>
     </div>
     

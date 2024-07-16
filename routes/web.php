@@ -165,13 +165,20 @@ use App\Http\Controllers\clientes\clientesProspectoController;
 use App\Http\Controllers\catalogo\categoriasController; 
 use App\Http\Controllers\marcasCatalogo\marcasCatalogoController;
 use App\Http\Controllers\catalogo\ClaseController;
-
+use App\Http\Controllers\clientes\clientesConfirmadosController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\getFuncionesController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/', function () {
 	return redirect('/login');
 });
+
+//Para documentos
+Route::get('files/{filename}', [FileController::class, 'show'])
+    ->name('file.show')
+    ->middleware('auth'); // Middleware para autenticar usuarios
 
 Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm');
@@ -394,7 +401,7 @@ Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->na
 Route::get('/solicitudinfo_cliente/{id}', [clientesProspectoController::class, 'info'])->name('solicitud_cliente');
 Route::get('/asignacion_usuario', [CartaAsignacionController::class, 'access_user'])->name('asignacion_usuario');
 Route::get('/solicitudservi', [CartaAsignacionController::class, 'solicitudservi'])->name('solicitudservi');
-Route::get('/prestacion_servicio_fisica', [CartaAsignacionController::class, 'ServicioPersonaFisica'])->name('prestacion_servicio_fisica');
+Route::get('/prestacion_servicio_fisica/{id}', [clientesConfirmadosController::class, 'pdfServicioPersonaFisica'])->name('prestacion_servicio_fisica');
 Route::get('/prestacion_servicios_vigente', [CartaAsignacionController::class, 'ServicioPersonaVigente'])->name('prestacion_servicios_vigente');
 Route::get('/Contrato_NMX-052', [CartaAsignacionController::class, 'CONTRATO_NMX_052'])->name('Contrato_NMX-052');
 Route::get('/Contrato_prestacion_servicio_NOM-199', [CartaAsignacionController::class, 'Contrato_prestacion_servicio_NOM_199'])->name('Contrato_prestacion_servicio_NOM-199');
@@ -409,18 +416,18 @@ Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dict
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');
 Route::resource('/empresas-list', clientesProspectoController::class);
 Route::post('/aceptar-cliente', [clientesProspectoController::class,'aceptarCliente']);
+Route::get('/lista_empresas/{id}', [getFuncionesController::class,'find_clientes_prospecto']);
 
-//Catalogo de marcas
-Route::controller(catalogoMarcasController::class) ->group(function(){
-Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catalogoMarcas');
-});
+Route::get('/clientes/confirmados', [clientesConfirmadosController::class, 'UserManagement'])->name('clientes-confirmados');
+Route::resource('/clientes-list', clientesConfirmadosController::class);
+Route::get('/carta_asignacion/{id}', [clientesConfirmadosController::class, 'pdfCartaAsignacion'])->name('carta_asignacion');
+
 
 
 //Marcas y catalogo
 Route::get('/marcas/catalogo', [marcasCatalogoController::class, 'UserManagement'])->name('marcas-catalogo');
 Route::resource('/catalago-list', marcasCatalogoController::class);
-Route::get('/categorias', [catalogoController::class, 'UserManagement'])->name('categorias');
-Route::resource('/categorias-list', catalogoController::class)->middleware('auth');
+
 
 /* ruta de clases catalogo */
 Route::get('/catalogo', [ClaseController::class, 'UserManagement'])->name('catalogo');

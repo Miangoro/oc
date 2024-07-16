@@ -18,15 +18,15 @@ class clientesProspectoController extends Controller
     public function UserManagement()
   {
     // dd('UserManagement');
-    $empresas = empresa::all();
-    $userCount = $empresas->count();
+   // $empresas = empresa::all();
+   // $userCount = $empresas->count();
     $verified = 5;
     $notVerified = 10;
-    $usersUnique = $empresas->unique(['estado']);
+   // $usersUnique = $empresas->unique(['estado']);
     $userDuplicates = 40;
 
     return view('clientes.find_clientes_prospecto_view', [
-      'totalUser' => $userCount,
+      
       'verified' => $verified,
       'notVerified' => $notVerified,
       'userDuplicates' => $userDuplicates,
@@ -35,10 +35,14 @@ class clientesProspectoController extends Controller
 
   public function aceptarCliente(Request $request){
 
-        $cliente = new empresaNumCliente();
-        $cliente->numero_cliente = $request->numero_cliente;
-        $cliente->id_norma = 1;
-        $cliente->save();
+       for ($i=0; $i < count($request->numero_cliente); $i++) { 
+          $cliente = new empresaNumCliente();
+          $cliente->id_empresa = $request->id_empresa;
+          $cliente->numero_cliente = $request->numero_cliente[$i];
+          $cliente->id_norma = $request->id_norma[$i];
+          $cliente->save();
+       }
+       
 
         $contrato = new empresaContrato();
         $contrato->id_empresa = $request->id_empresa;
@@ -113,7 +117,7 @@ class clientesProspectoController extends Controller
 
     $search = [];
 
-    $totalData = empresa::count();
+    $totalData = empresa::where('tipo', 1)->count();
 
     $totalFiltered = $totalData;
 
@@ -123,14 +127,14 @@ class clientesProspectoController extends Controller
     $dir = $request->input('order.0.dir');
 
     if (empty($request->input('search.value'))) {
-      $users = empresa::offset($start)
+      $users = empresa::where('tipo', 1)->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
         ->get();
     } else {
       $search = $request->input('search.value');
 
-      $users = empresa::where('id_empresa', 'LIKE', "%{$search}%")
+      $users = empresa::where('tipo', 1)->where('id_empresa', 'LIKE', "%{$search}%")
         ->orWhere('razon_social', 'LIKE', "%{$search}%")
         ->orWhere('domicilio_fiscal', 'LIKE', "%{$search}%")
         ->offset($start)
@@ -138,7 +142,7 @@ class clientesProspectoController extends Controller
         ->orderBy($order, $dir)
         ->get();
 
-      $totalFiltered = empresa::where('id_empresa', 'LIKE', "%{$search}%")
+      $totalFiltered = empresa::where('tipo', 1)->where('id_empresa', 'LIKE', "%{$search}%")
         ->orWhere('razon_social', 'LIKE', "%{$search}%")
         ->orWhere('domicilio_fiscal', 'LIKE', "%{$search}%")
         ->count();

@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Clientes prospecto')
+@section('title', 'Clientes confirmados')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
@@ -32,16 +32,102 @@
 
 <!-- Page Scripts -->
 @section('page-script')
-@vite(['resources/js/clientes_prospecto.js'])
+@vite(['resources/js/clientes_confirmados.js'])
 @endsection
 
 @section('content')
-
+<div class="row g-6 mb-6">
+    <div class="col-sm-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div class="me-1">
+              <p class="text-heading mb-1">Clientes</p>
+              <div class="d-flex align-items-center">
+                <h4 class="mb-1 me-2">{{$empresas}}</h4>
+                <p class="text-success mb-1">(100%)</p>
+              </div>
+              <small class="mb-0">Clientes totales</small>
+            </div>
+            <div class="avatar">
+              <div class="avatar-initial bg-label-primary rounded-3">
+                <div class="ri-user-line ri-26px"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div class="me-1">
+              <p class="text-heading mb-1">Personas físicas</p>
+              <div class="d-flex align-items-center">
+                <h4 class="mb-1 me-1">{{$fisicas}}</h4>
+                <p class="text-success mb-1">(+95%)</p>
+              </div>
+              <small class="mb-0">Recent analytics</small>
+            </div>
+            <div class="avatar">
+              <div class="avatar-initial bg-label-success rounded-3">
+                <div class="ri-user-follow-line ri-26px"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div class="me-1">
+              <p class="text-heading mb-1">Personas morales</p>
+              <div class="d-flex align-items-center">
+                <h4 class="mb-1 me-1">{{$morales}}</h4>
+                <p class="text-danger mb-1">(0%)</p>
+              </div>
+              <small class="mb-0">Recent analytics</small>
+            </div>
+            <div class="avatar">
+              <div class="avatar-initial bg-label-danger rounded-3">
+                <div class="ri-group-line ri-26px"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="d-flex justify-content-between">
+            <div class="me-1">
+              <p class="text-heading mb-1">Verification Pending</p>
+              <div class="d-flex align-items-center">
+                <h4 class="mb-1 me-1">{{$empresas}}</h4>
+                <p class="text-success mb-1">(+6%)</p>
+              </div>
+              <small class="mb-0">Recent analytics</small>
+            </div>
+            <div class="avatar">
+              <div class="avatar-initial bg-label-warning rounded-3">
+                <div class="ri-user-unfollow-line ri-26px"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </div>
 
 <!-- Users List Table -->
 <div class="card">
   <div class="card-header pb-0y">
-    <h3 class="card-title mb-0">Clientes prospecto</h3>
+    <h3 class="card-title mb-0">Clientes confirmados</h3>
   </div>
   <div class="card-datatable table-responsive">
     <table class="datatables-users table">
@@ -49,6 +135,7 @@
         <tr>
           <th></th>
           <th>Id</th>
+          <th>Número de cliente</th>
           <th>Cliente</th>
           <th>Domicilio fiscal</th>
           <th>Régimen</th>

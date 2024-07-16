@@ -29,9 +29,9 @@
           "slug": "clientes-prospecto"
         },
         {
-          "url": "laravel/user-management",
-          "name": "Activos",
-          "slug": "clientes-activos"
+          "url": "clientes/confirmados",
+          "name": "Confirmados",
+          "slug": "clientes-confirmados"
         }
       ]
     },
@@ -109,7 +109,7 @@
         },
         {
           "url": "catalogo",
-          "name": "Catalogo clases",
+          "name": "Clases de agave",
           "slug": "marcas-categorias"
         }
 

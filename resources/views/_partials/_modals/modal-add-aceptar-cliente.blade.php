@@ -41,12 +41,18 @@
               </div>
             </div>
           </div>-->
-          <div class="col-12 col-md-12 col-sm-12">
-            <div class="form-floating form-floating-outline">
-              <input type="text" id="modalAddressFirstName" name="numero_cliente" class="form-control" placeholder="Introducir el número de cliente" />
-              <label for="modalAddressFirstName">Número de cliente</label>
-            </div>
+
+       
+            
+        
+          <div class="contenido">
+            
           </div>
+
+          
+          
+
+       
           <hr class="my-6">
           <h5 class="mb-5">Información para el contrato</h5>
 
