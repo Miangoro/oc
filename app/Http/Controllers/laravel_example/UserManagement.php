@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\laravel_example;
 
 use App\Http\Controllers\Controller;
+use App\Models\empresa;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -16,6 +17,7 @@ class UserManagement extends Controller
    */
   public function UserManagement()
   {
+    $empresas = empresa::where('tipo', 2)->get();
     // dd('UserManagement');
     $users = User::all();
     $userCount = $users->count();
@@ -29,6 +31,7 @@ class UserManagement extends Controller
       'verified' => $verified,
       'notVerified' => $notVerified,
       'userDuplicates' => $userDuplicates,
+      'empresas' => $empresas
     ]);
   }
 
@@ -146,10 +149,12 @@ class UserManagement extends Controller
       // create new one if email is unique
       $userEmail = User::where('email', $request->email)->first();
 
+      $pass = Str::random(10);
+
       if (empty($userEmail)) {
         $users = User::updateOrCreate(
           ['id' => $userID],
-          ['name' => $request->name, 'email' => $request->email, 'password' => bcrypt(Str::random(10))]
+          ['name' => $request->name, 'email' => $request->email, 'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa]
         );
 
         // user created

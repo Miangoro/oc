@@ -14,6 +14,7 @@ class getFuncionesController extends Controller
         $normas = DB::table('empresa_norma_certificar AS n')
         ->join('catalogo_norma_certificar AS c', 'n.id_norma', '=', 'c.id_norma')
         ->select('c.norma', 'c.id_norma') // Selecciona las columnas necesarias
+        ->where('c.id_norma', '!=' ,2)
         ->where('n.id_empresa', $id_empresa)
         ->get();
         // Lógica común que se necesita en diferentes vistas

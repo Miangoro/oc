@@ -166,6 +166,7 @@ use App\Http\Controllers\catalogo\categoriasController;
 use App\Http\Controllers\marcasCatalogo\marcasCatalogoController;
 use App\Http\Controllers\catalogo\ClaseController;
 use App\Http\Controllers\clientes\clientesConfirmadosController;
+use App\Http\Controllers\domicilios\DomiciliosController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\getFuncionesController;
 
@@ -421,6 +422,7 @@ Route::get('/lista_empresas/{id}', [getFuncionesController::class,'find_clientes
 Route::get('/clientes/confirmados', [clientesConfirmadosController::class, 'UserManagement'])->name('clientes-confirmados');
 Route::resource('/clientes-list', clientesConfirmadosController::class);
 Route::get('/carta_asignacion/{id}', [clientesConfirmadosController::class, 'pdfCartaAsignacion'])->name('carta_asignacion');
+Route::get('/carta_asignacion052/{id}', [clientesConfirmadosController::class, 'pdfCartaAsignacion052'])->name('carta_asignacion052');
 
 
 
@@ -444,3 +446,8 @@ Route::delete('categorias/{id_categoria}', [categoriasController::class, 'destro
 Route::post('/categorias', [categoriasController::class, 'store'])->name('categorias.store');
 Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit');
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
+
+
+//Domicilios
+Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
+Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'domicilio_instalaciones'])->name('domicilio_instalaciones');

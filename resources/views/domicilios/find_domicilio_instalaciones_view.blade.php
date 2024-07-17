@@ -128,7 +128,7 @@
 <!-- Users List Table -->
 <div class="card">
   <div class="card-header pb-0y">
-    <h3 class="card-title mb-0">Clientes confirmados</h3>
+    <h3 class="card-title mb-0">Domicilios de instalaciones</h3>
   </div>
   <div class="card-datatable table-responsive">
     <table class="datatables-users table">

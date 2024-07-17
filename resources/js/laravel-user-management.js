@@ -462,20 +462,6 @@ $(function () {
           }
         }
       },
-      userContact: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter your contact'
-          }
-        }
-      },
-      company: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter your company'
-          }
-        }
-      }
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),

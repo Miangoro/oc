@@ -13,7 +13,17 @@
       "submenu": [
         {
           "url": "laravel/user-management",
-          "name": "User Management",
+          "name": "Personal OC",
+          "slug": "usuarios-lista"
+        },
+        {
+          "url": "laravel/user-management",
+          "name": "Inspectores",
+          "slug": "usuarios-lista"
+        },
+        {
+          "url": "laravel/user-management",
+          "name": "Clientes",
           "slug": "usuarios-lista"
         }
       ]
@@ -38,27 +48,27 @@
     {
       "name": "Domicilios",
       "icon": "menu-icon ri-map-pin-user-fill",
-      "slug": "laravel-example",
+      "slug": "domicilios",
       "submenu": [
         {
           "url": "laravel/user-management",
           "name": "Fiscal",
-          "slug": "laravel-example-user-management"
+          "slug": "domicilios-fiscal"
         },
         {
-          "url": "laravel/user-management",
+          "url": "domicilios/instalaciones",
           "name": "Predios",
-          "slug": "laravel-example-user-management"
+           "slug": "domicilios-predios"
         },
         {
-          "url": "laravel/user-management",
+          "url": "domicilios/instalaciones",
           "name": "Instalaciones",
-          "slug": "laravel-example-user-management"
+           "slug": "domicilios-instalaciones"
         }
       ]
     },
     {
-      "name": "Requisitos documentales",
+      "name": "Documentación",
       "icon": "menu-icon ri-folder-check-fill",
       "slug": "laravel-example",
       "submenu": [
@@ -110,7 +120,14 @@
         {
           "url": "catalogo",
           "name": "Clases de agave",
-          "slug": "marcas-categorias"
+          "slug": "marcas-clases"
+        }
+
+        ,
+        {
+          "url": "catalogo",
+          "name": "Tipo de agave",
+          "slug": "marcas-tipos"
         }
 
       ]

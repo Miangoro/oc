@@ -50,6 +50,16 @@
           </div>
 
           
+          <div class="col-12">
+            <div class="form-floating form-floating-outline">
+              <select id="id_contacto" name="id_contacto" class="select2 form-select" data-allow-clear="true">
+               @foreach ($usuarios as $usuario)
+                 <option value="{{$usuario->id}}">{{$usuario->name}}</option>
+               @endforeach
+              </select>
+              <label for="id_contacto">Persona de contacto CIDAM</label>
+            </div>
+          </div>
           
 
        

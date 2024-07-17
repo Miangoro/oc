@@ -9,6 +9,7 @@ use App\Models\empresa;
 use App\Models\empresaContrato;
 use App\Models\empresaNumCliente;
 use App\Models\solicitud_informacion;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,7 @@ class clientesProspectoController extends Controller
     public function UserManagement()
   {
     // dd('UserManagement');
-   // $empresas = empresa::all();
+    $usuarios = User::where("tipo",1)->get();
    // $userCount = $empresas->count();
     $verified = 5;
     $notVerified = 10;
@@ -30,6 +31,7 @@ class clientesProspectoController extends Controller
       'verified' => $verified,
       'notVerified' => $notVerified,
       'userDuplicates' => $userDuplicates,
+      'usuarios' => $usuarios,
     ]);
   }
 
@@ -57,9 +59,10 @@ class clientesProspectoController extends Controller
         $contrato->num_permiso = $request->num_permiso;
         $contrato->save();
 
-        $contrato = empresa::find($request->id_empresa);
-        $contrato->tipo = 2;
-        $contrato->update();
+        $empresa = empresa::find($request->id_empresa);
+        $empresa->tipo = 2;
+        $empresa->id_contacto = $request->id_contacto;
+        $empresa->update();
 
     return response()->json('Validada');
   }

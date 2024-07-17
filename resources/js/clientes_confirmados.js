@@ -36,7 +36,6 @@ $(function () {
         { data: 'razon_social' },
         { data: 'domicilio_fiscal' },
         { data: 'regimen' },
-        { data: 'regimen' },
         { data: 'id_empresa' },
         { data: 'action' }
       ],
@@ -71,9 +70,9 @@ $(function () {
                  
                 var array = numero_cliente.split("<br>");
                 var $row_output = "";
-                array.forEach(function(numero) {
+                array.forEach(function(numero1) {
                     
-              
+                var numero = numero1.split(",");
     
                 // Creates full output for row
               
@@ -84,8 +83,8 @@ $(function () {
                   '</div>' +
                   '</div>' +
                   '<div class="d-flex flex-column">' +
-                  '<a id="pdf" data-bs-target="#mostrarPdf" href="javascript:;" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="'+numero+'" data-registro="'+numero+'" class="text-truncate text-heading"><span class="fw-medium">' +
-                  numero +
+                  '<a data-pdf="'+numero[1]+'" id="pdf" data-bs-target="#mostrarPdf" href="javascript:;" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="'+numero[0]+'" data-registro="'+numero[0]+'" class="text-truncate text-heading"><span class="fw-medium">' +
+                  numero[0] +
                   '</span></a>' +
                   '</div>' +
                   '</div>';
@@ -129,7 +128,7 @@ $(function () {
           }
         },
         {
-          // User email
+          // Domicilio fiscal
           targets: 4,
           render: function (data, type, full, meta) {
             var $email = full['domicilio_fiscal'];
@@ -137,7 +136,7 @@ $(function () {
           }
         },
         {
-          // email verify
+          // Régimen fiscal
           targets: 5,
           className: 'text-center',
           render: function (data, type, full, meta) {
@@ -155,16 +154,7 @@ $(function () {
           }
         },
         {
-          // email verify
-          targets: 6,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $id = full['id_empresa'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_empresa']}" data-registro="${full['razon_social']} "></i>`;
-          }
-        },
-        {
-          // Actions
+          // Acciones
           targets: -1,
           title: 'Acciones',
           searchable: false,
@@ -467,9 +457,17 @@ $(function () {
 
   $(document).on('click', '#pdf', function () {
         var id = $(this).data('id');
+        var tipo_pdf = $(this).data('pdf');
         var registro = $(this).data('registro');
             var iframe = $('#pdfViewer');
-            iframe.attr('src', '../carta_asignacion/'+id);
+            if(tipo_pdf==1){
+              var pdf = "../carta_asignacion/";
+            }
+
+            if(tipo_pdf==2){
+              var pdf = "../carta_asignacion052/";
+            }
+            iframe.attr('src', pdf+id);
 
             $("#titulo_modal").text("Carta de asignación de número de cliente");
             $("#subtitulo_modal").text(registro);

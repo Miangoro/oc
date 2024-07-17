@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\clientes;
+namespace App\Http\Controllers\domicilios;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -9,14 +9,13 @@ use App\Models\empresa;
 use App\Models\empresaContrato;
 use App\Models\empresaNumCliente;
 use App\Models\solicitud_informacion;
-use App\Models\User;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 
-class clientesConfirmadosController extends Controller
+class DomiciliosController extends Controller
 {
-    public function UserManagement()
+    public function domicilio_instalaciones()
     {
 
         $empresas = empresa::where('tipo', 2)->count();
@@ -28,7 +27,7 @@ class clientesConfirmadosController extends Controller
         // $usersUnique = $empresas->unique(['estado']);
         $userDuplicates = 40;
 
-        return view('clientes.find_clientes_confirmados_view', [
+        return view('domicilios.find_domicilio_instalaciones_view', [
 
 
             'empresas' => $empresas,
@@ -65,9 +64,6 @@ class clientesConfirmadosController extends Controller
         $contrato = empresa::find($request->id_empresa);
         $contrato->tipo = 2;
         $contrato->update();
-
-
-        // Hash::make($input['password']
 
         return response()->json('Validada');
     }
