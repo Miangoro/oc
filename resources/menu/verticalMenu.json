@@ -12,19 +12,19 @@
       "slug": "usuarios",
       "submenu": [
         {
-          "url": "laravel/user-management",
+          "url": "/usuarios/personal",
           "name": "Personal OC",
-          "slug": "usuarios-lista"
+          "slug": "usuarios-personal"
         },
         {
-          "url": "laravel/user-management",
+          "url": "/usuarios/inspectores",
           "name": "Inspectores",
-          "slug": "usuarios-lista"
+          "slug": "usuarios-inspectores"
         },
         {
-          "url": "laravel/user-management",
+          "url": "/usuarios/clientes",
           "name": "Clientes",
-          "slug": "usuarios-lista"
+          "slug": "usuarios-clientes"
         }
       ]
     },
@@ -58,12 +58,12 @@
         {
           "url": "domicilios/instalaciones",
           "name": "Predios",
-           "slug": "domicilios-predios"
+          "slug": "domicilios-predios"
         },
         {
           "url": "domicilios/instalaciones",
           "name": "Instalaciones",
-           "slug": "domicilios-instalaciones"
+          "slug": "domicilios-instalaciones"
         }
       ]
     },
@@ -104,32 +104,28 @@
     {
       "name": "Catálogos",
       "icon": "menu-icon ri-book-open-fill",
-      "slug": "marcas",
+      "slug": "catalogo",
       "submenu": [
         {
-          "url": "marcas/catalogo",
+          "url": "catalogo/marcas",
           "name": "Marcas",
-          "slug": "marcas-catalogo"
+          "slug": "catalogo-marcas"
         },
         {
-          "url": "categorias",
+          "url": "catalogo/categorias",
           "name": "Categorías de agave",
-          "slug": "marcas-categorias"
-
+          "slug": "catalogo-categorias"
         },
         {
-          "url": "catalogo",
+          "url": "catalogo/clases",
           "name": "Clases de agave",
-          "slug": "marcas-clases"
-        }
-
-        ,
+          "slug": "catalogo-clases"
+        },
         {
-          "url": "catalogo",
+          "url": "catalogo/tipo",
           "name": "Tipo de agave",
-          "slug": "marcas-tipos"
+          "slug": "catalogo-tipos"
         }
-
       ]
     }
   ]

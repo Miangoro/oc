@@ -16,7 +16,7 @@ $(function () {
     var $this = select2;
     select2Focus($this);
     $this.wrap('<div class="position-relative"></div>').select2({
-      placeholder: 'Select Country',
+      placeholder: 'Seleccione el cliente',
       dropdownParent: $this.parent()
     });
   }
@@ -42,7 +42,9 @@ $(function () {
         { data: 'id' },
         { data: 'name' },
         { data: 'email' },
-        { data: 'email_verified_at' },
+        { data: 'password_original' },
+        { data: 'razon_social' },
+        { data: 'id' },
         { data: 'action' }
       ],
       columnDefs: [
@@ -110,36 +112,44 @@ $(function () {
           }
         },
         {
-          // email verify
+          // contraseña
           targets: 4,
           className: 'text-center',
           render: function (data, type, full, meta) {
-            var $verified = full['email_verified_at'];
-            return `${
-              $verified
-                ? '<i class="ri-shield-check-line ri-24px text-success"></i>'
-                : '<i class="ri-shield-line ri-24px text-danger" ></i>'
-            }`;
+            var $pass = full['password_original'];
+            return '<span class="text-heading fw-medium">' + $pass + '</span>';
           }
         },
         {
+            // Razón social
+            targets: 5,
+            className: 'text-center',
+            render: function (data, type, full, meta) {
+              var $cliente = full['razon_social'];
+              return '<span class="user-email">' + $cliente + '</span>';
+            }
+          },
+          {
+            // email verify
+            targets: 6,
+            className: 'text-center',
+            render: function (data, type, full, meta) {
+              var $id = full['id_empresa'];
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id']}" data-registro="${full['name']} "></i>`;
+            }
+          },
+        {
           // Actions
           targets: -1,
-          title: 'Actions',
+          title: 'Acciones',
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px"></i></button>` +
-              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id']}"><i class="ri-delete-bin-7-line ri-20px"></i></button>` +
-              '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="' +
-              userView +
-              '" class="dropdown-item">View</a>' +
-              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-              '</div>' +
+              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="text-info ri-edit-box-line ri-20px"></i></button>` +
+              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id']}"><i class="text-danger ri-delete-bin-7-line ri-20px"></i></button>` +
+             
               '</div>'
             );
           }
@@ -155,11 +165,11 @@ $(function () {
         '<"col-sm-12 col-md-6"i>' +
         '<"col-sm-12 col-md-6"p>' +
         '>',
-      lengthMenu: [7, 10, 20, 50, 70, 100], //for length of menu
+      lengthMenu: [ 10, 20, 50, 70, 100], //for length of menu
       language: {
         sLengthMenu: '_MENU_',
         search: '',
-        searchPlaceholder: 'Search',
+        searchPlaceholder: 'Buscar',
         info: 'Displaying _START_ to _END_ of _TOTAL_ entries'
       },
       // Buttons with Dropdown
@@ -310,7 +320,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Add New User</span>',
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo usuario</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'offcanvas',
@@ -366,11 +376,11 @@ $(function () {
 
     // sweetalert for confirmation of delete
     Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
+      title: '¿Está seguro de eliminar ese usuario?',
+      text: "¡No podrá revertirlo!",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: '¡Si, eliminarlo!',
       customClass: {
         confirmButton: 'btn btn-primary me-3',
         cancelButton: 'btn btn-label-secondary'
@@ -393,16 +403,16 @@ $(function () {
         // success sweetalert
         Swal.fire({
           icon: 'success',
-          title: 'Deleted!',
-          text: 'The user has been deleted!',
+          title: '¡Eliminado!',
+          text: '¡El usuario ha sido eliminado!',
           customClass: {
             confirmButton: 'btn btn-success'
           }
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
-          title: 'Cancelled',
-          text: 'The User is not deleted!',
+          title: 'Cancelado',
+          text: '¡El usuario no ha sido eliminado!',
           icon: 'error',
           customClass: {
             confirmButton: 'btn btn-success'
@@ -411,6 +421,18 @@ $(function () {
       }
     });
   });
+
+  $(document).on('click', '.pdf', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+        var iframe = $('#pdfViewer');
+        iframe.attr('src', '../pdf_asignacion_usuario/'+id);
+
+        $("#titulo_modal").text("Carta de asignación de usuario y contraseña para plataforma del OC");
+        $("#subtitulo_modal").text(registro);
+        
+      
+});
 
   // edit record
   $(document).on('click', '.edit-record', function () {
@@ -423,20 +445,21 @@ $(function () {
     }
 
     // changing the title of offcanvas
-    $('#offcanvasAddUserLabel').html('Edit User');
+    $('#offcanvasAddUserLabel').html('Editar usuario');
 
     // get data
     $.get(`${baseUrl}user-list\/${user_id}\/edit`, function (data) {
       $('#user_id').val(data.id);
       $('#add-user-fullname').val(data.name);
       $('#add-user-email').val(data.email);
+      $('#id_empresa').val(data.id_empresa).prop('selected', true).change();
     });
   });
 
   // changing the title
   $('.add-new').on('click', function () {
     $('#user_id').val(''); //reseting input field
-    $('#offcanvasAddUserLabel').html('Add User');
+    $('#offcanvasAddUserLabel').html('Agregar usuario');
   });
 
   // validating form and updating user's data
@@ -448,31 +471,24 @@ $(function () {
       name: {
         validators: {
           notEmpty: {
-            message: 'Please enter fullname'
+            message: 'Por favor introduce el nombre completo'
           }
         }
       },
       email: {
         validators: {
           notEmpty: {
-            message: 'Please enter your email'
+            message: 'Por favor introduce un correo'
           },
           emailAddress: {
-            message: 'The value is not a valid email address'
+            message: 'Correo inválido'
           }
         }
       },
-      userContact: {
+      id_empresa: {
         validators: {
           notEmpty: {
-            message: 'Please enter your contact'
-          }
-        }
-      },
-      company: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter your company'
+            message: 'Please enter your email'
           }
         }
       }
@@ -505,8 +521,8 @@ $(function () {
         // sweetalert
         Swal.fire({
           icon: 'success',
-          title: `Successfully ${status}!`,
-          text: `User ${status} Successfully.`,
+          title: `Correctamente ${status}!`,
+          text: `Usuario ${status} correctamente.`,
           customClass: {
             confirmButton: 'btn btn-success'
           }

@@ -127,7 +127,7 @@
     </div>
     <div class="line"></div> <!-- Línea desde la esquina derecha inferior -->
     <div class="section">
-        <p class="text_al left">Morelia, Mich. a ____ de _____ del 20__</p>
+        <p class="text_al left">Morelia, Mich. a <b>{{$dia}}</b> de <b>{{$mes}}</b> del <b>{{$anio}}</b></p>
     </div>
     <div class="asunto">
         <p>ASUNTO: Asignación de usuario para acceso a plataforma</p>
@@ -135,7 +135,7 @@
 
     <!-- Contenido -->
     <div class="contenido">
-        <p>C.</p>
+        <p>C. {{$datos->name}}</p>
     </div>
     <div class="contenido_text">
         <p>Reciba un cordial saludo de nuestro equipo del Centro de Innovación y Desarrollo
@@ -149,8 +149,8 @@
         <p>https://oc.erpcidam.com/</p>
     </div>
     <div class="Datos">
-        <p>USUARIO:</p>
-        <p>CONTRASEÑA:</p>
+        <p>USUARIO: <b>{{$datos->email}}</b></p>
+        <p>CONTRASEÑA: <b>{{$datos->password_original}}</b></p>
         <p>Con esta información Usted podrá solicitar los servicios que requiera y verificar la
             trazabilidad de los mismos, así también realizar descargas de archivos referentes a su
             proceso de certificación, le pedimos la resguarde como información de carácter
