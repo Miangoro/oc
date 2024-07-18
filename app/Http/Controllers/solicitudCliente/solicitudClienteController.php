@@ -9,6 +9,7 @@ use App\Models\empresa_producto;
 use App\Models\empresa_norma;
 use App\Models\empresa_actividad;
 use App\Models\solicitud_informacion;
+use App\Models\estados;
 use App\Mail\correoEjemplo;
 use Illuminate\Support\Facades\Mail;
 
@@ -16,8 +17,11 @@ class solicitudClienteController extends Controller
 {
   public function index()
   {
-    return view('solicitudes.solicitudCliente');
+      $estados = estados::orderBy('nombre')->pluck('nombre');
+  
+      return view('solicitudes.solicitudCliente', compact('estados'));
   }
+  
 
   public function RegistroExitoso()
   {
@@ -85,4 +89,8 @@ class solicitudClienteController extends Controller
 
     return view('solicitudes.Registro_exitoso');
   }
+
+
+
+
 }

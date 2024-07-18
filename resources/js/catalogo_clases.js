@@ -100,38 +100,36 @@ $(function () {
                 },
 
                 {
-                    // Actions botones de eliminar y actualizar(editar)
-                    targets: -1,
-                    title: 'Acciones',
-                    searchable: false,
-                    orderable: false,
-                    render: function (data, type, full, meta) {
-                        return (
-                            '<div class="d-flex align-items-center gap-50">' +
-                            `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_clase']}" data-bs-toggle="offcanvas" data-bs-target="#editClase"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-                            `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_clase']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-                            '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
-                            '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                            '<a href="' +
-                            userView +
-                            '" class="dropdown-item">View</a>' +
-                            '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-                            '</div>' +
-                            '</div>'
-                        );
-                    }
-                    
+            // Actions botones de eliminar y actualizar(editar)
+            targets: -1,
+            title: 'Acciones',
+            searchable: false,
+            orderable: false,
+            render: function (data, type, full, meta) {
+                return (
+                  '<div class="d-flex align-items-center gap-50">' +
+                  `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_clase']}" data-bs-toggle="offcanvas" data-bs-target="#editClase"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+                  `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_clase']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+                  '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
+                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                  '<a href="' + userView + '" class="dropdown-item">View</a>' +
+                  '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+                  '</div>' +
+                  '</div>'
+                );
+              }           
                 }
             ],
             order: [[2, 'desc']],
-            dom: '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
-                '<"me-5 ms-n2"f>' +
-                '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
-                '>t' +
-                '<"row mx-1"' +
-                '<"col-sm-12 col-md-6"i>' +
-                '<"col-sm-12 col-md-6"p>' +
-                '>',
+            dom:
+            '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
+            '<"me-5 ms-n2"f>' +
+            '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
+            '>t' +
+            '<"row mx-1"' +
+            '<"col-sm-12 col-md-6"i>' +
+            '<"col-sm-12 col-md-6"p>' +
+            '>',
             lengthMenu: [10, 20, 50, 70, 100], //for length of menu
             language: {
                 sLengthMenu: '_MENU_',
@@ -303,15 +301,45 @@ $(function () {
                     }
                 }
             ],
+
+            
             // For responsive popup
-           
+      responsive: {
+        details: {
+          display: $.fn.dataTable.Responsive.display.modal({
+            header: function (row) {
+              var data = row.data();
+              return 'Detalles de ' + data['clase'];
+            }
+          }),
+          type: 'column',
+          renderer: function (api, rowIdx, columns) {
+            var data = $.map(columns, function (col, i) {
+              return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
+                ? '<tr data-dt-row="' +
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
+                : '';
+            }).join('');
+
+            return data ? $('<table class="table"/><tbody />').append(data) : false;
+          }
+        }
+      }
         });
     }
 
 
-
-//funcion para agregar registro
-// Función para agregar registro de clase
 // Función para agregar registro de clase
 $('#addNewClassForm').on('submit', function (e) {
     e.preventDefault();

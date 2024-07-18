@@ -394,6 +394,7 @@ Route::middleware([
 //Solicitud de Cliente
 Route::get('/solicitud-cliente', [solicitudClienteController::class, 'index'])->name('solicitud-cliente');
 Route::post('/solicitud-cliente-registrar', [solicitudClienteController::class, 'registrar'])->name('solicitud-cliente-registrar');
+Route::get('/get-estados', [solicitudClienteController::class, 'getEstados'])->name('estados.index');
 
 //Vista formulario registro exitoso 
 Route::get('/Registro_exitoso', [solicitudClienteController::class, 'RegistroExitoso'])->name('Registro_exitoso');
