@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\marcas;
 use App\Models\empresa;
 use Illuminate\Support\Facades\Auth;
-use App\Helpers\Helpers; 
+use App\Helpers\Helpers;
 
 
 
@@ -24,7 +24,9 @@ class marcasCatalogoController extends Controller
 
         ]);
 
-        $nombreEmpresa = empresa::where('id_empresa', $request->cliente)->pluck('razon_social')->first();
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->cliente)->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        
 
         if ($request->id) {
             // Actualizar marca existente
@@ -49,8 +51,8 @@ class marcasCatalogoController extends Controller
         // Almacenar el archivo
         if ($request->hasFile('url')) {
             foreach ($request->file('url') as $index => $file) {
-                $filename = $request->nombre_documento[$index]. '_' .time().'.'.$file->getClientOriginalExtension();
-                $filePath = $file->storeAs('uploads/' . $nombreEmpresa, $filename, 'public');
+                $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
                 $filePaths[] = $filename;
 
                 // Aquí puedes guardar la información del archivo en la base de datos si lo necesitas
