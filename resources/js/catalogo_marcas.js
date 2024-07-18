@@ -3,9 +3,6 @@
  */
 'use strict';
 
-//JS PARA agregar
-// Agregar nuevo registro
-
 // Agregar nuevo registro
   // validating form and updating user's data
   const addNewMarca = document.getElementById('addNewMarca');
@@ -66,22 +63,30 @@ $(document).ready(function () {
   });
 
 });
+
 $(function () {
   // Datatable (jquery)
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
-    select2 = $('.select2'),
-    userView = baseUrl + 'app/user/view/account',
-    offCanvasForm = $('#addMarca');
+  select2Elements = $('.select2'),
+  userView = baseUrl + 'app/user/view/account',
+  offCanvasForm = $('#addMarca');
 
-  if (select2.length) {
-    var $this = select2;
-    select2Focus($this);
-    $this.wrap('<div class="position-relative"></div>').select2({
-      placeholder: 'Selecciona cliente',
-      dropdownParent: $this.parent()
-    });
-  }
+// Función para inicializar Select2 en elementos específicos
+function initializeSelect2($elements) {
+  $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+          placeholder: 'Selecciona cliente',
+          dropdownParent: $this.parent()
+      });
+  });
+}
+
+// Inicialización de Select2 para elementos con clase .select2
+initializeSelect2(select2Elements);
+  
 
   // ajax setup
   $.ajaxSetup({
@@ -505,6 +510,75 @@ $(function () {
             
           
   });*/
+  //JS para editar
+  $(document).ready(function() {
+    // Abrir el modal y cargar datos para editar
+    $('.datatables-users').on('click', '.edit-record', function() {
+        var id_marca = $(this).data('id');
+        
+        // Realizar la solicitud AJAX para obtener los datos de la marca
+        $.get('/marcas-list/' + id_marca + '/edit', function(data) {
+            // Rellenar el formulario con los datos obtenidos
+            $('#edit_marca_id').val(data.id_marca);
+            $('#edit_marca_nombre').val(data.marca);
+            $('#edit_cliente').val(data.id_empresa).trigger('change');
+            
+            // Mostrar el modal de edición
+            $('#editMarca').modal('show');
+        }).fail(function() {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al obtener los datos de la marca',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+        });
+    });
+
+    // Manejar el envío del formulario de edición
+    $('#editMarcaForm').on('submit', function(e) {
+        e.preventDefault();
+
+        var formData = $(this).serialize();
+        var id_marca = $('#edit_marca_id').val(); // Obtener el ID de la marca desde el campo oculto
+
+        $.ajax({
+            url: '/marcas-list/' + id_marca,
+            type: 'PUT',
+            data: formData,
+            success: function(response) {
+                $('#editMarca').modal('hide'); // Ocultar el modal de edición
+                $('#editMarcaForm')[0].reset(); // Limpiar el formulario
+
+                // Mostrar alerta de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.success,
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                });
+
+                // Recargar los datos en la tabla sin reinicializar DataTables
+                $('.datatables-users').DataTable().ajax.reload();
+            },
+            error: function(xhr) {
+                // Mostrar alerta de error
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Error al actualizar la marca',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
+        });
+    });
+});
 
 
 });
