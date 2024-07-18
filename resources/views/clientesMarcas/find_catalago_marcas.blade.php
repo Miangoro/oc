@@ -54,5 +54,7 @@
     <!-- Modal -->
     @include('_partials/_modals/modal-pdfs-frames')
     @include('_partials/_modals/modal-add-marca')
+    @include('_partials/_modals/modal-edit-marca')
+
     <!-- /Modal -->
 @endsection

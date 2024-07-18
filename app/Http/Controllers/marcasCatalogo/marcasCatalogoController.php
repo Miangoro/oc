@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\marcas;
 use App\Models\empresa;
 use Illuminate\Support\Facades\Auth;
-use App\Helpers\Helpers; 
+use App\Helpers\Helpers;
 
 
 
@@ -49,7 +49,7 @@ class marcasCatalogoController extends Controller
         // Almacenar el archivo
         if ($request->hasFile('url')) {
             foreach ($request->file('url') as $index => $file) {
-                $filename = $request->nombre_documento[$index]. '_' .time().'.'.$file->getClientOriginalExtension();
+                $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
                 $filePath = $file->storeAs('uploads/' . $nombreEmpresa, $filename, 'public');
                 $filePaths[] = $filename;
 
@@ -71,8 +71,36 @@ class marcasCatalogoController extends Controller
                 ->with('file', $filename);*/
         }
     }
+    //Metodo para editar las marcas
+    public function edit($id_marca)
+    {
+        try {
+            $marca = marcas::findOrFail($id_marca);
+            return response()->json($marca);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener los datos de la marcona'], 500);
+        }
+    }
 
+    // Método para actualizar una marca existente
+    public function update(Request $request, $id_marca)
+    {
+        $request->validate([
+            'marca' => 'required|string|max:60',
+            'cliente' => 'required|integer|exists:empresa,id_empresa',
+        ]);
 
+        try {
+            $marca = marcas::findOrFail($id_marca);
+            $marca->marca = $request->marca;
+            $marca->id_empresa = $request->cliente;
+            $marca->save();
+
+            return response()->json(['success' => 'Marca actualizada correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al actualizar la marca'], 500);
+        }
+    }
 
     public function marcas()
     {
