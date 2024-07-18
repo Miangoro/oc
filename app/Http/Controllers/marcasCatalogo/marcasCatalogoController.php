@@ -52,11 +52,7 @@ class marcasCatalogoController extends Controller
         if ($request->hasFile('url')) {
             foreach ($request->file('url') as $index => $file) {
                 $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-<<<<<<< HEAD
-                $filePath = $file->storeAs('uploads/' . $nombreEmpresa, $filename, 'public');
-=======
                 $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
->>>>>>> b5290e550f352f7cd34d0ada052124f6c1dce420
                 $filePaths[] = $filename;
 
                 // Aquí puedes guardar la información del archivo en la base de datos si lo necesitas
