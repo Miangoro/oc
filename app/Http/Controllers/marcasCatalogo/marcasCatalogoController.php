@@ -71,6 +71,7 @@ class marcasCatalogoController extends Controller
                 ->with('file', $filename);*/
         }
     }
+    
     //Metodo para editar las marcas
     public function edit($id_marca)
     {
