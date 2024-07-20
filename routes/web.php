@@ -167,6 +167,7 @@ use App\Http\Controllers\catalogo\categoriasController;
 use App\Http\Controllers\marcasCatalogo\marcasCatalogoController;
 use App\Http\Controllers\catalogo\ClaseController;
 use App\Http\Controllers\clientes\clientesConfirmadosController;
+use App\Http\Controllers\documentacion\documentacionController;
 use App\Http\Controllers\domicilios\DomiciliosController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\getFuncionesController;
@@ -470,3 +471,6 @@ Route::resource('/inspectores-list', UsuariosInspectoresController::class);
 
 Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal'])->name('usuarios-personal');
 Route::resource('/personal-list', UsuariosPersonalController::class);
+
+//Documentacion
+Route::get('/documentacion', [documentacionController::class, 'index'])->name('documentacion')->middleware('auth');;
