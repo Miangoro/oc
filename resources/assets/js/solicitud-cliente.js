@@ -1,72 +1,5 @@
 
-document.addEventListener('DOMContentLoaded', function() {
-    
 
-  // Contador para nuevas direcciones
-  let addressCounter = 1;
-
-  // Función para clonar la dirección
-  function cloneAddress() {
-      addressCounter++;
-      let clonedAddress = document.getElementById('address1').cloneNode(true);
-      clonedAddress.id = 'address' + addressCounter;
-
-      // Limpiar los valores de los inputs clonados
-      clonedAddress.querySelectorAll('input').forEach(input => {
-          input.value = '';
-      });
-
-      // Asegurar que los ID de los inputs sean únicos
-      clonedAddress.querySelectorAll('input').forEach((input, index) => {
-          input.id = input.id.slice(0, -1) + addressCounter; // Cambiar el número en el ID
-          input.name = input.name.slice(0, -1) + addressCounter; // Cambiar el número en el name
-          input.nextElementSibling.setAttribute('for', input.id); // Actualizar el label for
-      });
-
-      // Crear botón de eliminar con icono
-      let deleteBtn = document.createElement('button');
-      deleteBtn.classList.add('btn', 'btn-danger', 'btn-sm', 'mt-2', 'ms-2'); // Ajustar la clase ms-2 para el margen izquierdo
-      deleteBtn.type = 'button';
-      
-      // Agregar icono de Remix Icon
-      let icon = document.createElement('i');
-      icon.classList.add('ri-delete-bin-6-line', 'me-1'); // Clase del icono de Remix Icon
-      deleteBtn.appendChild(icon);
-
-      // Texto del botón
-      deleteBtn.appendChild(document.createTextNode('Eliminar'));
-
-      deleteBtn.addEventListener('click', function() {
-          clonedAddress.remove();
-          hrElement.remove(); // Eliminar también el HR asociado
-      });
-
-      // Agregar el botón de eliminar después del campo de C.P.
-      let hrElement = document.createElement('hr');
-      hrElement.classList.add('mt-4', 'mb-4'); // Ajusta los márgenes del HR si es necesario
-
-      // Agregar el HTML clonado al contenedor
-      let container = document.getElementById('clonedAddresses');
-      container.appendChild(clonedAddress);
-      container.appendChild(hrElement);
-      hrElement.appendChild(deleteBtn);
-  }
-
-  // Evento click para el botón de agregar dirección
-  document.getElementById('addAddressBtn').addEventListener('click', function() {
-      cloneAddress();
-  });
-
-  // Función para eliminar una dirección clonada
-  window.deleteAddress = function(element) {
-      let row = element.closest('.row');
-      let hrElement = row.nextElementSibling; // Obtener el HR siguiente al elemento a eliminar
-      row.remove(); // Elimina el elemento padre .row más cercano
-      if (hrElement.tagName === 'HR') {
-          hrElement.remove(); // Eliminar el HR si existe
-      }
-  };
-});
 
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -88,6 +21,10 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       function mostrarSecciones() {
+        console.log('mezcalCheckbox:', mezcalCheckbox.checked);
+        console.log('bebidaCheckbox:', bebidaCheckbox.checked);
+        console.log('coctelCheckbox:', coctelCheckbox.checked);
+        console.log('licorCheckbox:', licorCheckbox.checked);
           if (mezcalCheckbox.checked) {
               nom070Checkbox.checked = true;
               nom251Checkbox.checked = true;
@@ -131,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       function mostrarRepresentante(){
-
         var regimen = document.getElementById("regimen").value;
         var representante = document.getElementById('representante');
         var nombreRepresentante = document.getElementById('nombreRepresentante');
@@ -303,7 +239,51 @@ if (typeof wizardIcons !== undefined && wizardIcons !== null) {
   }*/
 }
 
+
+
 new Cleave(".phone-number-mask", {
     phone: true,
     phoneRegionCode: "US"
   });
+
+/*  */document.addEventListener('DOMContentLoaded', function () {
+    const checkboxes = document.querySelectorAll('input[name="producto[]"]');
+    const specificAddressSection = document.getElementById('specific-address-section');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            specificAddressSection.innerHTML = ''; // Clear existing fields
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    const label = cb.nextElementSibling.querySelector('small').textContent;
+                    const addressHtml = `
+                        <div class="content-header mb-4">
+                            <h6 class="mb-0">Domicilio Fiscal</h6>
+                            <small>Ingrese los datos del domicilio fiscal del ${label}</small>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" class="form-control" id="localidad-${cb.value}" name="localidad_${cb.value}" required placeholder=" ">
+                                    <label for="localidad-${cb.value}">Domicilio completo</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating form-floating-outline">
+                                    <select class="form-control custom-select" name="estado_${cb.value}" id="estado_${cb.value}" aria-label="Estado" required>
+                                        <option disabled selected>Selecciona un estado</option>
+                                        @foreach ($estados as $estado)
+                                            <option value="{{ $estado }}">{{ $estado }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label for="estado_${cb.value}">Estado</label>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    specificAddressSection.insertAdjacentHTML('beforeend', addressHtml);
+                }
+            });
+        });
+    });
+});

@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Catalogo Categorias')
+@section('title', 'Catalogo Clases')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
@@ -37,8 +37,8 @@
 
 @section('content')
 
-<meta name="csrf-token" content="{{ csrf_token() }}">
-
+{{-- <meta name="csrf-token" content="{{ csrf_token() }}">
+ --}}
 <!-- Users List Table -->
 <div class="card">
   <div class="card-header pb-0">
@@ -49,7 +49,7 @@
       <thead class="table-dark">
         <tr>
           <th></th>
-          <th>Id</th>
+          <th>ID</th>
           <th>Clases</th>
           <th>Acciones</th>
         </tr>
