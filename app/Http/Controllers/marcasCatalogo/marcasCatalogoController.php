@@ -10,23 +10,94 @@ use App\Models\marcas;
 use App\Models\empresa;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helpers;
+use Illuminate\Support\Facades\Storage;
 
 
 
 class marcasCatalogoController extends Controller
 {
 
+    public function index(Request $request)
+    {
+        $columns = [
+            1 => 'id_marca',
+            2 => 'folio',
+            3 => 'marca',
+            4 => 'id_empresa',
+        ];
+
+        $search = [];
+
+        $totalData = marcas::count();
+
+        $totalFiltered = $totalData;
+
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+
+        if (empty($request->input('search.value'))) {
+            $users = marcas::with('empresa') // Incluye la relación empresa
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
+                ->get();
+        } else {
+            $search = $request->input('search.value');
+
+            $users = marcas::with('empresa') // Incluye la relación empresa
+                ->where('id_marca', 'LIKE', "%{$search}%")
+                ->orWhere('folio', 'LIKE', "%{$search}%")
+                ->orWhere('marca', 'LIKE', "%{$search}%")
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
+                ->get();
+
+            $totalFiltered = marcas::where('id_marca', 'LIKE', "%{$search}%")
+                ->orWhere('folio', 'LIKE', "%{$search}%")
+                ->orWhere('marca', 'LIKE', "%{$search}%")
+                ->count();
+        }
+
+        $data = [];
+
+        if (!empty($users)) {
+            // providing a dummy id instead of database ids
+            $ids = $start;
+
+            foreach ($users as $user) {
+                $nestedData['id_marca'] = $user->id_marca;
+                $nestedData['fake_id'] = ++$ids;
+                $nestedData['folio'] = $user->folio;
+                $nestedData['marca'] = $user->marca;
+                $nestedData['id_empresa'] = $user->id_empresa;
+                $nestedData['razon_social'] = $user->empresa ? $user->empresa->razon_social : ''; // Obtiene la razón social
+
+                $data[] = $nestedData;
+            }
+        }
+
+        return response()->json([
+            'draw' => intval($request->input('draw')),
+            'recordsTotal' => intval($totalData),
+            'recordsFiltered' => intval($totalFiltered),
+            'code' => 200,
+            'data' => $data,
+        ]);
+    }
+
+
+    /*Metodo para actualizar*/
     public function store(Request $request)
     {
         $request->validate([
-
             'marca' => 'required|string|max:60',
-
         ]);
 
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->cliente)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-        
 
         if ($request->id) {
             // Actualizar marca existente
@@ -35,7 +106,6 @@ class marcasCatalogoController extends Controller
             $marca->marca = $request->marca;
             $marca->folio = Helpers::generarFolioMarca($request->cliente);
             $marca->save();
-            //return response()->json(['success' => 'Marca actualizada exitosamente.']);
         } else {
             // Crear nueva marca
             $marca = new marcas();
@@ -43,37 +113,42 @@ class marcasCatalogoController extends Controller
             $marca->marca = $request->marca;
             $marca->folio = Helpers::generarFolioMarca($request->cliente);
             $marca->save();
-            //return response()->json(['success' => 'Marca registrada exitosamente.']);
         }
-        $filePaths = [];
-
 
         // Almacenar el archivo
         if ($request->hasFile('url')) {
             foreach ($request->file('url') as $index => $file) {
                 $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
                 $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
-                $filePaths[] = $filename;
 
-                // Aquí puedes guardar la información del archivo en la base de datos si lo necesitas
-                // Documento::create(['file_path' => $filePath]);
-                $documentacion_url = new Documentacion_url();
-                $documentacion_url->id_relacion = $marca->id_marca;
-                $documentacion_url->id_documento = $request->id_documento[$index];
-                $documentacion_url->nombre_documento = $request->nombre_documento[$index];
-                $documentacion_url->url = $filePath;
-                $documentacion_url->id_empresa = $request->cliente;
-                //$documentacion_url->id_usuario_registro = Auth::id();
-                $documentacion_url->save();
+                // Verificar si el documento ya existe para esta marca y cliente
+                $existingDocument = Documentacion_url::where('id_relacion', $marca->id_marca)
+                    ->where('id_documento', $request->id_documento[$index])
+                    ->first();
+
+                if ($existingDocument) {
+                    // Eliminar el archivo anterior
+                    Storage::disk('public')->delete($existingDocument->url);
+
+                    // Actualizar la información del archivo en la base de datos
+                    $existingDocument->url = $filePath;
+                    $existingDocument->nombre_documento = $request->nombre_documento[$index];
+                    $existingDocument->save();
+                } else {
+                    // Crear nuevo registro de documento
+                    $documentacion_url = new Documentacion_url();
+                    $documentacion_url->id_relacion = $marca->id_marca;
+                    $documentacion_url->id_documento = $request->id_documento[$index];
+                    $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+                    $documentacion_url->url = $filePath;
+                    $documentacion_url->id_empresa = $request->cliente;
+                    $documentacion_url->save();
+                }
             }
-
-
-            /* return back()
-                ->with('success', 'Documento subido exitosamente.')
-                ->with('file', $filename);*/
         }
     }
-    
+
+
     //Metodo para editar las marcas
     public function edit($id_marca)
     {
@@ -153,82 +228,6 @@ class marcasCatalogoController extends Controller
             'userDuplicates' => $userDuplicates,
             'clientes' => $clientes, // Pasa la lista de clientes a la vista
             'documentos' => $documentos,
-        ]);
-    }
-
-
-
-
-
-
-    public function index(Request $request)
-    {
-        $columns = [
-            1 => 'id_marca',
-            2 => 'folio',
-            3 => 'marca',
-            4 => 'id_empresa',
-        ];
-
-        $search = [];
-
-        $totalData = marcas::count();
-
-        $totalFiltered = $totalData;
-
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
-
-        if (empty($request->input('search.value'))) {
-            $users = marcas::with('empresa') // Incluye la relación empresa
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-        } else {
-            $search = $request->input('search.value');
-
-            $users = marcas::with('empresa') // Incluye la relación empresa
-                ->where('id_marca', 'LIKE', "%{$search}%")
-                ->orWhere('folio', 'LIKE', "%{$search}%")
-                ->orWhere('marca', 'LIKE', "%{$search}%")
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-
-            $totalFiltered = marcas::where('id_marca', 'LIKE', "%{$search}%")
-                ->orWhere('folio', 'LIKE', "%{$search}%")
-                ->orWhere('marca', 'LIKE', "%{$search}%")
-                ->count();
-        }
-
-        $data = [];
-
-        if (!empty($users)) {
-            // providing a dummy id instead of database ids
-            $ids = $start;
-
-            foreach ($users as $user) {
-                $nestedData['id_marca'] = $user->id_marca;
-                $nestedData['fake_id'] = ++$ids;
-                $nestedData['folio'] = $user->folio;
-                $nestedData['marca'] = $user->marca;
-                $nestedData['id_empresa'] = $user->id_empresa;
-                $nestedData['razon_social'] = $user->empresa ? $user->empresa->razon_social : ''; // Obtiene la razón social
-
-                $data[] = $nestedData;
-            }
-        }
-
-        return response()->json([
-            'draw' => intval($request->input('draw')),
-            'recordsTotal' => intval($totalData),
-            'recordsFiltered' => intval($totalFiltered),
-            'code' => 200,
-            'data' => $data,
         ]);
     }
 }
