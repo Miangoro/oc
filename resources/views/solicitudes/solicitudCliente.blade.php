@@ -40,14 +40,15 @@
         .light-style .bs-stepper.wizard-icons .bs-stepper-header .bs-stepper-label {
             color: white;
         }
-/* Usando la variable de Bootstrap para el color primario */
-/*         .custom-option.active {
-        border: 2px solid var(--bs-primary); 
-       }
- */
 
+        /* Usando la variable de Bootstrap para el color primario */
+        /*         .custom-option.active {
+            border: 1px solid var(--bs-primary);
+           } */
+        .custom-option.active {
+            border: 2px solid #8eb3ae;
+        }
     </style>
-
     <div class="card">
         <img alt="Organismo de certificación" src="{{ asset('assets/img/branding/Banner solicitud_información.png') }}"
             alt="timeline-image" class="card-img-top " style="object-fit: cover;">
@@ -172,7 +173,6 @@
 
                     </div>
 
-
                     <!-- Social Links -->
                     <div id="social-links" class="content">
                         <!-- 1. Delivery Type -->
@@ -267,6 +267,66 @@
                             </div>
                         </div>
                         <hr>
+                        {{-- secciones ocultas --}}
+                        <div id="nom070-section" style="display: none;">
+                            <h6 class="my-4">Actividad del cliente NOM-070-SCFI-2016:</h6>
+                            <div class="row gy-3 align-items-start">
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon8">
+                                            <span class="custom-option-body">
+                                                <i class="icon-agave"></i>
+                                                <small>Productor de Agave</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="1" id="customRadioIcon8" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon9">
+                                            <span class="custom-option-body">
+                                                <i class="icon-envasador"></i>
+                                                <small>Envasador de Mezcal</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="2" id="customRadioIcon9" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon10">
+                                            <span class="custom-option-body">
+                                                <i class="icon-productor-tequila"></i>
+                                                <small>Productor de Mezcal</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="3" id="customRadioIcon10" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon11">
+                                            <span class="custom-option-body">
+                                                <i class="icon-comercializador"></i>
+                                                <small>Comercializador de Mezcal</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="4" id="customRadioIcon11" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+
+
+
+                        {{-- fin de la secciones ocultas --}}
                         <div class="col-12 d-flex justify-content-between mt-3">
                             <button type="button" class="btn btn-outline-danger btn-prev">
                                 <i class="ri-arrow-left-line me-sm-1"></i>
@@ -278,117 +338,180 @@
                             </button>
                         </div>
                     </div>
-{{-- direccion --}}
-                  <div id="address" class="content">
-                    <div class="content-header mb-4">
-                        <h6 class="mb-0">Domicilio Fiscal</h6>
-                        <small>Ingrese los datos del primer domicilio fiscal</small>
-                    </div>
-                
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" id="localidad1" name="localidad1" required placeholder=" ">
-                                <label for="localidad1">Domicilio completo</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="form-floating form-floating-outline">
-                                <select class="form-control custom-select" name="estado" id="estado" aria-label="Régimen fiscal" required>
-                                    <option disabled selected>selecciona un estado</option>
-                                    @foreach ($estados as $estado)
-                                        <option value="{{ $estado }}">{{ $estado }}</option>
-                                    @endforeach
-                                </select>
-                                <label for="estado">Estado</label>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row g-3">
-                      <div class="col-md-6 offset-md-6 d-flex justify-content-end align-items-center flex-column">
-                          <div class="text-light small fw-medium mb-2">Seleccionar</div>
-                          <label class="switch">
-                              <input type="checkbox" class="switch-input" />
-                              <span class="switch-toggle-slider">
-                                  <span class="switch-on"></span>
-                                  <span class="switch-off"></span>
-                              </span>
-                              <span class="switch-label">Usar la misma direccion fiscal</span>
-                          </label>
-                      </div>
-                  </div>
-                    <hr>
-                    <div id="specific-address-section"></div>
-                
-                    <hr>
-                    <div class="col-12 d-flex justify-content-between mt-3">
-                        <button type="button" class="btn btn-outline-danger btn-prev">
-                            <i class="ri-arrow-left-line me-sm-1"></i>
-                            <span class="align-middle d-sm-inline-block d-none">Anterior</span>
-                        </button>
-                        <button type="button" class="btn btn-primary btn-next">
-                            <span class="align-middle d-sm-inline-block d-none">Siguiente</span>
-                            <i class="ri-arrow-right-line"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                  {{-- direccion --}}
+
+
+                    {{-- direccion --}}
                     <div id="address" class="content">
-                      <div class="content-header mb-4">
-                          <h6 class="mb-0">Domicilio Fiscal</h6>
-                          <small>Ingrese los datos del primer domicilio fiscal</small>
-                      </div>
-                      <div class="row g-3">
-                          <div class="col-md-6">
-                              <div class="form-floating form-floating-outline">
-                                  <input type="text" class="form-control" id="localidad1" name="localidad1" required placeholder=" ">
-                                  <label for="localidad1">Domicilio completo</label>
-                              </div>
-                          </div>
-                          <div class="col-md-6 mb-3">
-                              <div class="form-floating form-floating-outline">
-                                  <select class="form-control custom-select" name="estado" id="estado" aria-label="Régimen fiscal" required>
-                                      <option disabled selected>selecciona un estado</option>
-                                      @foreach ($estados as $estado)
-                                          <option value="{{ $estado }}">{{ $estado }}</option>
-                                      @endforeach
-                                  </select>
-                                  <label for="estado">Estado</label>
-                              </div>
-                          </div>
-                      </div>
-                      <hr>
-                      <div class="row g-3">
-                        <div class="col-md-6 offset-md-6 d-flex justify-content-end align-items-center flex-column">
-                            <div class="text-light small fw-medium mb-2">Seleccionar</div>
-                            <label class="switch">
-                                <input type="checkbox" class="switch-input" />
-                                <span class="switch-toggle-slider">
-                                    <span class="switch-on"></span>
-                                    <span class="switch-off"></span>
-                                </span>
-                                <span class="switch-label">Usar la misma dirección fiscal</span>
-                            </label>
+                        <div class="content-header mb-4">
+                            <h6 class="mb-0">Domicilio Fiscal</h6>
+                            <small>Ingrese los datos del primer domicilio fiscal</small>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" class="form-control" id="localidad1" name="localidad1"
+                                        required placeholder=" ">
+                                    <label for="localidad1">Domicilio completo</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-floating form-floating-outline">
+                                    <select class="form-control custom-select" name="estado" id="estado" required>
+                                        <option disabled selected>selecciona un estado</option>
+                                        @foreach ($estados as $estado)
+                                            <option value="{{ $estado }}">{{ $estado }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label for="estado">Estado</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6 offset-md-6 d-flex justify-content-end align-items-center flex-column">
+                                <div class="text-light small fw-medium mb-2">Seleccionar</div>
+                                <label class="switch">
+                                    <input type="checkbox" class="switch-input" />
+                                    <span class="switch-toggle-slider">
+                                        <span class="switch-on"></span>
+                                        <span class="switch-off"></span>
+                                    </span>
+                                    <span class="switch-label">Usar la misma dirección fiscal</span>
+                                </label>
+                            </div>
+                        </div>
+                        <hr>
+                        {{-- se generan las direcciones --}}
+
+                        <div id="domiProductAgace" style="display: none;">
+                            <div class="content-header mb-4">
+                                <h6 class="mb-0">Domicilio de Productor de Agave:</h6>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="text" class="form-control" id="localidad2" name="localidad2"
+                                            required placeholder=" ">
+                                        <label for="localidad2">Domicilio completo</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating form-floating-outline">
+                                        <select class="form-control custom-select" name="estado2" id="estado2"
+                                            required>
+                                            <option disabled selected>selecciona un estado</option>
+                                            @foreach ($estados as $estado)
+                                                <option value="{{ $estado }}">{{ $estado }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="estado2">Estado</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+
+                        <div id="domiEnvasaMezcal" style="display: none;">
+                            <div class="content-header mb-4">
+                                <h6 class="mb-0">Domicilio de Envasador de Mezcal:</h6>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="text" class="form-control" id="localidad3" name="localidad3"
+                                            required placeholder=" ">
+                                        <label for="localidad3">Domicilio completo</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating form-floating-outline">
+                                        <select class="form-control custom-select" name="estado3" id="estado3"
+                                            required>
+                                            <option disabled selected>selecciona un estado</option>
+                                            @foreach ($estados as $estado)
+                                                <option value="{{ $estado }}">{{ $estado }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="estado3">Estado</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+
+                        <div id="domiProductMezcal" style="display: none;">
+                            <div class="content-header mb-4">
+                                <h6 class="mb-0">Domicilio de Productor de Mezcal:</h6>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="text" class="form-control" id="localidad4" name="localidad4"
+                                            required placeholder=" ">
+                                        <label for="localidad4">Domicilio completo</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating form-floating-outline">
+                                        <select class="form-control custom-select" name="estado4" id="estado4"
+                                            required>
+                                            <option disabled selected>selecciona un estado</option>
+                                            @foreach ($estados as $estado)
+                                                <option value="{{ $estado }}">{{ $estado }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="estado4">Estado</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+                        <div id="domiComerMezcal" style="display: none;">
+                            <div class="content-header mb-4">
+                                <h6 class="mb-0">Domicilio de Comercializador de Mezcal:</h6>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="text" class="form-control" id="localidad5" name="localidad5"
+                                            required placeholder=" ">
+                                        <label for="localidad5">Domicilio completo</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating form-floating-outline">
+                                        <select class="form-control custom-select" name="estado5" id="estado5"
+                                            required>
+                                            <option disabled selected>selecciona un estado</option>
+                                            @foreach ($estados as $estado)
+                                                <option value="{{ $estado }}">{{ $estado }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="estado5">Estado</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+
+                        {{--  --}}
+
+                        <div class="col-12 d-flex justify-content-between mt-3">
+                            <button type="button" class="btn btn-outline-danger btn-prev">
+                                <i class="ri-arrow-left-line me-sm-1"></i>
+                                <span class="align-middle d-sm-inline-block d-none">Anterior</span>
+                            </button>
+                            <button type="button" class="btn btn-primary btn-next">
+                                <span class="align-middle d-sm-inline-block d-none">Siguiente</span>
+                                <i class="ri-arrow-right-line"></i>
+                            </button>
                         </div>
                     </div>
-                  
-                      <hr>
-                      <div id="specific-address-section"></div>
-                      <hr>
-                      <div class="col-12 d-flex justify-content-between mt-3">
-                          <button type="button" class="btn btn-outline-danger btn-prev">
-                              <i class="ri-arrow-left-line me-sm-1"></i>
-                              <span class="align-middle d-sm-inline-block d-none">Anterior</span>
-                          </button>
-                          <button type="button" class="btn btn-primary btn-next">
-                              <span class="align-middle d-sm-inline-block d-none">Siguiente</span>
-                              <i class="ri-arrow-right-line"></i>
-                          </button>
-                      </div>
-                  </div>
-                  
+
 
                     <!-- Información sobre los Procesos y productos a certificar por el cliente -->
                     <div id="personal-info-icon" class="content">
