@@ -455,7 +455,7 @@ Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'upd
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
 
 Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio_instalaciones');
-Route::resource('/instalaciones-list', categoriasController::class);
+Route::resource('/instalaciones-list', DomiciliosController::class);
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');

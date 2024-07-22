@@ -41,6 +41,7 @@ $(function () {
         { data: 'id_instalacion' },
         { data: 'razon_social' },
         { data: 'tipo' },
+        { data: 'estado' },
         { data: 'direccion_completa' },
         { data: 'action' }
       ],
@@ -61,7 +62,7 @@ $(function () {
           orderable: false,
           targets: 1,
           render: function (data, type, full, meta) {
-            return `<span>${full.id_instalacion}</span>`;
+            return `<span>${full.fake_id}</span>`;
           }
         },
         {
@@ -75,9 +76,9 @@ $(function () {
             return `
               <div class="d-flex justify-content-start align-items-center user-name">
                 <div class="d-flex flex-column">
-                  <a href="${userView}" class="text-truncate text-heading">
+                
                     <span class="fw-medium">${$name}</span>
-                  </a>
+                 
                 </div>
               </div>`;
           }
@@ -100,6 +101,22 @@ $(function () {
         {
           // Direccion Completa
           targets: 4,
+          responsivePriority: 4,
+          render: function (data, type, full, meta) {
+            var $name = full.estado;
+
+            return `
+              <div class="d-flex justify-content-start align-items-center user-name">
+                <div class="d-flex flex-column">
+                  <span class="fw-medium">${$name}</span>
+                </div>
+              </div>`;
+          }
+        },
+        
+        {
+          // Direccion Completa
+          targets: 5,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $name = full.direccion_completa;
@@ -131,7 +148,7 @@ $(function () {
                   <i class="ri-more-2-line ri-20px"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end m-0">
-                  <a href="${userView}" class="dropdown-item">View</a>
+                  <a href="" class="dropdown-item">View</a>
                   <a href="javascript:;" class="dropdown-item">Suspend</a>
                 </div>
               </div>`;
