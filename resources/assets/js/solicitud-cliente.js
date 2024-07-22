@@ -48,6 +48,7 @@
           toggleSectionVisibility('normex-section', normexCheckbox.checked);
       }
 
+
       function toggleSectionVisibility(sectionId, shouldShow) {
           let section = document.getElementById(sectionId);
           if (section) {
@@ -67,6 +68,7 @@
           }
       }
 
+
       function mostrarRepresentante(){
         var regimen = document.getElementById("regimen").value;
         var representante = document.getElementById('representante');
@@ -79,65 +81,6 @@
             representante.style.display = "none";
             nombreRepresentante.removeAttribute("required");
         }
-
-      }
-
-      function crearNOM070Section() {
-          const nom070Section = document.createElement('div');
-          nom070Section.id = 'nom070-section';
-
-          nom070Section.innerHTML = `
-              <h6 class="my-4">Actividad del cliente NOM-070-SCFI-2016:</h6>
-              <div class="row gy-3 align-items-start">
-                  <div class="col-md">
-                      <div class="form-check custom-option custom-option-icon">
-                          <label class="form-check-label custom-option-content" for="customRadioIcon8">
-                              <span class="custom-option-body">
-                                  <i class="icon-agave"></i>
-                                  <small>Productor de Agave</small>
-                              </span>
-                              <input name="actividad[]" class="form-check-input" type="checkbox" value="1" id="customRadioIcon8" />
-                          </label>
-                      </div>
-                  </div>
-                  <div class="col-md">
-                      <div class="form-check custom-option custom-option-icon">
-                          <label class="form-check-label custom-option-content" for="customRadioIcon9">
-                              <span class="custom-option-body">
-                                  <i class="icon-envasador"></i>
-                                  <small>Envasador de Mezcal</small>
-                              </span>
-                              <input name="actividad[]" class="form-check-input" type="checkbox" value="2" id="customRadioIcon9" />
-                          </label>
-                      </div>
-                  </div>
-                  <div class="col-md">
-                      <div class="form-check custom-option custom-option-icon">
-                          <label class="form-check-label custom-option-content" for="customRadioIcon10">
-                              <span class="custom-option-body">
-                                  <i class="icon-productor-tequila"></i>
-                                  <small>Productor de Mezcal</small>
-                              </span>
-                              <input name="actividad[]" class="form-check-input" type="checkbox" value="3" id="customRadioIcon10" />
-                          </label>
-                      </div>
-                  </div>
-                  <div class="col-md">
-                      <div class="form-check custom-option custom-option-icon">
-                          <label class="form-check-label custom-option-content" for="customRadioIcon11">
-                              <span class="custom-option-body">
-                                  <i class="icon-comercializador"></i>
-                                  <small>Comercializador de Mezcal</small>
-                              </span>
-                              <input name="actividad[]" class="form-check-input" type="checkbox" value="4" id="customRadioIcon11" />
-                          </label>
-                      </div>
-                  </div>
-              </div>
-              <hr>
-          `;
-
-          return nom070Section;
       }
 
       function crearNormexSection() {
@@ -208,6 +151,13 @@
     });
 
 
+    window.estadosOptions = `
+    @foreach ($estados as $estado)
+        <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
+    @endforeach
+`;
+
+
 const wizardIcons = document.querySelector('.wizard-icons-example');
 
 if (typeof wizardIcons !== undefined && wizardIcons !== null) {
@@ -246,44 +196,98 @@ new Cleave(".phone-number-mask", {
     phoneRegionCode: "US"
   });
 
-/*  */document.addEventListener('DOMContentLoaded', function () {
-    const checkboxes = document.querySelectorAll('input[name="producto[]"]');
-    const specificAddressSection = document.getElementById('specific-address-section');
 
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            specificAddressSection.innerHTML = ''; // Clear existing fields
-            checkboxes.forEach(cb => {
-                if (cb.checked) {
-                    const label = cb.nextElementSibling.querySelector('small').textContent;
-                    const addressHtml = `
-                        <div class="content-header mb-4">
-                            <h6 class="mb-0">Domicilio Fiscal</h6>
-                            <small>Ingrese los datos del domicilio fiscal del ${label}</small>
-                        </div>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" id="localidad-${cb.value}" name="localidad_${cb.value}" required placeholder=" ">
-                                    <label for="localidad-${cb.value}">Domicilio completo</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating form-floating-outline">
-                                    <select class="form-control custom-select" name="estado_${cb.value}" id="estado_${cb.value}" aria-label="Estado" required>
-                                        <option disabled selected>Selecciona un estado</option>
-                                        @foreach ($estados as $estado)
-                                            <option value="{{ $estado }}">{{ $estado }}</option>
-                                        @endforeach
-                                    </select>
-                                    <label for="estado_${cb.value}">Estado</label>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    specificAddressSection.insertAdjacentHTML('beforeend', addressHtml);
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Función para mostrar u ocultar secciones según el checkbox seleccionado
+    function toggleSection() {
+        // Obtener el estado de cada checkbox
+        const agaveCheckbox = document.getElementById('customRadioIcon8');
+        const envasadorCheckbox = document.getElementById('customRadioIcon9');
+        const productorMezcalCheckbox = document.getElementById('customRadioIcon10');
+        const comercializadorCheckbox = document.getElementById('customRadioIcon11');
+
+        // Mostrar u ocultar secciones basadas en los checkboxes seleccionados
+        document.getElementById('domiProductAgace').style.display = agaveCheckbox.checked ? 'block' : 'none';
+        document.getElementById('domiEnvasaMezcal').style.display = envasadorCheckbox.checked ? 'block' : 'none';
+        document.getElementById('domiProductMezcal').style.display = productorMezcalCheckbox.checked ? 'block' : 'none';
+        document.getElementById('domiComerMezcal').style.display = comercializadorCheckbox.checked ? 'block' : 'none';
+        
+        // Limpia los campos de las secciones ocultas
+        if (!agaveCheckbox.checked) {
+            document.getElementById('domiProductAgace').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+            document.getElementById('domiProductAgace').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        }
+        if (!envasadorCheckbox.checked) {
+            document.getElementById('domiEnvasaMezcal').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+            document.getElementById('domiEnvasaMezcal').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        }
+        if (!productorMezcalCheckbox.checked) {
+            document.getElementById('domiProductMezcal').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+            document.getElementById('domiProductMezcal').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        }
+        if (!comercializadorCheckbox.checked) {
+            document.getElementById('domiComerMezcal').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+            document.getElementById('domiComerMezcal').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        }
+    }
+
+    // Añadir event listeners a los checkboxes
+    document.getElementById('customRadioIcon8').addEventListener('change', toggleSection);
+    document.getElementById('customRadioIcon9').addEventListener('change', toggleSection);
+    document.getElementById('customRadioIcon10').addEventListener('change', toggleSection);
+    document.getElementById('customRadioIcon11').addEventListener('change', toggleSection);
+    
+    // Inicializa el estado de las secciones al cargar la página
+    toggleSection();
+});
+
+/* seccion del switch */
+
+document.addEventListener('DOMContentLoaded', () => {
+    const switchInput = document.querySelector('.switch-input');
+    const localidad1 = document.getElementById('localidad1');
+    const estado = document.getElementById('estado');
+
+    // Función para copiar los datos del primer domicilio a las secciones visibles
+    function copyAddress() {
+        // Obtener todos los contenedores de domicilio fiscal
+        const addressContainers = [
+            document.getElementById('domiProductAgace'),
+            document.getElementById('domiEnvasaMezcal'),
+            document.getElementById('domiProductMezcal'),
+            document.getElementById('domiComerMezcal')
+        ];
+        
+        if (switchInput.checked) {
+            // Copiar datos si el switch está marcado
+            addressContainers.forEach(container => {
+                if (container.style.display !== 'none') {
+                    const localidadInput = container.querySelector('input[type="text"]');
+                    const estadoSelect = container.querySelector('select');
+                    
+                    if (localidadInput && estadoSelect) {
+                        localidadInput.value = localidad1.value;
+                        estadoSelect.value = estado.value;
+                    }
                 }
             });
-        });
-    });
+        } else {
+            // Vaciar campos si el switch no está marcado
+            addressContainers.forEach(container => {
+                if (container.style.display !== 'none') {
+                    const localidadInput = container.querySelector('input[type="text"]');
+                    const estadoSelect = container.querySelector('select');
+                    
+                    if (localidadInput && estadoSelect) {
+                        localidadInput.value = '';
+                        estadoSelect.selectedIndex = 0; // Resetea la selección del <select>
+                    }
+                }
+            });
+        }
+    }
+
+    // Escuchar cambios en el switch
+    switchInput.addEventListener('change', copyAddress);
 });
