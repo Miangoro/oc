@@ -385,7 +385,7 @@
 
                         <div id="domiProductAgace" style="display: none;">
                             <div class="content-header mb-4">
-                                <h6 class="mb-0">Domicilio Fiscal de Productor de Agave:</h6>
+                                <h6 class="mb-0">Domicilio de Productor de Agave:</h6>
                             </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
@@ -414,7 +414,7 @@
 
                         <div id="domiEnvasaMezcal" style="display: none;">
                             <div class="content-header mb-4">
-                                <h6 class="mb-0">Domicilio Fiscal de Envasador de Mezcal:</h6>
+                                <h6 class="mb-0">Domicilio de Envasador de Mezcal:</h6>
                             </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
@@ -443,7 +443,7 @@
 
                         <div id="domiProductMezcal" style="display: none;">
                             <div class="content-header mb-4">
-                                <h6 class="mb-0">Domicilio Fiscal de Productor de Mezcal:</h6>
+                                <h6 class="mb-0">Domicilio de Productor de Mezcal:</h6>
                             </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
@@ -471,7 +471,7 @@
 
                         <div id="domiComerMezcal" style="display: none;">
                             <div class="content-header mb-4">
-                                <h6 class="mb-0">Domicilio Fiscal de Comercializador de Mezcal:</h6>
+                                <h6 class="mb-0">Domicilio de Comercializador de Mezcal:</h6>
                             </div>
                             <div class="row g-3">
                                 <div class="col-md-6">
