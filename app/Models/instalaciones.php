@@ -15,11 +15,12 @@ class Instalaciones extends Model
       'id_empresa',
       'tipo',
       'direccion_completa',
+      'estado'
   ];
 
   public function empresa()
   {
-      return $this->belongsTo(Empresa::class, 'id_empresa');
+      return $this->belongsTo(Empresa::class,'id_empresa');
   }
 
 }

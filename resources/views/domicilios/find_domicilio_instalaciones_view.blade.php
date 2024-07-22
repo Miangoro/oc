@@ -51,12 +51,13 @@
           <th>ID</th>
           <th>Cliente</th>
           <th>Tipo</th>
+          <th>Estado</th>          
           <th>Dirección</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        @foreach($instalaciones as $instalacion)
+       <!-- @foreach($instalaciones as $instalacion)
             <tr>
                 <td></td>
                 <td>{{ $instalacion->id_instalaciones }}</td>
@@ -64,7 +65,7 @@
                 <td>{{ $instalacion->tipo }}</td>
                 <td>{{ $instalacion->direccion_completa }}</td>
             </tr>
-        @endforeach
+        @endforeach-->
     </tbody>
 
     </table>
