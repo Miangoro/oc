@@ -167,7 +167,6 @@ use App\Http\Controllers\catalogo\categoriasController;
 use App\Http\Controllers\marcasCatalogo\marcasCatalogoController;
 use App\Http\Controllers\catalogo\ClaseController;
 use App\Http\Controllers\clientes\clientesConfirmadosController;
-use App\Http\Controllers\documentacion\documentacionController;
 use App\Http\Controllers\domicilios\DomiciliosController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\getFuncionesController;
@@ -395,9 +394,8 @@ Route::middleware([
 //Solicitud de Cliente
 Route::get('/solicitud-cliente', [solicitudClienteController::class, 'index'])->name('solicitud-cliente');
 Route::post('/solicitud-cliente-registrar', [solicitudClienteController::class, 'registrar'])->name('solicitud-cliente-registrar');
-Route::get('/get-estados', [solicitudClienteController::class, 'getEstados'])->name('estados.index');
 
-//Vista formulario registro exitoso 
+//Vista formulario registro exitoso
 Route::get('/Registro_exitoso', [solicitudClienteController::class, 'RegistroExitoso'])->name('Registro_exitoso');
 
 //Enviar Correo
@@ -430,16 +428,9 @@ Route::resource('/clientes-list', clientesConfirmadosController::class);
 Route::get('/carta_asignacion/{id}', [clientesConfirmadosController::class, 'pdfCartaAsignacion'])->name('carta_asignacion');
 Route::get('/carta_asignacion052/{id}', [clientesConfirmadosController::class, 'pdfCartaAsignacion052'])->name('carta_asignacion052');
 
-
-
 //Marcas y catalogo
 Route::get('/catalogo/marcas', [marcasCatalogoController::class, 'UserManagement'])->name('catalogo-marcas');
 Route::resource('/catalago-list', marcasCatalogoController::class);
-Route::resource('marcas-list', marcasCatalogoController::class)->except(['create', 'edit']);
-Route::get('/marcas-list/{id}/edit', [marcasCatalogoController::class, 'edit'])->name('marcas.edit');
-Route::post('/marcas-list/{id}', [marcasCatalogoController::class, 'store']);
-
-
 
 /* ruta de clases catalogo */
 Route::get('/catalogo/clases', [ClaseController::class, 'UserManagement'])->name('catalogo-clases');
@@ -457,11 +448,11 @@ Route::post('/categorias', [categoriasController::class, 'store'])->name('catego
 Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit');
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
 
-
-//Domicilios
+//Domicilios**
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
-Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'domicilio_instalaciones'])->name('domicilio_instalaciones');
 
+Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio_instalaciones');
+Route::resource('/instalaciones-list', categoriasController::class);
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
@@ -473,6 +464,3 @@ Route::resource('/inspectores-list', UsuariosInspectoresController::class);
 
 Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal'])->name('usuarios-personal');
 Route::resource('/personal-list', UsuariosPersonalController::class);
-
-//Documentacion
-Route::get('/documentacion', [documentacionController::class, 'index'])->name('documentacion')->middleware('auth');;

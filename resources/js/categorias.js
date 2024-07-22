@@ -83,7 +83,7 @@ $(function () {
               '<div class="d-flex justify-content-start align-items-center user-name">' +
               '<div class="avatar-wrapper">' +
 /*               '<div class="avatar avatar-sm me-3">' + */
-              
+
               '</d iv>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
@@ -122,7 +122,7 @@ $(function () {
                 : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
             }`;
           }
-        }, 
+        },
         /* {
           // email verify
           targets: 5,
@@ -143,8 +143,8 @@ $(function () {
               '<div class="d-flex align-items-center gap-50">' +
               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}" data-bs-toggle="offcanvas" data-bs-target="#editCategoria"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
               `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-              '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
+/*               '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
+ */              '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
               userView +
               '" class="dropdown-item">View</a>' +
@@ -154,7 +154,7 @@ $(function () {
             );
           }
         }
-        
+
       ],
       order: [[2, 'desc']],
       dom:
@@ -376,7 +376,7 @@ $(function () {
 
 
 
-  
+
   // Eliminar registro
   $(document).on('click', '.delete-record', function () {
     var id_categoria = $(this).data('id'),
@@ -398,7 +398,7 @@ $(function () {
         confirmButton: 'btn btn-primary me-3',
         cancelButton: 'btn btn-label-secondary'
       },
-      buttonsStyling: false 
+      buttonsStyling: false
     }).then(function (result) {
       if (result.value) {
         // delete the data
@@ -435,8 +435,8 @@ $(function () {
     });
   });
 
-  
-  
+
+
 // Agregar nuevo registro
 $('#addNewCategoryForm').on('submit', function (e) {
   e.preventDefault();
@@ -488,13 +488,13 @@ $(document).ready(function() {
   // Abrir el modal y cargar datos para editar
   $('.datatables-users').on('click', '.edit-record', function() {
       var id_categoria = $(this).data('id');
-      
+
       // Realizar la solicitud AJAX para obtener los datos de la clase
       $.get('/categorias-list/' + id_categoria + '/edit', function(data) {
           // Rellenar el formulario con los datos obtenidos
           $('#edit_id_categoria').val(data.id_categoria);
           $('#edit_categoria').val(data.categoria);
-          
+
           // Mostrar el modal de edición
           $('#editCategoria').offcanvas('show');
       }).fail(function() {
