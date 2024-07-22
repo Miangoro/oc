@@ -163,6 +163,9 @@ class marcasCatalogoController extends Controller
     }
     
 
+    
+    
+
     // Método para actualizar una marca existente
     public function update(Request $request, $id_marca)
     {

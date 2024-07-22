@@ -431,6 +431,9 @@ Route::get('/carta_asignacion052/{id}', [clientesConfirmadosController::class, '
 //Marcas y catalogo
 Route::get('/catalogo/marcas', [marcasCatalogoController::class, 'UserManagement'])->name('catalogo-marcas');
 Route::resource('/catalago-list', marcasCatalogoController::class);
+Route::resource('marcas-list', marcasCatalogoController::class)->except(['create', 'edit']);
+Route::get('/marcas-list/{id}/edit', [marcasCatalogoController::class, 'edit'])->name('marcas.edit');
+Route::post('/marcas-list/{id}', [marcasCatalogoController::class, 'store']);
 
 /* ruta de clases catalogo */
 Route::get('/catalogo/clases', [ClaseController::class, 'UserManagement'])->name('catalogo-clases');

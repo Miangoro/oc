@@ -23,7 +23,6 @@ class marcas extends Model
       {
           return $this->belongsTo(Empresa::class, 'id_empresa');
       }
-
       public function documentacion_url()
       {
           return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_marca');
