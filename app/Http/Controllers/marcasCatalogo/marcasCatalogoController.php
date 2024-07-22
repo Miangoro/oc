@@ -150,15 +150,18 @@ class marcasCatalogoController extends Controller
 
 
     //Metodo para editar las marcas
-    public function edit($id_marca)
+    public function edit($id)
     {
-        try {
-            $marca = marcas::findOrFail($id_marca);
-            return response()->json($marca);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener los datos de la marcona'], 500);
-        }
+        $marca = Marcas::with('documentacion_url')->findOrFail($id);
+        $documentos = Documentacion::all();
+    
+        return response()->json([
+            'marca' => $marca,
+            'documentos' => $documentos,
+            'documentacion_urls' => $marca->documentacion_url
+        ]);
     }
+    
 
     // Método para actualizar una marca existente
     public function update(Request $request, $id_marca)
