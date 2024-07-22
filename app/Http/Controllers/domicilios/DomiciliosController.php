@@ -21,10 +21,9 @@ class DomiciliosController extends Controller
   {
     $columns = [
       1 => 'id_instalacion',
-      2 => 'razon_social',
-      3 => 'tipo',
-      4 => 'estado',
-      5 => 'direccion_completa',
+      2 => 'tipo',
+      3 => 'estado',
+      4 => 'direccion_completa',
      
     ];
 
@@ -73,7 +72,7 @@ class DomiciliosController extends Controller
       foreach ($users as $user) {
         $nestedData['id_instalacion'] = $user->id_instalacion;
         $nestedData['fake_id'] = ++$ids;
-        $nestedData['razon_social'] = $user->razon_social;
+        $nestedData['razon_social'] = $user->empresa->razon_social;
         $nestedData['tipo'] = $user->tipo;
         $nestedData['estado'] = $user->estado;
         $nestedData['direccion_completa'] = $user->direccion_completa;
