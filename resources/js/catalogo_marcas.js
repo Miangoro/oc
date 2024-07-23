@@ -503,10 +503,15 @@ $(function () {
             
           
   });*/
-  $(document).ready(function () {
+$(document).ready(function () {
     // Abrir el modal y cargar datos para editar
     $('.datatables-users').on('click', '.edit-record', function () {
         var id_marca = $(this).data('id');
+
+        // Limpiar campos y contenido residual del formulario de edición
+        $('#editMarcaForm')[0].reset();
+        $('.existing-file').html(''); // Asegúrate de que todos los contenedores de archivos existentes estén vacíos
+        $('.existing-date').text(''); // Asegúrate de que todos los contenedores de fechas existentes estén vacíos
 
         // Realizar la solicitud AJAX para obtener los datos de la marca
         $.get('/marcas-list/' + id_marca + '/edit', function (data) {
@@ -573,6 +578,7 @@ $(function () {
         });
     });
 });
+
 
 
 
