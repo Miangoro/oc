@@ -127,9 +127,9 @@
           "slug": "catalogo-tipos"
         },
         {
-          "url": "catalogo/tipo",
+          "url": "catalogo/lotes",
           "name": "Lotes envasados",
-          "slug": "catalogo-tipos"
+          "slug": "catalogo-lotes"
         }
       ]
     }

@@ -166,6 +166,7 @@ use App\Http\Controllers\clientes\clientesProspectoController;
 use App\Http\Controllers\catalogo\categoriasController;
 use App\Http\Controllers\catalogo\marcasCatalogoController;
 use App\Http\Controllers\catalogo\ClaseController;
+use App\Http\Controllers\catalogo\lotesEnvasadoController;
 use App\Http\Controllers\clientes\clientesConfirmadosController;
 use App\Http\Controllers\documentacion\documentacionController;
 use App\Http\Controllers\domicilios\DomiciliosController;
@@ -454,6 +455,10 @@ Route::delete('categorias/{id_categoria}', [categoriasController::class, 'destro
 Route::post('/categorias', [categoriasController::class, 'store'])->name('categorias.store');
 Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit');
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
+
+
+//Lotes de envasado
+Route::get('/catalogo/lotes', [lotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
 
 //Domicilios
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');

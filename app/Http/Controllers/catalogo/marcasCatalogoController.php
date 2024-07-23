@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\catalogo;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Documentacion;
 use App\Models\Documentacion_url;
-use Illuminate\Http\Request;
 use App\Models\marcas;
 use App\Models\empresa;
 use Illuminate\Support\Facades\Auth;
