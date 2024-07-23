@@ -14,7 +14,9 @@ class Documentacion_url extends Model
           'url',
           'id_relacion',
           'id_usuario_registro',
-          'nombre_documento'
+          'nombre_documento',
+          'fecha_vigencia'  // <-- Asegúrate de agregar esto
+
       ];
 
 

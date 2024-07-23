@@ -518,7 +518,6 @@ $(function () {
         // Realizar la solicitud AJAX para obtener los datos de la marca
         $.get('/marcas-list/' + id_marca + '/edit', function (data) {
             var marca = data.marca;
-            var documentos = data.documentos;
             var documentacion_urls = data.documentacion_urls;
 
             // Rellenar el formulario con los datos obtenidos
@@ -528,10 +527,13 @@ $(function () {
 
             // Mostrar archivos existentes en los mismos espacios de entrada de archivo
             documentacion_urls.forEach(function (doc) {
-                var fileInputId = '#file' + doc.id_documento;
                 var existingFileDivId = '#existing_file_' + doc.id_documento;
-
-                $(existingFileDivId).html(`<p>Archivo existente: <a href="/storage/${doc.url}" target="_blank">${doc.url}</a></p>`);
+                $(existingFileDivId).html(`<p>Archivo existente: <a href="/storage/uploads/${marca.id_empresa}/${doc.url}" target="_blank">${doc.url}</a></p>`);
+                
+                var existingDateId = '#existing_date_' + doc.id_documento;
+                $(existingDateId).text('Fecha de vigencia: ' + doc.fecha_vigencia);
+                
+                $('#date' + doc.id_documento).val(doc.fecha_vigencia);  // Establecer la fecha de vigencia
             });
 
             // Mostrar el modal de edición
@@ -592,6 +594,10 @@ $(function () {
         });
     });
 });
+
+
+
+
 
 
 
