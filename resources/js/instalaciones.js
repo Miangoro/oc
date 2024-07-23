@@ -1,4 +1,5 @@
 $(function () {
+  // Código para DataTables
   var dt_instalaciones_table = $('.datatables-users');
 
   if (dt_instalaciones_table.length) {
@@ -38,7 +39,7 @@ $(function () {
           render: function (data, type, full) {
             return (
               '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}" data-bs-toggle="offcanvas" data-bs-target="#editCategoria"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}" data-bs-toggle="offcanvas" data-bs-target="#editInstalacion"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
               `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
               '</div>'
             );
@@ -177,56 +178,62 @@ $(function () {
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'offcanvas',
-            'data-bs-target': '#offcanvasAddUser'
+            'data-bs-target': '#offcanvasAddInstalacion'
           }
         }
       ]
     });
   }
 
-  // Manejar clic en el botón de eliminación
-  $(document).on('click', '.delete-record', function() {
-    var id = $(this).data('id');
-    var row = $(this).closest('tr');
+  // Agregar nuevo registro
+  $('#addNewInstalacionForm').on('submit', function (e) {
+    e.preventDefault();
+    var formData = new FormData(this); // Usa FormData para incluir archivos
 
-    // Confirmar eliminación
-    swal({
-      title: '¿Estás seguro?',
-      text: "No podrás recuperar este registro!",
-      icon: 'warning',
-      buttons: ['Cancelar', 'Eliminar'],
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        // Enviar solicitud AJAX para eliminar el registro
-        $.ajax({
-          url: `${baseUrl}instalaciones-list/${id}`,
-          type: 'DELETE',
-          success: function(response) {
-            // Mostrar mensaje de éxito
-            swal('¡Eliminado!', response.success, 'success');
-            // Eliminar la fila de la tabla
-            dt_instalaciones_table.DataTable().ajax.reload();
-          },
-          error: function(xhr) {
-            // Mostrar mensaje de error
-            swal('Error', xhr.responseJSON.error, 'error');
-          }
-        });
+    $.ajax({
+      url: $(this).attr('action'),
+      type: 'POST',
+      data: formData,
+      processData: false, // No procesar los datos
+      contentType: false, // No establecer el contenido del tipo
+      success: function (response) {
+        $('#offcanvasAddInstalacion').offcanvas('hide');
+        $('#addNewInstalacionForm')[0].reset();
+        dt_instalaciones_table.DataTable().ajax.reload();
+        swal('Éxito', response.success, 'success');
+      },
+      error: function (xhr) {
+        swal('Error', xhr.responseJSON.error || 'Ha ocurrido un error.', 'error');
       }
     });
   });
 
+  // Llenar select con empresas en el formulario de agregar
+  $.ajax({
+    url: '/empresas',
+    type: 'GET',
+    success: function (data) {
+      var select = $('#cliente');
+      select.empty();
+      select.append('<option value="">Seleccione un cliente</option>'); // Agregar opción predeterminada
+      $.each(data, function (index, empresa) {
+        select.append('<option value="' + empresa.id_empresa + '">' + empresa.razon_social + '</option>');
+      });
+    }
+  });
 
-  
+  // Llenar select con estados en el formulario de agregar
+  $.ajax({
+    url: '/estados',
+    type: 'GET',
+    success: function (data) {
+      var select = $('#estado');
+      select.empty();
+      select.append('<option value="">Seleccione un estado</option>'); // Agregar opción predeterminada
+      $.each(data, function (index, estado) {
+        select.append('<option value="' + estado.id_estado + '">' + estado.nombre + '</option>');
+      });
+    }
+  });
 
-
-
-
-
-
-
-
-
-//end
 });
