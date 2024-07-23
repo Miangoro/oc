@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\marcasCatalogo;
+namespace App\Http\Controllers\catalogo;
 
 use App\Http\Controllers\Controller;
 use App\Models\Documentacion;
@@ -228,7 +228,7 @@ class marcasCatalogoController extends Controller
     {
         $clientes = empresa::where('tipo', 1)->get();
         $opciones = marcas::all();
-        return view('clientesMarcas.find_catalago_marcas', compact('opciones', 'clientes'));
+        return view('catalogo.find_catalago_marcas', compact('opciones', 'clientes'));
     }
 
 
@@ -265,7 +265,7 @@ class marcasCatalogoController extends Controller
         $notVerified = 10;
         $userDuplicates = 40;
 
-        return view('clientesMarcas.find_catalago_marcas', [
+        return view('catalogo.find_catalago_marcas', [
             'totalUser' => $userCount,
             'verified' => $verified,
             'notVerified' => $notVerified,
