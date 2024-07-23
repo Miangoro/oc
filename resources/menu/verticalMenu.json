@@ -130,6 +130,11 @@
           "url": "catalogo/tipo",
           "name": "Tipo de agave",
           "slug": "catalogo-tipos"
+        },
+        {
+          "url": "catalogo/lotes",
+          "name": "Lotes envasados",
+          "slug": "catalogo-lotes"
         }
       ]
     }
