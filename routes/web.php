@@ -173,6 +173,7 @@ use App\Http\Controllers\getFuncionesController;
 use App\Http\Controllers\usuarios\UsuariosController;
 use App\Http\Controllers\usuarios\UsuariosInspectoresController;
 use App\Http\Controllers\usuarios\UsuariosPersonalController;
+use App\Http\Controllers\catalogo\lotesGranelController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -447,6 +448,10 @@ Route::delete('categorias/{id_categoria}', [categoriasController::class, 'destro
 Route::post('/categorias', [categoriasController::class, 'store'])->name('categorias.store');
 Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit');
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
+
+/* ruta de lotes a granel */
+Route::get('/catalogo/lotes', [lotesGranelController::class, 'UserManagement'])->name('catalogo-lotes');
+
 
 //Domicilios**
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
