@@ -174,7 +174,7 @@ use App\Http\Controllers\getFuncionesController;
 use App\Http\Controllers\usuarios\UsuariosController;
 use App\Http\Controllers\usuarios\UsuariosInspectoresController;
 use App\Http\Controllers\usuarios\UsuariosPersonalController;
-use App\Http\Controllers\catalogo\lotesGranelController;
+use App\Http\Controllers\catalogo\LotesGranelController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -454,7 +454,9 @@ Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class,
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
 
 /* ruta de lotes a granel */
-Route::get('/catalogo/lotes', [lotesGranelController::class, 'UserManagement'])->name('catalogo-lotes');
+Route::get('/catalogo/lotes', [LotesGranelController::class, 'UserManagement'])->name('catalogo-lotes');
+Route::resource('/lotes-list', LotesGranelController::class);
+Route::delete('/lotes_granel/{id}', [LotesGranelController::class, 'destroy']);
 
 
 //Domicilios

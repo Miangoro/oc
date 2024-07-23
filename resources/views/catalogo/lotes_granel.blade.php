@@ -19,8 +19,8 @@
 
 @section('content')
 
-    {{-- <meta name="csrf-token" content="{{ csrf_token() }}">
- --}}
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
     <!-- Users List Table -->
     <div class="card">
         <div class="card-header pb-0">
@@ -32,15 +32,21 @@
                     <tr>
                         <th>ID</th>
                         <th>no. clientes</th>
-                        <th>nombre del cliente</th>
-                        <th>tipo</th>
-                        <th>No. de lote</th>
-                        <th>Categoria</th>
-                        <th>Clase</th>
-                        <th>No. analisis de laboratorio</th>
-                        <th>Tipo de maguey</th>
+                        <th>Nombre de lote</th>
+                        <th>tipo lote</th>
+                        <th>folio</th>
                         <th>volumen de lote</th>
                         <th>Contenido alcoholico</th>
+                        <th>Categoria</th>
+                        <th>Clase</th>
+                        <th>Tipo de maguey</th>
+                        <th>ingredientes</th>
+                        <th>edad</th>
+                        <th>guia</th>
+                        <th>folio certificado</th>
+                        <th>organismo</th>
+                        <th>fecha emision</th>
+                        <th>fecha vigencia</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -51,7 +57,167 @@
 
 
 
+        <!-- Offcanvas para agregar nuevo lote -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddLote" aria-labelledby="offcanvasAddLoteLabel">
+            <div class="offcanvas-header border-bottom">
+                <h5 id="offcanvasAddLoteLabel" class="offcanvas-title">Registro de Lote a Granel</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+
+            <div class="offcanvas-body mx-0 flex-grow-0 h-100">
+                <form id="loteForm">
+                    @csrf
+                    <!-- Nombre del lote -->
+                    <div class="form-floating form-floating-outline mb-4">
+                        <input type="text" id="nombre_lote" name="nombre_lote" class="form-control"
+                            placeholder="Nombre del lote" required />
+                        <label for="nombre_lote">Nombre del Lote</label>
+                        <div class="form-text">Este nombre ya está registrado.</div>
+                    </div>
+
+                    <!-- Empresa -->
+                    <div class="form-floating form-floating-outline mb-4">
+                        <select id="id_empresa" name="id_empresa" class="select2 form-select" required>
+                            <option value="" disabled selected>Selecciona la empresa</option>
+                            @foreach ($empresas as $empresa)
+                                <option value="{{ $empresa->id }}">{{ $empresa->razon_social }}</option>
+                            @endforeach
+                        </select>
+                        <label for="id_empresa">Empresa</label>
+                    </div>
+                    <!-- Tipo de Lote -->
+                    <div class="form-floating form-floating-outline mb-4">
+                        <select id="tipo_lote" name="tipo_lote" class="form-select" required onchange="toggleFields()">
+                            <option value="" disabled selected>Selecciona el tipo de lote</option>
+                            <option value="oc_cidam">Certificación por OC CIDAM</option>
+                            <option value="otro_organismo">Certificado por otro organismo</option>
+                        </select>
+                        <label for="tipo_lote">Tipo de Lote</label>
+                    </div>
+
+                    <!-- Campos para "Certificación por OC CIDAM" -->
+                    <div id="oc_cidam_fields" class="d-none">
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="text" id="folio_guia" name="folio_guia" class="form-control"
+                                placeholder="Folio de guía de translado" />
+                            <label for="no_analisis">Folio de guía de translado</label>
+                        </div>
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="text" id="no_analisis" name="no_analisis" class="form-control"
+                                placeholder="No. de Análisis Fisicoquímico" />
+                            <label for="no_analisis">No. de Análisis Fisicoquímico</label>
+                        </div>
+
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="file" id="analisis_fisicoquimico" name="analisis_fisicoquimico"
+                                class="form-control" />
+                            <label for="analisis_fisicoquimico">Adjuntar Análisis Fisicoquímico</label>
+                        </div>
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="number" step="0.01" id="volumen_lote" name="volumen_lote" class="form-control"
+                                placeholder="Volumen de Lote Inicial (litros)" />
+                            <label for="volumen_lote">Volumen de Lote Inicial (litros)</label>
+                        </div>
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="number" step="0.01" id="contenido_alcoholico" name="contenido_alcoholico"
+                                class="form-control" placeholder="Contenido Alcohólico" />
+                            <label for="contenido_alcoholico">Contenido Alcohólico</label>
+                        </div>
+                        <!-- Categoría de Agave -->
+                        <div class="form-floating form-floating-outline mb-4">
+                            <select id="categoria_agave" name="categoria_agave" class="select2 form-select" required>
+                                <option value="" disabled selected>Selecciona la categoría de agave</option>
+                                @foreach ($categorias as $categoria)
+                                    <option value="{{ $categoria->id_categoria }}">{{ $categoria->categoria }}</option>
+                                @endforeach
+                            </select>
+                            <label for="categoria_agave">Categoría de Agave</label>
+                        </div>
+                                <!-- Clase de Agave -->
+                                <div class="form-floating form-floating-outline mb-4">
+                                    <select id="clase_agave" name="clase_agave" class="select2 form-select" required>
+                                        <option value="" disabled selected>Selecciona la clase de agave</option>
+                                        @foreach ($clases as $clase)
+                                            <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label for="clase_agave">Clase de Agave</label>
+                                </div>
+
+                        <!-- Tipo de Agave -->
+                        <!-- Tipo de Agave -->
+                        <div class="form-floating form-floating-outline mb-4">
+                            <select id="tipo_agave" name="tipo_agave" class="select2 form-select" required>
+                                <option value="" disabled selected>Selecciona el tipo de agave</option>
+                                @foreach ($tipos as $tipo)
+                                    <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
+                                @endforeach
+                            </select>
+                            <label for="tipo_agave">Tipo de Agave</label>
+                        </div>
+
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="text" id="ingredientes" name="ingredientes" class="form-control"
+                                placeholder="Ingredientes" />
+                            <label for="ingredientes">Ingredientes</label>
+                        </div>
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="text" id="edad" name="edad" class="form-control" placeholder="Edad" />
+                            <label for="edad">Edad</label>
+                        </div>
+                    </div>
+
+                    <!-- Campos para "Certificado por otro organismo" -->
+                    <div id="otro_organismo_fields" class="d-none">
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="file" id="certificado_lote" name="certificado_lote" class="form-control" />
+                            <label for="certificado_lote">Adjuntar Certificado de Lote a Granel</label>
+                        </div>
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="text" id="folio_certificado" name="folio_certificado" class="form-control"
+                                placeholder="Folio/Número de Certificado" />
+                            <label for="folio_certificado">Folio/Número de Certificado</label>
+                        </div>
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="text" id="organismo_certificacion" name="organismo_certificacion"
+                                class="form-control" placeholder="Organismo de Certificación" />
+                            <label for="organismo_certificacion">Organismo de Certificación</label>
+                        </div>
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="date" id="fecha_emision" name="fecha_emision"
+                                class="form-control datepicker" placeholder="Fecha de Emisión" />
+                            <label for="fecha_emision">Fecha de Emisión</label>
+                        </div>
+
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="date" id="fecha_vigencia" name="fecha_vigencia"
+                                class="form-control datepicker" placeholder="Fecha de Vigencia" />
+                            <label for="fecha_vigencia">Fecha de Vigencia</label>
+                        </div>
+
+                        </div>
+
+                    <!-- Botones -->
+                    <div class="form-floating form-floating-outline mb-5">
+                        <button type="submit" class="btn btn-primary me-2">Registrar Lote</button>
+                        <button type="reset" class="btn btn-outline-secondary"
+                            data-bs-dismiss="offcanvas">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
     </div>
+
+
+
+
+
+
+
+
+
 
     <!-- Modal -->
     @include('_partials/_modals/modal-pdfs-frames')
