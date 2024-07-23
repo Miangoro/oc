@@ -1,4 +1,4 @@
- <!-- Edit Marca Modal -->
+<!-- Edit Marca Modal -->
 <div class="modal fade" id="editMarca" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -38,11 +38,13 @@
                                 <input class="form-control" type="file" id="file{{ $documento->id_documento }}" name="url[]">
                                 <input value="{{ $documento->id_documento }}" class="form-control" type="hidden" name="id_documento[]">
                                 <input value="{{ $documento->nombre }}" class="form-control" type="hidden" name="nombre_documento[]">
+                                <div id="existing_file_{{ $documento->id_documento }}"></div>  <!-- Contenedor para el archivo existente -->
                             </div>
                             <div class="col-md-3">
                                 <label for="date{{ $documento->id_documento }}" class="form-label">Fecha de vigencia</label>
                                 <div class="input-group">
-                                    <input type="date" class="form-control datepicker" id="date{{ $documento->id_documento }}" name="fecha_vigencia[]">
+                                    <input type="date" class="form-control datepicker" id="date{{ $documento->id_documento }}" name="fecha_vigencia[]" required>
+                                    <p id="existing_date_{{ $documento->id_documento }}" class="mt-2"></p> <!-- Mostrar la fecha de vigencia existente -->
                                 </div>
                             </div>
                         </div>

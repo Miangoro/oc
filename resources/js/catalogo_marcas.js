@@ -517,10 +517,24 @@ $(function () {
 
         // Realizar la solicitud AJAX para obtener los datos de la marca
         $.get('/marcas-list/' + id_marca + '/edit', function (data) {
+            var marca = data.marca;
+            var documentacion_urls = data.documentacion_urls;
+
             // Rellenar el formulario con los datos obtenidos
-            $('#edit_marca_id').val(data.id_marca);
-            $('#edit_marca_nombre').val(data.marca);
-            $('#edit_cliente').val(data.id_empresa).trigger('change');
+            $('#edit_marca_id').val(marca.id_marca);
+            $('#edit_marca_nombre').val(marca.marca);
+            $('#edit_cliente').val(marca.id_empresa).trigger('change');
+
+            // Mostrar archivos existentes en los mismos espacios de entrada de archivo
+            documentacion_urls.forEach(function (doc) {
+                var existingFileDivId = '#existing_file_' + doc.id_documento;
+                $(existingFileDivId).html(`<p>Archivo existente: <a href="/storage/uploads/${marca.id_empresa}/${doc.url}" target="_blank">${doc.url}</a></p>`);
+                
+                var existingDateId = '#existing_date_' + doc.id_documento;
+                $(existingDateId).text('Fecha de vigencia: ' + doc.fecha_vigencia);
+                
+                $('#date' + doc.id_documento).val(doc.fecha_vigencia);  // Establecer la fecha de vigencia
+            });
 
             // Mostrar el modal de edición
             $('#editMarca').modal('show');
@@ -540,12 +554,12 @@ $(function () {
     $('#editMarcaForm').on('submit', function (e) {
         e.preventDefault();
 
-        var formData = new FormData(this); // Usar FormData para incluir archivos
+        var formData = new FormData(this);
         var id_marca = $('#edit_marca_id').val(); // Obtener el ID de la marca desde el campo oculto
 
         $.ajax({
             url: '/marcas-list/' + id_marca,
-            type: 'POST', // Cambia el método a POST
+            type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
@@ -580,6 +594,12 @@ $(function () {
         });
     });
 });
+
+
+
+
+
+
 
 
 

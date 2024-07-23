@@ -95,10 +95,10 @@ class marcasCatalogoController extends Controller
         $request->validate([
             'marca' => 'required|string|max:60',
         ]);
-
+    
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->cliente)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-
+    
         if ($request->id) {
             // Actualizar marca existente
             $marca = marcas::findOrFail($request->id);
@@ -106,6 +106,33 @@ class marcasCatalogoController extends Controller
             $marca->marca = $request->marca;
             $marca->folio = Helpers::generarFolioMarca($request->cliente);
             $marca->save();
+    
+            // Actualizar documentos existentes
+            foreach ($request->id_documento as $index => $id_documento) {
+                $documento = Documentacion_url::where('id_relacion', $marca->id_marca)
+                    ->where('id_documento', $id_documento)
+                    ->first();
+    
+                if ($documento) {
+                    // Actualizar archivo y fecha de vigencia
+                    if ($request->hasFile('url') && $request->file('url')[$index]) {
+                        // Eliminar el archivo anterior
+                        Storage::disk('public')->delete('uploads/' . $numeroCliente . '/' . $documento->url);
+    
+                        // Subir el nuevo archivo
+                        $file = $request->file('url')[$index];
+                        $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                        $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+    
+                        // Actualizar en la base de datos
+                        $documento->url = $filename;
+                    }
+    
+                    // Actualizar fecha de vigencia
+                    $documento->fecha_vigencia = $request->fecha_vigencia[$index];
+                    $documento->save();
+                }
+            }
         } else {
             // Crear nueva marca
             $marca = new marcas();
@@ -113,52 +140,46 @@ class marcasCatalogoController extends Controller
             $marca->marca = $request->marca;
             $marca->folio = Helpers::generarFolioMarca($request->cliente);
             $marca->save();
-        }
-
-        // Almacenar el archivo
-        if ($request->hasFile('url')) {
+    
+            // Almacenar nuevos documentos
             foreach ($request->file('url') as $index => $file) {
                 $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
                 $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
-
-                // Verificar si el documento ya existe para esta marca y cliente
-                $existingDocument = Documentacion_url::where('id_relacion', $marca->id_marca)
-                    ->where('id_documento', $request->id_documento[$index])
-                    ->first();
-
-                if ($existingDocument) {
-                    // Eliminar el archivo anterior
-                    Storage::disk('public')->delete($existingDocument->url);
-
-                    // Actualizar la información del archivo en la base de datos
-                    $existingDocument->url = $filePath;
-                    $existingDocument->nombre_documento = $request->nombre_documento[$index];
-                    $existingDocument->save();
-                } else {
-                    // Crear nuevo registro de documento
-                    $documentacion_url = new Documentacion_url();
-                    $documentacion_url->id_relacion = $marca->id_marca;
-                    $documentacion_url->id_documento = $request->id_documento[$index];
-                    $documentacion_url->nombre_documento = $request->nombre_documento[$index];
-                    $documentacion_url->url = $filePath;
-                    $documentacion_url->id_empresa = $request->cliente;
-                    $documentacion_url->save();
-                }
+                
+                $documentacion_url = new Documentacion_url();
+                $documentacion_url->id_relacion = $marca->id_marca;
+                $documentacion_url->id_documento = $request->id_documento[$index];
+                $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+                $documentacion_url->url = $filePath;
+                $documentacion_url->id_empresa = $request->cliente;
+                $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index];
+                $documentacion_url->save();
             }
         }
+    
+        return response()->json(['success' => 'Marca actualizada exitosamente.']);
     }
+    
+    
 
 
     //Metodo para editar las marcas
-    public function edit($id_marca)
+    public function edit($id)
     {
-        try {
-            $marca = marcas::findOrFail($id_marca);
-            return response()->json($marca);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener los datos de la marcona'], 500);
-        }
+        $marca = Marcas::findOrFail($id);
+        $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get(); // Obtener los documentos asociados a la marca
+    
+        return response()->json([
+            'marca' => $marca,
+            'documentacion_urls' => $documentacion_urls // Incluir la fecha de vigencia en los datos
+        ]);
     }
+    
+    
+    
+
+    
+    
 
     // Método para actualizar una marca existente
     public function update(Request $request, $id_marca)
