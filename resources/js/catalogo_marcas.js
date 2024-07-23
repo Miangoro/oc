@@ -1,12 +1,65 @@
 /**
  * Page User List
  */
-
 'use strict';
 
-// Datatable (jquery)
+//JS PARA agregar
+// Agregar nuevo registro
+
+// Agregar nuevo registro
+$('#addNewUserForm').on('submit', function (e) {
+  e.preventDefault();
+  var formData = $(this).serialize();
+
+  $.ajax({
+      url: '/catalago-list',
+      type: 'POST',
+      data: formData,
+      success: function (response) {
+          $('#offcanvasAddUser').offcanvas('hide');
+          $('#addNewUserForm')[0].reset();
+
+          // Actualizar la tabla sin reinicializar DataTables
+          $('.datatables-users').DataTable().ajax.reload();
+
+          // Mostrar alerta de éxito
+          Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.success,
+              customClass: {
+                  confirmButton: 'btn btn-success'
+              }
+          });
+      },
+      error: function (xhr) {
+          // Mostrar alerta de error
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al agregar la marca',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      }
+  });
+});
+
+
+
+
+//DATE PICKER
+//Datepicker inicializador
+
+$(document).ready(function () {
+  $('.datepicker').datepicker({
+    format: 'yyyy-mm-dd'
+  });
+
+});
 $(function () {
-  
+  // Datatable (jquery)
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
     select2 = $('.select2'),
@@ -17,7 +70,7 @@ $(function () {
     var $this = select2;
     select2Focus($this);
     $this.wrap('<div class="position-relative"></div>').select2({
-      placeholder: 'Select Country',
+      placeholder: 'Selecciona cliente',
       dropdownParent: $this.parent()
     });
   }
@@ -43,7 +96,7 @@ $(function () {
         { data: 'id_marca' },
         { data: 'folio' },
         { data: 'marca' },
-        { data: 'id_empresa' },
+        { data: 'razon_social' }, // Nueva columna para la razón social
         { data: 'action' }
       ],
       columnDefs: [
@@ -77,15 +130,15 @@ $(function () {
             var stateNum = Math.floor(Math.random() * 6);
             var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
             var $state = states[stateNum];
-             
-          
+
+
 
             // Creates full output for row
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center user-name">' +
               '<div class="avatar-wrapper">' +
               '<div class="avatar avatar-sm me-3">' +
-              
+
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
@@ -107,7 +160,7 @@ $(function () {
             return '<span class="user-email">' + $email + '</span>';
           }
         },
-        
+
         /*{
           // email verify
           targets: 4,
@@ -125,8 +178,8 @@ $(function () {
                 : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
             }`;
           }
-        },/
-       /* {
+        },*/
+       /*{
           // email verify
           targets: 5,
           className: 'text-center',
@@ -135,28 +188,29 @@ $(function () {
             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_marca']}" data-registro="${full['folio']} "></i>`;
           }
         },*/
-          {
-            // Actions
-            targets: -1,
-            title: 'Acciones',
-            searchable: false,
-            orderable: false,
-            render: function (data, type, full, meta) {
-              return (
-                '<div class="d-flex align-items-center gap-50">' +
-                `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-                `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-                '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
-                '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                '<a href="' +
-                userView +
-                '" class="dropdown-item">View</a>' +
-                '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-                '</div>' +
-                '</div>'
-              );
-            }
+
+        {
+          // Actions
+          targets: -1,
+          title: 'Acciones',
+          searchable: false,
+          orderable: false,
+          render: function (data, type, full, meta) {
+            return (
+              '<div class="d-flex align-items-center gap-50">' +
+              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+              '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
+              '<div class="dropdown-menu dropdown-menu-end m-0">' +
+              '<a href="' +
+              userView +
+              '" class="dropdown-item">View</a>' +
+              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+              '</div>' +
+              '</div>'
+            );
           }
+        }
       ],
       order: [[2, 'desc']],
       dom:
@@ -175,11 +229,11 @@ $(function () {
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
         paginate: {
-                "sFirst":    "Primero",
-                "sLast":     "Último",
-                "sNext":     "Siguiente",
-                "sPrevious": "Anterior"
-              }
+          "sFirst": "Primero",
+          "sLast": "Último",
+          "sNext": "Siguiente",
+          "sPrevious": "Anterior"
+        }
       },
       // Buttons with Dropdown
       buttons: [
@@ -276,7 +330,7 @@ $(function () {
                 }
               }
             },
-           {
+            {
               extend: 'pdf',
               title: 'Users',
               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
@@ -351,18 +405,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -400,7 +454,7 @@ $(function () {
         // delete the data
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}empresas-list/${user_id}`,
+          url: `${baseUrl}catalago-list/${user_id}`,
           success: function () {
             dt_user.draw();
           },
@@ -443,134 +497,5 @@ $(function () {
           
   });*/
 
-  // edit record
-  $(document).on('click', '.edit-record', function () {
-    var user_id = $(this).data('id'),
-      dtrModal = $('.dtr-bs-modal.show');
 
-    // hide responsive modal in small screen
-    if (dtrModal.length) {
-      dtrModal.modal('hide');
-    }
-
-    // changing the title of offcanvas
-    $('#offcanvasAddUserLabel').html('Edit User');
-
-    // get data
-    $.get(`${baseUrl}empresas-list\/${user_id}\/edit`, function (data) {
-      $('#user_id').val(data.id);
-      $('#add-user-fullname').val(data.name);
-      $('#add-user-email').val(data.email);
-    });
-  });
-
-  // changing the title
-  $('.add-new').on('click', function () {
-    $('#user_id').val(''); //reseting input field
-    $('#offcanvasAddUserLabel').html('Añadir registro');
-  });
-
-  // validating form and updating user's data
-  const addNewUserForm = document.getElementById('addNewUserForm');
-
-  // user form validation
-  const fv = FormValidation.formValidation(addNewUserForm, {
-    fields: {
-      name: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter fullname'
-          }
-        }
-      },
-      email: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter your email'
-          },
-          emailAddress: {
-            message: 'The value is not a valid email address'
-          }
-        }
-      },
-      /*userContact: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter your contact'
-          }
-        }
-      },*/
-      company: {
-        validators: {
-          notEmpty: {
-            message: 'Please enter your company'
-          }
-        }
-      }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        // Use this for enabling/changing valid/invalid class
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          // field is the field name & ele is the field element
-          return '.mb-5';
-        }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      // Submit the form when all fields are valid
-      // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    // adding or updating user when form successfully validate
-    $.ajax({
-      data: $('#addNewUserForm').serialize(),
-      url: `${baseUrl}empresas-list`,
-      type: 'POST',
-      success: function (status) {
-        dt_user.draw();
-        offCanvasForm.offcanvas('hide');
-
-        // sweetalert
-        Swal.fire({
-          icon: 'success',
-          title: `Successfully ${status}!`,
-          text: `User ${status} Successfully.`,
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function (err) {
-        offCanvasForm.offcanvas('hide');
-        Swal.fire({
-          title: 'Duplicate Entry!',
-          text: 'Your email should be unique.',
-          icon: 'error',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      }
-    });
-  });
-
-  // clearing form data when offcanvas hidden
-  offCanvasForm.on('hidden.bs.offcanvas', function () {
-    fv.resetForm(true);
-  });
-
-  const phoneMaskList = document.querySelectorAll('.phone-mask');
-
-  // Phone Number
-  if (phoneMaskList) {
-    phoneMaskList.forEach(function (phoneMask) {
-      new Cleave(phoneMask, {
-        phone: true,
-        phoneRegionCode: 'US'
-      });
-    });
-  }
 });

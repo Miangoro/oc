@@ -417,14 +417,6 @@ Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catal
 Route::get('/marcas/catalogo', [marcasCatalogoController::class, 'UserManagement'])->name('marcas-catalogo');
 Route::resource('/catalago-list', marcasCatalogoController::class);
 
-
-Route::get('/categorias', [catalogoController::class, 'UserManagement'])->name('categorias');
-Route::resource('/categorias-list', catalogoController::class);
-
-
-
-
-
 //Categorias Agave
 Route::get('/categorias', [categoriasController::class, 'UserManagement'])->name('categorias');
 Route::resource('/categorias-list', categoriasController::class);
