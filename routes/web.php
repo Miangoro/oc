@@ -164,9 +164,11 @@ use App\Http\Controllers\pdfscontrollers\CartaAsignacionController;
 use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
 use App\Http\Controllers\catalogo\categoriasController;
-use App\Http\Controllers\marcasCatalogo\marcasCatalogoController;
+use App\Http\Controllers\catalogo\marcasCatalogoController;
 use App\Http\Controllers\catalogo\ClaseController;
+use App\Http\Controllers\catalogo\lotesEnvasadoController;
 use App\Http\Controllers\clientes\clientesConfirmadosController;
+use App\Http\Controllers\documentacion\documentacionController;
 use App\Http\Controllers\domicilios\DomiciliosController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\getFuncionesController;
@@ -434,6 +436,9 @@ Route::resource('/catalago-list', marcasCatalogoController::class);
 Route::resource('marcas-list', marcasCatalogoController::class)->except(['create', 'edit']);
 Route::get('/marcas-list/{id}/edit', [marcasCatalogoController::class, 'edit'])->name('marcas.edit');
 Route::post('/marcas-list/{id}', [marcasCatalogoController::class, 'store']);
+Route::post('/update-fecha-vigencia/{id_documento}', [marcasCatalogoController::class, 'updateFechaVigencia']);
+Route::post('/marcas-list/{id}/update', [marcasCatalogoController::class, 'update'])->name('marcas.update');
+
 
 /* ruta de clases catalogo */
 Route::get('/catalogo/clases', [ClaseController::class, 'UserManagement'])->name('catalogo-clases');
@@ -451,6 +456,10 @@ Route::post('/categorias', [categoriasController::class, 'store'])->name('catego
 Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit');
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
 
+
+//Lotes de envasado
+Route::get('/catalogo/lotes', [lotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
+
 //Domicilios
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
 Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio-instalaciones');
@@ -466,3 +475,9 @@ Route::resource('/inspectores-list', UsuariosInspectoresController::class);
 
 Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal'])->name('usuarios-personal');
 Route::resource('/personal-list', UsuariosPersonalController::class);
+
+//Documentacion
+
+Route::get('/documentacion', [documentacionController::class, 'index'])->name('documentacion');
+Route::get('/documentacion/getNormas', [documentacionController::class, 'getNormas'])->name('documentacion.getNormas');
+Route::get('documentacion/getActividades', [documentacionController::class, 'getActividades'])->name('documentacion.getActividades');

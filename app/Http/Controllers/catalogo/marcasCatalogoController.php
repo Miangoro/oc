@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\marcasCatalogo;
+namespace App\Http\Controllers\catalogo;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Documentacion;
 use App\Models\Documentacion_url;
-use Illuminate\Http\Request;
 use App\Models\marcas;
 use App\Models\empresa;
 use Illuminate\Support\Facades\Auth;
@@ -94,10 +94,11 @@ class marcasCatalogoController extends Controller
     {
         $request->validate([
             'marca' => 'required|string|max:60',
+            'cliente' => 'required|integer|exists:empresa,id_empresa',
         ]);
     
-        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->cliente)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $empresa = empresa::where("id_empresa", $request->cliente)->first();
+        $idEmpresa = $empresa->id_empresa;
     
         if ($request->id) {
             // Actualizar marca existente
@@ -107,30 +108,50 @@ class marcasCatalogoController extends Controller
             $marca->folio = Helpers::generarFolioMarca($request->cliente);
             $marca->save();
     
-            // Actualizar documentos existentes
-            foreach ($request->id_documento as $index => $id_documento) {
-                $documento = Documentacion_url::where('id_relacion', $marca->id_marca)
-                    ->where('id_documento', $id_documento)
-                    ->first();
+            // Actualizar documentos existentes o agregar nuevos
+            if ($request->has('id_documento')) {
+                foreach ($request->id_documento as $index => $id_documento) {
+                    $documento = Documentacion_url::where('id_relacion', $marca->id_marca)
+                        ->where('id_documento', $id_documento)
+                        ->first();
     
-                if ($documento) {
-                    // Actualizar archivo y fecha de vigencia
-                    if ($request->hasFile('url') && $request->file('url')[$index]) {
-                        // Eliminar el archivo anterior
-                        Storage::disk('public')->delete('uploads/' . $numeroCliente . '/' . $documento->url);
+                    if ($documento) {
+                        // Actualizar archivo y fecha de vigencia si están presentes
+                        if ($request->hasFile('url') && isset($request->file('url')[$index])) {
+                            // Eliminar el archivo anterior
+                            Storage::disk('public')->delete('uploads/' . $idEmpresa . '/' . $documento->url);
     
-                        // Subir el nuevo archivo
-                        $file = $request->file('url')[$index];
-                        $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                        $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+                            // Subir el nuevo archivo
+                            $file = $request->file('url')[$index];
+                            $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                            $filePath = $file->storeAs('uploads/' . $idEmpresa, $filename, 'public');
     
-                        // Actualizar en la base de datos
-                        $documento->url = $filename;
+                            // Actualizar en la base de datos
+                            $documento->url = $filename;
+                        }
+    
+                        // Actualizar fecha de vigencia solo si está presente en la solicitud
+                        if (!empty($request->fecha_vigencia[$index])) {
+                            $documento->fecha_vigencia = $request->fecha_vigencia[$index];
+                        }
+                        $documento->save();
+                    } else {
+                        // Agregar nuevo documento si no existe
+                        if ($request->hasFile('url') && isset($request->file('url')[$index])) {
+                            $file = $request->file('url')[$index];
+                            $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                            $filePath = $file->storeAs('uploads/' . $idEmpresa, $filename, 'public');
+    
+                            $documentacion_url = new Documentacion_url();
+                            $documentacion_url->id_relacion = $marca->id_marca;
+                            $documentacion_url->id_documento = $id_documento;
+                            $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+                            $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+                            $documentacion_url->id_empresa = $request->cliente;
+                            $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index] ?? null;
+                            $documentacion_url->save();
+                        }
                     }
-    
-                    // Actualizar fecha de vigencia
-                    $documento->fecha_vigencia = $request->fecha_vigencia[$index];
-                    $documento->save();
                 }
             }
         } else {
@@ -141,23 +162,25 @@ class marcasCatalogoController extends Controller
             $marca->folio = Helpers::generarFolioMarca($request->cliente);
             $marca->save();
     
-            // Almacenar nuevos documentos
-            foreach ($request->file('url') as $index => $file) {
-                $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
-                
-                $documentacion_url = new Documentacion_url();
-                $documentacion_url->id_relacion = $marca->id_marca;
-                $documentacion_url->id_documento = $request->id_documento[$index];
-                $documentacion_url->nombre_documento = $request->nombre_documento[$index];
-                $documentacion_url->url = $filePath;
-                $documentacion_url->id_empresa = $request->cliente;
-                $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index];
-                $documentacion_url->save();
+            // Almacenar nuevos documentos solo si se envían
+            if ($request->hasFile('url')) {
+                foreach ($request->file('url') as $index => $file) {
+                    $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('uploads/' . $idEmpresa, $filename, 'public');
+    
+                    $documentacion_url = new Documentacion_url();
+                    $documentacion_url->id_relacion = $marca->id_marca;
+                    $documentacion_url->id_documento = $request->id_documento[$index];
+                    $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+                    $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+                    $documentacion_url->id_empresa = $request->cliente;
+                    $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index] ?? null; // Usa null si no hay fecha
+                    $documentacion_url->save();
+                }
             }
         }
     
-        return response()->json(['success' => 'Marca actualizada exitosamente.']);
+        return response()->json(['success' => 'Marca registrada exitosamente.']);
     }
     
     
@@ -205,7 +228,7 @@ class marcasCatalogoController extends Controller
     {
         $clientes = empresa::where('tipo', 1)->get();
         $opciones = marcas::all();
-        return view('clientesMarcas.find_catalago_marcas', compact('opciones', 'clientes'));
+        return view('catalogo.find_catalago_marcas', compact('opciones', 'clientes'));
     }
 
 
@@ -242,7 +265,7 @@ class marcasCatalogoController extends Controller
         $notVerified = 10;
         $userDuplicates = 40;
 
-        return view('clientesMarcas.find_catalago_marcas', [
+        return view('catalogo.find_catalago_marcas', [
             'totalUser' => $userCount,
             'verified' => $verified,
             'notVerified' => $notVerified,

@@ -12,18 +12,18 @@ use Carbon\Carbon;
 
 class UsuariosPersonalController extends Controller
 {
-         /**
+  /**
    * Redirecciona a la vista de usuarios inspectores.
    *
    */
   public function personal()
   {
-   
+
 
     return view('usuarios.find_usuarios_personal_view');
   }
 
-  
+
 
   /**
    * Display a listing of the resource.
@@ -31,7 +31,7 @@ class UsuariosPersonalController extends Controller
    * @return \Illuminate\Http\Response
    */
 
- 
+
 
   public function index(Request $request)
   {
@@ -46,7 +46,7 @@ class UsuariosPersonalController extends Controller
 
     $search = [];
 
-    $users_temp = User::where("tipo",1)->get();
+    $users_temp = User::where("tipo", 1)->get();
     $totalData = $users_temp->count();
 
     $totalFiltered = $totalData;
@@ -57,7 +57,7 @@ class UsuariosPersonalController extends Controller
     $dir = $request->input('order.0.dir');
 
     if (empty($request->input('search.value'))) {
-      $users = User::where("tipo",1)->offset($start)
+      $users = User::where("tipo", 1)->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
         ->get();
@@ -65,20 +65,20 @@ class UsuariosPersonalController extends Controller
       $search = $request->input('search.value');
 
       $users = User::where('id', 'LIKE', "%{$search}%")
-        ->where("tipo",1)
+        ->where("tipo", 1)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
-        
+
         ->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
         ->get();
 
       $totalFiltered = User::where('id', 'LIKE', "%{$search}%")
-        ->where("tipo",3)
+        ->where("tipo", 3)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
-        
+
         ->count();
     }
 
@@ -92,8 +92,8 @@ class UsuariosPersonalController extends Controller
         $nestedData['id'] = $user->id;
         $nestedData['fake_id'] = ++$ids;
         $nestedData['name'] = $user->name;
-        $nestedData['email'] = $user->email ;
-        $nestedData['password_original'] = $user->password_original ;
+        $nestedData['email'] = $user->email;
+        $nestedData['password_original'] = $user->password_original;
         $nestedData['razon_social'] = 'No aplica';
 
         $data[] = $nestedData;
@@ -155,7 +155,7 @@ class UsuariosPersonalController extends Controller
       if (empty($userEmail)) {
         $users = User::updateOrCreate(
           ['id' => $userID],
-          ['name' => $request->name, 'email' => $request->email, 'password_original' => $pass, 'password' => bcrypt($pass),'tipo'=>2]
+          ['name' => $request->name, 'email' => $request->email, 'password_original' => $pass, 'password' => bcrypt($pass), 'tipo' => 1]
         );
 
         // user created

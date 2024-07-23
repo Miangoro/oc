@@ -168,7 +168,7 @@ class UsuariosInspectoresController extends Controller
       if (empty($userEmail)) {
         $users = User::updateOrCreate(
           ['id' => $userID],
-          ['name' => $request->name, 'email' => $request->email, 'password_original' => $pass, 'password' => bcrypt($pass),'tipo'=>1]
+          ['name' => $request->name, 'email' => $request->email, 'password_original' => $pass, 'password' => bcrypt($pass),'tipo'=>2]
         );
 
         // user created
