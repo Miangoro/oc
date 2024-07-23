@@ -7,7 +7,7 @@
 // validating form and updating user's data
 const addNewMarca = document.getElementById('addNewMarca');
 
-// Validación del formulario de Validación de solicitud
+// Validación del formulario
 $("#addNewMarca").on('submit', function (e) {
   e.preventDefault();
   var formData = new FormData(this);
@@ -20,11 +20,6 @@ $("#addNewMarca").on('submit', function (e) {
     contentType: false, // Evita que se establezca el tipo de contenido
     success: function (response) {
       $('#addMarca').modal('hide');
-      //$('#addNewUserForm')[0].reset();
-
-
-
-      // Actualizar la tabla sin reinicializar DataTables
       $('.datatables-users').DataTable().ajax.reload();
 
       // Mostrar alerta de éxito
@@ -50,7 +45,6 @@ $("#addNewMarca").on('submit', function (e) {
     }
   });
 });
-
 
 
 
@@ -533,67 +527,56 @@ $(function () {
                 var existingDateId = '#existing_date_' + doc.id_documento;
                 $(existingDateId).text('Fecha de vigencia: ' + doc.fecha_vigencia);
                 
-                $('#date' + doc.id_documento).val(doc.fecha_vigencia);  // Establecer la fecha de vigencia
+                $('#date' + doc.id_documento).val(doc.fecha_vigencia);  // Rellenar la fecha existente en el campo de fecha
             });
 
-            // Mostrar el modal de edición
             $('#editMarca').modal('show');
-        }).fail(function () {
-            Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: 'Error al obtener los datos de la marca',
-                customClass: {
-                    confirmButton: 'btn btn-danger'
-                }
-            });
         });
     });
 
-    // Manejar el envío del formulario de edición
-    $('#editMarcaForm').on('submit', function (e) {
+    // Enviar el formulario de actualización de marca
+    $('#editMarcaForm').submit(function (e) {
         e.preventDefault();
-
+        
         var formData = new FormData(this);
-        var id_marca = $('#edit_marca_id').val(); // Obtener el ID de la marca desde el campo oculto
-
+        
         $.ajax({
-            url: '/marcas-list/' + id_marca,
+            url: '/marcas-list',
             type: 'POST',
             data: formData,
-            processData: false,
             contentType: false,
+            processData: false,
             success: function (response) {
-                $('#editMarca').modal('hide'); // Ocultar el modal de edición
-                $('#editMarcaForm')[0].reset(); // Limpiar el formulario
-
-                // Mostrar alerta de éxito
                 Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
+                    title: 'Éxito',
                     text: response.success,
+                    icon: 'success',
+                    buttonsStyling: false,
                     customClass: {
-                        confirmButton: 'btn btn-success'
+                      confirmButton: 'btn btn-success'
                     }
                 });
-
-                // Recargar los datos en la tabla sin reinicializar DataTables
+                $('#editMarca').modal('hide');
+                $('#editMarcaForm')[0].reset();
                 $('.datatables-users').DataTable().ajax.reload();
             },
-            error: function (xhr) {
-                // Mostrar alerta de error
+            error: function (response) {
                 Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error al actualizar la marca.',
                     icon: 'error',
-                    title: '¡Error!',
-                    text: 'Error al actualizar la marca',
+                    buttonsStyling: false,
                     customClass: {
-                        confirmButton: 'btn btn-danger'
+                      confirmButton: 'btn btn-success'
                     }
                 });
             }
         });
     });
 });
+
+
+
 
 
 
