@@ -16,6 +16,36 @@ use Illuminate\Support\Facades\Storage;
 
 class marcasCatalogoController extends Controller
 {
+    /*Crea la solicitud JSEON*/
+    public function UserManagement()
+    {
+        // Obtener listado de clientes (empresas)
+        $clientes = Empresa::all(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $documentos = Documentacion::where('id_documento', '=', '82')
+            ->orWhere('id_documento', '=', '80')
+            ->orWhere('id_documento', '=', '121')
+            ->orWhere('id_documento', '=', '107')
+            ->orWhere('id_documento', '=', '38')
+            ->orWhere('id_documento', '=', '39')
+            ->orWhere('id_documento', '=', '40')
+            ->get();
+
+        // Otros datos que puedas querer pasar a la vista
+        $marcas = marcas::all();
+        $userCount = $marcas->count();
+        $verified = 5;
+        $notVerified = 10;
+        $userDuplicates = 40;
+
+        return view('catalogo.find_catalago_marcas', [
+            'totalUser' => $userCount,
+            'verified' => $verified,
+            'notVerified' => $notVerified,
+            'userDuplicates' => $userDuplicates,
+            'clientes' => $clientes, // Pasa la lista de clientes a la vista
+            'documentos' => $documentos,
+        ]);
+    }
 
     public function index(Request $request)
     {
@@ -244,34 +274,5 @@ class marcasCatalogoController extends Controller
     }
 
 
-    /*Crea la solicitud JSEON*/
-    public function UserManagement()
-    {
-        // Obtener listado de clientes (empresas)
-        $clientes = Empresa::all(); // Esto depende de cómo tengas configurado tu modelo Empresa
-        $documentos = Documentacion::where('id_documento', '=', '82')
-            ->orWhere('id_documento', '=', '80')
-            ->orWhere('id_documento', '=', '121')
-            ->orWhere('id_documento', '=', '107')
-            ->orWhere('id_documento', '=', '38')
-            ->orWhere('id_documento', '=', '39')
-            ->orWhere('id_documento', '=', '40')
-            ->get();
 
-        // Otros datos que puedas querer pasar a la vista
-        $marcas = marcas::all();
-        $userCount = $marcas->count();
-        $verified = 5;
-        $notVerified = 10;
-        $userDuplicates = 40;
-
-        return view('catalogo.find_catalago_marcas', [
-            'totalUser' => $userCount,
-            'verified' => $verified,
-            'notVerified' => $notVerified,
-            'userDuplicates' => $userDuplicates,
-            'clientes' => $clientes, // Pasa la lista de clientes a la vista
-            'documentos' => $documentos,
-        ]);
-    }
 }

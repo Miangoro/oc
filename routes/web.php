@@ -468,13 +468,18 @@ Route::resource('/lotes-granel', LotesGranelController::class);
 
 
 //Lotes de envasado
-Route::get('/catalogo/lotes', [lotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
+Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
+Route::resource('/lotes-list', LotesEnvasadoController::class);
+
 
 
 //Domicilios
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
-Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio_instalaciones');
+
+//Domicilios Instalaciones
+Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio-instalaciones');
 Route::resource('/instalaciones-list', DomiciliosController::class);
+Route::delete('instalaciones/{id}', [DomiciliosController::class, 'destroy'])->name('instalaciones.destroy');
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');

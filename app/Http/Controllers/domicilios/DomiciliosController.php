@@ -5,6 +5,8 @@ namespace App\Http\Controllers\domicilios;
 use App\Http\Controllers\Controller;
 use App\Models\Instalaciones;
 use App\Models\Empresa;
+use App\Models\Estados;
+use App\Models\Organismos;
 use Illuminate\Http\Request;
 
 class DomiciliosController extends Controller
@@ -12,7 +14,10 @@ class DomiciliosController extends Controller
     public function UserManagement()
     {
         $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
-        return view('domicilios.find_domicilio_instalaciones_view', compact('instalaciones'));
+        $empresas = Empresa::all(); // Obtener todas las empresas
+        $estados = Estados::all(); // Obtener todos los estados
+        $organismos = Organismos::all(); // Obtener todos los estados
+        return view('domicilios.find_domicilio_instalaciones_view', compact('instalaciones', 'empresas', 'estados', 'organismos'));
     }
 
     public function index(Request $request)
@@ -62,7 +67,6 @@ class DomiciliosController extends Controller
         $data = [];
 
         if (!empty($instalaciones)) {
-            // Providing a dummy id instead of database ids
             $ids = $start;
 
             foreach ($instalaciones as $instalacion) {
@@ -70,10 +74,8 @@ class DomiciliosController extends Controller
                 $nestedData['fake_id'] = ++$ids;
                 $nestedData['razon_social'] = $instalacion->empresa->razon_social;
                 $nestedData['tipo'] = $instalacion->tipo;
-                $nestedData['estado'] = $instalacion->estado;
+                $nestedData['estado'] = $instalacion->estados->nombre;
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa;
-
-                // Agregar una acción para eliminar el registro
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
 
                 $data[] = $nestedData;
@@ -90,11 +92,11 @@ class DomiciliosController extends Controller
     }
 
     public function destroy($id_instalacion)
-    {
-        $instalacion = Instalaciones::findOrFail($id_instalacion);
-        $instalacion->delete();
-    
-        return response()->json(['success' => 'Instalación eliminada correctamente']);
-    }
-    
+{
+    $instalacion = Instalaciones::findOrFail($id_instalacion);
+    $instalacion->delete();
+
+    return response()->json(['success' => 'Registro eliminado correctamente']);
+}
+
 }
