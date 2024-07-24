@@ -22,5 +22,14 @@ class Instalaciones extends Model
         return $this->belongsTo(Empresa::class, 'id_empresa');
     }
 
+    public function organismos()
+    {
+        return $this->belongsTo(Empresa::class, 'id_organismo');
+    }
+
+    public function estados()
+    {
+        return $this->belongsTo(Estados::class, 'estado');
+    }
 }
 

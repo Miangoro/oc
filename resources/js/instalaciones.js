@@ -10,7 +10,7 @@ $(function () {
       url: baseUrl + 'instalaciones-list',
       type: 'GET',
       dataSrc: function (json) {
-        console.log(json); // Ver los datos en la consola
+        console.log(json); // Ver los datos en la consola 
         return json.data;
       }
     },
@@ -83,19 +83,27 @@ $(function () {
             exportOptions: {
               columns: [0, 1, 2, 3, 4, 5],
               format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 5) {
-                    return 'ViewSuspend';
-                  }
-                  return inner;
+                body: function (inner, coldex, rowdex) {
+                  if (inner.length <= 0) return inner;
+                  var el = $.parseHTML(inner);
+                  var result = '';
+                  $.each(el, function (index, item) {
+                    if (item.classList !== undefined && item.classList.contains('user-name')) {
+                      result = result + item.lastChild.firstChild.textContent;
+                    } else if (item.innerText === undefined) {
+                      result = result + item.textContent;
+                    } else result = result + item.innerText;
+                  });
+                  return result;
                 }
               }
             },
             customize: function (win) {
+              //customize print view for dark
               $(win.document.body)
-                .css('color', '#000') // Ajusta los colores según tu tema
-                .css('border-color', '#000')
-                .css('background-color', '#fff');
+                .css('color', config.colors.headingColor)
+                .css('border-color', config.colors.borderColor)
+                .css('background-color', config.colors.body);
               $(win.document.body)
                 .find('table')
                 .addClass('compact')
@@ -185,12 +193,57 @@ $(function () {
     ]
   });
 
+  $(document).on('click', '.delete-record', function () {
+    var id_instalacion = $(this).data('id');
+    var baseUrl = window.location.origin;
 
-
-
-
-
-
+    // Confirmación con SweetAlert
+    Swal.fire({
+        title: '¿Está seguro?',
+        text: "No podrá revertir este evento",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, eliminar',
+        customClass: {
+            confirmButton: 'btn btn-primary me-3',
+            cancelButton: 'btn btn-label-secondary'
+        },
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.value) {
+            $.ajax({
+                url: `${baseUrl}/instalaciones/${id_instalacion}`,
+                type: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (response) {
+                    // Actualiza la tabla después de la eliminación
+                    $('.datatables-users').DataTable().draw();
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Eliminado!',
+                        text: '¡El registro ha sido eliminado correctamente!',
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.log(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo eliminar el registro.',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+            });
+        }
+    });
+});
 
 //end
 });
