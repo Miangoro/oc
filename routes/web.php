@@ -457,6 +457,20 @@ Route::post('/categorias', [categoriasController::class, 'store'])->name('catego
 Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit');
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
 
+
+
+/* ruta de lotes a granel */
+Route::get('/catalogo/lotes_granel', [LotesGranelController::class, 'UserManagement'])->name('catalogo-lotes-granel');
+Route::resource('/lotes-list', LotesGranelController::class);
+// Ruta para eliminar un lote
+Route::get('/lotes_granel_delete/{id_lote_granel}', [LotesGranelController::class, 'destroy'])->name('lotes-a-granel.destroy');
+Route::resource('/lotes-granel', LotesGranelController::class);
+
+
+//Lotes de envasado
+Route::get('/catalogo/lotes', [lotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
+
+
 //Domicilios
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
 Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio_instalaciones');

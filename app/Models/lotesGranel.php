@@ -42,4 +42,9 @@ class LotesGranel extends Model
     {
         return $this->belongsTo(Organismo::class, 'id_organismo');
     }
+
+    public function guias()
+    {
+        return $this->belongsTo(guias::class, 'id_guia');
+    }
 }
