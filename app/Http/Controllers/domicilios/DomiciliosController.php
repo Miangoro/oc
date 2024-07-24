@@ -76,7 +76,6 @@ class DomiciliosController extends Controller
                 $nestedData['tipo'] = $instalacion->tipo;
                 $nestedData['estado'] = $instalacion->estados->nombre;
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa;
-
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
 
                 $data[] = $nestedData;

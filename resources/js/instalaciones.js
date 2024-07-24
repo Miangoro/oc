@@ -10,7 +10,7 @@ $(function () {
       url: baseUrl + 'instalaciones-list',
       type: 'GET',
       dataSrc: function (json) {
-        console.log(json); // Ver los datos en la consola
+        console.log(json); // Ver los datos en la consola 
         return json.data;
       }
     },
