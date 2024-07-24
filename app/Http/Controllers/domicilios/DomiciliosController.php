@@ -91,26 +91,4 @@ class DomiciliosController extends Controller
     }
 
 
-    public function destroy($id_instalacion)
-    {
-        \Log::info("Intentando eliminar el registro con ID: $id_instalacion");
-
-        $instalacion = Instalacion::find($id_instalacion);
-
-        if ($instalacion) {
-            $instalacion->delete();
-            \Log::info("Registro eliminado con éxito.");
-            return response()->json(['success' => true]);
-        } else {
-            \Log::error("Registro no encontrado con ID: $id_instalacion");
-            return response()->json(['success' => false, 'error' => 'Registro no encontrado']);
-        }
-    }
-
-
-
-
-
-
-
 }

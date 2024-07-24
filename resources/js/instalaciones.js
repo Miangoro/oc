@@ -1,14 +1,16 @@
 $(function () {
-  var baseUrl = window.location.origin;
+  // Definir la URL base
+  var baseUrl = window.location.origin + '/';
 
+  // Inicializar DataTable
   var dt_instalaciones_table = $('.datatables-users').DataTable({
     processing: true,
     serverSide: true,
     ajax: {
-      url: baseUrl + '/instalaciones-list',
+      url: baseUrl + 'instalaciones-list',
       type: 'GET',
       dataSrc: function (json) {
-        console.log('Datos de AJAX:', json);
+        console.log(json); // Ver los datos en la consola
         return json.data;
       }
     },
@@ -22,14 +24,15 @@ $(function () {
     ],
     columnDefs: [
       {
-        targets: 0,
+        targets: 0, // Primera columna
         searchable: false,
         orderable: false,
         render: function (data, type, full, meta) {
-          return meta.row + 1;
+          return meta.row + 1; // Índice incremental
         }
       },
       {
+        // Actions
         targets: -1,
         title: 'Acciones',
         searchable: false,
@@ -72,7 +75,103 @@ $(function () {
         className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
         text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
         buttons: [
-          // Definición de botones para exportar
+          {
+            extend: 'print',
+            title: 'Instalaciones',
+            text: '<i class="ri-printer-line me-1"></i>Print',
+            className: 'dropdown-item',
+            exportOptions: {
+              columns: [0, 1, 2, 3, 4, 5],
+              format: {
+                body: function (inner, rowIndex, columnIndex) {
+                  if (columnIndex === 5) {
+                    return 'ViewSuspend';
+                  }
+                  return inner;
+                }
+              }
+            },
+            customize: function (win) {
+              $(win.document.body)
+                .css('color', '#000') // Ajusta los colores según tu tema
+                .css('border-color', '#000')
+                .css('background-color', '#fff');
+              $(win.document.body)
+                .find('table')
+                .addClass('compact')
+                .css('color', 'inherit')
+                .css('border-color', 'inherit')
+                .css('background-color', 'inherit');
+            }
+          },
+          {
+            extend: 'csv',
+            title: 'Instalaciones',
+            text: '<i class="ri-file-text-line me-1"></i>CSV',
+            className: 'dropdown-item',
+            exportOptions: {
+              columns: [0, 1, 2, 3, 4, 5],
+              format: {
+                body: function (inner, rowIndex, columnIndex) {
+                  if (columnIndex === 5) {
+                    return 'ViewSuspend';
+                  }
+                  return inner;
+                }
+              }
+            }
+          },
+          {
+            extend: 'excel',
+            title: 'Instalaciones',
+            text: '<i class="ri-file-excel-line me-1"></i>Excel',
+            className: 'dropdown-item',
+            exportOptions: {
+              columns: [0, 1, 2, 3, 4, 5],
+              format: {
+                body: function (inner, rowIndex, columnIndex) {
+                  if (columnIndex === 5) {
+                    return 'ViewSuspend';
+                  }
+                  return inner;
+                }
+              }
+            }
+          },
+          {
+            extend: 'pdf',
+            title: 'Instalaciones',
+            text: '<i class="ri-file-pdf-line me-1"></i>PDF',
+            className: 'dropdown-item',
+            exportOptions: {
+              columns: [0, 1, 2, 3, 4, 5],
+              format: {
+                body: function (inner, rowIndex, columnIndex) {
+                  if (columnIndex === 5) {
+                    return 'ViewSuspend';
+                  }
+                  return inner;
+                }
+              }
+            }
+          },
+          {
+            extend: 'copy',
+            title: 'Instalaciones',
+            text: '<i class="ri-file-copy-line me-1"></i>Copy',
+            className: 'dropdown-item',
+            exportOptions: {
+              columns: [0, 1, 2, 3, 4, 5],
+              format: {
+                body: function (inner, rowIndex, columnIndex) {
+                  if (columnIndex === 5) {
+                    return 'ViewSuspend';
+                  }
+                  return inner;
+                }
+              }
+            }
+          }
         ]
       },
       {
@@ -86,72 +185,12 @@ $(function () {
     ]
   });
 
-  $(document).on('click', '.delete-record', function () {
-    var id_instalacion = $(this).data('id');
-    var url = `${baseUrl}/domicilios/${id_instalacion}`;
-    console.log('URL de eliminación:', url);
 
-    Swal.fire({
-      title: '¿Está seguro?',
-      text: "No podrá revertir este evento",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Si, eliminar',
-      customClass: {
-        confirmButton: 'btn btn-primary me-3',
-        cancelButton: 'btn btn-label-secondary'
-      },
-      buttonsStyling: false
-    }).then(function (result) {
-      if (result.value) {
-        $.ajax({
-          type: 'DELETE',
-          url: url,
-          success: function (response) {
-            console.log('Respuesta de eliminación:', response);
-            if (response.success) {
-              dt_instalaciones_table.ajax.reload();
-              Swal.fire({
-                icon: 'success',
-                title: '¡Eliminado!',
-                text: '¡La solicitud ha sido eliminada correctamente!',
-                customClass: {
-                  confirmButton: 'btn btn-success'
-                }
-              });
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: response.error || 'Error desconocido',
-                customClass: {
-                  confirmButton: 'btn btn-danger'
-                }
-              });
-            }
-          },
-          error: function (xhr, status, error) {
-            console.error('Error:', error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se pudo eliminar el registro',
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          }
-        });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: 'Cancelado',
-          text: 'La solicitud no ha sido eliminada',
-          icon: 'error',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      }
-    });
-  });
+
+
+
+
+
+
+//end
 });
