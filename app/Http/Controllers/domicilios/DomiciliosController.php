@@ -12,7 +12,7 @@ class DomiciliosController extends Controller
 {
     public function UserManagement()
     {
-      $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
+        $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
         $empresas = Empresa::all(); // Obtener todas las empresas
         $estados = Estados::all(); // Obtener todos los estados
         return view('domicilios.find_domicilio_instalaciones_view', compact('instalaciones', 'empresas', 'estados'));
@@ -65,7 +65,6 @@ class DomiciliosController extends Controller
         $data = [];
 
         if (!empty($instalaciones)) {
-            // Providing a dummy id instead of database ids
             $ids = $start;
 
             foreach ($instalaciones as $instalacion) {
@@ -76,7 +75,6 @@ class DomiciliosController extends Controller
                 $nestedData['estado'] = $instalacion->estado;
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa;
 
-                // Agregar una acción para eliminar el registro
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
 
                 $data[] = $nestedData;
