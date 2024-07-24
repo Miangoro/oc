@@ -100,6 +100,7 @@ $(function () {
       columns: [
         // columns according to JSON
         { data: '' },
+        { data: 'id_lote_envasado' },
         { data: 'id_empresa' },
         { data: 'razon_social' },
         { data: 'tipo_lote' },
@@ -132,7 +133,7 @@ $(function () {
           targets: 2,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
-            var $name = full['tipo_lote'];
+            var $name = full['id_empresa'];
 
             // For Avatar badge
             var stateNum = Math.floor(Math.random() * 6);
@@ -164,7 +165,7 @@ $(function () {
           // User email
           targets: 3,
           render: function (data, type, full, meta) {
-            var $email = full['nombre_lote'];
+            var $email = full['razon_social'];
             return '<span class="user-email">' + $email + '</span>';
           }
         },
@@ -206,8 +207,8 @@ $(function () {
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_empresa']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_lote_envasado']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_lote_envasado']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
               userView +

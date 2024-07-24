@@ -458,8 +458,8 @@ Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'upd
 
 
 //Lotes de envasado
-Route::get('/catalogo/lotes', [lotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
-Route::resource('/lotes-list', lotesEnvasadoController::class);
+Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
+Route::resource('/lotes-list', LotesEnvasadoController::class);
 
 
 //Domicilios

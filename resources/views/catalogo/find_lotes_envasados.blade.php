@@ -48,59 +48,18 @@
     <table class="datatables-users table">
       <thead class="table-dark">
         <tr>
-            <th></th>
-            <th>Id</th>
-            <th>Id empresa</th>
-            <th>Cliente</th>
-            <th>Tipo de lote</th>
-            <th>Nombre lote</th>
-            <th>cantidad botellas</th>
-            <th>Acciones</th>
+          <th></th>
+          <th>Id</th>
+          <th>No. de CLiente</th>
+          <th>Nombre del Cliente</th>
+          <th>Tipo de lote</th>
+          <th>Nombre lote</th>
+          <th>cantidad botellas</th>
+          <th>Acciones</th>
         </tr>
       </thead>
     </table>
   </div>
-
-<!-- Offcanvas para agregar nueva clase -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
-  <div class="offcanvas-header border-bottom">
-    <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Nueva Clase</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body mx-0 flex-grow-0 h-100">
-    <form class="add-new-user pt-0" id="addNewClassForm">
-      @csrf
-      <div class="form-floating form-floating-outline mb-5">
-        <input type="text" class="form-control" id="clase" placeholder="Ingrese el nombre de la clase" name="clase" aria-label="clase" required>
-        <label for="clase">Nombre de la clase</label>
-      </div>
-      <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
-      <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
-    </form>
-  </div>
-</div>
-<!-- Offcanvas para editar -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="editClase">
-  <div class="offcanvas-header border-bottom">
-    <h5 class="offcanvas-title">Editar Clase</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body mx-0 flex-grow-0 h-100">
-    <form class="edit-class-form pt-0" id="editClassForm">
-      @csrf
-      @method('PUT')
-      <input type="hidden" name="id_clase" id="edit_clase_id" value="">
-      <div class="form-floating form-floating-outline mb-5">
-        <input type="text" class="form-control" id="edit_clase_nombre" placeholder="Nombre de la clase" name="clase" aria-label="clase" required>
-        <label for="edit_clase_nombre">Nombre de la clase</label>
-      </div>
-      <button type="submit" class="btn btn-primary me-sm-3 me-1">Confirmar</button>
-      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
-    </form>
-  </div>
-</div>
-
-
 
 
 </div>

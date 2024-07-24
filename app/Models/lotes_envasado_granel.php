@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class lotes_envasado_granel extends Model
 {
     use HasFactory;
-    protected $table = 'lotes_envasado_granel';
+    protected $table = 'lotes_envasado';
     protected $primaryKey = 'id';
     protected $fillable = [
         'id_lote_envasado',

@@ -11,6 +11,7 @@ class lotes_envasado extends Model
     protected $table = 'lotes_envasado';
     protected $primaryKey = 'id_lote_envasado';
     protected $fillable = [
+        'id_lote_envasado',
         'id_empresa',
         'nombre_lote',
         'tipo_lote',
@@ -24,8 +25,8 @@ class lotes_envasado extends Model
         'lugar_envasado',
     ];
 
-    public function lotesEnvasadoGranel()
+    public function empresa()
     {
-        return $this->hasMany(lotes_envasado_granel::class, 'id_lote_envasado', 'id_lote_envasado');
+        return $this->belongsTo(Empresa::class, 'id_empresa', 'id_empresa');
     }
 }
