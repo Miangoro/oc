@@ -457,22 +457,17 @@ Route::post('/categorias', [categoriasController::class, 'store'])->name('catego
 Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit');
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
 
-
-
 /* ruta de lotes a granel */
 Route::get('/catalogo/lotes_granel', [LotesGranelController::class, 'UserManagement'])->name('catalogo-lotes-granel');
-Route::resource('/lotes-list', LotesGranelController::class);
+Route::resource('/lotes-granel-list', LotesGranelController::class);
 // Ruta para eliminar un lote
-Route::get('/lotes_granel_delete/{id_lote_granel}', [LotesGranelController::class, 'destroy'])->name('lotes-a-granel.destroy');
-Route::resource('/lotes-granel', LotesGranelController::class);
+Route::delete('/lotes-granel-list/{id_lote_granel}', [LotesGranelController::class, 'destroy']);
+Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->name('lotes-register.store');
 
 
 //Lotes de envasado
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
 Route::resource('/lotes-list', LotesEnvasadoController::class);
-
-
-
 
 //Domicilios
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
@@ -480,7 +475,7 @@ Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->na
 //Domicilios Instalaciones
 Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio-instalaciones');
 Route::resource('/instalaciones-list', DomiciliosController::class);
-Route::delete('instalaciones/{id}', [DomiciliosController::class, 'destroy'])->name('instalaciones.destroy');
+Route::delete('instalaciones/{id_instalacion}', [DomiciliosController::class, 'destroy']);
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
@@ -494,7 +489,6 @@ Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal']
 Route::resource('/personal-list', UsuariosPersonalController::class);
 
 //Documentacion
-
 Route::get('/documentacion', [documentacionController::class, 'index'])->name('documentacion');
 Route::get('/documentacion/getNormas', [documentacionController::class, 'getNormas'])->name('documentacion.getNormas');
 Route::get('documentacion/getActividades', [documentacionController::class, 'getActividades'])->name('documentacion.getActividades');

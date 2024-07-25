@@ -64,6 +64,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 <th>Tipo</th>
                 <th>Estado</th>
                 <th>Dirección</th>
+                <th>Folio</th>
+                <th>Organismo</th>
                 <th>Acciones</th>
               </tr>
             </thead>
