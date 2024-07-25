@@ -1,3 +1,4 @@
+
 $(function () {
   // Definir la URL base
   var baseUrl = window.location.origin + '/';
@@ -10,8 +11,16 @@ $(function () {
       url: baseUrl + 'instalaciones-list',
       type: 'GET',
       dataSrc: function (json) {
-        console.log(json); // Ver los datos en la consola 
+        console.log(json); // Ver los datos en la consola
         return json.data;
+      },
+      error: function (xhr, error, thrown) {
+        console.error('Error en la solicitud Ajax:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al cargar los datos.',
+        });
       }
     },
     columns: [
@@ -20,7 +29,9 @@ $(function () {
       { data: 'tipo' },
       { data: 'estado' },
       { data: 'direccion_completa' },
-      { data: 'action' }
+      { data: 'folio' },
+      { data: 'organismo' },
+      { data: 'actions' } // Asegúrate de que el campo de acción esté correctamente definido
     ],
     columnDefs: [
       {
@@ -99,7 +110,7 @@ $(function () {
               }
             },
             customize: function (win) {
-              //customize print view for dark
+              // Customize print view for dark
               $(win.document.body)
                 .css('color', config.colors.headingColor)
                 .css('border-color', config.colors.borderColor)
@@ -193,57 +204,67 @@ $(function () {
     ]
   });
 
+  // Configuración CSRF para Laravel
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+
+  // Eliminar registro
   $(document).on('click', '.delete-record', function () {
     var id_instalacion = $(this).data('id');
-    var baseUrl = window.location.origin;
 
     // Confirmación con SweetAlert
     Swal.fire({
-        title: '¿Está seguro?',
-        text: "No podrá revertir este evento",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Si, eliminar',
-        customClass: {
-            confirmButton: 'btn btn-primary me-3',
-            cancelButton: 'btn btn-label-secondary'
-        },
-        buttonsStyling: false
+      title: '¿Está seguro?',
+      text: "No podrá revertir este evento",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      customClass: {
+        confirmButton: 'btn btn-primary me-3',
+        cancelButton: 'btn btn-label-secondary'
+      },
+      buttonsStyling: false
     }).then(function (result) {
-        if (result.value) {
-            $.ajax({
-                url: `${baseUrl}/instalaciones/${id_instalacion}`,
-                type: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (response) {
-                    // Actualiza la tabla después de la eliminación
-                    $('.datatables-users').DataTable().draw();
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Eliminado!',
-                        text: '¡El registro ha sido eliminado correctamente!',
-                        customClass: {
-                            confirmButton: 'btn btn-success'
-                        }
-                    });
-                },
-                error: function (error) {
-                    console.log(error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudo eliminar el registro.',
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
-                    });
-                }
+      if (result.value) {
+        // Solicitud de eliminación
+        $.ajax({
+          type: 'DELETE',
+          url: `${baseUrl}instalaciones/${id_instalacion}`, // Ajusta la URL aquí
+          success: function () {
+            dt_instalaciones_table.draw();
+          },
+          error: function (xhr, textStatus, errorThrown) {
+            console.error('Error en la solicitud de eliminación:', textStatus, errorThrown);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Hubo un problema al eliminar el registro.',
             });
-        }
-    });
-});
+          }
+        });
 
-//end
+        // SweetAlert de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Eliminado!',
+          text: '¡La solicitud ha sido eliminada correctamente!',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: 'Cancelado',
+          text: 'La solicitud no ha sido eliminada',
+          icon: 'info',
+          customClass: {
+            confirmButton: 'btn btn-secondary'
+          }
+        });
+      }
+    });
+  });
 });
