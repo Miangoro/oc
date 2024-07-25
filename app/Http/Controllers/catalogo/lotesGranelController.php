@@ -51,11 +51,10 @@ class LotesGranelController extends Controller
                 16 => 'fecha_emision',
                 17 => 'fecha_vigencia',
             ];
-    
+            
             $search = $request->input('search.value');
             $totalData = LotesGranel::count();
             $totalFiltered = $totalData;
-    
             $limit = $request->input('length');
             $start = $request->input('start');
             $order = $columns[$request->input('order.0.column')];
@@ -64,6 +63,7 @@ class LotesGranelController extends Controller
             $LotesGranel = LotesGranel::with(['empresa', 'categoria', 'clase', 'Tipo', 'Organismo'])
                 ->when($search, function ($query, $search) {
                     return $query->where('id_lote_granel', 'LIKE', "%{$search}%")
+                                 ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
                                  ->orWhere('folio_fq', 'LIKE', "%{$search}%")
                                  ->orWhere('volumen', 'LIKE', "%{$search}%")
                                  ->orWhere('cont_alc', 'LIKE', "%{$search}%")
@@ -76,14 +76,13 @@ class LotesGranelController extends Controller
     
             $totalFiltered = LotesGranel::when($search, function ($query, $search) {
                 return $query->where('id_lote_granel', 'LIKE', "%{$search}%")
+                             ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
                              ->orWhere('folio_fq', 'LIKE', "%{$search}%")
                              ->orWhere('volumen', 'LIKE', "%{$search}%")
                              ->orWhere('cont_alc', 'LIKE', "%{$search}%")
                              ->orWhere('ingredientes', 'LIKE', "%{$search}%");
             })->count();
-    
             $data = [];
-    
             foreach ($LotesGranel as $lote) {
                 $data[] = [
                     'id_lote_granel' => $lote->id_lote_granel,
@@ -129,7 +128,6 @@ class LotesGranelController extends Controller
         }
     }
     
-    
 
 
     public function getLotesList(Request $request)
@@ -162,89 +160,29 @@ class LotesGranelController extends Controller
         'recordsFiltered' => $totalFiltered,
         'data' => $data
     ]);
+
+
 }
 
-public function destroy($id_lote_granel)
+
+
+
+
+
+
+}
+
+
+
+
+/* public function destroy($id_lote_granel)
 {
     try {
         $lote = LotesGranel::findOrFail($id_lote_granel);
         $lote->delete();
-        return response()->json([
-            'success' => true,
-            'message' => 'Lote eliminado con éxito.',
-        ]);
+        return response()->json(['success' => 'Clase eliminada correctamente']);
     } catch (\Exception $e) {
-        \Log::error('Error al eliminar lote: ' . $e->getMessage());
-        return response()->json([
-            'success' => false,
-            'message' => 'Error al eliminar el lote.',
-        ]);
+        return response()->json(['error' => 'Error al eliminar la clase'], 500);
     }
 }
-
-
-
-
-
-public function store(Request $request)
-{
-    $request->validate([
-        'nombre_lote' => 'required|string|max:255',
-        'id_empresa' => 'required|exists:empresas,id',
-        'tipo_lote' => 'required|string|in:oc_cidam,otro_organismo',
-        'no_analisis' => 'nullable|string|max:255',
-        'analisis_fisicoquimico' => 'nullable|file|mimes:pdf',
-        'volumen_lote' => 'nullable|numeric',
-        'contenido_alcoholico' => 'nullable|numeric',
-        'id_categoria' => 'nullable|exists:catalogo_categorias,id_categoria',
-        'id_clase' => 'nullable|exists:catalogo_clases,id_clase',
-        'id_tipo' => 'nullable|exists:catalogo_tipo_agave,id_tipo',
-        'ingredientes' => 'nullable|string',
-        'edad' => 'nullable|string|max:255',
-        'id_guia' => 'nullable|exists:guias,id_guia',
-        'folio_certificado' => 'nullable|string|max:255',
-        'organismo_certificacion' => 'nullable|string|max:255',
-        'fecha_emision' => 'nullable|date',
-        'fecha_vigencia' => 'nullable|date',
-        'certificado_lote' => 'nullable|file|mimes:pdf',
-    ]);
-
-    $lote = new Lote();
-    $lote->nombre_lote = $request->input('nombre_lote');
-    $lote->id_empresa = $request->input('id_empresa');
-    $lote->tipo_lote = $request->input('tipo_lote');
-    $lote->no_analisis = $request->input('no_analisis');
-    $lote->volumen_lote = $request->input('volumen_lote');
-    $lote->contenido_alcoholico = $request->input('contenido_alcoholico');
-    $lote->id_categoria = $request->input('id_categoria');
-    $lote->id_clase = $request->input('id_clase');
-    $lote->id_tipo = $request->input('id_tipo');
-    $lote->ingredientes = $request->input('ingredientes');
-    $lote->edad = $request->input('edad');
-    $lote->id_guia = $request->input('id_guia');
-    $lote->folio_certificado = $request->input('folio_certificado');
-    $lote->organismo_certificacion = $request->input('organismo_certificacion');
-    $lote->fecha_emision = $request->input('fecha_emision');
-    $lote->fecha_vigencia = $request->input('fecha_vigencia');
-
-    if ($request->hasFile('analisis_fisicoquimico')) {
-        $file = $request->file('analisis_fisicoquimico');
-        $filename = time() . '_analisis_fisicoquimico.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads/analisis'), $filename);
-        $lote->analisis_fisicoquimico = $filename;
-    }
-
-    if ($request->hasFile('certificado_lote')) {
-        $file = $request->file('certificado_lote');
-        $filename = time() . '_certificado_lote.' . $file->getClientOriginalExtension();
-        $file->move(public_path('uploads/certificados'), $filename);
-        $lote->certificado_lote = $filename;
-    }
-
-    $lote->save();
-
-    return redirect()->route('lotes-granel.index')->with('success', 'Lote registrado exitosamente.');
-}
-
-
-}
+ */

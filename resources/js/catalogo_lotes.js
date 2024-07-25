@@ -1,11 +1,13 @@
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const tipoLoteSelect = document.getElementById('tipo_lote');
     const ocCidamFields = document.getElementById('oc_cidam_fields');
     const otroOrganismoFields = document.getElementById('otro_organismo_fields');
-    
+
     tipoLoteSelect.addEventListener('change', function() {
         const selectedValue = tipoLoteSelect.value;
-        
+
         if (selectedValue === 'oc_cidam') {
             ocCidamFields.classList.remove('d-none');
             otroOrganismoFields.classList.add('d-none');
@@ -17,14 +19,14 @@ document.addEventListener('DOMContentLoaded', function() {
             otroOrganismoFields.classList.add('d-none');
         }
     });
-    
+
     $(document).ready(function() {
         // Inicializar DataTable
         $('.datatables-users').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
-                url: '/lotes-list',
+                url: '/lotes-granel-list',
                 type: 'GET'
             },
             columns: [
@@ -210,140 +212,68 @@ document.addEventListener('DOMContentLoaded', function() {
             ]
         });
 
-        // Maneja el clic en los botones de eliminación
-        $(document).on('click', '.delete-record', function () {
-            var loteId = $(this).data('id');
-            var token = $('meta[name="csrf-token"]').attr('content');
-            
-            Swal.fire({
-                title: '¿Está seguro?',
-                text: `No podrá revertir este evento. ID del lote: ${loteId}`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Sí, eliminar',
-                customClass: {
-                    confirmButton: 'btn btn-primary me-3',
-                    cancelButton: 'btn btn-label-secondary'
+        
+// Eliminar registro
+$(document).on('click', '.delete-record', function () {
+    var id_lote = $(this).data('id');
+    var row = $(this).closest('tr');
+    // Confirmación con SweetAlert
+    Swal.fire({
+        title: '¿Está seguro?',
+        text: "No podrá revertir este evento",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        customClass: {
+            confirmButton: 'btn btn-primary me-3',
+            cancelButton: 'btn btn-label-secondary'
+        },
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.value) {
+            // Solicitud de eliminación
+            $.ajax({
+                type: 'DELETE',
+                url: `/lotes_granel_delete/${id_lote}`, // Ajusta la URL aquí
+                success: function (response) {
+                    $('.datatables-users').DataTable().draw();
+                    // Mostrar mensaje de éxito
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Eliminado!',
+                        text: 'El registro ha sido eliminado correctamente.',
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    });
                 },
-                buttonsStyling: false
-            }).then(function (result) {
-                if (result.value) {
-                    $.ajax({
-                        url: `/lotes_granel_delete/${loteId}`,  // Verifica que esta URL sea correcta
-                        type: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': token
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: '¡Eliminado!',
-                                    text: response.message,
-                                    customClass: {
-                                        confirmButton: 'btn btn-success'
-                                    }
-                                }).then(() => {
-                                    // Actualiza la tabla o realiza otra acción según sea necesario
-                                    $('.datatables-users').DataTable().ajax.reload();
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Error',
-                                    text: response.message,
-                                    icon: 'error',
-                                    customClass: {
-                                        confirmButton: 'btn btn-danger'
-                                    }
-                                });
-                            }
-                        },
-                        error: function (xhr) {
-                            Swal.fire({
-                                title: 'Error',
-                                text: 'Hubo un problema al eliminar el lote.',
-                                icon: 'error',
-                                customClass: {
-                                    confirmButton: 'btn btn-danger'
-                                }
-                            });
+                error: function (xhr, textStatus, errorThrown) {
+                    console.error('Error en la solicitud de eliminación:', textStatus, errorThrown);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un problema al eliminar el registro.',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
                         }
                     });
                 }
             });
-        });
-
-        /* insertar datos */
-        $(document).on('submit', '#loteForm', function(e) {
-            e.preventDefault();
-        
-            var formData = new FormData(this);
-            
-            $.ajax({
-                url: '/lotes-granel',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Éxito',
-                            text: response.message
-                        }).then(() => {
-                            $('#offcanvasAddLote').modal('hide');
-                            // Opcional: Recarga la tabla o actualiza la vista
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: response.message
-                        });
-                    }
-                },
-                error: function(xhr) {
-                    // Mostrar errores específicos de validación
-                    var errors = xhr.responseJSON.errors;
-                    var errorMessages = '';
-                    $.each(errors, function(key, value) {
-                        errorMessages += value.join(' ') + '\n';
-                    });
-        
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: errorMessages || 'Hubo un problema al registrar el lote.'
-                    });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire({
+                title: 'Cancelado',
+                text: 'El registro no ha sido eliminado',
+                icon: 'info',
+                customClass: {
+                    confirmButton: 'btn btn-secondary'
                 }
             });
-        });
-        
-        
-        
-        document.addEventListener('DOMContentLoaded', function () {
-            const tipoLote = document.getElementById('tipo_lote');
-            const ocCidamFields = document.getElementById('oc_cidam_fields');
-            const otroOrganismoFields = document.getElementById('otro_organismo_fields');
-        
-            function toggleFields() {
-                if (tipoLote.value === 'oc_cidam') {
-                    ocCidamFields.classList.remove('d-none');
-                    otroOrganismoFields.classList.add('d-none');
-                } else if (tipoLote.value === 'otro_organismo') {
-                    ocCidamFields.classList.add('d-none');
-                    otroOrganismoFields.classList.remove('d-none');
-                } else {
-                    ocCidamFields.classList.add('d-none');
-                    otroOrganismoFields.classList.add('d-none');
-                }
-            }
-        
-            tipoLote.addEventListener('change', toggleFields);
-            toggleFields(); // Inicializar estado de los campos
-        });
-        
+        }
+    });
+});
 
+
+
+        
     });
 });
