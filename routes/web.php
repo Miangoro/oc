@@ -473,6 +473,7 @@ Route::resource('/lotes-list', LotesEnvasadoController::class);
 
 
 
+
 //Domicilios
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
 
