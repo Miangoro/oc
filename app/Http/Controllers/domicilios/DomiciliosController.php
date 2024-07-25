@@ -28,7 +28,7 @@ class DomiciliosController extends Controller
             3 => 'estado',
             4 => 'direccion_completa',
             5 => 'folio',
-            6 => 'organismo',
+            6 => 'id_organismo',
         ];
 
         $search = [];
@@ -76,14 +76,14 @@ class DomiciliosController extends Controller
             $ids = $start;
 
             foreach ($instalaciones as $instalacion) {
-                $nestedData['id_instalacion'] = $instalacion->id_instalacion;
-                $nestedData['fake_id'] = ++$ids;
-                $nestedData['razon_social'] = $instalacion->empresa->razon_social;
-                $nestedData['tipo'] = $instalacion->tipo;
-                $nestedData['estado'] = $instalacion->estados->nombre;
-                $nestedData['direccion_completa'] = $instalacion->direccion_completa;
-                $nestedData['folio'] = $instalacion->folio;
-                $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'N/A'; // Maneja el caso donde el organismo sea nulo
+                $nestedData['id_instalacion'] = $instalacion->id_instalacion ?? 'NA';
+                $nestedData['fake_id'] = ++$ids ?? 'NA';
+                $nestedData['razon_social'] = $instalacion->empresa->razon_social ?? 'NA';
+                $nestedData['tipo'] = $instalacion->tipo ?? 'NA';
+                $nestedData['estado'] = $instalacion->estados->nombre ?? 'NA';
+                $nestedData['direccion_completa'] = $instalacion->direccion_completa ?? 'NA';
+                $nestedData['folio'] = $instalacion->folio ?? 'NA';
+                $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'NA';
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
 
                 $data[] = $nestedData;
@@ -110,6 +110,34 @@ class DomiciliosController extends Controller
             return response()->json(['error' => 'Instalación no encontrada'], 404);
         }
     }
+
+    public function store(Request $request)
+    {
+        // Validar los datos del formulario
+        $validator = Validator::make($request->all(), [
+            'id_empresa' => 'required|exists:empresas,id',
+            'tipo' => 'required|string',
+            'estado' => 'required|exists:estados,id',
+            'direccion_completa' => 'required|string',
+        ]);
+
+        // Verificar si la validación falló
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        // Crear una nueva instalación
+        $instalacion = new Instalacion();
+        $instalacion->id_empresa = $request->input('id_empresa');
+        $instalacion->tipo = $request->input('tipo');
+        $instalacion->estado = $request->input('estado');
+        $instalacion->direccion_completa = $request->input('direccion_completa');
+        $instalacion->save();
+
+        // Responder con éxito
+        return response()->json(['success' => 'Instalación registrada exitosamente.']);
+    }
+
 
 }
 

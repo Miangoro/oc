@@ -1,4 +1,3 @@
-
 $(function () {
   // Definir la URL base
   var baseUrl = window.location.origin + '/';
@@ -100,10 +99,12 @@ $(function () {
                   var result = '';
                   $.each(el, function (index, item) {
                     if (item.classList !== undefined && item.classList.contains('user-name')) {
-                      result = result + item.lastChild.firstChild.textContent;
+                      result += item.lastChild.firstChild.textContent;
                     } else if (item.innerText === undefined) {
-                      result = result + item.textContent;
-                    } else result = result + item.innerText;
+                      result += item.textContent;
+                    } else {
+                      result += item.innerText;
+                    }
                   });
                   return result;
                 }
@@ -235,9 +236,17 @@ $(function () {
           url: `${baseUrl}instalaciones/${id_instalacion}`, // Ajusta la URL aquí
           success: function () {
             dt_instalaciones_table.draw();
+            Swal.fire({
+              icon: 'success',
+              title: '¡Eliminado!',
+              text: '¡La solicitud ha sido eliminada correctamente!',
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+            });
           },
           error: function (xhr, textStatus, errorThrown) {
-            console.error('Error en la solicitud de eliminación:', textStatus, errorThrown);
+            console.error('Error al eliminar:', textStatus, errorThrown);
             Swal.fire({
               icon: 'error',
               title: 'Error',
@@ -245,26 +254,88 @@ $(function () {
             });
           }
         });
-
-        // SweetAlert de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Eliminado!',
-          text: '¡La solicitud ha sido eliminada correctamente!',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: 'Cancelado',
           text: 'La solicitud no ha sido eliminada',
-          icon: 'info',
+          icon: 'error',
           customClass: {
-            confirmButton: 'btn btn-secondary'
+            confirmButton: 'btn btn-success'
           }
         });
       }
     });
   });
+
+
+  //funcion agregar
+  $(document).ready(function () {
+    // CSRF Token
+    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
+    // Submit del formulario de agregar nueva instalación
+    $('#addNewInstalacionForm').on('submit', function (e) {
+      e.preventDefault();
+
+      // Obtener valores del formulario
+      var id_empresa = $('#cliente').val();
+      var tipo = $('#tipo').val();
+      var estado = $('#estado').val();
+      var direccion_completa = $('#direccion').val();
+
+      console.log('ID Empresa:', id_empresa);
+      console.log('Tipo:', tipo);
+      console.log('Estado:', estado);
+      console.log('Dirección Completa:', direccion_completa);
+
+      $.ajax({
+        url: '/instalaciones',
+        method: 'POST',
+        data: {
+          _token: CSRF_TOKEN,
+          id_empresa: id_empresa,
+          tipo: tipo,
+          estado: estado,
+          direccion_completa: direccion_completa
+        },
+        success: function (response) {
+          console.log('Respuesta del servidor:', response);
+          if (response.success) {
+            Swal.fire({
+              title: '¡Éxito!',
+              text: response.success,
+              icon: 'success',
+              confirmButtonText: 'OK'
+            }).then(function (result) {
+              if (result.isConfirmed) {
+                $('#modalAddInstalacion').modal('hide');
+                $('.datatables-users').DataTable().ajax.reload();
+              }
+            });
+          } else {
+            Swal.fire({
+              title: 'Error',
+              text: 'Hubo un problema al registrar la instalación.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+          }
+        },
+        error: function (response) {
+          console.log('Error en la solicitud:', response);
+          Swal.fire({
+            title: 'Error',
+            text: 'Hubo un problema al registrar la instalación.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        }
+      });
+    });
+  });
+
+
+
+
+//end
 });

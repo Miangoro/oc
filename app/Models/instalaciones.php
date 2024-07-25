@@ -10,7 +10,9 @@ class Instalaciones extends Model
     use HasFactory;
 
     protected $table = 'instalaciones';
+
     protected $primaryKey = 'id_instalacion';
+
     protected $fillable = [
         'id_empresa',
         'tipo',
@@ -34,5 +36,3 @@ class Instalaciones extends Model
         return $this->belongsTo(Estados::class, 'estado');
     }
 }
-
-
