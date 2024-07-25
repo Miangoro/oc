@@ -28,7 +28,7 @@ class DomiciliosController extends Controller
             3 => 'estado',
             4 => 'direccion_completa',
             5 => 'folio',
-            6 => 'organismo',
+            6 => 'id_organismo',
         ];
 
         $search = [];
@@ -83,7 +83,7 @@ class DomiciliosController extends Controller
                 $nestedData['estado'] = $instalacion->estados->nombre;
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa;
                 $nestedData['folio'] = $instalacion->folio;
-                $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'N/A'; // Maneja el caso donde el organismo sea nulo
+                $nestedData['organismo'] = $instalacion->organismos->organismo;
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
 
                 $data[] = $nestedData;

@@ -15,8 +15,7 @@ class Instalaciones extends Model
         'id_empresa',
         'tipo',
         'direccion_completa',
-        'folio',
-        'id_organismo'
+        'folio'
     ];
 
     public function empresa()
@@ -34,5 +33,3 @@ class Instalaciones extends Model
         return $this->belongsTo(Estados::class, 'estado');
     }
 }
-
-
