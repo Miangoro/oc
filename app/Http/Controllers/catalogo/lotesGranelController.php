@@ -28,39 +28,38 @@ class LotesGranelController extends Controller
     }
     
     
-    
     public function index(Request $request)
     {
         try {
             $columns = [
                 1 => 'id_lote_granel',
-                2 => 'razon_social',
-                3 => 'nombre_lote',
-                4 => 'tipo_lote',
-                5 => 'folio_fq',
-                6 => 'volumen',
-                7 => 'cont_alc',
-                8 => 'id_categoria',
-                9 => 'id_clase',
-                10 => 'id_tipo',
-                11 => 'ingredientes',
-                12 => 'edad',
-                13 => 'id_guia',
-                14 => 'folio_certificado',
-                15 => 'id_organismo',
-                16 => 'fecha_emision',
-                17 => 'fecha_vigencia',
+                2 => 'nombre_lote',
+                3 => 'tipo_lote',
+                4 => 'folio_fq',
+                5 => 'volumen',
+                6 => 'cont_alc',
+                7 => 'id_categoria',
+                8 => 'id_clase',
+                9 => 'id_tipo',
+                10 => 'ingredientes',
+                11 => 'edad',
+                12 => 'id_guia',
+                13 => 'folio_certificado',
+                14 => 'id_organismo',
+                15 => 'fecha_emision',
+                16 => 'fecha_vigencia',
             ];
             
             $search = $request->input('search.value');
             $totalData = LotesGranel::count();
             $totalFiltered = $totalData;
+    
             $limit = $request->input('length');
             $start = $request->input('start');
             $order = $columns[$request->input('order.0.column')];
             $dir = $request->input('order.0.dir');
     
-            $LotesGranel = LotesGranel::with(['empresa', 'categoria', 'clase', 'Tipo', 'Organismo'])
+            $LotesGranel = LotesGranel::with(['empresa', 'categoria', 'clase', 'Tipo', 'Organismo', 'guias'])
                 ->when($search, function ($query, $search) {
                     return $query->where('id_lote_granel', 'LIKE', "%{$search}%")
                                  ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
@@ -82,25 +81,27 @@ class LotesGranelController extends Controller
                              ->orWhere('cont_alc', 'LIKE', "%{$search}%")
                              ->orWhere('ingredientes', 'LIKE', "%{$search}%");
             })->count();
+    
             $data = [];
+    
             foreach ($LotesGranel as $lote) {
                 $data[] = [
                     'id_lote_granel' => $lote->id_lote_granel,
                     'fake_id' => $start + 1, // Incremental ID
-                    'id_empresa' => $lote->empresa->razon_social ?? '',
+                    'id_empresa' => $lote->empresa->razon_social ?? 'NA',
                     'nombre_lote' => $lote->nombre_lote,
                     'tipo_lote' => $lote->tipo_lote,
                     'folio_fq' => $lote->folio_fq,
                     'volumen' => $lote->volumen,
                     'cont_alc' => $lote->cont_alc,
-                    'id_categoria' => $lote->categoria->categoria ?? '',
-                    'id_clase' => $lote->clase->clase ?? '',
-                    'id_tipo' => $lote->Tipo->nombre,
+                    'id_categoria' => $lote->categoria->categoria ?? 'NA',
+                    'id_clase' => $lote->clase->clase ?? 'NA',
+                    'id_tipo' => $lote->tipo->nombre ?? 'NA',
                     'ingredientes' => $lote->ingredientes,
                     'edad' => $lote->edad,
-                    'id_guia' => $lote->guias->Folio,
+                    'id_guia' => $lote->guias->Folio ?? 'NA',
                     'folio_certificado' => $lote->folio_certificado,
-                    'id_organismo' => $lote->Organismo->organismo ?? '',
+                    'id_organismo' => $lote->organismo->organismo ?? 'NA',
                     'fecha_emision' => $lote->fecha_emision,
                     'fecha_vigencia' => $lote->fecha_vigencia,
                     'actions' => '<button class="btn btn-danger btn-sm delete-record" data-id="' . $lote->id_lote_granel . '">Eliminar</button>',
@@ -115,7 +116,6 @@ class LotesGranelController extends Controller
                 'data' => $data,
             ]);
         } catch (\Exception $e) {
-            // Log the error message
             \Log::error('Error en LotesGranelController@index: ' . $e->getMessage());
             
             return response()->json([
@@ -127,6 +127,7 @@ class LotesGranelController extends Controller
             ]);
         }
     }
+    
     
 
 
@@ -162,27 +163,51 @@ class LotesGranelController extends Controller
     ]);
 
 
-}
-
-
-
-
-
-
-
-}
-
-
-
-
-/* public function destroy($id_lote_granel)
-{
-    try {
-        $lote = LotesGranel::findOrFail($id_lote_granel);
-        $lote->delete();
-        return response()->json(['success' => 'Clase eliminada correctamente']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al eliminar la clase'], 500);
     }
+
+
+
+
+    public function destroy($id_lote_granel)
+    {
+        try {
+            $lote = LotesGranel::findOrFail($id_lote_granel);
+            $lote->delete();
+
+            return response()->json(['success' => 'Lote eliminado correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al eliminar el lote'], 500);
+        }
+    }
+
+    public function store(Request $request)
+    {
+        // Validar los datos del formulario
+        $request->validate([
+            'id_empresa' => 'required|exists:empresa,id_empresa',
+            'nombre_lote' => 'required|string|max:255',
+            'tipo_lote' => 'required|string',
+            // Agrega más validaciones según tus necesidades
+        ]);
+        // Crear una nueva instancia del modelo LotesGranel
+        $lote = new LotesGranel();
+    
+        // Asignar los valores del formulario a las propiedades del modelo
+        $lote->id_empresa = $request->input('id_empresa'); // Aquí se usa el ID de la empresa
+        $lote->nombre_lote = $request->input('nombre_lote');
+        $lote->tipo_lote = $request->input('tipo_lote');
+        // Asignar más propiedades según los campos del formulario
+    
+        // Guardar el nuevo lote en la base de datos
+        $lote->save();
+    
+        // Retornar una respuesta
+        return response()->json([
+            'success' => true,
+            'message' => 'Lote registrado exitosamente',
+        ]);
+    }
+    
+
+
 }
- */
