@@ -457,8 +457,6 @@ Route::post('/categorias', [categoriasController::class, 'store'])->name('catego
 Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit');
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
 
-
-
 /* ruta de lotes a granel */
 Route::get('/catalogo/lotes_granel', [LotesGranelController::class, 'UserManagement'])->name('catalogo-lotes-granel');
 Route::resource('/lotes-granel-list', LotesGranelController::class);
@@ -473,8 +471,6 @@ Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->n
 //Lotes de envasado
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
 Route::resource('/lotes-list', LotesEnvasadoController::class);
-
-
 
 //Domicilios
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
@@ -496,7 +492,6 @@ Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal']
 Route::resource('/personal-list', UsuariosPersonalController::class);
 
 //Documentacion
-
 Route::get('/documentacion', [documentacionController::class, 'index'])->name('documentacion');
 Route::get('/documentacion/getNormas', [documentacionController::class, 'getNormas'])->name('documentacion.getNormas');
 Route::get('documentacion/getActividades', [documentacionController::class, 'getActividades'])->name('documentacion.getActividades');

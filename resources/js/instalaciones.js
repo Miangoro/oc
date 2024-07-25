@@ -1,4 +1,3 @@
-
 $(function () {
   // Definir la URL base
   var baseUrl = window.location.origin + '/';
@@ -100,10 +99,12 @@ $(function () {
                   var result = '';
                   $.each(el, function (index, item) {
                     if (item.classList !== undefined && item.classList.contains('user-name')) {
-                      result = result + item.lastChild.firstChild.textContent;
+                      result += item.lastChild.firstChild.textContent;
                     } else if (item.innerText === undefined) {
-                      result = result + item.textContent;
-                    } else result = result + item.innerText;
+                      result += item.textContent;
+                    } else {
+                      result += item.innerText;
+                    }
                   });
                   return result;
                 }
@@ -235,9 +236,17 @@ $(function () {
           url: `${baseUrl}instalaciones/${id_instalacion}`, // Ajusta la URL aquí
           success: function () {
             dt_instalaciones_table.draw();
+            Swal.fire({
+              icon: 'success',
+              title: '¡Eliminado!',
+              text: '¡La solicitud ha sido eliminada correctamente!',
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+            });
           },
           error: function (xhr, textStatus, errorThrown) {
-            console.error('Error en la solicitud de eliminación:', textStatus, errorThrown);
+            console.error('Error al eliminar:', textStatus, errorThrown);
             Swal.fire({
               icon: 'error',
               title: 'Error',
@@ -245,23 +254,13 @@ $(function () {
             });
           }
         });
-
-        // SweetAlert de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Eliminado!',
-          text: '¡La solicitud ha sido eliminada correctamente!',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: 'Cancelado',
           text: 'La solicitud no ha sido eliminada',
-          icon: 'info',
+          icon: 'error',
           customClass: {
-            confirmButton: 'btn btn-secondary'
+            confirmButton: 'btn btn-success'
           }
         });
       }
