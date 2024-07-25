@@ -459,10 +459,10 @@ Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'upd
 
 /* ruta de lotes a granel */
 Route::get('/catalogo/lotes_granel', [LotesGranelController::class, 'UserManagement'])->name('catalogo-lotes-granel');
-Route::resource('/lotes-list', LotesGranelController::class);
+Route::resource('/lotes-granel-list', LotesGranelController::class);
 // Ruta para eliminar un lote
-Route::get('/lotes_granel_delete/{id_lote_granel}', [LotesGranelController::class, 'destroy'])->name('lotes-a-granel.destroy');
-Route::resource('/lotes-granel', LotesGranelController::class);
+Route::delete('/lotes-granel-list/{id_lote_granel}', [LotesGranelController::class, 'destroy']);
+Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->name('lotes-register.store');
 
 
 //Lotes de envasado

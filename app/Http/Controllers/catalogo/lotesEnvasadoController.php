@@ -4,6 +4,10 @@ namespace App\Http\Controllers\catalogo;
 
 use App\Models\lotes_envasado;
 use App\Models\empresa;
+use App\Models\marcas;
+use App\Models\LotesGranel;
+use App\Models\Instalaciones;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -11,7 +15,9 @@ class lotesEnvasadoController extends Controller
 {
     public function UserManagement()
     {
-      
+        $clientes = Empresa::all(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $marcas = marcas::all(); // Obtener todas las marcas
+        $lotes_granel = LotesGranel::all(); // Obtener todas las marcas
         $lotes_envasado = lotes_envasado::all();
         $userCount = $lotes_envasado->count();
         $verified = 5;
@@ -23,13 +29,19 @@ class lotesEnvasadoController extends Controller
             'verified' => $verified,
             'notVerified' => $notVerified,
             'userDuplicates' => $userDuplicates,
+            'clientes' => $clientes, // Pasa la lista de clientes a la vista
+            'marcas' => $marcas,     // Pasa la lista de marcas a la vista
+            'lotes_granel' => $lotes_granel,     // Pasa la lista de marcas a la vista
+            'lotes_envasado' => $lotes_envasado,     // Pasa la lista de marcas a la vista
+
+
         ]);
     }
 
     public function index(Request $request)
     {
         $columns = [
-            1 => 'id_lote_envasado', 
+            1 => 'id_lote_envasado',
             2 => 'id_empresa',
             3 => 'nombre_lote',
             4 => 'tipo_lote',
@@ -41,7 +53,7 @@ class lotesEnvasadoController extends Controller
             10 => 'unidad',
             11 => 'volumen_total',
             12 => 'lugar_envasado',
-            
+
         ];
 
         $limit = $request->input('length');
@@ -55,10 +67,10 @@ class lotesEnvasadoController extends Controller
         $query = lotes_envasado::with('empresa');
 
         if (!empty($searchValue)) {
-            $query->where(function($q) use ($searchValue) {
+            $query->where(function ($q) use ($searchValue) {
                 $q->where('id_empresa', 'LIKE', "%{$searchValue}%")
-                  ->orWhere('nombre_lote', 'LIKE', "%{$searchValue}%")
-                  ->orWhere('cant_botellas', 'LIKE', "%{$searchValue}%");
+                    ->orWhere('nombre_lote', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('cant_botellas', 'LIKE', "%{$searchValue}%");
             });
         }
 
@@ -66,16 +78,20 @@ class lotesEnvasadoController extends Controller
         $totalFiltered = $query->count();
 
         $users = $query->offset($start)
-                       ->limit($limit)
-                       ->orderBy($order, $dir)
-                       ->get();
+            ->limit($limit)
+            ->orderBy($order, $dir)
+            ->get();
 
         $data = [];
 
         if ($users->isNotEmpty()) {
             $ids = $start;
-
+        
             foreach ($users as $user) {
+                // Obtener la dirección completa de la instalación mediante el id_empresa
+                $instalacion = Instalaciones::where('id_empresa', $user->id_empresa)->first();
+                $direccion_completa = $instalacion ? $instalacion->direccion_completa : '';
+        
                 $nestedData = [
                     'id_lote_envasado' => $user->id_lote_envasado,
                     'fake_id' => ++$ids,
@@ -84,11 +100,18 @@ class lotesEnvasadoController extends Controller
                     'tipo_lote' => $user->tipo_lote,
                     'nombre_lote' => $user->nombre_lote,
                     'cant_botellas' => $user->cant_botellas,
+                    'presentacion' => $user->presentacion,
+                    'unidad' => $user->unidad,
+                    'destino_lote' => $user->destino_lote,
+                    'volumen_total' => $user->volumen_total,
+                    'direccion_completa' => $direccion_completa,
+                    'sku' => $user->sku,
                 ];
-
+        
                 $data[] = $nestedData;
             }
         }
+        
 
         return response()->json([
             'draw' => intval($request->input('draw')),
@@ -97,5 +120,14 @@ class lotesEnvasadoController extends Controller
             'code' => 200,
             'data' => $data,
         ]);
+    }
+
+    //Metodo para eliminar
+    public function destroy($id_lote_envasado)
+    {
+        $clase = lotes_envasado::findOrFail($id_lote_envasado);
+        $clase->delete();
+
+        return response()->json(['success' => 'Clase eliminada correctamente']);
     }
 }

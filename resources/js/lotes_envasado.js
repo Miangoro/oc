@@ -47,6 +47,31 @@ $("#addNewMarca").on('submit', function (e) {
 });
 
 
+document.addEventListener('DOMContentLoaded', function () {
+  const conformadoPorSelect = document.getElementById('conformadoPor');
+  const datosOpcion1 = document.getElementById('datosOpcion1');
+  const datosOpcion2 = document.getElementById('datosOpcion2');
+
+  // Inicialmente, ocultamos ambos conjuntos de datos
+  datosOpcion1.style.display = 'none';
+  datosOpcion2.style.display = 'none';
+
+  // Evento para detectar cambios en el select
+  conformadoPorSelect.addEventListener('change', function () {
+      const selectedValue = this.value;
+
+      if (selectedValue === '1') {
+          datosOpcion1.style.display = 'block';
+          datosOpcion2.style.display = 'none';
+      } else if (selectedValue === '2') {
+          datosOpcion1.style.display = 'none';
+          datosOpcion2.style.display = 'block';
+      } else {
+          datosOpcion1.style.display = 'none';
+          datosOpcion2.style.display = 'none';
+      }
+  });
+});
 
 //DATE PICKER
 //Datepicker inicializador
@@ -64,7 +89,7 @@ $(function () {
   var dt_user_table = $('.datatables-users'),
     select2Elements = $('.select2'),
     userView = baseUrl + 'app/user/view/account',
-    offCanvasForm = $('#addMarca');
+    offCanvasForm = $('#addlostesEnvasado');
 
   // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
@@ -104,8 +129,18 @@ $(function () {
         { data: 'id_empresa' },
         { data: 'razon_social' },
         { data: 'tipo_lote' },
-        { data: 'nombre_lote' }, 
+        { data: 'nombre_lote' },
         { data: 'cant_botellas' },
+        //concatenar datos
+        {
+          data: function (row, type, set) {
+            return row.presentacion + ' ' + row.unidad;
+          }
+        },
+        { data: 'volumen_total' },
+        { data: 'destino_lote' },
+        { data: 'direccion_completa' },
+        { data: 'sku' },
         { data: 'action' }
       ],
       columnDefs: [
@@ -396,7 +431,7 @@ $(function () {
           attr: {
             'data-bs-toggle': 'modal',
             'data-bs-dismiss': 'modal',
-            'data-bs-target': '#addMarca'
+            'data-bs-target': '#addlostesEnvasado'
           }
         }
       ],
@@ -463,7 +498,7 @@ $(function () {
         // delete the data
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}catalago-list/${user_id}`,
+          url: `${baseUrl}lotes-list/${user_id}`,
           success: function () {
             dt_user.draw();
           },
@@ -505,81 +540,81 @@ $(function () {
             
           
   });*/
-$(document).ready(function () {
+  $(document).ready(function () {
     // Abrir el modal y cargar datos para editar
     $('.datatables-users').on('click', '.edit-record', function () {
-        var id_marca = $(this).data('id');
+      var id_marca = $(this).data('id');
 
-        // Limpiar campos y contenido residual del formulario de edición
-        $('#editMarcaForm')[0].reset();
-        $('.existing-file').html(''); // Asegúrate de que todos los contenedores de archivos existentes estén vacíos
-        $('.existing-date').text(''); // Asegúrate de que todos los contenedores de fechas existentes estén vacíos
+      // Limpiar campos y contenido residual del formulario de edición
+      $('#editMarcaForm')[0].reset();
+      $('.existing-file').html(''); // Asegúrate de que todos los contenedores de archivos existentes estén vacíos
+      $('.existing-date').text(''); // Asegúrate de que todos los contenedores de fechas existentes estén vacíos
 
-        // Realizar la solicitud AJAX para obtener los datos de la marca
-        $.get('/marcas-list/' + id_marca + '/edit', function (data) {
-            var marca = data.marca;
-            var documentacion_urls = data.documentacion_urls;
+      // Realizar la solicitud AJAX para obtener los datos de la marca
+      $.get('/marcas-list/' + id_marca + '/edit', function (data) {
+        var marca = data.marca;
+        var documentacion_urls = data.documentacion_urls;
 
-            // Rellenar el formulario con los datos obtenidos
-            $('#edit_marca_id').val(marca.id_marca);
-            $('#edit_marca_nombre').val(marca.marca);
-            $('#edit_cliente').val(marca.id_empresa).trigger('change');
+        // Rellenar el formulario con los datos obtenidos
+        $('#edit_marca_id').val(marca.id_marca);
+        $('#edit_marca_nombre').val(marca.marca);
+        $('#edit_cliente').val(marca.id_empresa).trigger('change');
 
-            // Mostrar archivos existentes en los mismos espacios de entrada de archivo
-            documentacion_urls.forEach(function (doc) {
-                var existingFileDivId = '#existing_file_' + doc.id_documento;
-                $(existingFileDivId).html(`<p>Archivo existente: <a href="/storage/uploads/${marca.id_empresa}/${doc.url}" target="_blank">${doc.url}</a></p>`);
-                
-                var existingDateId = '#existing_date_' + doc.id_documento;
-                $(existingDateId).text('Fecha de vigencia: ' + doc.fecha_vigencia);
-                
-                $('#date' + doc.id_documento).val(doc.fecha_vigencia);  // Rellenar la fecha existente en el campo de fecha
-            });
+        // Mostrar archivos existentes en los mismos espacios de entrada de archivo
+        documentacion_urls.forEach(function (doc) {
+          var existingFileDivId = '#existing_file_' + doc.id_documento;
+          $(existingFileDivId).html(`<p>Archivo existente: <a href="/storage/uploads/${marca.id_empresa}/${doc.url}" target="_blank">${doc.url}</a></p>`);
 
-            $('#editMarca').modal('show');
+          var existingDateId = '#existing_date_' + doc.id_documento;
+          $(existingDateId).text('Fecha de vigencia: ' + doc.fecha_vigencia);
+
+          $('#date' + doc.id_documento).val(doc.fecha_vigencia);  // Rellenar la fecha existente en el campo de fecha
         });
+
+        $('#editMarca').modal('show');
+      });
     });
 
     // Enviar el formulario de actualización de marca
     $('#editMarcaForm').submit(function (e) {
-        e.preventDefault();
-        
-        var formData = new FormData(this);
-        
-        $.ajax({
-            url: '/marcas-list',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                Swal.fire({
-                    title: 'Éxito',
-                    text: response.success,
-                    icon: 'success',
-                    buttonsStyling: false,
-                    customClass: {
-                      confirmButton: 'btn btn-success'
-                    }
-                });
-                $('#editMarca').modal('hide');
-                $('#editMarcaForm')[0].reset();
-                $('.datatables-users').DataTable().ajax.reload();
-            },
-            error: function (response) {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Ocurrió un error al actualizar la marca.',
-                    icon: 'error',
-                    buttonsStyling: false,
-                    customClass: {
-                      confirmButton: 'btn btn-success'
-                    }
-                });
+      e.preventDefault();
+
+      var formData = new FormData(this);
+
+      $.ajax({
+        url: '/marcas-list',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+          Swal.fire({
+            title: 'Éxito',
+            text: response.success,
+            icon: 'success',
+            buttonsStyling: false,
+            customClass: {
+              confirmButton: 'btn btn-success'
             }
-        });
+          });
+          $('#editMarca').modal('hide');
+          $('#editMarcaForm')[0].reset();
+          $('.datatables-users').DataTable().ajax.reload();
+        },
+        error: function (response) {
+          Swal.fire({
+            title: 'Error',
+            text: 'Ocurrió un error al actualizar la marca.',
+            icon: 'error',
+            buttonsStyling: false,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        }
+      });
     });
-});
+  });
 
 
 

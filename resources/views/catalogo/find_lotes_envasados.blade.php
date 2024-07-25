@@ -55,6 +55,11 @@
           <th>Tipo de lote</th>
           <th>Nombre lote</th>
           <th>cantidad botellas</th>
+          <th>Presentacion</th>
+          <th>Volumen total</th>
+          <th>Destino lote</th>
+          <th>Direccion completa</th>
+          <th>No. de pedido/SKU</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -66,5 +71,7 @@
 
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
+@include('_partials/_modals/modal-add-lotesEnvasado')
+
 <!-- /Modal -->
 @endsection
