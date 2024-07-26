@@ -91,11 +91,14 @@ class lotesEnvasadoController extends Controller
                 // Obtener la dirección completa de la instalación mediante el id_empresa
                 $instalacion = Instalaciones::where('id_empresa', $user->id_empresa)->first();
                 $direccion_completa = $instalacion ? $instalacion->direccion_completa : '';
-        
+                
+                // Obtener numero_cliente
+                $numero_cliente = $user->empresaNumCliente ? $user->empresaNumCliente->numero_cliente : '';
+
                 $nestedData = [
                     'id_lote_envasado' => $user->id_lote_envasado,
                     'fake_id' => ++$ids,
-                    'id_empresa' => $user->id_empresa,
+                    'id_empresa' => $numero_cliente, // Mostrar numero_cliente en lugar de id_empresa
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
                     'tipo_lote' => $user->tipo_lote,
                     'nombre_lote' => $user->nombre_lote,
@@ -107,7 +110,7 @@ class lotesEnvasadoController extends Controller
                     'direccion_completa' => $direccion_completa,
                     'sku' => $user->sku,
                 ];
-        
+
                 $data[] = $nestedData;
             }
         }
