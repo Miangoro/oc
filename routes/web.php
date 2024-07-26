@@ -175,9 +175,7 @@ use App\Http\Controllers\getFuncionesController;
 use App\Http\Controllers\usuarios\UsuariosController;
 use App\Http\Controllers\usuarios\UsuariosInspectoresController;
 use App\Http\Controllers\usuarios\UsuariosPersonalController;
-//Tipos maguey/agave
-use App\Http\Controllers\catalogo\tiposController;
-
+use App\Http\Controllers\catalogo\LotesGranelController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -425,16 +423,31 @@ Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dict
 //Clientes prospecto y confirmado
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');
 Route::resource('/empresas-list', clientesProspectoController::class);
+Route::post('/aceptar-cliente', [clientesProspectoController::class, 'aceptarCliente']);
+Route::get('/lista_empresas/{id}', [getFuncionesController::class, 'find_clientes_prospecto']);
 
-//Catalogo de marcas
-Route::controller(catalogoMarcasController::class) ->group(function(){
-Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catalogoMarcas');
-});
+Route::get('/clientes/confirmados', [clientesConfirmadosController::class, 'UserManagement'])->name('clientes-confirmados');
+Route::resource('/clientes-list', clientesConfirmadosController::class);
+Route::get('/carta_asignacion/{id}', [clientesConfirmadosController::class, 'pdfCartaAsignacion'])->name('carta_asignacion');
+Route::get('/carta_asignacion052/{id}', [clientesConfirmadosController::class, 'pdfCartaAsignacion052'])->name('carta_asignacion052');
 
 //Marcas y catalogo
 Route::get('/catalogo/marcas', [marcasCatalogoController::class, 'UserManagement'])->name('catalogo-marcas');
 Route::resource('/catalago-list', marcasCatalogoController::class);
+Route::resource('marcas-list', marcasCatalogoController::class)->except(['create', 'edit']);
+Route::get('/marcas-list/{id}/edit', [marcasCatalogoController::class, 'edit'])->name('marcas.edit');
+Route::post('/marcas-list/{id}', [marcasCatalogoController::class, 'store']);
+Route::post('/update-fecha-vigencia/{id_documento}', [marcasCatalogoController::class, 'updateFechaVigencia']);
+Route::post('/marcas-list/{id}/update', [marcasCatalogoController::class, 'update'])->name('marcas.update');
 
+
+/* ruta de clases catalogo */
+Route::get('/catalogo/clases', [ClaseController::class, 'UserManagement'])->name('catalogo-clases');
+Route::get('/clases-list', [ClaseController::class, 'index']);
+Route::delete('/clases-list/{id_clase}', [ClaseController::class, 'destroy'])->name('clases.destroy');
+Route::post('/catalogo', [ClaseController::class, 'store'])->name('catalogo.store');
+Route::get('/clases-list/{id_clase}/edit', [ClaseController::class, 'edit'])->name('clases.edit');
+Route::put('/clases-list/{id_clase}', [ClaseController::class, 'update'])->name('clases.update');
 
 //Categorias Agave
 Route::get('/catalogo/categorias', [categoriasController::class, 'UserManagement'])->name('catalogo-categorias');
@@ -444,10 +457,12 @@ Route::post('/categorias', [categoriasController::class, 'store'])->name('catego
 Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit');
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
 
-
-//Tipos de maguey/agave
-Route::get('/catalogo/tipos', [tiposController::class, 'UserManagement'])->name('tipos-maguey-agave');
-Route::resource('/tipos-list', tiposController::class);
+/* ruta de lotes a granel */
+Route::get('/catalogo/lotes_granel', [LotesGranelController::class, 'UserManagement'])->name('catalogo-lotes-granel');
+Route::resource('/lotes-granel-list', LotesGranelController::class);
+// Ruta para eliminar un lote
+Route::delete('/lotes-granel-list/{id_lote_granel}', [LotesGranelController::class, 'destroy']);
+Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->name('lotes-register.store');
 
 
 //Lotes de envasado
