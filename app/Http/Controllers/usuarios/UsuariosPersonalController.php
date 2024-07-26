@@ -1,45 +1,38 @@
 <?php
 
-namespace App\Http\Controllers\laravel_example;
+namespace App\Http\Controllers\usuarios;
 
 use App\Http\Controllers\Controller;
-use App\Models\empresa;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
-class UserManagement extends Controller
+class UsuariosPersonalController extends Controller
 {
   /**
-   * Redirect to user-management view.
+   * Redirecciona a la vista de usuarios inspectores.
    *
    */
-  public function UserManagement()
+  public function personal()
   {
-    $empresas = empresa::where('tipo', 2)->get();
-    // dd('UserManagement');
-    $users = User::all();
-    $userCount = $users->count();
-    $verified = User::whereNotNull('email_verified_at')->get()->count();
-    $notVerified = User::whereNull('email_verified_at')->get()->count();
-    $usersUnique = $users->unique(['email']);
-    $userDuplicates = $users->diff($usersUnique)->count();
 
-    return view('content.laravel-example.user-management', [
-      'totalUser' => $userCount,
-      'verified' => $verified,
-      'notVerified' => $notVerified,
-      'userDuplicates' => $userDuplicates,
-      'empresas' => $empresas
-    ]);
+
+    return view('usuarios.find_usuarios_personal_view');
   }
+
+
 
   /**
    * Display a listing of the resource.
    *
    * @return \Illuminate\Http\Response
    */
+
+
+
   public function index(Request $request)
   {
     $columns = [
@@ -47,11 +40,14 @@ class UserManagement extends Controller
       2 => 'name',
       3 => 'email',
       4 => 'email_verified_at',
+      5 => 'razon_social',
+
     ];
 
     $search = [];
 
-    $totalData = User::count();
+    $users_temp = User::where("tipo", 1)->get();
+    $totalData = $users_temp->count();
 
     $totalFiltered = $totalData;
 
@@ -61,7 +57,7 @@ class UserManagement extends Controller
     $dir = $request->input('order.0.dir');
 
     if (empty($request->input('search.value'))) {
-      $users = User::offset($start)
+      $users = User::where("tipo", 1)->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
         ->get();
@@ -69,16 +65,20 @@ class UserManagement extends Controller
       $search = $request->input('search.value');
 
       $users = User::where('id', 'LIKE', "%{$search}%")
+        ->where("tipo", 1)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
+
         ->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
         ->get();
 
       $totalFiltered = User::where('id', 'LIKE', "%{$search}%")
+        ->where("tipo", 3)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
+
         ->count();
     }
 
@@ -93,7 +93,8 @@ class UserManagement extends Controller
         $nestedData['fake_id'] = ++$ids;
         $nestedData['name'] = $user->name;
         $nestedData['email'] = $user->email;
-        $nestedData['email_verified_at'] = $user->email_verified_at;
+        $nestedData['password_original'] = $user->password_original;
+        $nestedData['razon_social'] = 'No aplica';
 
         $data[] = $nestedData;
       }
@@ -144,7 +145,7 @@ class UserManagement extends Controller
       );
 
       // user updated
-      return response()->json('Updated');
+      return response()->json('Modificado');
     } else {
       // create new one if email is unique
       $userEmail = User::where('email', $request->email)->first();
@@ -154,14 +155,14 @@ class UserManagement extends Controller
       if (empty($userEmail)) {
         $users = User::updateOrCreate(
           ['id' => $userID],
-          ['name' => $request->name, 'email' => $request->email, 'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa]
+          ['name' => $request->name, 'email' => $request->email, 'password_original' => $pass, 'password' => bcrypt($pass), 'tipo' => 1]
         );
 
         // user created
-        return response()->json('Created');
+        return response()->json('Registrado');
       } else {
         // user already exist
-        return response()->json(['message' => "already exits"], 422);
+        return response()->json(['message' => "ya existe"], 422);
       }
     }
   }

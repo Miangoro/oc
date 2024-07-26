@@ -1,6 +1,6 @@
 @extends('layouts.layoutMaster')
 
-@section('title', 'Tipos de Maguey o Agave')
+@section('title', 'Catálogo Categorías')
 
 @section('vendor-style')
 @vite([
@@ -29,7 +29,7 @@
 @endsection
 
 @section('page-script')
-@vite(['resources/js/tipos.js'])
+@vite(['resources/js/categorias.js'])
 @endsection
 
 @section('content')
@@ -37,9 +37,8 @@
 <!-- Users List Table -->
 <div class="card">
     <div class="card-header pb-0">
-        <h3 class="card-title mb-0">Tipos de Maguey o Agave</h3>
+        <h3 class="card-title mb-0">Categorías de Agave</h3>
     </div>
-    
     <div class="card-datatable table-responsive">
         <table class="datatables-users table">
             <thead class="table-dark">
@@ -47,7 +46,6 @@
                     <th></th>
                     <th>ID</th>
                     <th>Categoría</th>
-                    <th>Científico</th>
                     <th>Acciones</th>
                 </tr>
             </thead>

@@ -12,9 +12,19 @@
       "slug": "usuarios",
       "submenu": [
         {
-          "url": "laravel/user-management",
-          "name": "User Management",
-          "slug": "usuarios-lista"
+          "url": "/usuarios/personal",
+          "name": "Personal OC",
+          "slug": "usuarios-personal"
+        },
+        {
+          "url": "/usuarios/inspectores",
+          "name": "Inspectores",
+          "slug": "usuarios-inspectores"
+        },
+        {
+          "url": "/usuarios/clientes",
+          "name": "Clientes",
+          "slug": "usuarios-clientes"
         }
       ]
     },
@@ -29,36 +39,36 @@
           "slug": "clientes-prospecto"
         },
         {
-          "url": "laravel/user-management",
-          "name": "Activos",
-          "slug": "clientes-activos"
+          "url": "clientes/confirmados",
+          "name": "Confirmados",
+          "slug": "clientes-confirmados"
         }
       ]
     },
     {
       "name": "Domicilios",
       "icon": "menu-icon ri-map-pin-user-fill",
-      "slug": "laravel-example",
+      "slug": "domicilios",
       "submenu": [
         {
           "url": "laravel/user-management",
           "name": "Fiscal",
-          "slug": "laravel-example-user-management"
+          "slug": "domicilios-fiscal"
         },
         {
-          "url": "laravel/user-management",
+          "url": "domicilios/instalaciones",
           "name": "Predios",
-          "slug": "laravel-example-user-management"
+          "slug": "domicilios-predios"
         },
         {
-          "url": "laravel/user-management",
+          "url": "domicilios/instalaciones",
           "name": "Instalaciones",
-          "slug": "laravel-example-user-management"
+          "slug": "domicilios-instalaciones"
         }
       ]
     },
     {
-      "name": "Requisitos documentales",
+      "name": "Documentación",
       "icon": "menu-icon ri-folder-check-fill",
       "slug": "laravel-example",
       "submenu": [
@@ -94,25 +104,33 @@
     {
       "name": "Catálogos",
       "icon": "menu-icon ri-book-open-fill",
-      "slug": "marcas",
+      "slug": "catalogo",
       "submenu": [
         {
-          "url": "marcas/catalogo",
+          "url": "catalogo/marcas",
           "name": "Marcas",
-          "slug": "marcas-catalogo"
+          "slug": "catalogo-marcas"
         },
         {
-          "url": "categorias",
+          "url": "catalogo/categorias",
           "name": "Categorías de agave",
-          "slug": "marcas-categorias"
-
+          "slug": "catalogo-categorias"
         },
         {
-          "url": "catalogo",
-          "name": "Catalogo clases",
-          "slug": "marcas-categorias"
+          "url": "catalogo/clases",
+          "name": "Clases de agave",
+          "slug": "catalogo-clases"
+        },
+        {
+          "url": "catalogo/tipos",
+          "name": "Tipos de maguey/agave",
+          "slug": "catalogo-tipos"
+        },
+        {
+          "url": "catalogo/lotes",
+          "name": "Lotes envasados",
+          "slug": "catalogo-lotes"
         }
-
       ]
     }
   ]

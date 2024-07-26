@@ -82,9 +82,9 @@ $(function () {
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center user-name">' +
               '<div class="avatar-wrapper">' +
-              '<div class="avatar avatar-sm me-3">' +
-              
-              '</div>' +
+/*               '<div class="avatar avatar-sm me-3">' + */
+
+              '</d iv>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
               '<a href="' +
@@ -122,7 +122,7 @@ $(function () {
                 : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
             }`;
           }
-        }, 
+        },
         /* {
           // email verify
           targets: 5,
@@ -141,10 +141,10 @@ $(function () {
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}" data-bs-toggle="offcanvas" data-bs-target="#editCategoria"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
               `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-              '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
+/*               '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
+ */              '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
               userView +
               '" class="dropdown-item">View</a>' +
@@ -153,7 +153,8 @@ $(function () {
               '</div>'
             );
           }
-        } 
+        }
+
       ],
       order: [[2, 'desc']],
       dom:
@@ -190,7 +191,7 @@ $(function () {
           buttons: [
             {
               extend: 'print',
-              title: 'Users',
+              title: 'Categorías de Agave',
               text: '<i class="ri-printer-line me-1" ></i>Print',
               className: 'dropdown-item',
               exportOptions: {
@@ -253,7 +254,7 @@ $(function () {
             },
             {
               extend: 'excel',
-              title: 'Users',
+              title: 'Categorías de Agave',
               text: '<i class="ri-file-excel-line me-1"></i>Excel',
               className: 'dropdown-item',
               exportOptions: {
@@ -278,7 +279,7 @@ $(function () {
             },
             {
               extend: 'pdf',
-              title: 'Users',
+              title: 'Categorías de Agave',
               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
               className: 'dropdown-item',
               exportOptions: {
@@ -303,7 +304,7 @@ $(function () {
             },
             {
               extend: 'copy',
-              title: 'Users',
+              title: 'Categorías de Agave',
               text: '<i class="ri-file-copy-line me-1"></i>Copy',
               className: 'dropdown-item',
               exportOptions: {
@@ -375,7 +376,7 @@ $(function () {
 
 
 
-  
+
   // Eliminar registro
   $(document).on('click', '.delete-record', function () {
     var id_categoria = $(this).data('id'),
@@ -397,7 +398,7 @@ $(function () {
         confirmButton: 'btn btn-primary me-3',
         cancelButton: 'btn btn-label-secondary'
       },
-      buttonsStyling: false 
+      buttonsStyling: false
     }).then(function (result) {
       if (result.value) {
         // delete the data
@@ -434,37 +435,122 @@ $(function () {
     });
   });
 
-    // Edit category
-    $('.datatables-users').on('click', '.edit-record', function() {
-      var id = $(this).data('id');
-      $.get('{{ route("categorias.index") }}/' + id + '/edit', function(data) {
-          $('#user_id').val(data.id_categoria);
-          $('#add-user-fullname').val(data.categoria);
-          $('#offcanvasAddUserLabel').text('Editar Categoría');
-          $('#offcanvasAddUser').offcanvas('show');
+
+
+// Agregar nuevo registro
+$('#addNewCategoryForm').on('submit', function (e) {
+  e.preventDefault();
+  var formData = $(this).serialize();
+      // changing the title of offcanvas
+
+  $.ajax({
+    url: '/categorias',
+    type: 'POST',
+    data: formData,
+    success: function (response) {
+      $('#offcanvasAddUser').offcanvas('hide');
+      $('#addNewCategoryForm')[0].reset();
+
+      // Actualizar la tabla sin reinicializar DataTables
+      $('.datatables-users').DataTable().ajax.reload();
+
+      // Mostrar alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.success,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+    },
+    error: function (xhr) {
+      // Mostrar alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al agregar la categoría',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
+  });
+});
+
+
+
+
+
+
+// Editar registro
+$(document).ready(function() {
+  // Abrir el modal y cargar datos para editar
+  $('.datatables-users').on('click', '.edit-record', function() {
+      var id_categoria = $(this).data('id');
+
+      // Realizar la solicitud AJAX para obtener los datos de la clase
+      $.get('/categorias-list/' + id_categoria + '/edit', function(data) {
+          // Rellenar el formulario con los datos obtenidos
+          $('#edit_id_categoria').val(data.id_categoria);
+          $('#edit_categoria').val(data.categoria);
+
+          // Mostrar el modal de edición
+          $('#editCategoria').offcanvas('show');
+      }).fail(function() {
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al obtener los datos de la clase',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
       });
   });
 
-    // Add new category
-    $('#addNewUserForm').on('submit', function(e) {
+  // Manejar el envío del formulario de edición
+  $('#editCategoriaForm').on('submit', function(e) {
       e.preventDefault();
+
       var formData = $(this).serialize();
+      var id_categoria = $('#edit_id_categoria').val(); // Obtener el ID de la clase desde el campo oculto
 
       $.ajax({
-          url: '{{ route("categorias.store") }}',
-          method: 'POST',
+          url: '/categorias-list/' + id_categoria,
+          type: 'PUT',
           data: formData,
           success: function(response) {
-              $('#offcanvasAddUser').offcanvas('hide');
-              table.ajax.reload();
-              alert(response.success);
+              $('#editCategoria').offcanvas('hide'); // Ocultar el modal de edición
+              $('#editCategoriaForm')[0].reset(); // Limpiar el formulario
+
+              // Mostrar alerta de éxito
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.success,
+                  customClass: {
+                      confirmButton: 'btn btn-success'
+                  }
+              });
+
+              // Recargar los datos en la tabla sin reinicializar DataTables
+              $('.datatables-users').DataTable().ajax.reload();
           },
-          error: function(response) {
-              alert('Hubo un error, por favor intente de nuevo.');
+          error: function(xhr) {
+              // Mostrar alerta de error
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Error al actualizar la clase',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
           }
       });
   });
-
+});
 
 
 });

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>F7.1-01-27 Carta asignación del número de cliente NOM-070-SCFI-2016. Ed. 4, Vigente </title>
+    <title>F7.1-04-04 Carta asignación del número de cliente NMX-V-052-NORMEX-2016 Ed 0 Vigente</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -89,7 +89,7 @@
     </div>
 
     <div class="section content">
-        <p class="text_al left">Oficio:<strong>CIDAM/OC/____/20__</strong></p>
+        <p class="text_al left">Oficio:<strong>CIDAM052/OC/____/20__</strong></p>
         <p class="text_al left">Morelia, Michoacán. a __ de _____ del 20__</p>
         <p class="text_al left">ASUNTO: Asignación del número de cliente.</p>
     </div>
@@ -101,7 +101,8 @@
     </div>
 
     <div class="section">
-        <p style="text-align: justify; text-indent: 40px;">Por medio de la presente el Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. acreditado como Organismo de Certificación de Producto, con número 144/18 ante la Entidad Mexicana de Acreditación, A.C. de acuerdo con los criterios establecidos en la Norma Mexicana NMX-EC-17065-IMNC-2014/ISO/IEC 17065:2012 para las actividades de certificación. Se le informa que a partir de esta fecha queda inscrito como cliente del Organismo Certificador del CIDAM, como parte de la cadena productiva Agave-Mezcal en los eslabones 
+        <p style="text-align: justify; text-indent: 40px;">Por medio de la presente el Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. acreditado como Organismo de Certificación de Producto, con número 144/18 ante la Entidad Mexicana de Acreditación, A.C. de acuerdo con los criterios establecidos en la Norma Mexicana NMX-EC-17065-IMNC-2014/ISO/IEC 17065:2012 para las actividades de certificación. Se le informa que a partir de esta fecha queda inscrito como cliente del Organismo Certificador del CIDAM, como parte de la cadena productiva de Bebidas alcohólicas que contienen
+Mezcal (Bebidas alcohólicas preparadas, Cócteles, Licores o cremas) en los eslabones 
             @php
                 $total = count($datos);
                 $i = 0;
@@ -137,8 +138,8 @@
     </div>
     
     <div style="margin-bottom: 20px;">
-        <p class="text_al">Carta asignación del número de cliente NOM-070-SCFI-2016 F7.1-01-27</p>
-        <p class="text_al">Edición 4 Entrada en vigor: 02-09-2022</p>
+        <p class="text_al">Carta asignación del número de cliente NMX-V-052-NORMEX-2016 F7.1-04-04</p>
+        <p class="text_al">Ed 0 Entrada en vigor. 12-09-2022</p>
     </div>
     <div>
         <p class="text-center" style="font-size: 10px;">

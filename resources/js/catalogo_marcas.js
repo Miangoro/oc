@@ -3,49 +3,48 @@
  */
 'use strict';
 
-//JS PARA agregar
 // Agregar nuevo registro
+// validating form and updating user's data
+const addNewMarca = document.getElementById('addNewMarca');
 
-// Agregar nuevo registro
-$('#addNewUserForm').on('submit', function (e) {
+// Validación del formulario
+$("#addNewMarca").on('submit', function (e) {
   e.preventDefault();
-  var formData = $(this).serialize();
+  var formData = new FormData(this);
 
   $.ajax({
-      url: '/catalago-list',
-      type: 'POST',
-      data: formData,
-      success: function (response) {
-          $('#offcanvasAddUser').offcanvas('hide');
-          $('#addNewUserForm')[0].reset();
+    url: '/catalago-list',
+    type: 'POST',
+    data: formData,
+    processData: false, // Evita la conversión automática de datos a cadena
+    contentType: false, // Evita que se establezca el tipo de contenido
+    success: function (response) {
+      $('#addMarca').modal('hide');
+      $('.datatables-users').DataTable().ajax.reload();
 
-          // Actualizar la tabla sin reinicializar DataTables
-          $('.datatables-users').DataTable().ajax.reload();
-
-          // Mostrar alerta de éxito
-          Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: response.success,
-              customClass: {
-                  confirmButton: 'btn btn-success'
-              }
-          });
-      },
-      error: function (xhr) {
-          // Mostrar alerta de error
-          Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al agregar la marca',
-              customClass: {
-                  confirmButton: 'btn btn-danger'
-              }
-          });
-      }
+      // Mostrar alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.success,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+    },
+    error: function (xhr) {
+      // Mostrar alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al agregar la marca',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
   });
 });
-
 
 
 
@@ -58,22 +57,30 @@ $(document).ready(function () {
   });
 
 });
+
 $(function () {
   // Datatable (jquery)
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
-    select2 = $('.select2'),
+    select2Elements = $('.select2'),
     userView = baseUrl + 'app/user/view/account',
-    offCanvasForm = $('#offcanvasAddUser');
+    offCanvasForm = $('#addMarca');
 
-  if (select2.length) {
-    var $this = select2;
-    select2Focus($this);
-    $this.wrap('<div class="position-relative"></div>').select2({
-      placeholder: 'Selecciona cliente',
-      dropdownParent: $this.parent()
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        placeholder: 'Selecciona cliente',
+        dropdownParent: $this.parent()
+      });
     });
   }
+
+  // Inicialización de Select2 para elementos con clase .select2
+  initializeSelect2(select2Elements);
+
 
   // ajax setup
   $.ajaxSetup({
@@ -179,15 +186,15 @@ $(function () {
             }`;
           }
         },*/
-       /*{
-          // email verify
-          targets: 5,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $id = full['id_marca'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_marca']}" data-registro="${full['folio']} "></i>`;
-          }
-        },*/
+        /*{
+           // email verify
+           targets: 5,
+           className: 'text-center',
+           render: function (data, type, full, meta) {
+             var $id = full['id_marca'];
+             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_marca']}" data-registro="${full['folio']} "></i>`;
+           }
+         },*/
 
         {
           // Actions
@@ -200,7 +207,6 @@ $(function () {
               '<div class="d-flex align-items-center gap-50">' +
               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
               `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-              '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
               userView +
@@ -386,8 +392,9 @@ $(function () {
           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo prospecto</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
-            'data-bs-toggle': 'offcanvas',
-            'data-bs-target': '#offcanvasAddUser'
+            'data-bs-toggle': 'modal',
+            'data-bs-dismiss': 'modal',
+            'data-bs-target': '#addMarca'
           }
         }
       ],
@@ -496,6 +503,92 @@ $(function () {
             
           
   });*/
+$(document).ready(function () {
+    // Abrir el modal y cargar datos para editar
+    $('.datatables-users').on('click', '.edit-record', function () {
+        var id_marca = $(this).data('id');
+
+        // Limpiar campos y contenido residual del formulario de edición
+        $('#editMarcaForm')[0].reset();
+        $('.existing-file').html(''); // Asegúrate de que todos los contenedores de archivos existentes estén vacíos
+        $('.existing-date').text(''); // Asegúrate de que todos los contenedores de fechas existentes estén vacíos
+
+        // Realizar la solicitud AJAX para obtener los datos de la marca
+        $.get('/marcas-list/' + id_marca + '/edit', function (data) {
+            var marca = data.marca;
+            var documentacion_urls = data.documentacion_urls;
+
+            // Rellenar el formulario con los datos obtenidos
+            $('#edit_marca_id').val(marca.id_marca);
+            $('#edit_marca_nombre').val(marca.marca);
+            $('#edit_cliente').val(marca.id_empresa).trigger('change');
+
+            // Mostrar archivos existentes en los mismos espacios de entrada de archivo
+            documentacion_urls.forEach(function (doc) {
+                var existingFileDivId = '#existing_file_' + doc.id_documento;
+                $(existingFileDivId).html(`<p>Archivo existente: <a href="/storage/uploads/${marca.id_empresa}/${doc.url}" target="_blank">${doc.url}</a></p>`);
+                
+                var existingDateId = '#existing_date_' + doc.id_documento;
+                $(existingDateId).text('Fecha de vigencia: ' + doc.fecha_vigencia);
+                
+                $('#date' + doc.id_documento).val(doc.fecha_vigencia);  // Rellenar la fecha existente en el campo de fecha
+            });
+
+            $('#editMarca').modal('show');
+        });
+    });
+
+    // Enviar el formulario de actualización de marca
+    $('#editMarcaForm').submit(function (e) {
+        e.preventDefault();
+        
+        var formData = new FormData(this);
+        
+        $.ajax({
+            url: '/marcas-list',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                Swal.fire({
+                    title: 'Éxito',
+                    text: response.success,
+                    icon: 'success',
+                    buttonsStyling: false,
+                    customClass: {
+                      confirmButton: 'btn btn-success'
+                    }
+                });
+                $('#editMarca').modal('hide');
+                $('#editMarcaForm')[0].reset();
+                $('.datatables-users').DataTable().ajax.reload();
+            },
+            error: function (response) {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Ocurrió un error al actualizar la marca.',
+                    icon: 'error',
+                    buttonsStyling: false,
+                    customClass: {
+                      confirmButton: 'btn btn-success'
+                    }
+                });
+            }
+        });
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
 
 
 });

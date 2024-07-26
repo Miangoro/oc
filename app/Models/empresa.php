@@ -16,4 +16,19 @@ class empresa extends Model
         'domicilio_fiscal',
         'tipo',
       ];
+
+      public function empresaNumClientes()
+    {
+        return $this->hasMany(EmpresaNumCliente::class, 'id_empresa');
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'id_empresa');
+    }
+
+    public function instalaciones()
+    {
+        return $this->hasMany(Instalaciones::class, 'id_empresa');
+    }
 }

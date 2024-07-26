@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\laravel_example\UserManagement;
 use App\Http\Controllers\dashboard\Analytics;
@@ -162,16 +163,32 @@ use App\Http\Controllers\solicitudCliente\solicitudClienteController;
 use App\Http\Controllers\pdfscontrollers\CartaAsignacionController;
 use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
-use App\Http\Controllers\catalogo\categoriasController; 
-use App\Http\Controllers\marcasCatalogo\marcasCatalogoController;
-use App\Http\Controllers\catalago_clase\ClaseController;
+use App\Http\Controllers\catalogo\categoriasController;
+use App\Http\Controllers\catalogo\marcasCatalogoController;
+use App\Http\Controllers\catalogo\ClaseController;
+use App\Http\Controllers\catalogo\lotesEnvasadoController;
+use App\Http\Controllers\clientes\clientesConfirmadosController;
+use App\Http\Controllers\documentacion\documentacionController;
+use App\Http\Controllers\domicilios\DomiciliosController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\getFuncionesController;
+use App\Http\Controllers\usuarios\UsuariosController;
+use App\Http\Controllers\usuarios\UsuariosInspectoresController;
+use App\Http\Controllers\usuarios\UsuariosPersonalController;
+//Tipos maguey/agave
+use App\Http\Controllers\catalogo\tiposController;
 
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/', function () {
-	return redirect('/login');
+    return redirect('/login');
 });
+
+//Para documentos
+Route::get('files/{filename}', [FileController::class, 'show'])
+    ->name('file.show')
+    ->middleware('auth'); // Middleware para autenticar usuarios
 
 Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm');
@@ -383,7 +400,7 @@ Route::middleware([
 Route::get('/solicitud-cliente', [solicitudClienteController::class, 'index'])->name('solicitud-cliente');
 Route::post('/solicitud-cliente-registrar', [solicitudClienteController::class, 'registrar'])->name('solicitud-cliente-registrar');
 
-//Vista formulario registro exitoso 
+//Vista formulario registro exitoso
 Route::get('/Registro_exitoso', [solicitudClienteController::class, 'RegistroExitoso'])->name('Registro_exitoso');
 
 //Enviar Correo
@@ -394,7 +411,7 @@ Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->na
 Route::get('/solicitudinfo_cliente/{id}', [clientesProspectoController::class, 'info'])->name('solicitud_cliente');
 Route::get('/asignacion_usuario', [CartaAsignacionController::class, 'access_user'])->name('asignacion_usuario');
 Route::get('/solicitudservi', [CartaAsignacionController::class, 'solicitudservi'])->name('solicitudservi');
-Route::get('/prestacion_servicio_fisica', [CartaAsignacionController::class, 'ServicioPersonaFisica'])->name('prestacion_servicio_fisica');
+Route::get('/prestacion_servicio_fisica/{id}', [clientesConfirmadosController::class, 'pdfServicioPersonaFisica'])->name('prestacion_servicio_fisica');
 Route::get('/prestacion_servicios_vigente', [CartaAsignacionController::class, 'ServicioPersonaVigente'])->name('prestacion_servicios_vigente');
 Route::get('/Contrato_NMX-052', [CartaAsignacionController::class, 'CONTRATO_NMX_052'])->name('Contrato_NMX-052');
 Route::get('/Contrato_prestacion_servicio_NOM-199', [CartaAsignacionController::class, 'Contrato_prestacion_servicio_NOM_199'])->name('Contrato_prestacion_servicio_NOM-199');
@@ -413,11 +430,48 @@ Route::resource('/empresas-list', clientesProspectoController::class);
 Route::controller(catalogoMarcasController::class) ->group(function(){
 Route::get('/catalogo/marcas','catalogoMarcas')->middleware('auth')->name('catalogoMarcas');
 });
+
 //Marcas y catalogo
-Route::get('/marcas/catalogo', [marcasCatalogoController::class, 'UserManagement'])->name('marcas-catalogo');
+Route::get('/catalogo/marcas', [marcasCatalogoController::class, 'UserManagement'])->name('catalogo-marcas');
 Route::resource('/catalago-list', marcasCatalogoController::class);
 
+
 //Categorias Agave
-Route::get('/categorias', [categoriasController::class, 'UserManagement'])->name('categorias');
+Route::get('/catalogo/categorias', [categoriasController::class, 'UserManagement'])->name('catalogo-categorias');
 Route::resource('/categorias-list', categoriasController::class);
 Route::delete('categorias/{id_categoria}', [categoriasController::class, 'destroy'])->name('categorias.destroy');
+Route::post('/categorias', [categoriasController::class, 'store'])->name('categorias.store');
+Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit');
+Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
+
+
+//Tipos de maguey/agave
+Route::get('/catalogo/tipos', [tiposController::class, 'UserManagement'])->name('tipos-maguey-agave');
+Route::resource('/tipos-list', tiposController::class);
+
+
+
+//Lotes de envasado
+Route::get('/catalogo/lotes', [lotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
+
+//Domicilios
+Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
+Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio-instalaciones');
+Route::resource('/instalaciones-list', DomiciliosController::class);
+
+//Usuarios
+Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
+Route::resource('/user-list', UsuariosController::class);
+Route::get('/pdf_asignacion_usuario/{id}', [UsuariosController::class, 'pdfAsignacionUsuario'])->name('pdf_asignacion_usuario');
+
+Route::get('/usuarios/inspectores', [UsuariosInspectoresController::class, 'inspectores'])->name('usuarios-inspectores');
+Route::resource('/inspectores-list', UsuariosInspectoresController::class);
+
+Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal'])->name('usuarios-personal');
+Route::resource('/personal-list', UsuariosPersonalController::class);
+
+//Documentacion
+
+Route::get('/documentacion', [documentacionController::class, 'index'])->name('documentacion');
+Route::get('/documentacion/getNormas', [documentacionController::class, 'getNormas'])->name('documentacion.getNormas');
+Route::get('documentacion/getActividades', [documentacionController::class, 'getActividades'])->name('documentacion.getActividades');

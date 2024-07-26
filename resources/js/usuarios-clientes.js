@@ -1,5 +1,5 @@
 /**
- * Lista de clientes prospecto
+ * Page User List
  */
 
 'use strict';
@@ -8,11 +8,18 @@
 $(function () {
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
-
+    select2 = $('.select2'),
     userView = baseUrl + 'app/user/view/account',
-    offCanvasForm = $('#offcanvasValidarSolicitud');
+    offCanvasForm = $('#offcanvasAddUser');
 
-
+  if (select2.length) {
+    var $this = select2;
+    select2Focus($this);
+    $this.wrap('<div class="position-relative"></div>').select2({
+      placeholder: 'Seleccione el cliente',
+      dropdownParent: $this.parent()
+    });
+  }
 
   // ajax setup
   $.ajaxSetup({
@@ -27,16 +34,17 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'empresas-list'
+        url: baseUrl + 'user-list'
       },
       columns: [
         // columns according to JSON
         { data: '' },
+        { data: 'id' },
+        { data: 'name' },
+        { data: 'email' },
+        { data: 'password_original' },
         { data: 'razon_social' },
-        { data: 'domicilio_fiscal' },
-        { data: 'regimen' },
-        { data: 'regimen' },
-        { data: 'id_empresa' },
+        { data: 'id' },
         { data: 'action' }
       ],
       columnDefs: [
@@ -60,25 +68,28 @@ $(function () {
           }
         },
         {
-          // Es la razón social
+          // User full name
           targets: 2,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
-            var $name = full['razon_social'];
+            var $name = full['name'];
 
             // For Avatar badge
             var stateNum = Math.floor(Math.random() * 6);
             var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
-            var $state = states[stateNum];
-             
-          
+            var $state = states[stateNum],
+              $name = full['name'],
+              $initials = $name.match(/\b\w/g) || [],
+              $output;
+            $initials = (($initials.shift() || '') + ($initials.pop() || '')).toUpperCase();
+            $output = '<span class="avatar-initial rounded-circle bg-label-' + $state + '">' + $initials + '</span>';
 
             // Creates full output for row
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center user-name">' +
               '<div class="avatar-wrapper">' +
               '<div class="avatar avatar-sm me-3">' +
-              
+              $output +
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
@@ -96,37 +107,37 @@ $(function () {
           // User email
           targets: 3,
           render: function (data, type, full, meta) {
-            var $email = full['domicilio_fiscal'];
+            var $email = full['email'];
             return '<span class="user-email">' + $email + '</span>';
           }
         },
         {
-          // email verify
+          // contraseña
           targets: 4,
           className: 'text-center',
           render: function (data, type, full, meta) {
-            var $verified = full['regimen'];
-            if($verified=='Persona física'){
-              var $colorRegimen = 'info';
-            }else{
-              var $colorRegimen = 'warning';
-            }
-            return `${
-              $verified
-                ? '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-                : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-            }`;
+            var $pass = full['password_original'];
+            return '<span class="text-heading fw-medium">' + $pass + '</span>';
           }
         },
         {
-          // email verify
-          targets: 5,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $id = full['id_empresa'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_empresa']}" data-registro="${full['razon_social']} "></i>`;
-          }
-        },
+            // Razón social
+            targets: 5,
+            className: 'text-center',
+            render: function (data, type, full, meta) {
+              var $cliente = full['razon_social'];
+              return '<span class="user-email">' + $cliente + '</span>';
+            }
+          },
+          {
+            // email verify
+            targets: 6,
+            className: 'text-center',
+            render: function (data, type, full, meta) {
+              var $id = full['id_empresa'];
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id']}" data-registro="${full['name']} "></i>`;
+            }
+          },
         {
           // Actions
           targets: -1,
@@ -136,13 +147,9 @@ $(function () {
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center gap-50">' +
+              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="text-info ri-edit-box-line ri-20px"></i></button>` +
+              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id']}"><i class="text-danger ri-delete-bin-7-line ri-20px"></i></button>` +
              
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              
-              `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-search-eye-line"></i> Validar solicitud</a>` +
-              `<a data-id="${full['id_empresa']}"  data-bs-toggle="modal" data-bs-dismiss="modal" onclick="abrirModal(${full['id_empresa']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-success ri-checkbox-circle-fill"></i> Aceptar cliente</a>` +
-              '</div>' +
               '</div>'
             );
           }
@@ -158,25 +165,19 @@ $(function () {
         '<"col-sm-12 col-md-6"i>' +
         '<"col-sm-12 col-md-6"p>' +
         '>',
-      lengthMenu: [10, 20, 50, 70, 100], //for length of menu
+      lengthMenu: [ 10, 20, 50, 70, 100], //for length of menu
       language: {
         sLengthMenu: '_MENU_',
         search: '',
         searchPlaceholder: 'Buscar',
-        info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
-        paginate: {
-                "sFirst":    "Primero",
-                "sLast":     "Último",
-                "sNext":     "Siguiente",
-                "sPrevious": "Anterior"
-              }
+        info: 'Displaying _START_ to _END_ of _TOTAL_ entries'
       },
       // Buttons with Dropdown
       buttons: [
         {
           extend: 'collection',
           className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-          text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
+          text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Export </span>',
           buttons: [
             {
               extend: 'print',
@@ -319,7 +320,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo prospecto</span>',
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo usuario</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'offcanvas',
@@ -333,7 +334,7 @@ $(function () {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Detalles de ' + data['razon_social'];
+              return 'Details of ' + data['name'];
             }
           }),
           type: 'column',
@@ -359,19 +360,13 @@ $(function () {
             return data ? $('<table class="table"/><tbody />').append(data) : false;
           }
         }
-        
       }
-      
     });
-
-    
   }
-
-
 
   // Delete Record
   $(document).on('click', '.delete-record', function () {
-    var user_id = $(this).data('empresa_id'),
+    var user_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
 
     // hide responsive modal in small screen
@@ -381,11 +376,11 @@ $(function () {
 
     // sweetalert for confirmation of delete
     Swal.fire({
-      title: '¿Está seguro?',
-      text: "No podrá revertir este evento",
+      title: '¿Está seguro de eliminar ese usuario?',
+      text: "¡No podrá revertirlo!",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Si, eliminar',
+      confirmButtonText: '¡Si, eliminarlo!',
       customClass: {
         confirmButton: 'btn btn-primary me-3',
         cancelButton: 'btn btn-label-secondary'
@@ -396,7 +391,7 @@ $(function () {
         // delete the data
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}empresas-list/${id_empresa}`,
+          url: `${baseUrl}user-list/${user_id}`,
           success: function () {
             dt_user.draw();
           },
@@ -409,7 +404,7 @@ $(function () {
         Swal.fire({
           icon: 'success',
           title: '¡Eliminado!',
-          text: '¡La solicitud ha sido eliminada correctamente!',
+          text: '¡El usuario ha sido eliminado!',
           customClass: {
             confirmButton: 'btn btn-success'
           }
@@ -417,7 +412,7 @@ $(function () {
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: 'Cancelado',
-          text: 'La solicitud no ha sido eliminada',
+          text: '¡El usuario no ha sido eliminado!',
           icon: 'error',
           customClass: {
             confirmButton: 'btn btn-success'
@@ -427,23 +422,21 @@ $(function () {
     });
   });
 
-
-
   $(document).on('click', '.pdf', function () {
-        var id = $(this).data('id');
-        var registro = $(this).data('registro');
-            var iframe = $('#pdfViewer');
-            iframe.attr('src', '../solicitudinfo_cliente/'+id);
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+        var iframe = $('#pdfViewer');
+        iframe.attr('src', '../pdf_asignacion_usuario/'+id);
 
-            $("#titulo_modal").text("Solicitud de información del cliente");
-            $("#subtitulo_modal").text(registro);
-            
-          
-  });
+        $("#titulo_modal").text("Carta de asignación de usuario y contraseña para plataforma del OC");
+        $("#subtitulo_modal").text(registro);
+        
+      
+});
 
   // edit record
-  $(document).on('click', '.edit-record', function () { 
-    var id_empresa = $(this).data('id_empresa'),
+  $(document).on('click', '.edit-record', function () {
+    var user_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
 
     // hide responsive modal in small screen
@@ -452,71 +445,53 @@ $(function () {
     }
 
     // changing the title of offcanvas
-    $('#offcanvasAddUserLabel').html('Edit User');
+    $('#offcanvasAddUserLabel').html('Editar usuario');
 
     // get data
-    $.get(`${baseUrl}empresas-list\/${user_id}\/edit`, function (data) {
-      $('#empresa_id').val(data.id);
+    $.get(`${baseUrl}user-list\/${user_id}\/edit`, function (data) {
+      $('#user_id').val(data.id);
       $('#add-user-fullname').val(data.name);
       $('#add-user-email').val(data.email);
+      $('#id_empresa').val(data.id_empresa).prop('selected', true).change();
     });
   });
-
-    // Validar solicitud
-    $(document).on('click', '.validar-solicitud', function () { 
-      var id_empresa = $(this).data('id'),
-        dtrModal = $('.dtr-bs-modal.show');
-        
-      // hide responsive modal in small screen
-      if (dtrModal.length) {
-        dtrModal.modal('hide');
-      }
-  
-      // changing the title of offcanvas
-    //  $('#offcanvasAddUserLabel').html('Edit User');
-  
-      $('#empresa_id').val(id_empresa);
-    });
-
-        // aceptar cliente
-        $(document).on('click', '.validar-solicitud2', function () {  
-          var id_empresa = $(this).data('id');
- 
-      
-          $('#empresaID').val(id_empresa);
-        });
 
   // changing the title
   $('.add-new').on('click', function () {
     $('#user_id').val(''); //reseting input field
-    $('#offcanvasAddUserLabel').html('Add User');
+    $('#offcanvasAddUserLabel').html('Agregar usuario');
   });
 
   // validating form and updating user's data
   const addNewUserForm = document.getElementById('addNewUserForm');
 
-  // Validación del formulario de Validación de solicitud
+  // user form validation
   const fv = FormValidation.formValidation(addNewUserForm, {
     fields: {
-        medios: {
-          validators: {
-              notEmpty: {
-                  message: 'Por favor selecciona una opción.'
-              }
-          }
-      },competencia: {
+      name: {
         validators: {
-            notEmpty: {
-                message: 'Por favor selecciona una opción.'
-            }
-        }
-    },capacidad: {
-      validators: {
           notEmpty: {
-              message: 'Por favor selecciona una opción.'
+            message: 'Por favor introduce el nombre completo'
           }
+        }
+      },
+      email: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor introduce un correo'
+          },
+          emailAddress: {
+            message: 'Correo inválido'
+          }
+        }
+      },
+      id_empresa: {
+        validators: {
+          notEmpty: {
+            message: 'Please enter your email'
+          }
+        }
       }
-  }
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -537,7 +512,7 @@ $(function () {
     // adding or updating user when form successfully validate
     $.ajax({
       data: $('#addNewUserForm').serialize(),
-      url: `${baseUrl}empresas-list`,
+      url: `${baseUrl}user-list`,
       type: 'POST',
       success: function (status) {
         dt_user.draw();
@@ -546,93 +521,14 @@ $(function () {
         // sweetalert
         Swal.fire({
           icon: 'success',
-          title: `${status} Exitosamente`,
-          text: `Solicitud ${status} Exitosamente.`,
+          title: `Correctamente ${status}!`,
+          text: `Usuario ${status} correctamente.`,
           customClass: {
             confirmButton: 'btn btn-success'
           }
         });
       },
       error: function (err) {
-        
-        offCanvasForm.offcanvas('hide');
-        Swal.fire({
-          title: 'Duplicate Entry!',
-          text: 'Your email should be unique.',
-          icon: 'error',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      }
-    });
-  });
-
-
-
-  // validating form and updating user's data
-  const addNewCliente = document.getElementById('addNewCliente');
-
-  // Validación del formulario de aceptar cliente
-  const fv2 = FormValidation.formValidation(addNewCliente, {
-    fields: {
-        'numero_cliente[]': {
-          validators: {
-              notEmpty: {
-                  message: 'Por favor introduzca el número de cliente.'
-              }
-          }
-      },fecha_cedula: {
-        validators: {
-            notEmpty: {
-                message: 'Por favor introduzca la fecha de cédula de identificación fiscal.'
-            }
-        }
-    },idcif: {
-      validators: {
-          notEmpty: {
-              message: 'Por favor introduzca el idCIF del Servicio deAdministración Tributaria.'
-          }
-      }
-  }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        // Use this for enabling/changing valid/invalid class
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          // field is the field name & ele is the field element
-          return '.col-sm-12';
-        }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      // Submit the form when all fields are valid
-      // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    // adding or updating user when form successfully validate
-    $.ajax({
-      data: $('#addNewCliente').serialize(),
-      url: `${baseUrl}aceptar-cliente`,
-      type: 'POST',
-      success: function (status) {
-        dt_user.draw();
-        offCanvasForm.offcanvas('hide');
-
-        // sweetalert
-        Swal.fire({
-          icon: 'success',
-          title: `${status} Exitosamente`,
-          text: `Solicitud ${status} Exitosamente.`,
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function (err) {
-        
         offCanvasForm.offcanvas('hide');
         Swal.fire({
           title: 'Duplicate Entry!',
@@ -648,7 +544,7 @@ $(function () {
 
   // clearing form data when offcanvas hidden
   offCanvasForm.on('hidden.bs.offcanvas', function () {
-    fv2.resetForm(true);
+    fv.resetForm(true);
   });
 
   const phoneMaskList = document.querySelectorAll('.phone-mask');

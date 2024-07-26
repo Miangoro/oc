@@ -1,72 +1,5 @@
 
-document.addEventListener('DOMContentLoaded', function() {
-    
 
-  // Contador para nuevas direcciones
-  let addressCounter = 1;
-
-  // Función para clonar la dirección
-  function cloneAddress() {
-      addressCounter++;
-      let clonedAddress = document.getElementById('address1').cloneNode(true);
-      clonedAddress.id = 'address' + addressCounter;
-
-      // Limpiar los valores de los inputs clonados
-      clonedAddress.querySelectorAll('input').forEach(input => {
-          input.value = '';
-      });
-
-      // Asegurar que los ID de los inputs sean únicos
-      clonedAddress.querySelectorAll('input').forEach((input, index) => {
-          input.id = input.id.slice(0, -1) + addressCounter; // Cambiar el número en el ID
-          input.name = input.name.slice(0, -1) + addressCounter; // Cambiar el número en el name
-          input.nextElementSibling.setAttribute('for', input.id); // Actualizar el label for
-      });
-
-      // Crear botón de eliminar con icono
-      let deleteBtn = document.createElement('button');
-      deleteBtn.classList.add('btn', 'btn-danger', 'btn-sm', 'mt-2', 'ms-2'); // Ajustar la clase ms-2 para el margen izquierdo
-      deleteBtn.type = 'button';
-      
-      // Agregar icono de Remix Icon
-      let icon = document.createElement('i');
-      icon.classList.add('ri-delete-bin-6-line', 'me-1'); // Clase del icono de Remix Icon
-      deleteBtn.appendChild(icon);
-
-      // Texto del botón
-      deleteBtn.appendChild(document.createTextNode('Eliminar'));
-
-      deleteBtn.addEventListener('click', function() {
-          clonedAddress.remove();
-          hrElement.remove(); // Eliminar también el HR asociado
-      });
-
-      // Agregar el botón de eliminar después del campo de C.P.
-      let hrElement = document.createElement('hr');
-      hrElement.classList.add('mt-4', 'mb-4'); // Ajusta los márgenes del HR si es necesario
-
-      // Agregar el HTML clonado al contenedor
-      let container = document.getElementById('clonedAddresses');
-      container.appendChild(clonedAddress);
-      container.appendChild(hrElement);
-      hrElement.appendChild(deleteBtn);
-  }
-
-  // Evento click para el botón de agregar dirección
-  document.getElementById('addAddressBtn').addEventListener('click', function() {
-      cloneAddress();
-  });
-
-  // Función para eliminar una dirección clonada
-  window.deleteAddress = function(element) {
-      let row = element.closest('.row');
-      let hrElement = row.nextElementSibling; // Obtener el HR siguiente al elemento a eliminar
-      row.remove(); // Elimina el elemento padre .row más cercano
-      if (hrElement.tagName === 'HR') {
-          hrElement.remove(); // Eliminar el HR si existe
-      }
-  };
-});
 
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -88,6 +21,10 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       function mostrarSecciones() {
+        console.log('mezcalCheckbox:', mezcalCheckbox.checked);
+        console.log('bebidaCheckbox:', bebidaCheckbox.checked);
+        console.log('coctelCheckbox:', coctelCheckbox.checked);
+        console.log('licorCheckbox:', licorCheckbox.checked);
           if (mezcalCheckbox.checked) {
               nom070Checkbox.checked = true;
               nom251Checkbox.checked = true;
@@ -111,6 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
           toggleSectionVisibility('normex-section', normexCheckbox.checked);
       }
 
+
       function toggleSectionVisibility(sectionId, shouldShow) {
           let section = document.getElementById(sectionId);
           if (section) {
@@ -130,8 +68,8 @@ document.addEventListener('DOMContentLoaded', function() {
           }
       }
 
-      function mostrarRepresentante(){
 
+      function mostrarRepresentante(){
         var regimen = document.getElementById("regimen").value;
         var representante = document.getElementById('representante');
         var nombreRepresentante = document.getElementById('nombreRepresentante');
@@ -143,65 +81,6 @@ document.addEventListener('DOMContentLoaded', function() {
             representante.style.display = "none";
             nombreRepresentante.removeAttribute("required");
         }
-
-      }
-
-      function crearNOM070Section() {
-          const nom070Section = document.createElement('div');
-          nom070Section.id = 'nom070-section';
-
-          nom070Section.innerHTML = `
-              <h6 class="my-4">Actividad del cliente NOM-070-SCFI-2016:</h6>
-              <div class="row gy-3 align-items-start">
-                  <div class="col-md">
-                      <div class="form-check custom-option custom-option-icon">
-                          <label class="form-check-label custom-option-content" for="customRadioIcon8">
-                              <span class="custom-option-body">
-                                  <i class="icon-agave"></i>
-                                  <small>Productor de Agave</small>
-                              </span>
-                              <input name="actividad[]" class="form-check-input" type="checkbox" value="1" id="customRadioIcon8" />
-                          </label>
-                      </div>
-                  </div>
-                  <div class="col-md">
-                      <div class="form-check custom-option custom-option-icon">
-                          <label class="form-check-label custom-option-content" for="customRadioIcon9">
-                              <span class="custom-option-body">
-                                  <i class="icon-envasador"></i>
-                                  <small>Envasador de Mezcal</small>
-                              </span>
-                              <input name="actividad[]" class="form-check-input" type="checkbox" value="2" id="customRadioIcon9" />
-                          </label>
-                      </div>
-                  </div>
-                  <div class="col-md">
-                      <div class="form-check custom-option custom-option-icon">
-                          <label class="form-check-label custom-option-content" for="customRadioIcon10">
-                              <span class="custom-option-body">
-                                  <i class="icon-productor-tequila"></i>
-                                  <small>Productor de Mezcal</small>
-                              </span>
-                              <input name="actividad[]" class="form-check-input" type="checkbox" value="3" id="customRadioIcon10" />
-                          </label>
-                      </div>
-                  </div>
-                  <div class="col-md">
-                      <div class="form-check custom-option custom-option-icon">
-                          <label class="form-check-label custom-option-content" for="customRadioIcon11">
-                              <span class="custom-option-body">
-                                  <i class="icon-comercializador"></i>
-                                  <small>Comercializador de Mezcal</small>
-                              </span>
-                              <input name="actividad[]" class="form-check-input" type="checkbox" value="4" id="customRadioIcon11" />
-                          </label>
-                      </div>
-                  </div>
-              </div>
-              <hr>
-          `;
-
-          return nom070Section;
       }
 
       function crearNormexSection() {
@@ -272,6 +151,13 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
+    window.estadosOptions = `
+    @foreach ($estados as $estado)
+        <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
+    @endforeach
+`;
+
+
 const wizardIcons = document.querySelector('.wizard-icons-example');
 
 if (typeof wizardIcons !== undefined && wizardIcons !== null) {
@@ -303,7 +189,105 @@ if (typeof wizardIcons !== undefined && wizardIcons !== null) {
   }*/
 }
 
+
+
 new Cleave(".phone-number-mask", {
     phone: true,
     phoneRegionCode: "US"
   });
+
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Función para mostrar u ocultar secciones según el checkbox seleccionado
+    function toggleSection() {
+        // Obtener el estado de cada checkbox
+        const agaveCheckbox = document.getElementById('customRadioIcon8');
+        const envasadorCheckbox = document.getElementById('customRadioIcon9');
+        const productorMezcalCheckbox = document.getElementById('customRadioIcon10');
+        const comercializadorCheckbox = document.getElementById('customRadioIcon11');
+
+        // Mostrar u ocultar secciones basadas en los checkboxes seleccionados
+        document.getElementById('domiProductAgace').style.display = agaveCheckbox.checked ? 'block' : 'none';
+        document.getElementById('domiEnvasaMezcal').style.display = envasadorCheckbox.checked ? 'block' : 'none';
+        document.getElementById('domiProductMezcal').style.display = productorMezcalCheckbox.checked ? 'block' : 'none';
+        document.getElementById('domiComerMezcal').style.display = comercializadorCheckbox.checked ? 'block' : 'none';
+        
+        // Limpia los campos de las secciones ocultas
+        if (!agaveCheckbox.checked) {
+            document.getElementById('domiProductAgace').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+            document.getElementById('domiProductAgace').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        }
+        if (!envasadorCheckbox.checked) {
+            document.getElementById('domiEnvasaMezcal').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+            document.getElementById('domiEnvasaMezcal').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        }
+        if (!productorMezcalCheckbox.checked) {
+            document.getElementById('domiProductMezcal').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+            document.getElementById('domiProductMezcal').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        }
+        if (!comercializadorCheckbox.checked) {
+            document.getElementById('domiComerMezcal').querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+            document.getElementById('domiComerMezcal').querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+        }
+    }
+
+    // Añadir event listeners a los checkboxes
+    document.getElementById('customRadioIcon8').addEventListener('change', toggleSection);
+    document.getElementById('customRadioIcon9').addEventListener('change', toggleSection);
+    document.getElementById('customRadioIcon10').addEventListener('change', toggleSection);
+    document.getElementById('customRadioIcon11').addEventListener('change', toggleSection);
+    
+    // Inicializa el estado de las secciones al cargar la página
+    toggleSection();
+});
+
+/* seccion del switch */
+
+document.addEventListener('DOMContentLoaded', () => {
+    const switchInput = document.querySelector('.switch-input');
+    const localidad1 = document.getElementById('localidad1');
+    const estado = document.getElementById('estado');
+
+    // Función para copiar los datos del primer domicilio a las secciones visibles
+    function copyAddress() {
+        // Obtener todos los contenedores de domicilio fiscal
+        const addressContainers = [
+            document.getElementById('domiProductAgace'),
+            document.getElementById('domiEnvasaMezcal'),
+            document.getElementById('domiProductMezcal'),
+            document.getElementById('domiComerMezcal')
+        ];
+        
+        if (switchInput.checked) {
+            // Copiar datos si el switch está marcado
+            addressContainers.forEach(container => {
+                if (container.style.display !== 'none') {
+                    const localidadInput = container.querySelector('input[type="text"]');
+                    const estadoSelect = container.querySelector('select');
+                    
+                    if (localidadInput && estadoSelect) {
+                        localidadInput.value = localidad1.value;
+                        estadoSelect.value = estado.value;
+                    }
+                }
+            });
+        } else {
+            // Vaciar campos si el switch no está marcado
+            addressContainers.forEach(container => {
+                if (container.style.display !== 'none') {
+                    const localidadInput = container.querySelector('input[type="text"]');
+                    const estadoSelect = container.querySelector('select');
+                    
+                    if (localidadInput && estadoSelect) {
+                        localidadInput.value = '';
+                        estadoSelect.selectedIndex = 0; // Resetea la selección del <select>
+                    }
+                }
+            });
+        }
+    }
+
+    // Escuchar cambios en el switch
+    switchInput.addEventListener('change', copyAddress);
+});

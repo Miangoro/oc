@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Catalogo Categorias')
+@section('title', 'Usuarios inspectores')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
@@ -32,48 +32,54 @@
 
 <!-- Page Scripts -->
 @section('page-script')
-@vite(['resources/js/catalago_clases.js'])
+@vite(['resources/js/usuarios-inspectores.js'])
 @endsection
 
 @section('content')
 
-<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <!-- Users List Table -->
 <div class="card">
   <div class="card-header pb-0">
-    <h3 class="card-title mb-0">Catalago Clases</h3>
+    <h3 class="card-title mb-0">Usuarios inspectores</h3>
   </div>
   <div class="card-datatable table-responsive">
     <table class="datatables-users table">
-      <thead class="table-dark">
+      <thead>
         <tr>
           <th></th>
           <th>Id</th>
-          <th>Clases</th>
+          <th>Usuario</th>
+          <th>Correo</th>
+          <th>Contraseña</th>
           <th>Acciones</th>
         </tr>
       </thead>
     </table>
   </div>
-  <!-- Offcanvas to add new class -->
+  <!-- Offcanvas to add new user -->
   <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
     <div class="offcanvas-header border-bottom">
-      <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Ingresar nueva clase</h5>
+      <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Registrar Usuario</h5>
       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body mx-0 flex-grow-0 h-100">
-
-    <form class=" pt-0" id="addNewUserForm">
-        <input type="hidden" name="id" id="id_clase">
+      <form class="add-new-user pt-0" id="addNewUserForm">
+        <input type="hidden" name="id" id="user_id">
         <div class="form-floating form-floating-outline mb-5">
-          <input type="text" class="form-control" id="clase" placeholder="Nombre de la clase" name="name" aria-label="Nombre de la clase" />
-          <label for="add-name">Ingrese nombre de la clase</label>
+          <input type="text" class="form-control" id="add-user-fullname" placeholder="Ana Gómez" name="name" aria-label="Ana Gómez" />
+          <label for="add-user-fullname">Nombre completo</label>
         </div>
-        <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Enviar</button>
+        <div class="form-floating form-floating-outline mb-5">
+          <input type="text" id="add-user-email" class="form-control" placeholder="ana.gmz@example.com" aria-label="ana.gmz@example.com" name="email" />
+          <label for="add-user-email">Correo</label>
+        </div>
+       
+        
+        
+        <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
       </form>
-      
     </div>
   </div>
 </div>

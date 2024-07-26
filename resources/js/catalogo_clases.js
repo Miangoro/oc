@@ -27,6 +27,8 @@ $(function () {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+    
     
     // Users datatable
     if (dt_user_table.length) {
@@ -98,37 +100,36 @@ $(function () {
                 },
 
                 {
-                    // Actions
-                    targets: -1,
-                    title: 'Acciones',
-                    searchable: false,
-                    orderable: false,
-                    render: function (data, type, full, meta) {
-                        return (
-                            '<div class="d-flex align-items-center gap-50">' +
-                            `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_clase']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-                            `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_clase']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-                            '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
-                            '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                            '<a href="' +
-                            userView +
-                            '" class="dropdown-item">View</a>' +
-                            '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-                            '</div>' +
-                            '</div>'
-                        );
-                    }
+            // Actions botones de eliminar y actualizar(editar)
+            targets: -1,
+            title: 'Acciones',
+            searchable: false,
+            orderable: false,
+            render: function (data, type, full, meta) {
+                return (
+                  '<div class="d-flex align-items-center gap-50">' +
+                  `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_clase']}" data-bs-toggle="offcanvas" data-bs-target="#editClase"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+                  `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_clase']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+                  '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
+                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                  '<a href="' + userView + '" class="dropdown-item">View</a>' +
+                  '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+                  '</div>' +
+                  '</div>'
+                );
+              }           
                 }
             ],
             order: [[2, 'desc']],
-            dom: '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
-                '<"me-5 ms-n2"f>' +
-                '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
-                '>t' +
-                '<"row mx-1"' +
-                '<"col-sm-12 col-md-6"i>' +
-                '<"col-sm-12 col-md-6"p>' +
-                '>',
+            dom:
+            '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
+            '<"me-5 ms-n2"f>' +
+            '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
+            '>t' +
+            '<"row mx-1"' +
+            '<"col-sm-12 col-md-6"i>' +
+            '<"col-sm-12 col-md-6"p>' +
+            '>',
             lengthMenu: [10, 20, 50, 70, 100], //for length of menu
             language: {
                 sLengthMenu: '_MENU_',
@@ -153,7 +154,7 @@ $(function () {
                     buttons: [
                         {
                             extend: 'print',
-                            title: 'Users',
+                            title: 'catalogo clases',
                             text: '<i class="ri-printer-line me-1" ></i>Print',
                             className: 'dropdown-item',
                             exportOptions: {
@@ -191,7 +192,7 @@ $(function () {
                         },
                         {
                             extend: 'csv',
-                            title: 'Users',
+                            title: 'catalogo clases',
                             text: '<i class="ri-file-text-line me-1" ></i>Csv',
                             className: 'dropdown-item',
                             exportOptions: {
@@ -216,7 +217,7 @@ $(function () {
                         },
                         {
                             extend: 'excel',
-                            title: 'Users',
+                            title: 'catalogo clases',
                             text: '<i class="ri-file-excel-line me-1"></i>Excel',
                             className: 'dropdown-item',
                             exportOptions: {
@@ -241,7 +242,7 @@ $(function () {
                         },
                         {
                             extend: 'pdf',
-                            title: 'Users',
+                            title: 'catalogo clases',
                             text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
                             className: 'dropdown-item',
                             exportOptions: {
@@ -266,7 +267,7 @@ $(function () {
                         },
                         {
                             extend: 'copy',
-                            title: 'Users',
+                            title: 'catalogo clases',
                             text: '<i class="ri-file-copy-line me-1"></i>Copy',
                             className: 'dropdown-item',
                             exportOptions: {
@@ -292,7 +293,7 @@ $(function () {
                     ]
                 },
                 {
-                    text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo prospecto</span>',
+                    text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar Clase</span>',
                     className: 'add-new btn btn-primary waves-effect waves-light',
                     attr: {
                         'data-bs-toggle': 'offcanvas',
@@ -300,44 +301,87 @@ $(function () {
                     }
                 }
             ],
-            // For responsive popup
-            responsive: {
-                details: {
-                    display: $.fn.dataTable.Responsive.display.modal({
-                        header: function (row) {
-                            var data = row.data();
-                            return 'Detalles de ' + data['clase'];
-                        }
-                    }),
-                    type: 'column',
-                    renderer: function (api, rowIdx, columns) {
-                        var data = $.map(columns, function (col, i) {
-                            return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
-                                ? '<tr data-dt-row="' +
-                                col.rowIndex +
-                                '" data-dt-column="' +
-                                col.columnIndex +
-                                '">' +
-                                '<td>' +
-                                col.title +
-                                ':' +
-                                '</td> ' +
-                                '<td>' +
-                                col.data +
-                                '</td>' +
-                                '</tr>'
-                                : '';
-                        }).join('');
 
-                        return data ? $('<table class="table"/><tbody />').append(data) : false;
-                    }
-                }
+            
+            // For responsive popup
+      responsive: {
+        details: {
+          display: $.fn.dataTable.Responsive.display.modal({
+            header: function (row) {
+              var data = row.data();
+              return 'Detalles de ' + data['clase'];
             }
+          }),
+          type: 'column',
+          renderer: function (api, rowIdx, columns) {
+            var data = $.map(columns, function (col, i) {
+              return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
+                ? '<tr data-dt-row="' +
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
+                : '';
+            }).join('');
+
+            return data ? $('<table class="table"/><tbody />').append(data) : false;
+          }
+        }
+      }
         });
     }
 
 
-    /* funciones de los botones */
+// Función para agregar registro de clase
+$('#addNewClassForm').on('submit', function (e) {
+    e.preventDefault();
+
+    var formData = $(this).serialize();
+
+    $.ajax({
+        url: '/catalogo',
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            $('#offcanvasAddUser').offcanvas('hide');
+            $('#addNewClassForm')[0].reset();
+
+            // Actualizar la tabla sin reinicializar DataTables
+            $('.datatables-users').DataTable().ajax.reload();
+
+            // Mostrar alerta de éxito
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.success,
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
+        },
+        error: function (xhr) {
+            // Mostrar alerta de error
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al agregar la clase',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+        }
+    });
+});
+
+
 
 // Delete Record
 $(document).on('click', '.delete-record', function () {
@@ -415,9 +459,75 @@ $(document).on('click', '.delete-record', function () {
     });
 });
 
+//editar un campo de la tabla
+// mostrar el registro en el campo
+$(document).ready(function() {
+    // Abrir el modal y cargar datos para editar
+    $('.datatables-users').on('click', '.edit-record', function() {
+        var id_clase = $(this).data('id');
+        
+        // Realizar la solicitud AJAX para obtener los datos de la clase
+        $.get('/clases-list/' + id_clase + '/edit', function(data) {
+            // Rellenar el formulario con los datos obtenidos
+            $('#edit_clase_id').val(data.id_clase);
+            $('#edit_clase_nombre').val(data.clase);
+            
+            // Mostrar el modal de edición
+            $('#editClase').offcanvas('show');
+        }).fail(function() {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al obtener los datos de la clase',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+        });
+    });
 
+    // Manejar el envío del formulario de edición
+    $('#editClassForm').on('submit', function(e) {
+        e.preventDefault();
 
-// para insertar datos
+        var formData = $(this).serialize();
+        var id_clase = $('#edit_clase_id').val(); // Obtener el ID de la clase desde el campo oculto
+
+        $.ajax({
+            url: '/clases-list/' + id_clase,
+            type: 'PUT',
+            data: formData,
+            success: function(response) {
+                $('#editClase').offcanvas('hide'); // Ocultar el modal de edición
+                $('#editClassForm')[0].reset(); // Limpiar el formulario
+
+                // Mostrar alerta de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.success,
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                });
+
+                // Recargar los datos en la tabla sin reinicializar DataTables
+                $('.datatables-users').DataTable().ajax.reload();
+            },
+            error: function(xhr) {
+                // Mostrar alerta de error
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Error al actualizar la clase',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
+        });
+    });
+});
 
 
 

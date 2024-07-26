@@ -1,37 +1,46 @@
 <?php
 
-namespace App\Http\Controllers\laravel_example;
+namespace App\Http\Controllers\usuarios;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\empresa;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
-class UserManagement extends Controller
+
+class UsuariosController extends Controller
 {
-  /**
-   * Redirect to user-management view.
+    
+
+    /**
+   *Redirecciona a la vista de usuarios clientes.
    *
    */
   public function UserManagement()
   {
     $empresas = empresa::where('tipo', 2)->get();
     // dd('UserManagement');
-    $users = User::all();
+    $users = User::with('empresa')
+    ->offset(1)
+    ->limit(10)
+    ->get();
     $userCount = $users->count();
     $verified = User::whereNotNull('email_verified_at')->get()->count();
     $notVerified = User::whereNull('email_verified_at')->get()->count();
     $usersUnique = $users->unique(['email']);
     $userDuplicates = $users->diff($usersUnique)->count();
 
-    return view('content.laravel-example.user-management', [
+    return view('usuarios.find_usuarios_clientes_view', [
       'totalUser' => $userCount,
       'verified' => $verified,
       'notVerified' => $notVerified,
       'userDuplicates' => $userDuplicates,
-      'empresas' => $empresas
+      'empresas' => $empresas,
+      'users' => $users,
     ]);
   }
 
@@ -40,6 +49,22 @@ class UserManagement extends Controller
    *
    * @return \Illuminate\Http\Response
    */
+
+   public function pdfAsignacionUsuario($id)
+    {     Carbon::setLocale('es'); // Establece la localización a español  
+        $currentDate = Carbon::now();
+
+    // Obtener el día
+    $dia = $currentDate->day;
+    $mes = $currentDate->translatedFormat('F');
+    $anio = $currentDate->year;
+        $res = User::with('empresa')->where('id', $id)->first();
+        $pdf = Pdf::loadView('pdfs.AsignacionUsuario',['datos'=>$res,'dia'=>$dia,'mes'=>$mes,'anio'=>$anio]);
+        return $pdf->stream('F7.1-01-46 Carta de asignación de usuario y contraseña para plataforma del OC Ed. 0, Vigente.pdf');
+        
+  
+    }
+
   public function index(Request $request)
   {
     $columns = [
@@ -47,11 +72,14 @@ class UserManagement extends Controller
       2 => 'name',
       3 => 'email',
       4 => 'email_verified_at',
+      5 => 'razon_social',
+
     ];
 
     $search = [];
 
-    $totalData = User::count();
+    $users_temp = User::with('empresa')->where("tipo",3)->get();
+    $totalData = $users_temp->count();
 
     $totalFiltered = $totalData;
 
@@ -61,24 +89,32 @@ class UserManagement extends Controller
     $dir = $request->input('order.0.dir');
 
     if (empty($request->input('search.value'))) {
-      $users = User::offset($start)
+      $users = User::with('empresa')->where("tipo",3)->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
         ->get();
     } else {
       $search = $request->input('search.value');
 
-      $users = User::where('id', 'LIKE', "%{$search}%")
+      $users = User::with('empresa')->where('id', 'LIKE', "%{$search}%")
+        ->where("tipo",3)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
+        ->orWhereHas('empresa', function ($query) use ($search) {
+            $query->where('razon_social', 'LIKE', "%{$search}%");
+        })
         ->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
         ->get();
 
-      $totalFiltered = User::where('id', 'LIKE', "%{$search}%")
+      $totalFiltered = User::with('empresa')->where('id', 'LIKE', "%{$search}%")
+        ->where("tipo",3)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
+        ->orWhereHas('empresa', function ($query) use ($search) {
+            $query->where('razon_social', 'LIKE', "%{$search}%");
+        })
         ->count();
     }
 
@@ -92,8 +128,9 @@ class UserManagement extends Controller
         $nestedData['id'] = $user->id;
         $nestedData['fake_id'] = ++$ids;
         $nestedData['name'] = $user->name;
-        $nestedData['email'] = $user->email;
-        $nestedData['email_verified_at'] = $user->email_verified_at;
+        $nestedData['email'] = $user->email ;
+        $nestedData['password_original'] = $user->password_original ;
+        $nestedData['razon_social'] = $user->empresa->razon_social ;
 
         $data[] = $nestedData;
       }
@@ -144,7 +181,7 @@ class UserManagement extends Controller
       );
 
       // user updated
-      return response()->json('Updated');
+      return response()->json('Modificado');
     } else {
       // create new one if email is unique
       $userEmail = User::where('email', $request->email)->first();
@@ -154,14 +191,14 @@ class UserManagement extends Controller
       if (empty($userEmail)) {
         $users = User::updateOrCreate(
           ['id' => $userID],
-          ['name' => $request->name, 'email' => $request->email, 'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa]
+          ['name' => $request->name, 'email' => $request->email, 'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa,'tipo'=>3]
         );
 
         // user created
-        return response()->json('Created');
+        return response()->json('Registrado');
       } else {
         // user already exist
-        return response()->json(['message' => "already exits"], 422);
+        return response()->json(['message' => "ya existe"], 422);
       }
     }
   }

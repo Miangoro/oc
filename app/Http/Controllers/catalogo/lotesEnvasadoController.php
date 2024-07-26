@@ -1,20 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\clientes;
+namespace App\Http\Controllers\catalogo;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Models\empresa;
 use App\Models\empresaContrato;
 use App\Models\empresaNumCliente;
 use App\Models\solicitud_informacion;
 use App\Models\User;
+//modelos
+use App\Models\empresa;
+
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 
-class clientesProspectoController extends Controller
+class lotesEnvasadoController extends Controller
 {
     public function UserManagement()
   {
