@@ -437,46 +437,55 @@ $(function () {
 
 
 
-// Agregar nuevo registro
-$('#addNewCategoryForm').on('submit', function (e) {
-  e.preventDefault();
-  var formData = $(this).serialize();
-      // changing the title of offcanvas
+  $(document).ready(function () {
+    // CSRF Token
+    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
-  $.ajax({
-    url: '/categorias',
-    type: 'POST',
-    data: formData,
-    success: function (response) {
-      $('#offcanvasAddUser').offcanvas('hide');
-      $('#addNewCategoryForm')[0].reset();
+    // Submit del formulario de agregar nueva instalación
+    $('#addNewInstalacionForm').on('submit', function (e) {
+      e.preventDefault();
 
-      // Actualizar la tabla sin reinicializar DataTables
-      $('.datatables-users').DataTable().ajax.reload();
+      // Obtener datos del formulario
+      var formData = $(this).serialize() + '&_token=' + CSRF_TOKEN;
 
-      // Mostrar alerta de éxito
-      Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: response.success,
-        customClass: {
-          confirmButton: 'btn btn-success'
+      $.ajax({
+        url: '/instalaciones',
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+          // Ocultar modal y resetear formulario
+          $('#modalAddInstalacion').modal('hide');
+          $('#addNewInstalacionForm')[0].reset();
+
+          // Actualizar la tabla sin reinicializar DataTables
+          $('.datatables-users').DataTable().ajax.reload();
+
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.success,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText); // Para depuración
+
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al agregar la instalación',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
         }
       });
-    },
-    error: function (xhr) {
-      // Mostrar alerta de error
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al agregar la categoría',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    }
+    });
   });
-});
 
 
 

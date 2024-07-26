@@ -33,6 +33,8 @@ $(function () {
     // Users datatable
     if (dt_user_table.length) {
         var dt_user = dt_user_table.DataTable({
+
+            
             processing: true,
             serverSide: true,
             ajax: {

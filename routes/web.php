@@ -175,9 +175,6 @@ use App\Http\Controllers\getFuncionesController;
 use App\Http\Controllers\usuarios\UsuariosController;
 use App\Http\Controllers\usuarios\UsuariosInspectoresController;
 use App\Http\Controllers\usuarios\UsuariosPersonalController;
-//Tipos maguey/agave
-use App\Http\Controllers\catalogo\tiposController;
-
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -445,19 +442,17 @@ Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class,
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
 
 
-//Tipos de maguey/agave
-Route::get('/catalogo/tipos', [tiposController::class, 'UserManagement'])->name('tipos-maguey-agave');
-Route::resource('/tipos-list', tiposController::class);
-
-
-
 //Lotes de envasado
-Route::get('/catalogo/lotes', [lotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
+Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
+Route::resource('/lotes-list', LotesEnvasadoController::class);
 
 //Domicilios
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
+
+//Domicilios Instalaciones
 Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio-instalaciones');
 Route::resource('/instalaciones-list', DomiciliosController::class);
+Route::delete('instalaciones/{id_instalacion}', [DomiciliosController::class, 'destroy']);
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
@@ -471,7 +466,6 @@ Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal']
 Route::resource('/personal-list', UsuariosPersonalController::class);
 
 //Documentacion
-
 Route::get('/documentacion', [documentacionController::class, 'index'])->name('documentacion');
 Route::get('/documentacion/getNormas', [documentacionController::class, 'getNormas'])->name('documentacion.getNormas');
 Route::get('documentacion/getActividades', [documentacionController::class, 'getActividades'])->name('documentacion.getActividades');

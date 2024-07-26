@@ -31,4 +31,6 @@ class empresa extends Model
     {
         return $this->hasMany(Instalaciones::class, 'id_empresa');
     }
+
+    
 }

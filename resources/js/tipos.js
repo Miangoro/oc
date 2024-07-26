@@ -23,6 +23,7 @@ $(function () {
     });
   }
 
+
   // ajax setup
   $.ajaxSetup({
     headers: {
@@ -30,6 +31,7 @@ $(function () {
     }
   });
 
+  
   // Users datatable
   if (dt_user_table.length) {
     var dt_user = dt_user_table.DataTable({
@@ -530,6 +532,7 @@ $(document).ready(function() {
       });
   });
 });
+
 
 
 });

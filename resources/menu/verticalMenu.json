@@ -107,6 +107,11 @@
       "slug": "catalogo",
       "submenu": [
         {
+          "url": "catalogo/lotes_granel",
+          "name": "Lotes a granel",
+          "slug": "catalogo-marcas"
+        },
+        {
           "url": "catalogo/marcas",
           "name": "Marcas",
           "slug": "catalogo-marcas"
