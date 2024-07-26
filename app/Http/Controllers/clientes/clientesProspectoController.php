@@ -69,8 +69,7 @@ class clientesProspectoController extends Controller
 
   public function info($id)
     {   
-      $res = DB::select('SELECT s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
-      e.calle, e.num, e.colonia, e.municipio, e.estado, e.cp
+      $res = DB::select('SELECT p.id_producto, n.id_norma, a.id_actividad, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono
       FROM empresa e 
       JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
       JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
