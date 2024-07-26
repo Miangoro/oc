@@ -11,17 +11,18 @@ use App\Models\empresa_actividad;
 use App\Models\solicitud_informacion;
 use App\Models\estados;
 use App\Mail\correoEjemplo;
+use App\Models\Instalaciones;
 use Illuminate\Support\Facades\Mail;
 
 class solicitudClienteController extends Controller
 {
   public function index()
   {
-      $estados = estados::orderBy('nombre')->pluck('nombre');
-  
-      return view('solicitudes.solicitudCliente', compact('estados'));
+    $estados = estados::orderBy('nombre')->get(['id', 'nombre AS estado']);
+
+    return view('solicitudes.solicitudCliente', compact('estados'));
   }
-  
+
 
   public function RegistroExitoso()
   {
@@ -33,13 +34,13 @@ class solicitudClienteController extends Controller
 
     $empresa = new empresa();
     $empresa->razon_social = $request->razon_social;
-    $empresa->domicilio_fiscal = $request->calle1 . " " . $request->numero1 . " " . $request->colonia1 . " " . $request->municipio1 . " " . $request->cp1;
-    $empresa->estado = $request->municipio1;
-    $empresa->calle = $request->calle1;
+    $empresa->domicilio_fiscal = $request->domicilio_fiscal;
+    $empresa->estado = $request->estado_fiscal;
+    /*$empresa->calle = $request->calle1;
     $empresa->num = $request->numero1;
     $empresa->colonia = $request->colonia1;
     $empresa->municipio = $request->municipio1;
-    $empresa->cp = $request->cp1;
+    $empresa->cp = $request->cp1;*/
     $empresa->regimen = $request->regimen;
     $empresa->correo = $request->correo;
     $empresa->telefono = $request->telefono;
@@ -62,6 +63,34 @@ class solicitudClienteController extends Controller
       $norma->id_empresa = $id_empresa;
       $norma->save();
     }
+
+    if (!empty($request->domicilio_productora) && !empty($request->estado_productora)) {
+      $productora = new Instalaciones();
+      $productora->direccion_completa = $request->domicilio_productora;
+      $productora->estado = $request->estado_productora;
+      $productora->id_empresa = $id_empresa;
+      $productora->tipo = 'Productora';
+      $productora->save();
+    }
+
+    if (!empty($request->domicilio_envasadora) && !empty($request->estado_envasadora)) {
+      $envasadora = new Instalaciones();
+      $envasadora->direccion_completa = $request->domicilio_envasadora;
+      $envasadora->estado = $request->estado_envasadora;
+      $envasadora->id_empresa = $id_empresa;
+      $envasadora->tipo = 'Envasadora';
+      $envasadora->save();
+    }
+
+    if (!empty($request->domicilio_comercializadora) && !empty($request->estado_comercializadora)) {
+      $comercializadora = new Instalaciones();
+      $comercializadora->direccion_completa = $request->domicilio_comercializadora;
+      $comercializadora->estado = $request->estado_comercializadora;
+      $comercializadora->id_empresa = $id_empresa;
+      $comercializadora->tipo = 'Comercializadora';
+      $comercializadora->save();
+    }
+
 
     for ($i = 0; $i < count($request->actividad); $i++) {
       $actividad = new empresa_actividad();
@@ -89,8 +118,4 @@ class solicitudClienteController extends Controller
 
     return view('solicitudes.Registro_exitoso');
   }
-
-
-
-
 }

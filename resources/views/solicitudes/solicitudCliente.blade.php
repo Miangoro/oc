@@ -349,17 +349,17 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" id="localidad1" name="localidad1"
+                                    <input type="text" class="form-control" id="localidad1" name="domicilio_fiscal"
                                         required placeholder=" ">
                                     <label for="localidad1">Domicilio completo</label>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating form-floating-outline">
-                                    <select class="form-control custom-select" name="estado" id="estado" required>
+                                    <select class="form-control custom-select" name="estado_fiscal" id="estado" required>
                                         <option disabled selected>selecciona un estado</option>
                                         @foreach ($estados as $estado)
-                                            <option value="{{ $estado }}">{{ $estado }}</option>
+                                            <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
                                         @endforeach
                                     </select>
                                     <label for="estado">Estado</label>
@@ -391,17 +391,17 @@
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
                                         <input type="text" class="form-control" id="localidad2" name="localidad2"
-                                            required placeholder=" ">
+                                             placeholder=" ">
                                         <label for="localidad2">Domicilio completo</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-floating form-floating-outline">
                                         <select class="form-control custom-select" name="estado2" id="estado2"
-                                            required>
+                                            >
                                             <option disabled selected>selecciona un estado</option>
                                             @foreach ($estados as $estado)
-                                                <option value="{{ $estado }}">{{ $estado }}</option>
+                                                <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
                                             @endforeach
                                         </select>
                                         <label for="estado2">Estado</label>
@@ -419,18 +419,18 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="localidad3" name="localidad3"
-                                            required placeholder=" ">
+                                        <input type="text" class="form-control" id="localidad3" name="domicilio_envasadora"
+                                             placeholder=" ">
                                         <label for="localidad3">Domicilio completo</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado3" id="estado3"
-                                            required>
+                                        <select class="form-control custom-select" name="estado_envasadora" id="estado3"
+                                            >
                                             <option disabled selected>selecciona un estado</option>
                                             @foreach ($estados as $estado)
-                                                <option value="{{ $estado }}">{{ $estado }}</option>
+                                            <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
                                             @endforeach
                                         </select>
                                         <label for="estado3">Estado</label>
@@ -448,18 +448,18 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="localidad4" name="localidad4"
-                                            required placeholder=" ">
+                                        <input type="text" class="form-control" id="localidad4" name="domicilio_productora"
+                                             placeholder=" ">
                                         <label for="localidad4">Domicilio completo</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado4" id="estado4"
-                                            required>
+                                        <select class="form-control custom-select" name="estado_productora" id="estado4"
+                                            >
                                             <option disabled selected>selecciona un estado</option>
                                             @foreach ($estados as $estado)
-                                                <option value="{{ $estado }}">{{ $estado }}</option>
+                                                <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
                                             @endforeach
                                         </select>
                                         <label for="estado4">Estado</label>
@@ -476,18 +476,18 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="localidad5" name="localidad5"
-                                            required placeholder=" ">
+                                        <input type="text" class="form-control" id="localidad5" name="domicilio_comercializadora"
+                                             placeholder=" ">
                                         <label for="localidad5">Domicilio completo</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado5" id="estado5"
-                                            required>
+                                        <select class="form-control custom-select" name="estado_comercializadora" id="estado5"
+                                            >
                                             <option disabled selected>selecciona un estado</option>
                                             @foreach ($estados as $estado)
-                                                <option value="{{ $estado }}">{{ $estado }}</option>
+                                                <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
                                             @endforeach
                                         </select>
                                         <label for="estado5">Estado</label>

@@ -112,17 +112,17 @@
                         </td>
                         <td class="custom-table-cell spaced-text" colspan="2">
                             <!-- Contenido del lado derecho, primer elemento -->
-                            <span style="margin-right: 90px;">Calle: {{$datos[0]->calle}}</span>
-                            <span style="margin-right: 20px;">Número: {{$datos[0]->num}}</span>
-                            <span style="margin-right: 90px;">Colonia: {{$datos[0]->colonia}}</span>
+                            <span style="margin-right: 90px;">Calle: </span>
+                            <span style="margin-right: 20px;">Número:</span>
+                            <span style="margin-right: 90px;">Colonia: </span>
 
                         </td>
                     </tr>
                     <tr>
                         <td class="custom-table-cell spaced-text" colspan="2">
                             <!-- Contenido del lado derecho, segundo elemento -->
-                            <span style="margin-right: 200px">Localidad/Municipio/Ciudad/Estado: {{$datos[0]->municipio}}</span>
-                            <span>C.P.: {{$datos[0]->cp}}</span>
+                            <span style="margin-right: 200px">Localidad/Municipio/Ciudad/Estado:</span>
+                            <span>C.P.:</span>
                         </td>
                     </tr>
                     <tr>
