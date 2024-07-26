@@ -176,6 +176,8 @@ use App\Http\Controllers\usuarios\UsuariosController;
 use App\Http\Controllers\usuarios\UsuariosInspectoresController;
 use App\Http\Controllers\usuarios\UsuariosPersonalController;
 use App\Http\Controllers\catalogo\LotesGranelController;
+//Tipos maguey/agave
+use App\Http\Controllers\catalogo\tiposController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -492,3 +494,8 @@ Route::resource('/personal-list', UsuariosPersonalController::class);
 Route::get('/documentacion', [documentacionController::class, 'index'])->name('documentacion');
 Route::get('/documentacion/getNormas', [documentacionController::class, 'getNormas'])->name('documentacion.getNormas');
 Route::get('documentacion/getActividades', [documentacionController::class, 'getActividades'])->name('documentacion.getActividades');
+
+
+//Tipos de maguey/agave
+Route::get('/catalogo/tipos', [tiposController::class, 'UserManagement'])->name('tipos-maguey-agave');
+Route::resource('/tipos-list', tiposController::class);
