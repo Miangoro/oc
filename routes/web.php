@@ -175,6 +175,9 @@ use App\Http\Controllers\getFuncionesController;
 use App\Http\Controllers\usuarios\UsuariosController;
 use App\Http\Controllers\usuarios\UsuariosInspectoresController;
 use App\Http\Controllers\usuarios\UsuariosPersonalController;
+//Tipos maguey/agave
+use App\Http\Controllers\catalogo\tiposController;
+
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -440,6 +443,11 @@ Route::delete('categorias/{id_categoria}', [categoriasController::class, 'destro
 Route::post('/categorias', [categoriasController::class, 'store'])->name('categorias.store');
 Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit');
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
+
+
+//Tipos de maguey/agave
+Route::get('/catalogo/tipos', [tiposController::class, 'UserManagement'])->name('tipos-maguey-agave');
+Route::resource('/tipos-list', tiposController::class);
 
 
 //Lotes de envasado
