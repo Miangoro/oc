@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\catalogo;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\LotesGranel;
 use App\Models\empresa;
 use App\Models\categorias;
 use App\Models\clases;
-use App\Models\Tipo;
+use App\Models\Tipos;
 use App\Models\Organismo;
 use App\Models\guias;
 
@@ -19,15 +20,15 @@ class LotesGranelController extends Controller
         $empresas = Empresa::all();
         $categorias = Categorias::all();
         $clases = Clases::all();
-        $tipos = Tipo::all(); // Obtén todos los tipos de agave
+        $tipos = Tipos::all(); // Obtén todos los tipos de agave
         $organismos = Organismo::all(); // Obtén todos los organismos
         $guias = Guias::all(); // Obtén todas las guías
         $lotes = LotesGranel::with('empresa', 'categoria', 'clase', 'tipo', 'organismo', 'guias')->get();
-        
+
         return view('catalogo.lotes_granel', compact('lotes', 'empresas', 'categorias', 'clases', 'tipos', 'organismos', 'guias'));
     }
-    
-    
+
+
     public function index(Request $request)
     {
         try {
@@ -49,41 +50,41 @@ class LotesGranelController extends Controller
                 15 => 'fecha_emision',
                 16 => 'fecha_vigencia',
             ];
-            
+
             $search = $request->input('search.value');
             $totalData = LotesGranel::count();
             $totalFiltered = $totalData;
-    
+
             $limit = $request->input('length');
             $start = $request->input('start');
             $order = $columns[$request->input('order.0.column')];
             $dir = $request->input('order.0.dir');
-    
+
             $LotesGranel = LotesGranel::with(['empresa', 'categoria', 'clase', 'Tipo', 'Organismo', 'guias'])
                 ->when($search, function ($query, $search) {
                     return $query->where('id_lote_granel', 'LIKE', "%{$search}%")
-                                 ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
-                                 ->orWhere('folio_fq', 'LIKE', "%{$search}%")
-                                 ->orWhere('volumen', 'LIKE', "%{$search}%")
-                                 ->orWhere('cont_alc', 'LIKE', "%{$search}%")
-                                 ->orWhere('ingredientes', 'LIKE', "%{$search}%");
+                        ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
+                        ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+                        ->orWhere('volumen', 'LIKE', "%{$search}%")
+                        ->orWhere('cont_alc', 'LIKE', "%{$search}%")
+                        ->orWhere('ingredientes', 'LIKE', "%{$search}%");
                 })
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
-    
+
             $totalFiltered = LotesGranel::when($search, function ($query, $search) {
                 return $query->where('id_lote_granel', 'LIKE', "%{$search}%")
-                             ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
-                             ->orWhere('folio_fq', 'LIKE', "%{$search}%")
-                             ->orWhere('volumen', 'LIKE', "%{$search}%")
-                             ->orWhere('cont_alc', 'LIKE', "%{$search}%")
-                             ->orWhere('ingredientes', 'LIKE', "%{$search}%");
+                    ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
+                    ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+                    ->orWhere('volumen', 'LIKE', "%{$search}%")
+                    ->orWhere('cont_alc', 'LIKE', "%{$search}%")
+                    ->orWhere('ingredientes', 'LIKE', "%{$search}%");
             })->count();
-    
+
             $data = [];
-    
+
             foreach ($LotesGranel as $lote) {
                 $data[] = [
                     'id_lote_granel' => $lote->id_lote_granel,
@@ -107,7 +108,7 @@ class LotesGranelController extends Controller
                     'actions' => '<button class="btn btn-danger btn-sm delete-record" data-id="' . $lote->id_lote_granel . '">Eliminar</button>',
                 ];
             }
-    
+
             return response()->json([
                 'draw' => intval($request->input('draw')),
                 'recordsTotal' => intval($totalData),
@@ -117,7 +118,7 @@ class LotesGranelController extends Controller
             ]);
         } catch (\Exception $e) {
             \Log::error('Error en LotesGranelController@index: ' . $e->getMessage());
-            
+
             return response()->json([
                 'draw' => intval($request->input('draw')),
                 'recordsTotal' => 0,
@@ -127,42 +128,40 @@ class LotesGranelController extends Controller
             ]);
         }
     }
-    
-    
+
+
 
 
     public function getLotesList(Request $request)
     {
-    $columns = ['id_lote', 'num_clientes', 'nombre_cliente', 'tipo', 'no_lote', 'categoria', 'clase', 'no_analisis', 'tipo_maguey', 'volumen_lote', 'contenido_alcoholico'];
+        $columns = ['id_lote', 'num_clientes', 'nombre_cliente', 'tipo', 'no_lote', 'categoria', 'clase', 'no_analisis', 'tipo_maguey', 'volumen_lote', 'contenido_alcoholico'];
 
-    $query = Lote::query();
+        $query = Lote::query();
 
-    // Filtrar y ordenar
-    if ($request->has('search') && $request->input('search')['value']) {
-        $search = $request->input('search')['value'];
-        $query->where(function ($q) use ($search, $columns) {
-            foreach ($columns as $column) {
-                $q->orWhere($column, 'like', "%$search%");
-            }
-        });
-     }
+        // Filtrar y ordenar
+        if ($request->has('search') && $request->input('search')['value']) {
+            $search = $request->input('search')['value'];
+            $query->where(function ($q) use ($search, $columns) {
+                foreach ($columns as $column) {
+                    $q->orWhere($column, 'like', "%$search%");
+                }
+            });
+        }
 
-    $totalData = $query->count();
-    $totalFiltered = $totalData;
+        $totalData = $query->count();
+        $totalFiltered = $totalData;
 
-    $query->skip($request->input('start', 0))
-          ->take($request->input('length', 10));
+        $query->skip($request->input('start', 0))
+            ->take($request->input('length', 10));
 
-    $data = $query->get();
+        $data = $query->get();
 
-    return response()->json([
-        'draw' => intval($request->input('draw')),
-        'recordsTotal' => $totalData,
-        'recordsFiltered' => $totalFiltered,
-        'data' => $data
-    ]);
-
-
+        return response()->json([
+            'draw' => intval($request->input('draw')),
+            'recordsTotal' => $totalData,
+            'recordsFiltered' => $totalFiltered,
+            'data' => $data
+        ]);
     }
 
 
@@ -191,23 +190,20 @@ class LotesGranelController extends Controller
         ]);
         // Crear una nueva instancia del modelo LotesGranel
         $lote = new LotesGranel();
-    
+
         // Asignar los valores del formulario a las propiedades del modelo
         $lote->id_empresa = $request->input('id_empresa'); // Aquí se usa el ID de la empresa
         $lote->nombre_lote = $request->input('nombre_lote');
         $lote->tipo_lote = $request->input('tipo_lote');
         // Asignar más propiedades según los campos del formulario
-    
+
         // Guardar el nuevo lote en la base de datos
         $lote->save();
-    
+
         // Retornar una respuesta
         return response()->json([
             'success' => true,
             'message' => 'Lote registrado exitosamente',
         ]);
     }
-    
-
-
 }
