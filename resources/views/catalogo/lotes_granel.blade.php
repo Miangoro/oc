@@ -59,7 +59,7 @@
         <!-- Modal para agregar nuevo lote -->
         <div class="modal fade" id="offcanvasAddLote" tabindex="-1" aria-labelledby="offcanvasAddLoteLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog">
+            <div class="modal-dialog modal-xl modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 id="offcanvasAddLoteLabel" class="modal-title">Registro de Lote a Granel</h5>
@@ -123,32 +123,18 @@
 
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" id="no_analisis" name="no_analisis" class="form-control"
-                                                placeholder="No. de Análisis Fisicoquímico" />
-                                            <label for="no_analisis">No. de Análisis Fisicoquímico</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <input type="file" id="analisis_fisicoquimico" name="analisis_fisicoquimico"
-                                                class="form-control" />
-                                            <label for="analisis_fisicoquimico">Adjuntar Análisis Fisicoquímico</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating form-floating-outline mb-4">
                                             <input type="number" step="0.01" id="volumen_lote" name="volumen_lote"
                                                 class="form-control" placeholder="Volumen de Lote Inicial (litros)" />
                                             <label for="volumen_lote">Volumen de Lote Inicial (litros)</label>
                                         </div>
                                     </div>
                                 </div>
+                                
+                                
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" step="0.01" id="contenido_alcoholico"
+                                            <input required type="number" step="0.01" id="contenido_alcoholico"
                                                 name="contenido_alcoholico" class="form-control"
                                                 placeholder="Contenido Alcohólico" />
                                             <label for="contenido_alcoholico">Contenido Alcohólico</label>
@@ -156,7 +142,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select id="categoria_agave" name="categoria_agave"
+                                            <select required id="categoria_agave" name="id_categoria"
                                                 class="select2 form-select" >
                                                 <option value="" disabled selected>Selecciona la categoría de agave
                                                 </option>
@@ -172,7 +158,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select id="clase_agave" name="clase_agave" class="select2 form-select"
+                                            <select id="clase_agave" name="id_clase" class="select2 form-select"
                                                 >
                                                 <option value="" disabled selected>Selecciona la clase de agave
                                                 </option>
@@ -185,7 +171,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select id="tipo_agave" name="tipo_agave" class="select2 form-select"
+                                            <select id="tipo_agave" name="id_tipo" class="select2 form-select"
                                                 >
                                                 <option value="" disabled selected>Selecciona el tipo de agave
                                                 </option>
@@ -213,6 +199,49 @@
                                         </div>
                                     </div>
                                 </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo de análisis</th>
+                                            <th>No. de Análisis Fisicoquímico</th>
+                                            <th>Documento</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($documentos as $documento)
+                                            <!-- Primer bloque -->
+                                            <tr>
+                                                <td>
+                                                    <input readonly value="Análisis completo" type="text" class="form-control form-control-sm" id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm" id="date{{ $documento->id_documento }}" name="folio_fq_completo">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm" type="file" id="file{{ $documento->id_documento }}" name="url[]">
+                                                    <input value="{{ $documento->id_documento }}" class="form-control" type="hidden" name="id_documento[]">
+                                                    <input value="{{ $documento->nombre }}" class="form-control" type="hidden" name="nombre_documento[]">
+                                                </td>
+                                            </tr>
+                                
+                                            <!-- Segundo bloque -->
+                                            <tr>
+                                                <td>
+                                                    <input readonly value="Ajuste de grado" type="text" class="form-control form-control-sm" id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm" id="date{{ $documento->id_documento }}-2" name="folio_fq_ajuste">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm" type="file" id="file{{ $documento->id_documento }}-2" name="url[]">
+                                                    <input value="{{ $documento->id_documento }}" class="form-control" type="hidden" name="id_documento[]">
+                                                    <input value="{{ $documento->nombre }}" class="form-control" type="hidden" name="nombre_documento[]">
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                
                             </div>
 
                             <!-- Campos para "Certificado por otro organismo" -->
@@ -221,8 +250,9 @@
                                     <!-- Campo de archivo ocupando toda la fila -->
                                     <div class="col-md-12 mb-4">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="file" id="certificado_lote" name="certificado_lote"
-                                                class="form-control" />
+                                            <input class="form-control form-control-sm" type="file" id="file-59" name="url[]">
+                                            <input value="59" class="form-control" type="hidden" name="id_documento[]">
+                                            <input value="Certificado de lote a granel" class="form-control" type="hidden" name="nombre_documento[]">
                                             <label for="certificado_lote">Adjuntar Certificado de Lote a Granel</label>
                                         </div>
                                     </div>
@@ -238,7 +268,7 @@
                                     </div>
                                     <div class="col-md-6 mb-4">
                                         <div class="form-floating form-floating-outline">
-                                            <select id="organismo_certificacion" name="organismo_certificacion"
+                                            <select id="id_organismo" name="id_organismo"
                                                 class="select2 form-select">
                                                 <option value="" disabled selected>Selecciona el organismo de
                                                     certificación</option>
@@ -247,7 +277,7 @@
                                                     </option>
                                                 @endforeach
                                             </select>
-                                            <label for="organismo_certificacion">Organismo de Certificación</label>
+                                            <label for="id_organismo">Organismo de Certificación</label>
                                         </div>
                                     </div>
 
