@@ -66,19 +66,18 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form class="add-new-user pt-0" id="addNewInstalacionForm" enctype="multipart/form-data">
+                    <form id="addNewInstalacionForm">
                         @csrf
 
-                        <!-- Select de Clientes -->
-                        <div class="form-floating form-floating-outline mb-3">
-                            <select class="form-select" id="cliente" name="id_empresa" aria-label="Cliente" required>
-                                <option value="">Seleccione un cliente</option>
-                                @foreach($empresas as $empresa)
-                                    <option value="{{ $empresa->id }}">{{ $empresa->razon_social }}</option>
-                                @endforeach
-                            </select>
-                            <label for="cliente">Cliente</label>
-                        </div>
+                        <div class="form-floating form-floating-outline mb-4">
+                          <select id="id_empresa" name="id_empresa" class="form-select" required>
+                              <option value="" disabled selected>Selecciona la empresa</option>
+                              @foreach ($empresas as $empresa)
+                                  <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
+                              @endforeach
+                          </select>
+                          <label for="id_empresa">Empresa</label>
+                      </div>
 
                         <!-- Select de Tipo de Instalación -->
                         <div class="form-floating form-floating-outline mb-3">
@@ -108,7 +107,7 @@
                             <label for="direccion">Dirección Completa</label>
                         </div>
 
-                        <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
+                        <button type="submit" class="btn btn-primary me-sm-3 me-1">Registrar</button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
                     </form>
                 </div>

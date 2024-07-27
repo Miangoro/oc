@@ -267,8 +267,7 @@ $(function () {
     });
   });
 
-
-  //funcion agregar
+  // Funcion agregar
   $(document).ready(function () {
     // CSRF Token
     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
@@ -278,7 +277,7 @@ $(function () {
       e.preventDefault();
 
       // Obtener valores del formulario
-      var id_empresa = $('#cliente').val();
+      var id_empresa = $('#id_empresa').val();
       var tipo = $('#tipo').val();
       var estado = $('#estado').val();
       var direccion_completa = $('#direccion').val();
@@ -289,7 +288,7 @@ $(function () {
       console.log('Dirección Completa:', direccion_completa);
 
       $.ajax({
-        url: '/instalaciones',
+        url: baseUrl + 'instalaciones',
         method: 'POST',
         data: {
           _token: CSRF_TOKEN,
@@ -300,10 +299,10 @@ $(function () {
         },
         success: function (response) {
           console.log('Respuesta del servidor:', response);
-          if (response.success) {
+          if (response.code === 200) {
             Swal.fire({
               title: '¡Éxito!',
-              text: response.success,
+              text: response.message,
               icon: 'success',
               confirmButtonText: 'OK'
             }).then(function (result) {
@@ -315,7 +314,7 @@ $(function () {
           } else {
             Swal.fire({
               title: 'Error',
-              text: 'Hubo un problema al registrar la instalación.',
+              text: response.message || 'Hubo un problema al registrar la instalación.',
               icon: 'error',
               confirmButtonText: 'OK'
             });
@@ -333,9 +332,4 @@ $(function () {
       });
     });
   });
-
-
-
-
-//end
 });
