@@ -71,17 +71,13 @@
                             @csrf
                             <!-- Nombre del lote -->
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
                                         <input type="text" id="nombre_lote" name="nombre_lote" class="form-control"
                                             placeholder="Nombre del lote" required />
                                         <label for="nombre_lote">Nombre del Lote</label>
                                     </div>
                                 </div>
-                            </div>
-
-                            <!-- Empresa y Tipo de Lote -->
-                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
                                         <select id="id_empresa" name="id_empresa" class=" form-select" required >
@@ -93,6 +89,11 @@
                                         <label for="id_empresa">Empresa</label>
                                     </div>
                                 </div>
+                            </div>
+
+                            <!-- Empresa y Tipo de Lote -->
+                            <div class="row">
+
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
                                         <select id="tipo_lote" name="tipo_lote" class="select2 form-select" required
@@ -104,85 +105,89 @@
                                         <label for="tipo_lote">Tipo de Lote</label>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline mb-4">
+                                        <input required type="text" step="0.01" id="folio fq"
+                                            name="folio fq" class="form-control"
+                                            placeholder="Folio fq" />
+                                        <label for="folio fq">folio fq</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline mb-4">
+                                        <select id="id_guia" name="id_guia" class="form-control" required>
+                                            <option value="">Seleccione una guía</option>
+                                            @foreach ($guias as $guia)
+                                                <option value="{{ $guia->id_guia }}">{{ $guia->Folio }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="id_guia">Folio de guía de translado</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline mb-4">
+                                        <input type="number" step="0.01" id="volumen" name="volumen"
+                                            class="form-control" placeholder="Volumen de Lote Inicial (litros)" required/>
+                                        <label for="volumen">Volumen de Lote Inicial (litros)</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline mb-4">
+                                        <input required type="number" step="0.01" id="cont_alc"
+                                            name="cont_alc" class="form-control"
+                                            placeholder="Contenido Alcohólico" />
+                                        <label for="cont_alc">Contenido Alcohólico</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline mb-4">
+                                        <select required id="id_categoria" name="id_categoria"
+                                            class="select2 form-select" >
+                                            <option value="" disabled selected>Selecciona la categoría de agave
+                                            </option>
+                                            @foreach ($categorias as $categoria)
+                                                <option value="{{ $categoria->id_categoria }}">
+                                                    {{ $categoria->categoria }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="id_categoria">Categoría de Agave</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline mb-4">
+                                        <select id="clase_agave" name="id_clase" class="select2 form-select" required>
+                                            <option value="" disabled selected>Selecciona la clase de agave
+                                            </option>
+                                            @foreach ($clases as $clase)
+                                                <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="clase_agave">Clase de Agave</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline mb-4">
+                                        <select id="tipo_agave" name="id_tipo" class="select2 form-select" required>
+                                            <option value="" disabled selected>Selecciona el tipo de agave
+                                            </option>
+                                            @foreach ($tipos as $tipo)
+                                                <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="tipo_agave">Tipo de Agave</label>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Campos para "Certificación por OC CIDAM" -->
                             <div id="oc_cidam_fields" class="d-none">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <select id="id_guia" name="id_guia" class="form-control">
-                                                <option value="">Seleccione una guía</option>
-                                                @foreach ($guias as $guia)
-                                                    <option value="{{ $guia->id_guia }}">{{ $guia->Folio }}</option>
-                                                @endforeach
-                                            </select>
-                                            <label for="id_guia">Folio de guía de translado</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" step="0.01" id="volumen_lote" name="volumen_lote"
-                                                class="form-control" placeholder="Volumen de Lote Inicial (litros)" />
-                                            <label for="volumen_lote">Volumen de Lote Inicial (litros)</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <input required type="number" step="0.01" id="contenido_alcoholico"
-                                                name="contenido_alcoholico" class="form-control"
-                                                placeholder="Contenido Alcohólico" />
-                                            <label for="contenido_alcoholico">Contenido Alcohólico</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <select required id="categoria_agave" name="id_categoria"
-                                                class="select2 form-select" >
-                                                <option value="" disabled selected>Selecciona la categoría de agave
-                                                </option>
-                                                @foreach ($categorias as $categoria)
-                                                    <option value="{{ $categoria->id_categoria }}">
-                                                        {{ $categoria->categoria }}</option>
-                                                @endforeach
-                                            </select>
-                                            <label for="categoria_agave">Categoría de Agave</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <select id="clase_agave" name="id_clase" class="select2 form-select"
-                                                >
-                                                <option value="" disabled selected>Selecciona la clase de agave
-                                                </option>
-                                                @foreach ($clases as $clase)
-                                                    <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
-                                                @endforeach
-                                            </select>
-                                            <label for="clase_agave">Clase de Agave</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <select id="tipo_agave" name="id_tipo" class="select2 form-select"
-                                                >
-                                                <option value="" disabled selected>Selecciona el tipo de agave
-                                                </option>
-                                                @foreach ($tipos as $tipo)
-                                                    <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
-                                                @endforeach
-                                            </select>
-                                            <label for="tipo_agave">Tipo de Agave</label>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">

@@ -23,7 +23,7 @@ $(function() {
     });
 
 
-   
+    select2 = $('.select2')
     // Inicializar DataTable
     var dt_user = $('.datatables-users').DataTable({
 
