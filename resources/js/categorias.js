@@ -7,7 +7,6 @@
 // Datatable (jquery)
 $(function () {
 
-
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
     select2 = $('.select2'),
@@ -374,9 +373,6 @@ $(function () {
     });
   }
 
-
-
-
   // Eliminar registro
   $(document).on('click', '.delete-record', function () {
     var id_categoria = $(this).data('id'),
@@ -435,62 +431,42 @@ $(function () {
     });
   });
 
+  // Agregar nueva categoría
+  $('#addNewCategoryForm').on('submit', function (e) {
+    e.preventDefault();
+    var formData = $(this).serialize();
 
+    $.ajax({
+      url: '/categorias',
+      type: 'POST',
+      data: formData,
+      success: function (response) {
+        $('#offcanvasAddUser').offcanvas('hide');
+        $('#addNewCategoryForm')[0].reset();
+        dt_user.ajax.reload();
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.success,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function (xhr) {
+        console.log('Error:', xhr.responseText);
 
-  $(document).ready(function () {
-    // CSRF Token
-    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-
-    // Submit del formulario de agregar nueva instalación
-    $('#addNewInstalacionForm').on('submit', function (e) {
-      e.preventDefault();
-
-      // Obtener datos del formulario
-      var formData = $(this).serialize() + '&_token=' + CSRF_TOKEN;
-
-      $.ajax({
-        url: '/instalaciones',
-        type: 'POST',
-        data: formData,
-        success: function (response) {
-          // Ocultar modal y resetear formulario
-          $('#modalAddInstalacion').modal('hide');
-          $('#addNewInstalacionForm')[0].reset();
-
-          // Actualizar la tabla sin reinicializar DataTables
-          $('.datatables-users').DataTable().ajax.reload();
-
-          // Mostrar alerta de éxito
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.success,
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-        },
-        error: function (xhr) {
-          console.log('Error:', xhr.responseText); // Para depuración
-
-          // Mostrar alerta de error
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al agregar la instalación',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
-        }
-      });
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al agregar la categoría',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
     });
   });
-
-
-
-
-
 
 // Editar registro
 $(document).ready(function() {
@@ -561,5 +537,5 @@ $(document).ready(function() {
   });
 });
 
-
+//end
 });

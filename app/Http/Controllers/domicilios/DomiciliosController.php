@@ -8,6 +8,7 @@ use App\Models\Empresa;
 use App\Models\Estados;
 use App\Models\Organismos;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class DomiciliosController extends Controller
 {
@@ -33,7 +34,10 @@ class DomiciliosController extends Controller
 
         $search = [];
 
-        $totalData = Instalaciones::count();
+        $totalData = Instalaciones::whereHas('empresa', function($query) {
+            $query->where('tipo', 2);
+        })->count();
+
         $totalFiltered = $totalData;
 
         $limit = $request->input('length');
@@ -43,6 +47,9 @@ class DomiciliosController extends Controller
 
         if (empty($request->input('search.value'))) {
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos')
+                ->whereHas('empresa', function($query) {
+                    $query->where('tipo', 2);
+                })
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
@@ -51,22 +58,32 @@ class DomiciliosController extends Controller
             $search = $request->input('search.value');
 
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos')
-                ->where('id_instalacion', 'LIKE', "%{$search}%")
-                ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
-                ->orWhere('estado', 'LIKE', "%{$search}%")
-                ->orWhere('folio', 'LIKE', "%{$search}%")
-                ->orWhere('id_organismo', 'LIKE', "%{$search}%")
+                ->whereHas('empresa', function($query) {
+                    $query->where('tipo', 2);
+                })
+                ->where(function($query) use ($search) {
+                    $query->where('id_instalacion', 'LIKE', "%{$search}%")
+                        ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
+                        ->orWhere('estado', 'LIKE', "%{$search}%")
+                        ->orWhere('folio', 'LIKE', "%{$search}%")
+                        ->orWhere('id_organismo', 'LIKE', "%{$search}%");
+                })
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
 
             $totalFiltered = Instalaciones::with('empresa', 'estados', 'organismos')
-                ->where('id_instalacion', 'LIKE', "%{$search}%")
-                ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
-                ->orWhere('estado', 'LIKE', "%{$search}%")
-                ->orWhere('folio', 'LIKE', "%{$search}%")
-                ->orWhere('id_organismo', 'LIKE', "%{$search}%")
+                ->whereHas('empresa', function($query) {
+                    $query->where('tipo', 2);
+                })
+                ->where(function($query) use ($search) {
+                    $query->where('id_instalacion', 'LIKE', "%{$search}%")
+                        ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
+                        ->orWhere('estado', 'LIKE', "%{$search}%")
+                        ->orWhere('folio', 'LIKE', "%{$search}%")
+                        ->orWhere('id_organismo', 'LIKE', "%{$search}%");
+                })
                 ->count();
         }
 
@@ -76,13 +93,13 @@ class DomiciliosController extends Controller
             $ids = $start;
 
             foreach ($instalaciones as $instalacion) {
-                $nestedData['id_instalacion'] = $instalacion->id_instalacion;
-                $nestedData['fake_id'] = ++$ids;
-                $nestedData['razon_social'] = $instalacion->empresa->razon_social;
-                $nestedData['tipo'] = $instalacion->tipo;
-                $nestedData['estado'] = $instalacion->estados->nombre;
-                $nestedData['direccion_completa'] = $instalacion->direccion_completa;
-                $nestedData['folio'] = $instalacion->folio;
+                $nestedData['id_instalacion'] = $instalacion->id_instalacion ?? 'N/A';
+                $nestedData['fake_id'] = ++$ids  ?? 'N/A';
+                $nestedData['razon_social'] = $instalacion->empresa->razon_social  ?? 'N/A';
+                $nestedData['tipo'] = $instalacion->tipo  ?? 'N/A';
+                $nestedData['estado'] = $instalacion->estados->nombre  ?? 'N/A';
+                $nestedData['direccion_completa'] = $instalacion->direccion_completa  ?? 'N/A';
+                $nestedData['folio'] = $instalacion->folio ?? 'N/A'; // Corregido 'folion' a 'folio'
                 $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'N/A'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
 
@@ -98,7 +115,6 @@ class DomiciliosController extends Controller
             'data' => $data,
         ]);
     }
-
     public function destroy($id_instalacion)
     {
         try {
@@ -108,36 +124,30 @@ class DomiciliosController extends Controller
             return response()->json(['success' => 'Instalación eliminada correctamente']);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Instalación no encontrada'], 404);
-        }
-    }
+}
+}
 
     public function store(Request $request)
     {
-        // Validar los datos del formulario
-        $validator = Validator::make($request->all(), [
-            'id_empresa' => 'required|exists:empresas,id',
+        $request->validate([
+          'id_empresa' => 'required|exists:empresa,id_empresa',
             'tipo' => 'required|string',
             'estado' => 'required|exists:estados,id',
             'direccion_completa' => 'required|string',
         ]);
 
-        // Verificar si la validación falló
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 422);
-        }
+        try {
+            Instalaciones::create([
+                'id_empresa' => $request->input('id_empresa'),
+                'tipo' => $request->input('tipo'),
+                'estado' => $request->input('estado'),
+                'direccion_completa' => $request->input('direccion_completa'),
+            ]);
 
-        // Crear una nueva instalación
-        $instalacion = new Instalacion();
-        $instalacion->id_empresa = $request->input('id_empresa');
-        $instalacion->tipo = $request->input('tipo');
-        $instalacion->estado = $request->input('estado');
-        $instalacion->direccion_completa = $request->input('direccion_completa');
-        $instalacion->save();
-
-        // Responder con éxito
-        return response()->json(['success' => 'Instalación registrada exitosamente.']);
-    }
-
-
+            return response()->json(['code' => 200, 'message' => 'Instalación registrada correctamente.']);
+        } catch (\Exception $e) {
+            return response()->json(['code' => 500, 'message' => 'Error al registrar la instalación.']);
+     }
 }
 
+}

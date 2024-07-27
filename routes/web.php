@@ -478,6 +478,7 @@ Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->na
 Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio-instalaciones');
 Route::resource('/instalaciones-list', DomiciliosController::class);
 Route::delete('instalaciones/{id_instalacion}', [DomiciliosController::class, 'destroy']);
+Route::post('/instalaciones', [DomiciliosController::class, 'store']);
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
