@@ -31,6 +31,8 @@ $(function () {
       { data: 'direccion_completa' },
       { data: 'folio' },
       { data: 'organismo' },
+      { data: 'fecha_emision' },
+      { data: 'fecha_vigencia' },
       { data: 'actions' } // Asegúrate de que el campo de acción esté correctamente definido
     ],
     columnDefs: [
