@@ -30,6 +30,31 @@
 
 @section('page-script')
 @vite(['resources/js/instalaciones.js'])
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const certificacionSelect = document.getElementById('certificacion');
+      const certificadoOtrosDiv = document.getElementById('certificado-otros');
+
+      certificacionSelect.addEventListener('change', function () {
+          if (certificacionSelect.value === 'otro_organismo') {
+              certificadoOtrosDiv.classList.remove('d-none');
+          } else {
+              certificadoOtrosDiv.classList.add('d-none');
+          }
+      });
+
+      // Reiniciar formulario y ocultar campos adicionales al cerrar el modal
+      const modal = document.getElementById('modalAddInstalacion');
+      modal.addEventListener('hidden.bs.modal', function () {
+          const form = document.getElementById('addNewInstalacionForm');
+          form.reset();
+          certificacionSelect.value = '';
+          certificadoOtrosDiv.classList.add('d-none');
+      });
+  });
+</script>
+
 @endsection
 
 @section('content')
@@ -51,6 +76,8 @@
                     <th>Dirección</th>
                     <th>Folio</th>
                     <th>Organismo</th>
+                    <th>Fecha Emision</th>
+                    <th>Fecha Vigencia</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -70,14 +97,14 @@
                         @csrf
 
                         <div class="form-floating form-floating-outline mb-4">
-                          <select id="id_empresa" name="id_empresa" class="form-select" required>
-                              <option value="" disabled selected>Selecciona la empresa</option>
-                              @foreach ($empresas as $empresa)
-                                  <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
-                              @endforeach
-                          </select>
-                          <label for="id_empresa">Empresa</label>
-                      </div>
+                            <select id="id_empresa" name="id_empresa" class="form-select" required>
+                                <option value="" disabled selected>Selecciona la empresa</option>
+                                @foreach ($empresas as $empresa)
+                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
+                                @endforeach
+                            </select>
+                            <label for="id_empresa">Empresa</label>
+                        </div>
 
                         <!-- Select de Tipo de Instalación -->
                         <div class="form-floating form-floating-outline mb-3">
@@ -92,7 +119,7 @@
 
                         <!-- Input de Estado -->
                         <div class="form-floating form-floating-outline mb-3">
-                            <select class="form-select" id="estado" name="estado" aria-label="Estado" required>
+                            <select class="select2 form-select" id="estado" name="estado" data-placeholder="Seleccione un estado" aria-label="Estado" required>
                                 <option value="">Seleccione un estado</option>
                                 @foreach($estados as $estado)
                                     <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
@@ -107,8 +134,59 @@
                             <label for="direccion">Dirección Completa</label>
                         </div>
 
-                        <button type="submit" class="btn btn-primary me-sm-3 me-1">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <!-- Select de Tipo de Certificación -->
+                        <div class="form-floating form-floating-outline mb-3">
+                            <select class="form-select" id="certificacion" name="certificacion" aria-label="Tipo de Certificación" required>
+                                <option value="">Seleccione el tipo de certificación</option>
+                                <option value="oc_cidam">Certificación por OC CIDAM</option>
+                                <option value="otro_organismo">Certificado por otro organismo</option>
+                            </select>
+                            <label for="certificacion">Tipo de Certificación</label>
+                        </div>
+
+                        <!-- Campos adicionales para "Certificado por otro organismo" -->
+                        <div id="certificado-otros" class="d-none">
+                            <div class="form-floating form-floating-outline mb-3">
+                                <input type="file" class="form-control" id="certificado_archivo" name="certificado_archivo" aria-label="Archivo de Certificación">
+                                <label for="certificado_archivo">Archivo de Certificación</label>
+                            </div>
+
+                            <div class="form-floating form-floating-outline mb-3">
+                                <input type="text" class="form-control" id="folio" placeholder="Folio/Número del certificado" name="folio" aria-label="Folio/Número del certificado">
+                                <label for="folio_certificado">Folio/Número del certificado</label>
+                            </div>
+
+                            <div class="form-floating form-floating-outline mb-3">
+                                <select class="select2 form-select" id="id_organismo" name="id_organismo" data-placeholder="Seleccione un organismo de certificación" aria-label="Organismo de Certificación">
+                                    <option value="">Seleccione un organismo de certificación</option>
+                                    @foreach($organismos as $organismo)
+                                        <option value="{{ $organismo->id_organismo }}">{{ $organismo->organismo }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_organismo">Organismo de Certificación</label>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="date" class="form-control" id="fecha_emision" name="fecha_emision" aria-label="Fecha de Emisión">
+                                        <label for="fecha_emision">Fecha de Emisión</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="date" class="form-control" id="fecha_vigencia" name="fecha_vigencia" aria-label="Fecha de Vigencia">
+                                        <label for="fecha_vigencia">Fecha de Vigencia</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-3">
+                          <button type="submit" class="btn btn-primary me-2">Registrar</button>
+                          <button type="reset" class="btn btn-outline-secondary"
+                              data-bs-dismiss="modal">Cancelar</button>
+                      </div>
                     </form>
                 </div>
             </div>

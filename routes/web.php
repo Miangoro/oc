@@ -471,7 +471,7 @@ Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->n
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
 Route::resource('/lotes-list', LotesEnvasadoController::class);
 
-//Domicilios
+//Domicilios fiscal
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
 
 //Domicilios Instalaciones

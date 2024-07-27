@@ -15,7 +15,7 @@ class DomiciliosController extends Controller
     public function UserManagement()
     {
         $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
-        $empresas = Empresa::all(); // Obtener todas las empresas
+        $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = Estados::all(); // Obtener todos los estados
         $organismos = Organismos::all(); // Obtener todos los organismos
         return view('domicilios.find_domicilio_instalaciones_view', compact('instalaciones', 'empresas', 'estados', 'organismos'));
@@ -25,11 +25,13 @@ class DomiciliosController extends Controller
     {
         $columns = [
             1 => 'id_instalacion',
-            2 => 'tipo',
+            2 => 'direccion_completa',
             3 => 'estado',
-            4 => 'direccion_completa',
-            5 => 'folio',
+            4 => 'folio',
+            5 => 'tipo',
             6 => 'id_organismo',
+            7 => 'fecha_emision',
+            8 => 'fecha_vigencia'
         ];
 
         $search = [];
@@ -66,7 +68,10 @@ class DomiciliosController extends Controller
                         ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
                         ->orWhere('estado', 'LIKE', "%{$search}%")
                         ->orWhere('folio', 'LIKE', "%{$search}%")
-                        ->orWhere('id_organismo', 'LIKE', "%{$search}%");
+                        ->orWhere('tipo', 'LIKE', "%{$search}%")
+                        ->orWhere('id_organismo', 'LIKE', "%{$search}%")
+                        ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
+                        ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%");
                 })
                 ->offset($start)
                 ->limit($limit)
@@ -82,7 +87,11 @@ class DomiciliosController extends Controller
                         ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
                         ->orWhere('estado', 'LIKE', "%{$search}%")
                         ->orWhere('folio', 'LIKE', "%{$search}%")
-                        ->orWhere('id_organismo', 'LIKE', "%{$search}%");
+                        ->orWhere('tipo', 'LIKE', "%{$search}%")
+                        ->orWhere('id_organismo', 'LIKE', "%{$search}%")
+                        ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
+                        ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%");
+
                 })
                 ->count();
         }
@@ -101,6 +110,8 @@ class DomiciliosController extends Controller
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa  ?? 'N/A';
                 $nestedData['folio'] = $instalacion->folio ?? 'N/A'; // Corregido 'folion' a 'folio'
                 $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'N/A'; // Maneja el caso donde el organismo sea nulo
+                $nestedData['fecha_emision'] = $instalacion->fecha_emision  ?? 'N/A';
+                $nestedData['fecha_vigencia'] = $instalacion->fecha_vigencia  ?? 'N/A';
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
 
                 $data[] = $nestedData;
@@ -115,6 +126,7 @@ class DomiciliosController extends Controller
             'data' => $data,
         ]);
     }
+
     public function destroy($id_instalacion)
     {
         try {
@@ -124,30 +136,39 @@ class DomiciliosController extends Controller
             return response()->json(['success' => 'Instalación eliminada correctamente']);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Instalación no encontrada'], 404);
-}
-}
+        }
+    }
 
     public function store(Request $request)
     {
+        // Validar datos de entrada
         $request->validate([
-          'id_empresa' => 'required|exists:empresa,id_empresa',
+            'id_empresa' => 'required|exists:empresa,id_empresa',
             'tipo' => 'required|string',
             'estado' => 'required|exists:estados,id',
             'direccion_completa' => 'required|string',
+            'folio' => 'nullable|string', // Opcional
+            'id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo', // Opcional
+            'fecha_emision' => 'nullable|date', // Opcional
+            'fecha_vigencia' => 'nullable|date', // Opcional
         ]);
 
         try {
+            // Crear nueva instalación
             Instalaciones::create([
                 'id_empresa' => $request->input('id_empresa'),
                 'tipo' => $request->input('tipo'),
                 'estado' => $request->input('estado'),
                 'direccion_completa' => $request->input('direccion_completa'),
+                'folio' => $request->input('folio', null), // Opcional
+                'id_organismo' => $request->input('id_organismo', null), // Opcional
+                'fecha_emision' => $request->input('fecha_emision', null), // Opcional
+                'fecha_vigencia' => $request->input('fecha_vigencia', null), // Opcional
             ]);
 
             return response()->json(['code' => 200, 'message' => 'Instalación registrada correctamente.']);
         } catch (\Exception $e) {
             return response()->json(['code' => 500, 'message' => 'Error al registrar la instalación.']);
-     }
-}
-
+        }
+    }
 }
