@@ -32,7 +32,8 @@ $(function () {
   });
 
   
-  // Users datatable
+
+  //FUNCIONALIDAD DE LA VISTA datatable
   if (dt_user_table.length) {
     var dt_user = dt_user_table.DataTable({
       processing: true,
@@ -51,7 +52,6 @@ $(function () {
       ],
       columnDefs: [
         {
-          // For Responsive
           className: 'control',
           searchable: false,
           orderable: false,
@@ -61,7 +61,7 @@ $(function () {
             return '';
           }
         },
-        {
+        {//Tabla 1
           searchable: false,
           orderable: false,
           targets: 1,
@@ -70,7 +70,7 @@ $(function () {
           }
         },
         {
-          // User nombre del tipod e agave
+          // Tabla 2 Nombre
           targets: 2,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
@@ -79,40 +79,14 @@ $(function () {
           }
         },
          {
-          // User email
+          // Tabla 3 Cientifico
           targets: 3,
           render: function (data, type, full, meta) {
             var $email = full['cientifico'];
             return '<span class="user-email">' + $email + '</span>';
           }
         }, 
-/*         {
-          // email verify
-          targets: 4,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $verified = full['regimen'];
-            if($verified=='Persona física'){
-              var $colorRegimen = 'info';
-            }else{
-              var $colorRegimen = 'warning';
-            }
-            return `${
-              $verified
-                ? '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-                : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-            }`;
-          }
-        },
-        /* {
-          // email verify
-          targets: 5,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $id = full['id_empresa'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_empresa']}" data-registro="${full['razon_social']} "></i>`;
-          }
-        },*/
+
         {
           // Actions
           targets: -1,
@@ -122,10 +96,10 @@ $(function () {
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}" data-bs-toggle="offcanvas" data-bs-target="#editCategoria"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-/*               '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
- */              '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                  `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}" data-bs-toggle="offcanvas" data-bs-target="#editCategoria"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+                  `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+                  //'<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
+              '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
               userView +
               '" class="dropdown-item">View</a>' +
@@ -135,8 +109,8 @@ $(function () {
             );
           }
         }
-
       ],
+
       order: [[2, 'desc']],
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
@@ -161,9 +135,7 @@ $(function () {
               }
       },
 
-
-
-      // Exportar crud en documentos
+      // Opciones Exportar Documentos
       buttons: [
         {
           extend: 'collection',
@@ -311,7 +283,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Categoría</span>',
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo tipo de maguey/agave</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'offcanvas',
@@ -319,13 +291,14 @@ $(function () {
           }
         }
       ],
+/*FUNCION DESCONOCIDA
       // For responsive popup
       responsive: {
         details: {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Detalles de ' + data['categoria'];
+              return 'Detalles de ' + data['nombre'];
             }
           }),
           type: 'column',
@@ -351,16 +324,16 @@ $(function () {
             return data ? $('<table class="table"/><tbody />').append(data) : false;
           }
         }
-      }
+      }*/
     });
-  }
+  } 
 
 
 
 
   // Eliminar registro
   $(document).on('click', '.delete-record', function () {
-    var id_categoria = $(this).data('id'),
+    var id_tipo = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
 
     // hide responsive modal in small screen
@@ -385,7 +358,11 @@ $(function () {
         // delete the data
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}categorias-list/${id_categoria}`,
+          url: `${baseUrl}tipos-list/${id_tipo}`,
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        // Actualizar la tabla después de eliminar el registro
           success: function () {
             dt_user.draw();
           },
@@ -394,7 +371,7 @@ $(function () {
           }
         });
 
-        // success sweetalert
+        // Success Alert
         Swal.fire({
           icon: 'success',
           title: '¡Eliminado!',
@@ -415,6 +392,7 @@ $(function () {
       }
     });
   });
+
 
 
 

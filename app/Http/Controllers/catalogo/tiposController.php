@@ -89,4 +89,21 @@ class tiposController extends Controller
     }
 
 
+
+
+    // Función para eliminar una clase
+    public function destroy($id_tipo)
+    {
+        try {
+            $clase = clases::findOrFail($id_tipo);
+            $clase->delete();
+
+            return response()->json(['success' => 'Clase eliminada correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al eliminar la clase'], 500);
+        }
+    }
+
+
+
 }

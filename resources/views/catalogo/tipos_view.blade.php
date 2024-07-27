@@ -39,7 +39,7 @@
     <div class="card-header pb-0">
         <h3 class="card-title mb-0">Tipos de Maguey o Agave</h3>
     </div>
-    
+
     <div class="card-datatable table-responsive">
         <table class="datatables-users table">
             <thead class="table-dark">
@@ -54,18 +54,18 @@
         </table>
     </div>
 
-    <!-- Offcanvas to add new category -->
+    <!-- Offcanvas Agregar nuevo tipo -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
         <div class="offcanvas-header border-bottom">
-            <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Nueva Categoría</h5>
+            <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Nuevo Tipo de Maguey/Agave</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body mx-0 flex-grow-0 h-100">
             <form class="add-new-user pt-0" id="addNewCategoryForm">
                 @csrf
                 <div class="form-floating form-floating-outline mb-5">
-                    <input type="text" class="form-control" id="categoria" placeholder="Categoría" name="categoria" aria-label="Categoría" required>
-                    <label for="categoria">Nombre de la Categoría</label>
+                    <input type="text" class="form-control" id="categoria" placeholder="Tipo de maguey o agave" name="categoria" aria-label="Categoría" required>
+                    <label for="categoria">Nombre del Tipo</label>
                 </div>
                 <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
                 <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
