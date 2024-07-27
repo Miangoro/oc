@@ -18,6 +18,8 @@ class Instalaciones extends Model
         'tipo',
         'estado',
         'direccion_completa',
+        'folio',
+        'id_organismo'
     ];
 
     public function empresa()

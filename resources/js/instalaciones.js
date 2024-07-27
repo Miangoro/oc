@@ -4,6 +4,7 @@ $(function () {
 
   // Inicializar DataTable
   var dt_instalaciones_table = $('.datatables-users').DataTable({
+
     processing: true,
     serverSide: true,
     ajax: {
@@ -205,6 +206,22 @@ $(function () {
     ]
   });
 
+  var dt_user_table = $('.datatables-users'),
+  select2Elements = $('.select2'),
+  userView = baseUrl + 'app/user/view/account'
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+
+  initializeSelect2(select2Elements);
+
   // Configuración CSRF para Laravel
   $.ajaxSetup({
     headers: {
@@ -267,69 +284,55 @@ $(function () {
     });
   });
 
-  // Funcion agregar
-  $(document).ready(function () {
-    // CSRF Token
-    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+  //Agregar registro
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
 
-    // Submit del formulario de agregar nueva instalación
+    // Agregar nueva instalación
     $('#addNewInstalacionForm').on('submit', function (e) {
       e.preventDefault();
-
-      // Obtener valores del formulario
-      var id_empresa = $('#id_empresa').val();
-      var tipo = $('#tipo').val();
-      var estado = $('#estado').val();
-      var direccion_completa = $('#direccion').val();
-
-      console.log('ID Empresa:', id_empresa);
-      console.log('Tipo:', tipo);
-      console.log('Estado:', estado);
-      console.log('Dirección Completa:', direccion_completa);
+      var formData = $(this).serialize(); // Obtiene los datos del formulario en formato de cadena
 
       $.ajax({
-        url: baseUrl + 'instalaciones',
-        method: 'POST',
-        data: {
-          _token: CSRF_TOKEN,
-          id_empresa: id_empresa,
-          tipo: tipo,
-          estado: estado,
-          direccion_completa: direccion_completa
-        },
+        url: '/instalaciones', // URL para la solicitud POST
+        type: 'POST',
+        data: formData,
         success: function (response) {
-          console.log('Respuesta del servidor:', response);
-          if (response.code === 200) {
-            Swal.fire({
-              title: '¡Éxito!',
-              text: response.message,
-              icon: 'success',
-              confirmButtonText: 'OK'
-            }).then(function (result) {
-              if (result.isConfirmed) {
-                $('#modalAddInstalacion').modal('hide');
-                $('.datatables-users').DataTable().ajax.reload();
-              }
-            });
-          } else {
-            Swal.fire({
-              title: 'Error',
-              text: response.message || 'Hubo un problema al registrar la instalación.',
-              icon: 'error',
-              confirmButtonText: 'OK'
-            });
-          }
-        },
-        error: function (response) {
-          console.log('Error en la solicitud:', response);
+          $('#modalAddInstalacion').modal('hide'); // Oculta el modal
+          $('#addNewInstalacionForm')[0].reset(); // Reinicia el formulario
+          $('.datatables-users').DataTable().ajax.reload(); // Recarga los datos en la tabla
+
           Swal.fire({
-            title: 'Error',
-            text: 'Hubo un problema al registrar la instalación.',
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message, // Mensaje de éxito de la respuesta
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText); // Muestra el error en la consola
+
+          Swal.fire({
             icon: 'error',
-            confirmButtonText: 'OK'
+            title: '¡Error!',
+            text: 'Error al agregar la instalación', // Mensaje de error
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
           });
         }
       });
     });
   });
+
+
+
+  //end
 });

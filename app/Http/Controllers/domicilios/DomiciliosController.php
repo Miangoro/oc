@@ -15,7 +15,7 @@ class DomiciliosController extends Controller
     public function UserManagement()
     {
         $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
-        $empresas = Empresa::all(); // Obtener todas las empresas
+        $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = Estados::all(); // Obtener todos los estados
         $organismos = Organismos::all(); // Obtener todos los organismos
         return view('domicilios.find_domicilio_instalaciones_view', compact('instalaciones', 'empresas', 'estados', 'organismos'));
@@ -25,10 +25,10 @@ class DomiciliosController extends Controller
     {
         $columns = [
             1 => 'id_instalacion',
-            2 => 'tipo',
+            2 => 'direccion_completa',
             3 => 'estado',
-            4 => 'direccion_completa',
-            5 => 'folio',
+            4 => 'folio',
+            5 => 'tipo',
             6 => 'id_organismo',
         ];
 
@@ -66,6 +66,7 @@ class DomiciliosController extends Controller
                         ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
                         ->orWhere('estado', 'LIKE', "%{$search}%")
                         ->orWhere('folio', 'LIKE', "%{$search}%")
+                        ->orWhere('tipo', 'LIKE', "%{$search}%")
                         ->orWhere('id_organismo', 'LIKE', "%{$search}%");
                 })
                 ->offset($start)
@@ -82,6 +83,7 @@ class DomiciliosController extends Controller
                         ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
                         ->orWhere('estado', 'LIKE', "%{$search}%")
                         ->orWhere('folio', 'LIKE', "%{$search}%")
+                        ->orWhere('tipo', 'LIKE', "%{$search}%")
                         ->orWhere('id_organismo', 'LIKE', "%{$search}%");
                 })
                 ->count();
@@ -127,27 +129,34 @@ class DomiciliosController extends Controller
 }
 }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-          'id_empresa' => 'required|exists:empresa,id_empresa',
-            'tipo' => 'required|string',
-            'estado' => 'required|exists:estados,id',
-            'direccion_completa' => 'required|string',
+public function store(Request $request)
+{
+    // Validar datos de entrada
+    $request->validate([
+        'id_empresa' => 'required|exists:empresa,id_empresa',
+        'tipo' => 'required|string',
+        'estado' => 'required|exists:estados,id',
+        'direccion_completa' => 'required|string',
+        'folio' => 'nullable|string', // Opcional
+        'id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo', // Opcional
+    ]);
+
+    try {
+        // Crear nueva instalación
+        Instalaciones::create([
+            'id_empresa' => $request->input('id_empresa'),
+            'tipo' => $request->input('tipo'),
+            'estado' => $request->input('estado'),
+            'direccion_completa' => $request->input('direccion_completa'),
+            'folio' => $request->input('folio', null), // Opcional
+            'id_organismo' => $request->input('id_organismo', null), // Opcional
         ]);
 
-        try {
-            Instalaciones::create([
-                'id_empresa' => $request->input('id_empresa'),
-                'tipo' => $request->input('tipo'),
-                'estado' => $request->input('estado'),
-                'direccion_completa' => $request->input('direccion_completa'),
-            ]);
-
-            return response()->json(['code' => 200, 'message' => 'Instalación registrada correctamente.']);
-        } catch (\Exception $e) {
-            return response()->json(['code' => 500, 'message' => 'Error al registrar la instalación.']);
-     }
+        return response()->json(['code' => 200, 'message' => 'Instalación registrada correctamente.']);
+    } catch (\Exception $e) {
+        return response()->json(['code' => 500, 'message' => 'Error al registrar la instalación.']);
+    }
 }
+
 
 }
