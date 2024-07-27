@@ -46,32 +46,41 @@ $("#addNewMarca").on('submit', function (e) {
   });
 });
 
-
-document.addEventListener('DOMContentLoaded', function () {
-  const conformadoPorSelect = document.getElementById('conformadoPor');
-  const datosOpcion1 = document.getElementById('datosOpcion1');
-  const datosOpcion2 = document.getElementById('datosOpcion2');
-
-  // Inicialmente, ocultamos ambos conjuntos de datos
-  datosOpcion1.style.display = 'none';
-  datosOpcion2.style.display = 'none';
-
-  // Evento para detectar cambios en el select
-  conformadoPorSelect.addEventListener('change', function () {
-      const selectedValue = this.value;
-
-      if (selectedValue === '1') {
-          datosOpcion1.style.display = 'block';
-          datosOpcion2.style.display = 'none';
-      } else if (selectedValue === '2') {
-          datosOpcion1.style.display = 'none';
-          datosOpcion2.style.display = 'block';
-      } else {
-          datosOpcion1.style.display = 'none';
-          datosOpcion2.style.display = 'none';
-      }
+//MODAL para ocultar y mostara
+document.addEventListener('DOMContentLoaded', function() {
+  // Evento para el cambio en el select de tipo de lote
+  document.getElementById('tipo_lote').addEventListener('change', function() {
+      toggleFields();
   });
+
+  // Función para mostrar u ocultar campos dependiendo de la opción seleccionada
+  function toggleFields() {
+      var tipoLote = document.getElementById('tipo_lote').value;
+      if (tipoLote == '1') {
+          document.getElementById('datosOpcion1').style.display = 'block';
+          document.getElementById('datosOpcion2').style.display = 'none';
+      } else if (tipoLote == '2') {
+          document.getElementById('datosOpcion1').style.display = 'none';
+          document.getElementById('datosOpcion2').style.display = 'block';
+      } else {
+          document.getElementById('datosOpcion1').style.display = 'none';
+          document.getElementById('datosOpcion2').style.display = 'none';
+      }
+  }
+
+  // Función para inicializar select2 en los select
+  function initializeSelect2() {
+      $('.select2').select2();
+  }
+
+  // Inicializar select2
+  initializeSelect2();
+
+  // Inicializar campos por defecto
+  toggleFields();
 });
+
+
 
 //DATE PICKER
 //Datepicker inicializador
@@ -90,6 +99,11 @@ $(function () {
     select2Elements = $('.select2'),
     userView = baseUrl + 'app/user/view/account',
     offCanvasForm = $('#addlostesEnvasado');
+
+
+
+
+
 
   // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
@@ -140,6 +154,7 @@ $(function () {
         { data: 'volumen_total' },
         { data: 'destino_lote' },
         { data: 'direccion_completa' },
+        { data: 'lugar_envasado' },
         { data: 'sku' },
         { data: 'action' }
       ],

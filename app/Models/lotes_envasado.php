@@ -29,9 +29,5 @@ class lotes_envasado extends Model
     {
         return $this->belongsTo(Empresa::class, 'id_empresa', 'id_empresa');
     }
-
-    public function empresaNumCliente()
-    {
-        return $this->hasOne(empresaNumCliente::class, 'id_empresa', 'id_empresa');
-    }
+    
 }

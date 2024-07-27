@@ -59,6 +59,7 @@
           <th>Volumen total</th>
           <th>Destino lote</th>
           <th>Direccion completa</th>
+          <th>Lugar envasado</th>
           <th>No. de pedido/SKU</th>
           <th>Acciones</th>
         </tr>

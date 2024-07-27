@@ -9,7 +9,7 @@
                     <p class="address-subtitle"></p>
                 </div>
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-4">
                         <div class="form-floating form-floating-outline mb-5">
                             <select id="cliente" name="cliente" class="select2 form-select" required>
                                 <option value="">Selecciona cliente</option>
@@ -21,17 +21,19 @@
                         </div>
                     </div>
             
-                    <div class="col-md-3">
-                        <div class="form-floating form-floating-outline mb-6">
-                            <select class=" form-select" id="conformadoPor" aria-label="Default select example">
+                    <div class="col-md-4">
+                        <div class="form-floating form-floating-outline mb-4">
+                            <select id="tipo_lote" name="tipo_lote" class=" form-select" required
+                                onchange="toggleFields()">
                                 <option value="1">Por un solo lote a granel</option>
                                 <option value="2">Por más de un lote a granel</option>
                             </select>
-                            <label for="conformadoPor">Conformado por</label>
+                            <label for="tipo_lote">Conformado por</label>
                         </div>
                     </div>
+
             
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="form-floating form-floating-outline mb-6">
                             <select class="select2 form-select" id="lotesGra" name="lotesGra" aria-label="Default select example">
                                 <option value="" selected>Lote Granel</option>
@@ -44,7 +46,7 @@
                     </div>
                 </div>
             
-                <div id="datosOpcion1" class="opcion-datos">
+                <div id="datosOpcion1" class="opcion-datos" style="display: block;">
                     <!-- Datos a mostrar para la opción 1 -->
                     <div class="form-floating form-floating-outline mb-5">
                         <input type="text" class="form-control" id="add-user-fullname" placeholder="Introduce el nombre del lote" name="name" aria-label="Ana Gómez" />
@@ -112,12 +114,11 @@
                     </div>
                 </div>
             
-                <div id="datosOpcion2" class="opcion-datos">
+                <div id="datosOpcion2" class="opcion-datos" style="display: none;">
                     <!-- Datos a mostrar para la opción 2 -->
                     <!-- Agrega aquí los datos específicos que deseas mostrar para la opción 2 -->
                 </div>
             </div>
-            
             <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                 <button type="submit" class="btn btn-primary">Registrar</button>
                 <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"

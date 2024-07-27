@@ -447,7 +447,6 @@ Route::post('/marcas-list/{id}/update', [marcasCatalogoController::class, 'updat
 Route::get('/catalogo/clases', [ClaseController::class, 'UserManagement'])->name('catalogo-clases');
 Route::get('/clases-list', [ClaseController::class, 'index']);
 Route::delete('/clases-list/{id_clase}', [ClaseController::class, 'destroy'])->name('clases.destroy');
-Route::post('/catalogo', [ClaseController::class, 'store'])->name('catalogo.store');
 Route::get('/clases-list/{id_clase}/edit', [ClaseController::class, 'edit'])->name('clases.edit');
 Route::put('/clases-list/{id_clase}', [ClaseController::class, 'update'])->name('clases.update');
 
@@ -470,6 +469,7 @@ Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->n
 //Lotes de envasado
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
 Route::resource('/lotes-list', LotesEnvasadoController::class);
+Route::post('/catalogo', [lotesEnvasadoController::class, 'store'])->name('catalogo.store');
 
 //Domicilios
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
