@@ -339,7 +339,7 @@ $('#loteForm').on('submit', function(event) {
                 otroOrganismoFields.classList.add('d-none');
             });
         },
-        error: function(xhr) {
+        error: function(xhr) { console.log(xhr.responseText);
             // Mostrar mensaje de error
             Swal.fire({
                 icon: 'error',

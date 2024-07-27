@@ -127,8 +127,9 @@ class marcasCatalogoController extends Controller
             'cliente' => 'required|integer|exists:empresa,id_empresa',
         ]);
     
-        $empresa = empresa::where("id_empresa", $request->cliente)->first();
-        $idEmpresa = $empresa->id_empresa;
+       
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->cliente)->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
     
         if ($request->id) {
             // Actualizar marca existente
@@ -149,12 +150,12 @@ class marcasCatalogoController extends Controller
                         // Actualizar archivo y fecha de vigencia si están presentes
                         if ($request->hasFile('url') && isset($request->file('url')[$index])) {
                             // Eliminar el archivo anterior
-                            Storage::disk('public')->delete('uploads/' . $idEmpresa . '/' . $documento->url);
+                            Storage::disk('public')->delete('uploads/' . $numeroCliente . '/' . $documento->url);
     
                             // Subir el nuevo archivo
                             $file = $request->file('url')[$index];
                             $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                            $filePath = $file->storeAs('uploads/' . $idEmpresa, $filename, 'public');
+                            $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
     
                             // Actualizar en la base de datos
                             $documento->url = $filename;
@@ -170,7 +171,7 @@ class marcasCatalogoController extends Controller
                         if ($request->hasFile('url') && isset($request->file('url')[$index])) {
                             $file = $request->file('url')[$index];
                             $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                            $filePath = $file->storeAs('uploads/' . $idEmpresa, $filename, 'public');
+                            $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
     
                             $documentacion_url = new Documentacion_url();
                             $documentacion_url->id_relacion = $marca->id_marca;
@@ -196,7 +197,7 @@ class marcasCatalogoController extends Controller
             if ($request->hasFile('url')) {
                 foreach ($request->file('url') as $index => $file) {
                     $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                    $filePath = $file->storeAs('uploads/' . $idEmpresa, $filename, 'public');
+                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
     
                     $documentacion_url = new Documentacion_url();
                     $documentacion_url->id_relacion = $marca->id_marca;
