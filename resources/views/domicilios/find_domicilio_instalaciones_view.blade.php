@@ -33,24 +33,44 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-      const certificacionSelect = document.getElementById('certificacion');
-      const certificadoOtrosDiv = document.getElementById('certificado-otros');
+      const certificacionSelectAdd = document.getElementById('certificacion');
+      const certificadoOtrosDivAdd = document.getElementById('certificado-otros');
 
-      certificacionSelect.addEventListener('change', function () {
-          if (certificacionSelect.value === 'otro_organismo') {
-              certificadoOtrosDiv.classList.remove('d-none');
+      const certificacionSelectEdit = document.getElementById('edit_certificacion');
+      const certificadoOtrosDivEdit = document.getElementById('edit_certificado_otros');
+
+      certificacionSelectAdd.addEventListener('change', function () {
+          if (certificacionSelectAdd.value === 'otro_organismo') {
+              certificadoOtrosDivAdd.classList.remove('d-none');
           } else {
-              certificadoOtrosDiv.classList.add('d-none');
+              certificadoOtrosDivAdd.classList.add('d-none');
           }
       });
 
-      // Reiniciar formulario y ocultar campos adicionales al cerrar el modal
-      const modal = document.getElementById('modalAddInstalacion');
-      modal.addEventListener('hidden.bs.modal', function () {
+      certificacionSelectEdit.addEventListener('change', function () {
+          if (certificacionSelectEdit.value === 'otro_organismo') {
+              certificadoOtrosDivEdit.classList.remove('d-none');
+          } else {
+              certificadoOtrosDivEdit.classList.add('d-none');
+          }
+      });
+
+      // Reiniciar formulario y ocultar campos adicionales al cerrar el modal de agregar
+      const modalAdd = document.getElementById('modalAddInstalacion');
+      modalAdd.addEventListener('hidden.bs.modal', function () {
           const form = document.getElementById('addNewInstalacionForm');
           form.reset();
-          certificacionSelect.value = '';
-          certificadoOtrosDiv.classList.add('d-none');
+          certificacionSelectAdd.value = '';
+          certificadoOtrosDivAdd.classList.add('d-none');
+      });
+
+      // Reiniciar formulario y ocultar campos adicionales al cerrar el modal de editar
+      const modalEdit = document.getElementById('modalEditInstalacion');
+      modalEdit.addEventListener('hidden.bs.modal', function () {
+          const form = document.getElementById('editInstalacionForm');
+          form.reset();
+          certificacionSelectEdit.value = '';
+          certificadoOtrosDivEdit.classList.add('d-none');
       });
   });
 </script>
@@ -144,7 +164,7 @@
                             <label for="certificacion">Tipo de Certificación</label>
                         </div>
 
-                      <!-- Campos adicionales para "Certificado por otro organismo" -->
+                        <!-- Campos adicionales para "Certificado por otro organismo" -->
                         <div id="certificado-otros" class="d-none">
                             <div class="form-floating form-floating-outline mb-3">
                                 <input type="file" class="form-control" id="certificado_archivo" name="certificado_archivo" aria-label="Archivo de Certificación">
@@ -183,10 +203,118 @@
                         </div>
 
                         <div class="d-flex justify-content-end mt-3">
-                          <button type="submit" class="btn btn-primary me-2">Registrar</button>
-                          <button type="reset" class="btn btn-outline-secondary"
-                              data-bs-dismiss="modal">Cancelar</button>
-                      </div>
+                            <button type="submit" class="btn btn-primary me-2">Registrar</button>
+                            <button type="reset" class="btn btn-outline-secondary"
+                                data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para editar instalación -->
+    <div class="modal fade" id="modalEditInstalacion" tabindex="-1" aria-labelledby="modalEditInstalacionLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="modalEditInstalacionLabel" class="modal-title">Editar Instalación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editInstalacionForm">
+                        @csrf
+
+                        <div class="form-floating form-floating-outline mb-4">
+                            <select id="edit_id_empresa" name="id_empresa" class="select2 form-select" required>
+                                <option value="" disabled selected>Selecciona la empresa</option>
+                                @foreach ($empresas as $empresa)
+                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
+                                @endforeach
+                            </select>
+                            <label for="edit_id_empresa">Empresa</label>
+                        </div>
+
+                        <!-- Select de Tipo de Instalación -->
+                        <div class="form-floating form-floating-outline mb-3">
+                            <select class="select2 form-select" id="edit_tipo" name="tipo" aria-label="Tipo de Instalación" required>
+                                <option value="">Seleccione un tipo de instalación</option>
+                                <option value="productora">Productora</option>
+                                <option value="envasadora">Envasadora</option>
+                                <option value="comercializadora">Comercializadora</option>
+                            </select>
+                            <label for="edit_tipo">Tipo de Instalación</label>
+                        </div>
+
+                        <!-- Input de Estado -->
+                        <div class="form-floating form-floating-outline mb-3">
+                            <select class="select2 form-select" id="edit_estado" name="estado" data-placeholder="Seleccione un estado" aria-label="Estado" required>
+                                <option value="">Seleccione un estado</option>
+                                @foreach($estados as $estado)
+                                    <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
+                                @endforeach
+                            </select>
+                            <label for="edit_estado">Estado</label>
+                        </div>
+
+                        <!-- Input de Dirección Completa -->
+                        <div class="form-floating form-floating-outline mb-3">
+                            <input type="text" class="form-control" id="edit_direccion" placeholder="Ingrese la dirección completa" name="direccion_completa" aria-label="Dirección Completa" required>
+                            <label for="edit_direccion">Dirección Completa</label>
+                        </div>
+
+                        <!-- Select de Tipo de Certificación -->
+                        <div class="form-floating form-floating-outline mb-3">
+                            <select class="form-select" id="edit_certificacion" name="certificacion" aria-label="Tipo de Certificación" required>
+                                <option value="">Seleccione el tipo de certificación</option>
+                                <option value="oc_cidam">Certificación por OC CIDAM</option>
+                                <option value="otro_organismo">Certificado por otro organismo</option>
+                            </select>
+                            <label for="edit_certificacion">Tipo de Certificación</label>
+                        </div>
+
+                        <!-- Campos adicionales para "Certificado por otro organismo" -->
+                        <div id="edit_certificado_otros" class="d-none">
+                            <div class="form-floating form-floating-outline mb-3">
+                                <input type="file" class="form-control" id="edit_certificado_archivo" name="certificado_archivo" aria-label="Archivo de Certificación">
+                                <label for="edit_certificado_archivo">Archivo de Certificación</label>
+                            </div>
+
+                            <div class="form-floating form-floating-outline mb-3">
+                                <input type="text" class="form-control" id="edit_folio" placeholder="Folio/Número del certificado" name="folio" aria-label="Folio/Número del certificado">
+                                <label for="edit_folio">Folio/Número del certificado</label>
+                            </div>
+
+                            <div class="form-floating form-floating-outline mb-3">
+                                <select class="form-select" id="edit_id_organismo" name="id_organismo" data-placeholder="Seleccione un organismo de certificación" aria-label="Organismo de Certificación">
+                                    <option value="">Seleccione un organismo de certificación</option>
+                                    @foreach($organismos as $organismo)
+                                        <option value="{{ $organismo->id_organismo }}">{{ $organismo->organismo }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="edit_id_organismo">Organismo de Certificación</label>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="date" class="form-control" id="edit_fecha_emision" name="fecha_emision" aria-label="Fecha de Emisión">
+                                        <label for="edit_fecha_emision">Fecha de Emisión</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="date" class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia" aria-label="Fecha de Vigencia">
+                                        <label for="edit_fecha_vigencia">Fecha de Vigencia</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end mt-3">
+                            <button type="submit" class="btn btn-primary me-2">Guardar Cambios</button>
+                            <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
                     </form>
                 </div>
             </div>
