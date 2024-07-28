@@ -16,8 +16,12 @@ class Instalaciones extends Model
     protected $fillable = [
         'id_empresa',
         'tipo',
+        'estado',
         'direccion_completa',
-        'folio'
+        'folio',
+        'id_organismo',
+        'fecha_emision',
+        'fecha_vigencia'
     ];
 
     public function empresa()

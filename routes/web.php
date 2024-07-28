@@ -472,13 +472,14 @@ Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement']
 Route::resource('/lotes-list', LotesEnvasadoController::class);
 Route::post('/lotes-envasado', [LotesEnvasadoController::class, 'store']);
 
-//Domicilios
+//Domicilios fiscal
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
 
 //Domicilios Instalaciones
 Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio-instalaciones');
 Route::resource('/instalaciones-list', DomiciliosController::class);
 Route::delete('instalaciones/{id_instalacion}', [DomiciliosController::class, 'destroy']);
+Route::post('/instalaciones', [DomiciliosController::class, 'store']);
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
