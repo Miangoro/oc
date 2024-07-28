@@ -97,7 +97,7 @@
                         @csrf
 
                         <div class="form-floating form-floating-outline mb-4">
-                            <select id="id_empresa" name="id_empresa" class="form-select" required>
+                            <select id="id_empresa" name="id_empresa" class="select2 form-select" required>
                                 <option value="" disabled selected>Selecciona la empresa</option>
                                 @foreach ($empresas as $empresa)
                                     <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
@@ -108,7 +108,7 @@
 
                         <!-- Select de Tipo de Instalación -->
                         <div class="form-floating form-floating-outline mb-3">
-                            <select class="form-select" id="tipo" name="tipo" aria-label="Tipo de Instalación" required>
+                            <select class="select2 form-select" id="tipo" name="tipo" aria-label="Tipo de Instalación" required>
                                 <option value="">Seleccione un tipo de instalación</option>
                                 <option value="productora">Productora</option>
                                 <option value="envasadora">Envasadora</option>
@@ -144,7 +144,7 @@
                             <label for="certificacion">Tipo de Certificación</label>
                         </div>
 
-                        <!-- Campos adicionales para "Certificado por otro organismo" -->
+                      <!-- Campos adicionales para "Certificado por otro organismo" -->
                         <div id="certificado-otros" class="d-none">
                             <div class="form-floating form-floating-outline mb-3">
                                 <input type="file" class="form-control" id="certificado_archivo" name="certificado_archivo" aria-label="Archivo de Certificación">
@@ -157,7 +157,7 @@
                             </div>
 
                             <div class="form-floating form-floating-outline mb-3">
-                                <select class="select2 form-select" id="id_organismo" name="id_organismo" data-placeholder="Seleccione un organismo de certificación" aria-label="Organismo de Certificación">
+                                <select class="form-select" id="id_organismo" name="id_organismo" data-placeholder="Seleccione un organismo de certificación" aria-label="Organismo de Certificación">
                                     <option value="">Seleccione un organismo de certificación</option>
                                     @foreach($organismos as $organismo)
                                         <option value="{{ $organismo->id_organismo }}">{{ $organismo->organismo }}</option>
