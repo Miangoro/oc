@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers\catalogo;
@@ -270,4 +269,3 @@ class LotesGranelController extends Controller
         ]);
     }
 }
-
