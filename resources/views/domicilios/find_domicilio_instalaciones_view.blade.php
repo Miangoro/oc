@@ -320,7 +320,7 @@
             </div>
         </div>
     </div>
-
+//new
     <!-- Modal -->
     @include('_partials._modals.modal-pdfs-frames')
     <!-- /Modal -->
