@@ -208,21 +208,17 @@ $(function () {
     ]
   });
 
-  var dt_user_table = $('.datatables-users'),
-  select2Elements = $('.select2'),
-  userView = baseUrl + 'app/user/view/account'
   // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
     $elements.each(function () {
       var $this = $(this);
-      select2Focus($this);
       $this.wrap('<div class="position-relative"></div>').select2({
         dropdownParent: $this.parent()
+      }).on('select2:open', function () {
+        // Puedes agregar lógica aquí si necesitas hacer algo cuando el select2 se abre
       });
     });
   }
-
-  initializeSelect2(select2Elements);
 
   // Configuración CSRF para Laravel
   $.ajaxSetup({
@@ -286,7 +282,6 @@ $(function () {
     });
   });
 
-  //Agregar registro
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -297,20 +292,25 @@ $(function () {
 
     // Agregar nueva instalación
     $('#addNewInstalacionForm').on('submit', function (e) {
-      e.preventDefault();
+      e.preventDefault(); // Evita el comportamiento por defecto del formulario
       var formData = new FormData(this);
-
 
       $.ajax({
         url: '/instalaciones',
-    type: 'POST',
-    data: formData,
-    processData: false, // Evita la conversión automática de datos a cadena
-    contentType: false, // Evita que se establezca el tipo de contenido
+        type: 'POST',
+        data: formData,
+        processData: false, // Evita la conversión automática de datos a cadena
+        contentType: false, // Evita que se establezca el tipo de contenido
         success: function (response) {
-         // $('#modalAddInstalacion').modal('hide'); // Oculta el modal
-         // $('#addNewInstalacionForm')[0].reset(); // Reinicia el formulario
-          $('.datatables-users').DataTable().ajax.reload(); // Recarga los datos en la tabla
+          // Ocultar el modal y reiniciar el formulario
+          $('#modalAddInstalacion').modal('hide');
+          $('#addNewInstalacionForm')[0].reset();
+
+          // Reiniciar los campos select2
+          $('.select2').val(null).trigger('change');
+
+          // Recargar los datos en la tabla
+          $('.datatables-users').DataTable().ajax.reload();
 
           console.log(response);
 
@@ -339,129 +339,107 @@ $(function () {
     });
   });
 
-// Cargar datos para edición
-$(document).on('click', '.edit-record', function () {
-  var id_instalacion = $(this).data('id');
-  var url = baseUrl + 'domicilios/edit/' + id_instalacion;
+  $(document).on('click', '.edit-record', function () {
+    var id_instalacion = $(this).data('id');
+    var url = baseUrl + 'domicilios/edit/' + id_instalacion;
 
-  $.get(url, function (data) {
-      if (data.success) {
-          var instalacion = data.instalacion;
-          console.log(instalacion); // Verificar los datos recibidos
+    $.get(url, function (data) {
+        if (data.success) {
+            var instalacion = data.instalacion;
 
-          // Asignar valores a los campos
-          $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
-          $('#edit_tipo').val(instalacion.tipo).trigger('change');
-          $('#edit_estado').val(instalacion.estado).trigger('change');
-          $('#edit_direccion').val(instalacion.direccion_completa);
+            // Asignar valores a los campos
+            $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
+            $('#edit_tipo').val(instalacion.tipo).trigger('change');
+            $('#edit_estado').val(instalacion.estado).trigger('change');
+            $('#edit_direccion').val(instalacion.direccion_completa);
 
-          // Verificar si hay valores en los campos adicionales
-          var tieneCertificadoOtroOrganismo = instalacion.folio || instalacion.id_organismo ||
-              (instalacion.fecha_emision && instalacion.fecha_emision !== 'N/A') ||
-              (instalacion.fecha_vigencia && instalacion.fecha_vigencia !== 'N/A');
+            // Verificar si hay valores en los campos adicionales
+            var tieneCertificadoOtroOrganismo = instalacion.folio || instalacion.id_organismo ||
+                (instalacion.fecha_emision && instalacion.fecha_emision !== 'N/A') ||
+                (instalacion.fecha_vigencia && instalacion.fecha_vigencia !== 'N/A');
 
-          if (tieneCertificadoOtroOrganismo) {
-              $('#edit_certificacion').val('otro_organismo').trigger('change');
-              $('#edit_certificado_otros').removeClass('d-none');
+            if (tieneCertificadoOtroOrganismo) {
+                $('#edit_certificacion').val('otro_organismo').trigger('change');
+                $('#edit_certificado_otros').removeClass('d-none');
 
-              $('#edit_folio').val(instalacion.folio || '');
-              $('#edit_id_organismo').val(instalacion.id_organismo || '').trigger('change');
+                $('#edit_folio').val(instalacion.folio || '');
+                $('#edit_id_organismo').val(instalacion.id_organismo || '').trigger('change');
 
-              // Solo asignar las fechas si son válidas
-              if (instalacion.fecha_emision && instalacion.fecha_emision !== 'N/A') {
-                  $('#edit_fecha_emision').val(instalacion.fecha_emision);
-              } else {
-                  $('#edit_fecha_emision').val('');
-              }
+                $('#edit_fecha_emision').val(instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '');
+                $('#edit_fecha_vigencia').val(instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '');
+            } else {
+                $('#edit_certificacion').val('oc_cidam').trigger('change');
+                $('#edit_certificado_otros').addClass('d-none');
+            }
 
-              if (instalacion.fecha_vigencia && instalacion.fecha_vigencia !== 'N/A') {
-                  $('#edit_fecha_vigencia').val(instalacion.fecha_vigencia);
-              } else {
-                  $('#edit_fecha_vigencia').val('');
-              }
-          } else {
-              $('#edit_certificacion').val('oc_cidam').trigger('change');
-              $('#edit_certificado_otros').addClass('d-none');
-          }
-
-          // Mostrar el modal
-          $('#modalEditInstalacion').modal('show');
-      } else {
-          Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se pudo cargar los datos de la instalación',
-              customClass: {
-                  confirmButton: 'btn btn-primary'
-              }
-          });
-      }
-  }).fail(function() {
-      Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Error en la solicitud. Inténtalo de nuevo.',
-          customClass: {
-              confirmButton: 'btn btn-primary'
-          }
-      });
-  });
+            // Mostrar el modal
+            $('#modalEditInstalacion').modal('show');
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo cargar los datos de la instalación',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
+                }
+            });
+        }
+    }).fail(function() {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error en la solicitud. Inténtalo de nuevo.',
+            customClass: {
+                confirmButton: 'btn btn-primary'
+            }
+        });
+    });
 });
 
 $(document).ready(function() {
-  // Al abrir el modal, guarda el ID de la instalación en el formulario
-  $('#modalEditInstalacion').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget); // Botón que abre el modal
-      var id_instalacion = button.data('id'); // Extrae el ID de la instalación
-      var modal = $(this);
+    $('#modalEditInstalacion').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id_instalacion = button.data('id');
+        var modal = $(this);
 
-      // Configura el ID en el formulario
-      modal.find('#editInstalacionForm').data('id', id_instalacion);
-  });
+        modal.find('#editInstalacionForm').data('id', id_instalacion);
+    });
 
-  // Enviar el formulario de edición
-  $('#editInstalacionForm').submit(function (e) {
-      e.preventDefault();
+    $('#editInstalacionForm').submit(function (e) {
+        e.preventDefault();
 
-      var id_instalacion = $(this).data('id');
-      var formData = $(this).serialize(); // Obtener los datos del formulario
+        var id_instalacion = $(this).data('id');
+        var formData = $(this).serialize();
 
-      // Realizar la petición AJAX para actualizar los datos
-      $.ajax({
-          url: baseUrl + 'instalaciones/' + id_instalacion,
-          type: 'PUT',
-          data: formData,
-          success: function (response) {
-              // Actualizar la tabla de datos
-              dt_instalaciones_table.ajax.reload();
+        $.ajax({
+            url: baseUrl + 'instalaciones/' + id_instalacion,
+            type: 'PUT',
+            data: formData,
+            success: function (response) {
+                dt_instalaciones_table.ajax.reload();
+                $('#modalEditInstalacion').modal('hide');
 
-              // Cerrar el modal de edición
-              $('#modalEditInstalacion').modal('hide');
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.success,
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                });
+            },
+            error: function (xhr) {
+                console.error('Error en la solicitud AJAX:', xhr.responseJSON);
 
-              // Mostrar mensaje de éxito
-             // Mostrar alerta de éxito
-             Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: response.success,
-              customClass: {
-                  confirmButton: 'btn btn-success'
-              }
-          });
-          },
-          error: function (xhr) {
-              // Mostrar el error en consola
-              console.error('Error en la solicitud AJAX:', xhr.responseJSON);
-
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Error',
-                  text: 'Hubo un problema al actualizar los datos.',
-                  footer: `<pre>${JSON.stringify(xhr.responseJSON, null, 2)}</pre>`,
-              });
-          }
-      });
-  });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un problema al actualizar los datos.',
+                    footer: `<pre>${JSON.stringify(xhr.responseJSON, null, 2)}</pre>`,
+                });
+            }
+        });
+    });
 });
 
 

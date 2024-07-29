@@ -13,8 +13,8 @@
                     <input type="hidden" id="edit_id_lote_envasado" name="id">
                     <div class="row">
                         <div class="col-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <select id="edit_cliente" name="cliente" class="select2 form-select" required>
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select onchange="obtenerGraneles(); obtenerMarcas(); obtenerDirecciones();" id="edit_cliente" name="id_empresa" class="select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($clientes as $cliente)
                                         <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
@@ -36,13 +36,13 @@
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="select2 form-select" id="edit_lotesGra" name="lotesGra" aria-label="Default select example">
+                                <select class="select2 form-select id_lote_granel" id="edit_lote_granel" name="id_lote_granel" aria-label="Default select example">
                                     <option value="" selected>Lote Granel</option>
                                     @foreach ($lotes_granel as $lotesGra)
-                                        <option value="{{ $lotesGra->id_lote_granel }}">{{ $lotesGra->nombre_lote }}</option>
+                                        <option value="{{ $lotesGra->id_empresa }}">{{ $lotesGra->nombre_lote }}</option>
                                     @endforeach
                                 </select>
-                                <label for="edit_lotesGra">No de lote granel:</label>
+                                <label for="edit_lote_granel">No de lote granel:</label>
                             </div>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select" id="edit_marca" name="id_marca" aria-label="Marca">
+                                    <select class="select2 form-select id_marca" id="edit_marca" name="id_marca" aria-label="Marca">
                                         <option value="" selected>Selecciona una marca</option>
                                         @foreach ($marcas as $marca)
                                             <option value="{{ $marca->id_marca }}">{{ $marca->marca }}</option>
@@ -71,6 +71,7 @@
                                     </select>
                                     <label for="edit_marca">Marca</label>
                                 </div>
+                                
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
@@ -114,10 +115,10 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select" id="edit_Instalaciones" name="Instalaciones" aria-label="Default select example">
+                                    <select class="select2 form-select id_instalacion" id="edit_Instalaciones" name="lugar_envasado" aria-label="Default select example">
                                         <option value="" selected>Lote Granel</option>
-                                        @foreach ($Instalaciones as $Instalaciones)
-                                            <option value="{{ $Instalaciones->id_instalacion }}">{{ $Instalaciones->direccion_completa }}</option>
+                                        @foreach ($Instalaciones as $Instalacion)
+                                            <option value="{{ $Instalacion->id_instalacion }}">{{ $Instalacion->direccion_completa }}</option>
                                         @endforeach
                                     </select>
                                     <label for="edit_Instalaciones">Lugar de envasado</label>
@@ -135,3 +136,85 @@
         </div>
     </div>
 </div>
+
+
+
+<script>
+
+    function obtenerGraneles() {
+        var empresa = $("#id_empresa").val();
+    // Hacer una petición AJAX para obtener los detalles de la empresa
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            // Cargar los detalles en el modal
+            var contenido = "";
+          for (let index = 0; index < response.lotes_granel.length; index++) {
+            contenido = '<option value="'+response.lotes_granel[index].id_lote_granel+'">'+response.lotes_granel[index].nombre_lote+'</option>' + contenido;
+           // console.log(response.normas[index].norma);
+          }
+
+          if(response.lotes_granel.length == 0){
+            contenido = '<option value="">Sin lotes a granel registrados</option>';
+          }
+            $('.id_lote_granel').html(contenido);
+        },
+        error: function() {
+            //alert('Error al cargar los lotes a granel.');
+        }
+    });
+  }
+
+  function obtenerMarcas() {
+        var empresa = $("#id_empresa").val();
+    // Hacer una petición AJAX para obtener los detalles de la empresa
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            // Cargar los detalles en el modal
+            var contenido = "";
+          for (let index = 0; index < response.marcas.length; index++) {
+            contenido = '<option value="'+response.marcas[index].id_marca+'">'+response.marcas[index].marca+'</option>' + contenido;
+           // console.log(response.normas[index].norma);
+          }
+
+          if(response.marcas.length == 0){
+            contenido = '<option value="">Sin marcas registradas</option>';
+          }
+            $('#id_marca').html(contenido);
+        },
+        error: function() {
+            //alert('Error al cargar los lotes a granel.');
+        }
+    });
+  }
+
+
+  function obtenerDirecciones() {
+        var empresa = $("#id_empresa").val();
+    // Hacer una petición AJAX para obtener los detalles de la empresa
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            // Cargar los detalles en el modal
+            var contenido = "";
+          for (let index = 0; index < response.instalaciones.length; index++) {
+            contenido = '<option value="'+response.instalaciones[index].id_instalacion+'">'+response.instalaciones[index].direccion_completa+'</option>' + contenido;
+           // console.log(response.normas[index].norma);
+          }
+
+          if(response.instalaciones.length == 0){
+            contenido = '<option value="">Sin lotes a granel registrados</option>';
+          }
+            $('.id_instalacion').html(contenido);
+        },
+        error: function() {
+            //alert('Error al cargar los lotes a granel.');
+        }
+    });
+  }
+
+</script>

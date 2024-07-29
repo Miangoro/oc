@@ -290,8 +290,11 @@ class LotesGranelController extends Controller
         return response()->json(['success' => false], 404);
     }
 }
+<<<<<<< HEAD
 
 
     
     
 }
+=======
+>>>>>>> b5f22562b40b488de2ddfb0e9f2f63f6e590089c

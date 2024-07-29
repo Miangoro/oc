@@ -91,8 +91,8 @@ class lotesEnvasadoController extends Controller
         
             foreach ($users as $user) {
                 // Obtener la dirección completa de la instalación mediante el id_empresa
-                $instalacion = Instalaciones::where('id_empresa', $user->id_empresa)->first();
-                $direccion_completa = $instalacion ? $instalacion->direccion_completa : '';
+                $instalacion = Instalaciones::where('id_instalacion', $user->lugar_envasado)->first();
+        $direccion_completa = $instalacion ? $instalacion->direccion_completa : '';
         
                 // Obtener el numero_cliente de la tabla empresa_num_cliente
                 $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
