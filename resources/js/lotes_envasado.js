@@ -52,6 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
       toggleFields();
   });
 
+ 
+
   // Función para mostrar u ocultar campos dependiendo de la opción seleccionada
   function toggleFields() {
       var tipoLote = document.getElementById('tipo_lote').value;
@@ -507,6 +509,8 @@ $(function () {
         });
     });
 
+    obtenerGraneles();
+
     // Manejar el envío del formulario de edición
     $('#editLoteEnvasadoForm').on('submit', function(e) {
         e.preventDefault();
@@ -546,6 +550,8 @@ $(function () {
         });
     });
 });
+
+
 
   
 

@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select id="id_empresa" name="id_empresa" class="select2 form-select" required>
+                                <select onchange="obtenerGraneles()" id="id_empresa" name="id_empresa" class="select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($clientes as $cliente)
                                         <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
@@ -32,20 +32,18 @@
                             </div>
                         </div>
                 
-                        <div class="col-md-4">
+                        <div  id="datosOpcion1"  class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="select2 form-select" id="lotesGra" name="lugar_envasado" aria-label="Default select example">
-                                    <option value="" selected>Lote Granel</option>
-                                    @foreach ($lotes_granel as $lotesGra)
-                                        <option value="{{ $lotesGra->id_lote_granel }}">{{ $lotesGra->nombre_lote }}</option>
-                                    @endforeach
+                                <select class="select2 form-select lotesGra" id="lotesGra" name="id_lote_granel[]"  aria-label="Default select example">
+                                  
+                                   
                                 </select>
                                 <label for="lotesGra">No de lote granel:</label>
                             </div>
                         </div>
                     </div>
                 
-                    <div id="datosOpcion1" class="opcion-datos" style="display: block;">
+                    <div  class="opcion-datos" >
                         <!-- Datos a mostrar para la opción 1 -->
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control" id="name" placeholder="Introduce el nombre del lote" name="nombre_lote" aria-label="Nombre del lote" required />
@@ -59,7 +57,7 @@
                                     <label for="sku">No. de pedido/SKU</label>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <divclass="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <select class="select2 form-select" id="marca" name="id_marca" aria-label="Marca">
                                         <option value="" selected>Selecciona una marca</option>
@@ -124,6 +122,34 @@
                             
                         </div>
                     </div>
+
+                    <div id="datosOpcion2">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th><button type="button" class="btn btn-primary"> <i class="ri-add-line"></i> </button></th>
+                                    <th>Lote a granel</th>
+                                    <th>Volumen parcial</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <tr>
+                                        <th>
+                                            <button type="button" class="btn btn-danger"> <i class="ri-delete-bin-5-fill"></i> </button>
+                                        </th>
+                                        <td>
+                                            <select class="lotesGra form-control select2" name="id_lote_granel[]" id="">
+
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-sm"  name="volumen_parcial">
+                                        </td>
+                                    </tr>
+                               
+                            </tbody>
+                        </table>
+                    </div>
                 
 
                     
@@ -147,3 +173,41 @@
                     <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
                         aria-label="Close">Cancelar</button>
                 </div>-->
+
+<script>
+
+
+    function obtenerGraneles() {
+
+        var empresa = $("#id_empresa").val();
+        //alert(empresa);
+    // Hacer una petición AJAX para obtener los detalles de la empresa
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            // Cargar los detalles en el modal
+            var contenido = "";
+
+
+          for (let index = 0; index < response.lotes_granel.length; index++) {
+            contenido = '<option value="'+response.lotes_granel[index].id_lote_granel+'">'+response.lotes_granel[index].nombre_lote+'</option>' + contenido;
+           // console.log(response.normas[index].norma);
+          }
+
+          if(response.lotes_granel.length == 0){
+            contenido = '<option value="">Sin lotes a granel registrados</option>';
+          }
+           
+
+            $('.lotesGra').html(contenido);
+         
+          
+        },
+        error: function() {
+            //alert('Error al cargar los lotes a granel.');
+        }
+    });
+  }
+
+</script>

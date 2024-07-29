@@ -503,3 +503,5 @@ Route::get('documentacion/getActividades', [documentacionController::class, 'get
 //Tipos de maguey/agave
 Route::get('/catalogo/tipos', [tiposController::class, 'UserManagement'])->name('tipos-maguey-agave');
 Route::resource('/tipos-list', tiposController::class);
+
+Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');
