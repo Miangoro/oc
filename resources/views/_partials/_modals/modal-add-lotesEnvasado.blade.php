@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select onchange="obtenerGraneles()" id="id_empresa" name="id_empresa" class="select2 form-select" required>
+                                <select onchange="obtenerGraneles(); obtenerMarcas();" id="id_empresa" name="id_empresa" class="select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($clientes as $cliente)
                                         <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
@@ -59,11 +59,9 @@
                             </div>
                             <divclass="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select" id="marca" name="id_marca" aria-label="Marca">
+                                    <select class="select2 form-select" id="id_marca" name="id_marca" aria-label="Marca">
                                         <option value="" selected>Selecciona una marca</option>
-                                        @foreach ($marcas as $marca)
-                                            <option value="{{ $marca->id_marca }}">{{ $marca->marca }}</option>
-                                        @endforeach
+                                     
                                     </select>
                                     <label for="marca">Marca</label>
                                 </div>
@@ -176,11 +174,8 @@
 
 <script>
 
-
     function obtenerGraneles() {
-
         var empresa = $("#id_empresa").val();
-        //alert(empresa);
     // Hacer una petición AJAX para obtener los detalles de la empresa
     $.ajax({
         url: '/getDatos/' + empresa,
@@ -188,8 +183,6 @@
         success: function(response) {
             // Cargar los detalles en el modal
             var contenido = "";
-
-
           for (let index = 0; index < response.lotes_granel.length; index++) {
             contenido = '<option value="'+response.lotes_granel[index].id_lote_granel+'">'+response.lotes_granel[index].nombre_lote+'</option>' + contenido;
            // console.log(response.normas[index].norma);
@@ -198,11 +191,32 @@
           if(response.lotes_granel.length == 0){
             contenido = '<option value="">Sin lotes a granel registrados</option>';
           }
-           
-
             $('.lotesGra').html(contenido);
-         
-          
+        },
+        error: function() {
+            //alert('Error al cargar los lotes a granel.');
+        }
+    });
+  }
+
+  function obtenerMarcas() {
+        var empresa = $("#id_empresa").val();
+    // Hacer una petición AJAX para obtener los detalles de la empresa
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            // Cargar los detalles en el modal
+            var contenido = "";
+          for (let index = 0; index < response.marcas.length; index++) {
+            contenido = '<option value="'+response.marcas[index].id_marca+'">'+response.marcas[index].marca+'</option>' + contenido;
+           // console.log(response.normas[index].norma);
+          }
+
+          if(response.marcas.length == 0){
+            contenido = '<option value="">Sin marcas registradas</option>';
+          }
+            $('#id_marca').html(contenido);
         },
         error: function() {
             //alert('Error al cargar los lotes a granel.');

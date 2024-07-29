@@ -84,7 +84,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select id="id_empresa" name="id_empresa" class=" form-select" required >
+                                        <select onchange="obtenerGuias()" id="id_empresa" name="id_empresa" class=" form-select" required >
                                             <option value="" disabled selected>Selecciona la empresa</option>
                                             @foreach ($empresas as $empresa)
                                                 <option value="{{ $empresa->id_empresa}}">{{ $empresa->razon_social }}</option>
@@ -113,9 +113,7 @@
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select id="id_guia" name="id_guia" class="form-control">
                                                 <option value="">Seleccione una guía</option>
-                                                @foreach ($guias as $guia)
-                                                    <option value="{{ $guia->id_guia }}">{{ $guia->Folio }}</option>
-                                                @endforeach
+                                               
                                             </select>
                                             <label for="id_guia">Folio de guía de translado</label>
                                         </div>
@@ -322,3 +320,33 @@
     @include('_partials/_modals/modal-pdfs-frames')
     <!-- /Modal -->
 @endsection
+
+
+<script>
+
+function obtenerGuias() {
+        var empresa = $("#id_empresa").val();
+    // Hacer una petición AJAX para obtener los detalles de la empresa
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            // Cargar los detalles en el modal
+            var contenido = "";
+          for (let index = 0; index < response.guias.length; index++) {
+            contenido = '<option value="'+response.guias[index].id_guia+'">'+response.guias[index].Folio+'</option>' + contenido;
+           // console.log(response.normas[index].norma);
+          }
+
+          if(response.guias.length == 0){
+            contenido = '<option value="">Sin guias registradas</option>';
+          }
+            $('#id_guia').html(contenido);
+        },
+        error: function() {
+            //alert('Error al cargar los lotes a granel.');
+        }
+    });
+  }
+
+</script>
