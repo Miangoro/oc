@@ -39,28 +39,19 @@ class documentacionController extends Controller
 
         $tabs = '';
         $contents = '';
+        $tabsNormas = '';
+        $contenido = '';
 
         foreach ($normas as $index => $norma) {
             $tabId = 'norma-' . $norma->id_norma;
             $activeClass = $index == 0 ? 'active' : '';
+            $norma =  $norma->nombre;
+            $tabsNormas = $tabsNormas.' <li class="nav-item">
+                  <button type="button" class="nav-link '.$activeClass.'" role="tab" data-bs-toggle="tab" data-bs-target="#'.$tabId.'" aria-controls="'.$tabId.'" aria-selected="true">'.$norma.'</button>
+                </li>';
 
-            
-        }
-
-        $tabs = '<div class="nav-align-top">
-              <ul class="nav nav-tabs nav-fill" role="tablist">
-                <li class="nav-item">
-                  <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-justified-new" aria-controls="navs-justified-new" aria-selected="true">NOM-070-SCFI-2016</button>
-                </li>
-                <li class="nav-item">
-                  <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-justified-link-preparing" aria-controls="navs-justified-link-preparing" aria-selected="false">NMX-V-052-NORMEX-2016</button>
-                </li>
-                <li class="nav-item">
-                  <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-justified-link-shipping" aria-controls="navs-justified-link-shipping" aria-selected="false">NOM-199-SCFI-2017</button>
-                </li>
-              </ul>
-              <div class="tab-content border-0 pb-0 px-6 mx-1">
-                <div class="tab-pane fade show active" id="navs-justified-new" role="tabpanel">
+            $contenido = $contenido.'
+            <div class="tab-pane fade show '.$activeClass.'" id="'.$tabId.'" role="tabpanel">
                   <div class="row">                     
   <!-- Top Referral Source Mobile  -->
   <div class="col-xxl-12">
@@ -293,13 +284,17 @@ class documentacionController extends Controller
 
   </div>
                             Fin del contenido 1
-                </div>
-                <div class="tab-pane fade" id="navs-justified-link-preparing" role="tabpanel">
-                     Contenido aqui
-                </div>
-                <div class="tab-pane fade" id="navs-justified-link-shipping" role="tabpanel">
-                    Contenido 2 aqui
-                </div>
+                </div>';
+            
+        }
+
+        $tabs = '<div class="nav-align-top">
+              <ul class="nav nav-tabs nav-fill" role="tablist">
+                  '.$tabsNormas.'
+              </ul>
+              <div class="tab-content border-0 pb-0 px-6 mx-1">
+                  '.$contenido.'
+                
               </div>
             </div>';
 

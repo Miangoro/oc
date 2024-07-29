@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\domicilios;
 
 use App\Http\Controllers\Controller;
+use App\Models\Documentacion_url;
 use App\Models\Instalaciones;
 use App\Models\Empresa;
 use App\Models\Estados;
@@ -165,6 +166,31 @@ class DomiciliosController extends Controller
                 'fecha_emision' => $request->input('fecha_emision', null), // Opcional
                 'fecha_vigencia' => $request->input('fecha_vigencia', null), // Opcional
             ]);
+
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->input('id_empresa'))->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+
+            
+        // Almacenar nuevos documentos solo si se envían
+        if ($request->hasFile('url')) {
+            foreach ($request->file('url') as $index => $file) {
+
+              
+
+                $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); //Aqui se guarda en la ruta definida storage/public
+
+                $documentacion_url = new Documentacion_url ();
+                $documentacion_url->id_relacion = 15253;
+                $documentacion_url->id_documento = $request->id_documento[$index];
+                $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+                $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+                $documentacion_url->id_empresa =  $request->input('id_empresa');
+
+                $documentacion_url->save();
+            }
+        }
+
 
             return response()->json(['code' => 200, 'message' => 'Instalación registrada correctamente.']);
         } catch (\Exception $e) {

@@ -510,6 +510,7 @@ $(function () {
     });
 
     obtenerGraneles();
+    obtenerMarcas();
 
     // Manejar el envío del formulario de edición
     $('#editLoteEnvasadoForm').on('submit', function(e) {

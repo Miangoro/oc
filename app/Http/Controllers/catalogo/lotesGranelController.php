@@ -232,18 +232,27 @@ class LotesGranelController extends Controller
         // Almacenar nuevos documentos solo si se envían
         if ($request->hasFile('url')) {
             foreach ($request->file('url') as $index => $file) {
-                if ($index == 0) {
+
+                $folio_fq = "";
+                if ($index == 0 AND $request->id_documento[$index] ==58) {
                     $folio_fq = $request->folio_fq_completo;
                 } else {
                     $folio_fq = $request->folio_fq_ajuste;
                 }
+
+                if(!empty($request->tipo_analisis[$index])){
+                    $tipo_analisis = $request->tipo_analisis[$index];
+                }else{
+                    $tipo_analisis = "";
+                }
+
                 $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); //Aqui se guarda en la ruta definida storage/public
 
                 $documentacion_url = new Documentacion_url();
                 $documentacion_url->id_relacion = $lote->id_lote_granel;
                 $documentacion_url->id_documento = $request->id_documento[$index];
-                $documentacion_url->nombre_documento = $request->nombre_documento[$index] . ": " . $request->tipo_analisis[$index] . " - " . $folio_fq;
+                $documentacion_url->nombre_documento = $request->nombre_documento[$index] . ": " . $tipo_analisis . " - " . $folio_fq;
                 $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
                 $documentacion_url->id_empresa = $lote->id_empresa;
 

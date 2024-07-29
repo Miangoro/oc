@@ -40,6 +40,15 @@ class empresa extends Model
         return LotesGranel::where('id_empresa', $this->id_empresa)->get();
     }
 
+    public function marcas(){
+        return marcas::where('id_empresa', $this->id_empresa)->get();
+    }
+
+    public function guias(){
+        return guias::where('id_empresa', $this->id_empresa)->get();
+    }
+
+
 
     
 }
