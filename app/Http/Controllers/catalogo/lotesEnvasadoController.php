@@ -96,11 +96,15 @@ class lotesEnvasadoController extends Controller
         
                 // Obtener el numero_cliente de la tabla empresa_num_cliente
                 $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
+                
+                // Obtener la marca de la tabla marcas mediante el id_marca
+                $marca = \App\Models\Marcas::where('id_marca', $user->id_marca)->value('marca');
         
                 $nestedData = [
                     'id_lote_envasado' => $user->id_lote_envasado,
                     'fake_id' => ++$ids,
                     'id_empresa' => $numero_cliente, // Asignar numero_cliente a id_empresa
+                    'id_marca' => $marca, // Asignar el nombre de la marca a id_marca
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
                     'tipo_lote' => $user->tipo_lote,
                     'nombre_lote' => $user->nombre_lote,
@@ -116,6 +120,7 @@ class lotesEnvasadoController extends Controller
                 $data[] = $nestedData;
             }
         }
+        
         
         
         
@@ -138,7 +143,7 @@ class lotesEnvasadoController extends Controller
         return response()->json(['success' => 'Clase eliminada correctamente']);
     }
 
-
+//Metodo para egistrar
     public function store(Request $request)
     {
         // Valida los datos
@@ -163,6 +168,20 @@ class lotesEnvasadoController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function edit($id)
+    {
+        $loteEnvasado = lotes_envasado::find($id);
+        return response()->json($loteEnvasado);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $loteEnvasado = lotes_envasado::find($id);
+        $loteEnvasado->update($request->all());
+
+        return response()->json(['success' => true]);
     }
     
 

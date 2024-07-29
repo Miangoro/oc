@@ -471,6 +471,8 @@ Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->n
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
 Route::resource('/lotes-list', LotesEnvasadoController::class);
 Route::post('/lotes-envasado', [LotesEnvasadoController::class, 'store']);
+Route::get('/lotes-envasado/{id}/edit', [lotesEnvasadoController::class, 'edit']);
+Route::put('/lotes-envasado/{id}', [lotesEnvasadoController::class, 'update']);
 
 //Domicilios fiscal
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');

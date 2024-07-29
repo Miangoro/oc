@@ -143,6 +143,7 @@ $(function () {
             { data: 'razon_social' },
             { data: 'tipo_lote' },
             { data: 'nombre_lote' },
+            { data: 'id_marca' },
             { data: 'cant_botellas' },
             {
                 data: function (row, type, set) {
@@ -471,81 +472,82 @@ $(function () {
             
           
   });*/
-  $(document).ready(function () {
+  $(document).ready(function() {
     // Abrir el modal y cargar datos para editar
-    $('.datatables-users').on('click', '.edit-record', function () {
-      var id_marca = $(this).data('id');
+    $('.datatables-users').on('click', '.edit-record', function() {
+        var id_lote_envasado = $(this).data('id');
 
-      // Limpiar campos y contenido residual del formulario de edición
-      $('#editMarcaForm')[0].reset();
-      $('.existing-file').html(''); // Asegúrate de que todos los contenedores de archivos existentes estén vacíos
-      $('.existing-date').text(''); // Asegúrate de que todos los contenedores de fechas existentes estén vacíos
+        // Realizar la solicitud AJAX para obtener los datos del lote envasado
+        $.get('/lotes-envasado/' + id_lote_envasado + '/edit', function(data) {
+            // Rellenar el formulario con los datos obtenidos
+            $('#edit_id_lote_envasado').val(data.id_lote_envasado);
+            $('#edit_cliente').val(data.id_empresa).trigger('change');
+            $('#edit_nombre_lote').val(data.nombre_lote);
+            $('#edit_tipo_lote').val(data.tipo_lote);
+            $('#edit_sku').val(data.sku);
+            $('#edit_marca').val(data.id_marca).trigger('change');
+            $('#edit_destino_lote').val(data.destino_lote);
+            $('#edit_cant_botellas').val(data.cant_botellas);
+            $('#edit_presentacion').val(data.presentacion);
+            $('#edit_unidad').val(data.unidad);
+            $('#edit_volumen_total').val(data.volumen_total);
+            $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
 
-      // Realizar la solicitud AJAX para obtener los datos de la marca
-      $.get('/marcas-list/' + id_marca + '/edit', function (data) {
-        var marca = data.marca;
-        var documentacion_urls = data.documentacion_urls;
-
-        // Rellenar el formulario con los datos obtenidos
-        $('#edit_marca_id').val(marca.id_marca);
-        $('#edit_marca_nombre').val(marca.marca);
-        $('#edit_cliente').val(marca.id_empresa).trigger('change');
-
-        // Mostrar archivos existentes en los mismos espacios de entrada de archivo
-        documentacion_urls.forEach(function (doc) {
-          var existingFileDivId = '#existing_file_' + doc.id_documento;
-          $(existingFileDivId).html(`<p>Archivo existente: <a href="/storage/uploads/${marca.id_empresa}/${doc.url}" target="_blank">${doc.url}</a></p>`);
-
-          var existingDateId = '#existing_date_' + doc.id_documento;
-          $(existingDateId).text('Fecha de vigencia: ' + doc.fecha_vigencia);
-
-          $('#date' + doc.id_documento).val(doc.fecha_vigencia);  // Rellenar la fecha existente en el campo de fecha
+            // Mostrar el modal de edición
+            $('#editLoteEnvasado').modal('show');
+        }).fail(function() {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al obtener los datos del lote envasado',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
         });
-
-        $('#editMarca').modal('show');
-      });
     });
 
-    // Enviar el formulario de actualización de marca
-    $('#editMarcaForm').submit(function (e) {
-      e.preventDefault();
+    // Manejar el envío del formulario de edición
+    $('#editLoteEnvasadoForm').on('submit', function(e) {
+        e.preventDefault();
 
-      var formData = new FormData(this);
+        var formData = $(this).serialize();
+        var id_lote_envasado = $('#edit_id_lote_envasado').val();
 
-      $.ajax({
-        url: '/marcas-list',
-        type: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: function (response) {
-          Swal.fire({
-            title: 'Éxito',
-            text: response.success,
-            icon: 'success',
-            buttonsStyling: false,
-            customClass: {
-              confirmButton: 'btn btn-success'
+        // Enviar los datos mediante AJAX
+        $.ajax({
+            url: '/lotes-envasado/' + id_lote_envasado,
+            method: 'PUT',
+            data: formData,
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: 'Lote envasado actualizado correctamente',
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                }).then(function() {
+                    // Recargar la tabla de datos o hacer lo necesario
+                    $('#editLoteEnvasado').modal('hide');
+                    $('.datatables-users').DataTable().ajax.reload();
+                });
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Error al actualizar el lote envasado',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
             }
-          });
-          $('#editMarca').modal('hide');
-          $('#editMarcaForm')[0].reset();
-          $('.datatables-users').DataTable().ajax.reload();
-        },
-        error: function (response) {
-          Swal.fire({
-            title: 'Error',
-            text: 'Ocurrió un error al actualizar la marca.',
-            icon: 'error',
-            buttonsStyling: false,
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-        }
-      });
+        });
     });
-  });
+});
+
+  
 
 
 

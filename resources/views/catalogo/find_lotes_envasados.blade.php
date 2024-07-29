@@ -54,6 +54,7 @@
           <th>Nombre del Cliente</th>
           <th>Tipo de lote</th>
           <th>Nombre lote</th>
+          <th>Marca</th>
           <th>cantidad botellas</th>
           <th>Presentacion</th>
           <th>Volumen total</th>
@@ -72,6 +73,8 @@
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-lotesEnvasado')
+@include('_partials/_modals/modal-edit-lotesEnvasado')
+
 
 <!-- /Modal -->
 @endsection
