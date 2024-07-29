@@ -298,16 +298,21 @@ $(function () {
     // Agregar nueva instalación
     $('#addNewInstalacionForm').on('submit', function (e) {
       e.preventDefault();
-      var formData = $(this).serialize(); // Obtiene los datos del formulario en formato de cadena
+      var formData = new FormData(this);
+
 
       $.ajax({
-        url: '/instalaciones', // URL para la solicitud POST
-        type: 'POST',
-        data: formData,
+        url: '/instalaciones',
+    type: 'POST',
+    data: formData,
+    processData: false, // Evita la conversión automática de datos a cadena
+    contentType: false, // Evita que se establezca el tipo de contenido
         success: function (response) {
-          $('#modalAddInstalacion').modal('hide'); // Oculta el modal
-          $('#addNewInstalacionForm')[0].reset(); // Reinicia el formulario
+         // $('#modalAddInstalacion').modal('hide'); // Oculta el modal
+         // $('#addNewInstalacionForm')[0].reset(); // Reinicia el formulario
           $('.datatables-users').DataTable().ajax.reload(); // Recarga los datos en la tabla
+
+          console.log(response);
 
           Swal.fire({
             icon: 'success',

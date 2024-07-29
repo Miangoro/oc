@@ -10,6 +10,7 @@ use App\Models\Estados;
 use App\Models\Organismos;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
 
 class DomiciliosController extends Controller
 {
@@ -152,6 +153,10 @@ class DomiciliosController extends Controller
             'id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo', // Opcional
             'fecha_emision' => 'nullable|date', // Opcional
             'fecha_vigencia' => 'nullable|date', // Opcional
+            'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf', // Validación de archivos
+            'nombre_documento.*' => 'required_with:url.*|string', // Validación de nombres de documentos
+            'id_documento.*' => 'required_with:url.*|integer', // Validación de IDs de documentos
+        
         ]);
 
         try {
@@ -170,9 +175,14 @@ class DomiciliosController extends Controller
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->input('id_empresa'))->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
+       
+    
+
+        $aux =     $request->hasFile('url');
             
         // Almacenar nuevos documentos solo si se envían
         if ($request->hasFile('url')) {
+           
             foreach ($request->file('url') as $index => $file) {
 
               
@@ -188,11 +198,12 @@ class DomiciliosController extends Controller
                 $documentacion_url->id_empresa =  $request->input('id_empresa');
 
                 $documentacion_url->save();
+              
             }
         }
 
 
-            return response()->json(['code' => 200, 'message' => 'Instalación registrada correctamente.']);
+            return response()->json(['code' => 200, 'message' => 'Instalación registrada correctamente.', 'aux' =>$aux]);
         } catch (\Exception $e) {
             return response()->json(['code' => 500, 'message' => 'Error al registrar la instalación.']);
         }
