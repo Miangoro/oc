@@ -9,6 +9,7 @@ use App\Models\LotesGranel;
 use App\Models\Instalaciones;
 
 use App\Http\Controllers\Controller;
+use App\Models\lotes_envasado_granel;
 use Illuminate\Http\Request;
 
 class lotesEnvasadoController extends Controller
@@ -159,11 +160,34 @@ class lotesEnvasadoController extends Controller
             'unidad' => 'required|string|max:50',
             'volumen_total' => 'required|numeric',
             'lugar_envasado' => 'required|exists:instalaciones,id_instalacion',
+            'id_lote_granel.*' => 'nullable',
+            'volumen_parcial.*' => 'nullable',
         ]);
     
         // Crea un nuevo registro en la base de datos
         try {
             lotes_envasado::create($validated);
+
+            $ultimoLote = lotes_envasado::latest()->first();
+
+            
+
+            for ($i = 0; $i < count($request->id_lote_granel); $i++) {
+
+                if(empty($request->volumen_total)){
+                    $volumen_parcial =  $request->volumen_parcial[$i];
+                }else{
+                    $volumen_parcial = $request->volumen_total;
+                }
+               
+                $envasado_granel = new lotes_envasado_granel();
+                $envasado_granel->id_lote_envasado = $ultimoLote->id_lote_envasado;
+                $envasado_granel->id_lote_granel = $request->id_lote_granel[$i];
+                $envasado_granel->volumen_parcial = $volumen_parcial;
+                $envasado_granel->save();
+              }
+          
+
             return response()->json(['success' => 'Lote registrado exitosamente.']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
