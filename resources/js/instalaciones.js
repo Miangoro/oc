@@ -53,7 +53,7 @@ $(function () {
         render: function (data, type, full, meta) {
           return (
             '<div class="d-flex align-items-center gap-50">' +
-            `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}" data-bs-toggle="offcanvas" data-bs-target="#editInstalacion"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+            `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}" data-bs-toggle="modal" data-bs-target="#modalEditInstalacion"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
             `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
             '</div>'
           );
@@ -223,15 +223,6 @@ $(function () {
   }
 
   initializeSelect2(select2Elements);
-
-  $(document).ready(function () {
-    $('.datepicker').datepicker({
-        dateFormat: 'yy-mm-dd', // Formato para jQuery UI Datepicker
-        changeMonth: true,
-        changeYear: true,
-        showButtonPanel: true
-    });
-});
 
   // Configuración CSRF para Laravel
   $.ajaxSetup({
@@ -411,6 +402,63 @@ $(document).on('click', '.edit-record', function () {
       });
   });
 });
+
+$(document).ready(function() {
+  // Al abrir el modal, guarda el ID de la instalación en el formulario
+  $('#modalEditInstalacion').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget); // Botón que abre el modal
+      var id_instalacion = button.data('id'); // Extrae el ID de la instalación
+      var modal = $(this);
+
+      // Configura el ID en el formulario
+      modal.find('#editInstalacionForm').data('id', id_instalacion);
+  });
+
+  // Enviar el formulario de edición
+  $('#editInstalacionForm').submit(function (e) {
+      e.preventDefault();
+
+      var id_instalacion = $(this).data('id');
+      var formData = $(this).serialize(); // Obtener los datos del formulario
+
+      // Realizar la petición AJAX para actualizar los datos
+      $.ajax({
+          url: baseUrl + 'instalaciones/' + id_instalacion,
+          type: 'PUT',
+          data: formData,
+          success: function (response) {
+              // Actualizar la tabla de datos
+              dt_instalaciones_table.ajax.reload();
+
+              // Cerrar el modal de edición
+              $('#modalEditInstalacion').modal('hide');
+
+              // Mostrar mensaje de éxito
+             // Mostrar alerta de éxito
+             Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.success,
+              customClass: {
+                  confirmButton: 'btn btn-success'
+              }
+          });
+          },
+          error: function (xhr) {
+              // Mostrar el error en consola
+              console.error('Error en la solicitud AJAX:', xhr.responseJSON);
+
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'Hubo un problema al actualizar los datos.',
+                  footer: `<pre>${JSON.stringify(xhr.responseJSON, null, 2)}</pre>`,
+              });
+          }
+      });
+  });
+});
+
 
 //end
 });

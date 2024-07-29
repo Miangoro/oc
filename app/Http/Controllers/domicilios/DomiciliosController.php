@@ -182,33 +182,37 @@ class DomiciliosController extends Controller
         }
     }
 
-
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'id_empresa' => 'required|integer',
+        $request->validate([
+            'id_empresa' => 'required|exists:empresa,id_empresa',
             'tipo' => 'required|string',
-            'estado' => 'required|integer',
+            'estado' => 'required|string',
             'direccion_completa' => 'required|string',
-            'certificacion' => 'required|string',
             'folio' => 'nullable|string',
-            'id_organismo' => 'nullable|integer',
+            'id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo',
             'fecha_emision' => 'nullable|date',
             'fecha_vigencia' => 'nullable|date',
         ]);
 
         try {
-            $instalacion = Instalacion::findOrFail($id);
-            $instalacion->update($validatedData);
+            $instalacion = Instalaciones::findOrFail($id);
+            $instalacion->update([
+                'id_empresa' => $request->input('id_empresa'),
+                'tipo' => $request->input('tipo'),
+                'estado' => $request->input('estado'),
+                'direccion_completa' => $request->input('direccion_completa'),
+                'folio' => $request->input('folio', null),
+                'id_organismo' => $request->input('id_organismo', null),
+                'fecha_emision' => $request->input('fecha_emision', null),
+                'fecha_vigencia' => $request->input('fecha_vigencia', null),
+            ]);
 
-            return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()]);
-        }
-    }
-
-
-
+            return response()->json(['success' => 'Instalacion actualizada correctamente']);
+          } catch (\Exception $e) {
+              return response()->json(['error' => 'Error al actualizar la Instalacion'], 500);
+          }
+      }
 
 
 //end

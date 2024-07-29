@@ -93,7 +93,7 @@ class categoriasController extends Controller
             ]);
         }
     }
-    
+
 //funcion para eliminar
 public function destroy($id_categoria)
 {
