@@ -110,8 +110,8 @@ class DomiciliosController extends Controller
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa  ?? 'N/A';
                 $nestedData['folio'] = $instalacion->folio ?? 'N/A'; // Corregido 'folion' a 'folio'
                 $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'N/A'; // Maneja el caso donde el organismo sea nulo
-                $nestedData['fecha_emision'] = $instalacion->fecha_emision  ?? 'N/A';
-                $nestedData['fecha_vigencia'] = $instalacion->fecha_vigencia  ?? 'N/A';
+                $nestedData['fecha_emision'] = $instalacion->fecha_emision;
+                $nestedData['fecha_vigencia'] = $instalacion->fecha_vigencia;
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
 
                 $data[] = $nestedData;
@@ -171,4 +171,45 @@ class DomiciliosController extends Controller
             return response()->json(['code' => 500, 'message' => 'Error al registrar la instalación.']);
         }
     }
+
+    public function edit($id_instalacion)
+    {
+        try {
+            $instalacion = Instalaciones::findOrFail($id_instalacion);
+            return response()->json(['success' => true, 'instalacion' => $instalacion]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['success' => false], 404);
+        }
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'id_empresa' => 'required|integer',
+            'tipo' => 'required|string',
+            'estado' => 'required|integer',
+            'direccion_completa' => 'required|string',
+            'certificacion' => 'required|string',
+            'folio' => 'nullable|string',
+            'id_organismo' => 'nullable|integer',
+            'fecha_emision' => 'nullable|date',
+            'fecha_vigencia' => 'nullable|date',
+        ]);
+
+        try {
+            $instalacion = Instalacion::findOrFail($id);
+            $instalacion->update($validatedData);
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
+    }
+
+
+
+
+
+//end
 }

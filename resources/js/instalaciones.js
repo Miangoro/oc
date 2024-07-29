@@ -224,6 +224,15 @@ $(function () {
 
   initializeSelect2(select2Elements);
 
+  $(document).ready(function () {
+    $('.datepicker').datepicker({
+        dateFormat: 'yy-mm-dd', // Formato para jQuery UI Datepicker
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true
+    });
+});
+
   // Configuración CSRF para Laravel
   $.ajaxSetup({
     headers: {
@@ -334,7 +343,74 @@ $(function () {
     });
   });
 
+// Cargar datos para edición
+$(document).on('click', '.edit-record', function () {
+  var id_instalacion = $(this).data('id');
+  var url = baseUrl + 'domicilios/edit/' + id_instalacion;
 
+  $.get(url, function (data) {
+      if (data.success) {
+          var instalacion = data.instalacion;
+          console.log(instalacion); // Verificar los datos recibidos
 
-  //end
+          // Asignar valores a los campos
+          $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
+          $('#edit_tipo').val(instalacion.tipo).trigger('change');
+          $('#edit_estado').val(instalacion.estado).trigger('change');
+          $('#edit_direccion').val(instalacion.direccion_completa);
+
+          // Verificar si hay valores en los campos adicionales
+          var tieneCertificadoOtroOrganismo = instalacion.folio || instalacion.id_organismo ||
+              (instalacion.fecha_emision && instalacion.fecha_emision !== 'N/A') ||
+              (instalacion.fecha_vigencia && instalacion.fecha_vigencia !== 'N/A');
+
+          if (tieneCertificadoOtroOrganismo) {
+              $('#edit_certificacion').val('otro_organismo').trigger('change');
+              $('#edit_certificado_otros').removeClass('d-none');
+
+              $('#edit_folio').val(instalacion.folio || '');
+              $('#edit_id_organismo').val(instalacion.id_organismo || '').trigger('change');
+
+              // Solo asignar las fechas si son válidas
+              if (instalacion.fecha_emision && instalacion.fecha_emision !== 'N/A') {
+                  $('#edit_fecha_emision').val(instalacion.fecha_emision);
+              } else {
+                  $('#edit_fecha_emision').val('');
+              }
+
+              if (instalacion.fecha_vigencia && instalacion.fecha_vigencia !== 'N/A') {
+                  $('#edit_fecha_vigencia').val(instalacion.fecha_vigencia);
+              } else {
+                  $('#edit_fecha_vigencia').val('');
+              }
+          } else {
+              $('#edit_certificacion').val('oc_cidam').trigger('change');
+              $('#edit_certificado_otros').addClass('d-none');
+          }
+
+          // Mostrar el modal
+          $('#modalEditInstalacion').modal('show');
+      } else {
+          Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo cargar los datos de la instalación',
+              customClass: {
+                  confirmButton: 'btn btn-primary'
+              }
+          });
+      }
+  }).fail(function() {
+      Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error en la solicitud. Inténtalo de nuevo.',
+          customClass: {
+              confirmButton: 'btn btn-primary'
+          }
+      });
+  });
+});
+
+//end
 });

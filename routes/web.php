@@ -479,6 +479,7 @@ Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManag
 Route::resource('/instalaciones-list', DomiciliosController::class);
 Route::delete('instalaciones/{id_instalacion}', [DomiciliosController::class, 'destroy']);
 Route::post('/instalaciones', [DomiciliosController::class, 'store']);
+Route::get('domicilios/edit/{id_instalacion}', [DomiciliosController::class, 'edit'])->name('domicilios.edit');
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
