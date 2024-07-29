@@ -32,5 +32,14 @@ class empresa extends Model
         return $this->hasMany(Instalaciones::class, 'id_empresa');
     }
 
+    public function obtenerInstalaciones(){
+        return Instalaciones::where('id_empresa', $this->id_empresa)->get();
+    }
+
+    public function lotes_granel(){
+        return LotesGranel::where('id_empresa', $this->id_empresa)->get();
+    }
+
+
     
 }

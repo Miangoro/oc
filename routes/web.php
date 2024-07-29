@@ -470,6 +470,9 @@ Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->n
 //Lotes de envasado
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
 Route::resource('/lotes-list', LotesEnvasadoController::class);
+Route::post('/lotes-envasado', [LotesEnvasadoController::class, 'store']);
+Route::get('/lotes-envasado/{id}/edit', [lotesEnvasadoController::class, 'edit']);
+Route::put('/lotes-envasado/{id}', [lotesEnvasadoController::class, 'update']);
 
 //Domicilios fiscal
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
@@ -503,3 +506,5 @@ Route::get('documentacion/getActividades', [documentacionController::class, 'get
 //Tipos de maguey/agave
 Route::get('/catalogo/tipos', [tiposController::class, 'UserManagement'])->name('tipos-maguey-agave');
 Route::resource('/tipos-list', tiposController::class);
+
+Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');
