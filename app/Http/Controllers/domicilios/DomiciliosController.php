@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\domicilios;
 
 use App\Http\Controllers\Controller;
+use App\Models\Documentacion_url;
 use App\Models\Instalaciones;
 use App\Models\Empresa;
 use App\Models\Estados;
@@ -110,8 +111,8 @@ class DomiciliosController extends Controller
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa  ?? 'N/A';
                 $nestedData['folio'] = $instalacion->folio ?? 'N/A'; // Corregido 'folion' a 'folio'
                 $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'N/A'; // Maneja el caso donde el organismo sea nulo
-                $nestedData['fecha_emision'] = $instalacion->fecha_emision  ?? 'N/A';
-                $nestedData['fecha_vigencia'] = $instalacion->fecha_vigencia  ?? 'N/A';
+                $nestedData['fecha_emision'] = $instalacion->fecha_emision;
+                $nestedData['fecha_vigencia'] = $instalacion->fecha_vigencia;
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
 
                 $data[] = $nestedData;
@@ -166,9 +167,79 @@ class DomiciliosController extends Controller
                 'fecha_vigencia' => $request->input('fecha_vigencia', null), // Opcional
             ]);
 
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->input('id_empresa'))->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+
+            
+        // Almacenar nuevos documentos solo si se envían
+        if ($request->hasFile('url')) {
+            foreach ($request->file('url') as $index => $file) {
+
+              
+
+                $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); //Aqui se guarda en la ruta definida storage/public
+
+                $documentacion_url = new Documentacion_url ();
+                $documentacion_url->id_relacion = 15253;
+                $documentacion_url->id_documento = $request->id_documento[$index];
+                $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+                $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+                $documentacion_url->id_empresa =  $request->input('id_empresa');
+
+                $documentacion_url->save();
+            }
+        }
+
+
             return response()->json(['code' => 200, 'message' => 'Instalación registrada correctamente.']);
         } catch (\Exception $e) {
             return response()->json(['code' => 500, 'message' => 'Error al registrar la instalación.']);
         }
     }
+
+    public function edit($id_instalacion)
+    {
+        try {
+            $instalacion = Instalaciones::findOrFail($id_instalacion);
+            return response()->json(['success' => true, 'instalacion' => $instalacion]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['success' => false], 404);
+        }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'id_empresa' => 'required|exists:empresa,id_empresa',
+            'tipo' => 'required|string',
+            'estado' => 'required|string',
+            'direccion_completa' => 'required|string',
+            'folio' => 'nullable|string',
+            'id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo',
+            'fecha_emision' => 'nullable|date',
+            'fecha_vigencia' => 'nullable|date',
+        ]);
+
+        try {
+            $instalacion = Instalaciones::findOrFail($id);
+            $instalacion->update([
+                'id_empresa' => $request->input('id_empresa'),
+                'tipo' => $request->input('tipo'),
+                'estado' => $request->input('estado'),
+                'direccion_completa' => $request->input('direccion_completa'),
+                'folio' => $request->input('folio', null),
+                'id_organismo' => $request->input('id_organismo', null),
+                'fecha_emision' => $request->input('fecha_emision', null),
+                'fecha_vigencia' => $request->input('fecha_vigencia', null),
+            ]);
+
+            return response()->json(['success' => 'Instalacion actualizada correctamente']);
+          } catch (\Exception $e) {
+              return response()->json(['error' => 'Error al actualizar la Instalacion'], 500);
+          }
+      }
+
+
+//end
 }

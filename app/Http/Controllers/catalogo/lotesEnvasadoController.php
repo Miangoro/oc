@@ -15,10 +15,12 @@ class lotesEnvasadoController extends Controller
 {
     public function UserManagement()
     {
-        $clientes = Empresa::all(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $clientes = Empresa::where('tipo','=','2')->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
         $marcas = marcas::all(); // Obtener todas las marcas
         $lotes_granel = LotesGranel::all(); // Obtener todas las marcas
         $lotes_envasado = lotes_envasado::all();
+        $Instalaciones = Instalaciones::all();
+
         $userCount = $lotes_envasado->count();
         $verified = 5;
         $notVerified = 10;
@@ -33,6 +35,7 @@ class lotesEnvasadoController extends Controller
             'marcas' => $marcas,     // Pasa la lista de marcas a la vista
             'lotes_granel' => $lotes_granel,     // Pasa la lista de marcas a la vista
             'lotes_envasado' => $lotes_envasado,     // Pasa la lista de marcas a la vista
+            'Instalaciones' => $Instalaciones,     // Pasa la lista de marcas a la vista
 
 
         ]);
@@ -83,7 +86,6 @@ class lotesEnvasadoController extends Controller
             ->get();
 
         $data = [];
-
         if ($users->isNotEmpty()) {
             $ids = $start;
         
@@ -92,10 +94,17 @@ class lotesEnvasadoController extends Controller
                 $instalacion = Instalaciones::where('id_empresa', $user->id_empresa)->first();
                 $direccion_completa = $instalacion ? $instalacion->direccion_completa : '';
         
+                // Obtener el numero_cliente de la tabla empresa_num_cliente
+                $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
+                
+                // Obtener la marca de la tabla marcas mediante el id_marca
+                $marca = \App\Models\Marcas::where('id_marca', $user->id_marca)->value('marca');
+        
                 $nestedData = [
                     'id_lote_envasado' => $user->id_lote_envasado,
                     'fake_id' => ++$ids,
-                    'id_empresa' => $user->id_empresa,
+                    'id_empresa' => $numero_cliente, // Asignar numero_cliente a id_empresa
+                    'id_marca' => $marca, // Asignar el nombre de la marca a id_marca
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
                     'tipo_lote' => $user->tipo_lote,
                     'nombre_lote' => $user->nombre_lote,
@@ -104,13 +113,16 @@ class lotesEnvasadoController extends Controller
                     'unidad' => $user->unidad,
                     'destino_lote' => $user->destino_lote,
                     'volumen_total' => $user->volumen_total,
-                    'direccion_completa' => $direccion_completa,
+                    'lugar_envasado' => $direccion_completa, // Asignar direccion_completa a lugar_envasado
                     'sku' => $user->sku,
                 ];
         
                 $data[] = $nestedData;
             }
         }
+        
+        
+        
         
 
         return response()->json([
@@ -130,4 +142,47 @@ class lotesEnvasadoController extends Controller
 
         return response()->json(['success' => 'Clase eliminada correctamente']);
     }
+
+//Metodo para egistrar
+    public function store(Request $request)
+    {
+        // Valida los datos
+        $validated = $request->validate([
+            'id_empresa' => 'required|exists:empresa,id_empresa',
+            'nombre_lote' => 'required|string|max:100',
+            'tipo_lote' => 'required|integer',
+            'sku' => 'required|string|max:60',
+            'id_marca' => 'required|exists:marcas,id_marca',
+            'destino_lote' => 'required|string|max:120',
+            'cant_botellas' => 'required|integer',
+            'presentacion' => 'required|integer',
+            'unidad' => 'required|string|max:50',
+            'volumen_total' => 'required|numeric',
+            'lugar_envasado' => 'required|exists:instalaciones,id_instalacion',
+        ]);
+    
+        // Crea un nuevo registro en la base de datos
+        try {
+            lotes_envasado::create($validated);
+            return response()->json(['success' => 'Lote registrado exitosamente.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function edit($id)
+    {
+        $loteEnvasado = lotes_envasado::find($id);
+        return response()->json($loteEnvasado);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $loteEnvasado = lotes_envasado::find($id);
+        $loteEnvasado->update($request->all());
+
+        return response()->json(['success' => true]);
+    }
+    
+
 }

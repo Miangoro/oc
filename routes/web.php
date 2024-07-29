@@ -476,6 +476,9 @@ Route::put('/lotes-a-granel/{id_lote_granel}', [LotesGranelController::class, 'u
 //Lotes de envasado
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
 Route::resource('/lotes-list', LotesEnvasadoController::class);
+Route::post('/lotes-envasado', [LotesEnvasadoController::class, 'store']);
+Route::get('/lotes-envasado/{id}/edit', [lotesEnvasadoController::class, 'edit']);
+Route::put('/lotes-envasado/{id}', [lotesEnvasadoController::class, 'update']);
 
 //Domicilios fiscal
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
@@ -485,6 +488,9 @@ Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManag
 Route::resource('/instalaciones-list', DomiciliosController::class);
 Route::delete('instalaciones/{id_instalacion}', [DomiciliosController::class, 'destroy']);
 Route::post('/instalaciones', [DomiciliosController::class, 'store']);
+Route::get('domicilios/edit/{id_instalacion}', [DomiciliosController::class, 'edit'])->name('domicilios.edit');
+// web.php o api.php
+Route::put('instalaciones/{id}', [DomiciliosController::class, 'update']);
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
@@ -506,3 +512,5 @@ Route::get('documentacion/getActividades', [documentacionController::class, 'get
 //Tipos de maguey/agave
 Route::get('/catalogo/tipos', [tiposController::class, 'UserManagement'])->name('tipos-maguey-agave');
 Route::resource('/tipos-list', tiposController::class);
+
+Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');

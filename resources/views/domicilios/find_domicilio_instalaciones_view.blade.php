@@ -166,9 +166,13 @@
 
                         <!-- Campos adicionales para "Certificado por otro organismo" -->
                         <div id="certificado-otros" class="d-none">
-                            <div class="form-floating form-floating-outline mb-3">
-                                <input type="file" class="form-control" id="certificado_archivo" name="certificado_archivo" aria-label="Archivo de Certificación">
-                                <label for="certificado_archivo">Archivo de Certificación</label>
+                            <div class="col-md-12 mb-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input class="form-control form-control-sm" type="file" id="file-127" name="url[]">
+                                    <input value="127" class="form-control" type="hidden" name="id_documento[]">
+                                    <input value="Certificado de lote a granel" class="form-control" type="hidden" name="nombre_documento[]">
+                                    <label for="certificado_instalaciones">Adjuntar Certificado de instalaciones</label>
+                                </div>
                             </div>
 
                             <div class="form-floating form-floating-outline mb-3">
@@ -320,7 +324,7 @@
             </div>
         </div>
     </div>
-
+//new
     <!-- Modal -->
     @include('_partials._modals.modal-pdfs-frames')
     <!-- /Modal -->

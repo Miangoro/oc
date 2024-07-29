@@ -17,6 +17,8 @@ class getFuncionesController extends Controller
         ->where('c.id_norma', '!=' ,2)
         ->where('n.id_empresa', $id_empresa)
         ->get();
+
+
         // Lógica común que se necesita en diferentes vistas
         return [
             'empresas' => empresa::all(),
@@ -37,6 +39,17 @@ class getFuncionesController extends Controller
     {   
         $id_empresa = $id;
         return $this->renderVista('_partials._modals.modal-add-aceptar-cliente',$id_empresa);
+    }
+
+
+    public function getDatos(empresa $empresa){
+        return response()->json([
+            'instalaciones' => $empresa->obtenerInstalaciones(),
+            'lotes_granel' => $empresa->lotes_granel(),
+            'marcas' => $empresa->marcas(),
+            'guias' => $empresa->guias(),
+
+        ]);
     }
 
     

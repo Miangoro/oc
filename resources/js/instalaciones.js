@@ -53,7 +53,7 @@ $(function () {
         render: function (data, type, full, meta) {
           return (
             '<div class="d-flex align-items-center gap-50">' +
-            `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}" data-bs-toggle="offcanvas" data-bs-target="#editInstalacion"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+            `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}" data-bs-toggle="modal" data-bs-target="#modalEditInstalacion"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
             `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
             '</div>'
           );
@@ -334,7 +334,131 @@ $(function () {
     });
   });
 
+// Cargar datos para edición
+$(document).on('click', '.edit-record', function () {
+  var id_instalacion = $(this).data('id');
+  var url = baseUrl + 'domicilios/edit/' + id_instalacion;
+
+  $.get(url, function (data) {
+      if (data.success) {
+          var instalacion = data.instalacion;
+          console.log(instalacion); // Verificar los datos recibidos
+
+          // Asignar valores a los campos
+          $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
+          $('#edit_tipo').val(instalacion.tipo).trigger('change');
+          $('#edit_estado').val(instalacion.estado).trigger('change');
+          $('#edit_direccion').val(instalacion.direccion_completa);
+
+          // Verificar si hay valores en los campos adicionales
+          var tieneCertificadoOtroOrganismo = instalacion.folio || instalacion.id_organismo ||
+              (instalacion.fecha_emision && instalacion.fecha_emision !== 'N/A') ||
+              (instalacion.fecha_vigencia && instalacion.fecha_vigencia !== 'N/A');
+
+          if (tieneCertificadoOtroOrganismo) {
+              $('#edit_certificacion').val('otro_organismo').trigger('change');
+              $('#edit_certificado_otros').removeClass('d-none');
+
+              $('#edit_folio').val(instalacion.folio || '');
+              $('#edit_id_organismo').val(instalacion.id_organismo || '').trigger('change');
+
+              // Solo asignar las fechas si son válidas
+              if (instalacion.fecha_emision && instalacion.fecha_emision !== 'N/A') {
+                  $('#edit_fecha_emision').val(instalacion.fecha_emision);
+              } else {
+                  $('#edit_fecha_emision').val('');
+              }
+
+              if (instalacion.fecha_vigencia && instalacion.fecha_vigencia !== 'N/A') {
+                  $('#edit_fecha_vigencia').val(instalacion.fecha_vigencia);
+              } else {
+                  $('#edit_fecha_vigencia').val('');
+              }
+          } else {
+              $('#edit_certificacion').val('oc_cidam').trigger('change');
+              $('#edit_certificado_otros').addClass('d-none');
+          }
+
+          // Mostrar el modal
+          $('#modalEditInstalacion').modal('show');
+      } else {
+          Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'No se pudo cargar los datos de la instalación',
+              customClass: {
+                  confirmButton: 'btn btn-primary'
+              }
+          });
+      }
+  }).fail(function() {
+      Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error en la solicitud. Inténtalo de nuevo.',
+          customClass: {
+              confirmButton: 'btn btn-primary'
+          }
+      });
+  });
+});
+
+$(document).ready(function() {
+  // Al abrir el modal, guarda el ID de la instalación en el formulario
+  $('#modalEditInstalacion').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget); // Botón que abre el modal
+      var id_instalacion = button.data('id'); // Extrae el ID de la instalación
+      var modal = $(this);
+
+      // Configura el ID en el formulario
+      modal.find('#editInstalacionForm').data('id', id_instalacion);
+  });
+
+  // Enviar el formulario de edición
+  $('#editInstalacionForm').submit(function (e) {
+      e.preventDefault();
+
+      var id_instalacion = $(this).data('id');
+      var formData = $(this).serialize(); // Obtener los datos del formulario
+
+      // Realizar la petición AJAX para actualizar los datos
+      $.ajax({
+          url: baseUrl + 'instalaciones/' + id_instalacion,
+          type: 'PUT',
+          data: formData,
+          success: function (response) {
+              // Actualizar la tabla de datos
+              dt_instalaciones_table.ajax.reload();
+
+              // Cerrar el modal de edición
+              $('#modalEditInstalacion').modal('hide');
+
+              // Mostrar mensaje de éxito
+             // Mostrar alerta de éxito
+             Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.success,
+              customClass: {
+                  confirmButton: 'btn btn-success'
+              }
+          });
+          },
+          error: function (xhr) {
+              // Mostrar el error en consola
+              console.error('Error en la solicitud AJAX:', xhr.responseJSON);
+
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'Hubo un problema al actualizar los datos.',
+                  footer: `<pre>${JSON.stringify(xhr.responseJSON, null, 2)}</pre>`,
+              });
+          }
+      });
+  });
+});
 
 
-  //end
+//end
 });
