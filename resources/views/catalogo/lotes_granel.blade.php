@@ -4,12 +4,13 @@
 
 <!-- Vendor Styles -->
 @section('vendor-style')
-    @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.scss', 'resources/assets/vendor/libs/select2/select2.scss', 'resources/assets/vendor/libs/@form-validation/form-validation.scss', 'resources/assets/vendor/libs/animate-css/animate.scss', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss'])
+    @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.scss', 'resources/assets/vendor/libs/select2/select2.scss', 'resources/assets/vendor/libs/@form-validation/form-validation.scss', 'resources/assets/vendor/libs/animate-css/animate.scss', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss', 'resources\assets\vendor\libs\bootstrap-datepicker\bootstrap-datepicker.scss'])
 @endsection
+
 
 <!-- Vendor Scripts -->
 @section('vendor-script')
-    @vite(['resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js'])
+    @vite(['resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js'])
 @endsection
 
 <!-- Page Scripts -->
@@ -19,7 +20,6 @@
 
 
 @section('content')
-
 
 
     <!-- Users List Table -->
@@ -66,7 +66,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                     {{--  --}}
+                        {{--  --}}
                         <form id="loteForm" method="POST" action="{{ route('lotes-register.store') }}">
                             @csrf
                             <!-- Nombre del lote -->
@@ -80,13 +80,14 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select id="id_empresa" name="id_empresa" class=" form-select" required >
+                                        <select id="id_empresa" name="id_empresa" class="select2 form-select" required>
                                             <option value="" disabled selected>Selecciona la empresa</option>
                                             @foreach ($empresas as $empresa)
-                                                <option value="{{ $empresa->id_empresa}}">{{ $empresa->razon_social }}</option>
+                                                <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
+                                                </option>
                                             @endforeach
                                         </select>
-                                        <label for="id_empresa">Empresa</label>
+
                                     </div>
                                 </div>
                             </div>
@@ -96,7 +97,7 @@
 
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select id="tipo_lote" name="tipo_lote" class="select2 form-select" required
+                                        <select id="tipo_lote" name="tipo_lote" class=" form-select" required
                                             onchange="toggleFields()">
                                             <option value="" disabled selected>Selecciona el tipo de lote</option>
                                             <option value="1">Certificación por OC CIDAM</option>
@@ -107,9 +108,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <input required type="text" step="0.01" id="folio fq"
-                                            name="folio fq" class="form-control"
-                                            placeholder="Folio fq" />
+                                        <input required type="text" step="0.01" id="folio_fq" name="folio_fq"
+                                            class="form-control" placeholder="Folio fq" />
                                         <label for="folio fq">folio fq</label>
                                     </div>
                                 </div>
@@ -130,7 +130,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
                                         <input type="number" step="0.01" id="volumen" name="volumen"
-                                            class="form-control" placeholder="Volumen de Lote Inicial (litros)" required/>
+                                            class="form-control" placeholder="Volumen de Lote Inicial (litros)" required />
                                         <label for="volumen">Volumen de Lote Inicial (litros)</label>
                                     </div>
                                 </div>
@@ -138,16 +138,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <input required type="number" step="0.01" id="cont_alc"
-                                            name="cont_alc" class="form-control"
-                                            placeholder="Contenido Alcohólico" />
+                                        <input required type="number" step="0.01" id="cont_alc" name="cont_alc"
+                                            class="form-control" placeholder="Contenido Alcohólico" />
                                         <label for="cont_alc">Contenido Alcohólico</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select required id="id_categoria" name="id_categoria"
-                                            class="select2 form-select" >
+                                        <select required id="id_categoria" name="id_categoria" class=" form-select">
                                             <option value="" disabled selected>Selecciona la categoría de agave
                                             </option>
                                             @foreach ($categorias as $categoria)
@@ -162,7 +160,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select id="clase_agave" name="id_clase" class="select2 form-select" required>
+                                        <select id="clase_agave" name="id_clase" class=" form-select" required>
                                             <option value="" disabled selected>Selecciona la clase de agave
                                             </option>
                                             @foreach ($clases as $clase)
@@ -174,7 +172,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select id="tipo_agave" name="id_tipo" class="select2 form-select" required>
+                                        <select id="tipo_agave" name="id_tipo" class=" form-select" required>
                                             <option value="" disabled selected>Selecciona el tipo de agave
                                             </option>
                                             @foreach ($tipos as $tipo)
@@ -198,7 +196,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" id="edad" name="edad" class="form-control"
+                                            <input type="number" id="edad" name="edad" class="form-control"
                                                 placeholder="Edad" />
                                             <label for="edad">Edad</label>
                                         </div>
@@ -217,36 +215,48 @@
                                             <!-- Primer bloque -->
                                             <tr>
                                                 <td>
-                                                    <input readonly value="Análisis completo" type="text" class="form-control form-control-sm" id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
+                                                    <input readonly value="Análisis completo" type="text"
+                                                        class="form-control form-control-sm"
+                                                        id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="form-control form-control-sm" id="date{{ $documento->id_documento }}" name="folio_fq_completo">
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        id="date{{ $documento->id_documento }}" name="folio_fq_completo">
                                                 </td>
                                                 <td>
-                                                    <input class="form-control form-control-sm" type="file" id="file{{ $documento->id_documento }}" name="url[]">
-                                                    <input value="{{ $documento->id_documento }}" class="form-control" type="hidden" name="id_documento[]">
-                                                    <input value="{{ $documento->nombre }}" class="form-control" type="hidden" name="nombre_documento[]">
+                                                    <input class="form-control form-control-sm" type="file"
+                                                        id="file{{ $documento->id_documento }}" name="url[]">
+                                                    <input value="{{ $documento->id_documento }}" class="form-control"
+                                                        type="hidden" name="id_documento[]">
+                                                    <input value="{{ $documento->nombre }}" class="form-control"
+                                                        type="hidden" name="nombre_documento[]">
                                                 </td>
                                             </tr>
-                                
+
                                             <!-- Segundo bloque -->
                                             <tr>
                                                 <td>
-                                                    <input readonly value="Ajuste de grado" type="text" class="form-control form-control-sm" id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
+                                                    <input readonly value="Ajuste de grado" type="text"
+                                                        class="form-control form-control-sm"
+                                                        id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
                                                 </td>
                                                 <td>
-                                                    <input type="text" class="form-control form-control-sm" id="date{{ $documento->id_documento }}-2" name="folio_fq_ajuste">
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        id="date{{ $documento->id_documento }}-2" name="folio_fq_ajuste">
                                                 </td>
                                                 <td>
-                                                    <input class="form-control form-control-sm" type="file" id="file{{ $documento->id_documento }}-2" name="url[]">
-                                                    <input value="{{ $documento->id_documento }}" class="form-control" type="hidden" name="id_documento[]">
-                                                    <input value="{{ $documento->nombre }}" class="form-control" type="hidden" name="nombre_documento[]">
+                                                    <input class="form-control form-control-sm" type="file"
+                                                        id="file{{ $documento->id_documento }}-2" name="url[]">
+                                                    <input value="{{ $documento->id_documento }}" class="form-control"
+                                                        type="hidden" name="id_documento[]">
+                                                    <input value="{{ $documento->nombre }}" class="form-control"
+                                                        type="hidden" name="nombre_documento[]">
                                                 </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
-                                
+
                             </div>
 
                             <!-- Campos para "Certificado por otro organismo" -->
@@ -255,11 +265,15 @@
                                     <!-- Campo de archivo ocupando toda la fila -->
                                     <div class="col-md-12 mb-4">
                                         <div class="form-floating form-floating-outline">
-                                            <input class="form-control form-control-sm" type="file" id="file-59" name="url[]">
-                                            <input value="59" class="form-control" type="hidden" name="id_documento[]">
-                                            <input value="Certificado de lote a granel" class="form-control" type="hidden" name="nombre_documento[]">
+                                            <input class="form-control form-control-sm" type="file" id="file-59"
+                                                name="url[]">
+                                            <input value="59" class="form-control" type="hidden"
+                                                name="id_documento[]">
+                                            <input value="Certificado de lote a granel" class="form-control"
+                                                type="hidden" name="nombre_documento[]">
                                             <label for="certificado_lote">Adjuntar Certificado de Lote a Granel</label>
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="row">
@@ -273,8 +287,7 @@
                                     </div>
                                     <div class="col-md-6 mb-4">
                                         <div class="form-floating form-floating-outline">
-                                            <select id="id_organismo" name="id_organismo"
-                                                class="select2 form-select">
+                                            <select id="id_organismo" name="id_organismo" class=" form-select">
                                                 <option value="" disabled selected>Selecciona el organismo de
                                                     certificación</option>
                                                 @foreach ($organismos as $organismo)
@@ -290,15 +303,16 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-4">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="date" id="fecha_emision" name="fecha_emision"
-                                                class="form-control datepicker" placeholder="Fecha de Emisión" />
+                                            <input type="text" id="fecha_emision" name="fecha_emision"
+                                                class="form-control datepicker" placeholder="Fecha de Emisión" readonly />
                                             <label for="fecha_emision">Fecha de Emisión</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-4">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="date" id="fecha_vigencia" name="fecha_vigencia"
-                                                class="form-control datepicker" placeholder="Fecha de Vigencia" />
+                                            <input type="text" id="fecha_vigencia" name="fecha_vigencia"
+                                                class="form-control datepicker" placeholder="Fecha de Vigencia"
+                                                readonly />
                                             <label for="fecha_vigencia">Fecha de Vigencia</label>
                                         </div>
                                     </div>
@@ -317,6 +331,222 @@
                 </div>
             </div>
         </div>
+
+        {{--  --}}
+
+
+        <!-- Modal para editar un lote -->
+        <!-- Modal para editar un lote -->
+        <div class="modal fade" id="offcanvasEditLote" tabindex="-1" aria-labelledby="offcanvasEditLoteLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="offcanvasEditLoteLabel" class="modal-title">Registro de Lote a Granel</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="loteFormEdit" method="POST" action="{{ route('lotes-granel-list.update', ':id') }}">
+                            @csrf
+                            @method('PUT') <!-- Asegúrate de incluir esto -->
+                            <!-- Sección de Datos Básicos -->
+                            <div class="section">
+                                <h6>Datos Básicos</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <input type="text" id="nombre_lote" name="nombre_lote"
+                                                class="form-control" placeholder="Nombre del lote" required />
+                                            <label for="nombre_lote">Nombre del Lote</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <select id="id_empresa" name="id_empresa" class="select2 form-select"
+                                                required>
+                                                <option value="" disabled selected>Selecciona la empresa</option>
+                                                @foreach ($empresas as $empresa)
+                                                    <option value="{{ $empresa->id_empresa }}">
+                                                        {{ $empresa->razon_social }}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="id_empresa">Empresa</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <select id="tipo_lote" name="tipo_lote" class="form-select" required
+                                                onchange="toggleFields()">
+                                                <option value="" disabled selected>Selecciona el tipo de lote
+                                                </option>
+                                                <option value="1">Certificación por OC CIDAM</option>
+                                                <option value="2">Certificado por otro organismo</option>
+                                            </select>
+                                            <label for="tipo_lote">Tipo de Lote</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <input type="text" id="folio_fq" name="folio_fq" class="form-control"
+                                                placeholder="Folio fq" />
+                                            <label for="folio_fq">Folio fq</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sección de Información Adicional -->
+                            <div class="section">
+                                <h6>Información Adicional</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <select id="id_guia" name="id_guia" class="form-control" required>
+                                                <option value="">Seleccione una guía</option>
+                                                @foreach ($guias as $guia)
+                                                    <option value="{{ $guia->id_guia }}">{{ $guia->Folio }}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="id_guia">Folio de guía de translado</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <input type="number" step="0.01" id="volumen" name="volumen"
+                                                class="form-control" placeholder="Volumen de Lote Inicial (litros)"
+                                                required />
+                                            <label for="volumen">Volumen de Lote Inicial (litros)</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <input type="number" step="0.01" id="cont_alc" name="cont_alc"
+                                                class="form-control" placeholder="Contenido Alcohólico" required />
+                                            <label for="cont_alc">Contenido Alcohólico</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <select id="id_categoria" name="id_categoria" class="form-select" required>
+                                                <option value="" disabled selected>Selecciona la categoría de agave
+                                                </option>
+                                                @foreach ($categorias as $categoria)
+                                                    <option value="{{ $categoria->id_categoria }}">
+                                                        {{ $categoria->categoria }}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="id_categoria">Categoría de Agave</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <select id="clase_agave" name="id_clase" class="form-select" required>
+                                                <option value="" disabled selected>Selecciona la clase de agave
+                                                </option>
+                                                @foreach ($clases as $clase)
+                                                    <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="clase_agave">Clase de Agave</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <select id="tipo_agave" name="id_tipo" class="form-select" required>
+                                                <option value="" disabled selected>Selecciona el tipo de agave
+                                                </option>
+                                                @foreach ($tipos as $tipo)
+                                                    <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
+                                                @endforeach
+                                            </select>
+                                            <label for="tipo_agave">Tipo de Agave</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Campos Condicionales -->
+                            <div id="oc_cidam_fields" class="section d-none">
+                                <h6>Certificación por OC CIDAM</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <input type="text" id="ingredientes" name="ingredientes"
+                                                class="form-control" placeholder="Ingredientes" />
+                                            <label for="ingredientes">Ingredientes</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <input type="number" id="edad" name="edad" class="form-control"
+                                                placeholder="Edad" />
+                                            <label for="edad">Edad</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="otro_organismo_fields" class="section d-none">
+                                <h6>Certificado por otro organismo</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <input type="file" id="certificado_lote" name="certificado_lote"
+                                                class="form-control" />
+                                            <label for="certificado_lote">Adjuntar certificado de lote a granel</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <input type="text" id="folio_certificado" name="folio_certificado"
+                                                class="form-control" placeholder="Folio/Número de Certificado" />
+                                            <label for="folio_certificado">Folio/Número de Certificado</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <input type="text" id="organismo_certificacion"
+                                                name="organismo_certificacion" class="form-control"
+                                                placeholder="Organismo de certificación" />
+                                            <label for="organismo_certificacion">Organismo de Certificación</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <input type="date" id="fecha_emision" name="fecha_emision"
+                                                class="form-control" />
+                                            <label for="fecha_emision">Fecha de Emisión</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating form-floating-outline mb-4">
+                                            <input type="date" id="fecha_vigencia" name="fecha_vigencia"
+                                                class="form-control" />
+                                            <label for="fecha_vigencia">Fecha de Vigencia</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-center mt-3">
+                                <button type="submit" class="btn btn-primary me-2">Registrar</button>
+                                <button type="reset" class="btn btn-outline-secondary"
+                                    data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
 
 

@@ -183,8 +183,10 @@ class LotesGranelController extends Controller
         }
     }
 
+    
+
     public function store(Request $request)
-{
+    {
     // Validar los datos del formulario
     $validatedData = $request->validate([
         'id_empresa' => 'required|exists:empresa,id_empresa',
@@ -262,6 +264,7 @@ class LotesGranelController extends Controller
         'message' => 'Lote registrado exitosamente',
     ]);
 }
+/*  */
 
-    
+
 }

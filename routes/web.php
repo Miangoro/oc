@@ -464,6 +464,7 @@ Route::get('/catalogo/lotes_granel', [LotesGranelController::class, 'UserManagem
 Route::resource('/lotes-granel-list', LotesGranelController::class);
 // Ruta para eliminar un lote
 Route::delete('/lotes-granel-list/{id_lote_granel}', [LotesGranelController::class, 'destroy']);
+// Ruta para almacenar un lote
 Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->name('lotes-register.store');
 
 

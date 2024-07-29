@@ -1,8 +1,6 @@
-
+// resources/js/catalogo_lotes.js
 
 $(function() {
-
-
     const tipoLoteSelect = document.getElementById('tipo_lote');
     const ocCidamFields = document.getElementById('oc_cidam_fields');
     const otroOrganismoFields = document.getElementById('otro_organismo_fields');
@@ -23,13 +21,18 @@ $(function() {
     });
 
 
-    select2 = $('.select2')
+//DATE PICKER
+
+$(document).ready(function () {
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd'
+    });
+  
+  });
+  
+  
     // Inicializar DataTable
     var dt_user = $('.datatables-users').DataTable({
-
-
-
-
         processing: true,
         serverSide: true,
         ajax: {
@@ -73,7 +76,7 @@ $(function() {
                 render: function (data, type, full) {
                     return (
                         '<div class="d-flex align-items-center gap-50">' +
-                        `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_lote_granel']}" data-bs-toggle="offcanvas" data-bs-target="#editCategoria"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+                        `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_lote_granel']}" data-bs-toggle="modal" data-bs-target="#offcanvasEditLote"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
                         `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_lote_granel']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
                         '</div>'
                     );
@@ -191,7 +194,6 @@ $(function() {
                     },
                     {
                         extend: 'copy',
-                        title: 'Lotes a granel',
                         text: '<i class="ri-file-copy-line me-1"></i>Copy',
                         className: 'dropdown-item',
                         exportOptions: {
@@ -216,12 +218,8 @@ $(function() {
                     'data-bs-target': '#offcanvasAddLote'
                 }
             }
-        ]
+        ],
     });
-
-
-
-
 // Delete Record
 $(document).on('click', '.delete-record', function () {
     var id_lote= $(this).data('id'); // Obtener el ID de la clase
@@ -270,7 +268,6 @@ $(document).on('click', '.delete-record', function () {
                 },
                 error: function (error) {
                     console.log(error);
-
                     // Mostrar SweetAlert de error
                     Swal.fire({
                         icon: 'error',
@@ -299,7 +296,7 @@ $(document).on('click', '.delete-record', function () {
 });
 
 
-
+    
 /* funcion para registrar */
 $('#loteForm').on('submit', function(event) {
     event.preventDefault(); // Evita el envío por defecto del formulario
@@ -354,7 +351,6 @@ $('#loteForm').on('submit', function(event) {
     });
 });
 
-    
 
 
 });
