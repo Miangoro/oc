@@ -1,3 +1,4 @@
+
 @extends('layouts/layoutMaster')
 
 @section('title', 'Lotes a granel')

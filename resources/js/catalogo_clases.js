@@ -9,7 +9,6 @@ $(function () {
     // Variable declaration for table
     var dt_user_table = $('.datatables-users'),
         select2 = $('.select2'),
-        userView = baseUrl + 'app/user/view/account',
         offCanvasForm = $('#offcanvasAddUser');
 
     if (select2.length) {
@@ -85,16 +84,12 @@ $(function () {
                         var $row_output =
                             '<div class="d-flex justify-content-start align-items-center user-name">' +
                             '<div class="avatar-wrapper">' +
-                            '<div class="avatar avatar-sm me-3">' +
-
                             '</div>' +
                             '</div>' +
                             '<div class="d-flex flex-column">' +
-                            '<a href="' +
-                            userView +
-                            '" class="text-truncate text-heading"><span class="fw-medium">' +
+                            '<span class="fw-medium">' +
                             $name +
-                            '</span></a>' +
+                            '</span>' +
                             '</div>' +
                             '</div>';
                         return $row_output;
@@ -112,9 +107,7 @@ $(function () {
                   '<div class="d-flex align-items-center gap-50">' +
                   `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_clase']}" data-bs-toggle="offcanvas" data-bs-target="#editClase"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
                   `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_clase']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-                  '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
                   '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                  '<a href="' + userView + '" class="dropdown-item">View</a>' +
                   '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
                   '</div>' +
                   '</div>'
