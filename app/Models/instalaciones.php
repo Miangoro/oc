@@ -38,4 +38,14 @@ class Instalaciones extends Model
     {
         return $this->belongsTo(Estados::class, 'estado');
     }
+
+    public function getFechaEmisionAttribute($value)
+    {
+        return $value ? $value : 'N/A';
+    }
+
+    public function getFechaVigenciaAttribute($value)
+    {
+    return $value ? $value : 'N/A';
+    }
 }
