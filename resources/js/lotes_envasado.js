@@ -484,6 +484,7 @@ $(function () {
             // Rellenar el formulario con los datos obtenidos
             $('#edit_id_lote_envasado').val(data.id_lote_envasado);
             $('#edit_cliente').val(data.id_empresa).trigger('change');
+           /* */ $('#edit_lote_granel').val(data.id_empresa).trigger('change');
             $('#edit_nombre_lote').val(data.nombre_lote);
             $('#edit_tipo_lote').val(data.tipo_lote);
             $('#edit_sku').val(data.sku);
