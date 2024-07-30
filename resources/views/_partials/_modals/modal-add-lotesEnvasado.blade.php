@@ -134,7 +134,7 @@
                                         <button type="button" class="btn btn-danger remove-row" disabled> <i class="ri-delete-bin-5-fill"></i> </button>
                                     </th>
                                     <td>
-                                        <select class="id_lote_granel form-control " name="id_lote_granel[]" >
+                                        <select class="id_lote_granel form-control select2" name="id_lote_granel[]" >
                                             <!-- Opciones -->
                                         </select>
                                     </td>

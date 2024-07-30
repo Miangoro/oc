@@ -70,7 +70,7 @@ $(document).ready(function() {
                     <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
                 </th>
                 <td>
-                    <select class="id_lote_granel form-control " name="id_lote_granel[]">
+                    <select class="id_lote_granel form-control select2-nuevo" name="id_lote_granel[]">
                         <!-- Opciones -->
                     </select>
                 </td>
@@ -81,7 +81,13 @@ $(document).ready(function() {
         $('#contenidoGraneles').append(newRow);
 
         // Re-inicializar select2 en la nueva fila
-        $('.select2').select2();
+        $('#contenidoGraneles').find('.select2-nuevo').select2({
+            dropdownParent: $('#addlostesEnvasado'), // Asegúrate de que #myModal sea el id de tu modal
+            width: '100%',
+            dropdownCssClass: 'select2-dropdown'
+        });
+
+        $('.select2-dropdown').css('z-index', 9999);
 
         // Copiar opciones del primer select al nuevo select
         var options = $('#contenidoGraneles tr:first-child .id_lote_granel').html();

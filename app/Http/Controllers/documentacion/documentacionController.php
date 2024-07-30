@@ -125,17 +125,18 @@ class documentacionController extends Controller
                       <td class="text-success fw-medium text-end">--</td>
                     </tr>
                     ';
-        } 
+        }
 
         $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)->where('tipo', '=', $act_instalacion)->get();
 
         foreach ($instalaciones as $indexI => $instalacion) {
-        $contenidoInstalaciones = $contenidoInstalaciones . '
-        <div class="table-responsive text-nowrap col-md-6">
-              <table class="table border-top">
-                <thead>
+          $contenidoInstalaciones = $contenidoInstalaciones . '
+       
+        <div class="table-responsive text-nowrap col-md-6 mb-5 ">
+              <table class="table  table-bordered">
+                <thead class="bg-secondary text-white">
                   <tr>
-                    <th colspan="5" class="bg-transparent border-bottom">'.$instalacion->direccion_completa.'</th>
+                    <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3">Instalación: <b>' . $instalacion->direccion_completa . '</b></th>
                   </tr>
                   <tr>
                     <th class="bg-transparent border-bottom">#</th>
@@ -154,12 +155,15 @@ class documentacionController extends Controller
 
         $contenidoActividades = $contenidoActividades . '
           <div class="tab-pane fade ' . $showClassA . ' ' . $activeClassA . '" id="navs-orders-id-' . $actividad->id_actividad . '" role="tabpanel">
+           <div class="row p-5">
             ' . $contenidoInstalaciones . '
-           
+          </div> 
           </div>';
       }
 
-
+      $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $id_empresa)->first();
+      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+      $razonSocial = $empresa->pluck('razon_social')->first();
 
 
 
@@ -180,7 +184,7 @@ class documentacionController extends Controller
       <img src="' . asset('assets/img/branding/validacion_certificacion.png') . '" alt="timeline-image" class="card-img-top h-px-200" style="object-fit: cover;">
       <div class="card-header d-flex justify-content-between">
         <div>
-          <h5 class="card-title mb-1">NOM-070-001C MEZCALMICH S.P.R. DE R.L. (' . $norma . ')</h5>
+          <h5 class="card-title mb-1">'.$numeroCliente.' '.$razonSocial.' (' . $norma . ')</h5>
           
         </div>
         
