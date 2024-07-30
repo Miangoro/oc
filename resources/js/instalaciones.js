@@ -37,11 +37,22 @@ $(function () {
     ],
     columnDefs: [
       {
-        targets: 0, // Primera columna
+        // For Responsive
+        className: 'control',
         searchable: false,
         orderable: false,
+        responsivePriority: 2,
+        targets: 0,
         render: function (data, type, full, meta) {
-          return meta.row + 1; // Índice incremental
+          return '';
+        }
+      },
+      {
+        searchable: false,
+        orderable: false,
+        targets: 1,
+        render: function (data, type, full, meta) {
+          return `<span>${full.fake_id}</span>`;
         }
       },
       {
@@ -55,6 +66,12 @@ $(function () {
             '<div class="d-flex align-items-center gap-50">' +
             `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}" data-bs-toggle="modal" data-bs-target="#modalEditInstalacion"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
             `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+            '<div class="dropdown-menu dropdown-menu-end m-0">' +
+              '<a href="' +
+              userView +
+              '" class="dropdown-item">View</a>' +
+              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+            '</div>' +
             '</div>'
           );
         }
@@ -205,7 +222,40 @@ $(function () {
           'data-bs-target': '#modalAddInstalacion'
         }
       }
-    ]
+    ],
+          // For responsive popup
+          responsive: {
+            details: {
+              display: $.fn.dataTable.Responsive.display.modal({
+                header: function (row) {
+                  var data = row.data();
+                  return 'Detalles de ' + data['folio'];
+                }
+              }),
+              type: 'column',
+              renderer: function (api, rowIdx, columns) {
+                var data = $.map(columns, function (col, i) {
+                  return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
+                    ? '<tr data-dt-row="' +
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
+                    : '';
+                }).join('');
+
+                return data ? $('<table class="table"/><tbody />').append(data) : false;
+              }
+            }
+          }
   });
 
   var dt_user_table = $('.datatables-users'),
@@ -221,7 +271,6 @@ $(function () {
       });
     });
   }
-
   initializeSelect2(select2Elements);
 
   // Configuración CSRF para Laravel

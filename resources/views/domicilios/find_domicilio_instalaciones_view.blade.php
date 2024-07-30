@@ -34,14 +34,14 @@
   document.addEventListener('DOMContentLoaded', function () {
     const certificacionSelectAdd = document.getElementById('certificacion');
     const certificadoOtrosDivAdd = document.getElementById('certificado-otros');
-
-    const certificacionSelectEdit = document.getElementById('edit_certificacion');
-    const certificadoOtrosDivEdit = document.getElementById('edit_certificado_otros');
-
     const tipoSelectAdd = document.getElementById('tipo');
     const modalAddInstalacion = document.getElementById('modalAddInstalacion');
 
-    // Función para mostrar/ocultar el menú adicional
+    const certificacionSelectEdit = document.getElementById('edit_certificacion');
+    const certificadoOtrosDivEdit = document.getElementById('edit_certificado_otros');
+    const tipoSelectEdit = document.getElementById('edit_tipo');
+    const modalEditInstalacion = document.getElementById('modalEditInstalacion');
+
     function toggleCertificadoOtros(selectElement, divElement) {
       if (selectElement.value === 'otro_organismo') {
         divElement.classList.remove('d-none');
@@ -50,26 +50,90 @@
       }
     }
 
-    // Manejar el cambio en el select de tipo de certificación al agregar
-    certificacionSelectAdd.addEventListener('change', function () {
-      toggleCertificadoOtros(certificacionSelectAdd, certificadoOtrosDivAdd);
-    });
+    function updateDocumentFields(tipoSelect, divElement) {
+      const hiddenIdDocumento = divElement.querySelector('input[name="id_documento[]"]');
+      const hiddenNombreDocumento = divElement.querySelector('input[name="nombre_documento[]"]');
+      const fileCertificado = divElement.querySelector('input[type="file"]');
 
-    // Manejar el cambio en el select de tipo de certificación al editar
-    certificacionSelectEdit.addEventListener('change', function () {
-      toggleCertificadoOtros(certificacionSelectEdit, certificadoOtrosDivEdit);
-    });
+      switch (tipoSelect.value) {
+        case 'productora':
+          hiddenIdDocumento.value = '127';
+          hiddenNombreDocumento.value = 'Certificado de instalaciones';
+          fileCertificado.setAttribute('id', 'file-127');
+          break;
+        case 'envasadora':
+          hiddenIdDocumento.value = '128';
+          hiddenNombreDocumento.value = 'Certificado de envasadora';
+          fileCertificado.setAttribute('id', 'file-128');
+          break;
+        case 'comercializadora':
+          hiddenIdDocumento.value = '129';
+          hiddenNombreDocumento.value = 'Certificado de comercializadora';
+          fileCertificado.setAttribute('id', 'file-129');
+          break;
+        default:
+          hiddenIdDocumento.value = '';
+          hiddenNombreDocumento.value = '';
+          fileCertificado.removeAttribute('id');
+          break;
+      }
+    }
 
-    // Reiniciar el select de tipo de instalación y ocultar los campos adicionales al cerrar el modal
-    modalAddInstalacion.addEventListener('hidden.bs.modal', function () {
-      tipoSelectAdd.value = ''; // Reinicia el select al valor por defecto
-      $(tipoSelectAdd).trigger('change'); // Notifica a Select2 que se ha cambiado el valor
+    function setupEventListeners() {
+      // Add modal event listeners
+      certificacionSelectAdd.addEventListener('change', function () {
+        toggleCertificadoOtros(certificacionSelectAdd, certificadoOtrosDivAdd);
+      });
 
-      // Ocultar los campos adicionales
-      certificadoOtrosDivAdd.classList.add('d-none');
-    });
+      tipoSelectAdd.addEventListener('change', function () {
+        updateDocumentFields(tipoSelectAdd, certificadoOtrosDivAdd);
+      });
+
+      modalAddInstalacion.addEventListener('shown.bs.modal', function () {
+        certificacionSelectAdd.value = '';
+        $(certificacionSelectAdd).trigger('change');
+        tipoSelectAdd.value = '';
+        $(tipoSelectAdd).trigger('change');
+        certificadoOtrosDivAdd.classList.add('d-none');
+      });
+
+      modalAddInstalacion.addEventListener('hidden.bs.modal', function () {
+        certificacionSelectAdd.value = '';
+        $(certificacionSelectAdd).trigger('change');
+        tipoSelectAdd.value = '';
+        $(tipoSelectAdd).trigger('change');
+        certificadoOtrosDivAdd.classList.add('d-none');
+      });
+
+      // Edit modal event listeners
+      certificacionSelectEdit.addEventListener('change', function () {
+        toggleCertificadoOtros(certificacionSelectEdit, certificadoOtrosDivEdit);
+      });
+
+      tipoSelectEdit.addEventListener('change', function () {
+        updateDocumentFields(tipoSelectEdit, certificadoOtrosDivEdit);
+      });
+
+      modalEditInstalacion.addEventListener('shown.bs.modal', function () {
+        certificacionSelectEdit.value = '';
+        $(certificacionSelectEdit).trigger('change');
+        tipoSelectEdit.value = '';
+        $(tipoSelectEdit).trigger('change');
+        certificadoOtrosDivEdit.classList.add('d-none');
+      });
+
+      modalEditInstalacion.addEventListener('hidden.bs.modal', function () {
+        certificacionSelectEdit.value = '';
+        $(certificacionSelectEdit).trigger('change');
+        tipoSelectEdit.value = '';
+        $(tipoSelectEdit).trigger('change');
+        certificadoOtrosDivEdit.classList.add('d-none');
+      });
+    }
+
+    setupEventListeners();
   });
-  </script>
+</script>
 @endsection
 
 @section('content')
@@ -123,7 +187,7 @@
 
                         <!-- Select de Tipo de Instalación -->
                         <div class="form-floating form-floating-outline mb-3">
-                            <select class="select2 form-select" id="tipo" name="tipo" aria-label="Tipo de Instalación" required>
+                            <select class="form-select" id="tipo" name="tipo" aria-label="Tipo de Instalación" required>
                                 <option value="">Seleccione un tipo de instalación</option>
                                 <option value="productora">Productora</option>
                                 <option value="envasadora">Envasadora</option>
@@ -160,15 +224,16 @@
                         </div>
 
                         <!-- Campos adicionales para "Certificado por otro organismo" -->
-                        <div id="certificado-otros" class="d-none">
-                            <div class="col-md-12 mb-4">
-                                <div class="form-floating form-floating-outline">
-                                    <input class="form-control form-control-sm" type="file" id="file-127" name="url[]">
-                                    <input value="127" class="form-control" type="hidden" name="id_documento[]">
-                                    <input value="Certificado de instalaciones" class="form-control" type="hidden" name="nombre_documento[]">
-                                    <label for="certificado_instalaciones">Adjuntar Certificado de instalaciones</label>
+                               <!-- Campos adicionales para "Certificado por otro organismo" -->
+                               <div id="certificado-otros" class="d-none">
+                                <div class="col-md-12 mb-4">
+                                    <div class="form-floating form-floating-outline">
+                                        <input class="form-control form-control-sm" type="file" id="file-127" name="url[]">
+                                        <input value="127" class="form-control" type="hidden" name="id_documento[]">
+                                        <input value="Certificado de instalaciones" class="form-control" type="hidden" name="nombre_documento[]">
+                                        <label for="certificado_instalaciones">Adjuntar Certificado de instalaciones</label>
+                                    </div>
                                 </div>
-                            </div>
 
                             <div class="form-floating form-floating-outline mb-3">
                                 <input type="text" class="form-control" id="folio" placeholder="Folio/Número del certificado" name="folio" aria-label="Folio/Número del certificado">
