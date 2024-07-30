@@ -95,7 +95,7 @@
                             <!-- Empresa y Tipo de Lote -->
                             <div class="row">
 
-                                <div class="col-md-6">
+                                <div class="col-md-12">
                                     <div class="form-floating form-floating-outline mb-4">
                                         <select id="tipo_lote" name="tipo_lote" class=" form-select" required
                                             onchange="toggleFields()">
@@ -327,8 +327,6 @@
 
         {{--  --}}
 
-
-        <!-- Modal para editar un lote -->
         <!-- Modal para editar un lote -->
         <div class="modal fade" id="offcanvasEditLote" tabindex="-1" aria-labelledby="offcanvasEditLoteLabel"
             aria-hidden="true">
@@ -341,41 +339,40 @@
                     <div class="modal-body">
                         <form id="loteFormEdit" method="POST" action="">
                             @csrf
+                            <input type="hidden" id="edit_lote_action" name="edit_lote_action" value="">
                             <div class="section">
                                 <h6>Datos Básicos</h6>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" id="nombre_lote" name="nombre_lote"
+                                            <input type="text" id="edit_nombre_lote" name="nombre_lote"
                                                 class="form-control" placeholder="Nombre del lote" required />
-                                            <label for="nombre_lote">Nombre del Lote</label>
+                                            <label for="edit_nombre_lote">Nombre del Lote</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select id="id_empresa" name="id_empresa" class="select2 form-select"
-                                                required>
+                                            <select onchange="obtenerGuias1()" id="edit_id_empresa" name="id_empresa" class="select2 form-select" required >
                                                 <option value="" disabled selected>Selecciona la empresa</option>
                                                 @foreach ($empresas as $empresa)
-                                                    <option value="{{ $empresa->id_empresa }}">
-                                                        {{ $empresa->razon_social }}</option>
+                                                    <option value="{{ $empresa->id_empresa}}">{{ $empresa->razon_social }}</option>
                                                 @endforeach
                                             </select>
-                                            <label for="id_empresa">Empresa</label>
+                                            <label for="edit_id_empresa">Empresa</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select id="tipo_lote" name="tipo_lote" class="form-select" required
+                                            <select id="edit_tipo_lote" name="tipo_lote" class="form-select" required
                                                 onchange="toggleFields()">
                                                 <option value="" disabled selected>Selecciona el tipo de lote
                                                 </option>
                                                 <option value="1">Certificación por OC CIDAM</option>
                                                 <option value="2">Certificado por otro organismo</option>
                                             </select>
-                                            <label for="tipo_lote">Tipo de Lote</label>
+                                            <label for="edit_tipo_lote">Tipo de Lote</label>
                                         </div>
                                     </div>
                                 </div>
@@ -387,35 +384,35 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select id="id_guia" name="id_guia" class="form-control" required>
+                                            <select id="edit_id_guia" name="id_guia" class="form-control" required>
                                                 <option value="">Seleccione una guía</option>
                                                 @foreach ($guias as $guia)
                                                     <option value="{{ $guia->id_guia }}">{{ $guia->Folio }}</option>
                                                 @endforeach
                                             </select>
-                                            <label for="id_guia">Folio de guía de translado</label>
+                                            <label for="edit_id_guia">Folio de guía de translado</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" step="0.01" id="volumen" name="volumen"
+                                            <input type="number" step="0.01" id="edit_volumen" name="volumen"
                                                 class="form-control" placeholder="Volumen de Lote Inicial (litros)"
                                                 required />
-                                            <label for="volumen">Volumen de Lote Inicial (litros)</label>
+                                            <label for="edit_volumen">Volumen de Lote Inicial (litros)</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" step="0.01" id="cont_alc" name="cont_alc"
+                                            <input type="number" step="0.01" id="edit_cont_alc" name="cont_alc"
                                                 class="form-control" placeholder="Contenido Alcohólico" required />
-                                            <label for="cont_alc">Contenido Alcohólico</label>
+                                            <label for="edit_cont_alc">Contenido Alcohólico</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select id="id_categoria" name="id_categoria" class="form-select" required>
+                                            <select id="edit_id_categoria" name="id_categoria" class="form-select" required>
                                                 <option value="" disabled selected>Selecciona la categoría de agave
                                                 </option>
                                                 @foreach ($categorias as $categoria)
@@ -423,98 +420,98 @@
                                                         {{ $categoria->categoria }}</option>
                                                 @endforeach
                                             </select>
-                                            <label for="id_categoria">Categoría de Agave</label>
+                                            <label for="edit_id_categoria">Categoría de Agave</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select id="clase_agave" name="id_clase" class="form-select" required>
+                                            <select id="edit_clase_agave" name="id_clase" class="form-select" required>
                                                 <option value="" disabled selected>Selecciona la clase de agave
                                                 </option>
                                                 @foreach ($clases as $clase)
                                                     <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
                                                 @endforeach
                                             </select>
-                                            <label for="clase_agave">Clase de Agave</label>
+                                            <label for="edit_clase_agave">Clase de Agave</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select id="tipo_agave" name="id_tipo" class="form-select" required>
+                                            <select id="edit_tipo_agave" name="id_tipo" class="form-select" required>
                                                 <option value="" disabled selected>Selecciona el tipo de agave
                                                 </option>
                                                 @foreach ($tipos as $tipo)
                                                     <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
                                                 @endforeach
                                             </select>
-                                            <label for="tipo_agave">Tipo de Agave</label>
+                                            <label for="edit_tipo_agave">Tipo de Agave</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Campos Condicionales -->
-                            <div id="oc_cidam_fields" class="section d-none">
+                            <div id="edit_oc_cidam_fields" class="section d-none">
                                 <h6>Certificación por OC CIDAM</h6>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" id="ingredientes" name="ingredientes"
+                                            <input type="text" id="edit_ingredientes" name="ingredientes"
                                                 class="form-control" placeholder="Ingredientes" />
-                                            <label for="ingredientes">Ingredientes</label>
+                                            <label for="edit_ingredientes">Ingredientes</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" id="edad" name="edad" class="form-control"
+                                            <input type="number" id="edit_edad" name="edad" class="form-control"
                                                 placeholder="Edad" />
-                                            <label for="edad">Edad</label>
+                                            <label for="edit_edad">Edad</label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div id="otro_organismo_fields" class="section d-none">
+                            <div id="edit_otro_organismo_fields" class="section d-none">
                                 <h6>Certificado por otro organismo</h6>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="file" id="certificado_lote" name="certificado_lote"
+                                            <input type="file" id="edit_certificado_lote" name="certificado_lote"
                                                 class="form-control" />
-                                            <label for="certificado_lote">Adjuntar certificado de lote a granel</label>
+                                            <label for="edit_certificado_lote">Adjuntar certificado de lote a granel</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" id="folio_certificado" name="folio_certificado"
+                                            <input type="text" id="edit_folio_certificado" name="folio_certificado"
                                                 class="form-control" placeholder="Folio/Número de Certificado" />
-                                            <label for="folio_certificado">Folio/Número de Certificado</label>
+                                            <label for="edit_folio_certificado">Folio/Número de Certificado</label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" id="organismo_certificacion"
+                                            <input type="text" id="edit_organismo_certificacion"
                                                 name="organismo_certificacion" class="form-control"
                                                 placeholder="Organismo de certificación" />
-                                            <label for="organismo_certificacion">Organismo de Certificación</label>
+                                            <label for="edit_organismo_certificacion">Organismo de Certificación</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="date" id="fecha_emision" name="fecha_emision"
+                                            <input type="date" id="edit_fecha_emision" name="fecha_emision"
                                                 class="form-control" />
-                                            <label for="fecha_emision">Fecha de Emisión</label>
+                                            <label for="edit_fecha_emision">Fecha de Emisión</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="date" id="fecha_vigencia" name="fecha_vigencia"
+                                            <input type="date" id="edit_fecha_vigencia" name="fecha_vigencia"
                                                 class="form-control" />
-                                            <label for="fecha_vigencia">Fecha de Vigencia</label>
+                                            <label for="edit_fecha_vigencia">Fecha de Vigencia</label>
                                         </div>
                                     </div>
                                 </div>
@@ -561,6 +558,31 @@ function obtenerGuias() {
             contenido = '<option value="">Sin guias registradas</option>';
           }
             $('#id_guia').html(contenido);
+        },
+        error: function() {
+            //alert('Error al cargar los lotes a granel.');
+        }
+    });
+  }
+
+  function obtenerGuias1() {
+        var empresa = $("#edit_id_empresa").val();
+    // Hacer una petición AJAX para obtener los detalles de la empresa
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            // Cargar los detalles en el modal
+            var contenido = "";
+          for (let index = 0; index < response.guias.length; index++) {
+            contenido = '<option value="'+response.guias[index].id_guia+'">'+response.guias[index].Folio+'</option>' + contenido;
+           // console.log(response.normas[index].norma);
+          }
+
+          if(response.guias.length == 0){
+            contenido = '<option value="">Sin guias registradas</option>';
+          }
+            $('#edit_id_guia').html(contenido);
         },
         error: function() {
             //alert('Error al cargar los lotes a granel.');
