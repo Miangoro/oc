@@ -156,7 +156,7 @@ class DomiciliosController extends Controller
             'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf', // Validación de archivos
             'nombre_documento.*' => 'required_with:url.*|string', // Validación de nombres de documentos
             'id_documento.*' => 'required_with:url.*|integer', // Validación de IDs de documentos
-        
+
         ]);
 
         try {
@@ -175,17 +175,12 @@ class DomiciliosController extends Controller
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->input('id_empresa'))->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
-       
-    
+        $aux = $request->hasFile('url');
 
-        $aux =     $request->hasFile('url');
-            
         // Almacenar nuevos documentos solo si se envían
         if ($request->hasFile('url')) {
-           
-            foreach ($request->file('url') as $index => $file) {
 
-              
+            foreach ($request->file('url') as $index => $file) {
 
                 $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
                 $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); //Aqui se guarda en la ruta definida storage/public
@@ -198,11 +193,9 @@ class DomiciliosController extends Controller
                 $documentacion_url->id_empresa =  $request->input('id_empresa');
 
                 $documentacion_url->save();
-              
+
             }
         }
-
-
             return response()->json(['code' => 200, 'message' => 'Instalación registrada correctamente.', 'aux' =>$aux]);
         } catch (\Exception $e) {
             return response()->json(['code' => 500, 'message' => 'Error al registrar la instalación.']);
