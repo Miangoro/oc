@@ -280,21 +280,18 @@ class LotesGranelController extends Controller
             'message' => 'Lote registrado exitosamente',
         ]);
     }
-    /* funcion para llenar modal */
+
     public function edit($id_lote_granel)
-{
-    try {
-        $lote = LotesGranel::findOrFail($id_lote_granel);
-        return response()->json(['success' => true, 'lote' => $lote]);
-    } catch (ModelNotFoundException $e) {
-        return response()->json(['success' => false], 404);
+    {
+        try {
+            $lote = LotesGranel::findOrFail($id_lote_granel);
+            return response()->json(['success' => true, 'lote' => $lote]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['success' => false], 404);
+        }
     }
-}
-<<<<<<< HEAD
 
 
     
-    
+
 }
-=======
->>>>>>> b5f22562b40b488de2ddfb0e9f2f63f6e590089c
