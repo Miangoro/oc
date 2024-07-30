@@ -35,7 +35,7 @@
 
                     <div  id="datosOpcion1"  class="col-md-12">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select id_lote_granel" id="id_lote_granel" name="id_lote_granel[]"  aria-label="Default select example">
+                            <select class="select2 form-select id_lote_granel" name="id_lote_granel[]"  aria-label="Default select example">
                               
                                
                             </select>
@@ -123,28 +123,28 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th><button type="button" class="btn btn-primary"> <i class="ri-add-line"></i> </button></th>
+                                    <th><button type="button" class="btn btn-primary add-row"> <i class="ri-add-line"></i> </button></th>
                                     <th>Lote a granel</th>
                                     <th>Volumen parcial</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                    <tr>
-                                        <th>
-                                            <button type="button" class="btn btn-danger"> <i class="ri-delete-bin-5-fill"></i> </button>
-                                        </th>
-                                        <td>
-                                            <select class="lotesGra form-control select2" name="id_lote_granel[]" id="">
-
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="text" class="form-control form-control-sm"  name="volumen_parcial">
-                                        </td>
-                                    </tr>
-                               
+                            <tbody id="contenidoGraneles">
+                                <tr>
+                                    <th>
+                                        <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+                                    </th>
+                                    <td>
+                                        <select class="id_lote_granel form-control select2" name="id_lote_granel[]" >
+                                            <!-- Opciones -->
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
+                        
                     </div>
                 
 
@@ -247,5 +247,31 @@
         }
     });
   }
+
+  $(document).ready(function() {
+    // Add row
+    $('.add-row').click(function() {
+        var newRow = `<tr>
+            <th>
+                <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+            </th>
+            <td>
+                <select class="id_lote_granel form-control select2" name="id_lote_granel[]" >
+                    <!-- Opciones -->
+                </select>
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
+            </td>
+        </tr>`;
+        $('#contenidoGraneles').append(newRow);
+    });
+
+    // Remove row
+    $(document).on('click', '.remove-row', function() {
+        $(this).closest('tr').remove();
+    });
+});
+
 
 </script>
