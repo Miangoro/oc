@@ -5,6 +5,7 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use App\Models\marcas;
+use Carbon\Carbon;
 
 class Helpers
 {
@@ -13,6 +14,19 @@ class Helpers
       $count = marcas::where('id_empresa', $id_empresa)->count();
       return chr(65 + ($count % 26)); // 65 es el código ASCII para 'A'
   }
+
+  public static function formatearFecha($fecha)
+    { 
+      if (empty($fecha) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
+        return 'N/A'; // Retornar 'N/A' si el formato es incorrecto o la fecha es vacía
+       }
+        // Crear un objeto Carbon a partir de la cadena de fecha
+        $fechaCarbon = Carbon::createFromFormat('Y-m-d', $fecha);
+        $fechaCarbon->locale('es'); 
+        // Formatear la fecha
+        return $fechaCarbon->translatedFormat('d \d\e F \d\e\l Y');
+    }
+
   public static function appClasses()
   {
 
