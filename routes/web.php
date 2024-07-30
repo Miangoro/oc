@@ -469,6 +469,7 @@ Route::delete('/lotes-granel-list/{id_lote_granel}', [LotesGranelController::cla
 Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->name('lotes-register.store');
 // Mostrar el formulario de edición
 Route::get('/lotes-a-granel/{id_lote_granel}/edit', [LotesGranelController::class, 'edit'])->name('lotes-a-granel.edit');
+
 // Procesar la actualización
 Route::put('/lotes-a-granel/{id_lote_granel}', [LotesGranelController::class, 'update'])->name('lotes-a-granel.update');
 

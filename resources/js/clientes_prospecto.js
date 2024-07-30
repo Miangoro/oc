@@ -62,7 +62,6 @@ $(function () {
         {
           // Es la razón social
           targets: 2,
-          responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $name = full['razon_social'];
 

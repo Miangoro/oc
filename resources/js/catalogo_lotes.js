@@ -221,6 +221,24 @@ $(document).ready(function () {
             }
         ],
     });
+
+    var dt_user_table = $('.datatables-users'),
+  select2Elements = $('.select2'),
+  userView = baseUrl + 'app/user/view/account'
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+
+  initializeSelect2(select2Elements);
+
+
 // Delete Record
 $(document).on('click', '.delete-record', function () {
     var id_lote= $(this).data('id'); // Obtener el ID de la clase
@@ -357,36 +375,71 @@ $('#loteForm').on('submit', function(event) {
 
 /*  */
 /*  */
-$(document).ready(function() {
-
-    // Evento para abrir el modal
-    $('.edit-record').on('click', function() {
-        var id_lote_granel = $(this).data('id');
-        var url = baseUrl + '/lotes-a-granel/' + id_lote_granel + '/edit';
-        
-        $.get(url, function(response) {
-            console.log(response); // Verifica la respuesta del servidor
-            if (response.success) {
-                var lote = response.lote;
-                console.log(lote); // Verifica el objeto lote
-
-                // Solo rellenar los campos Nombre del Lote y Empresa
-                $('#nombre_lote').val(lote.nombre_lote);
-                $('#id_empresa').val(lote.id_empresa).trigger('change'); // trigger change si usas select2
+$(document).on('click', '.edit-record', function () {
+    var loteId = $(this).data('id');
+    
+    // Realizar una solicitud AJAX para obtener los datos del lote
+    $.ajax({
+        url: '/lotes-a-granel/' + loteId + '/edit', // Asegúrate de que esta ruta coincida con la configuración de rutas
+        method: 'GET',
+        success: function (data) {
+            if (data.success) {
+                var lote = data.lote;
                 
+                // Rellenar el modal con los datos del lote
+                $('#edit_nombre_lote').val(lote.nombre_lote);
+                $('#edit_id_empresa').val(lote.id_empresa).trigger('change');
+                $('#edit_tipo_lote').val(lote.tipo_lote);
+                $('#edit_id_guia').val(lote.id_guia).trigger('change');
+                $('#edit_volumen').val(lote.volumen);
+                $('#edit_cont_alc').val(lote.cont_alc);
+                $('#edit_id_categoria').val(lote.id_categoria).trigger('change');
+                $('#edit_clase_agave').val(lote.id_clase).trigger('change');
+                $('#edit_tipo_agave').val(lote.id_tipo).trigger('change');
+                
+                // Mostrar campos condicionales según el tipo de lote y rellenar los valores específicos
+                if (lote.tipo_lote == '1') { // OC CIDAM
+                    $('#edit_oc_cidam_fields').removeClass('d-none');
+                    $('#edit_otro_organismo_fields').addClass('d-none');
+                    $('#edit_ingredientes').val(lote.ingredientes);
+                    $('#edit_edad').val(lote.edad);
+                } else if (lote.tipo_lote == '2') { // Otro organismo
+                    $('#edit_otro_organismo_fields').removeClass('d-none');
+                    $('#edit_oc_cidam_fields').addClass('d-none');
+                    $('#edit_folio_certificado').val(lote.folio_certificado);
+                    $('#edit_organismo_certificacion').val(lote.organismo_certificacion).trigger('change');
+                    $('#edit_fecha_emision').val(lote.fecha_emision);
+                    $('#edit_fecha_vigencia').val(lote.fecha_vigencia);
+                } else {
+                    $('#edit_oc_cidam_fields').addClass('d-none');
+                    $('#edit_otro_organismo_fields').addClass('d-none');
+                }
+
                 // Mostrar el modal
                 $('#offcanvasEditLote').modal('show');
             } else {
-                // Muestra un mensaje de error más detallado
-                var errorMessage = response.message || 'Error al cargar los datos.';
-                alert(errorMessage);
+                // Mostrar un mensaje de error con SweetAlert2
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'No se pudieron cargar los datos del lote. Intenta nuevamente más tarde.',
+                });
             }
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            // Manejo de errores de la solicitud AJAX
-            alert('Error en la solicitud: ' + textStatus + ' - ' + errorThrown);
-        });
+        },
+        error: function (error) {
+            console.error('Error al cargar los datos del lote:', error);
+            
+            // Mostrar un mensaje de error con SweetAlert2
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'No se pudieron cargar los datos del lote. Intenta nuevamente más tarde.',
+            });
+        }
     });
 });
+
+
 
 
 
