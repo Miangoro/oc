@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\catalogo;
+namespace App\Http\Controllers\Catalogo;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\LotesGranel;
-use App\Models\empresa;
-use App\Models\categorias;
-use App\Models\clases;
+use App\Models\Empresa; // Corregido de 'empresa' a 'Empresa'
+use App\Models\Categorias; // Corregido de 'categorias' a 'Categorias'
+use App\Models\Clases; // Corregido de 'clases' a 'Clases'
 use App\Models\Documentacion;
 use App\Models\Documentacion_url;
 use App\Models\Tipos;
 use App\Models\Organismo;
-use App\Models\guias;
+use App\Models\Guias;
 
 
 class LotesGranelController extends Controller
@@ -102,10 +102,10 @@ class LotesGranelController extends Controller
                     'id_categoria' => $lote->categoria->categoria ?? 'NA',
                     'id_clase' => $lote->clase->clase ?? 'NA',
                     'id_tipo' => $lote->tipo->nombre ?? 'NA',
-                    'ingredientes' => $lote->ingredientes,
-                    'edad' => $lote->edad,
+                    'ingredientes' => $lote->ingredientes ?? 'NA',
+                    'edad' => $lote->edad ?? 'NA',
                     'id_guia' => $lote->guias->Folio ?? 'NA',
-                    'folio_certificado' => $lote->folio_certificado,
+                    'folio_certificado' => $lote->folio_certificado ?? 'NA',
                     'id_organismo' => $lote->organismo->organismo ?? 'NA',
                     'fecha_emision' => $lote->fecha_emision,
                     'fecha_vigencia' => $lote->fecha_vigencia,
@@ -138,7 +138,7 @@ class LotesGranelController extends Controller
 
     public function getLotesList(Request $request)
     {
-        $columns = ['id_lote', 'num_clientes', 'nombre_cliente', 'tipo', 'no_lote', 'categoria', 'clase', 'no_analisis', 'tipo_maguey', 'volumen_lote', 'contenido_alcoholico'];
+        $columns = ['id_lote', 'num_clientes', 'nombre_cliente', 'tipo', 'no_lote', 'categoria', 'clase', 'no_analisis', 'tipo_maguey', 'volumen', 'cont_alc'];
 
         $query = Lote::query();
 
@@ -183,48 +183,68 @@ class LotesGranelController extends Controller
         }
     }
 
+    
+
     public function store(Request $request)
     {
+
+
         // Validar los datos del formulario
-        $request->validate([
+        $validatedData = $request->validate([
             'id_empresa' => 'required|exists:empresa,id_empresa',
-            'nombre_lote' => 'required|string|max:255',
-            'tipo_lote' => 'required|string',
-            // Agrega más validaciones según tus necesidades
+            'nombre_lote' => 'required|string|max:70',
+            'tipo_lote' => 'required|integer',
+            'volumen' => 'nullable|numeric',
+            'cont_alc' => 'nullable|numeric',
+            'id_categoria' => 'nullable|integer|exists:catalogo_categorias,id_categoria',
+            'id_clase' => 'nullable|integer|exists:catalogo_clases,id_clase',
+            'id_tipo' => 'nullable|integer|exists:catalogo_tipo_agave,id_tipo',
+            'ingredientes' => 'nullable|string|max:100',
+            'edad' => 'nullable|string|max:30',
+            'id_guia' => 'nullable|integer',
+            'folio_certificado' => 'nullable|string|max:50',
+            'id_organismo' => 'nullable|integer|exists:catalogo_organismos,id_organismo',
+            'fecha_emision' => 'nullable|date',
+            'fecha_vigencia' => 'nullable|date',
+            'folio_fq_completo' => 'nullable|string|max:50',
+            'folio_fq_ajuste' => 'nullable|string|max:50',
+            'folio_fq' => 'nullable|string|max:50'
         ]);
+    
         // Crear una nueva instancia del modelo LotesGranel
         $lote = new LotesGranel();
-
-
-
+    
         // Asignar los valores del formulario a las propiedades del modelo
-        $lote->id_empresa = $request->input('id_empresa'); // Aquí se usa el ID de la empresa
-        $lote->nombre_lote = $request->input('nombre_lote');
-        $lote->tipo_lote = $request->input('tipo_lote');
-        $lote->id_guia = $request->input('id_guia');
-        $lote->volumen = $request->input('volumen_lote');
-        $lote->cont_alc = $request->input('contenido_alcoholico');
-        $lote->id_categoria = $request->input('id_categoria');
-        $lote->id_clase = $request->input('id_clase');
-        $lote->id_tipo = $request->input('id_tipo');
-        $lote->ingredientes = $request->input('ingredientes', '----');
-        $lote->edad = $request->input('edad', '----');
-        $lote->folio_certificado = $request->input('folio_certificado', '----');
-        $lote->id_organismo = $request->input('id_organismo', '0');
-        $lote->fecha_emision = $request->input('fecha_emision', '----');
-        $lote->fecha_vigencia = $request->input('fecha_vigencia', '----');
-
-        $folio_fq_completo = $request->input('folio_fq_completo', '----');
-        $folio_fq_ajuste = $request->input('folio_fq_ajuste', '----');
-
-        if (!empty($folio_fq_ajuste)) {
-            $folio_fq_completo .= 'y ' . $folio_fq_ajuste;
+        $lote->id_empresa = $validatedData['id_empresa'];
+        $lote->nombre_lote = $validatedData['nombre_lote'];
+        $lote->tipo_lote = $validatedData['tipo_lote'];
+        $lote->volumen = $validatedData['volumen'] ?? null;
+        $lote->cont_alc = $validatedData['cont_alc'] ?? null;
+        $lote->id_categoria = $validatedData['id_categoria'] ?? null;
+        $lote->id_clase = $validatedData['id_clase'] ?? null;
+        $lote->id_tipo = $validatedData['id_tipo'] ?? null;
+        $lote->ingredientes = $validatedData['ingredientes'] ?? null;
+        $lote->edad = $validatedData['edad'] ?? null;
+        $lote->id_guia = $validatedData['id_guia'] ?? 0;
+        $lote->folio_certificado = $validatedData['folio_certificado'] ?? null;
+        $lote->id_organismo = $validatedData['id_organismo'] ?? 0;
+        $lote->fecha_emision = $validatedData['fecha_emision'] ?? null;
+        $lote->fecha_vigencia = $validatedData['fecha_vigencia'] ?? null;
+    
+        // Determinar cuál folio_fq usar
+        if ($validatedData['tipo_lote'] == 1) {
+            // "Certificación por OC CIDAM"
+            $lote->folio_fq = $validatedData['folio_fq_completo'] ?? null;
+        } elseif ($validatedData['tipo_lote'] == 2) {
+            // "Certificado por otro organismo"
+            $lote->folio_fq = $validatedData['folio_fq_ajuste'] ?? $validatedData['folio_certificado'] ?? null;
+        } else {
+            $lote->folio_fq = null;
         }
-        $lote->folio_fq = $folio_fq_completo;
-
+    
         // Guardar el nuevo lote en la base de datos
         $lote->save();
-
+    
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
@@ -232,40 +252,49 @@ class LotesGranelController extends Controller
         // Almacenar nuevos documentos solo si se envían
         if ($request->hasFile('url')) {
             foreach ($request->file('url') as $index => $file) {
+                $folio_fq = $index == 0 && $request->id_documento[$index] == 58 
+                    ? $request->folio_fq_completo 
+                    : $request->folio_fq_ajuste ?? '';
+    
+                $tipo_analisis = $request->tipo_analisis[$index] ?? '';
+                
 
-                $folio_fq = "";
-                if ($index == 0 AND $request->id_documento[$index] ==58) {
-                    $folio_fq = $request->folio_fq_completo;
-                } else {
-                    $folio_fq = $request->folio_fq_ajuste;
-                }
-
-                if(!empty($request->tipo_analisis[$index])){
-                    $tipo_analisis = $request->tipo_analisis[$index];
-                }else{
-                    $tipo_analisis = "";
-                }
 
                 $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); //Aqui se guarda en la ruta definida storage/public
-
+                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); // Aqui se guarda en la ruta definida storage/public
+    
                 $documentacion_url = new Documentacion_url();
                 $documentacion_url->id_relacion = $lote->id_lote_granel;
                 $documentacion_url->id_documento = $request->id_documento[$index];
                 $documentacion_url->nombre_documento = $request->nombre_documento[$index] . ": " . $tipo_analisis . " - " . $folio_fq;
                 $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
                 $documentacion_url->id_empresa = $lote->id_empresa;
-
+    
                 $documentacion_url->save();
             }
         }
-
-
-
+    
         // Retornar una respuesta
         return response()->json([
             'success' => true,
             'message' => 'Lote registrado exitosamente',
         ]);
     }
+    /* funcion para llenar modal */
+    public function edit($id_lote_granel)
+{
+    try {
+        $lote = LotesGranel::findOrFail($id_lote_granel);
+        return response()->json(['success' => true, 'lote' => $lote]);
+    } catch (ModelNotFoundException $e) {
+        return response()->json(['success' => false], 404);
+    }
 }
+<<<<<<< HEAD
+
+
+    
+    
+}
+=======
+>>>>>>> b5f22562b40b488de2ddfb0e9f2f63f6e590089c

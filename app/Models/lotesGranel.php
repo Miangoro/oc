@@ -13,7 +13,6 @@ class LotesGranel extends Model
 
     protected $primaryKey = 'id_lote_granel';  // Cambia esto al nombre correcto de la columna de identificación
 
-    
     protected $fillable = [
         'id_empresa', 'nombre_lote', 'tipo_lote', 'folio_fq', 'volumen', 
         'cont_alc', 'id_categoria', 'id_clase', 'id_tipo', 'ingredientes', 

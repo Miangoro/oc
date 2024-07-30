@@ -30,51 +30,46 @@
 
 @section('page-script')
 @vite(['resources/js/instalaciones.js'])
-
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-      const certificacionSelectAdd = document.getElementById('certificacion');
-      const certificadoOtrosDivAdd = document.getElementById('certificado-otros');
+    const certificacionSelectAdd = document.getElementById('certificacion');
+    const certificadoOtrosDivAdd = document.getElementById('certificado-otros');
 
-      const certificacionSelectEdit = document.getElementById('edit_certificacion');
-      const certificadoOtrosDivEdit = document.getElementById('edit_certificado_otros');
+    const certificacionSelectEdit = document.getElementById('edit_certificacion');
+    const certificadoOtrosDivEdit = document.getElementById('edit_certificado_otros');
 
-      certificacionSelectAdd.addEventListener('change', function () {
-          if (certificacionSelectAdd.value === 'otro_organismo') {
-              certificadoOtrosDivAdd.classList.remove('d-none');
-          } else {
-              certificadoOtrosDivAdd.classList.add('d-none');
-          }
-      });
+    const tipoSelectAdd = document.getElementById('tipo');
+    const modalAddInstalacion = document.getElementById('modalAddInstalacion');
 
-      certificacionSelectEdit.addEventListener('change', function () {
-          if (certificacionSelectEdit.value === 'otro_organismo') {
-              certificadoOtrosDivEdit.classList.remove('d-none');
-          } else {
-              certificadoOtrosDivEdit.classList.add('d-none');
-          }
-      });
+    // Función para mostrar/ocultar el menú adicional
+    function toggleCertificadoOtros(selectElement, divElement) {
+      if (selectElement.value === 'otro_organismo') {
+        divElement.classList.remove('d-none');
+      } else {
+        divElement.classList.add('d-none');
+      }
+    }
 
-      // Reiniciar formulario y ocultar campos adicionales al cerrar el modal de agregar
-      const modalAdd = document.getElementById('modalAddInstalacion');
-      modalAdd.addEventListener('hidden.bs.modal', function () {
-          const form = document.getElementById('addNewInstalacionForm');
-          form.reset();
-          certificacionSelectAdd.value = '';
-          certificadoOtrosDivAdd.classList.add('d-none');
-      });
+    // Manejar el cambio en el select de tipo de certificación al agregar
+    certificacionSelectAdd.addEventListener('change', function () {
+      toggleCertificadoOtros(certificacionSelectAdd, certificadoOtrosDivAdd);
+    });
 
-      // Reiniciar formulario y ocultar campos adicionales al cerrar el modal de editar
-      const modalEdit = document.getElementById('modalEditInstalacion');
-      modalEdit.addEventListener('hidden.bs.modal', function () {
-          const form = document.getElementById('editInstalacionForm');
-          form.reset();
-          certificacionSelectEdit.value = '';
-          certificadoOtrosDivEdit.classList.add('d-none');
-      });
+    // Manejar el cambio en el select de tipo de certificación al editar
+    certificacionSelectEdit.addEventListener('change', function () {
+      toggleCertificadoOtros(certificacionSelectEdit, certificadoOtrosDivEdit);
+    });
+
+    // Reiniciar el select de tipo de instalación y ocultar los campos adicionales al cerrar el modal
+    modalAddInstalacion.addEventListener('hidden.bs.modal', function () {
+      tipoSelectAdd.value = ''; // Reinicia el select al valor por defecto
+      $(tipoSelectAdd).trigger('change'); // Notifica a Select2 que se ha cambiado el valor
+
+      // Ocultar los campos adicionales
+      certificadoOtrosDivAdd.classList.add('d-none');
+    });
   });
-</script>
-
+  </script>
 @endsection
 
 @section('content')
@@ -327,7 +322,7 @@
             </div>
         </div>
     </div>
-//new
+
     <!-- Modal -->
     @include('_partials._modals.modal-pdfs-frames')
     <!-- /Modal -->
