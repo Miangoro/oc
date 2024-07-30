@@ -208,17 +208,21 @@ $(function () {
     ]
   });
 
+  var dt_user_table = $('.datatables-users'),
+  select2Elements = $('.select2'),
+  userView = baseUrl + 'app/user/view/account'
   // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
     $elements.each(function () {
       var $this = $(this);
+      select2Focus($this);
       $this.wrap('<div class="position-relative"></div>').select2({
         dropdownParent: $this.parent()
-      }).on('select2:open', function () {
-        // Puedes agregar lógica aquí si necesitas hacer algo cuando el select2 se abre
       });
     });
   }
+
+  initializeSelect2(select2Elements);
 
   // Configuración CSRF para Laravel
   $.ajaxSetup({
