@@ -54,6 +54,7 @@
         </table>
     </div>
 
+
     <!-- Offcanvas Agregar nuevo tipo -->
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
         <div class="offcanvas-header border-bottom">
@@ -64,8 +65,12 @@
             <form class="add-new-user pt-0" id="addNewCategoryForm">
                 @csrf
                 <div class="form-floating form-floating-outline mb-5">
-                    <input type="text" class="form-control" id="categoria" placeholder="Tipo de maguey o agave" name="categoria" aria-label="Categoría" required>
-                    <label for="categoria">Nombre del Tipo</label>
+                    <input type="text" class="form-control" id="nombre" placeholder="Tipo de maguey o agave" name="nombre" aria-label="Nombre" required>
+                    <label for="nombre">Nombre del Tipo</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-5">
+                    <input type="text" class="form-control" id="ciencitico" placeholder="cientifico" name="cientifico" aria-label="Nombre" required>
+                    <label for="cientifico">Nombre 100</label>
                 </div>
                 <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
                 <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
@@ -73,20 +78,25 @@
         </div>
     </div>
 
-    <!-- Offcanvas to edit category -->
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="editCategoria" aria-labelledby="offcanvasEditCategoriaLabel">
+
+    <!-- Offcanvas EDITAR -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="editTipo">
         <div class="offcanvas-header border-bottom">
-            <h5 id="offcanvasEditCategoriaLabel" class="offcanvas-title">Editar Categoría</h5>
+            <h5 class="offcanvas-title">Editar</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body mx-0 flex-grow-0 h-100">
-            <form class="edit-class-form pt-0" id="editCategoriaForm">
+            <form class="edit-class-form pt-0" id="editTipoForm">
                 @csrf
                 @method('PUT')
-                <input type="hidden" name="id_categoria" id="edit_id_categoria" value="">
+                <input type="hidden" name="id_tipo" id="edit_id_tipo" value="">
                 <div class="form-floating form-floating-outline mb-5">
-                    <input type="text" class="form-control" id="edit_categoria" placeholder="Nombre de la Categoría" name="categoria" aria-label="Categoría" required>
-                    <label for="edit_categoria">Nombre de la Categoría</label>
+                    <input type="text" class="form-control" id="edit_nombre" placeholder="Nombre de la Categoría" name="nombre" aria-label="Categoría" required>
+                    <label for="nombre">Nombre de la Categoría</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-5">
+                    <input type="text" class="form-control" id="edit_cientifico" placeholder="Nombre del cientifico" name="cientifico" aria-label="Categoría" required>
+                    <label for="cientifico">Nombre de la Categoría</label>
                 </div>
                 <button type="submit" class="btn btn-primary me-sm-3 me-1">Guardar Cambios</button>
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>

@@ -138,7 +138,6 @@ class ClaseController extends Controller
             return response()->json(['error' => 'Error al obtener la clase'], 500);
         }
     }
-    
     // Función para actualizar una clase existente
     public function update(Request $request, $id_clase)
 {
