@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Cards Advance- UI elements')
+@section('title', 'Documentación')
 
 @section('vendor-style')
 @vite([
@@ -62,8 +62,7 @@
       <!--/ Orders by Countries -->
 </div>
 
-@include('_partials/_modals/modal-add-new-cc')
-@include('_partials/_modals/modal-upgrade-plan')
+@include('_partials/_modals/modal-pdfs-frames')
 <!-- /Modal -->
 <script type="module">
 // Check selected custom option
@@ -94,5 +93,17 @@ window.Helpers.initCustomOptionCheck();
           }
       });
   });
+
+
+
+  function abrirModal(url) {
+    var id = $(this).data('id');
+        var registro = $(this).data('registro');
+            var iframe = $('#pdfViewer');
+            iframe.attr('src', ''+url);
+
+            //$("#titulo_modal").text("Solicitud de información del cliente");
+            //$("#subtitulo_modal").text(registro);
+  }
 </script>
 @endsection

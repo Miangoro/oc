@@ -15,7 +15,8 @@ class Documentacion_url extends Model
           'id_relacion',
           'id_usuario_registro',
           'nombre_documento',
-          'fecha_vigencia'  // <-- Asegúrate de agregar esto
+          'fecha_vigencia',
+          'id_documento'
 
       ];
 
@@ -23,5 +24,10 @@ class Documentacion_url extends Model
       public function marca()
       {
           return $this->belongsTo(Marcas::class, 'id_relacion', 'id_marca');
+      }
+
+      public function documentacion()
+      {
+          return $this->belongsTo(Documentacion::class, 'id_documento');
       }
 }

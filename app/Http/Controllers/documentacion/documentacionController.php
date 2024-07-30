@@ -110,22 +110,54 @@ class documentacionController extends Controller
 
 
 
-        $documentos = Documentacion::where('subtipo', '=', $documentosActividad)->get();
+        $documentos = Documentacion::where('subtipo', $documentosActividad)
+          ->with('documentacionUrls') // Eager loading de la relación
+          ->get();
+
+      
 
         foreach ($documentos as $indexD => $documento) {
+
+          $urlPrimera = $documento->documentacionUrls->first();
+
+          $url = '';
+
+          if(!empty($urlPrimera)){
+            $url = $urlPrimera->url;
+          }
+
+         /* foreach ($documento->documentacionUrls as $url) {
+            "URL: " . $url->url . "<br>";
+        }*/
+
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $id_empresa)->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $razonSocial = $empresa->pluck('razon_social')->first();
+
+        if(!empty($url)){
+          $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
+        }else{
+          $mostrarDocumento = '---';
+        }
 
           $contenidoDocumentos = $contenidoDocumentos . '
                     <tr>
                       <td>' . ($indexD + 1) . '</td>
-                      <td class="text-wrap text-break"><b> ' . $documento->nombre . '</b></td>
+                      <td class="text-wrap text-break"><b>' . $documento->id_documento . ' ' . $documento->nombre . '</b></td>
                       <td class="text-end">
                           <input class="form-control form-control-sm" type="file" id="formFile">
                       </td>
-                      <td class="text-end fw-medium">--</td>
-                      <td class="text-success fw-medium text-end">--</td>
+                      <td class="text-end fw-medium">   
+                      
+                        '.$mostrarDocumento.'
+                      
+                     </td>
+                      <td class="text-success fw-medium text-end">----</td>
                     </tr>
                     ';
         }
+
+        
 
         $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)->where('tipo', '=', $act_instalacion)->get();
 
@@ -161,9 +193,7 @@ class documentacionController extends Controller
           </div>';
       }
 
-      $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $id_empresa)->first();
-      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-      $razonSocial = $empresa->pluck('razon_social')->first();
+     
 
 
 
@@ -181,10 +211,10 @@ class documentacionController extends Controller
   <!-- Top Referral Source Mobile  -->
   <div class="col-xxl-12">
     <div class="card"> 
-      <img src="' . asset('assets/img/branding/validacion_certificacion.png') . '" alt="timeline-image" class="card-img-top h-px-200" style="object-fit: cover;">
+      <img src="' . asset('assets/img/branding/validacion_certificacion.png') . '" alt="timeline-image" class="card-img-top h-px-100" style="object-fit: cover;">
       <div class="card-header d-flex justify-content-between">
         <div>
-          <h5 class="card-title mb-1">'.$numeroCliente.' '.$razonSocial.' (' . $norma . ')</h5>
+          <h5 class="card-title mb-1">' . $numeroCliente . ' ' . $razonSocial . ' (' . $norma . ')</h5>
           
         </div>
         
