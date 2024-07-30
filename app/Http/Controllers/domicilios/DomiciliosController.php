@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\domicilios;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Documentacion_url;
 use App\Models\Instalaciones;
@@ -111,9 +112,9 @@ class DomiciliosController extends Controller
                 $nestedData['estado'] = $instalacion->estados->nombre  ?? 'N/A';
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa  ?? 'N/A';
                 $nestedData['folio'] = $instalacion->folio ?? 'N/A'; // Corregido 'folion' a 'folio'
-                $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'N/A'; // Maneja el caso donde el organismo sea nulo
-                $nestedData['fecha_emision'] = $instalacion->fecha_emision;
-                $nestedData['fecha_vigencia'] = $instalacion->fecha_vigencia;
+                $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; // Maneja el caso donde el organismo sea nulo
+                $nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);
+                $nestedData['fecha_vigencia'] = Helpers::formatearFecha($instalacion->fecha_vigencia); ;
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
 
                 $data[] = $nestedData;

@@ -217,4 +217,32 @@
     });
   }
 
+
+  document.addEventListener('DOMContentLoaded', function () {
+        function calcularVolumenTotal() {
+            var cantidadBotellas = parseFloat(document.getElementById('cantidad_botellas').value) || 0;
+            var presentacion = parseFloat(document.getElementById('presentacion').value) || 0;
+            var unidad = document.getElementById('unidad').value;
+
+            var volumenTotal;
+
+            if (unidad === "Litros") {
+                volumenTotal = cantidadBotellas * presentacion;
+            } else if (unidad === "Mililitros") {
+                volumenTotal = (cantidadBotellas * presentacion) / 1000;
+            } else if (unidad === "Centrilitros") {
+                volumenTotal = (cantidadBotellas * presentacion) / 100;
+            } else {
+                volumenTotal = ''; // Limpiar el campo si la unidad no es Litros ni Mililitros
+            }
+
+            document.getElementById('volumen_total').value = volumenTotal ? volumenTotal.toFixed(2) : '';
+        }
+
+        // Añadir eventos de cambio a los campos relevantes
+        document.getElementById('cantidad_botellas').addEventListener('input', calcularVolumenTotal);
+        document.getElementById('presentacion').addEventListener('input', calcularVolumenTotal);
+        document.getElementById('unidad').addEventListener('change', calcularVolumenTotal);
+    });
+
 </script>

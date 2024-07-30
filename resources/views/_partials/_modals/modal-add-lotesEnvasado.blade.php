@@ -83,7 +83,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <input class="form-control" type="text" placeholder="Presentación de la botella" id="presentacion" name="presentacion" />
+                                    <input class="form-control" type="number" placeholder="Presentación de la botella" id="presentacion" name="presentacion" />
                                     <label for="presentacion">Presentación de la botella</label>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select" id="unidad" name="unidad" aria-label="Unidad">
+                                    <select class=" form-select" id="unidad" name="unidad" aria-label="Unidad">
                                         <option value="Litros">Litros</option>
                                         <option value="Mililitros">Mililitros</option>
                                         <option value="Centrilitros">Centrilitros</option>
@@ -102,8 +102,8 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <input class="form-control" type="number" step="0.01" placeholder="Volumen total" id="volumen_total" name="volumen_total" />
-                                    <label for="volumen_total">Volumen total</label>
+                                    <input class="form-control" type="text" step="0.01" placeholder="Volumen total" id="volumen_total" name="volumen_total" />
+                                    <label for="volumen_total">Volumen total en Litros</label>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -131,7 +131,7 @@
                             <tbody id="contenidoGraneles">
                                 <tr>
                                     <th>
-                                        <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+                                        <button type="button" class="btn btn-danger remove-row" disabled> <i class="ri-delete-bin-5-fill"></i> </button>
                                     </th>
                                     <td>
                                         <select class="id_lote_granel form-control select2" name="id_lote_granel[]" >
@@ -159,8 +159,6 @@
     </div>
 </div>
 
-
-<script></script>
 
 
 <!--/ Add New Address Modal -->
@@ -248,30 +246,32 @@
     });
   }
 
-  $(document).ready(function() {
-    // Add row
-    $('.add-row').click(function() {
-        var newRow = `<tr>
-            <th>
-                <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
-            </th>
-            <td>
-                <select class="id_lote_granel form-control select2" name="id_lote_granel[]" >
-                    <!-- Opciones -->
-                </select>
-            </td>
-            <td>
-                <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
-            </td>
-        </tr>`;
-        $('#contenidoGraneles').append(newRow);
-    });
+    document.addEventListener('DOMContentLoaded', function () {
+        function calcularVolumenTotal() {
+            var cantidadBotellas = parseFloat(document.getElementById('cantidad_botellas').value) || 0;
+            var presentacion = parseFloat(document.getElementById('presentacion').value) || 0;
+            var unidad = document.getElementById('unidad').value;
 
-    // Remove row
-    $(document).on('click', '.remove-row', function() {
-        $(this).closest('tr').remove();
+            var volumenTotal;
+
+            if (unidad === "Litros") {
+                volumenTotal = cantidadBotellas * presentacion;
+            } else if (unidad === "Mililitros") {
+                volumenTotal = (cantidadBotellas * presentacion) / 1000;
+            } else if (unidad === "Centrilitros") {
+                volumenTotal = (cantidadBotellas * presentacion) / 100;
+            } else {
+                volumenTotal = ''; // Limpiar el campo si la unidad no es Litros ni Mililitros
+            }
+
+            document.getElementById('volumen_total').value = volumenTotal ? volumenTotal.toFixed(2) : '';
+        }
+
+        // Añadir eventos de cambio a los campos relevantes
+        document.getElementById('cantidad_botellas').addEventListener('input', calcularVolumenTotal);
+        document.getElementById('presentacion').addEventListener('input', calcularVolumenTotal);
+        document.getElementById('unidad').addEventListener('change', calcularVolumenTotal);
     });
-});
 
 
 </script>

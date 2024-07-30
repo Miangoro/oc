@@ -508,8 +508,19 @@ Route::get('/documentacion/getNormas', [documentacionController::class, 'getNorm
 Route::get('documentacion/getActividades', [documentacionController::class, 'getActividades'])->name('documentacion.getActividades');
 
 
-//Tipos de maguey/agave
+/*-------------------Tipos de maguey/agave-------------------*/
+/*mostrar*/
 Route::get('/catalogo/tipos', [tiposController::class, 'UserManagement'])->name('tipos-maguey-agave');
 Route::resource('/tipos-list', tiposController::class);
+/*eliminar*/ 
+Route::delete('/tipos-list/{id_tipo}', [tiposController::class, 'destroy'])->name('tipos.destroy');
+/*registrar*/
+Route::post('/tipos-list', [tiposController::class, 'store'])->name('tipo.store');
+/*obtener el editar*/
+Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name('tipos.edit');
+/*editar*/
+Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('tipos.update');
+
+
 
 Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');

@@ -95,14 +95,70 @@ class tiposController extends Controller
     public function destroy($id_tipo)
     {
         try {
-            $clase = clases::findOrFail($id_tipo);
-            $clase->delete();
+            $eliminar = Tipos::findOrFail($id_tipo);
+            $eliminar->delete();
 
-            return response()->json(['success' => 'Clase eliminada correctamente']);
+            return response()->json(['success' => 'Eliminado correctamente']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al eliminar la clase'], 500);
+            return response()->json(['error' => 'Error al eliminar'], 500);
         }
     }
+
+
+
+    // Función para agregar registro
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'cientifico' => 'required|string|max:255',
+        ]);
+
+        try {
+            $var = new Tipos();
+            $var->nombre = $request->nombre;
+            $var->cientifico = $request->cientifico;
+
+            $var->save();//guardar en BD
+
+            return response()->json(['success' => 'Registro agregada correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al agregar'], 500);
+        }
+    }
+
+    
+//funcion para llenar el campo del formulario
+public function edit($id_tipo)
+{
+    try {
+        $var1 = tipos::findOrFail($id_tipo);
+        return response()->json($var1);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al obtener la clase'], 500);
+    }
+}
+
+// Función para EDITAR una clase existente
+    public function update(Request $request, $id_tipo)
+{
+    $request->validate([
+        'nombre' => 'required|string|max:255',
+        'cientifico' => 'required|string|max:255',
+    ]);
+
+    try {
+        $var2 = Tipos::findOrFail($id_tipo);
+        $var2->nombre = $request->nombre;
+        $var2->cientifico = $request->cientifico;
+        $var2->save();
+
+        return response()->json(['success' => 'Editado correctamente']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al editar'], 500);
+    }
+}
+
 
 
 

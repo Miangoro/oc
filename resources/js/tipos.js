@@ -44,7 +44,7 @@ $(function () {
       columns: [
         // columns according to JSON
         { data: '' },
-        { data: 'id_categoria' },
+        { data: 'id_tipo' },
         { data: 'nombre' },
         { data: 'cientifico' },
         { data: 'action' }
@@ -96,8 +96,8 @@ $(function () {
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center gap-50">' +
-                  `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}" data-bs-toggle="offcanvas" data-bs-target="#editCategoria"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-                  `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_categoria']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+                  `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_tipo']}" data-bs-toggle="offcanvas" data-bs-target="#editTipo"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+                  `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_tipo']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
                   //'<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
@@ -333,134 +333,148 @@ $(function () {
 
   // Eliminar registro
   $(document).on('click', '.delete-record', function () {
-    var id_tipo = $(this).data('id'),
-      dtrModal = $('.dtr-bs-modal.show');
+    var id_tipo = $(this).data('id'); // Obtener el ID de la clase
+    var dtrModal = $('.dtr-bs-modal.show');
 
-    // hide responsive modal in small screen
+    // Ocultar modal responsivo en pantalla pequeña si está abierto
     if (dtrModal.length) {
-      dtrModal.modal('hide');
+        dtrModal.modal('hide');
     }
 
-    // sweetalert for confirmation of delete
+    // SweetAlert para confirmar la eliminación
     Swal.fire({
-      title: '¿Está seguro?',
-      text: "No podrá revertir este evento",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Si, eliminar',
-      customClass: {
-        confirmButton: 'btn btn-primary me-3',
-        cancelButton: 'btn btn-label-secondary'
-      },
-      buttonsStyling: false
-    }).then(function (result) {
-      if (result.value) {
-        // delete the data
-        $.ajax({
-          type: 'DELETE',
-          url: `${baseUrl}tipos-list/${id_tipo}`,
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        title: '¿Está seguro?',
+        text: 'No podrá revertir este evento',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+            confirmButton: 'btn btn-primary me-3',
+            cancelButton: 'btn btn-label-secondary'
         },
-        // Actualizar la tabla después de eliminar el registro
-          success: function () {
-            dt_user.draw();
-          },
-          error: function (error) {
-            console.log(error);
-          }
-        });
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            // Enviar solicitud DELETE al servidor
+            $.ajax({
+                type: 'DELETE',
+                url: `${baseUrl}tipos-list/${id_tipo}`,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function () {
+                    // Actualizar la tabla después de eliminar el registro
+                    dt_user.draw();
 
-        // Success Alert
-        Swal.fire({
-          icon: 'success',
-          title: '¡Eliminado!',
-          text: '¡La solicitud ha sido eliminada correctamente!',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      } else if (result.dismiss === Swal.DismissReason.cancel) {
-        Swal.fire({
-          title: 'Cancelado',
-          text: 'La solicitud no ha sido eliminada',
-          icon: 'error',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      }
+                    // Mostrar SweetAlert de éxito
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Eliminado!',
+                        text: '¡La clase ha sido eliminada correctamente!',
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.log(error);
+
+                    // Mostrar SweetAlert de error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo eliminar la clase. Inténtalo de nuevo más tarde.',
+                        footer: `<pre>${error.responseText}</pre>`,
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            // Acción cancelada, mostrar mensaje informativo
+            Swal.fire({
+                title: 'Cancelado',
+                text: 'La eliminación de la clase ha sido cancelada',
+                icon: 'info',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
+                }
+            });
+        }
     });
-  });
+});
 
 
 
 
-// Agregar nuevo registro
-$('#addNewCategoryForm').on('submit', function (e) {
+// Función para agregar registro
+$('#addNewCategoryForm').on('submit', function (e) {//id del formulario #addNewCategory
   e.preventDefault();
+
   var formData = $(this).serialize();
-      // changing the title of offcanvas
 
   $.ajax({
-    url: '/categorias',
-    type: 'POST',
-    data: formData,
-    success: function (response) {
-      $('#offcanvasAddUser').offcanvas('hide');
-      $('#addNewCategoryForm')[0].reset();
+      url: '/tipos-list',
+      type: 'POST',
+      data: formData,
+      success: function (response) {
+          $('#offcanvasAddUser').offcanvas('hide');//id del div que encierra al formulario #offcanvaadduser
+          $('#addNewCategoryForm')[0].reset();
 
-      // Actualizar la tabla sin reinicializar DataTables
-      $('.datatables-users').DataTable().ajax.reload();
-
-      // Mostrar alerta de éxito
-      Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: response.success,
-        customClass: {
-          confirmButton: 'btn btn-success'
-        }
-      });
-    },
-    error: function (xhr) {
-      // Mostrar alerta de error
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al agregar la categoría',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    }
+          // Actualizar la tabla sin reinicializar DataTables
+    //es lo mismo que abajo$('.datatables-users').DataTable().ajax.reload();
+          dt_user.ajax.reload();
+          // Mostrar alerta de éxito
+          Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.success,
+              customClass: {
+                  confirmButton: 'btn btn-success'
+              }
+          });
+      },
+      error: function (xhr) {
+        console.log('Error:', xhr.responseText);
+          // Mostrar alerta de error
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al agregar la clase',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      }
   });
 });
 
 
 
 
-
-
-// Editar registro
+// FUNCION PARA EDITAR un registro
 $(document).ready(function() {
   // Abrir el modal y cargar datos para editar
   $('.datatables-users').on('click', '.edit-record', function() {
-      var id_categoria = $(this).data('id');
+      var id_tipo = $(this).data('id');
 
       // Realizar la solicitud AJAX para obtener los datos de la clase
-      $.get('/categorias-list/' + id_categoria + '/edit', function(data) {
+      $.get('/edit-list/' + id_tipo + '/edit', function(data) {
           // Rellenar el formulario con los datos obtenidos
-          $('#edit_id_categoria').val(data.id_categoria);
-          $('#edit_categoria').val(data.categoria);
+          $('#edit_id_tipo').val(data.id_tipo);
+          $('#edit_nombre').val(data.nombre);
+          $('#edit_cientifico').val(data.cientifico);
 
           // Mostrar el modal de edición
-          $('#editCategoria').offcanvas('show');
+          $('#editTipo').offcanvas('show');
       }).fail(function() {
           Swal.fire({
               icon: 'error',
               title: '¡Error!',
-              text: 'Error al obtener los datos de la clase',
+              text: 'Error al obtener los datos',
               customClass: {
                   confirmButton: 'btn btn-danger'
               }
@@ -469,19 +483,19 @@ $(document).ready(function() {
   });
 
   // Manejar el envío del formulario de edición
-  $('#editCategoriaForm').on('submit', function(e) {
+  $('#editTipoForm').on('submit', function(e) {
       e.preventDefault();
 
       var formData = $(this).serialize();
-      var id_categoria = $('#edit_id_categoria').val(); // Obtener el ID de la clase desde el campo oculto
+      var id_tipo = $('#edit_id_tipo').val(); // Obtener el ID de la clase desde el campo oculto
 
       $.ajax({
-          url: '/categorias-list/' + id_categoria,
+          url: '/edit-list/' + id_tipo,
           type: 'PUT',
           data: formData,
           success: function(response) {
-              $('#editCategoria').offcanvas('hide'); // Ocultar el modal de edición
-              $('#editCategoriaForm')[0].reset(); // Limpiar el formulario
+              $('#editTipo').offcanvas('hide'); // Ocultar el modal de edición "DIV"
+              $('#editTipoForm')[0].reset(); // Limpiar el formulario "FORM"
 
               // Mostrar alerta de éxito
               Swal.fire({
@@ -497,6 +511,7 @@ $(document).ready(function() {
               $('.datatables-users').DataTable().ajax.reload();
           },
           error: function(xhr) {
+            console.log('Error:', xhr.responseText);
               // Mostrar alerta de error
               Swal.fire({
                   icon: 'error',
@@ -510,6 +525,7 @@ $(document).ready(function() {
       });
   });
 });
+
 
 
 
