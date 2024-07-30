@@ -41,6 +41,7 @@ $(document).ready(function () {
             type: 'GET'
         },
         columns: [
+            { data: '' },
             { data: 'id_lote_granel' },
             { data: 'id_empresa' },
             { data: 'nombre_lote' },
@@ -62,38 +63,59 @@ $(document).ready(function () {
         ],
         columnDefs: [
             {
-                targets: 0, // Primera columna
+                // For Responsive
+                className: 'control',
                 searchable: false,
                 orderable: false,
+                responsivePriority: 2,
+                targets: 0,
                 render: function (data, type, full, meta) {
-                    return meta.row + 1; // Índice incremental
+                  return '';
                 }
-            },
-            {
-                targets: -1,
-                title: 'Acciones',
+              },
+              {
                 searchable: false,
                 orderable: false,
-                render: function (data, type, full) {
-                    return (
-                        '<div class="d-flex align-items-center gap-50">' +
-                        `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_lote_granel']}" data-bs-toggle="modal" data-bs-target="#offcanvasEditLote"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-                        `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_lote_granel']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-                        '</div>'
-                    );
+                targets: 1,
+                render: function (data, type, full, meta) {
+                  return `<span>${full.fake_id}</span>`;
                 }
+              },
+            {
+          // Actions
+          targets: -1,
+          title: 'Acciones',
+          searchable: false,
+          orderable: false,
+          render: function (data, type, full, meta) {
+            return (
+              '<div class="d-flex align-items-center gap-50">' +
+              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_lote_granel']}" data-bs-toggle="modal" data-bs-target="#offcanvasEditLote"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_lote_granel']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+              '<div class="dropdown-menu dropdown-menu-end m-0">' +
+              '<a href="' +
+              userView +
+              '" class="dropdown-item">View</a>' +
+              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+              '</div>' +
+              '</div>'
+              
+            );
+          }
+
+
             }
         ],
-        order: [[1, 'desc']],
-        dom:
+      order: [[2, 'desc']],
+      dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
-            '<"me-5 ms-n2"f>' +
-            '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
-            '>t' +
-            '<"row mx-1"' +
-            '<"col-sm-12 col-md-6"i>' +
-            '<"col-sm-12 col-md-6"p>' +
-            '>',
+        '<"me-5 ms-n2"f>' +
+        '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
+        '>t' +
+        '<"row mx-1"' +
+        '<"col-sm-12 col-md-6"i>' +
+        '<"col-sm-12 col-md-6"p>' +
+        '>',
         lengthMenu: [10, 20, 50, 70, 100],
         language: {
             sLengthMenu: '_MENU_',
@@ -220,8 +242,44 @@ $(document).ready(function () {
                 }
             }
         ],
+
+      // For responsive popup
+      responsive: {
+        details: {
+          display: $.fn.dataTable.Responsive.display.modal({
+            header: function (row) {
+              var data = row.data();
+              return 'Detalles de ' + data['folio'];
+            }
+          }),
+          type: 'column',
+          renderer: function (api, rowIdx, columns) {
+            var data = $.map(columns, function (col, i) {
+              return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
+                ? '<tr data-dt-row="' +
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
+                : '';
+            }).join('');
+
+            return data ? $('<table class="table"/><tbody />').append(data) : false;
+          }
+        }
+      }
+
     });
 
+    
     var dt_user_table = $('.datatables-users'),
   select2Elements = $('.select2'),
   userView = baseUrl + 'app/user/view/account'
@@ -358,13 +416,11 @@ $('#loteForm').on('submit', function(event) {
             });
         },
         error: function(xhr) {
-            console.log(xhr.responseText);
             // Mostrar mensaje de error
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
                 text: 'No se pudo registrar el lote. Inténtalo de nuevo más tarde.',
-                footer: `<pre>${xhr.responseText}</pre>`,
                 customClass: {
                     confirmButton: 'btn btn-danger'
                 }
@@ -407,7 +463,7 @@ $(document).on('click', '.edit-record', function () {
                     $('#edit_otro_organismo_fields').removeClass('d-none');
                     $('#edit_oc_cidam_fields').addClass('d-none');
                     $('#edit_folio_certificado').val(lote.folio_certificado);
-                    $('#edit_organismo_certificacion').val(lote.organismo_certificacion).trigger('change');
+                    $('#edit_organismo_certificacion').val(lote.organismo_certificacion);
                     $('#edit_fecha_emision').val(lote.fecha_emision);
                     $('#edit_fecha_vigencia').val(lote.fecha_vigencia);
                 } else {
@@ -421,23 +477,82 @@ $(document).on('click', '.edit-record', function () {
                 // Mostrar un mensaje de error con SweetAlert2
                 Swal.fire({
                     icon: 'error',
-                    title: 'Oops...',
-                    text: 'No se pudieron cargar los datos del lote. Intenta nuevamente más tarde.',
+                    title: 'Error',
+                    text: 'No se pudo cargar los datos del lote.',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
                 });
             }
         },
         error: function (error) {
             console.error('Error al cargar los datos del lote:', error);
-            
             // Mostrar un mensaje de error con SweetAlert2
             Swal.fire({
                 icon: 'error',
-                title: 'Oops...',
-                text: 'No se pudieron cargar los datos del lote. Intenta nuevamente más tarde.',
+                title: 'Error',
+                text: 'No se pudo cargar los datos del lote.',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
             });
         }
     });
 });
+
+
+$('#loteFormEdit').on('submit', function (e) {
+    e.preventDefault(); // Evitar el envío del formulario por defecto
+
+    var formData = new FormData(this); // Recoger los datos del formulario
+
+    // Obtener el ID del lote (asegúrate de definir esto correctamente)
+    var loteId = $('#edit_lote_id').val(); // Asegúrate de tener un campo oculto para el ID del lote
+
+    $.ajax({
+        url: '/lotes-a-granel/' + loteId, // URL para la actualización
+        method: 'PUT', // Método HTTP para la actualización
+        data: formData,
+        processData: false, // No procesar los datos (evitar que jQuery los convierta en query string)
+        contentType: false, // No establecer el tipo de contenido (necesario para los archivos)
+        success: function (data) {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Éxito',
+                    text: 'Lote actualizado exitosamente.',
+                }).then(() => {
+                    // Opcional: Recargar la página o actualizar la tabla
+                    location.reload(); // O actualizar la tabla con los nuevos datos
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo actualizar los datos del lote.',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
+        },
+        error: function (error) {
+            console.error('Error al actualizar el lote:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo actualizar los datos del lote.',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+        }
+    });
+});
+
+
+
+
 
 
 

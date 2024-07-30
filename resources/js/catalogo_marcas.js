@@ -139,7 +139,6 @@ $(function () {
             var $state = states[stateNum];
 
 
-
             // Creates full output for row
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center user-name">' +
@@ -216,6 +215,7 @@ $(function () {
               '</div>'
             );
           }
+          
         }
       ],
       order: [[2, 'desc']],
@@ -433,6 +433,7 @@ $(function () {
       }
     });
   }
+
 
   // Delete Record
   $(document).on('click', '.delete-record', function () {

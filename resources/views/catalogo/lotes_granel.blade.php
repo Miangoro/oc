@@ -34,6 +34,7 @@
             <table class="datatables-users table">
                 <thead class="table-dark">
                     <tr>
+                        <th></th>
                         <th>ID</th>
                         <th>no. clientes</th>
                         <th>Nombre de lote</th>
@@ -110,16 +111,17 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select id="id_guia" name="id_guia" class="form-control" required>
-                                            <option value="">Seleccione una guía</option>
+                                            <select id="id_guia" name="id_guia[]" class="select2 form-select" required multiple>
+                                            <option value="" disabled selected>Seleccione una guía</option>
                                             @foreach ($guias as $guia)
                                                 <option value="{{ $guia->id_guia }}">{{ $guia->Folio }}</option>
                                             @endforeach
                                         </select>
+                                       
                                         <label for="id_guia">Folio de guía de translado</label>
                                     </div>
                                 </div>
-
+                              
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
                                         <input type="number" step="0.01" id="volumen" name="volumen"
@@ -280,18 +282,15 @@
                                     </div>
                                     <div class="col-md-6 mb-4">
                                         <div class="form-floating form-floating-outline">
-                                            <select id="id_organismo" name="id_organismo" class=" form-select">
-                                                <option value="" disabled selected>Selecciona el organismo de
-                                                    certificación</option>
+                                            <select id="id_organismo" name="id_organismo" class="form-select">
+                                                <option value="" disabled selected>Selecciona el organismo de certificación</option>
                                                 @foreach ($organismos as $organismo)
-                                                    <option value="{{ $organismo->id }}">{{ $organismo->organismo }}
-                                                    </option>
+                                                    <option value="{{ $organismo->id }}">{{ $organismo->organismo }}</option>
                                                 @endforeach
                                             </select>
                                             <label for="id_organismo">Organismo de Certificación</label>
                                         </div>
-                                    </div>
-
+                                    </div>                                    
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-4">
@@ -328,18 +327,17 @@
         {{--  --}}
 
         <!-- Modal para editar un lote -->
-        <div class="modal fade" id="offcanvasEditLote" tabindex="-1" aria-labelledby="offcanvasEditLoteLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="offcanvasEditLote" tabindex="-1" aria-labelledby="offcanvasEditLoteLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="offcanvasEditLoteLabel" class="modal-title">Registro de Lote a Granel</h5>
+                        <h5 id="offcanvasEditLoteLabel" class="modal-title">Editar el Lote a Granel</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="loteFormEdit" method="POST" action="">
                             @csrf
-                            <input type="hidden" id="edit_lote_action" name="edit_lote_action" value="">
+                            <input type="hidden" id="edit_lote_id" name="edit_lote_id" value="">
                             <div class="section">
                                 <h6>Datos Básicos</h6>
                                 <div class="row">
@@ -384,8 +382,8 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select id="edit_id_guia" name="id_guia" class="form-control" required>
-                                                <option value="">Seleccione una guía</option>
+                                            <select id="edit_id_guia" name="id_guia" class="select2 form-select" required multiple>
+                                                <option value="" disabled selected>Seleccione una guía</option>
                                                 @foreach ($guias as $guia)
                                                     <option value="{{ $guia->id_guia }}">{{ $guia->Folio }}</option>
                                                 @endforeach
@@ -471,18 +469,76 @@
                                         </div>
                                     </div>
                                 </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo de análisis</th>
+                                            <th>No. de Análisis Fisicoquímico</th>
+                                            <th>Documento</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($documentos as $documento)
+                                            <!-- Primer bloque -->
+                                            <tr>
+                                                <td>
+                                                    <input readonly value="Análisis completo" type="text"
+                                                        class="form-control form-control-sm"
+                                                        id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        id="date{{ $documento->id_documento }}" name="folio_fq_completo">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm" type="file"
+                                                        id="file{{ $documento->id_documento }}" name="url[]">
+                                                    <input value="{{ $documento->id_documento }}" class="form-control"
+                                                        type="hidden" name="id_documento[]">
+                                                    <input value="{{ $documento->nombre }}" class="form-control"
+                                                        type="hidden" name="nombre_documento[]">
+                                                </td>
+                                            </tr>
+
+                                            <!-- Segundo bloque -->
+                                            <tr>
+                                                <td>
+                                                    <input readonly value="Ajuste de grado" type="text"
+                                                        class="form-control form-control-sm"
+                                                        id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm"
+                                                        id="date{{ $documento->id_documento }}-2" name="folio_fq_ajuste">
+                                                </td>
+                                                <td>
+                                                    <input class="form-control form-control-sm" type="file"
+                                                        id="file{{ $documento->id_documento }}-2" name="url[]">
+                                                    <input value="{{ $documento->id_documento }}" class="form-control"
+                                                        type="hidden" name="id_documento[]">
+                                                    <input value="{{ $documento->nombre }}" class="form-control"
+                                                        type="hidden" name="nombre_documento[]">
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+
                             </div>
 
                             <div id="edit_otro_organismo_fields" class="section d-none">
                                 <h6>Certificado por otro organismo</h6>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <input type="file" id="edit_certificado_lote" name="certificado_lote"
                                                 class="form-control" />
                                             <label for="edit_certificado_lote">Adjuntar certificado de lote a granel</label>
                                         </div>
                                     </div>
+
+                                </div>
+                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <input type="text" id="edit_folio_certificado" name="folio_certificado"
@@ -490,16 +546,22 @@
                                             <label for="edit_folio_certificado">Folio/Número de Certificado</label>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" id="edit_organismo_certificacion"
-                                                name="organismo_certificacion" class="form-control"
-                                                placeholder="Organismo de certificación" />
+                                            <select id="edit_organismo_certificacion" name="id_organismo" class=" form-select">
+                                                <option value="" disabled selected>Selecciona el organismo de
+                                                    certificación</option>
+                                                @foreach ($organismos as $organismo)
+                                                    <option value="{{ $organismo->id }}">{{ $organismo->organismo }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                             <label for="edit_organismo_certificacion">Organismo de Certificación</label>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row">
+
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <input type="date" id="edit_fecha_emision" name="fecha_emision"
@@ -518,7 +580,7 @@
                             </div>
 
                             <div class="d-flex justify-content-center mt-3">
-                                <button type="submit" class="btn btn-primary me-2">Registrar</button>
+                                <button type="submit" class="btn btn-primary me-2">actualizar</button>
                                 <button type="reset" class="btn btn-outline-secondary"
                                     data-bs-dismiss="modal">Cancelar</button>
                             </div>

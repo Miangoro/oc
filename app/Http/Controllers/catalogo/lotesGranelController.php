@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Catalogo;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\LotesGranel;
-use App\Models\Empresa; // Corregido de 'empresa' a 'Empresa'
-use App\Models\Categorias; // Corregido de 'categorias' a 'Categorias'
-use App\Models\Clases; // Corregido de 'clases' a 'Clases'
+use App\Models\Empresa; 
+use App\Models\Categorias; 
+use App\Models\Clases; 
 use App\Models\Documentacion;
 use App\Models\Documentacion_url;
 use App\Models\Tipos;
-use App\Models\Organismo;
+use App\Models\organismos;
 use App\Models\Guias;
 
 
@@ -23,12 +23,10 @@ class LotesGranelController extends Controller
         $categorias = Categorias::all();
         $clases = Clases::all();
         $tipos = Tipos::all(); // Obtén todos los tipos de agave
-        $organismos = Organismo::all(); // Obtén todos los organismos
+        $organismos = organismos::all(); // Obtén todos los organismos, aquí usa 'organismos' en minúscula
         $guias = Guias::all(); // Obtén todas las guías
         $lotes = LotesGranel::with('empresa', 'categoria', 'clase', 'tipo', 'organismo', 'guias')->get();
-        $documentos = Documentacion::where('id_documento', '=', '58')
-            ->get();
-
+        $documentos = Documentacion::where('id_documento', '=', '58')->get();
         return view('catalogo.lotes_granel', compact('lotes', 'empresas', 'categorias', 'clases', 'tipos', 'organismos', 'guias', 'documentos'));
     }
 
@@ -93,22 +91,22 @@ class LotesGranelController extends Controller
                 $data[] = [
                     'id_lote_granel' => $lote->id_lote_granel,
                     'fake_id' => $start + 1, // Incremental ID
-                    'id_empresa' => $lote->empresa->razon_social ?? 'NA',
+                    'id_empresa' => $lote->empresa->razon_social ?? 'N/A',
                     'nombre_lote' => $lote->nombre_lote,
                     'tipo_lote' => $lote->tipo_lote,
                     'folio_fq' => $lote->folio_fq,
                     'volumen' => $lote->volumen,
                     'cont_alc' => $lote->cont_alc,
-                    'id_categoria' => $lote->categoria->categoria ?? 'NA',
-                    'id_clase' => $lote->clase->clase ?? 'NA',
-                    'id_tipo' => $lote->tipo->nombre ?? 'NA',
-                    'ingredientes' => $lote->ingredientes ?? 'NA',
-                    'edad' => $lote->edad ?? 'NA',
-                    'id_guia' => $lote->guias->Folio ?? 'NA',
-                    'folio_certificado' => $lote->folio_certificado ?? 'NA',
-                    'id_organismo' => $lote->organismo->organismo ?? 'NA',
-                    'fecha_emision' => $lote->fecha_emision,
-                    'fecha_vigencia' => $lote->fecha_vigencia,
+                    'id_categoria' => $lote->categoria->categoria ?? 'N/A',
+                    'id_clase' => $lote->clase->clase ?? 'N/A',
+                    'id_tipo' => $lote->tipo->nombre ?? 'N/A',
+                    'ingredientes' => $lote->ingredientes ?? 'N/A',
+                    'edad' => $lote->edad ?? 'N/A',
+                    'id_guia' => $lote->guias->Folio ?? 'N/A',
+                    'folio_certificado' => $lote->folio_certificado ?? 'N/A',
+                    'id_organismo' => $lote->organismo->organismo ?? 'N/A',
+                    'fecha_emision' => $lote->fecha_emision ?? 'N/A',
+                    'fecha_vigencia' => $lote->fecha_vigencia ?? 'N/A',
                     'actions' => '<button class="btn btn-danger btn-sm delete-record" data-id="' . $lote->id_lote_granel . '">Eliminar</button>',
                 ];
             }
@@ -194,23 +192,25 @@ class LotesGranelController extends Controller
             'id_empresa' => 'required|exists:empresa,id_empresa',
             'nombre_lote' => 'required|string|max:70',
             'tipo_lote' => 'required|integer',
-            'volumen' => 'nullable|numeric',
-            'cont_alc' => 'nullable|numeric',
-            'id_categoria' => 'nullable|integer|exists:catalogo_categorias,id_categoria',
-            'id_clase' => 'nullable|integer|exists:catalogo_clases,id_clase',
-            'id_tipo' => 'nullable|integer|exists:catalogo_tipo_agave,id_tipo',
+            'volumen' => 'required|numeric',
+            'cont_alc' => 'required|numeric',
+            'id_categoria' => 'required|integer|exists:catalogo_categorias,id_categoria',
+            'id_clase' => 'required|integer|exists:catalogo_clases,id_clase',
+            'id_tipo' => 'required|integer|exists:catalogo_tipo_agave,id_tipo',
             'ingredientes' => 'nullable|string|max:100',
             'edad' => 'nullable|string|max:30',
-            'id_guia' => 'nullable|integer',
+            'id_guia' => 'required|array',
+            'id_guia.*' => 'exists:guias,id_guia',
             'folio_certificado' => 'nullable|string|max:50',
             'id_organismo' => 'nullable|integer|exists:catalogo_organismos,id_organismo',
             'fecha_emision' => 'nullable|date',
             'fecha_vigencia' => 'nullable|date',
+             'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf', // Validación de archivos
             'folio_fq_completo' => 'nullable|string|max:50',
             'folio_fq_ajuste' => 'nullable|string|max:50',
             'folio_fq' => 'nullable|string|max:50'
         ]);
-    
+
         // Crear una nueva instancia del modelo LotesGranel
         $lote = new LotesGranel();
     
@@ -227,7 +227,7 @@ class LotesGranelController extends Controller
         $lote->edad = $validatedData['edad'] ?? null;
         $lote->id_guia = $validatedData['id_guia'] ?? 0;
         $lote->folio_certificado = $validatedData['folio_certificado'] ?? null;
-        $lote->id_organismo = $validatedData['id_organismo'] ?? 0;
+        $lote->id_organismo = $validatedData['id_organismo'] ?? null;
         $lote->fecha_emision = $validatedData['fecha_emision'] ?? null;
         $lote->fecha_vigencia = $validatedData['fecha_vigencia'] ?? null;
     
@@ -281,6 +281,7 @@ class LotesGranelController extends Controller
         ]);
     }
 
+/* llenar el campo del modald e edicion */
     public function edit($id_lote_granel)
     {
         try {
@@ -292,6 +293,82 @@ class LotesGranelController extends Controller
     }
 
 
+
+    public function update(Request $request, $id_lote_granel)
+    {
+        // Validación de los datos
+        $validatedData = $request->validate([
+            'id_empresa' => 'required|exists:empresa,id_empresa',
+            'nombre_lote' => 'required|string|max:70',
+            'tipo_lote' => 'required|integer',
+            'volumen' => 'nullable|numeric',
+            'cont_alc' => 'nullable|numeric',
+            'id_categoria' => 'nullable|integer|exists:catalogo_categorias,id_categoria',
+            'id_clase' => 'nullable|integer|exists:catalogo_clases,id_clase',
+            'id_tipo' => 'nullable|integer|exists:catalogo_tipo_agave,id_tipo',
+            'ingredientes' => 'nullable|string|max:100',
+            'edad' => 'nullable|string|max:30',
+            'id_guia' => 'nullable|integer',
+            'folio_certificado' => 'nullable|string|max:50',
+            'id_organismo' => 'nullable|integer|exists:catalogo_organismos,id_organismo',
+            'fecha_emision' => 'nullable|date',
+            'fecha_vigencia' => 'nullable|date',
+            'folio_fq_completo' => 'nullable_if:tipo_lote,1|string|max:50',
+            'folio_fq_ajuste' => 'nullable_if:tipo_lote,1|string|max:50',
+            'folio_fq' => 'nullable',
+            'url.*' => 'nullable_if:tipo_lote,2|file|mimes:jpg,jpeg,png,pdf',
+        ]);
     
+        // Buscar el lote a granel por ID
+        $lote = LotesGranel::findOrFail($id_lote_granel);
+    
+        // Actualizar solo los campos que están presentes en la solicitud
+        $lote->update([
+            'id_empresa' => $validatedData['id_empresa'],
+            'nombre_lote' => $validatedData['nombre_lote'],
+            'tipo_lote' => $validatedData['tipo_lote'],
+            'volumen' => $validatedData['volumen'] ?? $lote->volumen,
+            'cont_alc' => $validatedData['cont_alc'] ?? $lote->cont_alc,
+            'id_categoria' => $validatedData['id_categoria'] ?? $lote->id_categoria,
+            'id_clase' => $validatedData['id_clase'] ?? $lote->id_clase,
+            'id_tipo' => $validatedData['id_tipo'] ?? $lote->id_tipo,
+            'ingredientes' => $validatedData['ingredientes'] ?? $lote->ingredientes,
+            'edad' => $validatedData['edad'] ?? $lote->edad,
+            'id_guia' => $validatedData['id_guia'] ?? $lote->id_guia,
+            'folio_certificado' => $validatedData['folio_certificado'] ?? $lote->folio_certificado,
+            'id_organismo' => $validatedData['id_organismo'] ?? $lote->id_organismo,
+            'fecha_emision' => $validatedData['fecha_emision'] ?? $lote->fecha_emision,
+            'fecha_vigencia' => $validatedData['fecha_vigencia'] ?? $lote->fecha_vigencia,
+            'folio_fq' => $this->getFolioFq($validatedData)
+        ]);
+    
+        // Manejo de archivos si se envían
+        if ($request->hasFile('url')) {
+            // Aquí puedes agregar el código para manejar la actualización de archivos si es necesario
+        }
+    
+        return response()->json([
+            'success' => true,
+            'message' => 'Lote actualizado exitosamente',
+        ]);
+    }
+    
+    /**
+     * Obtiene el valor de folio_fq basado en el tipo de lote.
+     *
+     * @param array $data
+     * @return string|null
+     */
+    private function getFolioFq($data)
+    {
+        if ($data['tipo_lote'] == 1) {
+            return $data['folio_fq_completo'] ?? $data['folio_fq_ajuste'] ?? null;
+        } elseif ($data['tipo_lote'] == 2) {
+            return $data['folio_certificado'] ?? null;
+        }
+        return null;
+    }
+    
+
 
 }
