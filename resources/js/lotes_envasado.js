@@ -45,6 +45,57 @@ $("#addNewLoteForm").on('submit', function (e) {
 
 
 
+//Añadir row
+$(document).ready(function() {
+    $('.add-row').click(function() {
+        // Verificar si se ha seleccionado un cliente
+        if ($("#id_empresa").val() === "") {
+            // Mostrar la alerta de SweetAlert2
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Por favor, selecciona un cliente primero.',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                },
+                buttonsStyling: false // Asegura que los estilos personalizados se apliquen
+            });
+            return;
+        }
+
+        // Si el cliente está seleccionado, añade una nueva fila
+        var newRow = `
+            <tr>
+                <th>
+                    <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+                </th>
+                <td>
+                    <select class="id_lote_granel form-control " name="id_lote_granel[]">
+                        <!-- Opciones -->
+                    </select>
+                </td>
+                <td>
+                    <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
+                </td>
+            </tr>`;
+        $('#contenidoGraneles').append(newRow);
+
+        // Re-inicializar select2 en la nueva fila
+        $('.select2').select2();
+
+        // Copiar opciones del primer select al nuevo select
+        var options = $('#contenidoGraneles tr:first-child .id_lote_granel').html();
+        $('#contenidoGraneles tr:last-child .id_lote_granel').html(options);
+    });
+
+    // Función para eliminar una fila
+    $(document).on('click', '.remove-row', function() {
+        $(this).closest('tr').remove();
+    });
+});
+
+
+
 //MODAL para ocultar y mostara
 document.addEventListener('DOMContentLoaded', function() {
   // Evento para el cambio en el select de tipo de lote
@@ -264,7 +315,7 @@ $(function () {
                         text: '<i class="ri-printer-line me-1" ></i>Print',
                         className: 'dropdown-item',
                         exportOptions: {
-                            columns: [1, 2, 3, 4, 5],
+                            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,],
                             format: {
                                 body: function (inner, coldex, rowdex) {
                                     if (inner.length <= 0) return inner;
@@ -300,7 +351,7 @@ $(function () {
                         text: '<i class="ri-file-text-line me-1" ></i>Csv',
                         className: 'dropdown-item',
                         exportOptions: {
-                            columns: [1, 2, 3, 4, 5],
+                            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,],
                             format: {
                                 body: function (inner, coldex, rowdex) {
                                     if (inner.length <= 0) return inner;
@@ -324,7 +375,7 @@ $(function () {
                         text: '<i class="ri-file-excel-line me-1"></i>Excel',
                         className: 'dropdown-item',
                         exportOptions: {
-                            columns: [1, 2, 3, 4, 5],
+                            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,],
                             format: {
                                 body: function (inner, coldex, rowdex) {
                                     if (inner.length <= 0) return inner;
@@ -348,7 +399,7 @@ $(function () {
                         text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
                         className: 'dropdown-item',
                         exportOptions: {
-                            columns: [1, 2, 3, 4, 5],
+                            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,],
                             format: {
                                 body: function (inner, coldex, rowdex) {
                                     if (inner.length <= 0) return inner;
@@ -372,7 +423,7 @@ $(function () {
                         text: '<i class="ri-file-copy-line me-1" ></i>Copy',
                         className: 'dropdown-item',
                         exportOptions: {
-                            columns: [1, 2, 3, 4, 5],
+                            columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,],
                             format: {
                                 body: function (inner, coldex, rowdex) {
                                     if (inner.length <= 0) return inner;
@@ -393,7 +444,7 @@ $(function () {
                 ]
             },
             {
-                text: '<i class="ri-add-line"></i>  Agregar un cliente prospecto',
+                text: '<i class="ri-add-line"></i>  Agregar Cliente Prospecto',
                 className: 'btn btn-primary',
                 action: function (e, dt, node, config) {
                     // Aquí puedes agregar el código para mostrar el modal o redirigir al formulario de creación

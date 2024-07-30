@@ -131,10 +131,10 @@
                             <tbody id="contenidoGraneles">
                                 <tr>
                                     <th>
-                                        <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+                                        <button type="button" class="btn btn-danger remove-row" disabled> <i class="ri-delete-bin-5-fill"></i> </button>
                                     </th>
                                     <td>
-                                        <select class="id_lote_granel form-control select2" name="id_lote_granel[]" >
+                                        <select class="id_lote_granel form-control " name="id_lote_granel[]" >
                                             <!-- Opciones -->
                                         </select>
                                     </td>
@@ -248,30 +248,7 @@
     });
   }
 
-  $(document).ready(function() {
-    // Add row
-    $('.add-row').click(function() {
-        var newRow = `<tr>
-            <th>
-                <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
-            </th>
-            <td>
-                <select class="id_lote_granel form-control select2" name="id_lote_granel[]" >
-                    <!-- Opciones -->
-                </select>
-            </td>
-            <td>
-                <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
-            </td>
-        </tr>`;
-        $('#contenidoGraneles').append(newRow);
-    });
 
-    // Remove row
-    $(document).on('click', '.remove-row', function() {
-        $(this).closest('tr').remove();
-    });
-});
 
 
 </script>
