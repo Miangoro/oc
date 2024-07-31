@@ -114,7 +114,7 @@ class DomiciliosController extends Controller
                 $nestedData['folio'] = $instalacion->folio ?? 'N/A'; // Corregido 'folion' a 'folio'
                 $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);
-                $nestedData['fecha_vigencia'] = Helpers::formatearFecha($instalacion->fecha_vigencia); ;
+                $nestedData['fecha_vigencia'] = Helpers::formatearFecha($instalacion->fecha_vigencia);
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
 
                 $data[] = $nestedData;

@@ -24,6 +24,7 @@ $(function () {
       }
     },
     columns: [
+      { data: '' },
       { data: 'id_instalacion' },
       { data: 'razon_social' },
       { data: 'tipo' },

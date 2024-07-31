@@ -148,6 +148,7 @@
         <table class="datatables-users table">
             <thead class="table-dark">
                 <tr>
+                  <th></th>
                     <th>ID</th>
                     <th>Cliente</th>
                     <th>Tipo</th>
