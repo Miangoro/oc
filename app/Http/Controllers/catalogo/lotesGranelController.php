@@ -261,23 +261,20 @@ class LotesGranelController extends Controller
         // Almacenar nuevos documentos solo si se envían
         if ($request->hasFile('url')) {
             foreach ($request->file('url') as $index => $file) {
-                $folio_fq = "";
-                if ($index == 0 && $request->id_documento[$index] == 58) {
-                    $folio_fq = $request->folio_fq_completo;
-                } else {
-                    $folio_fq = $request->folio_fq_ajuste;
-                }
+                $folio_fq = $index == 0 && $request->id_documento[$index] == 58 
+                    ? $request->folio_fq_completo 
+                    : $request->folio_fq_ajuste;
     
                 $tipo_analisis = $request->tipo_analisis[$index] ?? '';
-    
+                
                 $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); // Aqui se guarda en la ruta definida storage/public
     
                 $documentacion_url = new Documentacion_url();
                 $documentacion_url->id_relacion = $lote->id_lote_granel;
                 $documentacion_url->id_documento = $request->id_documento[$index];
                 $documentacion_url->nombre_documento = $request->nombre_documento[$index] . ": " . $tipo_analisis . " - " . $folio_fq;
-                $documentacion_url->url = $filePath;
+                $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
                 $documentacion_url->id_empresa = $lote->id_empresa;
     
                 $documentacion_url->save();
@@ -317,7 +314,7 @@ public function edit($id_lote_granel)
 
 public function update(Request $request, $id_lote_granel)
 {
-    // Imprimir los datos recibidos para depuración
+    // Imprimir los datos recibidos para depuración.
     \Log::info($request->all());
 
     // Validación de los datos
