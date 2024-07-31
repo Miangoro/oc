@@ -3,6 +3,8 @@
  */
 'use strict';
 
+
+
 $(function () {
     // Datatable (jquery)
     // Variable declaration for table
@@ -11,7 +13,7 @@ $(function () {
         userView = baseUrl + 'app/user/view/account',
         offCanvasForm = $('#addlostesEnvasado');
 
-
+       
 
 
 
@@ -630,6 +632,24 @@ $("#addNewLoteForm").on('submit', function (e) {
     });
 });
 
+$('#edit_tipo_lote').change(function () {
+
+    
+
+    var tipoLote = document.getElementById('edit_tipo_lote').value;
+   
+    if (tipoLote == '1') {
+        document.getElementById('edit_datosOpcion1').style.display = 'block';
+        document.getElementById('edit_datosOpcion2').style.display = 'none';
+    } else if (tipoLote == '2') {
+        document.getElementById('edit_datosOpcion1').style.display = 'none';
+        document.getElementById('edit_datosOpcion2').style.display = 'block';
+    } else {
+        document.getElementById('edit_datosOpcion1').style.display = 'none';
+        document.getElementById('edit_datosOpcion2').style.display = 'none';
+    }
+
+});
 
 
 
@@ -701,7 +721,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // Función para mostrar u ocultar campos dependiendo de la opción seleccionada
-    function toggleFields() {
+    function toggleFields() { 
+        
+        
+        
+        
         var tipoLote = document.getElementById('tipo_lote').value;
         if (tipoLote == '1') {
             document.getElementById('datosOpcion1').style.display = 'block';
@@ -715,6 +739,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    
+
     // Función para inicializar select2 en los select
     function initializeSelect2() {
         $('.select2').select2();
@@ -725,4 +751,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Inicializar campos por defecto
     toggleFields();
+   
 });
