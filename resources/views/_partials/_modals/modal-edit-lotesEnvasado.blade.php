@@ -27,8 +27,7 @@
 
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select id="edit_tipo_lote" name="tipo_lote" class="form-select" required
-                                    onchange="toggleFields()">
+                                <select id="edit_tipo_lote" name="tipo_lote" class="form-select" required onchange="mostrarLotes()">
                                     <option value="1">Por un solo lote a granel</option>
                                     <option value="2">Por más de un lote a granel</option>
                                 </select>
@@ -36,7 +35,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="datosOpcion1" div class="col-md-12">
+                    <div id="edit_datosOpcion1" div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-6">
                             <select class="select2 form-select id_lote_granel" id="edit_lote_granel"
                                 name="id_lote_granel" aria-label="Default select example">
@@ -141,7 +140,7 @@
                         </div>
                     </div>
 
-                    <div id="datosOpcion2">
+                    <div id="edit_datosOpcion2">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -290,4 +289,6 @@
         document.getElementById('edit_presentacion').addEventListener('input', calcularVolumenTotal);
         document.getElementById('edit_unidad').addEventListener('change', calcularVolumenTotal);
     });
+
+    
 </script>

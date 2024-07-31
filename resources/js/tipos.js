@@ -1,12 +1,10 @@
-/**
- * Page User List
+/*
+ Page User List
  */
-
 'use strict';
 
 // Datatable (jquery)
 $(function () {
-
 
   // Variable declaration for table
   var dt_user_table = $('.datatables-users'),
@@ -31,7 +29,6 @@ $(function () {
     }
   });
 
-  
 
   //FUNCIONALIDAD DE LA VISTA datatable
   if (dt_user_table.length) {
@@ -99,12 +96,10 @@ $(function () {
                   `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_tipo']}" data-bs-toggle="offcanvas" data-bs-target="#editTipo"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
                   `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_tipo']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
                   //'<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="' +
-              userView +
-              '" class="dropdown-item">View</a>' +
-              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-              '</div>' +
+                '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                '<a href="' + userView + '" class="dropdown-item">View</a>' +
+                '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+                '</div>' +
               '</div>'
             );
           }
@@ -291,8 +286,8 @@ $(function () {
           }
         }
       ],
-/*FUNCION DESCONOCIDA
-      // For responsive popup
+
+///PAGINA RESPONSIVA
       responsive: {
         details: {
           display: $.fn.dataTable.Responsive.display.modal({
@@ -324,8 +319,10 @@ $(function () {
             return data ? $('<table class="table"/><tbody />').append(data) : false;
           }
         }
-      }*/
+      }
+
     });
+
   } 
 
 
