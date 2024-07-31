@@ -62,7 +62,11 @@ $(function () {
                         return row.presentacion + ' ' + row.unidad;
                     }
                 },
-                { data: 'volumen_total' },
+                {
+                    data: function (row, type, set) {
+                        return row.volumen_total + ' Litros';
+                    }
+                },
                 { data: 'destino_lote' },
                 { data: 'lugar_envasado' },
                 { data: 'sku' },
@@ -216,7 +220,7 @@ $(function () {
                             text: '<i class="ri-printer-line me-1" ></i>Print',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
                                 // prevent avatar to be print
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -254,7 +258,7 @@ $(function () {
                             text: '<i class="ri-file-text-line me-1" ></i>Csv',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
                                 // prevent avatar to be print
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -279,7 +283,7 @@ $(function () {
                             text: '<i class="ri-file-excel-line me-1"></i>Excel',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
                                 // prevent avatar to be display
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -304,7 +308,7 @@ $(function () {
                             text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
                                 // prevent avatar to be display
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -329,7 +333,7 @@ $(function () {
                             text: '<i class="ri-file-copy-line me-1"></i>Copy',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
                                 // prevent avatar to be copy
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -714,6 +718,33 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('datosOpcion2').style.display = 'none';
         }
     }
+
+//Ocultar
+    document.addEventListener('DOMContentLoaded', function() {
+        const tipoLoteSelect = document.getElementById('tipo_lote');
+        const datosOpcion1 = document.getElementById('datosOpcion1');
+        const datosOpcion2 = document.getElementById('datosOpcion2');
+    
+        function toggleFields() {
+            if (tipoLoteSelect.value === '1') {
+                datosOpcion1.style.display = 'block'; // Muestra el campo
+                datosOpcion2.style.display = 'none';  // Oculta la opción 2
+            } else if (tipoLoteSelect.value === '2') {
+                datosOpcion1.style.display = 'none';  // Oculta el campo
+                datosOpcion2.style.display = 'block'; // Muestra la opción 2
+            } else {
+                datosOpcion1.style.display = 'none';  // Oculta el campo
+                datosOpcion2.style.display = 'none';  // Oculta la opción 2
+            }
+        }
+    
+        // Llama a toggleFields cuando se carga la página
+        toggleFields();
+    
+        // Llama a toggleFields cada vez que cambia el valor del select
+        tipoLoteSelect.addEventListener('change', toggleFields);
+    });
+    
 
     // Función para inicializar select2 en los select
     function initializeSelect2() {
