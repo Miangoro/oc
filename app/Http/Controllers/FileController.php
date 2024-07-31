@@ -17,4 +17,18 @@ class FileController extends Controller
 
         return response()->json(['message' => 'File not found'], 404);
     }
+
+    public function show2($carpeta,$filename)
+    {
+        $filePath = 'uploads/' . $carpeta . '/' . $filename;
+        $fullPath = storage_path('app/public/' . $filePath);
+
+       
+
+        if (Storage::disk('public')->exists($filePath)) {
+            return response()->file($fullPath);
+        }
+
+        return response()->json(['message' => 'Archivo no encontrado'], 404);
+    }
 }

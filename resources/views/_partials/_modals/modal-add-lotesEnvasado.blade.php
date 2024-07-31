@@ -44,7 +44,6 @@
                     </div>
                 
                     <div  class="opcion-datos" >
-                        <!-- Datos a mostrar para la opción 1 -->
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control" id="name" placeholder="Introduce el nombre del lote" name="nombre_lote" aria-label="Nombre del lote" required />
                             <label for="name">Nombre del lote</label>
@@ -180,7 +179,7 @@
             // Cargar los detalles en el modal
             var contenido = "";
           for (let index = 0; index < response.lotes_granel.length; index++) {
-            contenido = '<option value="'+response.lotes_granel[index].id_lote_granel+'">'+response.lotes_granel[index].nombre_lote+'</option>' + contenido;
+            contenido = '<option value="'+response.lotes_granel[index].id_empresa+'">'+response.lotes_granel[index].nombre_lote+'</option>' + contenido;
            // console.log(response.normas[index].norma);
           }
 

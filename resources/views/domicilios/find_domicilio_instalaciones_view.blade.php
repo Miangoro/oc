@@ -148,6 +148,7 @@
         <table class="datatables-users table">
             <thead class="table-dark">
                 <tr>
+                    <th></th>
                     <th>ID</th>
                     <th>Cliente</th>
                     <th>Tipo</th>
@@ -155,6 +156,7 @@
                     <th>Dirección</th>
                     <th>Folio</th>
                     <th>Organismo</th>
+                    <th>Certificado de instalaciones</th>
                     <th>Fecha Emision</th>
                     <th>Fecha Vigencia</th>
                     <th>Acciones</th>
@@ -228,8 +230,8 @@
                                <div id="certificado-otros" class="d-none">
                                 <div class="col-md-12 mb-4">
                                     <div class="form-floating form-floating-outline">
-                                        <input class="form-control form-control-sm" type="file" id="file-127" name="url[]">
-                                        <input value="127" class="form-control" type="hidden" name="id_documento[]">
+                                        <input class="form-control form-control-sm" type="file" id="file" name="url[]">
+                                        <input value="0" class="form-control" type="hidden" name="id_documento[]">
                                         <input value="Certificado de instalaciones" class="form-control" type="hidden" name="nombre_documento[]">
                                         <label for="certificado_instalaciones">Adjuntar Certificado de instalaciones</label>
                                     </div>
@@ -301,7 +303,7 @@
 
                         <!-- Select de Tipo de Instalación -->
                         <div class="form-floating form-floating-outline mb-3">
-                            <select class="select2 form-select" id="edit_tipo" name="tipo" aria-label="Tipo de Instalación" required>
+                            <select class="form-select" id="edit_tipo" name="tipo" aria-label="Tipo de Instalación" required>
                                 <option value="">Seleccione un tipo de instalación</option>
                                 <option value="productora">Productora</option>
                                 <option value="envasadora">Envasadora</option>
@@ -341,8 +343,8 @@
                         <div id="edit_certificado_otros" class="d-none">
                             <div class="col-md-12 mb-4">
                                 <div class="form-floating form-floating-outline">
-                                    <input class="form-control form-control-sm" type="file" id="file-127" name="url[]">
-                                    <input value="127" class="form-control" type="hidden" name="id_documento[]">
+                                    <input class="form-control form-control-sm" type="file" id="file" name="url[]">
+                                    <input value="0" class="form-control" type="hidden" name="id_documento[]">
                                     <input value="Certificado de instalaciones" class="form-control" type="hidden" name="nombre_documento[]">
                                     <label for="certificado_instalaciones">Adjuntar Certificado de Instalaciones</label>
                                 </div>

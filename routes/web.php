@@ -190,6 +190,10 @@ Route::get('files/{filename}', [FileController::class, 'show'])
     ->name('file.show')
     ->middleware('auth'); // Middleware para autenticar usuarios
 
+    Route::get('files/{carpeta}/{filename}', [FileController::class, 'show2'])
+    ->name('file.show2')
+    ->middleware('auth'); // Middleware para autenticar usuarios
+
 Route::get('/dashboard/analytics', [Analytics::class, 'index'])->name('dashboard-analytics');
 Route::get('/dashboard/crm', [Crm::class, 'index'])->name('dashboard-crm');
 // locale

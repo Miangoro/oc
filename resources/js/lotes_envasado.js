@@ -3,6 +3,8 @@
  */
 'use strict';
 
+
+
 $(function () {
     // Datatable (jquery)
     // Variable declaration for table
@@ -11,7 +13,7 @@ $(function () {
         userView = baseUrl + 'app/user/view/account',
         offCanvasForm = $('#addlostesEnvasado');
 
-
+       
 
 
 
@@ -62,7 +64,11 @@ $(function () {
                         return row.presentacion + ' ' + row.unidad;
                     }
                 },
-                { data: 'volumen_total' },
+                {
+                    data: function (row, type, set) {
+                        return row.volumen_total + ' Litros';
+                    }
+                },
                 { data: 'destino_lote' },
                 { data: 'lugar_envasado' },
                 { data: 'sku' },
@@ -167,7 +173,7 @@ $(function () {
                     render: function (data, type, full, meta) {
                         return (
                             '<div class="d-flex align-items-center gap-50">' +
-                            `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+                            `<button id="btn_edit-record" class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
                             `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_lote_envasado']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             '<a href="' +
@@ -216,7 +222,7 @@ $(function () {
                             text: '<i class="ri-printer-line me-1" ></i>Print',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
                                 // prevent avatar to be print
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -254,7 +260,7 @@ $(function () {
                             text: '<i class="ri-file-text-line me-1" ></i>Csv',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
                                 // prevent avatar to be print
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -279,7 +285,7 @@ $(function () {
                             text: '<i class="ri-file-excel-line me-1"></i>Excel',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
                                 // prevent avatar to be display
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -304,7 +310,7 @@ $(function () {
                             text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
                                 // prevent avatar to be display
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -329,7 +335,7 @@ $(function () {
                             text: '<i class="ri-file-copy-line me-1"></i>Copy',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
                                 // prevent avatar to be copy
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -366,7 +372,7 @@ $(function () {
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function (row) {
                             var data = row.data();
-                            return 'Detalles de ' + data['id_lote_envasado'];
+                            return 'Detalles de ' + data['folio'];
                         }
                     }),
                     type: 'column',
@@ -453,6 +459,41 @@ $(function () {
         });
     });
 
+
+    $(document).on('click', '.edit-record', function () {
+        console.log("Obteniendo datos...");
+        var id_lote_envasado = $(this).data('id');
+        // Realizar la solicitud AJAX para obtener los datos del lote envasado
+        $.get('/lotes-envasado/' + id_lote_envasado + '/edit', function (data) {
+            // Rellenar el formulario con los datos obtenidos
+            $('#edit_id_lote_envasado').val(data.id_lote_envasado);
+            $('#edit_cliente').val(data.id_empresa).trigger('change');
+            $('#edit_lote_granel').val(data.id_empresa).trigger('change');
+            $('#edit_nombre_lote').val(data.nombre_lote);
+            $('#edit_tipo_lote').val(data.tipo_lote);
+            $('#edit_sku').val(data.sku);
+            $('#edit_marca').val(data.id_marca).trigger('change');
+            $('#edit_destino_lote').val(data.destino_lote);
+            $('#edit_cant_botellas').val(data.cant_botellas);
+            $('#edit_presentacion').val(data.presentacion);
+            $('#edit_unidad').val(data.unidad);
+            $('#edit_volumen_total').val(data.volumen_total);
+            $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
+
+            // Mostrar el modal de edición
+            $('#editLoteEnvasado').modal('show');
+        }).fail(function () {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al obtener los datos del lote envasado',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+        });
+
+    });
     /*$(document).on('click', '.pdf', function () {
           var id = $(this).data('id');
           var registro = $(this).data('registro');
@@ -464,17 +505,24 @@ $(function () {
               
             
     });*/
+    
     $(document).ready(function () {
+        console.log("Cargado");
+        var id_lote_envasado = $(this).data('id');
         // Abrir el modal y cargar datos para editar
+
+
+        /*
         $('.datatables-users').on('click', '.edit-record', function () {
+            console.log("editar")
             var id_lote_envasado = $(this).data('id');
 
             // Realizar la solicitud AJAX para obtener los datos del lote envasado
             $.get('/lotes-envasado/' + id_lote_envasado + '/edit', function (data) {
                 // Rellenar el formulario con los datos obtenidos
                 $('#edit_id_lote_envasado').val(data.id_lote_envasado);
-                $('#edit_cliente').val(data.id_empresa).trigger('change');
-           /* */ $('#edit_lote_granel').val(data.id_empresa).trigger('change');
+                $('#select2-edit_cliente-container').val(data.id_empresa).trigger('change');
+       $('#edit_lote_granel').val(data.id_empresa).trigger('change');
                 $('#edit_nombre_lote').val(data.nombre_lote);
                 $('#edit_tipo_lote').val(data.tipo_lote);
                 $('#edit_sku').val(data.sku);
@@ -499,7 +547,7 @@ $(function () {
                 });
             });
         });
-
+*/
         obtenerGraneles();
         obtenerMarcas();
 
@@ -588,7 +636,50 @@ $("#addNewLoteForm").on('submit', function (e) {
     });
 });
 
+function mostrarLotes() { 
 
+    
+
+    var tipoLote = document.getElementById('edit_tipo_lote').value;
+   
+    if (tipoLote == '1') {
+        document.getElementById('edit_datosOpcion1').style.display = 'block';
+        document.getElementById('edit_datosOpcion2').style.display = 'none';
+    } else if (tipoLote == '2') {
+        document.getElementById('edit_datosOpcion1').style.display = 'none';
+        document.getElementById('edit_datosOpcion2').style.display = 'block';
+    } else {
+        document.getElementById('edit_datosOpcion1').style.display = 'none';
+        document.getElementById('edit_datosOpcion2').style.display = 'none';
+    }
+
+};
+
+
+document.getElementById('edit_tipo_lote').addEventListener('change', function () {
+    mostrarLotes();
+});
+
+
+
+// Función para mostrar u ocultar campos dependiendo de la opción seleccionada
+function toggleFields() { 
+    
+    
+    
+    
+    var tipoLote = document.getElementById('tipo_lote').value;
+    if (tipoLote == '1') {
+        document.getElementById('datosOpcion1').style.display = 'block';
+        document.getElementById('datosOpcion2').style.display = 'none';
+    } else if (tipoLote == '2') {
+        document.getElementById('datosOpcion1').style.display = 'none';
+        document.getElementById('datosOpcion2').style.display = 'block';
+    } else {
+        document.getElementById('datosOpcion1').style.display = 'none';
+        document.getElementById('datosOpcion2').style.display = 'none';
+    }
+}
 
 
 
@@ -659,7 +750,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // Función para mostrar u ocultar campos dependiendo de la opción seleccionada
-    function toggleFields() {
+    function toggleFields() { 
+        
+        
+        
+        
         var tipoLote = document.getElementById('tipo_lote').value;
         if (tipoLote == '1') {
             document.getElementById('datosOpcion1').style.display = 'block';
@@ -673,6 +768,35 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    
+
+//Ocultar select
+    document.addEventListener('DOMContentLoaded', function() {
+        const tipoLoteSelect = document.getElementById('tipo_lote');
+        const datosOpcion1 = document.getElementById('datosOpcion1');
+        const datosOpcion2 = document.getElementById('datosOpcion2');
+    
+        function toggleFields() {
+            if (tipoLoteSelect.value === '1') {
+                datosOpcion1.style.display = 'block'; // Muestra el campo
+                datosOpcion2.style.display = 'none';  // Oculta la opción 2
+            } else if (tipoLoteSelect.value === '2') {
+                datosOpcion1.style.display = 'none';  // Oculta el campo
+                datosOpcion2.style.display = 'block'; // Muestra la opción 2
+            } else {
+                datosOpcion1.style.display = 'none';  // Oculta el campo
+                datosOpcion2.style.display = 'none';  // Oculta la opción 2
+            }
+        }
+    
+        // Llama a toggleFields cuando se carga la página
+        toggleFields();
+    
+        // Llama a toggleFields cada vez que cambia el valor del select
+        tipoLoteSelect.addEventListener('change', toggleFields);
+    });
+    
+
     // Función para inicializar select2 en los select
     function initializeSelect2() {
         $('.select2').select2();
@@ -683,10 +807,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Inicializar campos por defecto
     toggleFields();
-
-
-
-
-
-    
+   
 });
