@@ -636,7 +636,7 @@ $("#addNewLoteForm").on('submit', function (e) {
     });
 });
 
-$('#edit_tipo_lote').change(function () {
+function mostrarLotes() { 
 
     
 
@@ -653,8 +653,33 @@ $('#edit_tipo_lote').change(function () {
         document.getElementById('edit_datosOpcion2').style.display = 'none';
     }
 
+};
+
+
+document.getElementById('tipo_lote').addEventListener('change', function () {
+    mostrarLotes();
 });
 
+
+
+// Función para mostrar u ocultar campos dependiendo de la opción seleccionada
+function toggleFields() { 
+    
+    
+    
+    
+    var tipoLote = document.getElementById('tipo_lote').value;
+    if (tipoLote == '1') {
+        document.getElementById('datosOpcion1').style.display = 'block';
+        document.getElementById('datosOpcion2').style.display = 'none';
+    } else if (tipoLote == '2') {
+        document.getElementById('datosOpcion1').style.display = 'none';
+        document.getElementById('datosOpcion2').style.display = 'block';
+    } else {
+        document.getElementById('datosOpcion1').style.display = 'none';
+        document.getElementById('datosOpcion2').style.display = 'none';
+    }
+}
 
 
 
@@ -745,7 +770,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     
 
-//Ocultar
+//Ocultar select
     document.addEventListener('DOMContentLoaded', function() {
         const tipoLoteSelect = document.getElementById('tipo_lote');
         const datosOpcion1 = document.getElementById('datosOpcion1');
