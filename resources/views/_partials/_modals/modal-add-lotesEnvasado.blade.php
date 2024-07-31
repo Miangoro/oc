@@ -44,7 +44,6 @@
                     </div>
                 
                     <div  class="opcion-datos" >
-                        <!-- Datos a mostrar para la opción 1 -->
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control" id="name" placeholder="Introduce el nombre del lote" name="nombre_lote" aria-label="Nombre del lote" required />
                             <label for="name">Nombre del lote</label>
