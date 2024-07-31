@@ -179,6 +179,8 @@ class DomiciliosController extends Controller
 
             $aux = $request->hasFile('url');
 
+            $ultimaInstalacion = Instalaciones::latest()->first();
+
             // Almacenar nuevos documentos solo si se envían
             if ($request->hasFile('url')) {
 
@@ -188,7 +190,7 @@ class DomiciliosController extends Controller
                     $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); //Aqui se guarda en la ruta definida storage/public
 
                     $documentacion_url = new Documentacion_url();
-                    $documentacion_url->id_relacion = 15253;
+                    $documentacion_url->id_relacion = $ultimaInstalacion->id_instalaciones;
                     $documentacion_url->id_documento = $request->id_documento[$index];
                     $documentacion_url->nombre_documento = $request->nombre_documento[$index];
                     $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
