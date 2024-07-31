@@ -656,7 +656,7 @@ function mostrarLotes() {
 };
 
 
-document.getElementById('tipo_lote').addEventListener('change', function () {
+document.getElementById('edit_tipo_lote').addEventListener('change', function () {
     mostrarLotes();
 });
 

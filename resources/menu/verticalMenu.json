@@ -112,6 +112,11 @@
           "slug": "catalogo-marcas"
         },
         {
+          "url": "catalogo/lotes",
+          "name": "Lotes envasados",
+          "slug": "catalogo-lotes"
+        },
+        {
           "url": "catalogo/marcas",
           "name": "Marcas",
           "slug": "catalogo-marcas"
@@ -130,11 +135,6 @@
           "url": "catalogo/tipos",
           "name": "Tipos de maguey/agave",
           "slug": "catalogo-tipos"
-        },
-        {
-          "url": "catalogo/lotes",
-          "name": "Lotes envasados",
-          "slug": "catalogo-lotes"
         }
       ]
     }

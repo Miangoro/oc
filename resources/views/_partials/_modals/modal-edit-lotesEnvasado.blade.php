@@ -14,7 +14,7 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="obtenerGraneles(); obtenerMarcas(); obtenerDirecciones();"
+                                <select onchange="edit_obtenerDirecciones(); edit_obtenerMarcas(); edit_obtenerGraneles();"
                                     id="edit_cliente" name="id_empresa" class="select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($clientes as $cliente)
@@ -31,13 +31,13 @@
                                     <option value="1">Por un solo lote a granel</option>
                                     <option value="2">Por más de un lote a granel</option>
                                 </select>
-                                <label for="tipo_lote">Conformado por</label>
+                                <label for="edit_tipo_lote">Conformado por</label>
                             </div>
                         </div>
                     </div>
                     <div id="edit_datosOpcion1" div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select id_lote_granel" id="edit_lote_granel"
+                            <select class="select2 form-select edit_lote_granel" id="edit_lote_granel"
                                 name="id_lote_granel" aria-label="Default select example">
                                 <option value="" selected>Lote Granel</option>
                                 @foreach ($lotes_granel as $lotesGra)
@@ -49,7 +49,7 @@
                     </div>
 
 
-                    <div class="opcion-datos" style="display: block;">
+                    <div class="opcion-datos">
                         <!-- Datos a mostrar para la opción 1 -->
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control" id="edit_nombre_lote"
@@ -68,7 +68,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select id_marca" id="edit_marca" name="id_marca"
+                                    <select class="select2 form-select edit_marca" id="edit_marca" name="id_marca"
                                         aria-label="Marca">
                                         <option value="" selected>Selecciona una marca</option>
                                         @foreach ($marcas as $marca)
@@ -126,7 +126,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select id_instalacion" id="edit_Instalaciones"
+                                    <select class="select2 form-select edit_Instalaciones" id="edit_Instalaciones"
                                         name="lugar_envasado" aria-label="Default select example">
                                         <option value="" selected>Lote Granel</option>
                                         @foreach ($Instalaciones as $Instalacion)
@@ -155,7 +155,7 @@
                                         <button type="button" class="btn btn-danger remove-row" disabled> <i class="ri-delete-bin-5-fill"></i> </button>
                                     </th>
                                     <td>
-                                        <select class="id_lote_granel form-control select2" name="id_lote_granel[]" >
+                                        <select class="edit_lote_granel form-control select2" name="id_lote_granel[]" >
                                             <!-- Opciones -->
                                         </select>
                                     </td>
@@ -183,7 +183,7 @@
 
 
 <script>
-    function obtenerGraneles() {
+    function edit_obtenerGraneles() {
         var empresa = $("#id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
@@ -193,7 +193,7 @@
                 // Cargar los detalles en el modal
                 var contenido = "";
                 for (let index = 0; index < response.lotes_granel.length; index++) {
-                    contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
+                    contenido = '<option value="' + response.lotes_granel[index].id_empresa + '">' +
                         response.lotes_granel[index].nombre_lote + '</option>' + contenido;
                     // console.log(response.normas[index].norma);
                 }
@@ -201,7 +201,7 @@
                 if (response.lotes_granel.length == 0) {
                     contenido = '<option value="">Sin lotes a granel registrados</option>';
                 }
-                $('.id_lote_granel').html(contenido);
+                $('.edit_lote_granel').html(contenido);
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');
@@ -209,8 +209,8 @@
         });
     }
 
-    function obtenerMarcas() {
-        var empresa = $("#id_empresa").val();
+    function edit_obtenerMarcas() {
+        var empresa = $("#edit_cliente").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
@@ -227,7 +227,7 @@
                 if (response.marcas.length == 0) {
                     contenido = '<option value="">Sin marcas registradas</option>';
                 }
-                $('#id_marca').html(contenido);
+                $('#edit_marca').html(contenido);
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');
@@ -236,8 +236,8 @@
     }
 
 
-    function obtenerDirecciones() {
-        var empresa = $("#id_empresa").val();
+    function edit_obtenerDirecciones() {
+        var empresa = $("#edit_cliente").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
@@ -254,7 +254,7 @@
                 if (response.instalaciones.length == 0) {
                     contenido = '<option value="">Sin lotes a granel registrados</option>';
                 }
-                $('.id_instalacion').html(contenido);
+                $('.edit_Instalaciones').html(contenido);
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');
