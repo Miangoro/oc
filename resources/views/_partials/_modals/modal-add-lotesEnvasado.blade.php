@@ -112,7 +112,9 @@
                                     </select>
                                     <label for="id_instalacion">Lugar de envasado</label>
                                 </div>
-                            </div>  
+                            </div>
+                            
+                            
                         </div>
                     </div>
 
