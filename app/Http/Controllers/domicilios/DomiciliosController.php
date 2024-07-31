@@ -33,13 +33,14 @@ class DomiciliosController extends Controller
             4 => 'folio',
             5 => 'tipo',
             6 => 'id_organismo',
-            7 => 'fecha_emision',
-            8 => 'fecha_vigencia'
+            7 => 'url',
+            8 => 'fecha_emision',
+            9 => 'fecha_vigencia'
         ];
 
         $search = [];
 
-        $totalData = Instalaciones::whereHas('empresa', function($query) {
+        $totalData = Instalaciones::whereHas('empresa', function ($query) {
             $query->where('tipo', 2);
         })->count();
 
@@ -51,8 +52,8 @@ class DomiciliosController extends Controller
         $dir = $request->input('order.0.dir');
 
         if (empty($request->input('search.value'))) {
-            $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos')
-                ->whereHas('empresa', function($query) {
+            $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
+                ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
                 })
                 ->offset($start)
@@ -62,11 +63,11 @@ class DomiciliosController extends Controller
         } else {
             $search = $request->input('search.value');
 
-            $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos')
-                ->whereHas('empresa', function($query) {
+            $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
+                ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
                 })
-                ->where(function($query) use ($search) {
+                ->where(function ($query) use ($search) {
                     $query->where('id_instalacion', 'LIKE', "%{$search}%")
                         ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
                         ->orWhere('estado', 'LIKE', "%{$search}%")
@@ -81,11 +82,11 @@ class DomiciliosController extends Controller
                 ->orderBy($order, $dir)
                 ->get();
 
-            $totalFiltered = Instalaciones::with('empresa', 'estados', 'organismos')
-                ->whereHas('empresa', function($query) {
+            $totalFiltered = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
+                ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
                 })
-                ->where(function($query) use ($search) {
+                ->where(function ($query) use ($search) {
                     $query->where('id_instalacion', 'LIKE', "%{$search}%")
                         ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
                         ->orWhere('estado', 'LIKE', "%{$search}%")
@@ -94,7 +95,6 @@ class DomiciliosController extends Controller
                         ->orWhere('id_organismo', 'LIKE', "%{$search}%")
                         ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
                         ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%");
-
                 })
                 ->count();
         }
@@ -104,7 +104,7 @@ class DomiciliosController extends Controller
         if (!empty($instalaciones)) {
             $ids = $start;
 
-            foreach ($instalaciones as $instalacion) {
+            foreach ($instalaciones as $instalacion) { 
                 $nestedData['id_instalacion'] = $instalacion->id_instalacion ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids  ?? 'N/A';
                 $nestedData['razon_social'] = $instalacion->empresa->razon_social  ?? 'N/A';
@@ -113,6 +113,7 @@ class DomiciliosController extends Controller
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa  ?? 'N/A';
                 $nestedData['folio'] = $instalacion->folio ?? 'N/A'; // Corregido 'folion' a 'folio'
                 $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; // Maneja el caso donde el organismo sea nulo
+                $nestedData['url'] = !empty($instalacion->documentos) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first().'/'.implode(',', $instalacion->documentos->pluck('url')->toArray()) : 'No hay';
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($instalacion->fecha_vigencia);
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
@@ -173,31 +174,30 @@ class DomiciliosController extends Controller
                 'fecha_vigencia' => $request->input('fecha_vigencia', null), // Opcional
             ]);
 
-        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->input('id_empresa'))->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->input('id_empresa'))->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
-        $aux = $request->hasFile('url');
+            $aux = $request->hasFile('url');
 
-        // Almacenar nuevos documentos solo si se envían
-        if ($request->hasFile('url')) {
+            // Almacenar nuevos documentos solo si se envían
+            if ($request->hasFile('url')) {
 
-            foreach ($request->file('url') as $index => $file) {
+                foreach ($request->file('url') as $index => $file) {
 
-                $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); //Aqui se guarda en la ruta definida storage/public
+                    $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); //Aqui se guarda en la ruta definida storage/public
 
-                $documentacion_url = new Documentacion_url ();
-                $documentacion_url->id_relacion = 15253;
-                $documentacion_url->id_documento = $request->id_documento[$index];
-                $documentacion_url->nombre_documento = $request->nombre_documento[$index];
-                $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
-                $documentacion_url->id_empresa =  $request->input('id_empresa');
+                    $documentacion_url = new Documentacion_url();
+                    $documentacion_url->id_relacion = 15253;
+                    $documentacion_url->id_documento = $request->id_documento[$index];
+                    $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+                    $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+                    $documentacion_url->id_empresa =  $request->input('id_empresa');
 
-                $documentacion_url->save();
-
+                    $documentacion_url->save();
+                }
             }
-        }
-            return response()->json(['code' => 200, 'message' => 'Instalación registrada correctamente.', 'aux' =>$aux]);
+            return response()->json(['code' => 200, 'message' => 'Instalación registrada correctamente.', 'aux' => $aux]);
         } catch (\Exception $e) {
             return response()->json(['code' => 500, 'message' => 'Error al registrar la instalación.']);
         }
@@ -240,11 +240,11 @@ class DomiciliosController extends Controller
             ]);
 
             return response()->json(['success' => 'Instalacion actualizada correctamente']);
-          } catch (\Exception $e) {
-              return response()->json(['error' => 'Error al actualizar la Instalacion'], 500);
-          }
-      }
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al actualizar la Instalacion'], 500);
+        }
+    }
 
 
-//end
+    //end
 }

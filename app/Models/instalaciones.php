@@ -48,4 +48,10 @@ class Instalaciones extends Model
     {
     return $value ? $value : 'N/A';
     }
+
+    public function documentos()
+    {
+      
+        return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_instalacion');
+    }
 }

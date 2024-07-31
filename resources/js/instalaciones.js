@@ -32,6 +32,7 @@ $(function () {
       { data: 'direccion_completa' },
       { data: 'folio' },
       { data: 'organismo' },
+      { data: '' },
       { data: 'fecha_emision' },
       { data: 'fecha_vigencia' },
       { data: 'actions' } // Asegúrate de que el campo de acción esté correctamente definido
@@ -54,6 +55,15 @@ $(function () {
         targets: 1,
         render: function (data, type, full, meta) {
           return `<span>${full.fake_id}</span>`;
+        }
+      },
+      {
+        // email verify
+        targets: 8,
+        className: 'text-center',
+        render: function (data, type, full, meta) {
+          
+          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${full['url']} " data-registro="${full['url']}"></i>`;
         }
       },
       {
@@ -494,6 +504,19 @@ $(document).ready(function() {
             }
         });
     });
+});
+
+
+$(document).on('click', '.pdf', function () {
+  var url = $(this).data('url');
+  var registro = $(this).data('registro');
+      var iframe = $('#pdfViewer');
+      iframe.attr('src', '../files/'+url);
+
+      $("#titulo_modal").text("Certificado de instalaciones");
+      $("#subtitulo_modal").text(registro);
+      
+    
 });
 
 

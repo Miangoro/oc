@@ -30,4 +30,11 @@ class Documentacion_url extends Model
       {
           return $this->belongsTo(Documentacion::class, 'id_documento');
       }
+
+      public function documentacionInstalaciones()
+      {
+        return $this->belongsTo(Instalaciones::class, 'id_relacion', 'id_instalacion');
+      }
+
+      
 }

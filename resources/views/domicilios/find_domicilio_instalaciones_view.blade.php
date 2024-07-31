@@ -156,6 +156,7 @@
                     <th>Dirección</th>
                     <th>Folio</th>
                     <th>Organismo</th>
+                    <th>Certificado de instalaciones</th>
                     <th>Fecha Emision</th>
                     <th>Fecha Vigencia</th>
                     <th>Acciones</th>
