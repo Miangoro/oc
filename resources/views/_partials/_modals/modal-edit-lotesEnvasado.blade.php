@@ -68,7 +68,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select edit_marca" id="edit_marca" name="id_marca"
+                                    <select class=" form-select edit_marca" id="edit_marca" name="id_marca"
                                         aria-label="Marca">
                                         <option value="" selected>Selecciona una marca</option>
                                         @foreach ($marcas as $marca)
@@ -183,6 +183,8 @@
 
 
 <script>
+
+    
     function edit_obtenerGraneles() {
         var empresa = $("#edit_cliente").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
@@ -210,6 +212,8 @@
     }
 
     function edit_obtenerMarcas() {
+
+       
         var empresa = $("#edit_cliente").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
@@ -218,7 +222,9 @@
             success: function(response) {
                 // Cargar los detalles en el modal
                 var contenido = "";
+                var selected = "";
                 for (let index = 0; index < response.marcas.length; index++) {
+                   
                     contenido = '<option value="' + response.marcas[index].id_marca + '">' + response
                         .marcas[index].marca + '</option>' + contenido;
                     // console.log(response.normas[index].norma);

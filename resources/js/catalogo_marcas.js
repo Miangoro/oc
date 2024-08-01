@@ -580,6 +580,9 @@ $(document).ready(function () {
         });
     });
 
+    
+
+
     // Enviar el formulario de actualización de marca
     $('#editMarcaForm').submit(function (e) {
         e.preventDefault();
@@ -607,6 +610,7 @@ $(document).ready(function () {
                 $('.datatables-users').DataTable().ajax.reload();
             },
             error: function (response) {
+             
                 Swal.fire({
                     title: 'Error',
                     text: 'Ocurrió un error al actualizar la marca.',
