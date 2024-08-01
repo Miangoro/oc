@@ -130,9 +130,10 @@ class documentacionController extends Controller
             "URL: " . $url->url . "<br>";
         }*/
 
-        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $id_empresa)->first();
+        $empresa = Empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-        $razonSocial = $empresa->pluck('razon_social')->first();
+        $razonSocial = $empresa->razon_social;
+        
 
         if(!empty($url)){
           $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
@@ -211,7 +212,7 @@ class documentacionController extends Controller
   <!-- Top Referral Source Mobile  -->
   <div class="col-xxl-12">
     <div class="card"> 
-      <img src="' . asset('assets/img/branding/validacion_certificacion.png') . '" alt="timeline-image" class="card-img-top h-px-100" style="object-fit: cover;">
+      <img src="' . asset('assets/img/branding/banner_documentos.png') . '" alt="timeline-image" class="card-img-top h-px-300" style="object-fit: cover;">
       <div class="card-header d-flex justify-content-between">
         <div>
           <h5 class="card-title mb-1">' . $numeroCliente . ' ' . $razonSocial . ' (' . $norma . ')</h5>

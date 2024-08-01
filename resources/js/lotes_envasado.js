@@ -63,7 +63,7 @@ const fv = FormValidation.formValidation(addNewLoteForm, {
         autoFocus: new FormValidation.plugins.AutoFocus()
     }
 }).on('core.form.valid', function (e) {
-    e.preventDefault();
+    //e.preventDefault();
     var formData = new FormData(addNewLoteForm);
 
     $.ajax({
@@ -102,45 +102,6 @@ const fv = FormValidation.formValidation(addNewLoteForm, {
 
 
 
-
-// Validación del formulario y agregar
-$("#addNewLoteForm").on('submit', function (e) {
-    e.preventDefault();
-    var formData = new FormData(this);
-
-    $.ajax({
-        url: '/lotes-envasado', // La URL debe coincidir con la ruta del controlador en Laravel
-        type: 'POST',
-        data: formData,
-        processData: false, // Evita la conversión automática de datos a cadena
-        contentType: false, // Evita que se establezca el tipo de contenido
-        success: function (response) {
-            $('#addlostesEnvasado').modal('hide');
-            $('.datatables-users').DataTable().ajax.reload();
-
-            // Mostrar alerta de éxito
-            Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-                text: response.success,
-                customClass: {
-                    confirmButton: 'btn btn-success'
-                }
-            });
-        },
-        error: function (xhr) {
-            // Mostrar alerta de error
-            Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: 'Error al agregar el lote envasado',
-                customClass: {
-                    confirmButton: 'btn btn-danger'
-                }
-            });
-        }
-    });
-});
 
 
 
