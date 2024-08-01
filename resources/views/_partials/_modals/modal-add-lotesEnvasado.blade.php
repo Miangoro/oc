@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="obtenerGraneles(); obtenerMarcas(); obtenerDirecciones();" id="id_empresa" name="id_empresa" class="select2 form-select" required>
+                                <select onchange="obtenerGraneles(); obtenerMarcas(); obtenerDirecciones();" id="id_empresa" name="id_empresa" class="select2 form-select" >
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($clientes as $cliente)
                                         <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
@@ -45,7 +45,7 @@
                 
                     <div  class="opcion-datos" >
                         <div class="form-floating form-floating-outline mb-5">
-                            <input type="text" class="form-control" id="name" placeholder="Introduce el nombre del lote" name="nombre_lote" aria-label="Nombre del lote" required />
+                            <input type="text" class="form-control" id="name" placeholder="Introduce el nombre del lote" name="nombre_lote" aria-label="Nombre del lote"  />
                             <label for="name">Nombre del lote</label>
                         </div>
                 
@@ -101,7 +101,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <input class="form-control" type="text" step="0.01" placeholder="Volumen total" id="volumen_total" name="volumen_total" />
+                                    <input class="form-control" type="text" step="0.01" placeholder="Volumen total" id="volumen_total" name="volumen_total" readonly/>
                                     <label for="volumen_total">Volumen total en Litros</label>
                                 </div>
                             </div>
@@ -159,15 +159,10 @@
 </div>
 
 
-
-<!--/ Add New Address Modal -->
-<!--  <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                    <button type="submit" class="btn btn-primary">Registrar</button>
-                    <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                        aria-label="Close">Cancelar</button>
-                </div>-->
-
 <script>
+
+
+
 
     function obtenerGraneles() {
         var empresa = $("#id_empresa").val();
@@ -221,7 +216,7 @@
 
 
   function obtenerDirecciones() {
-        var empresa = $("#id_empresa").val();
+    var empresa = $("#id_empresa").val();
     // Hacer una petición AJAX para obtener los detalles de la empresa
     $.ajax({
         url: '/getDatos/' + empresa,
@@ -229,21 +224,25 @@
         success: function(response) {
             // Cargar los detalles en el modal
             var contenido = "";
-          for (let index = 0; index < response.instalaciones.length; index++) {
-            contenido = '<option value="'+response.instalaciones[index].id_instalacion+'">'+response.instalaciones[index].direccion_completa+'</option>' + contenido;
-           // console.log(response.normas[index].norma);
-          }
+            for (let index = 0; index < response.instalaciones.length; index++) {
+                if (response.instalaciones[index].tipo === 'envasadora' || response.instalaciones[index].tipo === 'Envasadora') {
+                    contenido += '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                        response.instalaciones[index].direccion_completa + '</option>';
+                }
+            }
 
-          if(response.instalaciones.length == 0){
-            contenido = '<option value="">Sin lotes a granel registrados</option>';
-          }
+            if (contenido === "") {
+                contenido = '<option value="">Sin lotes a granel registrados</option>';
+            }
+
             $('.id_instalacion').html(contenido);
         },
         error: function() {
             //alert('Error al cargar los lotes a granel.');
         }
     });
-  }
+}
+
 
     document.addEventListener('DOMContentLoaded', function () {
         function calcularVolumenTotal() {

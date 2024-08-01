@@ -5,6 +5,146 @@
 
 
 
+// Agregar nuevo registro
+// validating form and updating user's data
+const addNewLoteForm = document.getElementById('addNewLoteForm');
+
+// Validación del formulario
+const fv = FormValidation.formValidation(addNewLoteForm, {
+    fields: {
+
+        nombre_lote: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor introduzca el nombre del lote'
+                }
+            }
+        },
+        sku: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese un numero de pedido/SKU'
+                }
+            }
+        },
+        presentacion: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese un digito'
+                }
+            }
+        },
+        destino_lote: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese un destino de lote'
+                }
+            }
+        },
+        cant_botellas: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese un digito'
+                }
+            }
+        },
+
+
+    },
+    plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+            eleValidClass: '',
+            rowSelector: function (field, ele) {
+                return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+            }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+}).on('core.form.valid', function (e) {
+    e.preventDefault();
+    var formData = new FormData(addNewLoteForm);
+
+    $.ajax({
+        url: '/lotes-envasado', // Actualiza con la URL correcta
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            $('#addlostesEnvasado').modal('hide');
+            $('.datatables-users').DataTable().ajax.reload();
+
+            // Mostrar alerta de éxito
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.success,
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
+        },
+        error: function (xhr) {
+            // Mostrar alerta de error
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al registrar el lote envasado',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+        }
+    });
+});
+
+
+
+
+// Validación del formulario y agregar
+$("#addNewLoteForm").on('submit', function (e) {
+    e.preventDefault();
+    var formData = new FormData(this);
+
+    $.ajax({
+        url: '/lotes-envasado', // La URL debe coincidir con la ruta del controlador en Laravel
+        type: 'POST',
+        data: formData,
+        processData: false, // Evita la conversión automática de datos a cadena
+        contentType: false, // Evita que se establezca el tipo de contenido
+        success: function (response) {
+            $('#addlostesEnvasado').modal('hide');
+            $('.datatables-users').DataTable().ajax.reload();
+
+            // Mostrar alerta de éxito
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.success,
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
+        },
+        error: function (xhr) {
+            // Mostrar alerta de error
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al agregar el lote envasado',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+        }
+    });
+});
+
+
+
+
 $(function () {
     // Datatable (jquery)
     // Variable declaration for table
@@ -13,7 +153,7 @@ $(function () {
         userView = baseUrl + 'app/user/view/account',
         offCanvasForm = $('#addlostesEnvasado');
 
-       
+
 
 
 
@@ -357,7 +497,7 @@ $(function () {
                     ]
                 },
                 {
-                    text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo prospecto</span>',
+                    text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo lote de envasado</span>',
                     className: 'add-new btn btn-primary waves-effect waves-light',
                     attr: {
                         'data-bs-toggle': 'modal',
@@ -464,7 +604,7 @@ $(function () {
         console.log("Obteniendo datos...");
         var id_lote_envasado = $(this).data('id');
         console.log(id_lote_envasado);
-        
+
         // Realizar la solicitud AJAX para obtener los datos del lote envasado
         $.get('/lotes-envasado/' + id_lote_envasado + '/edit', function (data) {
             // Rellenar el formulario con los datos obtenidos
@@ -507,7 +647,7 @@ $(function () {
               
             
     });*/
-    
+
     $(document).ready(function () {
         console.log("Cargado");
         var id_lote_envasado = $(this).data('id');
@@ -595,55 +735,25 @@ $(function () {
 
 
 
+
+
+
+
+
+
+
 });
 
 
 
-// Validación del formulario y agregar
-$("#addNewLoteForm").on('submit', function (e) {
-    e.preventDefault();
-    var formData = new FormData(this);
 
-    $.ajax({
-        url: '/lotes-envasado', // La URL debe coincidir con la ruta del controlador en Laravel
-        type: 'POST',
-        data: formData,
-        processData: false, // Evita la conversión automática de datos a cadena
-        contentType: false, // Evita que se establezca el tipo de contenido
-        success: function (response) {
-            $('#addlostesEnvasado').modal('hide');
-            $('.datatables-users').DataTable().ajax.reload();
 
-            // Mostrar alerta de éxito
-            Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-                text: response.success,
-                customClass: {
-                    confirmButton: 'btn btn-success'
-                }
-            });
-        },
-        error: function (xhr) {
-            // Mostrar alerta de error
-            Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: 'Error al agregar el lote envasado',
-                customClass: {
-                    confirmButton: 'btn btn-danger'
-                }
-            });
-        }
-    });
-});
+function mostrarLotes() {
 
-function mostrarLotes() { 
 
-    
 
     var tipoLote = document.getElementById('edit_tipo_lote').value;
-   
+
     if (tipoLote == '1') {
         document.getElementById('edit_datosOpcion1').style.display = 'block';
         document.getElementById('edit_datosOpcion2').style.display = 'none';
@@ -734,11 +844,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // Función para mostrar u ocultar campos dependiendo de la opción seleccionada
-    function toggleFields() { 
-        
-        
-        
-        
+    function toggleFields() {
+
+
+
+
         var tipoLote = document.getElementById('tipo_lote').value;
         if (tipoLote == '1') {
             document.getElementById('datosOpcion1').style.display = 'block';
@@ -752,14 +862,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    
 
-//Ocultar select
-    document.addEventListener('DOMContentLoaded', function() {
+
+    //Ocultar select
+    document.addEventListener('DOMContentLoaded', function () {
         const tipoLoteSelect = document.getElementById('tipo_lote');
         const datosOpcion1 = document.getElementById('datosOpcion1');
         const datosOpcion2 = document.getElementById('datosOpcion2');
-    
+
         function toggleFields() {
             if (tipoLoteSelect.value === '1') {
                 datosOpcion1.style.display = 'block'; // Muestra el campo
@@ -772,14 +882,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 datosOpcion2.style.display = 'none';  // Oculta la opción 2
             }
         }
-    
+
         // Llama a toggleFields cuando se carga la página
         toggleFields();
-    
+
         // Llama a toggleFields cada vez que cambia el valor del select
         tipoLoteSelect.addEventListener('change', toggleFields);
     });
-    
+
 
     // Función para inicializar select2 en los select
     function initializeSelect2() {
@@ -791,5 +901,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Inicializar campos por defecto
     toggleFields();
-   
+
 });
