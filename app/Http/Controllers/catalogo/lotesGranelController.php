@@ -16,7 +16,7 @@ use App\Models\Guias;
 use App\Models\lotesGranelGuia;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Log;
 
 
 class LotesGranelController extends Controller
@@ -312,74 +312,79 @@ public function edit($id_lote_granel)
 }
 
 
+
+
 public function update(Request $request, $id_lote_granel)
 {
-    // Imprimir los datos recibidos para depuración.
-    \Log::info($request->all());
+    try {
+        Log::info('Datos recibidos:', $request->all());
 
-    // Validación de los datos
-    $validatedData = $request->validate([
-        'id_empresa' => 'required|exists:empresa,id_empresa',
-        'nombre_lote' => 'required|string|max:70',
-        'tipo_lote' => 'required|integer',
-        'volumen' => 'nullable|numeric',
-        'cont_alc' => 'nullable|numeric',
-        'id_categoria' => 'nullable|integer|exists:catalogo_categorias,id_categoria',
-        'id_clase' => 'nullable|integer|exists:catalogo_clases,id_clase',
-        'id_tipo' => 'nullable|integer|exists:catalogo_tipo_agave,id_tipo',
-        'ingredientes' => 'nullable|string|max:100',
-        'edad' => 'nullable|string|max:30',
-        'folio_certificado' => 'nullable|string|max:50',
-        'id_organismo' => 'nullable|integer|exists:catalogo_organismos,id_organismo',
-        'fecha_emision' => 'nullable|date',
-        'fecha_vigencia' => 'nullable|date',
-        'url.*' => 'nullable_if:tipo_lote,2|file|mimes:jpg,jpeg,png,pdf',
-        'id_guia' => 'nullable|array',
-        'id_guia.*' => 'nullable|exists:guias,id_guia',
-    ]);
+        $validated = $request->validate([
+            'nombre_lote' => 'required|string|max:255',
+            'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+            'tipo_lote' => 'required|integer',
+            'id_guia' => 'required|array',
+            'id_guia.*' => 'integer|exists:guias,id_guia',
+            'volumen' => 'required|numeric',
+            'cont_alc' => 'required|numeric',
+            'id_categoria' => 'required|integer|exists:catalogo_categorias,id_categoria',
+            'id_clase' => 'required|integer|exists:catalogo_clases,id_clase',
+            'id_tipo' => 'required|integer|exists:catalogo_tipo_agave,id_tipo',
+            'ingredientes' => 'nullable|string',
+            'edad' => 'nullable|string',
+            'folio_certificado' => 'nullable|string',
+           'id_organismo' => 'nullable|integer|exists:catalogo_organismos,id_organismo',
+            'fecha_emision' => 'nullable|date',
+            'fecha_vigencia' => 'nullable|date',
+            'id_guia' => 'nullable|array',
+            'id_guia.*' => 'integer|exists:guias,id_guia'
+        ]);
 
-    // Buscar el lote a granel por ID
-    $lote = LotesGranel::findOrFail($id_lote_granel);
+        $lote = LotesGranel::findOrFail($id_lote_granel);
 
-    // Actualizar solo los campos que están presentes en la solicitud
-    $lote->update([
-        'id_empresa' => $validatedData['id_empresa'],
-        'nombre_lote' => $validatedData['nombre_lote'],
-        'tipo_lote' => $validatedData['tipo_lote'],
-        'volumen' => $validatedData['volumen'] ?? $lote->volumen,
-        'cont_alc' => $validatedData['cont_alc'] ?? $lote->cont_alc,
-        'id_categoria' => $validatedData['id_categoria'] ?? $lote->id_categoria,
-        'id_clase' => $validatedData['id_clase'] ?? $lote->id_clase,
-        'id_tipo' => $validatedData['id_tipo'] ?? $lote->id_tipo,
-        'ingredientes' => $validatedData['ingredientes'] ?? $lote->ingredientes,
-        'edad' => $validatedData['edad'] ?? $lote->edad,
-        'folio_certificado' => $validatedData['folio_certificado'] ?? $lote->folio_certificado,
-        'id_organismo' => $validatedData['id_organismo'] ?? $lote->id_organismo,
-        'fecha_emision' => $validatedData['fecha_emision'] ?? $lote->fecha_emision,
-        'fecha_vigencia' => $validatedData['fecha_vigencia'] ?? $lote->fecha_vigencia,
-        /* 'folio_fq' => $validatedData['folio_fq'] ?? $lote->folio_fq, */
-    ]);
+        Log::info('Lote antes de la actualización:', $lote->toArray());
 
-    // Actualizar la tabla intermedia usando el modelo LotesGranelGuia
-    if (isset($validatedData['id_guia'])) {
-        // Eliminar todas las guías existentes para este lote
-        LotesGranelGuia::where('id_lote_granel', $lote->id_lote_granel)->delete();
+        $lote->update([
+            'id_empresa' => $validated['id_empresa'],
+            'nombre_lote' => $validated['nombre_lote'],
+            'tipo_lote' => $validated['tipo_lote'],
+            'volumen' => $validated['volumen'],
+            'cont_alc' => $validated['cont_alc'],
+            'id_categoria' => $validated['id_categoria'],
+            'id_clase' => $validated['id_clase'],
+            'id_tipo' => $validated['id_tipo'],
+            'ingredientes' => $validated['ingredientes'],
+            'edad' => $validated['edad'],
+            'folio_certificado' => $validated['folio_certificado'],
+            'id_organismo' => $validated['id_organismo'] ?? null,
+            'fecha_emision' => $validated['fecha_emision'],
+            'fecha_vigencia' => $validated['fecha_vigencia'],
+        ]);
 
-        // Insertar las nuevas guías
-        foreach ($validatedData['id_guia'] as $idGuia) {
-            LotesGranelGuia::create([
-                'id_lote_granel' => $lote->id_lote_granel,
-                'id_guia' => $idGuia
-            ]);
+        Log::info('Lote después de la actualización:', $lote->toArray());
+
+        if ($request->has('id_guia')) {
+            LotesGranelGuia::where('id_lote_granel', $lote->id_lote_granel)->delete();
+            foreach ($validated['id_guia'] as $idGuia) {
+                LotesGranelGuia::create([
+                    'id_lote_granel' => $lote->id_lote_granel,
+                    'id_guia' => $idGuia
+                ]);
+            }
         }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Lote actualizado exitosamente',
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Error al actualizar el lote:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al actualizar el lote: ' . $e->getMessage(),
+        ], 500);
     }
-
-    
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Lote actualizado exitosamente',
-    ]);
 }
 
 
