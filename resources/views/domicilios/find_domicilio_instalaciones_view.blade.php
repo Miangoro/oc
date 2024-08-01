@@ -165,6 +165,7 @@
         </table>
     </div>
 
+    <form id="addNewInstalacionForm">
     <!-- Modal para agregar nueva instalación -->
     <div class="modal fade" id="modalAddInstalacion" tabindex="-1" aria-labelledby="modalAddInstalacionLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -178,7 +179,7 @@
                         @csrf
 
                         <div class="form-floating form-floating-outline mb-4">
-                            <select id="id_empresa" name="id_empresa" class="select2 form-select" required>
+                            <select id="id_empresa" name="id_empresa" class="form-select" required>
                                 <option value="" disabled selected>Selecciona la empresa</option>
                                 @foreach ($empresas as $empresa)
                                     <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
@@ -200,7 +201,7 @@
 
                         <!-- Input de Estado -->
                         <div class="form-floating form-floating-outline mb-3">
-                            <select class="select2 form-select" id="estado" name="estado" data-placeholder="Seleccione un estado" aria-label="Estado" required>
+                            <select class="form-select" id="estado" name="estado" data-placeholder="Seleccione un estado" aria-label="Estado" required>
                                 <option value="">Seleccione un estado</option>
                                 @foreach($estados as $estado)
                                     <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
@@ -278,8 +279,9 @@
             </div>
         </div>
     </div>
+</form>
 
-    <!-- Modal para editar instalación -->
+<!-- Modal para editar instalación -->
     <div class="modal fade" id="modalEditInstalacion" tabindex="-1" aria-labelledby="modalEditInstalacionLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
