@@ -209,12 +209,25 @@ class DomiciliosController extends Controller
     public function edit($id_instalacion)
     {
         try {
+            // Obtener la instalación y sus documentos asociados
             $instalacion = Instalaciones::findOrFail($id_instalacion);
-            return response()->json(['success' => true, 'instalacion' => $instalacion]);
+
+            // Obtener los documentos asociados
+            $documentacion_urls = Documentacion_url::where('id_relacion', $id_instalacion)->get();
+
+            // Extraer la URL del primer documento, si existe
+            $archivo_url = $documentacion_urls->isNotEmpty() ? $documentacion_urls->first()->url : '';
+
+            return response()->json([
+                'success' => true,
+                'instalacion' => $instalacion,
+                'archivo_url' => $archivo_url // Incluir la URL del archivo
+            ]);
         } catch (ModelNotFoundException $e) {
             return response()->json(['success' => false], 404);
         }
     }
+
 
     public function update(Request $request, $id)
     {

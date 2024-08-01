@@ -407,6 +407,10 @@ $(function () {
     var id_instalacion = $(this).data('id');
     var url = baseUrl + 'domicilios/edit/' + id_instalacion;
 
+    // Limpiar campos del formulario antes de cargar nuevos datos
+    $('#edit_certificado_otros').addClass('d-none');
+    $('#archivo_url_display').html('No hay archivo disponible.');
+
     $.get(url, function (data) {
         if (data.success) {
             var instalacion = data.instalacion;
@@ -420,7 +424,8 @@ $(function () {
             // Verificar si hay valores en los campos adicionales
             var tieneCertificadoOtroOrganismo = instalacion.folio || instalacion.id_organismo ||
                 (instalacion.fecha_emision && instalacion.fecha_emision !== 'N/A') ||
-                (instalacion.fecha_vigencia && instalacion.fecha_vigencia !== 'N/A');
+                (instalacion.fecha_vigencia && instalacion.fecha_vigencia !== 'N/A') ||
+                data.archivo_url;
 
             if (tieneCertificadoOtroOrganismo) {
                 $('#edit_certificacion').val('otro_organismo').trigger('change');
@@ -428,12 +433,24 @@ $(function () {
 
                 $('#edit_folio').val(instalacion.folio || '');
                 $('#edit_id_organismo').val(instalacion.id_organismo || '').trigger('change');
-
                 $('#edit_fecha_emision').val(instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '');
                 $('#edit_fecha_vigencia').val(instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '');
+
+                // Mostrar URL del archivo debajo del campo de archivo
+                var archivoUrl = data.archivo_url || '';
+                if (archivoUrl) {
+                    try {
+                        $('#archivo_url_display').html('Documento disponible: <a href="' + archivoUrl + '" target="_blank" class="text-primary">' + archivoUrl + '</a>');
+                    } catch (e) {
+                        $('#archivo_url_display').html('URL del archivo no válida.');
+                    }
+                } else {
+                    $('#archivo_url_display').html('No hay archivo disponible.');
+                }
             } else {
                 $('#edit_certificacion').val('oc_cidam').trigger('change');
                 $('#edit_certificado_otros').addClass('d-none');
+                $('#archivo_url_display').html('No hay archivo disponible.');
             }
 
             // Mostrar el modal
@@ -459,6 +476,69 @@ $(function () {
         });
     });
 });
+
+// Manejar el cambio en el tipo de instalación
+$(document).on('change', '#edit_tipo', function () {
+    var tipo = $(this).val();
+    var hiddenIdDocumento = $('#edit_certificado_otros').find('input[name="id_documento[]"]');
+    var hiddenNombreDocumento = $('#edit_certificado_otros').find('input[name="nombre_documento[]"]');
+    var fileCertificado = $('#edit_certificado_otros').find('input[type="file"]');
+
+    switch (tipo) {
+        case 'productora':
+            hiddenIdDocumento.val('127');
+            hiddenNombreDocumento.val('Certificado de instalaciones');
+            fileCertificado.attr('id', 'file-127');
+            break;
+        case 'envasadora':
+            hiddenIdDocumento.val('128');
+            hiddenNombreDocumento.val('Certificado de envasadora');
+            fileCertificado.attr('id', 'file-128');
+            break;
+        case 'comercializadora':
+            hiddenIdDocumento.val('129');
+            hiddenNombreDocumento.val('Certificado de comercializadora');
+            fileCertificado.attr('id', 'file-129');
+            break;
+        default:
+            hiddenIdDocumento.val('');
+            hiddenNombreDocumento.val('');
+            fileCertificado.removeAttr('id');
+            break;
+    }
+});
+
+// Manejar el cambio en el tipo de instalación
+$(document).on('change', '#edit_tipo', function () {
+    var tipo = $(this).val();
+    var hiddenIdDocumento = $('#edit_certificado_otros').find('input[name="id_documento[]"]');
+    var hiddenNombreDocumento = $('#edit_certificado_otros').find('input[name="nombre_documento[]"]');
+    var fileCertificado = $('#edit_certificado_otros').find('input[type="file"]');
+
+    switch (tipo) {
+        case 'productora':
+            hiddenIdDocumento.val('127');
+            hiddenNombreDocumento.val('Certificado de instalaciones');
+            fileCertificado.attr('id', 'file-127');
+            break;
+        case 'envasadora':
+            hiddenIdDocumento.val('128');
+            hiddenNombreDocumento.val('Certificado de envasadora');
+            fileCertificado.attr('id', 'file-128');
+            break;
+        case 'comercializadora':
+            hiddenIdDocumento.val('129');
+            hiddenNombreDocumento.val('Certificado de comercializadora');
+            fileCertificado.attr('id', 'file-129');
+            break;
+        default:
+            hiddenIdDocumento.val('');
+            hiddenNombreDocumento.val('');
+            fileCertificado.removeAttr('id');
+            break;
+    }
+});
+
 
 $(document).ready(function() {
     $('#modalEditInstalacion').on('show.bs.modal', function (event) {

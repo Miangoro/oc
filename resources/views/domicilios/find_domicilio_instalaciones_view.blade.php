@@ -348,6 +348,7 @@
                                     <input value="Certificado de instalaciones" class="form-control" type="hidden" name="nombre_documento[]">
                                     <label for="certificado_instalaciones">Adjuntar Certificado de Instalaciones</label>
                                 </div>
+                                <div id="archivo_url_display" class="mt-2 text-primary"></div>
                             </div>
 
                             <div class="form-floating form-floating-outline mb-3">
