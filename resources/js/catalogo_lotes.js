@@ -1,24 +1,63 @@
 // resources/js/catalogo_lotes.js
 
 $(function() {
+
     const tipoLoteSelect = document.getElementById('tipo_lote');
     const ocCidamFields = document.getElementById('oc_cidam_fields');
     const otroOrganismoFields = document.getElementById('otro_organismo_fields');
-
+    
+    // Selecciona los campos de archivo y de texto
+    const ocCidamFileFields = document.querySelectorAll('#oc_cidam_fields input[type="file"]');
+    const ocCidamTextFields = document.querySelectorAll('#oc_cidam_fields input[type="text"]');
+    const otroOrganismoFileField = document.getElementById('file-59');
+    
     tipoLoteSelect.addEventListener('change', function() {
         const selectedValue = tipoLoteSelect.value;
-
+    
         if (selectedValue === '1') {
             ocCidamFields.classList.remove('d-none');
             otroOrganismoFields.classList.add('d-none');
+            
+            // Añade el atributo required a los campos de archivo y de texto de OC CIDAM
+            ocCidamFileFields.forEach(field => {
+                field.setAttribute('required', 'required');
+            });
+            ocCidamTextFields.forEach(field => {
+                field.setAttribute('required', 'required');
+            });
+            
+            // Remueve el atributo required del campo de archivo de otro organismo
+            otroOrganismoFileField.removeAttribute('required');
         } else if (selectedValue === '2') {
             ocCidamFields.classList.add('d-none');
             otroOrganismoFields.classList.remove('d-none');
+            
+            // Remueve el atributo required de los campos de archivo y de texto de OC CIDAM
+            ocCidamFileFields.forEach(field => {
+                field.removeAttribute('required');
+            });
+            ocCidamTextFields.forEach(field => {
+                field.removeAttribute('required');
+            });
+            
+            // Añade el atributo required al campo de archivo de otro organismo
+            otroOrganismoFileField.setAttribute('required', 'required');
         } else {
             ocCidamFields.classList.add('d-none');
             otroOrganismoFields.classList.add('d-none');
+            
+            // Remueve el atributo required de todos los campos de archivo y de texto
+            ocCidamFileFields.forEach(field => {
+                field.removeAttribute('required');
+            });
+            ocCidamTextFields.forEach(field => {
+                field.removeAttribute('required');
+            });
+            otroOrganismoFileField.removeAttribute('required');
         }
     });
+    
+
 
     $('.select2').select2(); // Inicializa select2 en el documento
 
@@ -54,7 +93,7 @@ $(document).ready(function () {
             { data: 'id_tipo' },
             { data: 'ingredientes' },
             { data: 'edad' },
-            { data: 'id_guia' },
+            /* { : 'id_guia' }, */
             { data: 'folio_certificado' },
             { data: 'id_organismo' },
             { data: 'fecha_emision' },
@@ -433,26 +472,27 @@ $('#loteForm').on('submit', function(event) {
 /*  */
 $(document).on('click', '.edit-record', function () {
     var loteId = $(this).data('id');
-    
-    // Realizar una solicitud AJAX para obtener los datos del lote
+    $('#edit_lote_id').val(loteId);
+
+    // Realiza una solicitud AJAX para obtener los datos del lote
     $.ajax({
-        url: '/lotes-a-granel/' + loteId + '/edit', // Asegúrate de que esta ruta coincida con la configuración de rutas
+        url: '/lotes-a-granel/' + loteId + '/edit',
         method: 'GET',
         success: function (data) {
             if (data.success) {
                 var lote = data.lote;
-                
+
                 // Rellenar el modal con los datos del lote
                 $('#edit_nombre_lote').val(lote.nombre_lote);
                 $('#edit_id_empresa').val(lote.id_empresa).trigger('change');
                 $('#edit_tipo_lote').val(lote.tipo_lote);
-                $('#edit_id_guia').val(lote.id_guia).trigger('change');
+                $('#edit_id_guia').val(data.guias).trigger('change'); // Manejo de múltiples guías
                 $('#edit_volumen').val(lote.volumen);
                 $('#edit_cont_alc').val(lote.cont_alc);
                 $('#edit_id_categoria').val(lote.id_categoria).trigger('change');
                 $('#edit_clase_agave').val(lote.id_clase).trigger('change');
                 $('#edit_tipo_agave').val(lote.id_tipo).trigger('change');
-                
+
                 // Mostrar campos condicionales según el tipo de lote y rellenar los valores específicos
                 if (lote.tipo_lote == '1') { // OC CIDAM
                     $('#edit_oc_cidam_fields').removeClass('d-none');
@@ -500,14 +540,47 @@ $(document).on('click', '.edit-record', function () {
     });
 });
 
+    const edit_tipoLoteSelect = document.getElementById('edit_tipo_lote');
+    const edit_ocCidamFields = document.getElementById('edit_oc_cidam_fields');
+    const edit_otroOrganismoFields = document.getElementById('edit_otro_organismo_fields');
+
+    // Selecciona los campos de archivo y de texto
+    const edit_otroOrganismoFileField = document.getElementById('file-59');
+
+    edit_tipoLoteSelect.addEventListener('change', function() {
+        const edit_selectedValue = edit_tipoLoteSelect.value;
+
+        if (edit_selectedValue === '1') {
+            edit_ocCidamFields.classList.remove('d-none');
+            edit_otroOrganismoFields.classList.add('d-none');
+        
+        } else if (selectedValue === '2') {
+            edit_ocCidamFields.classList.add('d-none');
+            edit_otroOrganismoFields.classList.remove('d-none');
+
+        } else {
+            edit_ocCidamFields.classList.add('d-none');
+            edit_otroOrganismoFields.classList.add('d-none');
+
+        }
+    });
+
+
+
 
 $('#loteFormEdit').on('submit', function (e) {
     e.preventDefault(); // Evitar el envío del formulario por defecto
 
     var formData = new FormData(this); // Recoger los datos del formulario
 
-    // Obtener el ID del lote (asegúrate de definir esto correctamente)
-    var loteId = $('#edit_lote_id').val(); // Asegúrate de tener un campo oculto para el ID del lote
+    // Obtener el ID del lote del campo oculto
+    var loteId = $('#edit_lote_id').val();
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
     $.ajax({
         url: '/lotes-a-granel/' + loteId, // URL para la actualización
@@ -522,7 +595,6 @@ $('#loteFormEdit').on('submit', function (e) {
                     title: 'Éxito',
                     text: 'Lote actualizado exitosamente.',
                 }).then(() => {
-                    // Opcional: Recargar la página o actualizar la tabla
                     location.reload(); // O actualizar la tabla con los nuevos datos
                 });
             } else {
@@ -549,10 +621,6 @@ $('#loteFormEdit').on('submit', function (e) {
         }
     });
 });
-
-
-
-
 
 
 

@@ -20,7 +20,7 @@ class marcasCatalogoController extends Controller
     public function UserManagement()
     {
         // Obtener listado de clientes (empresas)
-        $clientes = Empresa::all(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $clientes = Empresa::where('tipo', 2)->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
         $documentos = Documentacion::where('id_documento', '=', '82')
             ->orWhere('id_documento', '=', '80')
             ->orWhere('id_documento', '=', '121')
@@ -219,13 +219,18 @@ class marcasCatalogoController extends Controller
 
     //Metodo para editar las marcas
     public function edit($id)
-    {
+    {   
+       
         $marca = Marcas::findOrFail($id);
         $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get(); // Obtener los documentos asociados a la marca
+
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
     
         return response()->json([
             'marca' => $marca,
-            'documentacion_urls' => $documentacion_urls // Incluir la fecha de vigencia en los datos
+            'documentacion_urls' => $documentacion_urls, // Incluir la fecha de vigencia en los datos
+            'numeroCliente' => $numeroCliente
         ]);
     }
     

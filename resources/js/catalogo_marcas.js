@@ -8,9 +8,41 @@
 const addNewMarca = document.getElementById('addNewMarca');
 
 // Validación del formulario
-$("#addNewMarca").on('submit', function (e) {
-  e.preventDefault();
-  var formData = new FormData(this);
+const fv = FormValidation.formValidation(addNewMarca, {
+  fields: {
+    cliente: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione el cliente'
+        }
+      }
+    },
+    marca: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor introduzca el nombre de la marca'
+        }
+      }
+    }
+  },
+  plugins: {
+    trigger: new FormValidation.plugins.Trigger(),
+    bootstrap5: new FormValidation.plugins.Bootstrap5({
+      // Use this for enabling/changing valid/invalid class
+      eleValidClass: '',
+      rowSelector: function (field, ele) {
+        // field is the field name & ele is the field element
+        return '.mb-5';
+      }
+    }),
+    submitButton: new FormValidation.plugins.SubmitButton(),
+    // Submit the form when all fields are valid
+    // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+    autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+ // e.preventDefault();
+  var formData = new FormData(addNewMarca);
 
   $.ajax({
     url: '/catalago-list',
@@ -389,7 +421,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo prospecto</span>',
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nueva marca</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'modal',
@@ -518,6 +550,8 @@ $(document).ready(function () {
         $.get('/marcas-list/' + id_marca + '/edit', function (data) {
             var marca = data.marca;
             var documentacion_urls = data.documentacion_urls;
+            var numCliente = data.numeroCliente;
+          
 
             // Rellenar el formulario con los datos obtenidos
             $('#edit_marca_id').val(marca.id_marca);
@@ -525,12 +559,19 @@ $(document).ready(function () {
             $('#edit_cliente').val(marca.id_empresa).trigger('change');
 
             // Mostrar archivos existentes en los mismos espacios de entrada de archivo
-            documentacion_urls.forEach(function (doc) {
+            documentacion_urls.forEach(function (doc) {   console.log(doc.url);
                 var existingFileDivId = '#existing_file_' + doc.id_documento;
-                $(existingFileDivId).html(`<p>Archivo existente: <a href="/storage/uploads/${marca.id_empresa}/${doc.url}" target="_blank">${doc.url}</a></p>`);
+                $(existingFileDivId).html(`<p>Archivo existente: <a href="../files/${numCliente}/${doc.url}" target="_blank">${doc.url}</a></p>`);
                 
                 var existingDateId = '#existing_date_' + doc.id_documento;
                 $(existingDateId).text('Fecha de vigencia: ' + doc.fecha_vigencia);
+
+                var existingDateId = '#Editdate' + doc.id_documento;
+                $(existingDateId).val(doc.fecha_vigencia);
+
+              
+
+             
                 
                 $('#date' + doc.id_documento).val(doc.fecha_vigencia);  // Rellenar la fecha existente en el campo de fecha
             });

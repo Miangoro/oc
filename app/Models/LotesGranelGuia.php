@@ -13,4 +13,10 @@ class LotesGranelGuia extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['id_lote_granel', 'id_guia'];
 
+    // Relación inversa con el modelo GuiaGranel
+    public function guia()
+    {
+        return $this->belongsTo(Guias::class, 'id_guia');
+    }
+
 }

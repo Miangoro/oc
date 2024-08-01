@@ -43,8 +43,8 @@
                             <div class="col-md-3">
                                 <label for="date{{ $documento->id_documento }}" class="form-label">Fecha de vigencia</label>
                                 <div class="input-group">
-                                    <input type="date" class="form-control datepicker" id="date{{ $documento->id_documento }}" name="fecha_vigencia[]">
-                                    <p id="existing_date_{{ $documento->id_documento }}" class="mt-2"></p> <!-- Mostrar la fecha de vigencia existente -->
+                                    <input placeholder="YYYY-MM-DD" type="text" class="form-control  " id="Editdate{{ $documento->id_documento }}" name="fecha_vigencia[]" readonly>
+                                 
                                 </div>
                             </div>
                         </div>
