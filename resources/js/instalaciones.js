@@ -345,7 +345,6 @@ $(function () {
       }
     });
   });
-
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -354,46 +353,115 @@ $(function () {
       }
     });
 
-    // Agregar nueva instalación
+    // Inicializar select2
+    $('.select2').select2();
+
+    // Inicializar FormValidation
+    const form = document.getElementById('addNewInstalacionForm');
+    const fv = FormValidation.formValidation(form, {
+      fields: {
+        'id_empresa': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona una empresa.'
+            }
+          }
+        },
+        'tipo': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un tipo de instalación.'
+            }
+          }
+        },
+        'estado': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un estado.'
+            }
+          }
+        },
+        'direccion_completa': {
+          validators: {
+            notEmpty: {
+              message: 'Ingrese la dirección completa.'
+            }
+          }
+        },
+        'certificacion': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el tipo de certificación.'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: 'is-valid',  // Clase para campos válidos
+          eleInvalidClass: 'is-invalid', // Clase para campos inválidos
+          rowSelector: '.form-floating' // Selector para el contenedor del campo
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    });
+
+    // Manejar el evento de envío del formulario
     $('#addNewInstalacionForm').on('submit', function (e) {
-      e.preventDefault(); // Evita el comportamiento por defecto del formulario
-      var formData = new FormData(this);
 
-      $.ajax({
-        url: '/instalaciones',
-        type: 'POST',
-        data: formData,
-        processData: false, // Evita la conversión automática de datos a cadena
-        contentType: false, // Evita que se establezca el tipo de contenido
-        success: function (response) {
-          // Ocultar el modal y reiniciar el formulario
-          $('#modalAddInstalacion').modal('hide');
-          $('#addNewInstalacionForm')[0].reset();
+      // Validar el formulario
+      fv.validate().then(function (status) {
+        if (status === 'Valid') {
+          var formData = new FormData(form);
 
-          // Reiniciar los campos select2
-          $('.select2').val(null).trigger('change');
+          $.ajax({
+            url: '/instalaciones',
+            type: 'POST',
+            data: formData,
+            processData: false, // Evita la conversión automática de datos a cadena
+            contentType: false, // Evita que se establezca el tipo de contenido
+            success: function (response) {
+              // Ocultar el modal y reiniciar el formulario
+              $('#modalAddInstalacion').modal('hide');
+              $('#addNewInstalacionForm')[0].reset();
 
-          // Recargar los datos en la tabla
-          $('.datatables-users').DataTable().ajax.reload();
+              // Reiniciar los campos select2
+              $('.select2').val(null).trigger('change');
 
-          console.log(response);
+              // Recargar los datos en la tabla
+              $('.datatables-users').DataTable().ajax.reload();
 
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.message, // Mensaje de éxito de la respuesta
-            customClass: {
-              confirmButton: 'btn btn-success'
+              console.log(response);
+
+              Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.message, // Mensaje de éxito de la respuesta
+                customClass: {
+                  confirmButton: 'btn btn-success'
+                }
+              });
+            },
+            error: function (xhr) {
+              console.log('Error:', xhr.responseText); // Muestra el error en la consola
+
+              Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al agregar la instalación', // Mensaje de error
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
+              });
             }
           });
-        },
-        error: function (xhr) {
-          console.log('Error:', xhr.responseText); // Muestra el error en la consola
-
+        } else {
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al agregar la instalación', // Mensaje de error
+            text: 'Por favor, corrija los errores en el formulario.',
             customClass: {
               confirmButton: 'btn btn-danger'
             }
@@ -402,6 +470,7 @@ $(function () {
       });
     });
   });
+
 
   //new
   $(document).on('click', '.edit-record', function () {
