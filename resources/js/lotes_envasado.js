@@ -463,6 +463,8 @@ $(function () {
     $(document).on('click', '.edit-record', function () {
         console.log("Obteniendo datos...");
         var id_lote_envasado = $(this).data('id');
+        console.log(id_lote_envasado);
+        
         // Realizar la solicitud AJAX para obtener los datos del lote envasado
         $.get('/lotes-envasado/' + id_lote_envasado + '/edit', function (data) {
             // Rellenar el formulario con los datos obtenidos
