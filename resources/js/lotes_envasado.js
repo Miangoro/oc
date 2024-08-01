@@ -461,9 +461,9 @@ $(function () {
 
 
     $(document).on('click', '.edit-record', function () {
-        console.log("Obteniendo datos...");
+        
         var id_lote_envasado = $(this).data('id');
-        console.log(id_lote_envasado);
+    
         
         // Realizar la solicitud AJAX para obtener los datos del lote envasado
         $.get('/lotes-envasado/' + id_lote_envasado + '/edit', function (data) {
@@ -474,7 +474,15 @@ $(function () {
             $('#edit_nombre_lote').val(data.nombre_lote);
             $('#edit_tipo_lote').val(data.tipo_lote);
             $('#edit_sku').val(data.sku);
-            $('#edit_marca').val(data.id_marca).trigger('change');
+           // $('#edit_marca').val(data.id_marca).trigger('change');
+           
+           //$('#edit_marca').val(data.id_marca).change(); 
+        
+          // $('#edit_marca option[value="107"]').prop('selected', true).change();
+         
+           
+         
+
             $('#edit_destino_lote').val(data.destino_lote);
             $('#edit_cant_botellas').val(data.cant_botellas);
             $('#edit_presentacion').val(data.presentacion);
@@ -484,6 +492,8 @@ $(function () {
 
             // Mostrar el modal de edición
             $('#editLoteEnvasado').modal('show');
+            $('#edit_marca option[value="'+data.id_marca+'').attr('selected', 'selected');
+           
         }).fail(function () {
             Swal.fire({
                 icon: 'error',
@@ -509,6 +519,8 @@ $(function () {
     });*/
     
     $(document).ready(function () {
+
+      
         console.log("Cargado");
         var id_lote_envasado = $(this).data('id');
         // Abrir el modal y cargar datos para editar
