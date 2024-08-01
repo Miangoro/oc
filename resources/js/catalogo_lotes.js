@@ -6,10 +6,6 @@ $(function() {
     const ocCidamFields = document.getElementById('oc_cidam_fields');
     const otroOrganismoFields = document.getElementById('otro_organismo_fields');
     
-    // Selecciona los campos de archivo y de texto
-    const ocCidamFileFields = document.querySelectorAll('#oc_cidam_fields input[type="file"]');
-    const ocCidamTextFields = document.querySelectorAll('#oc_cidam_fields input[type="text"]');
-    const otroOrganismoFileField = document.getElementById('file-59');
     
     tipoLoteSelect.addEventListener('change', function() {
         const selectedValue = tipoLoteSelect.value;
@@ -17,43 +13,15 @@ $(function() {
         if (selectedValue === '1') {
             ocCidamFields.classList.remove('d-none');
             otroOrganismoFields.classList.add('d-none');
-            
-            // Añade el atributo required a los campos de archivo y de texto de OC CIDAM
-            ocCidamFileFields.forEach(field => {
-                field.setAttribute('required', 'required');
-            });
-            ocCidamTextFields.forEach(field => {
-                field.setAttribute('required', 'required');
-            });
-            
-            // Remueve el atributo required del campo de archivo de otro organismo
-            otroOrganismoFileField.removeAttribute('required');
+                
         } else if (selectedValue === '2') {
             ocCidamFields.classList.add('d-none');
             otroOrganismoFields.classList.remove('d-none');
             
-            // Remueve el atributo required de los campos de archivo y de texto de OC CIDAM
-            ocCidamFileFields.forEach(field => {
-                field.removeAttribute('required');
-            });
-            ocCidamTextFields.forEach(field => {
-                field.removeAttribute('required');
-            });
-            
-            // Añade el atributo required al campo de archivo de otro organismo
-            otroOrganismoFileField.setAttribute('required', 'required');
+
         } else {
             ocCidamFields.classList.add('d-none');
             otroOrganismoFields.classList.add('d-none');
-            
-            // Remueve el atributo required de todos los campos de archivo y de texto
-            ocCidamFileFields.forEach(field => {
-                field.removeAttribute('required');
-            });
-            ocCidamTextFields.forEach(field => {
-                field.removeAttribute('required');
-            });
-            otroOrganismoFileField.removeAttribute('required');
         }
     });
     
@@ -288,7 +256,7 @@ $(document).ready(function () {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Detalles de ' + data['folio'];
+              return 'Detalles de ' + data['nombre_lote'];
             }
           }),
           type: 'column',
@@ -554,7 +522,7 @@ $(document).on('click', '.edit-record', function () {
             edit_ocCidamFields.classList.remove('d-none');
             edit_otroOrganismoFields.classList.add('d-none');
         
-        } else if (selectedValue === '2') {
+        } else if (edit_selectedValue === '2') {
             edit_ocCidamFields.classList.add('d-none');
             edit_otroOrganismoFields.classList.remove('d-none');
 
@@ -567,37 +535,36 @@ $(document).on('click', '.edit-record', function () {
 
 
 
+   // Manejar el envío del formulario
+   $('#loteFormEdit').on('submit', function(e) {
+    e.preventDefault();
 
-$('#loteFormEdit').on('submit', function (e) {
-    e.preventDefault(); // Evitar el envío del formulario por defecto
-
-    var formData = new FormData(this); // Recoger los datos del formulario
-
-    // Obtener el ID del lote del campo oculto
+    var formData = new FormData(this);
     var loteId = $('#edit_lote_id').val();
 
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
     $.ajax({
-        url: '/lotes-a-granel/' + loteId, // URL para la actualización
-        method: 'PUT', // Método HTTP para la actualización
+        url: '/lotes-a-granel/' + loteId,
+        type: 'POST',
         data: formData,
-        processData: false, // No procesar los datos (evitar que jQuery los convierta en query string)
-        contentType: false, // No establecer el tipo de contenido (necesario para los archivos)
-        success: function (data) {
-            if (data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Éxito',
-                    text: 'Lote actualizado exitosamente.',
-                }).then(() => {
-                    location.reload(); // O actualizar la tabla con los nuevos datos
-                });
-            } else {
+        contentType: false,
+        processData: false,
+        success: function(response) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: 'Lote actualizado con éxito',
+                timer: 1500,
+                showConfirmButton: false
+            }).then(function() {
+                $('#offcanvasEditLote').modal('hide');
+                location.reload();
+            });
+        },
+        error: function(xhr) {
+            if (xhr.status === 422) {
+                var errors = xhr.responseJSON.errors;
+                var errorMessages = Object.values(errors).flat().join('<br>');
+
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -606,24 +573,20 @@ $('#loteFormEdit').on('submit', function (e) {
                         confirmButton: 'btn btn-danger'
                     }
                 });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ha ocurrido un error al actualizar el lote.',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
             }
-        },
-        error: function (error) {
-            console.error('Error al actualizar el lote:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo actualizar los datos del lote.',
-                customClass: {
-                    confirmButton: 'btn btn-danger'
-                }
-            });
         }
     });
 });
-
-
-
+    
 
 
 
