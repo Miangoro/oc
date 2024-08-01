@@ -109,7 +109,7 @@
         {
           "url": "catalogo/lotes_granel",
           "name": "Lotes a granel",
-          "slug": "catalogo-marcas"
+          "slug": "catalogo-lotes-granel"
         },
         {
           "url": "catalogo/lotes",

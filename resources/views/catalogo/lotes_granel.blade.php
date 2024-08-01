@@ -47,7 +47,7 @@
                         <th>Tipo de maguey</th>
                         <th>ingredientes</th>
                         <th>edad</th>
-                        <th>guia</th>
+                        {{-- <th>guia</th> --}}
                         <th>folio certificado</th>
                         <th>organismo</th>
                         <th>fecha emision</th>
@@ -69,7 +69,7 @@
                     </div>
                     <div class="modal-body">
                         {{--  --}}
-                        <form id="loteForm" method="POST" action="{{ route('lotes-register.store') }}">
+                        <form id="loteForm" method="POST" action="{{ route('lotes-register.store') }}" enctype="multipart/form-data">
                             @csrf
                             <!-- Nombre del lote -->
                             <div class="row">
@@ -112,7 +112,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
                                             <select id="id_guia" name="id_guia[]" class="select2 form-select" required multiple>
-                                            <option value="" disabled selected>Seleccione una guía</option>
+                                           {{--  <option value="" disabled selected>Seleccione una guía</option> --}}
                                             @foreach ($guias as $guia)
                                                 <option value="{{ $guia->id_guia }}">{{ $guia->Folio }}</option>
                                             @endforeach
@@ -335,9 +335,11 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="loteFormEdit" method="POST" action="">
+                        <form id="loteFormEdit" method="POST">
                             @csrf
-                            <input type="hidden" id="edit_lote_id" name="edit_lote_id" value="">
+                            @method('PUT')
+                            <input type="hidden" id="edit_lote_id" name="edit_lote_id">
+                            <!-- Resto del formulario -->
                             <div class="section">
                                 <h6>Datos Básicos</h6>
                                 <div class="row">
@@ -382,13 +384,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select id="edit_id_guia" name="id_guia" class="select2 form-select" required multiple>
-                                                <option value="" disabled selected>Seleccione una guía</option>
-                                                @foreach ($guias as $guia)
-                                                    <option value="{{ $guia->id_guia }}">{{ $guia->Folio }}</option>
-                                                @endforeach
-                                            </select>
-                                            <label for="edit_id_guia">Folio de guía de translado</label>
+                                            <select id="edit_id_guia" name="id_guia[]" class="select2 form-select" required multiple>
+                                           {{--  <option value="" disabled selected>Seleccione una guía</option> --}}
+                                            @foreach ($guias as $guia)
+                                                <option value="{{ $guia->id_guia }}">{{ $guia->Folio }}</option>
+                                            @endforeach
+                                        </select>
+                                        <label for="id_guia">Folio de guía de translado</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -469,6 +471,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
