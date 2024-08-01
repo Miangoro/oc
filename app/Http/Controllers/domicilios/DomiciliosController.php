@@ -12,6 +12,7 @@ use App\Models\Organismos;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class DomiciliosController extends Controller
 {
@@ -104,7 +105,7 @@ class DomiciliosController extends Controller
         if (!empty($instalaciones)) {
             $ids = $start;
 
-            foreach ($instalaciones as $instalacion) { 
+            foreach ($instalaciones as $instalacion) {
                 $nestedData['id_instalacion'] = $instalacion->id_instalacion ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids  ?? 'N/A';
                 $nestedData['razon_social'] = $instalacion->empresa->razon_social  ?? 'N/A';
@@ -208,28 +209,48 @@ class DomiciliosController extends Controller
     public function edit($id_instalacion)
     {
         try {
+            // Obtener la instalación y sus documentos asociados
             $instalacion = Instalaciones::findOrFail($id_instalacion);
-            return response()->json(['success' => true, 'instalacion' => $instalacion]);
+
+            // Obtener los documentos asociados
+            $documentacion_urls = Documentacion_url::where('id_relacion', $id_instalacion)->get();
+
+            // Extraer la URL del primer documento, si existe
+            $archivo_url = $documentacion_urls->isNotEmpty() ? $documentacion_urls->first()->url : '';
+
+            return response()->json([
+                'success' => true,
+                'instalacion' => $instalacion,
+                'archivo_url' => $archivo_url // Incluir la URL del archivo
+            ]);
         } catch (ModelNotFoundException $e) {
             return response()->json(['success' => false], 404);
         }
     }
 
+
     public function update(Request $request, $id)
     {
+        // Validar datos de entrada
         $request->validate([
             'id_empresa' => 'required|exists:empresa,id_empresa',
             'tipo' => 'required|string',
-            'estado' => 'required|string',
+            'estado' => 'required|exists:estados,id',
             'direccion_completa' => 'required|string',
             'folio' => 'nullable|string',
             'id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo',
             'fecha_emision' => 'nullable|date',
             'fecha_vigencia' => 'nullable|date',
+            'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+            'nombre_documento.*' => 'required_with:url.*|string',
+            'id_documento.*' => 'required_with:url.*|integer',
         ]);
 
         try {
+            // Buscar la instalación existente
             $instalacion = Instalaciones::findOrFail($id);
+
+            // Actualizar los datos de la instalación
             $instalacion->update([
                 'id_empresa' => $request->input('id_empresa'),
                 'tipo' => $request->input('tipo'),
@@ -241,11 +262,43 @@ class DomiciliosController extends Controller
                 'fecha_vigencia' => $request->input('fecha_vigencia', null),
             ]);
 
-            return response()->json(['success' => 'Instalacion actualizada correctamente']);
+            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->input('id_empresa'))->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+
+            // Eliminar archivos antiguos
+            $documentacionUrls = Documentacion_url::where('id_relacion', $id)->get();
+            foreach ($documentacionUrls as $documentacionUrl) {
+                $filePath = 'uploads/' . $numeroCliente . '/' . $documentacionUrl->url;
+                if (Storage::disk('public')->exists($filePath)) {
+                    Storage::disk('public')->delete($filePath);
+                }
+                $documentacionUrl->delete();
+            }
+
+            // Almacenar nuevos documentos solo si se envían
+            if ($request->hasFile('url')) {
+                foreach ($request->file('url') as $index => $file) {
+                    $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+
+                    // Crear nuevo registro de Documentacion_url
+                    Documentacion_url::create([
+                        'id_relacion' => $id,
+                        'id_documento' => $request->id_documento[$index],
+                        'nombre_documento' => $request->nombre_documento[$index],
+                        'url' => $filename,
+                        'id_empresa' => $request->input('id_empresa'),
+                    ]);
+                }
+            }
+
+            return response()->json(['code' => 200, 'message' => 'Instalación actualizada correctamente.']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al actualizar la Instalacion'], 500);
+            return response()->json(['code' => 500, 'message' => 'Error al actualizar la instalación.']);
         }
     }
+
+
 
 
     //end

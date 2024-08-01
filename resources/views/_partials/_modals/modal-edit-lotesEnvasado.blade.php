@@ -14,8 +14,7 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select
-                                    onchange="edit_obtenerDirecciones(); edit_obtenerMarcas(); edit_obtenerGraneles();"
+                                <select onchange="edit_obtenerDirecciones(); edit_obtenerMarcas(); edit_obtenerGraneles();"
                                     id="edit_cliente" name="id_empresa" class="select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($clientes as $cliente)
@@ -28,8 +27,7 @@
 
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select id="edit_tipo_lote" name="tipo_lote" class="form-select" required
-                                    onchange="mostrarLotes()">
+                                <select id="edit_tipo_lote" name="tipo_lote" class="form-select" required onchange="mostrarLotes()">
                                     <option value="1">Por un solo lote a granel</option>
                                     <option value="2">Por más de un lote a granel</option>
                                 </select>
@@ -70,7 +68,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select edit_marca" id="edit_marca" name="id_marca"
+                                    <select class=" form-select edit_marca" id="edit_marca" name="id_marca"
                                         aria-label="Marca">
                                         <option value="" selected>Selecciona una marca</option>
                                         @foreach ($marcas as $marca)
@@ -146,8 +144,7 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th><button type="button" class="btn btn-primary add-row"> <i
-                                                class="ri-add-line"></i> </button></th>
+                                    <th><button type="button" class="btn btn-primary add-row"> <i class="ri-add-line"></i> </button></th>
                                     <th>Lote a granel</th>
                                     <th>Volumen parcial</th>
                                 </tr>
@@ -155,22 +152,20 @@
                             <tbody id="contenidoGraneles">
                                 <tr>
                                     <th>
-                                        <button type="button" class="btn btn-danger remove-row" disabled> <i
-                                                class="ri-delete-bin-5-fill"></i> </button>
+                                        <button type="button" class="btn btn-danger remove-row" disabled> <i class="ri-delete-bin-5-fill"></i> </button>
                                     </th>
                                     <td>
-                                        <select class="edit_lote_granel form-control select2" name="id_lote_granel[]">
+                                        <select class="edit_lote_granel form-control select2" name="id_lote_granel[]" >
                                             <!-- Opciones -->
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control form-control-sm"
-                                            name="volumen_parcial[]">
+                                        <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
-
+                        
                     </div>
 
 
@@ -188,25 +183,27 @@
 
 
 <script>
+
+    
     function edit_obtenerGraneles() {
         var empresa = $("#edit_cliente").val();
-        var selectedValue = $("#edit_lote_granel").val(); // Guarda el valor seleccionado actual
-
+        // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
             success: function(response) {
+                // Cargar los detalles en el modal
                 var contenido = "";
                 for (let index = 0; index < response.lotes_granel.length; index++) {
-                    contenido += '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                        response.lotes_granel[index].nombre_lote + '</option>';
+                    contenido = '<option value="' + response.lotes_granel[index].id_empresa + '">' +
+                        response.lotes_granel[index].nombre_lote + '</option>' + contenido;
+                    // console.log(response.normas[index].norma);
                 }
 
                 if (response.lotes_granel.length == 0) {
                     contenido = '<option value="">Sin lotes a granel registrados</option>';
                 }
                 $('.edit_lote_granel').html(contenido);
-                $("#edit_lote_granel").val(selectedValue); // Restaura el valor seleccionado
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');
@@ -215,62 +212,64 @@
     }
 
     function edit_obtenerMarcas() {
-        var empresa = $("#edit_cliente").val();
-        var selectedValue = $("#edit_marca").val(); // Guarda el valor seleccionado actual
 
+       
+        var empresa = $("#edit_cliente").val();
+        // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
             success: function(response) {
+                // Cargar los detalles en el modal
                 var contenido = "";
+                var selected = "";
                 for (let index = 0; index < response.marcas.length; index++) {
-                    contenido += '<option value="' + response.marcas[index].id_marca + '">' + response
-                        .marcas[index].marca + '</option>';
+                   
+                    contenido = '<option value="' + response.marcas[index].id_marca + '">' + response
+                        .marcas[index].marca + '</option>' + contenido;
+                    // console.log(response.normas[index].norma);
                 }
 
                 if (response.marcas.length == 0) {
                     contenido = '<option value="">Sin marcas registradas</option>';
                 }
                 $('#edit_marca').html(contenido);
-                $("#edit_marca").val(selectedValue); // Restaura el valor seleccionado
             },
             error: function() {
-                //alert('Error al cargar las marcas.');
+                //alert('Error al cargar los lotes a granel.');
             }
         });
     }
 
+
     function edit_obtenerDirecciones() {
         var empresa = $("#edit_cliente").val();
-        var selectedValue = $("#edit_Instalaciones").val(); // Guarda el valor seleccionado actual
-
+        // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
             success: function(response) {
+                // Cargar los detalles en el modal
                 var contenido = "";
                 for (let index = 0; index < response.instalaciones.length; index++) {
-                    contenido += '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                        response.instalaciones[index].direccion_completa + '</option>';
+                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                        response.instalaciones[index].direccion_completa + '</option>' + contenido;
+                    // console.log(response.normas[index].norma);
                 }
 
                 if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
+                    contenido = '<option value="">Sin lotes a granel registrados</option>';
                 }
                 $('.edit_Instalaciones').html(contenido);
-                $("#edit_Instalaciones").val(selectedValue); // Restaura el valor seleccionado
             },
             error: function() {
-                //alert('Error al cargar las instalaciones.');
+                //alert('Error al cargar los lotes a granel.');
             }
         });
     }
 
 
-
-
-
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         function calcularVolumenTotal() {
             var cantidadBotellas = parseFloat(document.getElementById('edit_cant_botellas').value) || 0;
             var edit_presentacion = parseFloat(document.getElementById('edit_presentacion').value) || 0;
@@ -296,4 +295,6 @@
         document.getElementById('edit_presentacion').addEventListener('input', calcularVolumenTotal);
         document.getElementById('edit_unidad').addEventListener('change', calcularVolumenTotal);
     });
+
+    
 </script>
