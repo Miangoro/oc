@@ -14,7 +14,7 @@
                     <div class="row">
                         <div class="col-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="/**/edit_obtenerDirecciones(); edit_obtenerGraneles();  edit_obtenerMarcas();"
+                                <select onchange="edit_obtenerDirecciones(); edit_obtenerMarcas(); edit_obtenerGraneles();"
                                     id="edit_cliente" name="id_empresa" class="select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($clientes as $cliente)
@@ -68,7 +68,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select edit_marca" id="edit_marca" name="id_marca"
+                                    <select class=" form-select edit_marca" id="edit_marca" name="id_marca"
                                         aria-label="Marca">
                                         <option value="" selected>Selecciona una marca</option>
                                         @foreach ($marcas as $marca)
@@ -183,35 +183,9 @@
 
 
 <script>
-  function edit_obtenerGraneles() {
-    var empresa = $("#edit_cliente").val();
-    $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function(response) {
-            var nuevoContenido = "";
-            // Añadir nuevas opciones
-            for (let index = 0; index < response.lotes_granel.length; index++) {
-                nuevoContenido += '<option value="' + response.lotes_granel[index].id_empresa + '">' +
-                    response.lotes_granel[index].nombre_lote + '</option>';
-            }
-            
-            if (response.lotes_granel.length == 0) {
-                nuevoContenido = '<option value="">Sin lotes a granel registrados</option>';
-            }
-            
-            // Añadir las nuevas opciones al select
-            var edit_lotes_g= $(".edit_lote_granel");
-            console.log(edit_lotes_g.val());
-            edit_lotes_g.append(nuevoContenido);
-        },
-        error: function() {
-            //alert('Error al cargar los lotes a granel.');
-        }
-    });
-}
 
-    function edit_obtenerMarcas() {
+    
+    function edit_obtenerGraneles() {
         var empresa = $("#edit_cliente").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
@@ -220,7 +194,37 @@
             success: function(response) {
                 // Cargar los detalles en el modal
                 var contenido = "";
+                for (let index = 0; index < response.lotes_granel.length; index++) {
+                    contenido = '<option value="' + response.lotes_granel[index].id_empresa + '">' +
+                        response.lotes_granel[index].nombre_lote + '</option>' + contenido;
+                    // console.log(response.normas[index].norma);
+                }
+
+                if (response.lotes_granel.length == 0) {
+                    contenido = '<option value="">Sin lotes a granel registrados</option>';
+                }
+                $('.edit_lote_granel').html(contenido);
+            },
+            error: function() {
+                //alert('Error al cargar los lotes a granel.');
+            }
+        });
+    }
+
+    function edit_obtenerMarcas() {
+
+       
+        var empresa = $("#edit_cliente").val();
+        // Hacer una petición AJAX para obtener los detalles de la empresa
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                // Cargar los detalles en el modal
+                var contenido = "";
+                var selected = "";
                 for (let index = 0; index < response.marcas.length; index++) {
+                   
                     contenido = '<option value="' + response.marcas[index].id_marca + '">' + response
                         .marcas[index].marca + '</option>' + contenido;
                     // console.log(response.normas[index].norma);
@@ -229,13 +233,7 @@
                 if (response.marcas.length == 0) {
                     contenido = '<option value="">Sin marcas registradas</option>';
                 }
-                var marca = $('#edit_marca').val();
-                // console.log(marca);
-
-
                 $('#edit_marca').html(contenido);
-                
-                $('#edit_marca').val(marca);
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');
@@ -263,8 +261,6 @@
                     contenido = '<option value="">Sin lotes a granel registrados</option>';
                 }
                 $('.edit_Instalaciones').html(contenido);
-                $('.edit_Instalaciones').val(empresa);
-
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');

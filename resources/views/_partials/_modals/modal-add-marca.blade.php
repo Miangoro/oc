@@ -21,7 +21,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-12 col-sm-12">
-                        <div class="form-floating form-floating-outline">
+                        <div class="form-floating form-floating-outline mb-5">
                             <input id="marca" type="text" name="marca" class="form-control" placeholder="Introduce el nombre de la marca" />
                             <label for="modalAddressFirstName">Nombre de la marca</label>
                         </div>
