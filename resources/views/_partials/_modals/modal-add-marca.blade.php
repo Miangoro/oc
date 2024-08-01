@@ -22,7 +22,7 @@
                     </div>
                     <div class="col-12 col-md-12 col-sm-12">
                         <div class="form-floating form-floating-outline">
-                            <input id="algo" type="text" name="marca" class="form-control" placeholder="Introduce el nombre de la marca" />
+                            <input id="marca" type="text" name="marca" class="form-control" placeholder="Introduce el nombre de la marca" />
                             <label for="modalAddressFirstName">Nombre de la marca</label>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                             <div class="col-md-3">
                                 <label for="date{{ $documento->id_documento }}" class="form-label">Fecha de vigencia</label>
                                 <div class="input-group">
-                                    <input type="date" class="form-control datepicker" id="date{{ $documento->id_documento }}" name="fecha_vigencia[]">
+                                    <input placeholder="YYYY-MM-DD" readonly type="text" class="form-control datepicker" id="date{{ $documento->id_documento }}" name="fecha_vigencia[]">
                                 </div>
                             </div>
                         </div>
