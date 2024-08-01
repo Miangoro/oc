@@ -62,7 +62,7 @@ $(function () {
         targets: 8,
         className: 'text-center',
         render: function (data, type, full, meta) {
-          
+
           return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${full['url']} " data-registro="${full['url']}"></i>`;
         }
       },
@@ -473,12 +473,18 @@ $(document).ready(function() {
         e.preventDefault();
 
         var id_instalacion = $(this).data('id');
-        var formData = $(this).serialize();
+        var form = $(this)[0];
+        var formData = new FormData(form);
 
         $.ajax({
             url: baseUrl + 'instalaciones/' + id_instalacion,
-            type: 'PUT',
+            type: 'POST',
             data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('X-HTTP-Method-Override', 'PUT');
+            },
             success: function (response) {
                 dt_instalaciones_table.ajax.reload();
                 $('#modalEditInstalacion').modal('hide');
@@ -486,7 +492,7 @@ $(document).ready(function() {
                 Swal.fire({
                     icon: 'success',
                     title: '¡Éxito!',
-                    text: response.success,
+                    text: response.message,
                     customClass: {
                         confirmButton: 'btn btn-success'
                     }
@@ -515,8 +521,8 @@ $(document).on('click', '.pdf', function () {
 
       $("#titulo_modal").text("Certificado de instalaciones");
       $("#subtitulo_modal").text(registro);
-      
-    
+
+
 });
 
 
