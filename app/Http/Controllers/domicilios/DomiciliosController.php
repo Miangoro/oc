@@ -218,10 +218,14 @@ class DomiciliosController extends Controller
             // Extraer la URL del primer documento, si existe
             $archivo_url = $documentacion_urls->isNotEmpty() ? $documentacion_urls->first()->url : '';
 
+            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $instalacion->id_empresa)->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+
             return response()->json([
                 'success' => true,
                 'instalacion' => $instalacion,
-                'archivo_url' => $archivo_url // Incluir la URL del archivo
+                'archivo_url' => $archivo_url, // Incluir la URL del archivo
+                'numeroCliente' => $numeroCliente
             ]);
         } catch (ModelNotFoundException $e) {
             return response()->json(['success' => false], 404);

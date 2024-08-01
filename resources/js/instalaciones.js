@@ -439,9 +439,10 @@ $(function () {
 
                 // Mostrar URL del archivo debajo del campo de archivo
                 var archivoUrl = data.archivo_url || '';
+                var numCliente = data.numeroCliente;
                 if (archivoUrl) {
                     try {
-                        $('#archivo_url_display').html('Documento disponible: <a href="' + archivoUrl + '" target="_blank" class="text-primary">' + archivoUrl + '</a>');
+                        $('#archivo_url_display').html('Documento disponible: <a href="../files/'+numCliente+'/' + archivoUrl + '" target="_blank" class="text-primary">' + archivoUrl + '</a>');
                     } catch (e) {
                         $('#archivo_url_display').html('URL del archivo no válida.');
                     }
