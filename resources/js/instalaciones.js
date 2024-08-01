@@ -406,14 +406,11 @@ $(function () {
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
-    });
-
-    // Manejar el evento de envío del formulario
-    $('#addNewInstalacionForm').on('submit', function (e) {
+    }).on('core.form.valid', function (e) {
 
       // Validar el formulario
-      fv.validate().then(function (status) {
-        if (status === 'Valid') {
+  
+   
           var formData = new FormData(form);
 
           $.ajax({
@@ -457,17 +454,8 @@ $(function () {
               });
             }
           });
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Por favor, corrija los errores en el formulario.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
-        }
-      });
+        
+    
     });
   });
 
