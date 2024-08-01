@@ -12,7 +12,13 @@ const addNewLoteForm = document.getElementById('addNewLoteForm');
 // Validación del formulario
 const fv = FormValidation.formValidation(addNewLoteForm, {
     fields: {
-
+        id_empresa: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor introduzca el nombre del lote'
+                }
+            }
+        },
         nombre_lote: {
             validators: {
                 notEmpty: {
@@ -21,6 +27,13 @@ const fv = FormValidation.formValidation(addNewLoteForm, {
             }
         },
         sku: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese un numero de pedido/SKU'
+                }
+            }
+        },
+        id_marca: {
             validators: {
                 notEmpty: {
                     message: 'Por favor ingrese un numero de pedido/SKU'
@@ -48,8 +61,15 @@ const fv = FormValidation.formValidation(addNewLoteForm, {
                 }
             }
         },
-
-
+        volumen_total: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese un numero de pedido/SKU'
+                }
+            }
+        },
+        
+        
     },
     plugins: {
         trigger: new FormValidation.plugins.Trigger(),

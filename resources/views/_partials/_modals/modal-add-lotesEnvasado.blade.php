@@ -138,7 +138,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
+                                        <input type="text" class="form-control form-control-sm" name="volumen_parcial[]" id="volumen_parcial">
                                     </td>
                                 </tr>
                             </tbody>
@@ -160,9 +160,7 @@
 
 
 <script>
-
-
-
+    
 
     function obtenerGraneles() {
         var empresa = $("#id_empresa").val();
