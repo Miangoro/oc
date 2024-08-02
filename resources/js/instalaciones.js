@@ -63,7 +63,11 @@ $(function () {
         className: 'text-center',
         render: function (data, type, full, meta) {
 
-          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${full['url']} " data-registro="${full['url']}"></i>`;
+          if (full['url'] && full['url'].trim() !== '') {
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${full['url']}" data-registro="${full['url']}"></i>`;
+        } else {
+            return '---';
+        }
         }
       },
       {

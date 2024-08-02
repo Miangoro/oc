@@ -18,8 +18,8 @@ const fv = FormValidation.formValidation(addNewMarca, {
       }
     },
     marca: {
-      validators: {
-        notEmpty: {
+      validators: {  
+        notEmpty: { 
           message: 'Por favor introduzca el nombre de la marca'
         }
       }
@@ -624,12 +624,6 @@ $(document).ready(function () {
         });
     });
 });
-
-
-
-
-
-
 
 
 
