@@ -46,12 +46,15 @@ class documentacionController extends Controller
     $contenido = '';
     $documentosActividad = '';
     $contenidoInstalaciones = '';
+    $contenidoInstalacionesGenerales = '';
 
 
 
     foreach ($normas as $index => $norma) {
       $tabsActividades = '';
+      $tabsGenerales = '';
       $contenidoActividades = '';
+      $contenidoGenerales = '';
 
 
       $actividades = DB::select("
@@ -67,13 +70,25 @@ class documentacionController extends Controller
         $activeClassA = $indexA == 0 ? 'active' : '';
         $showClassA = $indexA == 0 ? 'show' : '';
         $contenidoDocumentos = "";
+        $contenidoDocumentosGenerales = "";
         $contenidoInstalaciones = '';
+        $contenidoInstalacionesGenerales = '';
         $act_instalacion = '';
+
+        $tabsGenerales = '
+            <li class="nav-item">
+                <a style="width: 100% !important;" href="javascript:void(0);" class="nav-link btn active d-flex flex-column align-items-center justify-content-center" role="tab" data-bs-toggle="tab" data-bs-target="#navs-orders-id-0" aria-controls="navs-orders-id-0" aria-selected="true">
+                  <div>
+                    <img src="' . asset('assets/img/products/apple-iMac-3k.png') . '" alt="Mobile" class="img-fluid">
+                  </div>
+                  Documentos Generales
+                </a>
+              </li>';
 
 
         $tabsActividades = $tabsActividades . '
             <li class="nav-item">
-                <a style="width: 100% !important;" href="javascript:void(0);" class="nav-link btn ' . $activeClassA . ' d-flex flex-column align-items-center justify-content-center" role="tab" data-bs-toggle="tab" data-bs-target="#navs-orders-id-' . $actividad->id_actividad . '" aria-controls="navs-orders-id-' . $actividad->id_actividad . '" aria-selected="true">
+                <a style="width: 100% !important;" href="javascript:void(0);" class="nav-link btn d-flex flex-column align-items-center justify-content-center" role="tab" data-bs-toggle="tab" data-bs-target="#navs-orders-id-' . $actividad->id_actividad . '" aria-controls="navs-orders-id-' . $actividad->id_actividad . '" aria-selected="true">
                   <div>
                     <img src="' . asset('assets/img/products/apple-iMac-3k.png') . '" alt="Mobile" class="img-fluid">
                   </div>
@@ -110,11 +125,52 @@ class documentacionController extends Controller
 
 
 
-        $documentos = Documentacion::where('subtipo', $documentosActividad)
+        $documentos2 = Documentacion::where('subtipo', 'Todas')
           ->with('documentacionUrls') // Eager loading de la relación
           ->get();
 
+          $empresa = Empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
+          $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+          $razonSocial = $empresa->razon_social;
+          
+  
+
+          foreach ($documentos2 as $indexD => $documento) {
+
+            $urlPrimera = $documento->documentacionUrls->first();
+
+          $url = '';
+
+          if(!empty($urlPrimera)){
+            $url = $urlPrimera->url;
+          }
+
+
+            if(!empty($url)){
+              $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
+            }else{
+              $mostrarDocumento = '---';
+            }
+    
+
+        $contenidoDocumentosGenerales = $contenidoDocumentosGenerales.'<tr>
+                      <td>' . ($indexD + 1) . '</td>
+                      <td class="text-wrap text-break"><b>' . $documento->nombre . '</b></td>
+                      <td class="text-end">
+                          <input class="form-control form-control-sm" type="file" id="formFile">
+                      </td>
+                      <td class="text-end fw-medium">   
+                      
+                         '.$mostrarDocumento.'
+                      
+                     </td>
+                      <td class="text-success fw-medium text-end">----</td>
+                    </tr>';
+          }
       
+          $documentos = Documentacion::where('subtipo', $documentosActividad)
+          ->with('documentacionUrls') // Eager loading de la relación
+          ->get();
 
         foreach ($documentos as $indexD => $documento) {
 
@@ -130,16 +186,14 @@ class documentacionController extends Controller
             "URL: " . $url->url . "<br>";
         }*/
 
-        $empresa = Empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-        $razonSocial = $empresa->razon_social;
-        
-
+      
         if(!empty($url)){
           $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
         }else{
           $mostrarDocumento = '---';
         }
+
+        
 
           $contenidoDocumentos = $contenidoDocumentos . '
                     <tr>
@@ -161,6 +215,31 @@ class documentacionController extends Controller
         
 
         $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)->where('tipo', '=', $act_instalacion)->get();
+
+        $contenidoInstalacionesGenerales = '
+       
+        <div class="table-responsive text-nowrap col-md-6 mb-5 ">
+              <table class="table  table-bordered">
+                <thead class="bg-secondary text-white">
+                  <tr>
+                    <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3"><b>Documentación general</b></th>
+                  </tr>
+                  <tr>
+                    <th class="bg-transparent border-bottom">#</th>
+                    <th class="bg-transparent border-bottom">Descripción del documento</th>
+                    <th class="text-end bg-transparent border-bottom">Subir archivo</th>
+                    <th class="text-end bg-transparent border-bottom">Documento</th>
+                    <th class="text-end bg-transparent border-bottom">Validar</th>
+                  </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    ' . $contenidoDocumentosGenerales . '
+                </tbody>
+              </table>
+            </div>';
+        
+
+
 
         foreach ($instalaciones as $indexI => $instalacion) {
           $contenidoInstalaciones = $contenidoInstalaciones . '
@@ -186,8 +265,14 @@ class documentacionController extends Controller
             </div>';
         }
 
+        $contenidoGenerales =  '<div class="tab-pane fade show active" id="navs-orders-id-0" role="tabpanel">
+        <div class="row p-5"> 
+         ' . $contenidoInstalacionesGenerales . '
+       </div> 
+       </div>';
+
         $contenidoActividades = $contenidoActividades . '
-          <div class="tab-pane fade ' . $showClassA . ' ' . $activeClassA . '" id="navs-orders-id-' . $actividad->id_actividad . '" role="tabpanel">
+          <div class="tab-pane fade" id="navs-orders-id-' . $actividad->id_actividad . '" role="tabpanel">
            <div class="row p-5">
             ' . $contenidoInstalaciones . '
           </div> 
@@ -222,11 +307,11 @@ class documentacionController extends Controller
       </div>
       <div class="card-body pb-0">
         <ul class="nav nav-tabs nav-tabs-widget pb-6 gap-4 mx-1 d-flex flex-nowrap align-items-center" role="tablist">
-          ' . $tabsActividades . '
+         ' . $tabsGenerales . '  ' . $tabsActividades . '
         </ul>
       </div>
       <div class="tab-content p-0">
-        ' . $contenidoActividades . '
+       ' . $contenidoGenerales . '  ' . $contenidoActividades . '
         
       </div>
     </div>

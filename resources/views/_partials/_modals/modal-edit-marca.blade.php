@@ -33,17 +33,17 @@
 
                     @foreach ($documentos as $documento)
                         <div class="row mb-3">
-                            <div class="col-md-9">
+                            <div class="col-md-9 mb-5">
                                 <label for="file{{ $documento->id_documento }}" class="form-label">{{ $documento->nombre }}</label>
-                                <input class="form-control" type="file" id="file{{ $documento->id_documento }}" name="url[]">
+                                <input class="form-control" type="file" id="file{{ $documento->id_documento }}" data-id="{{ $documento->id_documento }}" name="url[]">
                                 <input value="{{ $documento->id_documento }}" class="form-control" type="hidden" name="id_documento[]">
                                 <input value="{{ $documento->nombre }}" class="form-control" type="hidden" name="nombre_documento[]">
                                 <div id="existing_file_{{ $documento->id_documento }}"></div>  <!-- Contenedor para el archivo existente -->
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3 mb-5">
                                 <label for="date{{ $documento->id_documento }}" class="form-label">Fecha de vigencia</label>
                                 <div class="input-group">
-                                    <input placeholder="YYYY-MM-DD" type="text" class="form-control  " id="Editdate{{ $documento->id_documento }}" name="fecha_vigencia[]" readonly>
+                                    <input placeholder="YYYY-MM-DD" type="text" class="form-control  datepicker" id="Editdate{{ $documento->id_documento }}" name="fecha_vigencia[]" readonly>
                                  
                                 </div>
                             </div>

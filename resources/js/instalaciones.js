@@ -63,7 +63,11 @@ $(function () {
         className: 'text-center',
         render: function (data, type, full, meta) {
 
-          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${full['url']} " data-registro="${full['url']}"></i>`;
+          if (full['url'] && full['url'].trim() !== '') {
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${full['url']}" data-registro="${full['url']}"></i>`;
+        } else {
+            return '---';
+        }
         }
       },
       {
@@ -345,7 +349,6 @@ $(function () {
       }
     });
   });
-
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -354,54 +357,112 @@ $(function () {
       }
     });
 
-    // Agregar nueva instalación
-    $('#addNewInstalacionForm').on('submit', function (e) {
-      e.preventDefault(); // Evita el comportamiento por defecto del formulario
-      var formData = new FormData(this);
+    // Inicializar select2
+    $('.select2').select2();
 
-      $.ajax({
-        url: '/instalaciones',
-        type: 'POST',
-        data: formData,
-        processData: false, // Evita la conversión automática de datos a cadena
-        contentType: false, // Evita que se establezca el tipo de contenido
-        success: function (response) {
-          // Ocultar el modal y reiniciar el formulario
-          $('#modalAddInstalacion').modal('hide');
-          $('#addNewInstalacionForm')[0].reset();
-
-          // Reiniciar los campos select2
-          $('.select2').val(null).trigger('change');
-
-          // Recargar los datos en la tabla
-          $('.datatables-users').DataTable().ajax.reload();
-
-          console.log(response);
-
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.message, // Mensaje de éxito de la respuesta
-            customClass: {
-              confirmButton: 'btn btn-success'
+    // Inicializar FormValidation
+    const form = document.getElementById('addNewInstalacionForm');
+    const fv = FormValidation.formValidation(form, {
+      fields: {
+        'id_empresa': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona una empresa.'
             }
-          });
+          }
         },
-        error: function (xhr) {
-          console.log('Error:', xhr.responseText); // Muestra el error en la consola
+        'tipo': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un tipo de instalación.'
+            }
+          }
+        },
+        'estado': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un estado.'
+            }
+          }
+        },
+        'direccion_completa': {
+          validators: {
+            notEmpty: {
+              message: 'Ingrese la dirección completa.'
+            }
+          }
+        },
+        'certificacion': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el tipo de certificación.'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: 'is-valid',  // Clase para campos válidos
+          eleInvalidClass: 'is-invalid', // Clase para campos inválidos
+          rowSelector: '.form-floating' // Selector para el contenedor del campo
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
 
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al agregar la instalación', // Mensaje de error
-            customClass: {
-              confirmButton: 'btn btn-danger'
+      // Validar el formulario
+  
+   
+          var formData = new FormData(form);
+
+          $.ajax({
+            url: '/instalaciones',
+            type: 'POST',
+            data: formData,
+            processData: false, // Evita la conversión automática de datos a cadena
+            contentType: false, // Evita que se establezca el tipo de contenido
+            success: function (response) {
+              // Ocultar el modal y reiniciar el formulario
+              $('#modalAddInstalacion').modal('hide');
+              $('#addNewInstalacionForm')[0].reset();
+
+              // Reiniciar los campos select2
+              $('.select2').val(null).trigger('change');
+
+              // Recargar los datos en la tabla
+              $('.datatables-users').DataTable().ajax.reload();
+
+              console.log(response);
+
+              Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.message, // Mensaje de éxito de la respuesta
+                customClass: {
+                  confirmButton: 'btn btn-success'
+                }
+              });
+            },
+            error: function (xhr) {
+              console.log('Error:', xhr.responseText); // Muestra el error en la consola
+
+              Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al agregar la instalación', // Mensaje de error
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
+              });
             }
           });
-        }
-      });
+        
+    
     });
   });
+
 
   //new
   $(document).on('click', '.edit-record', function () {
@@ -439,9 +500,10 @@ $(function () {
 
                 // Mostrar URL del archivo debajo del campo de archivo
                 var archivoUrl = data.archivo_url || '';
+                var numCliente = data.numeroCliente;
                 if (archivoUrl) {
                     try {
-                        $('#archivo_url_display').html('Documento disponible: <a href="' + archivoUrl + '" target="_blank" class="text-primary">' + archivoUrl + '</a>');
+                        $('#archivo_url_display').html('Documento disponible: <a href="../files/'+numCliente+'/' + archivoUrl + '" target="_blank" class="text-primary">' + archivoUrl + '</a>');
                     } catch (e) {
                         $('#archivo_url_display').html('URL del archivo no válida.');
                     }

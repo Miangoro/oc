@@ -56,6 +56,11 @@ class DomiciliosController extends Controller
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
+                }) ->where(function ($query) {
+                    $query->whereHas('documentos', function ($query) {
+                        $query->whereIn('id_documento', [127, 128]);
+                    })
+                    ->orWhereDoesntHave('documentos');
                 })
                 ->offset($start)
                 ->limit($limit)
@@ -67,6 +72,11 @@ class DomiciliosController extends Controller
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
+                }) ->where(function ($query) {
+                    $query->whereHas('documentos', function ($query) {
+                        $query->whereIn('id_documento', [127, 128]);
+                    })
+                    ->orWhereDoesntHave('documentos');
                 })
                 ->where(function ($query) use ($search) {
                     $query->where('id_instalacion', 'LIKE', "%{$search}%")
@@ -86,6 +96,11 @@ class DomiciliosController extends Controller
             $totalFiltered = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
+                })->where(function ($query) {
+                    $query->whereHas('documentos', function ($query) {
+                        $query->whereIn('id_documento', [127, 128, 129]);
+                    })
+                    ->orWhereDoesntHave('documentos');
                 })
                 ->where(function ($query) use ($search) {
                     $query->where('id_instalacion', 'LIKE', "%{$search}%")
@@ -114,7 +129,7 @@ class DomiciliosController extends Controller
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa  ?? 'N/A';
                 $nestedData['folio'] = $instalacion->folio ?? 'N/A'; // Corregido 'folion' a 'folio'
                 $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; // Maneja el caso donde el organismo sea nulo
-                $nestedData['url'] = !empty($instalacion->documentos) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first().'/'.implode(',', $instalacion->documentos->pluck('url')->toArray()) : 'No hay';
+                $nestedData['url'] = !empty($instalacion->documentos->pluck('url')->toArray()) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first().'/'.implode(',', $instalacion->documentos->pluck('url')->toArray()) : '';
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($instalacion->fecha_vigencia);
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
@@ -218,10 +233,14 @@ class DomiciliosController extends Controller
             // Extraer la URL del primer documento, si existe
             $archivo_url = $documentacion_urls->isNotEmpty() ? $documentacion_urls->first()->url : '';
 
+            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $instalacion->id_empresa)->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+
             return response()->json([
                 'success' => true,
                 'instalacion' => $instalacion,
-                'archivo_url' => $archivo_url // Incluir la URL del archivo
+                'archivo_url' => $archivo_url, // Incluir la URL del archivo
+                'numeroCliente' => $numeroCliente
             ]);
         } catch (ModelNotFoundException $e) {
             return response()->json(['success' => false], 404);
