@@ -22,7 +22,6 @@ use Illuminate\Support\Facades\Log;
 class LotesGranelController extends Controller
 {
     public function UserManagement(Request $request)
-
     {// Encuentra el lote a granel por ID
         $empresas = Empresa::where('tipo', 2)->get();
         $categorias = Categorias::all();
@@ -299,12 +298,21 @@ public function edit($id_lote_granel)
         // Cargar el lote y las guías asociadas
         $lote = LotesGranel::with('lotesGuias.guia')->findOrFail($id_lote_granel);
 
+            // Obtener los documentos asociados
+            $documentacion_urls = Documentacion_url::where('id_relacion', $id_lote_granel)->get();
+
+            // Extraer la URL del primer documento, si existe
+            $archivo_url = $documentacion_urls->isNotEmpty() ? $documentacion_urls->first()->url : '';
+
         // Obtener los IDs de las guías asociadas
         $guiasIds = $lote->lotesGuias->pluck('id_guia')->toArray();
+
         return response()->json([
             'success' => true,
             'lote' => $lote,
-            'guias' => $guiasIds
+            'guias' => $guiasIds,
+            'archivo_url' => $archivo_url // Incluir la URL del archivo
+
         ]);
     } catch (ModelNotFoundException $e) {
         return response()->json(['success' => false], 404);

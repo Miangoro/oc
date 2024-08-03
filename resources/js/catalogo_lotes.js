@@ -468,6 +468,18 @@ $(document).on('click', '.edit-record', function () {
                     $('#edit_ingredientes').val(lote.ingredientes);
                     $('#edit_edad').val(lote.edad);
                 } else if (lote.tipo_lote == '2') { // Otro organismo
+                                    // Mostrar URL del archivo debajo del campo de archivo
+                var archivoUrl = data.archivo_url || '';
+                if (archivoUrl) {
+                    try {
+                        $('#archivo_url_display').html('Documento disponible: <a href="' + archivoUrl + '" target="_blank" class="text-primary">' + archivoUrl + '</a>');
+                    } catch (e) {
+                        $('#archivo_url_display').html('URL del archivo no válida.');
+                    }
+                } else {
+                    $('#archivo_url_display').html('No hay archivo disponible.');
+                }
+                
                     $('#edit_otro_organismo_fields').removeClass('d-none');
                     $('#edit_oc_cidam_fields').addClass('d-none');
                     $('#edit_folio_certificado').val(lote.folio_certificado);

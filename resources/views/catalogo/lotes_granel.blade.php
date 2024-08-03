@@ -282,10 +282,10 @@
                                     </div>
                                     <div class="col-md-6 mb-4">
                                         <div class="form-floating form-floating-outline">
-                                            <select id="id_organismo" name="id_organismo" class="form-select">
+                                            <select id="id_organismo" name="id_organismo" class="select2 form-select">
                                                 <option value="" disabled selected>Selecciona el organismo de certificación</option>
                                                 @foreach ($organismos as $organismo)
-                                                    <option value="{{ $organismo->id }}">{{ $organismo->organismo }}</option>
+                                                    <option value="{{ $organismo->id_organismo }}">{{ $organismo->organismo }}</option>
                                                 @endforeach
                                             </select>
                                             <label for="id_organismo">Organismo de Certificación</label>
@@ -532,6 +532,7 @@
                                         class="form-control" />
                                     <label for="certificado_lote">Adjuntar certificado de lote a granel</label>
                                 </div>
+                                <div id="archivo_url_display" class="mt-2 text-primary"></div>
                             </div>
                         </div>
                         <div class="row">
