@@ -51,7 +51,7 @@ $(function () {
       },
       {
         searchable: false,
-        orderable: false,
+        orderable: true,
         targets: 1,
         render: function (data, type, full, meta) {
           return `<span>${full.fake_id}</span>`;
@@ -318,7 +318,15 @@ $(function () {
           type: 'DELETE',
           url: `${baseUrl}instalaciones/${id_instalacion}`, // Ajusta la URL aquí
           success: function () {
-            dt_instalaciones_table.draw();
+            dt_instalaciones_table.ajax.reload();
+
+            // Ocultar el modal
+            $('.modal.fade.dtr-bs-modal').removeClass('show').hide();
+
+            // Ocultar el backdrop
+            $('.modal-backdrop.fade.show').remove();
+
+            // Mostrar mensaje de éxito
             Swal.fire({
               icon: 'success',
               title: '¡Eliminado!',
@@ -349,6 +357,7 @@ $(function () {
       }
     });
   });
+
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -356,9 +365,6 @@ $(function () {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-
-    // Inicializar select2
-    $('.select2').select2();
 
     // Inicializar FormValidation
     const form = document.getElementById('addNewInstalacionForm');
@@ -412,9 +418,7 @@ $(function () {
       }
     }).on('core.form.valid', function (e) {
 
-      // Validar el formulario
-
-
+          // Validar el formulario
           var formData = new FormData(form);
 
           $.ajax({
@@ -633,8 +637,6 @@ $(document).on('click', '.pdf', function () {
 
       $("#titulo_modal").text("Certificado de instalaciones");
       $("#subtitulo_modal").text(registro);
-
-
 });
 
 
