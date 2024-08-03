@@ -134,6 +134,11 @@
     setupEventListeners();
   });
 </script>
+<style>
+.text-primary {
+    color: #262b43 !important;
+}
+</style>
 @endsection
 
 @section('content')
