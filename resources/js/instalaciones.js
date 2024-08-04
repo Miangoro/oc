@@ -403,8 +403,8 @@ $(function () {
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: 'is-valid',  // Clase para campos válidos
-          eleInvalidClass: 'is-invalid', // Clase para campos inválidos
+          eleValidClass: '',  // Clase para campos válidos
+          eleInvalidClass: '', // Clase para campos inválidos
           rowSelector: '.form-floating' // Selector para el contenedor del campo
         }),
         submitButton: new FormValidation.plugins.SubmitButton(),
@@ -413,8 +413,8 @@ $(function () {
     }).on('core.form.valid', function (e) {
 
       // Validar el formulario
-  
-   
+
+
           var formData = new FormData(form);
 
           $.ajax({
@@ -458,8 +458,8 @@ $(function () {
               });
             }
           });
-        
-    
+
+
     });
   });
 
@@ -503,7 +503,8 @@ $(function () {
                 var numCliente = data.numeroCliente;
                 if (archivoUrl) {
                     try {
-                        $('#archivo_url_display').html('Documento disponible: <a href="../files/'+numCliente+'/' + archivoUrl + '" target="_blank" class="text-primary">' + archivoUrl + '</a>');
+                      $('#archivo_url_display').html(`
+                        <p>Archivo existente:</span> <a href="../files/${numCliente}/${archivoUrl}" target="_blank">${archivoUrl}</a></p>`);
                     } catch (e) {
                         $('#archivo_url_display').html('URL del archivo no válida.');
                     }
