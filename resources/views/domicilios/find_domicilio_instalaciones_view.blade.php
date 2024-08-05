@@ -134,6 +134,7 @@
     setupEventListeners();
   });
 </script>
+
 <style>
 .text-primary {
     color: #262b43 !important;
@@ -299,7 +300,7 @@
                         @csrf
 
                         <div class="form-floating form-floating-outline mb-4">
-                            <select id="edit_id_empresa" name="id_empresa" class="select2 form-select" required>
+                            <select id="edit_id_empresa" name="id_empresa" class="form-select" required>
                                 <option value="" disabled selected>Selecciona la empresa</option>
                                 @foreach ($empresas as $empresa)
                                     <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
@@ -321,7 +322,7 @@
 
                         <!-- Input de Estado -->
                         <div class="form-floating form-floating-outline mb-3">
-                            <select class="select2 form-select" id="edit_estado" name="estado" data-placeholder="Seleccione un estado" aria-label="Estado" required>
+                            <select class="form-select" id="edit_estado" name="estado" data-placeholder="Seleccione un estado" aria-label="Estado" required>
                                 <option value="">Seleccione un estado</option>
                                 @foreach($estados as $estado)
                                     <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>

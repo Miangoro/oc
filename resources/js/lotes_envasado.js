@@ -64,7 +64,7 @@ const fv = FormValidation.formValidation(addNewLoteForm, {
         volumen_total: {
             validators: {
                 notEmpty: {
-                    message: 'Por favor ingrese un numero de pedido/SKU'
+                    message: 'Por favor llene los campos de detino lote y cantidad de botellas'
                 }
             }
         },
