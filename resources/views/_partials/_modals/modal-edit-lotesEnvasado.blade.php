@@ -108,13 +108,13 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select" id="edit_unidad" name="unidad"
+                                    <select class=" form-select" id="edit_unidad" name="unidad"
                                         aria-label="Unidad">
                                         <option value="Litros">Litros</option>
                                         <option value="Mililitros">Mililitros</option>
                                         <option value="Centrilitros">Centrilitros</option>
                                     </select>
-                                    <label for="unidad">Unidad</label>
+                                    <label for="edit_unidad">Unidad</label>
                                 </div>
                             </div>
                             <div class="col-md-4">
