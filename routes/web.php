@@ -425,6 +425,8 @@ Route::get('/solicitud_Info_ClienteNOM-199', [CartaAsignacionController::class, 
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamenp'])->name('dictamen_productor');
 Route::get('/dictamen_envasador', [CartaAsignacionController::class, 'dictamene'])->name('dictamen_envasador');
 Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dictamenc'])->name('dictamen_comercializador');
+Route::get('/guia_de_translado', [CartaAsignacionController::class, 'guiasTranslado'])->name('Guias_Translado');
+
 
 //Clientes prospecto y confirmado
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');

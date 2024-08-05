@@ -11,7 +11,7 @@
             font-family: Arial, sans-serif;
             margin: 30px;
             font-size: 15px;
-            color:#000000;
+            color: #000000;
         }
 
         .header {
@@ -19,14 +19,34 @@
             margin-bottom: 30px;
         }
 
-        .text_marge{
+        .colorRed {
+            color: red;
+            font-size: bold;
+        }
+
+        .tituloLetter {
+            font-size: 16px;
+        }
+
+        .leftLetter{
+            text-align: left;
+        }
+        .rightLetter {
+            text-align: right;
+        }
+
+        .bigLetter {
+            font-size: 31px;
+        }
+
+        .text_marge {
             margin: 25px;
         }
 
         .header img {
             width: 250px;
             float: left;
-            
+
         }
 
         .header h1 {
@@ -56,99 +76,182 @@
 
         .text_al {
             text-align: right;
-            margin: 0; padding: 0;
+            margin: 0;
+            padding: 0;
+            font-size: 12px;
+
 
         }
 
-
-        .section .bold {
-            font-weight: bold;
-        }
-
-
-
-        .text_c{
+        .text_c {
             color: rgb(4, 57, 78);
-            margin: 2px 0; /* Ajusta el margen según sea necesario */
+            margin: 2px 0;
+            /* Ajusta el margen según sea necesario */
 
         }
+
         .content {
-            margin-left: 20rem; /* Adjust this value as needed to ensure enough space on the right */
+            margin-left: 20rem;
+            /* Adjust this value as needed to ensure enough space on the right */
+        }
+
+
+
+        /*Tablas*/
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 4px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #608390;
+            color: white;
+            text-align: center;
+            font-size: 11px;
+            font-family: Arial, sans-serif;
+
+        }
+
+        .td-margins {
+            border-bottom: none;
+            border-top: none;
+            border-right: 1px solid black;
+            border-left: 1px solid black;
+        }
+
+        .td-no-margins {
+            border: none;
+        }
+
+        .td-barra {
+            border-bottom: none;
+            border-top: none;
+            border-right: none;
+            border-left: 1px solid black;
+        }
+
+        .letra_td {
+            text-align: right;
+        }
+
+        .th-color {
+            background-color: #d8d8d8;
+        }
+
+        .con-negra {
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
-    <div class="header">
-        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM">
-        <h2 class="text_c font-weight-bold">Centro de Innovación y Desarrollo Agroalimentario <br> de Michoacán, A.C.</h2>
-        <h2>Acreditado como organismo de certificación de producto con <br>
-             número de acreditación 144/18 ante la Entidad Mexicana <br> 
-             de Acreditación, A.C.</h2>
+    <div class="header" style="margin-top: 8%">
+        <p class="text_al left">F-UV-21-04 Versión 4</p>
 
-    </div>
-
-    <div class="section content">
-        <p class="text_al left">Oficio:<strong>CIDAM052/OC/____/20__</strong></p>
-        <p class="text_al left">Morelia, Michoacán. a __ de _____ del 20__</p>
-        <p class="text_al left">ASUNTO: Asignación del número de cliente.</p>
     </div>
 
     <div class="section">
-        <strong>C. REPRESENTANTE LEGAL</strong> <br>
-        <span class="font-weight-bold" style="text-decoration: underline;"> {{ !empty($datos[0]->representante) && $datos[0]->representante !== 'No aplica' ? $datos[0]->representante : $datos[0]->razon_social }}</span> <br>
-        <strong>PRESENTE</strong>
+        <center>
+            <b class="tituloLetter" >Folio de Guía No. : <b class="colorRed"> 539G005</b> No. de predio: UVEM539 <br>
+                Nombre del predio: TRES CRUCES M20464 <br>
+                Nombre de la empresa/productor: CRISTA LA SANTA S.A.P.I. DE C.V. <br>
+                No. del cliente: NOM-070-005C
+            <div  style="margin-top: 3%">
+                <b class="bigLetter">Guía de traslado de maguey o agave</b>
+            </div>
+        </center>
+    </div>
+    <table>
+        <tr>
+            <td style=" text-align: left" colspan="2"> Fecha de corte:</td>
+            <td class="leftLetter" colspan="2">N° de cliente:</td>
+        </tr>
+        <tr>
+            <td class="leftLetter" colspan="2"> Tipo de maguey (Tipo de agave):</td>
+            <td class="leftLetter" colspan="2">N° de cliente:</td>
+        </tr>
+        <tr>
+            <td class="leftLetter" colspan="2"> Edad:</td>
+            <td class="leftLetter" colspan="2">Maguey Espadín (A. angustifolia)</td>
+        </tr>
+        <tr>
+            <td class="leftLetter" colspan="2"> No. de lote o No. de tapada:</td>
+            <td class="leftLetter" colspan="2">N° de cliente:</td>
+        </tr>
+        <tr>
+            <td class="leftLetter" colspan="2"> No. de piñas comercializadas:</td>
+            <td class="leftLetter" colspan="2">N° de cliente:</td>
+        </tr>
+        <tr>
+            <td class="leftLetter" colspan="2"> No. de piñas anterior:</td>
+            <td class="leftLetter" colspan="2">N° de cliente:</td>
+        </tr>
+        <tr>
+            <td class="leftLetter" colspan="2"> No. de piñas actual:</td>
+            <td class="leftLetter" colspan="2">N° de cliente:</td>
+        </tr>
+        <tr>
+             <td class="leftLetter"> Kg de maguey: </td>
+             <td class="leftLetter">&nbsp;</td>
+             <td class="leftLetter"> %ART</td>
+             <td class="leftLetter">&nbsp;</td>
+        </tr>
+    </table>
+
+    <b class="tituloLetter"><br>I. &nbsp; &nbsp;  &nbsp; Datos del comprador</b>
+
+
+    <table style="margin-bottom: 30px">
+        <br>
+        <tr>
+            <td class="leftLetter">Nombre del cliente:</td>
+            <td class="leftLetter">Yucli Emmanuel Baza Ortuño</td>
+            <td class="leftLetter">No. de cliente:</td>
+            <td class="leftLetter">124342432</td>
+        </tr>
+        <tr>
+            <td class="leftLetter">Fecha de ingreso a
+                fábrica:</td>
+            <td colspan="3"></td>
+        </tr>
+        <tr>
+            <td class="leftLetter">Domicilio de
+                entrega:
+            </td>
+            <td colspan="3"></td>
+        </tr>
+    </table>
+
+    <table style="margin-bottom: 35px">
+        <br>
+        <tr style="font-size: 15px;">
+            <td colspan="2" class="td-no-margins leftLetter"> &nbsp; &nbsp;  &nbsp; &nbsp;Firma del vendedor</td>
+            <td colspan="2" class="td-no-margins rightLetter">Firma del comprador &nbsp; &nbsp;  &nbsp; &nbsp;</td>
+        </tr>
+    </table>
+    <div style="margin-bottom: 1px; text-align: center">
+        <p style="font-size: 18px">B.T.G. Erick antonio Mejía Vaca <br>
+            Gerente Técnico Sustituto de la Unidad de Inspección</p>
     </div>
 
-    <div class="section">
-        <p style="text-align: justify; text-indent: 40px;">Por medio de la presente el Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. acreditado como Organismo de Certificación de Producto, con número 144/18 ante la Entidad Mexicana de Acreditación, A.C. de acuerdo con los criterios establecidos en la Norma Mexicana NMX-EC-17065-IMNC-2014/ISO/IEC 17065:2012 para las actividades de certificación. Se le informa que a partir de esta fecha queda inscrito como cliente del Organismo Certificador del CIDAM, como parte de la cadena productiva de Bebidas alcohólicas que contienen
-Mezcal (Bebidas alcohólicas preparadas, Cócteles, Licores o cremas) en los eslabones 
-            @php
-                $total = count($datos);
-                $i = 0;
-            @endphp
-            @foreach ($datos as $eslabon)
-            
-            <strong>{{$eslabon->actividad}}</strong>@if ($i > 0),@endif
-            @php
-            $i++;
-        @endphp
-            @endforeach
-            
-            por consiguiente se le designa el número:</p>
-        <div class=" text-center">
-            <strong>{{$datos[0]->numero_cliente}}</strong>
-        </div>
-        <div style="margin-bottom: 40px;">
-            <p>Sin otro en particular le envío un cordial saludo.</p>
+    </div>
+    <table>
+        <tr>
+            <td colspan="2" class="td-no-margins leftLetter" style="font-size: 10px">C.c.p Expediente de la Unidad de Verificación del UMSNH<br> <div style="margin-left: 20%">________________________</div></td>
+            <td colspan="2" class="td-no-margins rightLetter" style="font-size: 10px">Entrada en vigor: 28-05-2022</td>
+        </tr>
+    </table>
+    <img src="{{ public_path('img_pdf/membretado_guia.png') }}" alt="Logo CIDAM">
 
-        </div  >
 
-        
 
-    </div>
-    <div class="text_marge text-center">
-        <p>Atentamente.</p>
-
-    </div>
-    <div style="margin-bottom: 50px; text-align: center">
-        <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/firma_mayra.png') }}">
-        <p class="text_al text-center">GERENTE TÉCNICO DEL ORGANISMO</p>
-        <p class="text_al text-center">CERTIFICADOR CIDAM A.C.</p>
-    </div>
-    
-    <div style="margin-bottom: 20px;">
-        <p class="text_al">Carta asignación del número de cliente NMX-V-052-NORMEX-2016 F7.1-04-04</p>
-        <p class="text_al">Ed 0 Entrada en vigor. 12-09-2022</p>
-    </div>
-    <div>
-        <p class="text-center" style="font-size: 10px;">
-            Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede <br> 
-            ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
-        </p>
-    </div>
-    
-    
 </body>
 
 </html>

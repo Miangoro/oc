@@ -90,5 +90,13 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.SolicitudDeServicio');
         return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
     }
+
+
+    //Guias de translado
+    public function guiasTranslado()
+    {
+        $pdf = Pdf::loadView('pdfs.GuiaDeTranslado');
+        return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
+    }
     
 }

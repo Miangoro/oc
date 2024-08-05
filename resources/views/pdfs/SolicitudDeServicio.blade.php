@@ -76,7 +76,7 @@
         <tr>
             <td rowspan="3" colspan="3">
                 <div>
-                        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM"
+                        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM">
                 </div>
             </td>
             <td class="con-negra" rowspan="2" colspan="3" style="font-size: 12px;">SOLICITUD DE SERVICIOS</td>
