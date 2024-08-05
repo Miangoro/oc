@@ -139,16 +139,6 @@
 .text-primary {
     color: #262b43 !important;
 }
-
-/* Clase para ocultar el modal */
-.hidden-modal {
-  display: none !important;
-}
-
-/* Ocultar el modal backdrop */
-.modal-backdrop.fade.show {
-  display: none !important;
-}
 </style>
 @endsection
 
