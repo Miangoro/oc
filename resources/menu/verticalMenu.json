@@ -48,7 +48,7 @@
     {
       "name": "Domicilios",
       "icon": "menu-icon ri-map-pin-user-fill",
-      "slug": "domicilios",
+      "slug": "domicilio",
       "submenu": [
         {
           "url": "laravel/user-management",
@@ -63,26 +63,15 @@
         {
           "url": "domicilios/instalaciones",
           "name": "Instalaciones",
-          "slug": "domicilios-instalaciones"
+          "slug": "domicilio-instalaciones"
         }
       ]
     },
     {
       "name": "Documentación",
+      "url": "documentacion",
       "icon": "menu-icon ri-folder-check-fill",
-      "slug": "laravel-example",
-      "submenu": [
-        {
-          "url": "laravel/user-management",
-          "name": "Prospectos",
-          "slug": "laravel-example-user-management"
-        },
-        {
-          "url": "laravel/user-management",
-          "name": "Activos",
-          "slug": "laravel-example-user-management"
-        }
-      ]
+      "slug": "documentacion"
     },
     {
       "name": "Solicitudes",
@@ -133,10 +122,16 @@
         },
         {
           "url": "catalogo/tipos",
-          "name": "Tipos de maguey/agave",
-          "slug": "catalogo-tipos"
+          "name": "Tipos de agave",
+          "slug": "tipos-maguey-agave"
         }
       ]
+    },
+    {
+      "name": "Guías de translado",
+      "url": "guias",
+      "icon": "menu-icon ri-truck-fill",
+      "slug": "documentacion"
     }
   ]
 }
