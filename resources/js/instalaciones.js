@@ -171,6 +171,9 @@ $(function () {
                   if (columnIndex === 5) {
                     return 'ViewSuspend';
                   }
+                  if (columnIndex === 1) { // Asegúrate de que el índice de columna es el correcto para el ID
+                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
+                  }
                   return inner;
                 }
               }
@@ -187,6 +190,9 @@ $(function () {
                 body: function (inner, rowIndex, columnIndex) {
                   if (columnIndex === 5) {
                     return 'ViewSuspend';
+                  }
+                  if (columnIndex === 1) { // Asegúrate de que el índice de columna es el correcto para el ID
+                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
                   }
                   return inner;
                 }
@@ -205,6 +211,9 @@ $(function () {
                   if (columnIndex === 5) {
                     return 'ViewSuspend';
                   }
+                  if (columnIndex === 1) { // Asegúrate de que el índice de columna es el correcto para el ID
+                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
+                  }
                   return inner;
                 }
               }
@@ -221,6 +230,9 @@ $(function () {
                 body: function (inner, rowIndex, columnIndex) {
                   if (columnIndex === 5) {
                     return 'ViewSuspend';
+                  }
+                  if (columnIndex === 1) { // Asegúrate de que el índice de columna es el correcto para el ID
+                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
                   }
                   return inner;
                 }
