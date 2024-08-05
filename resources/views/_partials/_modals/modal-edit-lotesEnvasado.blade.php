@@ -68,7 +68,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class=" form-select edit_marca" id="edit_marca" name="id_marca"
+                                    <select class="select2 form-select edit_marca" id="edit_marca" name="id_marca"
                                         aria-label="Marca">
                                         <option value="" selected>Selecciona una marca</option>
                                         @foreach ($marcas as $marca)
