@@ -421,63 +421,127 @@ $(function () {
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: 'is-valid',  // Clase para campos válidos
-          eleInvalidClass: 'is-invalid', // Clase para campos inválidos
-          rowSelector: '.form-floating' // Selector para el contenedor del campo
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
         }),
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function (e) {
+      // Validar el formulario
+      var formData = new FormData(form);
 
-          // Validar el formulario
-          var formData = new FormData(form);
+      $.ajax({
+        url: '/instalaciones',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#modalAddInstalacion').modal('hide');
+          $('#addNewInstalacionForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-users').DataTable().ajax.reload();
+          console.log(response);
 
-          $.ajax({
-            url: '/instalaciones',
-            type: 'POST',
-            data: formData,
-            processData: false, // Evita la conversión automática de datos a cadena
-            contentType: false, // Evita que se establezca el tipo de contenido
-            success: function (response) {
-              // Ocultar el modal y reiniciar el formulario
-              $('#modalAddInstalacion').modal('hide');
-              $('#addNewInstalacionForm')[0].reset();
-
-              // Reiniciar los campos select2
-              $('.select2').val(null).trigger('change');
-
-              // Recargar los datos en la tabla
-              $('.datatables-users').DataTable().ajax.reload();
-
-              console.log(response);
-
-              Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-                text: response.message, // Mensaje de éxito de la respuesta
-                customClass: {
-                  confirmButton: 'btn btn-success'
-                }
-              });
-            },
-            error: function (xhr) {
-              console.log('Error:', xhr.responseText); // Muestra el error en la consola
-
-              Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: 'Error al agregar la instalación', // Mensaje de error
-                customClass: {
-                  confirmButton: 'btn btn-danger'
-                }
-              });
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
             }
           });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
 
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al agregar la instalación',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
 
+    // Mostrar u ocultar campos adicionales según el tipo de certificación
+    $('#certificacion').on('change', function () {
+      if ($(this).val() === 'otro_organismo') {
+        $('#certificado-otros').removeClass('d-none');
+
+        // Agregar la validación a los campos adicionales
+        fv.addField('url[]', {
+          validators: {
+            notEmpty: {
+              message: 'Debes subir un archivo de certificado.'
+            },
+            file: {
+              extension: 'pdf,jpg,jpeg,png',
+              type: 'application/pdf,image/jpeg,image/png',
+              maxSize: 2097152, // 2 MB en bytes
+              message: 'El archivo debe ser un PDF o una imagen (jpg, png) y no debe superar los 2 MB.'
+            }
+          }
+        });
+
+        fv.addField('folio', {
+          validators: {
+            notEmpty: {
+              message: 'El folio o número del certificado es obligatorio.'
+            }
+          }
+        });
+
+        fv.addField('id_organismo', {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un organismo de certificación.'
+            }
+          }
+        });
+
+        fv.addField('fecha_emision', {
+          validators: {
+            notEmpty: {
+              message: 'La fecha de emisión es obligatoria.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'La fecha de emisión no es válida.'
+            }
+          }
+        });
+
+        fv.addField('fecha_vigencia', {
+          validators: {
+            notEmpty: {
+              message: 'La fecha de vigencia es obligatoria.'
+            },
+            date: {
+              format: 'YYYY-MM-DD',
+              message: 'La fecha de vigencia no es válida.'
+            }
+          }
+        });
+
+      } else {
+        $('#certificado-otros').addClass('d-none');
+
+        // Quitar la validación de los campos adicionales
+        fv.removeField('url[]');
+        fv.removeField('folio');
+        fv.removeField('id_organismo');
+        fv.removeField('fecha_emision');
+        fv.removeField('fecha_vigencia');
+      }
     });
   });
+
 
 
   //new
