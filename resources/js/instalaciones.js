@@ -332,12 +332,6 @@ $(function () {
           success: function () {
             dt_instalaciones_table.ajax.reload();
 
-            // Ocultar el modal
-            $('.modal.fade.dtr-bs-modal').removeClass('show').hide();
-
-            // Ocultar el backdrop
-            $('.modal-backdrop.fade.show').remove();
-
             // Mostrar mensaje de éxito
             Swal.fire({
               icon: 'success',
