@@ -59,9 +59,9 @@ $(document).ready(function () {
             { data: 'id_categoria' },
             { data: 'id_clase' },
             { data: 'id_tipo' },
+         /* { : 'id_guia' }, */
             { data: 'ingredientes' },
             { data: 'edad' },
-            /* { : 'id_guia' }, */
             { data: 'folio_certificado' },
             { data: 'id_organismo' },
             { data: 'fecha_emision' },
@@ -73,7 +73,7 @@ $(document).ready(function () {
                 // For Responsive
                 className: 'control',
                 searchable: false,
-                orderable: false,
+                orderable: true,
                 responsivePriority: 2,
                 targets: 0,
                 render: function (data, type, full, meta) {
@@ -287,7 +287,7 @@ $(document).ready(function () {
     });
 
     
-    var dt_user_table = $('.datatables-users'),
+var dt_user_table = $('.datatables-users'),
   select2Elements = $('.select2'),
   userView = baseUrl + 'app/user/view/account'
   // Función para inicializar Select2 en elementos específicos
@@ -379,74 +379,127 @@ $(document).on('click', '.delete-record', function () {
     });
 });
 
+/* registro de un nuevo lote */
 
-    
-$('#loteForm').on('submit', function(event) {
-    event.preventDefault(); // Evita el envío por defecto del formulario
+$(document).ready(function() {
+    // Validar campos requeridos al enviar el formulario
+    $('#loteForm').on('submit', function(event) {
+        event.preventDefault(); // Evita el envío por defecto del formulario
 
-    // Crear un nuevo FormData con los datos del formulario
-    var formData = new FormData(this);
+        var form = this;
+        var valid = true;
 
-    // Agregar el token CSRF al FormData
-    formData.append('_token', $('input[name="_token"]').val());
+        // Validar todos los campos requeridos
+        form.querySelectorAll('input[required], select[required]').forEach(function(input) {
+            if (!validateField(input)) {
+                valid = false;
+            }
+        });
 
-    // Depurar el contenido de FormData
-    for (var pair of formData.entries()) {
-        console.log(pair[0] + ', ' + pair[1]);
-    }
-
-    $.ajax({
-        type: 'POST',
-        url: $(this).attr('action'), // Usa la URL definida en el atributo 'action' del formulario
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            // Mostrar mensaje de éxito
+        if (!valid) {
+            // Mostrar mensaje de advertencia si hay campos no válidos
             Swal.fire({
-                icon: 'success',
-                title: '¡Registrado!',
-                text: 'El lote ha sido registrado correctamente.',
+                icon: 'warning',
+                title: 'Campos requeridos',
+                text: 'Por favor, complete todos los campos requeridos.',
                 customClass: {
-                    confirmButton: 'btn btn-success'
-                }
-            }).then(function() {
-                // Actualizar DataTable
-                dt_user.draw();
-                // Cerrar modal
-                $('#offcanvasAddLote').modal('hide');
-                // Resetear formulario
-                $('#loteForm')[0].reset();
-                // Ocultar campos adicionales
-                ocCidamFields.classList.add('d-none');
-                otroOrganismoFields.classList.add('d-none');
-            });
-        },
-        error: function(xhr) {
-            // Mostrar mensaje de error
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo registrar el lote. Inténtalo de nuevo más tarde.',
-                customClass: {
-                    confirmButton: 'btn btn-danger'
+                    confirmButton: 'btn btn-warning'
                 }
             });
+            return; // No continuar con el envío del formulario
         }
+
+        // Crear un nuevo FormData con los datos del formulario
+        var formData = new FormData(this);
+
+        // Agregar el token CSRF al FormData
+        formData.append('_token', $('input[name="_token"]').val());
+
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr('action'), // Usa la URL definida en el atributo 'action' del formulario
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                // Mostrar mensaje de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Registrado!',
+                    text: 'El lote ha sido registrado correctamente.',
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                }).then(function() {
+                    // Actualizar DataTable
+                    dt_user.draw();
+                    // Cerrar modal
+                    $('#offcanvasAddLote').modal('hide');
+                    // Resetear formulario
+                    $('#loteForm')[0].reset();
+                    // Ocultar campos adicionales
+                    $('#oc_cidam_fields').addClass('d-none');
+                    $('#otro_organismo_fields').addClass('d-none');
+                });
+            },
+            error: function(xhr) {
+                // Mostrar mensaje de error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo registrar el lote. Inténtalo de nuevo más tarde.',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
+        });
     });
+
+    // Validar campo en pérdida de foco
+    $('#loteForm').on('blur', 'input[required], select[required]', function() {
+        validateField(this);
+    });
+
+    function validateField(field) {
+        var valid = true;
+        var errorMessageElement = field.parentNode.querySelector('.invalid-feedback');
+
+        // Eliminar mensaje de error anterior si existe
+        if (errorMessageElement) {
+            errorMessageElement.remove();
+        }
+
+        // Crear nuevo mensaje de error
+        var errorMessageElement = document.createElement('div');
+        errorMessageElement.className = 'invalid-feedback';
+        errorMessageElement.textContent = field.getAttribute('data-error-message') || 'Este campo es requerido';
+
+        if (!field.value || (field.tagName === 'SELECT' && field.value === '')) {
+            field.classList.add('is-invalid');
+            field.parentNode.appendChild(errorMessageElement);
+            valid = false;
+        } else {
+            field.classList.remove('is-invalid');
+        }
+
+        return valid;
+    }
 });
 
-/*  */
-/*  */
+
+
+
 $(document).on('click', '.edit-record', function () {
     var loteId = $(this).data('id');
     $('#edit_lote_id').val(loteId);
 
-    // Realiza una solicitud AJAX para obtener los datos del lote
     $.ajax({
         url: '/lotes-a-granel/' + loteId + '/edit',
         method: 'GET',
         success: function (data) {
+            console.log(data); // Verifica la respuesta del servidor
+
             if (data.success) {
                 var lote = data.lote;
 
@@ -454,47 +507,103 @@ $(document).on('click', '.edit-record', function () {
                 $('#edit_nombre_lote').val(lote.nombre_lote);
                 $('#edit_id_empresa').val(lote.id_empresa).trigger('change');
                 $('#edit_tipo_lote').val(lote.tipo_lote);
-                $('#edit_id_guia').val(data.guias).trigger('change'); // Manejo de múltiples guías
+                $('#edit_id_guia').val(data.guias).trigger('change');
                 $('#edit_volumen').val(lote.volumen);
                 $('#edit_cont_alc').val(lote.cont_alc);
                 $('#edit_id_categoria').val(lote.id_categoria).trigger('change');
                 $('#edit_clase_agave').val(lote.id_clase).trigger('change');
                 $('#edit_tipo_agave').val(lote.id_tipo).trigger('change');
 
-                // Mostrar campos condicionales según el tipo de lote y rellenar los valores específicos
-                if (lote.tipo_lote == '1') { // OC CIDAM
+                // Mostrar campos condicionales
+                if (lote.tipo_lote == '1') {
                     $('#edit_oc_cidam_fields').removeClass('d-none');
                     $('#edit_otro_organismo_fields').addClass('d-none');
                     $('#edit_ingredientes').val(lote.ingredientes);
                     $('#edit_edad').val(lote.edad);
-                } else if (lote.tipo_lote == '2') { // Otro organismo
-                                    // Mostrar URL del archivo debajo del campo de archivo
-                var archivoUrl = data.archivo_url || '';
-                if (archivoUrl) {
-                    try {
-                        $('#archivo_url_display').html('Documento disponible: <a href="' + archivoUrl + '" target="_blank" class="text-primary">' + archivoUrl + '</a>');
-                    } catch (e) {
-                        $('#archivo_url_display').html('URL del archivo no válida.');
-                    }
-                } else {
-                    $('#archivo_url_display').html('No hay archivo disponible.');
-                }
-                
+                } else if (lote.tipo_lote == '2') {
                     $('#edit_otro_organismo_fields').removeClass('d-none');
                     $('#edit_oc_cidam_fields').addClass('d-none');
                     $('#edit_folio_certificado').val(lote.folio_certificado);
-                    $('#edit_organismo_certificacion').val(lote.organismo_certificacion);
+                    $('#edit_organismo_certificacion').val(lote.id_organismo);
                     $('#edit_fecha_emision').val(lote.fecha_emision);
                     $('#edit_fecha_vigencia').val(lote.fecha_vigencia);
+
+                    // Mostrar enlace al archivo PDF si está disponible
+                    var archivoDisponible = false;
+                    var documentos = data.documentos;
+                    documentos.forEach(function (documento) {
+                        if (documento.url) {
+                            archivoDisponible = true;
+                            var fileName = documento.url.split('/').pop();
+                            $('#archivo_url_display_otro_organismo').html('Documento disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileName + '</a>');
+                        }
+                    });
+                    if (!archivoDisponible) {
+                        $('#archivo_url_display_otro_organismo').html('No hay archivo disponible.');
+                    }
                 } else {
                     $('#edit_oc_cidam_fields').addClass('d-none');
                     $('#edit_otro_organismo_fields').addClass('d-none');
                 }
+                // Actualizar la tabla de documentos
+                var documentos = data.documentos;
+                if (documentos && documentos.length > 0) {
+                    var documentoCompletoUrlAsignado = false; // Variable para controlar la asignación del documento completo
+                    var documentoAjusteUrlAsignado = false;   // Variable para controlar la asignación del documento de ajuste
 
+                    documentos.forEach(function (documento) {
+                        var archivoUrlDisplayCompleto = $('#archivo_url_display_completo_' + documento.id_documento);
+                        var archivoUrlDisplayAjuste = $('#archivo_url_display_ajuste_' + documento.id_documento);
+                        var folioFqCompletoInput = $('#folio_fq_completo_' + documento.id_documento);
+                        var folioFqAjusteInput = $('#folio_fq_ajuste_' + documento.id_documento);
+                        
+                        // Mostrar el documento completo
+                        if (documento.tipo.includes('Análisis completo') && documento.url && !documentoCompletoUrlAsignado) {
+                            var fileNameCompleto = documento.url.split('/').pop();
+                            archivoUrlDisplayCompleto.html('Documento completo disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameCompleto + '</a>');
+                            folioFqCompletoInput.val(documento.nombre);
+                            documentoCompletoUrlAsignado = true; // Marcar como asignado
+                        }
+
+                        // Mostrar el documento de ajuste
+                        if (documento.tipo.includes('Ajuste de grado') && documento.url && !documentoAjusteUrlAsignado) {
+                            var fileNameAjuste = documento.url.split('/').pop();
+                            archivoUrlDisplayAjuste.html('Documento ajuste disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameAjuste + '</a>');
+                            folioFqAjusteInput.val(documento.nombre);
+                            documentoAjusteUrlAsignado = true; // Marcar como asignado
+                        }
+                    });
+
+                    // Si no se asignó un documento completo, mostrar un mensaje
+                    if (!documentoCompletoUrlAsignado) {
+                        $('#archivo_url_display_completo_' + documento.id_documento).html('No hay archivo completo disponible.');
+                    }
+
+                    // Si no se asignó un documento de ajuste, mostrar un mensaje
+                    if (!documentoAjusteUrlAsignado) {
+                        $('#archivo_url_display_ajuste_' + documento.id_documento).html('No hay archivo de ajuste disponible.');
+                    }
+                } else {
+                    console.log('No hay documentos disponibles.');
+                }
+
+                console.log('Documentos:', documentos);
+                documentos.forEach(function (documento) {
+                    console.log('Documento ID:', documento.id_documento);
+                    console.log('Tipo:', documento.tipo);
+                    console.log('URL:', documento.url);
+                    
+                    var archivoUrlDisplayCompleto = $('#archivo_url_display_completo_' + documento.id_documento);
+                    var archivoUrlDisplayAjuste = $('#archivo_url_display_ajuste_' + documento.id_documento);
+                    
+                    console.log('Completo ID:', '#archivo_url_display_completo_' + documento.id_documento);
+                    console.log('Ajuste ID:', '#archivo_url_display_ajuste_' + documento.id_documento);
+                });
+
+                
                 // Mostrar el modal
                 $('#offcanvasEditLote').modal('show');
             } else {
-                // Mostrar un mensaje de error con SweetAlert2
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -507,7 +616,6 @@ $(document).on('click', '.edit-record', function () {
         },
         error: function (error) {
             console.error('Error al cargar los datos del lote:', error);
-            // Mostrar un mensaje de error con SweetAlert2
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
@@ -519,6 +627,15 @@ $(document).on('click', '.edit-record', function () {
         }
     });
 });
+
+
+
+
+
+
+
+
+
 
     const edit_tipoLoteSelect = document.getElementById('edit_tipo_lote');
     const edit_ocCidamFields = document.getElementById('edit_oc_cidam_fields');
@@ -548,7 +665,8 @@ $(document).on('click', '.edit-record', function () {
 
 
    // Manejar el envío del formulario
-   $('#loteFormEdit').on('submit', function(e) {
+// Manejar el envío del formulario
+$('#loteFormEdit').on('submit', function(e) {
     e.preventDefault();
 
     var formData = new FormData(this);
@@ -561,15 +679,15 @@ $(document).on('click', '.edit-record', function () {
         contentType: false,
         processData: false,
         success: function(response) {
+            dt_user.ajax.reload();
+            $('#offcanvasEditLote').modal('hide');
             Swal.fire({
                 icon: 'success',
                 title: '¡Éxito!',
-                text: 'Lote actualizado con éxito',
-                timer: 1500,
-                showConfirmButton: false
-            }).then(function() {
-                $('#offcanvasEditLote').modal('hide');
-                location.reload();
+                text: response.message,
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
             });
         },
         error: function(xhr) {
@@ -580,7 +698,7 @@ $(document).on('click', '.edit-record', function () {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'No se pudo actualizar los datos del lote.',
+                    html: errorMessages,
                     customClass: {
                         confirmButton: 'btn btn-danger'
                     }
@@ -598,7 +716,8 @@ $(document).on('click', '.edit-record', function () {
         }
     });
 });
-    
+
+
 
 
 
