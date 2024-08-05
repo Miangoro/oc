@@ -422,6 +422,8 @@ class LotesGranelController extends Controller
                     $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
                     $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); // Aquí se guarda en la ruta definida storage/public
     
+                    Log::info('Archivo guardado:', ['path' => $filePath, 'filename' => $filename]);
+    
                     $documentacion_url = Documentacion_url::updateOrCreate(
                         ['id_documento' => $request->id_documento[$index], 'id_relacion' => $lote->id_lote_granel],
                         [
@@ -459,6 +461,7 @@ class LotesGranelController extends Controller
             ], 500);
         }
     }
+    
     
     
 

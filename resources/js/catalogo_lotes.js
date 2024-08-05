@@ -670,6 +670,8 @@ $('#loteFormEdit').on('submit', function(e) {
     e.preventDefault();
 
     var formData = new FormData(this);
+    console.log([...formData]); // Mostrar el contenido del FormData
+
     var loteId = $('#edit_lote_id').val();
 
     $.ajax({
@@ -716,7 +718,6 @@ $('#loteFormEdit').on('submit', function(e) {
         }
     });
 });
-
 
 
 
