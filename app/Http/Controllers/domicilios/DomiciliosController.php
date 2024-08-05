@@ -58,7 +58,7 @@ class DomiciliosController extends Controller
                     $query->where('tipo', 2);
                 }) ->where(function ($query) {
                     $query->whereHas('documentos', function ($query) {
-                        $query->whereIn('id_documento', [127, 128]);
+                        $query->whereIn('id_documento', [127, 128, 129]);
                     })
                     ->orWhereDoesntHave('documentos');
                 })
@@ -74,7 +74,7 @@ class DomiciliosController extends Controller
                     $query->where('tipo', 2);
                 }) ->where(function ($query) {
                     $query->whereHas('documentos', function ($query) {
-                        $query->whereIn('id_documento', [127, 128]);
+                        $query->whereIn('id_documento', [127, 128, 129]);
                     })
                     ->orWhereDoesntHave('documentos');
                 })
