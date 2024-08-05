@@ -409,8 +409,8 @@ $(function () {
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',  // Clase para campos válidos
-          eleInvalidClass: '', // Clase para campos inválidos
+          eleValidClass: 'is-valid',  // Clase para campos válidos
+          eleInvalidClass: 'is-invalid', // Clase para campos inválidos
           rowSelector: '.form-floating' // Selector para el contenedor del campo
         }),
         submitButton: new FormValidation.plugins.SubmitButton(),
