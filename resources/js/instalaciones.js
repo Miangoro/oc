@@ -715,10 +715,7 @@ $(function () {
     var id_instalacion = $(this).data('id');
     var url = baseUrl + 'domicilios/edit/' + id_instalacion;
 
-    // Limpiar campos del formulario antes de cargar nuevos datos
-    $('#edit_certificado_otros').addClass('d-none');
-    $('#archivo_url_display').html('No hay archivo disponible.');
-
+    // Solicitud para obtener los datos de la instalación
     $.get(url, function (data) {
         if (data.success) {
             var instalacion = data.instalacion;
@@ -749,8 +746,8 @@ $(function () {
                 var numCliente = data.numeroCliente;
                 if (archivoUrl) {
                     try {
-                      $('#archivo_url_display').html(`
-                        <p>Archivo existente:</span> <a href="../files/${numCliente}/${archivoUrl}" target="_blank">${archivoUrl}</a></p>`);
+                        $('#archivo_url_display').html(`
+                            <p>Archivo existente:</span> <a href="../files/${numCliente}/${archivoUrl}" target="_blank">${archivoUrl}</a></p>`);
                     } catch (e) {
                         $('#archivo_url_display').html('URL del archivo no válida.');
                     }
@@ -775,7 +772,9 @@ $(function () {
                 }
             });
         }
-    }).fail(function() {
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.error('Error en la solicitud:', textStatus, errorThrown);
+
         Swal.fire({
             icon: 'error',
             title: 'Error',
@@ -786,6 +785,24 @@ $(function () {
         });
     });
 });
+
+// Limpiar los campos del formulario cuando el modal se oculta
+$('#modalEditInstalacion').on('hidden.bs.modal', function () {
+    $('#edit_certificado_otros').addClass('d-none');
+    $('#archivo_url_display').html('No hay archivo disponible.');
+
+    // Limpiar campos individuales
+    $('#edit_id_empresa').val('').trigger('change');
+    $('#edit_tipo').val('').trigger('change');
+    $('#edit_estado').val('').trigger('change');
+    $('#edit_direccion').val('');
+    $('#edit_certificacion').val('oc_cidam').trigger('change');
+    $('#edit_folio').val('');
+    $('#edit_id_organismo').val('').trigger('change');
+    $('#edit_fecha_emision').val('');
+    $('#edit_fecha_vigencia').val('');
+});
+
 
 // Manejar el cambio en el tipo de instalación
 $(document).on('change', '#edit_tipo', function () {

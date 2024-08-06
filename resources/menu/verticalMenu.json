@@ -56,7 +56,7 @@
           "slug": "domicilios-fiscal"
         },
         {
-          "url": "domicilios/instalaciones",
+          "url": "domicilios/predios",
           "name": "Predios",
           "slug": "domicilios-predios"
         },
@@ -128,17 +128,12 @@
       ]
     },
     {
-      "name": "Guías de translado",
-      "icon": "menu-icon ri-truck-fill",
-      "slug": "guias",
-      "submenu": [
-        {
-          "url": "guias/guias_de_agave",
-          "name": "Guias de agave/maguey",
-          "slug": "translado-guias"
-        }
-      ]
+      "name": "Documentación",
+      "url": "guias/guias_de_agave",
+      "icon": "menu-icon ri-folder-check-fill",
+      "slug": "translado-guias"
     }
+
 
   ]
 }

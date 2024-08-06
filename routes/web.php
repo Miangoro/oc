@@ -171,6 +171,7 @@ use App\Http\Controllers\guias\GuiasController;
 use App\Http\Controllers\clientes\clientesConfirmadosController;
 use App\Http\Controllers\documentacion\documentacionController;
 use App\Http\Controllers\domicilios\DomiciliosController;
+use App\Http\Controllers\domicilios\prediosController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\getFuncionesController;
 use App\Http\Controllers\usuarios\UsuariosController;
@@ -488,6 +489,7 @@ Route::put('/lotes-envasado/{id}', [lotesEnvasadoController::class, 'update']);
 //Domicilios fiscal
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
 
+
 //Domicilios Instalaciones
 Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio-instalaciones');
 Route::resource('/instalaciones-list', DomiciliosController::class);
@@ -495,6 +497,13 @@ Route::delete('instalaciones/{id_instalacion}', [DomiciliosController::class, 'd
 Route::post('/instalaciones', [DomiciliosController::class, 'store']);
 Route::get('domicilios/edit/{id_instalacion}', [DomiciliosController::class, 'edit'])->name('domicilios.edit');
 Route::put('instalaciones/{id_instalacion}', [DomiciliosController::class, 'update']);
+
+//Domicilio predios
+Route::get('/domicilios/predios', [PrediosController::class, 'UserManagement'])->name('domicilios-predios');
+Route::resource('/predios-list', PrediosController::class);
+Route::get('/predios-list', [PrediosController::class, 'index'])->name('predios-list');
+Route::delete('/predios-list/{id}', [PrediosController::class, 'destroy'])->name('predios-list.destroy');
+
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');

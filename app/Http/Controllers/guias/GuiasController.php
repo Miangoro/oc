@@ -13,6 +13,7 @@ class GuiasController  extends Controller
     {
       
         $guias = guias::all();
+        $empresa = empresa::all();
         $userCount = $guias->count();
         $verified = 5;
         $notVerified = 10;
@@ -24,6 +25,7 @@ class GuiasController  extends Controller
             'notVerified' => $notVerified,
             'userDuplicates' => $userDuplicates,
             'guias' => $guias,
+            'empresa' => $empresa,
         ]);
     }
 
@@ -73,7 +75,7 @@ class GuiasController  extends Controller
                     'id_guia' => $user->id_guia,
                     'fake_id' => ++$ids,
                     'Folio' => $user->Folio,
-                    //'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
+                    'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
                     'id_empresa' => $user->id_empresa,
 
                 ];
@@ -90,4 +92,14 @@ class GuiasController  extends Controller
             'data' => $data,
         ]);
     }
+
+    //Metodo para eliminar
+    public function destroy($id_guia)
+    {
+        $clase = guias::findOrFail($id_guia);
+        $clase->delete();
+
+        return response()->json(['success' => 'Clase eliminada correctamente']);
+    }
+
 }
