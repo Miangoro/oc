@@ -109,7 +109,7 @@ class clientesConfirmadosController extends Controller
 
     public function pdfServicioPersonaFisica070($id)
     {
-        $res = DB::select('SELECT c.fecha_cedula, c.idcif, c.clave_ine, c.sociedad_mercantil, c.num_instrumento, c.vol_instrumento, c.fecha_instrumento, c.num_notario, c.num_permiso,  s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
+        $res = DB::select('SELECT c.fecha_vigencia, e.domicilio_fiscal, e.rfc, c.nombre_notario, c.estado_notario, c.fecha_cedula, c.idcif, c.clave_ine, c.sociedad_mercantil, c.num_instrumento, c.vol_instrumento, c.fecha_instrumento, c.num_notario, c.num_permiso,  s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
       e.estado
       FROM empresa e 
       JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
@@ -124,7 +124,7 @@ class clientesConfirmadosController extends Controller
 
     public function pdfServicioPersonaMoral070($id)
     {
-        $res = DB::select('SELECT c.fecha_cedula, c.idcif, c.clave_ine, c.sociedad_mercantil, c.num_instrumento, c.vol_instrumento, c.fecha_instrumento, c.num_notario, c.num_permiso,  s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
+        $res = DB::select('SELECT c.fecha_vigencia, e.domicilio_fiscal, e.rfc, c.nombre_notario, c.estado_notario, c.fecha_cedula, c.idcif, c.clave_ine, c.sociedad_mercantil, c.num_instrumento, c.vol_instrumento, c.fecha_instrumento, c.num_notario, c.num_permiso,  s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
         e.estado
         FROM empresa e 
         JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
@@ -135,7 +135,8 @@ class clientesConfirmadosController extends Controller
         WHERE e.id_empresa=' . $id);
         
         $fecha_cedula = Helpers::formatearFecha($res[0]->fecha_cedula);
-      $pdf = Pdf::loadView('pdfs.prestacion_servicios_vigente', ['datos' => $res,'fecha_cedula'=>$fecha_cedula]);
+        $fecha_vigencia = Helpers::formatearFecha($res[0]->fecha_vigencia);
+      $pdf = Pdf::loadView('pdfs.prestacion_servicios_vigente', ['datos' => $res,'fecha_cedula'=>$fecha_cedula,'fecha_vigencia'=>$fecha_vigencia]);
     return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 VIGENTE.pdf');
     }
 

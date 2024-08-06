@@ -111,8 +111,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select id="tipo_lote" name="tipo_lote" class=" form-select" data-error-message="Por favor selecciona el tipo de lote"
-                                            onchange="toggleFields()">
+                                        <select id="tipo_lote" name="tipo_lote" class=" form-select" data-error-message="Por favor selecciona el tipo de lote">
                                             <option value="" disabled selected>Selecciona el tipo de lote</option>
                                             <option value="1">Certificación por OC CIDAM</option>
                                             <option value="2">Certificado por otro organismo</option>
@@ -126,9 +125,7 @@
                                     <div class="form-floating form-floating-outline mb-4">
                                             <select id="id_guia" name="id_guia[]" class="select2 form-select" multiple data-error-message="Por favor selecciona una guia">
                                            {{--  <option value="" disabled selected>Seleccione una guía</option> --}}
-                                            @foreach ($guias as $guia)
-                                                <option value="{{ $guia->id_guia }}">{{ $guia->Folio }}</option>
-                                            @endforeach
+                                           
                                         </select>
                                        
                                         <label for="id_guia">Folio de guía de translado</label>
@@ -606,6 +603,10 @@
 @endsection
 <script>
 
+$(document).ready(function() {
+  obtenerGuias(); // Llama a la función cuando la página se carga por primera vez
+});
+
 function obtenerGuias() {
         var empresa = $("#id_empresa").val();
     // Hacer una petición AJAX para obtener los detalles de la empresa
@@ -616,7 +617,7 @@ function obtenerGuias() {
             // Cargar los detalles en el modal
             var contenido = "";
           for (let index = 0; index < response.guias.length; index++) {
-            contenido = '<option value="'+response.guias[index].id_guia+'">'+response.guias[index].Folio+'</option>' + contenido;
+            contenido = '<option value="'+response.guias[index].id_guia+'">'+response.guias[index].folio+'</option>' + contenido;
            // console.log(response.normas[index].norma);
           }
 
