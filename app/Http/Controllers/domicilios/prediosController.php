@@ -18,7 +18,8 @@ class PrediosController extends Controller
     
         return view('domicilios.find_domicilio_predios_view', [
             'predios' => $predios, // Pasar los datos a la vista
-            'empresas' => $empresas // Pasar las empresas a la vista
+            'empresas' => $empresas, // Pasar las empresas a la vista
+            'tipos' => $tipos // Pasar los tipos a la vista
         ]);
     }
     
