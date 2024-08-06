@@ -48,9 +48,15 @@ class getFuncionesController extends Controller
             'lotes_granel' => $empresa->lotes_granel(),
             'marcas' => $empresa->marcas(),
             'guias' => $empresa->guias(),
+            'predios' => $empresa->predios(),
+
+
+
 
         ]);
     }
+
+
 
     
 }

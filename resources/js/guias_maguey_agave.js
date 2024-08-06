@@ -5,11 +5,82 @@
 
 // Agregar nuevo registro
 // validating form and updating user's data
+const addNewMarca = document.getElementById('addNewMarca');
+
+// Validación del formulario
+$("#addNewMarca").on('submit', function (e) {
+  e.preventDefault();
+  var formData = new FormData(this);
+
+  $.ajax({
+    url: '/catalago-list',
+    type: 'POST',
+    data: formData,
+    processData: false, // Evita la conversión automática de datos a cadena
+    contentType: false, // Evita que se establezca el tipo de contenido
+    success: function (response) {
+      $('#addMarca').modal('hide');
+      $('.datatables-users').DataTable().ajax.reload();
+
+      // Mostrar alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.success,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+    },
+    error: function (xhr) {
+      // Mostrar alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al agregar la marca',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
+  });
+});
+
+
+
+//DATE PICKER
+//Datepicker inicializador
+
+$(document).ready(function () {
+  $('.datepicker').datepicker({
+    format: 'yyyy-mm-dd'
+  });
+
+});
 
 $(function () {
   // Datatable (jquery)
   // Variable declaration for table
-  var dt_user_table = $('.datatables-users')
+  var dt_user_table = $('.datatables-users'),
+    select2Elements = $('.select2'),
+    userView = baseUrl + 'app/user/view/account',
+    offCanvasForm = $('#addMarca');
+
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        placeholder: 'Selecciona cliente',
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+
+  // Inicialización de Select2 para elementos con clase .select2
+  initializeSelect2(select2Elements);
+
 
   // ajax setup
   $.ajaxSetup({
@@ -30,8 +101,9 @@ $(function () {
         // columns according to JSON
         { data: '' },
         { data: 'id_guia' },
-        { data: 'Folio' },
         { data: 'id_empresa' },
+        { data: 'razon_social' },
+        { data: 'Folio' },
         { data: 'action' }
       ],
       columnDefs: [
@@ -77,7 +149,9 @@ $(function () {
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
-              '<a href="" class="text-truncate text-heading"><span class="fw-medium">' +
+              '<a href="' +
+              userView +
+              '" class="text-truncate text-heading"><span class="fw-medium">' +
               $name +
               '</span></a>' +
               '</div>' +
@@ -134,7 +208,9 @@ $(function () {
               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
               `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="" class="dropdown-item">View</a>' +
+              '<a href="' +
+              userView +
+              '" class="dropdown-item">View</a>' +
               '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
               '</div>' +
               '</div>'
@@ -313,12 +389,12 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo prospecto</span>',
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nueva Solicitud de Guia de Translado</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'modal',
             'data-bs-dismiss': 'modal',
-            'data-bs-target': '#addMarca'
+            'data-bs-target': '#addGuias'
           }
         }
       ],
