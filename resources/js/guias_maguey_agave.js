@@ -3,30 +3,13 @@
  */
 'use strict';
 
+// Agregar nuevo registro
+// validating form and updating user's data
 
 $(function () {
   // Datatable (jquery)
   // Variable declaration for table
-  var dt_user_table = $('.datatables-users'),
-    select2Elements = $('.select2'),
-    userView = baseUrl + 'app/user/view/account',
-    offCanvasForm = $('#addMarca');
-
-  // Función para inicializar Select2 en elementos específicos
-  function initializeSelect2($elements) {
-    $elements.each(function () {
-      var $this = $(this);
-      select2Focus($this);
-      $this.wrap('<div class="position-relative"></div>').select2({
-        placeholder: 'Selecciona cliente',
-        dropdownParent: $this.parent()
-      });
-    });
-  }
-
-  // Inicialización de Select2 para elementos con clase .select2
-  initializeSelect2(select2Elements);
-
+  var dt_user_table = $('.datatables-users')
 
   // ajax setup
   $.ajaxSetup({
@@ -76,7 +59,7 @@ $(function () {
           targets: 2,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
-            var $name = full['id_guia'];
+            var $name = full['id_empresa'];
 
             // For Avatar badge
             var stateNum = Math.floor(Math.random() * 6);
@@ -108,7 +91,7 @@ $(function () {
           // User email
           targets: 3,
           render: function (data, type, full, meta) {
-            var $email = full['Folio'];
+            var $email = full['razon_social'];
             return '<span class="user-email">' + $email + '</span>';
           }
         },

@@ -18,7 +18,7 @@ class GuiasController  extends Controller
         $notVerified = 10;
         $userDuplicates = 40;
 
-        return view('Guias.find_guias_maguey_agave', [
+        return view('guias.find_guias_maguey_agave', [
             'totalUser' => $userCount,
             'verified' => $verified,
             'notVerified' => $notVerified,
