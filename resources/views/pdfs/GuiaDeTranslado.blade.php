@@ -157,7 +157,7 @@
             height: 1200px;
             z-index: -1;
             pointer-events: none; /* La marca de agua no es clickeable */
-            background-image: url('{{ public_path('img_pdf/membretado_guia.png') }}');
+            background-image: url('{{ public_path('img_pdf/membratado_guias.png') }}');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;

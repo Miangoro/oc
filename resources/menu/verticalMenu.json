@@ -128,10 +128,12 @@
       ]
     },
     {
-      "name": "Guías de translado",
-      "url": "guias",
-      "icon": "menu-icon ri-truck-fill",
-      "slug": "guias"
+      "name": "Documentación",
+      "url": "guias/guias_de_agave",
+      "icon": "menu-icon ri-folder-check-fill",
+      "slug": "translado-guias"
     }
+
+
   ]
 }

@@ -89,13 +89,13 @@
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
                                         <input type="text" id="nombre_lote" name="nombre_lote" class="form-control"
-                                            placeholder="Nombre del lote" required data-error-message="por favor selecciona el lote"/>
+                                            placeholder="Nombre del lote" data-error-message="por favor selecciona el lote"/>
                                         <label for="nombre_lote">Nombre del Lote</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select onchange="obtenerGuias()" id="id_empresa" name="id_empresa" class="select2 form-select" required data-error-message="por favor selecciona la empresa">
+                                        <select onchange="obtenerGuias()" id="id_empresa" name="id_empresa" class="select2 form-select" data-error-message="por favor selecciona la empresa">
                                             <option value="" disabled selected>Selecciona la empresa</option>
                                             @foreach ($empresas as $empresa)
                                                 <option value="{{ $empresa->id_empresa}}">{{ $empresa->razon_social }}</option>
@@ -111,7 +111,7 @@
 
                                 <div class="col-md-12">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select id="tipo_lote" name="tipo_lote" class=" form-select" required data-error-message="Por favor selecciona el tipo de lote"
+                                        <select id="tipo_lote" name="tipo_lote" class=" form-select" data-error-message="Por favor selecciona el tipo de lote"
                                             onchange="toggleFields()">
                                             <option value="" disabled selected>Selecciona el tipo de lote</option>
                                             <option value="1">Certificación por OC CIDAM</option>
@@ -124,7 +124,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                            <select id="id_guia" name="id_guia[]" class="select2 form-select" required multiple data-error-message="Por favor selecciona una guia">
+                                            <select id="id_guia" name="id_guia[]" class="select2 form-select" multiple data-error-message="Por favor selecciona una guia">
                                            {{--  <option value="" disabled selected>Seleccione una guía</option> --}}
                                             @foreach ($guias as $guia)
                                                 <option value="{{ $guia->id_guia }}">{{ $guia->Folio }}</option>
@@ -137,7 +137,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
                                         <input type="number" step="0.01" id="volumen" name="volumen"
-                                            class="form-control" placeholder="Volumen de Lote Inicial (litros)" required data-error-message="Por favor selecciona el volumen"/>
+                                            class="form-control" placeholder="Volumen de Lote Inicial (litros)"  data-error-message="Por favor selecciona el volumen"/>
                                         <label for="volumen">Volumen de Lote Inicial (litros)</label>
                                     </div>
                                 </div>
@@ -145,14 +145,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <input required type="number" step="0.01" id="cont_alc" name="cont_alc"
+                                        <input type="number" step="0.01" id="cont_alc" name="cont_alc"
                                             class="form-control" placeholder="Contenido Alcohólico" data-error-message="Por favor seleccione el contenido alcoholico"/>
                                         <label for="cont_alc">Contenido Alcohólico</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select required id="id_categoria" name="id_categoria" class=" form-select">
+                                        <select id="id_categoria" name="id_categoria" class=" form-select">
                                             <option value="" disabled selected data-error-message="Por favor seleccione una categoria">Selecciona la categoría de agave
                                             </option>
                                             @foreach ($categorias as $categoria)
@@ -167,7 +167,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select id="clase_agave" name="id_clase" class=" form-select" required data-error-message="Por favor selecciona una clase">
+                                        <select id="clase_agave" name="id_clase" class=" form-select"  data-error-message="Por favor selecciona una clase">
                                             <option value="" disabled selected>Selecciona la clase de agave
                                             </option>
                                             @foreach ($clases as $clase)
@@ -179,7 +179,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select id="tipo_agave" name="id_tipo" class=" form-select" required>
+                                        <select id="tipo_agave" name="id_tipo" class=" form-select">
                                             <option value="" disabled selected>Selecciona el tipo de agave
                                             </option>
                                             @foreach ($tipos as $tipo)
@@ -356,13 +356,13 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <input type="text" id="edit_nombre_lote" name="nombre_lote" class="form-control" placeholder="Nombre del lote" required />
+                                    <input type="text" id="edit_nombre_lote" name="nombre_lote" class="form-control" placeholder="Nombre del lote" />
                                     <label for="edit_nombre_lote">Nombre del Lote</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select onchange="obtenerGuias1()" id="edit_id_empresa" name="id_empresa" class="select2 form-select" required >
+                                    <select onchange="obtenerGuias1()" id="edit_id_empresa" name="id_empresa" class="select2 form-select"  >
                                         <option value="" disabled selected>Selecciona la empresa</option>
                                         @foreach ($empresas as $empresa)
                                             <option value="{{ $empresa->id_empresa}}">{{ $empresa->razon_social }}</option>
@@ -375,7 +375,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select id="edit_tipo_lote" name="tipo_lote" class="form-select" required>
+                                    <select id="edit_tipo_lote" name="tipo_lote" class="form-select" >
                                         <option value="" disabled selected>Selecciona el tipo de lote</option>
                                         <option value="1">Certificación por OC CIDAM</option>
                                         <option value="2">Certificado por otro organismo</option>
@@ -392,7 +392,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select id="edit_id_guia" name="id_guia[]" class="select2 form-select" required multiple>
+                                    <select id="edit_id_guia" name="id_guia[]" class="select2 form-select" multiple>
                                        {{--  <option value="" disabled selected>Seleccione una guía</option> --}}
                                         @foreach ($guias as $guia)
                                             <option value="{{ $guia->id_guia }}">{{ $guia->Folio }}</option>
@@ -404,8 +404,7 @@
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="edit_volumen" name="volumen"
-                                        class="form-control" placeholder="Volumen de Lote Inicial (litros)"
-                                        required />
+                                        class="form-control" placeholder="Volumen de Lote Inicial (litros)"/>
                                     <label for="volumen">Volumen de Lote Inicial (litros)</label>
                                 </div>
                             </div>
@@ -414,13 +413,13 @@
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="edit_cont_alc" name="cont_alc"
-                                        class="form-control" placeholder="Contenido Alcohólico" required />
+                                        class="form-control" placeholder="Contenido Alcohólico" />
                                     <label for="cont_alc">Contenido Alcohólico</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select id="edit_id_categoria" name="id_categoria" class="form-select" required>
+                                    <select id="edit_id_categoria" name="id_categoria" class="form-select">
                                         <option value="" disabled selected>Selecciona la categoría de agave</option>
                                         @foreach ($categorias as $categoria)
                                             <option value="{{ $categoria->id_categoria }}">
@@ -434,7 +433,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select id="edit_clase_agave" name="id_clase" class="form-select" required>
+                                    <select id="edit_clase_agave" name="id_clase" class="form-select" >
                                         <option value="" disabled selected>Selecciona la clase de agave</option>
                                         @foreach ($clases as $clase)
                                             <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
@@ -445,7 +444,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select id="edit_tipo_agave" name="id_tipo" class="form-select" required>
+                                    <select id="edit_tipo_agave" name="id_tipo" class="form-select" >
                                         <option value="" disabled selected>Selecciona el tipo de agave</option>
                                         @foreach ($tipos as $tipo)
                                             <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>

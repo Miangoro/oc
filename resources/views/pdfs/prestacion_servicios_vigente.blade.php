@@ -305,11 +305,10 @@
                                    <p> <strong>II.I.</strong>
                                     Que es una sociedad mercantil <strong>“{{ mb_strtoupper($datos[0]->sociedad_mercantil) }}”</strong>
                                     constituida como lo indica el instrumento
-                                    público número {{ mb_strtoupper($datos[0]->num_instrumento) }}, volumen {{ mb_strtoupper($datos[0]->vol_instrumento) }} del --- de --
-                                    del año ---, del Protocolo a cargo del
+                                    público número <strong>{{ mb_strtoupper($datos[0]->num_instrumento) }}</strong>, volumen <strong>{{ mb_strtoupper($datos[0]->vol_instrumento) }}</strong>, el <strong>{{  $fecha_cedula }}</strong>, del Protocolo a cargo del
                                     Licenciado --------, Notario público número
-                                    ------ del Estado de ------; número de
-                                    permiso: ---------- (clave única del
+                                    <strong>{{ mb_strtoupper($datos[0]->num_notario) }}</strong> del Estado de ------; número de
+                                    permiso: <strong>{{ mb_strtoupper($datos[0]->num_permiso) }}</strong> (clave única del
                                     documento) emitido por la Secretaria de
                                     Economía - Dirección General de
                                     Normatividad Mercantil Autorización de
