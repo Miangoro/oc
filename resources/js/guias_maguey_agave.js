@@ -47,17 +47,6 @@ $("#addNewMarca").on('submit', function (e) {
 });
 
 
-
-//DATE PICKER
-//Datepicker inicializador
-
-$(document).ready(function () {
-  $('.datepicker').datepicker({
-    format: 'yyyy-mm-dd'
-  });
-
-});
-
 $(function () {
   // Datatable (jquery)
   // Variable declaration for table

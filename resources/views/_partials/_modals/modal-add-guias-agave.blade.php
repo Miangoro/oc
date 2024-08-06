@@ -18,13 +18,13 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select onchange="obtenerNombrePredio();" id="cliente" name="cliente" class="select2 form-select" required>
+                            <select onchange="obtenerNombrePredio();" id="id_cliente" name="cliente" class="select2 form-select" required>
                                 <option value="">Selecciona cliente</option>
-                                @foreach ($empresa as $cliente)
-                                    <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
+                                @foreach ($empresa as $id_cliente)
+                                    <option value="{{ $id_cliente->id_empresa }}">{{ $id_cliente->razon_social }}</option>
                                 @endforeach
                             </select>
-                            <label for="cliente">Cliente</label>
+                            <label for="id_cliente">Cliente</label>
                         </div>
                     </div>
 
@@ -32,7 +32,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select " id="id_marca" name="id_marca"aria-label="Marca">
+                            <select class="select2 form-select " id="id_marca" name="predios"aria-label="Marca">
                                 <option value="" selected>Lista de predios</option>
                             </select>
                             <label for="id_marca">Lista de predios</label>
@@ -40,7 +40,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select " id="asas" name="asa"aria-label="Marca">
+                            <select class="select2 form-select " id="asas" name="plantacion" aria-label="Marca">
                                 <option value="" selected>Plantación del predio</option>
                             </select>
                             <label for="asasa">Plantación del predio</label>
@@ -58,8 +58,9 @@
 
 
 <script>
-       function obtenerNombrePredio() {
-        var empresa = $("#cliente").val();
+
+    function obtenerNombrePredio() {
+        var empresa = $("#id_cliente").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
@@ -68,7 +69,7 @@
                 // Cargar los detalles en el modal
                 var contenido = "";
                 for (let index = 0; index < response.predios.length; index++) {
-                    contenido = '<option value="' + response.predios[index].id_empresa + '">' + response
+                    contenido = '<option value="' + response.predios[index].id_marca + '">' + response
                         .predios[index].nombre_predio + '</option>' + contenido;
                     // console.log(response.normas[index].norma);
                 }
