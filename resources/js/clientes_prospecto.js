@@ -118,7 +118,7 @@ $(function () {
           }
         },
         {
-          // email verify
+          // PDF
           targets: 5,
           className: 'text-center',
           render: function (data, type, full, meta) {

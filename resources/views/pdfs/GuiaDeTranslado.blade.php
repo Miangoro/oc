@@ -148,10 +148,25 @@
         .con-negra {
             font-weight: bold;
         }
+        .marca-agua {
+            position: absolute;
+            top: -120px; /* Ajusta aquí la posición hacia arriba */
+            left:-45px;
+            margin-top: 70px; /* Desplaza la imagen hacia abajo */
+            width: 800px;
+            height: 1200px;
+            z-index: -1;
+            pointer-events: none; /* La marca de agua no es clickeable */
+            background-image: url('{{ public_path('img_pdf/membretado_guia.png') }}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
     </style>
 </head>
 
 <body>
+    <div class="marca-agua"></div>
     <div class="header" style="margin-top: 8%">
         <p class="text_al left">F-UV-21-04 Versión 4</p>
 
@@ -219,19 +234,19 @@
         <tr>
             <td class="leftLetter">Fecha de ingreso a
                 fábrica:</td>
-            <td colspan="3"></td>
+            <td class="leftLetter"colspan="3">123123123</td>
         </tr>
         <tr>
             <td class="leftLetter">Domicilio de
                 entrega:
             </td>
-            <td colspan="3"></td>
+            <td class="leftLetter" colspan="3">Jose Inicente lugo</td>
         </tr>
     </table>
 
-    <table style="margin-bottom: 35px">
+    <table style="margin-bottom: 32px">
         <br>
-        <tr style="font-size: 15px;">
+        <tr style="font-size: 18px;">
             <td colspan="2" class="td-no-margins leftLetter"> &nbsp; &nbsp;  &nbsp; &nbsp;Firma del vendedor</td>
             <td colspan="2" class="td-no-margins rightLetter">Firma del comprador &nbsp; &nbsp;  &nbsp; &nbsp;</td>
         </tr>
@@ -244,11 +259,10 @@
     </div>
     <table>
         <tr>
-            <td colspan="2" class="td-no-margins leftLetter" style="font-size: 10px">C.c.p Expediente de la Unidad de Verificación del UMSNH<br> <div style="margin-left: 20%">________________________</div></td>
-            <td colspan="2" class="td-no-margins rightLetter" style="font-size: 10px">Entrada en vigor: 28-05-2022</td>
+            <td colspan="2" class="td-no-margins leftLetter" style="font-size: 11px">C.c.p Expediente de la Unidad de Verificación del UMSNH<br> <div style="margin-left: 20%">___________________________</div></td>
+            <td colspan="2" class="td-no-margins rightLetter" style="font-size: 11px">Entrada en vigor: 28-05-2022</td>
         </tr>
     </table>
-    <img src="{{ public_path('img_pdf/membretado_guia.png') }}" alt="Logo CIDAM">
 
 
 

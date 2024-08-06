@@ -146,9 +146,9 @@
                                     “EL CIDAM, A.C.”, REPRESENTADO EN ESTE
                                     ACTO POR SU REPRESENTANTE LEGAL LA
                                     MTRA. SYLVANA FIGUEROA SILVA Y POR LA
-                                    OTRA “--------”, REPRESENTADO EN ESTE
+                                    OTRA <u>{{ mb_strtoupper($datos[0]->razon_social) }}</u>, REPRESENTADO EN ESTE
                                     ACTO POR SU REPRESENTANTE LEGAL EL C.
-                                    ------- Y A QUIEN EN LO SUCESIVO SE LE
+                                    <u>{{ mb_strtoupper($datos[0]->representante) }}</u> Y A QUIEN EN LO SUCESIVO SE LE
                                     DENOMINARÁ “EL CLIENTE”, AL TENOR DE
                                     LOS ANTECEDENTES, DECLARACIONES Y
                                     CLÁUSULAS SIGUIENTES:</p>
@@ -303,9 +303,9 @@
                                 <p>
                                     <strong>II.- DECLARA “EL CLIENTE”:</strong></p>
                                    <p> <strong>II.I.</strong>
-                                    Que es una sociedad mercantil <strong>“------”</strong>
+                                    Que es una sociedad mercantil <strong>“{{ mb_strtoupper($datos[0]->sociedad_mercantil) }}”</strong>
                                     constituida como lo indica el instrumento
-                                    público número ----, volumen ---- del --- de --
+                                    público número {{ mb_strtoupper($datos[0]->num_instrumento) }}, volumen {{ mb_strtoupper($datos[0]->vol_instrumento) }} del --- de --
                                     del año ---, del Protocolo a cargo del
                                     Licenciado --------, Notario público número
                                     ------ del Estado de ------; número de

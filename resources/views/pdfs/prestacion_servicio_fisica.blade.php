@@ -151,7 +151,7 @@
                                   A QUIEN EN LO SUCESIVO SE LE DENOMINARÁ “EL CIDAM,
                                    A.C.”, REPRESENTADO EN ESTE ACTO POR SU REPRESENTANTE
                                     LEGAL LA MTRA. SYLVANA FIGUEROA SILVA Y POR LA OTRA
-                                     EL C. ------Y A QUIEN EN LO SUCESIVO SE LE
+                                     EL C. <u>{{ mb_strtoupper($datos[0]->razon_social) }}</u> Y A QUIEN EN LO SUCESIVO SE LE
                                       DENOMINARÁ “EL CLIENTE”, AL TENOR DE LOS ANTECEDENTES,
                                        DECLARACIONES Y CLÁUSULAS SIGUIENTES:</p>
                                        <br>

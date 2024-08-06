@@ -140,6 +140,7 @@
           <th>Cliente</th>
           <th>Domicilio fiscal</th>
           <th>Régimen</th>
+          <th>Contrato para imprimir</th>
           <th>Acciones</th>
         </tr>
       </thead>
