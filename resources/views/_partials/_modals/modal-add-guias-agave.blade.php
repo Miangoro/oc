@@ -18,7 +18,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select id="cliente" name="cliente" class="select2 form-select" required>
+                            <select onchange="obtenerNombrePredio();" id="cliente" name="cliente" class="select2 form-select" required>
                                 <option value="">Selecciona cliente</option>
                                 @foreach ($empresa as $cliente)
                                     <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
@@ -40,10 +40,10 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select " id="id_marca" name="id_marca"aria-label="Marca">
+                            <select class="select2 form-select " id="asas" name="asa"aria-label="Marca">
                                 <option value="" selected>Plantación del predio</option>
                             </select>
-                            <label for="id_marca">Plantación del predio</label>
+                            <label for="asasa">Plantación del predio</label>
                         </div>
                     </div>
                 </div>
@@ -58,5 +58,29 @@
 
 
 <script>
-   
+       function obtenerNombrePredio() {
+        var empresa = $("#id_empresa").val();
+        // Hacer una petición AJAX para obtener los detalles de la empresa
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                // Cargar los detalles en el modal
+                var contenido = "";
+                for (let index = 0; index < response.predios.length; index++) {
+                    contenido = '<option value="' + response.predios[index].id_empresa + '">' + response
+                        .predios[index].nombre_predio + '</option>' + contenido;
+                    // console.log(response.normas[index].norma);
+                }
+
+                if (response.predios.length == 0) {
+                    contenido = '<option value="">Sin predios registradas</option>';
+                }
+                $('#id_marca').html(contenido);
+            },
+            error: function() {
+                //alert('Error al cargar los lotes a granel.');
+            }
+        });
+    }
 </script>
