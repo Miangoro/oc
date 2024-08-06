@@ -664,22 +664,23 @@ $(document).on('click', '.edit-record', function () {
 
 
 
-   // Manejar el envío del formulario
-// Manejar el envío del formulario
 $('#loteFormEdit').on('submit', function(e) {
     e.preventDefault();
 
     var formData = new FormData(this);
-    console.log([...formData]); // Mostrar el contenido del FormData
+    console.log([...formData.entries()]); // Mostrar el contenido del FormData
 
     var loteId = $('#edit_lote_id').val();
 
     $.ajax({
         url: '/lotes-a-granel/' + loteId,
-        type: 'POST',
+        type: 'POST', // Cambiar a POST, el método PUT se define en el formData
         data: formData,
         contentType: false,
         processData: false,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
         success: function(response) {
             dt_user.ajax.reload();
             $('#offcanvasEditLote').modal('hide');
@@ -695,7 +696,9 @@ $('#loteFormEdit').on('submit', function(e) {
         error: function(xhr) {
             if (xhr.status === 422) {
                 var errors = xhr.responseJSON.errors;
-                var errorMessages = Object.values(errors).flat().join('<br>');
+                var errorMessages = Object.keys(errors).map(function(key) {
+                    return errors[key].join('<br>');
+                }).join('<br>');
 
                 Swal.fire({
                     icon: 'error',
@@ -719,6 +722,7 @@ $('#loteFormEdit').on('submit', function(e) {
     });
 });
 
+    
 
 
 
