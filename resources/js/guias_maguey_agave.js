@@ -41,7 +41,7 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + '/guias-list'
+        url: baseUrl + 'guias-list'
       },
       columns: [
         // columns according to JSON
@@ -76,7 +76,7 @@ $(function () {
           targets: 2,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
-            var $name = full['id_empresa'];
+            var $name = full['id_guia'];
 
             // For Avatar badge
             var stateNum = Math.floor(Math.random() * 6);
@@ -108,7 +108,7 @@ $(function () {
           // User email
           targets: 3,
           render: function (data, type, full, meta) {
-            var $email = full['razon_social'];
+            var $email = full['Folio'];
             return '<span class="user-email">' + $email + '</span>';
           }
         },

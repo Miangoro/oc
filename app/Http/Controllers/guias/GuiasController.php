@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\guias;
 
 use App\Models\guias;
-//use App\Models\empresa;
+use App\Models\empresa;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class guiasController extends Controller
+class GuiasController  extends Controller
 {
     public function UserManagement()
     {
@@ -23,6 +23,7 @@ class guiasController extends Controller
             'verified' => $verified,
             'notVerified' => $notVerified,
             'userDuplicates' => $userDuplicates,
+            'guias' => $guias,
         ]);
     }
 
