@@ -335,13 +335,6 @@ class LotesGranelController extends Controller
         }
     }
     
-    
-
-
-
-
-
-
     public function update(Request $request, $id_lote_granel)
     {
         try {
@@ -373,8 +366,7 @@ class LotesGranelController extends Controller
     
             $lote = LotesGranel::findOrFail($id_lote_granel);
     
-            Log::info('Lote antes de la actualización:', $lote->toArray());
-    
+            // Actualizar lote
             $lote->update([
                 'id_empresa' => $validated['id_empresa'],
                 'nombre_lote' => $validated['nombre_lote'],
@@ -392,11 +384,58 @@ class LotesGranelController extends Controller
                 'fecha_vigencia' => $validated['fecha_vigencia'],
             ]);
     
-            Log::info('Lote después de la actualización:', $lote->toArray());
+            // Obtener el número de cliente
+            $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
     
-            // Actualizar las guías
-            if ($request->has('id_guia')) {
-                LotesGranelGuia::where('id_lote_granel', $lote->id_lote_granel)->delete();
+            // Eliminar archivos antiguos
+            $documentacionUrls = Documentacion_url::where('id_relacion', $id_lote_granel)->get();
+            foreach ($documentacionUrls as $documentacionUrl) {
+                $filePath = 'uploads/' . $numeroCliente . '/' . $documentacionUrl->url;
+                if (Storage::disk('public')->exists($filePath)) {
+                    Storage::disk('public')->delete($filePath);
+                }
+                $documentacionUrl->delete();
+            }
+            // Almacenar nuevos documentos solo si se envían
+            if ($request->hasFile('url')) {
+                foreach ($request->file('url') as $index => $file) {
+                    $folio_fq = $index == 0 && $request->id_documento[$index] == 58 
+                        ? $request->folio_fq_completo 
+                        : $request->folio_fq_ajuste;
+    
+                    $tipo_analisis = $request->tipo_analisis[$index] ?? '';
+                    
+                    // Generar un nombre único para el archivo
+                    $uniqueId = uniqid(); // Genera un identificador único
+                    $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); // Aquí se guarda en la ruta definida storage/public
+                    
+                    Log::info('Archivo guardado:', ['path' => $filePath, 'filename' => $filename]);
+    
+                    $documentacion_url = new Documentacion_url();
+                    $documentacion_url->id_relacion = $lote->id_lote_granel;
+                    $documentacion_url->id_documento = $request->id_documento[$index];
+                    $documentacion_url->nombre_documento = $request->nombre_documento[$index] . ": " . $tipo_analisis . " - " . $folio_fq;
+                    $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+                    $documentacion_url->id_empresa = $lote->id_empresa;
+    
+                    $documentacion_url->save();
+                }
+            }
+            // Guardar el nuevo lote en la base de datos
+            $folio_fq_Completo = $validated['folio_fq_completo'] ?? '----';
+            $folio_fq_ajuste = $validated['folio_fq_ajuste'] ?? '----';
+    
+            if (!empty($folio_fq_ajuste)) {
+                $folio_fq_Completo .= ' y ' . $folio_fq_ajuste;
+            }
+            $lote->folio_fq = $folio_fq_Completo;
+    
+            $lote->save();
+    
+            // Almacenar las guías en la tabla intermedia usando el modelo LotesGranelGuia
+            if (isset($validated['id_guia'])) {
                 foreach ($validated['id_guia'] as $idGuia) {
                     LotesGranelGuia::create([
                         'id_lote_granel' => $lote->id_lote_granel,
@@ -405,55 +444,15 @@ class LotesGranelController extends Controller
                 }
             }
     
-            // Eliminar documentos existentes si no se proporcionan nuevos archivos
-            $existingDocuments = Documentacion_url::where('id_relacion', $lote->id_lote_granel)->get();
-    
-            // Almacenar nuevos documentos o actualizar existentes
-            if ($request->hasFile('url')) {
-                foreach ($request->file('url') as $index => $file) {
-                    $folio_fq = $index == 0 && $request->id_documento[$index] == 58 
-                        ? $request->folio_fq_completo 
-                        : $request->folio_fq_ajuste;
-            
-                    $tipo_analisis = $request->tipo_analisis[$index] ?? '';
-                    
-                    // Generar un nombre único para el archivo
-                    $uniqueId = uniqid(); // Genera un identificador único
-                    $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
-                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); // Aquí se guarda en la ruta definida storage/public
-    
-                    Log::info('Archivo guardado:', ['path' => $filePath, 'filename' => $filename]);
-    
-                    $documentacion_url = Documentacion_url::updateOrCreate(
-                        ['id_documento' => $request->id_documento[$index], 'id_relacion' => $lote->id_lote_granel],
-                        [
-                            'nombre_documento' => $request->nombre_documento[$index] . ": " . $tipo_analisis . " - " . $folio_fq,
-                            'url' => $filename, // Corregido para almacenar solo el nombre del archivo
-                            'id_empresa' => $lote->id_empresa
-                        ]
-                    );
-                }
-            } else {
-                // Si no hay archivos, conservar los documentos existentes
-                foreach ($existingDocuments as $doc) {
-                    Documentacion_url::updateOrCreate(
-                        ['id_documento' => $doc->id_documento, 'id_relacion' => $lote->id_lote_granel],
-                        [
-                            'nombre_documento' => $doc->nombre_documento,
-                            'url' => $doc->url, // Mantener el nombre del archivo actual
-                            'id_empresa' => $lote->id_empresa
-                        ]
-                    );
-                }
-            }
-    
-            // Retornar una respuesta
             return response()->json([
                 'success' => true,
                 'message' => 'Lote actualizado exitosamente',
             ]);
         } catch (\Exception $e) {
-            Log::error('Error al actualizar el lote:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            Log::error('Error al actualizar el lote:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
     
             return response()->json([
                 'success' => false,
@@ -461,7 +460,6 @@ class LotesGranelController extends Controller
             ], 500);
         }
     }
-    
     
     
 

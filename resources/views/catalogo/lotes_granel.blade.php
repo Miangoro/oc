@@ -347,9 +347,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="loteFormEdit"  enctype="multipart/form-data">
+                <form id="loteFormEdit" >
                     @csrf
-                    @method('PUT')
                     <input type="hidden" id="edit_lote_id" name="edit_lote_id">
                     <!-- Resto del formulario -->
                     <div class="section">
@@ -357,8 +356,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <input type="text" id="edit_nombre_lote" name="nombre_lote"
-                                        class="form-control" placeholder="Nombre del lote" required />
+                                    <input type="text" id="edit_nombre_lote" name="nombre_lote" class="form-control" placeholder="Nombre del lote" required />
                                     <label for="edit_nombre_lote">Nombre del Lote</label>
                                 </div>
                             </div>
