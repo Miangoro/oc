@@ -111,7 +111,7 @@
 
                   <!-- Ubicación del Predio -->
                   <div class="form-floating form-floating-outline mb-3">
-                      <textarea class="form-control" id="ubicacion_predio" name="ubicacion_predio" placeholder="Ubicación del predio" required></textarea>
+                      <input type="text" class="form-control" id="ubicacion_predio" name="ubicacion_predio" placeholder="Ubicación del predio" required></input>
                       <label for="ubicacion_predio">Ubicación del Predio</label>
                   </div>
 
@@ -132,7 +132,7 @@
 
                       <div class="col-md-6">
                           <div class="form-floating form-floating-outline">
-                              <textarea class="form-control" id="puntos_referencia" name="puntos_referencia" placeholder="Puntos de referencia"></textarea>
+                              <input type="text" class="form-control" id="puntos_referencia" name="puntos_referencia" placeholder="Puntos de referencia"></input>
                               <label for="puntos_referencia">Puntos de Referencia</label>
                           </div>
                       </div>
@@ -198,21 +198,14 @@
                           <tr>
                               <td>
                                   <div class="form-floating form-floating-outline">
-                                      <input type="text" class="form-control" id="nombre_agave" name="nombre_agave" placeholder="Nombre del agave/maguey">
-                                      <label for="nombre_agave">Nombre del Agave/Maguey</label>
-                                  </div>
-                              </td>
-                              <td>
-                                  <div class="form-floating form-floating-outline">
-                                      <select class="form-select" id="especie_agave" name="especie_agave" aria-label="Especie de Agave/Maguey">
-                                          <option value="">Seleccione una especie</option>
-                                          <option value="Espadín">Espadín</option>
-                                          <option value="Tequilana">Tequilana</option>
-                                          <option value="Jalisco">Jalisco</option>
-                                          <!-- Agrega más especies según sea necesario -->
-                                      </select>
-                                      <label for="especie_agave">Especie de Agave/Maguey</label>
-                                  </div>
+                                    <select id="edit_tipo_agave" name="id_tipo" class="form-select" >
+                                      <option value="" disabled selected>Selecciona el tipo de agave</option>
+                                      @foreach ($tipos as $tipo)
+                                          <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
+                                      @endforeach
+                                  </select>
+                                      <label for="especie_agave">nombre y especie de Agave/Maguey</label>
+                                  </div>      
                               </td>
                           </tr>
                       </tbody>
