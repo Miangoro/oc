@@ -234,13 +234,13 @@
         <tr>
             <td class="leftLetter">Fecha de ingreso a
                 fábrica:</td>
-            <td colspan="3">123123123</td>
+            <td class="leftLetter"colspan="3">123123123</td>
         </tr>
         <tr>
             <td class="leftLetter">Domicilio de
                 entrega:
             </td>
-            <td colspan="3">Jose Inicente lugo</td>
+            <td class="leftLetter" colspan="3">Jose Inicente lugo</td>
         </tr>
     </table>
 
