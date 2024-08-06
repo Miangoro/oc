@@ -111,20 +111,32 @@
           </div>
           <div class="col-12 col-md-4">
             <div class="form-floating form-floating-outline">
-              <input type="date" id="modalAddressZipCode" name="fecha_instrumento" class="form-control" placeholder="99950" />
+              <input type="date" name="fecha_instrumento" class="form-control" placeholder="99950" />
               <label for="modalAddressZipCode">Fecha instrumento público</label>
             </div>
           </div>
           <div class="col-12 col-md-6">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalAddressZipCode" name="num_notario" class="form-control" placeholder="99950" />
+              <input type="text" name="nombre_notario" class="form-control" placeholder="99950" />
+              <label for="modalAddressZipCode">Nombre del notario público</label>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="form-floating form-floating-outline">
+              <input type="text"name="num_notario" class="form-control" placeholder="99950" />
               <label for="modalAddressZipCode">Número de notario público</label>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="form-floating form-floating-outline">
+              <input type="text"name="estado_notario" class="form-control" placeholder="99950" />
+              <label for="modalAddressZipCode">Estado del notario público</label>
             </div>
           </div>
 
           <div class="col-12 col-md-6">
             <div class="form-floating form-floating-outline">
-              <input type="text" id="modalAddressZipCode" name="num_permiso" class="form-control" placeholder="99950" />
+              <input type="text" name="num_permiso" class="form-control" placeholder="99950" />
               <label for="modalAddressZipCode">Número de permiso</label>
               <div id="floatingInputHelp" class="form-text">(Clave única del documento) emitido por la Secretaria de Economía.</div>
             </div>

@@ -306,24 +306,22 @@
                                     Que es una sociedad mercantil <strong>“{{ mb_strtoupper($datos[0]->sociedad_mercantil) }}”</strong>
                                     constituida como lo indica el instrumento
                                     público número <strong>{{ mb_strtoupper($datos[0]->num_instrumento) }}</strong>, volumen <strong>{{ mb_strtoupper($datos[0]->vol_instrumento) }}</strong>, el <strong>{{  $fecha_cedula }}</strong>, del Protocolo a cargo del
-                                    Licenciado --------, Notario público número
-                                    <strong>{{ mb_strtoupper($datos[0]->num_notario) }}</strong> del Estado de ------; número de
+                                    Licenciado <strong>{{ mb_strtoupper($datos[0]->nombre_notario) }}</strong>, el <strong>, Notario público número
+                                    <strong>{{ mb_strtoupper($datos[0]->num_notario) }}</strong> del Estado de <strong>{{ mb_strtoupper($datos[0]->estado_notario) }}</strong>; número de
                                     permiso: <strong>{{ mb_strtoupper($datos[0]->num_permiso) }}</strong> (clave única del
                                     documento) emitido por la Secretaria de
                                     Economía - Dirección General de
                                     Normatividad Mercantil Autorización de
                                     Uso de Denominación o Razón Social.                                    
                                 </p>
-                                <p></p>
+                                
                                 <p>
                                     <strong>II.II. </strong>
-                                    Que su representante legal es el C. <strong>----</strong>,
+                                    Que su representante legal es el C. <strong>{{ mb_strtoupper($datos[0]->representante) }}</strong>,
                                     acredita su personalidad con el instrumento
-                                    público número 26455, volumen 365 del 31
-                                    de enero del año 2020, del Protocolo a
-                                    cargo del Licenciado Fabio Arturo
-                                    Francisco Beltrán Carriles, Notario público
-                                    número 3 del Estado de Tehuacán, Puebla,
+                                    público número {{ mb_strtoupper($datos[0]->num_instrumento) }}, volumen {{ mb_strtoupper($datos[0]->vol_instrumento) }} del {{  $fecha_cedula }}, del Protocolo a
+                                    cargo del Licenciado {{ mb_strtoupper($datos[0]->nombre_notario) }}, Notario público
+                                    número {{ mb_strtoupper($datos[0]->num_permiso) }} del Estado de {{ mb_strtoupper($datos[0]->estado_notario) }},
                                 </p>                        
                             </td>
                         </tr>
@@ -366,12 +364,12 @@
                                 </p><p></p> 
                                 <p>
                                 <strong>II.III.</strong> Que su registro federal de causantes
-                                es: <strong>----</strong>.                                    
+                                es: <strong>{{ mb_strtoupper($datos[0]->rfc) }}</strong>.                                    
                                 </p>
                                 <p></p>
                                 <p>
                                     <strong>II.IV.</strong> Que su domicilio legal se encuentra
-                                    ubicado en <strong>--------</strong>, mismo que señala para
+                                    ubicado en <strong>{{ $datos[0]->domicilio_fiscal }}</strong>, mismo que señala para
                                     todos los fines y efectos del presente
                                     contrato.                                    
                                 </p>
@@ -888,8 +886,7 @@
                                 </p>
                                 <p>
                                     <strong>SEXTA.</strong> VIGENCIA. El presente contrato
-                                    estará vigente a partir del día ---- de ---- de
-                                    2022 y será por tiempo indefinido, hasta
+                                    estará vigente a partir del día {{ $fecha_vigencia }} y será por tiempo indefinido, hasta
                                     que el cliente deje de cumplir con los
                                     requisitos de la certificación.                                    
                                 </p>
@@ -953,22 +950,23 @@
                         <td class="small-column">
                             <p>Las partes firman el presente contrato por
                                 duplicado, en la ciudad de Morelia,
-                                Michoacán; el ---- de ----- de 2022.                                
+                                Michoacán; el {{ $fecha_vigencia }}.                                
                                 </p> <br><br>
                                 <p style="text-align: center; font-size: 10;"><strong>POR “EL CLIENTE”</strong></p> <br><br><br><br>
-                                <p style="text-align: center; font-size: 10;"><strong>---------</strong></p>
+                                <p style="text-align: center; font-size: 10;"><strong>{{ mb_strtoupper($datos[0]->representante) }}</strong></p>
                                 <p style="text-align: center; font-size: 10;">Representante Legal</p>                
                         </td>      
                         <td>
                             <br><br><br><br><br><br>
                             <p style="text-align: center; font-size: 10;"><strong>POR “EL CIDAM”</strong></p>   
                             <br><br><br>
+                            <img height="60px" src="{{ storage_path('app/public/firmas/firma_mtra_sylvana.png') }}" alt="">
                             <p style="text-align: center; font-size: 10;"><strong>MTRA. SYLVANA FIGUEROA SILVA</strong></p> 
                             <p style="text-align: center; font-size: 10;">Representante Legal</p> 
                         </td>
                     </tr>
                 </tbody>
-            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
             </table>
             <p style="text-align: center; margin-top: 15px; font-size: 10.5px;">
                 Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
@@ -1110,7 +1108,7 @@
         </p>
         <p></p>
         <p class="texto">
-            Por medio de la presente, yo la C. XXXXXX me permito notificar al OC CIDAM de la aceptación
+            Por medio de la presente, yo el/la C. {{ $datos[0]->representante }} me permito notificar al OC CIDAM de la aceptación
             de los términos y condiciones que se describen en el contrato de prestación de servicios, así
             como también hago de su conocimiento el haber leído detenidamente los documentos
             señalados en dicho instrumento jurídico, con código I4.1-01-01 Instructivo para el uso de
@@ -1134,7 +1132,7 @@
         </p> 
     </div>
     <br>
-    <br><br><br><br>
+    <br><br><br>
                 <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.
                 </p>
@@ -1168,7 +1166,7 @@
         <p class="texto">
             Esta carta de aceptación de términos y condiciones entrara en vigor a partir de la fecha de
             firma de la misma, teniendo en cuenta que las fechas de vigencia serán las equivalentes tanto
-            en el contrato como en el presente documento, a partir del día XXXXX y será por tiempo
+            en el contrato como en el presente documento, a partir del día {{ $fecha_vigencia }} y será por tiempo
             indefinido, hasta que el cliente deje de cumplir con los requisitos de la certificación como se
             señala en el contrato.            
         </p>
@@ -1180,8 +1178,8 @@
         </p>
         <br><br><br><br>
         <p class="texto">
-            XXXXXXXXXX
-        </p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+           {{ $datos[0]->representante }}
+        </p><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     </div>
                 <p style="text-align: center; margin-top: 20px; font-size: 10.5px;">
                     Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo.

@@ -379,113 +379,129 @@ $(document).on('click', '.delete-record', function () {
     });
 });
 
+const addNewLote = document.getElementById('loteForm');
 /* registro de un nuevo lote */
-
-$(document).ready(function() {
-    // Validar campos requeridos al enviar el formulario
-    $('#loteForm').on('submit', function(event) {
-        event.preventDefault(); // Evita el envío por defecto del formulario
-
-        var form = this;
-        var valid = true;
-
-        // Validar todos los campos requeridos
-        form.querySelectorAll('input[required], select[required]').forEach(function(input) {
-            if (!validateField(input)) {
-                valid = false;
-            }
-        });
-
-        if (!valid) {
-            // Mostrar mensaje de advertencia si hay campos no válidos
-            Swal.fire({
-                icon: 'warning',
-                title: 'Campos requeridos',
-                text: 'Por favor, complete todos los campos requeridos.',
-                customClass: {
-                    confirmButton: 'btn btn-warning'
+const fv = FormValidation.formValidation(addNewLote, {
+    fields: {
+        nombre_lote: {
+            validators: {
+                notEmpty: {
+                message: 'Por favor seleccione el cliente'
                 }
-            });
-            return; // No continuar con el envío del formulario
-        }
-
-        // Crear un nuevo FormData con los datos del formulario
-        var formData = new FormData(this);
-
-        // Agregar el token CSRF al FormData
-        formData.append('_token', $('input[name="_token"]').val());
-
-        $.ajax({
-            type: 'POST',
-            url: $(this).attr('action'), // Usa la URL definida en el atributo 'action' del formulario
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                // Mostrar mensaje de éxito
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Registrado!',
-                    text: 'El lote ha sido registrado correctamente.',
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                }).then(function() {
-                    // Actualizar DataTable
-                    dt_user.draw();
-                    // Cerrar modal
-                    $('#offcanvasAddLote').modal('hide');
-                    // Resetear formulario
-                    $('#loteForm')[0].reset();
-                    // Ocultar campos adicionales
-                    $('#oc_cidam_fields').addClass('d-none');
-                    $('#otro_organismo_fields').addClass('d-none');
-                });
-            },
-            error: function(xhr) {
-                // Mostrar mensaje de error
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'No se pudo registrar el lote. Inténtalo de nuevo más tarde.',
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
             }
-        });
-    });
-
-    // Validar campo en pérdida de foco
-    $('#loteForm').on('blur', 'input[required], select[required]', function() {
-        validateField(this);
-    });
-
-    function validateField(field) {
-        var valid = true;
-        var errorMessageElement = field.parentNode.querySelector('.invalid-feedback');
-
-        // Eliminar mensaje de error anterior si existe
-        if (errorMessageElement) {
-            errorMessageElement.remove();
+        },
+      id_empresa: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione el cliente'
+          }
         }
-
-        // Crear nuevo mensaje de error
-        var errorMessageElement = document.createElement('div');
-        errorMessageElement.className = 'invalid-feedback';
-        errorMessageElement.textContent = field.getAttribute('data-error-message') || 'Este campo es requerido';
-
-        if (!field.value || (field.tagName === 'SELECT' && field.value === '')) {
-            field.classList.add('is-invalid');
-            field.parentNode.appendChild(errorMessageElement);
-            valid = false;
-        } else {
-            field.classList.remove('is-invalid');
+      },
+      tipo_lote: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione el tipo de lote'
+          }
         }
-
-        return valid;
+      },
+      'id_guia[]': {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un folio de guía'
+          }
+        }
+      },
+      volumen: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un folio de guía'
+          }
+        }
+      },
+      cont_alc: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un folio de guía'
+          }
+        }
+      },
+      id_categoria: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un folio de guía'
+          }
+        }
+      },
+      id_clase: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un folio de guía'
+          }
+        }
+      },
+      id_tipo: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un folio de guía'
+          }
+        }
+      },
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        // Use this for enabling/changing valid/invalid class
+        eleValidClass: '',
+        rowSelector: function (field, ele) {
+          // field is the field name & ele is the field element
+          return '.mb-4';
+        }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      // Submit the form when all fields are valid
+      // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
     }
-});
+  }).on('core.form.valid', function (e) {
+   // e.preventDefault();
+    var formData = new FormData(addNewLote);
+  
+    $.ajax({
+      url: '/lotes-granel-list',
+      type: 'POST',
+      data: formData,
+      processData: false, // Evita la conversión automática de datos a cadena
+      contentType: false, // Evita que se establezca el tipo de contenido
+      success: function (response) {
+        $('#loteForm').trigger("reset");
+        $('#id_empresa').val('').trigger('change');
+        $('#id_guia').val('').trigger('change');
+        $('#offcanvasAddLote').modal('hide');
+        $('.datatables-users').DataTable().ajax.reload();
+  
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.success,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function (xhr) {
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al agregar el lote a granel',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+  });
 
 
 
