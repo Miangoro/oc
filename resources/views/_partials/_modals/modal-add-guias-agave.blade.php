@@ -18,7 +18,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select onchange="obtenerNombrePredio();" id="id_empresa" name="cliente" class="select2 form-select" required>
+                            <select onchange="obtenerNombrePredio();" id="cliente" name="cliente" class="select2 form-select" required>
                                 <option value="">Selecciona cliente</option>
                                 @foreach ($empresa as $cliente)
                                     <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
@@ -59,7 +59,7 @@
 
 <script>
        function obtenerNombrePredio() {
-        var empresa = $("#id_empresa").val();
+        var empresa = $("#cliente").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
