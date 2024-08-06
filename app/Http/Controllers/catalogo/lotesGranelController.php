@@ -17,12 +17,12 @@ use App\Models\lotesGranelGuia;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 
 class LotesGranelController extends Controller
 {
     public function UserManagement(Request $request)
-
     {// Encuentra el lote a granel por ID
         $empresas = Empresa::where('tipo', 2)->get();
         $categorias = Categorias::all();
@@ -264,22 +264,25 @@ class LotesGranelController extends Controller
                 $folio_fq = $index == 0 && $request->id_documento[$index] == 58 
                     ? $request->folio_fq_completo 
                     : $request->folio_fq_ajuste;
-    
+        
                 $tipo_analisis = $request->tipo_analisis[$index] ?? '';
                 
-                $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); // Aqui se guarda en la ruta definida storage/public
-    
+                // Generar un nombre único para el archivo
+                $uniqueId = uniqid(); // Genera un identificador único
+                $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); // Aquí se guarda en la ruta definida storage/public
+        
                 $documentacion_url = new Documentacion_url();
                 $documentacion_url->id_relacion = $lote->id_lote_granel;
                 $documentacion_url->id_documento = $request->id_documento[$index];
                 $documentacion_url->nombre_documento = $request->nombre_documento[$index] . ": " . $tipo_analisis . " - " . $folio_fq;
                 $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
                 $documentacion_url->id_empresa = $lote->id_empresa;
-    
+        
                 $documentacion_url->save();
             }
         }
+        
     
         // Retornar una respuesta
         return response()->json([
@@ -291,102 +294,175 @@ class LotesGranelController extends Controller
     
 
     
-
-/* llenar el campo del modald e edicion */
-public function edit($id_lote_granel)
-{
-    try {
-        // Cargar el lote y las guías asociadas
-        $lote = LotesGranel::with('lotesGuias.guia')->findOrFail($id_lote_granel);
-
-        // Obtener los IDs de las guías asociadas
-        $guiasIds = $lote->lotesGuias->pluck('id_guia')->toArray();
-        return response()->json([
-            'success' => true,
-            'lote' => $lote,
-            'guias' => $guiasIds
-        ]);
-    } catch (ModelNotFoundException $e) {
-        return response()->json(['success' => false], 404);
-    }
-}
-
-
-
-
-public function update(Request $request, $id_lote_granel)
-{
-    try {
-        Log::info('Datos recibidos:', $request->all());
-
-        $validated = $request->validate([
-            'nombre_lote' => 'required|string|max:255',
-            'id_empresa' => 'required|integer|exists:empresa,id_empresa',
-            'tipo_lote' => 'required|integer',
-            'id_guia' => 'required|array',
-            'id_guia.*' => 'integer|exists:guias,id_guia',
-            'volumen' => 'required|numeric',
-            'cont_alc' => 'required|numeric',
-            'id_categoria' => 'required|integer|exists:catalogo_categorias,id_categoria',
-            'id_clase' => 'required|integer|exists:catalogo_clases,id_clase',
-            'id_tipo' => 'required|integer|exists:catalogo_tipo_agave,id_tipo',
-            'ingredientes' => 'nullable|string',
-            'edad' => 'nullable|string',
-            'folio_certificado' => 'nullable|string',
-           'id_organismo' => 'nullable|integer|exists:catalogo_organismos,id_organismo',
-            'fecha_emision' => 'nullable|date',
-            'fecha_vigencia' => 'nullable|date',
-            'id_guia' => 'nullable|array',
-            'id_guia.*' => 'integer|exists:guias,id_guia'
-        ]);
-
-        $lote = LotesGranel::findOrFail($id_lote_granel);
-
-        Log::info('Lote antes de la actualización:', $lote->toArray());
-
-        $lote->update([
-            'id_empresa' => $validated['id_empresa'],
-            'nombre_lote' => $validated['nombre_lote'],
-            'tipo_lote' => $validated['tipo_lote'],
-            'volumen' => $validated['volumen'],
-            'cont_alc' => $validated['cont_alc'],
-            'id_categoria' => $validated['id_categoria'],
-            'id_clase' => $validated['id_clase'],
-            'id_tipo' => $validated['id_tipo'],
-            'ingredientes' => $validated['ingredientes'],
-            'edad' => $validated['edad'],
-            'folio_certificado' => $validated['folio_certificado'],
-            'id_organismo' => $validated['id_organismo'] ?? null,
-            'fecha_emision' => $validated['fecha_emision'],
-            'fecha_vigencia' => $validated['fecha_vigencia'],
-        ]);
-
-        Log::info('Lote después de la actualización:', $lote->toArray());
-
-        if ($request->has('id_guia')) {
-            LotesGranelGuia::where('id_lote_granel', $lote->id_lote_granel)->delete();
-            foreach ($validated['id_guia'] as $idGuia) {
-                LotesGranelGuia::create([
-                    'id_lote_granel' => $lote->id_lote_granel,
-                    'id_guia' => $idGuia
-                ]);
-            }
+    public function edit($id_lote_granel)
+    {
+        try {
+            // Cargar el lote y las guías asociadas
+            $lote = LotesGranel::with('lotesGuias.guia')->findOrFail($id_lote_granel);
+    
+            // Obtener los documentos asociados
+            $documentos = Documentacion_url::where('id_relacion', $id_lote_granel)->get();
+    
+            // Extraer la URL de los documentos
+            $documentosConUrl = $documentos->map(function ($documento) {
+                return [
+                    'id_documento' => $documento->id_documento,
+                    'nombre' => $documento->nombre_documento,
+                    'url' => $documento->url,
+                    'tipo' => $documento->nombre_documento
+                ];
+            });
+    
+            $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+    
+            // Obtener los IDs de las guías asociadas
+            $guiasIds = $lote->lotesGuias->pluck('id_guia')->toArray();
+    
+            // Obtener la URL del archivo para "otro organismo"
+            $archivoUrlOtroOrganismo = $lote->tipo_lote == '2' ? $lote->url_certificado : '';
+    
+            return response()->json([
+                'success' => true,
+                'lote' => $lote,
+                'guias' => $guiasIds,
+                'documentos' => $documentosConUrl,
+                'numeroCliente' => $numeroCliente,
+                'archivo_url_otro_organismo' => $archivoUrlOtroOrganismo
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['success' => false], 404);
         }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Lote actualizado exitosamente',
-        ]);
-    } catch (\Exception $e) {
-        Log::error('Error al actualizar el lote:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Error al actualizar el lote: ' . $e->getMessage(),
-        ], 500);
     }
-}
+    
+    
 
 
+
+
+
+
+    public function update(Request $request, $id_lote_granel)
+    {
+        try {
+            Log::info('Datos recibidos:', $request->all());
+    
+            // Validar los datos del formulario
+            $validated = $request->validate([
+                'nombre_lote' => 'required|string|max:255',
+                'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                'tipo_lote' => 'required|integer',
+                'id_guia' => 'nullable|array',
+                'id_guia.*' => 'integer|exists:guias,id_guia',
+                'volumen' => 'required|numeric',
+                'cont_alc' => 'required|numeric',
+                'id_categoria' => 'required|integer|exists:catalogo_categorias,id_categoria',
+                'id_clase' => 'required|integer|exists:catalogo_clases,id_clase',
+                'id_tipo' => 'required|integer|exists:catalogo_tipo_agave,id_tipo',
+                'ingredientes' => 'nullable|string',
+                'edad' => 'nullable|string',
+                'folio_certificado' => 'nullable|string',
+                'id_organismo' => 'nullable|integer|exists:catalogo_organismos,id_organismo',
+                'fecha_emision' => 'nullable|date',
+                'fecha_vigencia' => 'nullable|date',
+                'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+                'folio_fq_completo' => 'nullable|string|max:50',
+                'folio_fq_ajuste' => 'nullable|string|max:50',
+                'folio_fq' => 'nullable|string|max:50'
+            ]);
+    
+            $lote = LotesGranel::findOrFail($id_lote_granel);
+    
+            Log::info('Lote antes de la actualización:', $lote->toArray());
+    
+            $lote->update([
+                'id_empresa' => $validated['id_empresa'],
+                'nombre_lote' => $validated['nombre_lote'],
+                'tipo_lote' => $validated['tipo_lote'],
+                'volumen' => $validated['volumen'],
+                'cont_alc' => $validated['cont_alc'],
+                'id_categoria' => $validated['id_categoria'],
+                'id_clase' => $validated['id_clase'],
+                'id_tipo' => $validated['id_tipo'],
+                'ingredientes' => $validated['ingredientes'],
+                'edad' => $validated['edad'],
+                'folio_certificado' => $validated['folio_certificado'],
+                'id_organismo' => $validated['id_organismo'] ?? null,
+                'fecha_emision' => $validated['fecha_emision'],
+                'fecha_vigencia' => $validated['fecha_vigencia'],
+            ]);
+    
+            Log::info('Lote después de la actualización:', $lote->toArray());
+    
+            // Actualizar las guías
+            if ($request->has('id_guia')) {
+                LotesGranelGuia::where('id_lote_granel', $lote->id_lote_granel)->delete();
+                foreach ($validated['id_guia'] as $idGuia) {
+                    LotesGranelGuia::create([
+                        'id_lote_granel' => $lote->id_lote_granel,
+                        'id_guia' => $idGuia
+                    ]);
+                }
+            }
+    
+            // Eliminar documentos existentes si no se proporcionan nuevos archivos
+            $existingDocuments = Documentacion_url::where('id_relacion', $lote->id_lote_granel)->get();
+    
+            // Almacenar nuevos documentos o actualizar existentes
+            if ($request->hasFile('url')) {
+                foreach ($request->file('url') as $index => $file) {
+                    $folio_fq = $index == 0 && $request->id_documento[$index] == 58 
+                        ? $request->folio_fq_completo 
+                        : $request->folio_fq_ajuste;
+            
+                    $tipo_analisis = $request->tipo_analisis[$index] ?? '';
+                    
+                    // Generar un nombre único para el archivo
+                    $uniqueId = uniqid(); // Genera un identificador único
+                    $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); // Aquí se guarda en la ruta definida storage/public
+    
+                    Log::info('Archivo guardado:', ['path' => $filePath, 'filename' => $filename]);
+    
+                    $documentacion_url = Documentacion_url::updateOrCreate(
+                        ['id_documento' => $request->id_documento[$index], 'id_relacion' => $lote->id_lote_granel],
+                        [
+                            'nombre_documento' => $request->nombre_documento[$index] . ": " . $tipo_analisis . " - " . $folio_fq,
+                            'url' => $filename, // Corregido para almacenar solo el nombre del archivo
+                            'id_empresa' => $lote->id_empresa
+                        ]
+                    );
+                }
+            } else {
+                // Si no hay archivos, conservar los documentos existentes
+                foreach ($existingDocuments as $doc) {
+                    Documentacion_url::updateOrCreate(
+                        ['id_documento' => $doc->id_documento, 'id_relacion' => $lote->id_lote_granel],
+                        [
+                            'nombre_documento' => $doc->nombre_documento,
+                            'url' => $doc->url, // Mantener el nombre del archivo actual
+                            'id_empresa' => $lote->id_empresa
+                        ]
+                    );
+                }
+            }
+    
+            // Retornar una respuesta
+            return response()->json([
+                'success' => true,
+                'message' => 'Lote actualizado exitosamente',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error al actualizar el lote:', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+    
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el lote: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    
+    
+    
 
 }

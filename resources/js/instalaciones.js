@@ -363,8 +363,10 @@ $(function () {
       }
     });
   });
-
   $(function () {
+
+
+    
     // Configuración CSRF para Laravel
     $.ajaxSetup({
       headers: {
@@ -422,6 +424,7 @@ $(function () {
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
+
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(form);

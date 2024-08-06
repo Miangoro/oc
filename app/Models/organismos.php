@@ -16,3 +16,4 @@ class organismos extends Model
     protected $fillable = ['organismo']; // Campos que se pueden asignar masivamente
 
 }
+
