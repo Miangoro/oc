@@ -16,5 +16,10 @@ class guias extends Model
         'Folio', // Asegúrate de que el nombre del campo sea correcto en la tabla
         'id_empresa',
     ];
+
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class, 'id_empresa');
+    }
     
 }
