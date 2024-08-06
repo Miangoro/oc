@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Predios;
 use App\Models\Empresa;
+use App\Models\Tipos;
 
 class PrediosController extends Controller
 {
@@ -13,6 +14,7 @@ class PrediosController extends Controller
     {
         $predios = Predios::with('empresa')->get(); // Obtener todos los registros con la relación cargada
         $empresas = Empresa::all(); // Obtener todas las empresas
+        $tipos = Tipos::all(); // Obtén todos los tipos de agave
     
         return view('domicilios.find_domicilio_predios_view', [
             'predios' => $predios, // Pasar los datos a la vista
@@ -93,7 +95,7 @@ class PrediosController extends Controller
                 $nestedData['latitud'] = $predio->latitud ?? 'N/A';
                 $nestedData['longitud'] = $predio->longitud ?? 'N/A';
                 $nestedData['superficie'] = $predio->superficie;
-                $nestedData['especie_agave'] = $predio->especie_agave;
+                $nestedData['id_tipo'] = $predio->tipo->nombre ?? 'N/A';
                 $nestedData['numero_plantas'] = $predio->numero_plantas;
                 $nestedData['edad_plantacion'] = $predio->edad_plantacion;
                 $nestedData['tipo_plantacion'] = $predio->tipo_plantacion;
