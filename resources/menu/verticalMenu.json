@@ -129,9 +129,16 @@
     },
     {
       "name": "Guías de translado",
-      "url": "guias",
       "icon": "menu-icon ri-truck-fill",
-      "slug": "guias"
+      "slug": "guias",
+      "submenu": [
+        {
+          "url": "guias/guias_de_agave",
+          "name": "Guias de agave/maguey",
+          "slug": "translado-guias"
+        }
+      ]
     }
+
   ]
 }

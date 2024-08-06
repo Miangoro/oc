@@ -167,6 +167,7 @@ use App\Http\Controllers\catalogo\categoriasController;
 use App\Http\Controllers\catalogo\marcasCatalogoController;
 use App\Http\Controllers\catalogo\ClaseController;
 use App\Http\Controllers\catalogo\lotesEnvasadoController;
+use App\Http\Controllers\guias\guiasController;
 use App\Http\Controllers\clientes\clientesConfirmadosController;
 use App\Http\Controllers\documentacion\documentacionController;
 use App\Http\Controllers\domicilios\DomiciliosController;
@@ -532,3 +533,10 @@ Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('ti
 
 
 Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');
+
+
+
+
+//Guias de agave o maguey
+Route::get('/guias/guias_de_agave', [guiasController::class, 'UserManagement'])->name('translado-guias');
+Route::resource('/guias-list', guiasController::class);
