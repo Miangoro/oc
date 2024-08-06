@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\clientes;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -132,7 +133,9 @@ class clientesConfirmadosController extends Controller
         JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
         JOIN empresa_contrato c ON (c.id_empresa = e.id_empresa)
         WHERE e.id_empresa=' . $id);
-      $pdf = Pdf::loadView('pdfs.prestacion_servicios_vigente', ['datos' => $res]);
+        
+        $fecha_cedula = Helpers::formatearFecha($res[0]->fecha_cedula);
+      $pdf = Pdf::loadView('pdfs.prestacion_servicios_vigente', ['datos' => $res,'fecha_cedula'=>$fecha_cedula]);
     return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 VIGENTE.pdf');
     }
 

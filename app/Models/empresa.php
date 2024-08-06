@@ -49,6 +49,12 @@ class empresa extends Model
     }
 
 
+    public function guiasEmpresa()
+    {
+        return $this->hasMany(guias::class, 'id_empresa');
+    }
+
+
 
     
 }
