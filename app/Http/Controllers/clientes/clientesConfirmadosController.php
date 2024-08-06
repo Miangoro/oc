@@ -106,18 +106,34 @@ class clientesConfirmadosController extends Controller
         return $pdf->stream('Carta de asignación de número de cliente.pdf');
     }
 
-    public function pdfServicioPersonaFisica($id)
+    public function pdfServicioPersonaFisica070($id)
     {
-        $res = DB::select('SELECT  s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
-      e.calle, e.num, e.colonia, e.municipio, e.estado, e.cp
+        $res = DB::select('SELECT c.fecha_cedula, c.idcif, c.clave_ine, c.sociedad_mercantil, c.num_instrumento, c.vol_instrumento, c.fecha_instrumento, c.num_notario, c.num_permiso,  s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
+      e.estado
       FROM empresa e 
       JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
       JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
       JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
       JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
+      JOIN empresa_contrato c ON (c.id_empresa = e.id_empresa)
       WHERE e.id_empresa=' . $id);
         $pdf = Pdf::loadView('pdfs.prestacion_servicio_fisica', ['datos' => $res]);
         return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 persona fisica VIGENTE.pdf');
+    }
+
+    public function pdfServicioPersonaMoral070($id)
+    {
+        $res = DB::select('SELECT c.fecha_cedula, c.idcif, c.clave_ine, c.sociedad_mercantil, c.num_instrumento, c.vol_instrumento, c.fecha_instrumento, c.num_notario, c.num_permiso,  s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
+        e.estado
+        FROM empresa e 
+        JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
+        JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
+        JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
+        JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
+        JOIN empresa_contrato c ON (c.id_empresa = e.id_empresa)
+        WHERE e.id_empresa=' . $id);
+      $pdf = Pdf::loadView('pdfs.prestacion_servicios_vigente', ['datos' => $res]);
+    return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 VIGENTE.pdf');
     }
 
     public function registrarValidacion(Request $request)

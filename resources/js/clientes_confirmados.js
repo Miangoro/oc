@@ -37,6 +37,7 @@ $(function () {
         { data: 'domicilio_fiscal' },
         { data: 'regimen' },
         { data: 'id_empresa' },
+        { data: '' },
         { data: 'action' }
       ],
       columnDefs: [
@@ -151,6 +152,15 @@ $(function () {
                 ? '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
                 : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
             }`;
+          }
+        },
+        {
+          // PDF
+          targets: 6,
+          className: 'text-center',
+          render: function (data, type, full, meta) {
+            var $id = full['id_empresa'];
+            return `<i id="pdf2" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-regimen="${full['regimen']}" data-id="${full['id_empresa']}" data-registro="${full['razon_social']} "></i>`;
           }
         },
         {
@@ -455,7 +465,30 @@ $(function () {
 
 
 
-  $(document).on('click', '#pdf', function () {
+  $(document).on('click', '#pdf2', function () {
+        var id = $(this).data('id');
+        var regimen = $(this).data('regimen');
+        var registro = $(this).data('registro');
+      
+            var iframe = $('#pdfViewer');
+            if(regimen=='Persona física'){
+              var pdf = "../prestacion_servicio_fisica/";
+            }
+
+            if(regimen=='Persona moral'){
+              var pdf = "../prestacion_servicio_moral/";
+            }
+
+          
+            iframe.attr('src', pdf+id);
+
+            $("#titulo_modal").text("Contrato");
+            $("#subtitulo_modal").text(registro);
+            
+          
+  });
+
+    $(document).on('click', '#pdf', function () {
         var id = $(this).data('id');
         var tipo_pdf = $(this).data('pdf');
         var registro = $(this).data('registro');
