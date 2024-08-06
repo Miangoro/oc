@@ -397,7 +397,6 @@ class LotesGranelController extends Controller
                 }
                 $documentacionUrl->delete();
             }
-    
             // Almacenar nuevos documentos solo si se envían
             if ($request->hasFile('url')) {
                 foreach ($request->file('url') as $index => $file) {
@@ -424,7 +423,6 @@ class LotesGranelController extends Controller
                     $documentacion_url->save();
                 }
             }
-    
             // Guardar el nuevo lote en la base de datos
             $folio_fq_Completo = $validated['folio_fq_completo'] ?? '----';
             $folio_fq_ajuste = $validated['folio_fq_ajuste'] ?? '----';
