@@ -18,13 +18,13 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select onchange="obtenerNombrePredio();" id="id_cliente" name="cliente" class="select2 form-select" required>
+                            <select onchange="obtenerNombrePredio();  obtenerPlantacionPredio();" id="id_empresa" name="empresa" class="select2 form-select" required>
                                 <option value="">Selecciona cliente</option>
                                 @foreach ($empresa as $id_cliente)
                                     <option value="{{ $id_cliente->id_empresa }}">{{ $id_cliente->razon_social }}</option>
                                 @endforeach
                             </select>
-                            <label for="id_cliente">Cliente</label>
+                            <label for="id_empresa">Cliente</label>
                         </div>
                     </div>
 
@@ -40,10 +40,10 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select " id="asas" name="plantacion" aria-label="Marca">
+                            <select class="select2 form-select " id="id_planta" name="plantacion" aria-label="Marca">
                                 <option value="" selected>Plantación del predio</option>
                             </select>
-                            <label for="asasa">Plantación del predio</label>
+                            <label for="id_planta">Plantación del predio</label>
                         </div>
                     </div>
                 </div>
@@ -60,16 +60,18 @@
 <script>
 
     function obtenerNombrePredio() {
-        var empresa = $("#id_cliente").val();
+        var empresa = $("#id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
             success: function(response) {
+                console.log(response);
+
                 // Cargar los detalles en el modal
                 var contenido = "";
                 for (let index = 0; index < response.predios.length; index++) {
-                    contenido = '<option value="' + response.predios[index].id_marca + '">' + response
+                    contenido = '<option value="' + response.predios[index].id_empresa + '">' + response
                         .predios[index].nombre_predio + '</option>' + contenido;
                     // console.log(response.normas[index].norma);
                 }
@@ -84,4 +86,32 @@
             }
         });
     }
+    function obtenerPlantacionPredio() {
+        var empresa = $("#id_empresa").val();
+        // Hacer una petición AJAX para obtener los detalles de la empresa
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                console.log(response);
+
+                // Cargar los detalles en el modal
+                var contenido = "";
+                for (let index = 0; index < response.predios.length; index++) {
+                    contenido = '<option value="' + response.predios[index].id_empresa + '">' + response
+                        .predios[index].numero_plantas + '</option>' + contenido;
+                    // console.log(response.normas[index].norma);
+                }
+
+                if (response.predios.length == 0) {
+                    contenido = '<option value="">Sin predios registradas</option>';
+                }
+                $('#id_planta').html(contenido);
+            },
+            error: function() {
+                //alert('Error al cargar los lotes a granel.');
+            }
+        });
+    }
+
 </script>
