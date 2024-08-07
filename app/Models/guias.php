@@ -13,8 +13,14 @@ class guias extends Model
     protected $primaryKey = 'id_guia'; // Clave primaria de la tabla
     protected $fillable = [
         'id_guia',
-        'Folio', // Asegúrate de que el nombre del campo sea correcto en la tabla
+        'id_plantacion',
+        'folio', // Asegúrate de que el nombre del campo sea correcto en la tabla
         'id_empresa',
+        'id_predio',
+        'numero_plantas',
+        'numero_guias',
+
+
     ];
 
     public function empresa()

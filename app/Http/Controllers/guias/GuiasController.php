@@ -13,7 +13,7 @@ class GuiasController  extends Controller
     {
 
         $guias = guias::all();
-        $empresa = empresa::all();
+        $empresa = Empresa::where('tipo', 2)->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
         $userCount = $guias->count();
         $verified = 5;
         $notVerified = 10;
@@ -33,11 +33,12 @@ class GuiasController  extends Controller
     {
         $columns = [
             1 => 'id_guia',
-            2 => 'Folio',
-            3 => 'id_empresa',
-            4 => 'nombre_predio',
-            5 => 'numero_plantas',
-            6 => 'numero_guias',
+            2 => 'id_plantacion',
+            3 => 'folio',
+            4 => 'id_empresa',
+            5 => 'id_predio',
+            6 => 'numero_plantas',
+            7 => 'numero_guias',
 
         ];
 
@@ -54,7 +55,7 @@ class GuiasController  extends Controller
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('id_guia', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('Folio', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('folio', 'LIKE', "%{$searchValue}%")
                     ->orWhere('id_empresa', 'LIKE', "%{$searchValue}%");
             });
         }
@@ -79,11 +80,12 @@ class GuiasController  extends Controller
 
                 $nestedData = [
                     'id_guia' => $user->id_guia,
+                    'id_plantacion' => $user->id_plantacion,
                     'fake_id' => ++$ids,
-                    'Folio' => $user->Folio,
+                    'folio' => $user->folio,
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
                     'id_empresa' => $numero_cliente, // Asignar numero_cliente a id_empresa
-                    'nombre_predio' => $user->nombre_predio,
+                    'id_predio' => $user->id_predio,
                     'numero_plantas' => $user->numero_plantas,
                     'numero_guias' => $user->numero_guias,
 
@@ -120,7 +122,7 @@ class GuiasController  extends Controller
             'empresa' => 'required|exists:empresa,id_empresa',
             'predios' => 'required|string|max:255',
             'plantacion' => 'required|string|max:255',
-            'sku' => 'required|string|max:255',
+            'folio' => 'required|string|max:255',
         ]);
 
         // Crear una nueva instancia del modelo `guias`

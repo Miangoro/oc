@@ -50,6 +50,7 @@
         <tr>
           <th></th>
           <th>Id</th>
+          <th>Plantacion</th>
           <th>id empresa</th>
           <th>Nombre cliente</th>
           <th>Folio</th>

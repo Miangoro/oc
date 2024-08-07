@@ -48,9 +48,9 @@
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" id="Folio" class="form-control"
-                            placeholder="Folio" aria-label="Folio" name="Folio" required />
-                        <label for="sku">Folio</label>
+                        <input type="text" id="folio" class="form-control"
+                            placeholder="folio" aria-label="folio" name="folio" required />
+                        <label for="folio">Folio</label>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
@@ -105,13 +105,13 @@
 
                 // Cargar los detalles en el modal
                 var contenido = "";
-                for (let index = 0; index < response.predios.length; index++) {
-                    contenido = '<option value="' + response.predios[index].id_empresa + '">' + response
-                        .predios[index].numero_plantas + '</option>' + contenido;
+                for (let index = 0; index < response.predio_plantacion.length; index++) {
+                    contenido = '<option value="' + response.predio_plantacion[index].id_predio + '">' + response
+                        .predio_plantacion[index].num_plantas + '</option>' + contenido;
                     // console.log(response.normas[index].norma);
                 }
 
-                if (response.predios.length == 0) {
+                if (response.predio_plantacion.length == 0) {
                     contenido = '<option value="">Sin predios registradas</option>';
                 }
                 $('#numero_plantas').html(contenido);
