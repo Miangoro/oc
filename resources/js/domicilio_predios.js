@@ -444,6 +444,128 @@ $(document).on('click', '.delete-record', function () {
 });
 
 
+$(document).ready(function() {
+    // Convertir tiposAgave a opciones HTML
+    function generateOptions(tipos) {
+        return tipos.map(tipo => `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`).join('');
+    }
+
+    // Agregar nueva fila
+    $('.add-row-plantacion').click(function() {
+        var options = generateOptions(tiposAgave); // Usa la función para obtener las opciones
+        var newRow = `
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
+                </td>
+                <td>
+                    <div class="form-floating form-floating-outline mb-3">
+                        <select name="id_tipo[]" class="form-select tipo_agave">
+                            <option value="" disabled selected>Selecciona el tipo de agave</option>
+                            ${options}
+                        </select>
+                        <label for="especie_agave">Nombre y Especie de Agave/Maguey</label>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-floating form-floating-outline">
+                        <input type="number" class="form-control" name="numero_plantas[]" placeholder="Número de plantas" step="1">
+                        <label for="numero_plantas">Número de Plantas</label>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-floating form-floating-outline">
+                        <input type="text" class="form-control" name="edad_plantacion[]" placeholder="Edad de la plantación (años)" step="1">
+                        <label for="edad_plantacion">Edad de la Plantación</label>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-floating form-floating-outline">
+                        <input type="text" class="form-control" name="tipo_plantacion[]" placeholder="Tipo de plantación">
+                        <label for="tipo_plantacion">Tipo de Plantación</label>
+                    </div>
+                </td>
+            </tr>`;
+        $('.contenidoPlantacion').append(newRow);
+
+        // Habilitar el botón de eliminar si hay más de una fila
+        if ($('.contenidoPlantacion tr').length > 1) {
+            $('.remove-row-plantacion').prop('disabled', false);
+        }
+    });
+
+    // Eliminar fila
+    $(document).on('click', '.remove-row-plantacion', function() {
+        $(this).closest('tr').remove();
+
+        // Deshabilitar el botón de eliminar si no hay más filas
+        if ($('.contenidoPlantacion tr').length <= 1) {
+            $('.remove-row-plantacion').prop('disabled', true);
+        }
+    });
+
+    // Deshabilitar el botón de eliminar si solo hay una fila inicial
+    if ($('.contenidoPlantacion tr').length <= 1) {
+        $('.remove-row-plantacion').prop('disabled', true);
+    }
+});
+
+$(document).ready(function () {
+/*     // Mostrar/ocultar el div de coordenadas
+    $('#tiene_coordenadas').change(function () {
+        if ($(this).val() === 'Si') {
+            $('#coordenadas').removeClass('d-none');
+        } else {
+            $('#coordenadas').addClass('d-none');
+            $('#coordenadas tbody').empty(); // Limpiar las coordenadas cuando se oculta
+            $('#coordenadas').find('.remove-row-cordenadas').prop('disabled', true); // Deshabilitar el botón de eliminar
+        }
+    }); */
+
+    // Añadir nueva fila de coordenadas
+    $(document).on('click', '.add-row-cordenadas', function () {
+        var newRow = `
+            <tr>
+                <td>
+                    <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
+                </td>
+                <td>
+                    <div class="form-floating form-floating-outline">
+                        <input type="text" class="form-control" name="latitud[]" placeholder="Latitud">
+                        <label>Latitud</label>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-floating form-floating-outline">
+                        <input type="text" class="form-control" name="longitud[]" placeholder="Longitud">
+                        <label>Longitud</label>
+                    </div>
+                </td>
+            </tr>`;
+        $('#coordenadas tbody').append(newRow);
+
+        // Habilitar el botón de eliminar si hay más de una fila
+        if ($('#coordenadas tbody tr').length > 1) {
+            $('.remove-row-cordenadas').prop('disabled', false);
+        }
+    });
+
+    // Eliminar fila de coordenadas
+    $(document).on('click', '.remove-row-cordenadas', function () {
+        $(this).closest('tr').remove();
+
+        // Deshabilitar el botón de eliminar si no hay más filas
+        if ($('#coordenadas tbody tr').length <= 1) {
+            $('#coordenadas').find('.remove-row-cordenadas').prop('disabled', true);
+        }
+    });
+
+    // Deshabilitar el botón de eliminar si solo hay una fila inicial
+    if ($('#coordenadas tbody tr').length <= 1) {
+        $('#coordenadas').find('.remove-row-cordenadas').prop('disabled', true);
+    }
+});
+
 
 
 });
