@@ -55,7 +55,7 @@ class empresa extends Model
     }
 
     public function predios(){
-        return guias::where('id_empresa', $this->id_empresa)->get();
+        return Predios::where('id_empresa', $this->id_empresa)->get();
     }
 
 

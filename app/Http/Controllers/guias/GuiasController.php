@@ -11,7 +11,7 @@ class GuiasController  extends Controller
 {
     public function UserManagement()
     {
-      
+
         $guias = guias::all();
         $empresa = empresa::all();
         $userCount = $guias->count();
@@ -32,11 +32,11 @@ class GuiasController  extends Controller
     public function index(Request $request)
     {
         $columns = [
-            1 => 'id_guia', 
+            1 => 'id_guia',
             2 => 'Folio',
             3 => 'id_empresa',
 
-            
+
         ];
 
         $limit = $request->input('length');
@@ -50,10 +50,10 @@ class GuiasController  extends Controller
         $query = guias::with('empresa');
 
         if (!empty($searchValue)) {
-            $query->where(function($q) use ($searchValue) {
+            $query->where(function ($q) use ($searchValue) {
                 $q->where('id_guia', 'LIKE', "%{$searchValue}%")
-                  ->orWhere('Folio', 'LIKE', "%{$searchValue}%")
-                  ->orWhere('id_empresa', 'LIKE', "%{$searchValue}%");
+                    ->orWhere('Folio', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('id_empresa', 'LIKE', "%{$searchValue}%");
             });
         }
 
@@ -61,9 +61,9 @@ class GuiasController  extends Controller
         $totalFiltered = $query->count();
 
         $users = $query->offset($start)
-                       ->limit($limit)
-                       ->orderBy($order, $dir)
-                       ->get();
+            ->limit($limit)
+            ->orderBy($order, $dir)
+            ->get();
 
         $data = [];
 
@@ -102,4 +102,23 @@ class GuiasController  extends Controller
         return response()->json(['success' => 'Clase eliminada correctamente']);
     }
 
+    // Método para registrar una nueva guía
+    public function store(Request $request)
+    {
+        // Valida los datos
+        $validated = $request->validate([
+            'id_empresa' => 'required|exists:empresa,id_empresa',
+            'id_marca' => 'required|exists:marcas,id_marca',
+            'presentacion' => 'required|integer',
+        ]);
+
+        // Crea un nuevo registro en la base de datos
+        try {
+            $guia = guias::create($validated);
+
+            return response()->json(['success' => 'Guía registrada exitosamente.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
 }

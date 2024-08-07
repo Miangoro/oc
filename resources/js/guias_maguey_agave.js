@@ -493,6 +493,8 @@ $(function () {
           
   });*/
 $(document).ready(function () {
+
+  
     // Abrir el modal y cargar datos para editar
     $('.datatables-users').on('click', '.edit-record', function () {
         var id_marca = $(this).data('id');
