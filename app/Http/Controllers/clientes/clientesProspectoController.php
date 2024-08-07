@@ -57,6 +57,8 @@ class clientesProspectoController extends Controller
         $contrato->fecha_instrumento = $request->fecha_instrumento;
         $contrato->num_notario = $request->num_notario;
         $contrato->num_permiso = $request->num_permiso;
+        $contrato->nombre_notario = $request->nombre_notario;
+        $contrato->estado_notario = $request->estado_notario;
         $contrato->save();
 
         $empresa = empresa::find($request->id_empresa);

@@ -56,7 +56,7 @@
           "slug": "domicilios-fiscal"
         },
         {
-          "url": "domicilios/predios",
+          "url": "domicilios/instalaciones",
           "name": "Predios",
           "slug": "domicilios-predios"
         },
@@ -128,9 +128,9 @@
       ]
     },
     {
-      "name": "Documentación",
+      "name": "Guías de translado",
       "url": "guias/guias_de_agave",
-      "icon": "menu-icon ri-folder-check-fill",
+      "icon": "menu-icon ri-truck-fill",
       "slug": "translado-guias"
     }
 

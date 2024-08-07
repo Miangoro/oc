@@ -42,7 +42,7 @@
 <!-- Users List Table -->
 <div class="card">
   <div class="card-header pb-0">
-    <h3 class="card-title mb-0">Guia de agave/maguey</h3>
+    <h3 class="card-title mb-0">Solicitudes de guía de traslado de maguey o agave</h3>
   </div>
   <div class="card-datatable table-responsive">
     <table class="datatables-users table">
@@ -50,8 +50,12 @@
         <tr>
           <th></th>
           <th>Id</th>
+          <th>id empresa</th>
+          <th>Nombre cliente</th>
           <th>Folio</th>
-          <th>Empresa</th>
+          <th>Nombre predio</th>
+          <th>No. Plantas</th>
+          <th>No. Guias</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -63,6 +67,8 @@
 
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
+@include('_partials/_modals/modal-add-guias-agave')
+
 
 
 <!-- /Modal -->
