@@ -545,4 +545,4 @@ Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->
 //Guias de agave o maguey
 Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('translado-guias');
 Route::resource('/guias-list', GuiasController::class);
-Route::post('/guias_de_agave', [GuiasController::class, 'store']);
+Route::post('/guias/store', [GuiasController::class, 'store']);

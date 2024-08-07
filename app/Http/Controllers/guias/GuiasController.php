@@ -35,7 +35,9 @@ class GuiasController  extends Controller
             1 => 'id_guia',
             2 => 'Folio',
             3 => 'id_empresa',
-
+            4 => 'nombre_predio',
+            5 => 'numero_plantas',
+            6 => 'numero_guias',
 
         ];
 
@@ -71,12 +73,20 @@ class GuiasController  extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
+                //$numero_cliente = \App\Models\Empresa::where('id_empresa', $user->id_empresa)->value('razon_social');
+                $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
+
+
                 $nestedData = [
                     'id_guia' => $user->id_guia,
                     'fake_id' => ++$ids,
                     'Folio' => $user->Folio,
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
-                    'id_empresa' => $user->id_empresa,
+                    'id_empresa' => $numero_cliente, // Asignar numero_cliente a id_empresa
+                    'nombre_predio' => $user->nombre_predio,
+                    'numero_plantas' => $user->numero_plantas,
+                    'numero_guias' => $user->numero_guias,
+
 
                 ];
 
@@ -102,23 +112,26 @@ class GuiasController  extends Controller
         return response()->json(['success' => 'Clase eliminada correctamente']);
     }
 
-    // Método para registrar una nueva guía
     public function store(Request $request)
     {
-        // Valida los datos
-        $validated = $request->validate([
-            'id_empresa' => 'required|exists:empresa,id_empresa',
-            'id_marca' => 'required|exists:marcas,id_marca',
-            'presentacion' => 'required|integer',
+        // Validar los datos del formulario
+        $request->validate([
+            'presentacion' => 'required|numeric',
+            'empresa' => 'required|exists:empresa,id_empresa',
+            'predios' => 'required|string|max:255',
+            'plantacion' => 'required|string|max:255',
+            'sku' => 'required|string|max:255',
         ]);
 
-        // Crea un nuevo registro en la base de datos
-        try {
-            $guia = guias::create($validated);
+        // Crear una nueva instancia del modelo `guias`
+        $guia = new guias();
+        $guia->numero_guias = $request->input('presentacion');
+        $guia->id_empresa = $request->input('empresa');
+        $guia->nombre_predio = $request->input('predios');
+        $guia->numero_plantas = $request->input('plantacion');
+        $guia->Folio = $request->input('sku');
+        $guia->save();
 
-            return response()->json(['success' => 'Guía registrada exitosamente.']);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
-        }
+        return response()->json(['success' => 'Guía registrada correctamente']);
     }
 }
