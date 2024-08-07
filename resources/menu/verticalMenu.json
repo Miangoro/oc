@@ -121,7 +121,7 @@
           "slug": "catalogo-clases"
         },
         {
-          "url": "catalogo/tipos",
+          "url": "/catalogo/tipos",
           "name": "Tipos de agave",
           "slug": "tipos-maguey-agave"
         }
