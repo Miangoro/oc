@@ -78,7 +78,7 @@ class clientesConfirmadosController extends Controller
     public function pdfCartaAsignacion($id)
     {
         $res = DB::select('SELECT ac.actividad, nc.numero_cliente, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
-      e.calle, e.num, e.colonia, e.municipio, e.estado, e.cp
+       e.estado 
       FROM empresa e 
       JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
       JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
@@ -94,7 +94,7 @@ class clientesConfirmadosController extends Controller
     public function pdfCartaAsignacion052($id)
     {
         $res = DB::select('SELECT ac.actividad, nc.numero_cliente, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
-      e.calle, e.num, e.colonia, e.municipio, e.estado, e.cp
+       e.estado 
       FROM empresa e 
       JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
       JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
