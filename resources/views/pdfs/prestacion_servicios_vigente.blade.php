@@ -26,7 +26,6 @@
             text-align: right;
             z-index: 1;
             margin-bottom: 30px;
-            /* Ajusta este valor según sea necesario */
         }
 
 
@@ -133,9 +132,7 @@
             line-height: 1.5;
             font-size: 9px;
             margin-top: 0;
-            /* Eliminar margen */
             padding: 0;
-            /* Eliminar padding */
         }
 
         /* Estilos específicos para un td */
@@ -159,22 +156,22 @@
         .footer {
             position: fixed;
             bottom: 0;
-            left: 0;
+            left: -40;
             width: 100%;
-            padding: 10px;
-            background-color: #fff;
-            border-top: 1px solid #ccc;
             font-size: 10.5px;
-            z-index: 1;
-            text-align: center;
+           
         }
 
         .footer-text {
-            margin: 0;
             text-align: center;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            
         }
 
         .footer-page {
+            text-align: right;
             margin-top: 5px;
             font-size: 12px;
         }
@@ -193,11 +190,10 @@
     </div>
     <div class="footer">
         <p class="footer-text">
-            Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-            puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
+            Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
         </p>
         <p class="footer-page">
-            Página {PAGE_NUM} de {PAGE_COUNT}
+            Página <!-- Número de página será añadido aquí por el controlador -->
         </p>
     </div>
 
