@@ -98,10 +98,10 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.GuiaDeTranslado');
         return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
     }
-    
+
     public function Etiqueta()
     {
         $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
-        return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
+        return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
 }

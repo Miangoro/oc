@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Etiqueta para tapa de la muestra</title>
+    <title>Etiqueta-2401ESPTOB</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -219,13 +219,16 @@
 
 
 
-<!DOCTYPE html>
-<html lang="es">
+
+
+
+
+
+
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Etiqueta para Muestra</title>
     <style>
         table {
             border: 2px solid #3C8A69;
@@ -315,7 +318,7 @@
             <td rowspan="3" class="green-border"><img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección"
                     class="logo"></td>
             <td colspan="6" class="header-cell">Etiqueta para muestra</td>
-            <td rowspan="3" class="green-border"><img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección"
+            <td rowspan="3" class="green-border"><img src="{{ public_path('img_pdf/logo_oc_3d.png')  }}" alt="Unidad de Inspección"
                     class="logo"></td>
         </tr>
         <tr>
@@ -389,7 +392,7 @@
               <td rowspan="3" class="green-border"><img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección"
                       class="logo"></td>
               <td colspan="6" class="header-cell">Etiqueta para muestra</td>
-              <td rowspan="3" class="green-border"><img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección"
+              <td rowspan="3" class="green-border"><img src="{{ public_path('img_pdf/logo_oc_3d.png')  }}" alt="Unidad de Inspección"
                       class="logo"></td>
           </tr>
           <tr>
@@ -464,7 +467,7 @@
             <td rowspan="3" class="green-border"><img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección"
                     class="logo"></td>
             <td colspan="6" class="header-cell">Etiqueta para muestra</td>
-            <td rowspan="3" class="green-border"><img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección"
+            <td rowspan="3" class="green-border"><img src="{{ public_path('img_pdf/logo_oc_3d.png')  }}" alt="Unidad de Inspección"
                     class="logo"></td>
         </tr>
         <tr>
@@ -545,7 +548,6 @@
   </table>
 </body>
 
-</html>
 
 
 
@@ -559,13 +561,6 @@
 
 
 
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Etiqueta para sellado de tanques</title>
     <style>
         table {
             border-collapse: collapse;
@@ -804,7 +799,5 @@
             </tr>
         </table>
     </div>
-
 </body>
 
-</html>
