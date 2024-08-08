@@ -4,45 +4,123 @@
 'use strict';
 
 // Agregar nuevo registro
-// validating form and updating user's data
-const addNewMarca = document.getElementById('addNewMarca');
-
+// Validando formulario y actualizando datos del usuario
+const addNewGuia = document.getElementById('addGuiaForm');
 // Validación del formulario
-$("#addNewMarca").on('submit', function (e) {
-  e.preventDefault();
-  var formData = new FormData(this);
+const fv = FormValidation.formValidation(addGuiaForm, {
+  fields: {
+
+    empresa: {
+          validators: {
+              notEmpty: {
+                  message: 'Por favor seleccione una empresa'
+              }
+          }
+      },
+      presentacion: {
+        validators: {
+            notEmpty: {
+                message: 'Por favor introduzca un numero de guias a solicitar'
+            }
+        }
+    },
+      predios: {
+          validators: {
+              notEmpty: {
+                  message: 'Por favor seleccione una empresa para continuar'
+              }
+          }
+      },
+      plantacion: {
+          validators: {
+              notEmpty: {
+                  message: 'Por favor seleccione una empresa para continuar'
+              }
+          }
+      },
+      folio: {
+          validators: {
+              notEmpty: {
+                  message: 'Por favor ingrese un numero de pedido/SKU'
+              }
+          }
+      },
+      anterior: {
+        validators: {
+            notEmpty: {
+                message: 'Por favor introduzca un numero de guias a solicitar'
+            }
+        }
+    },
+    comercializadas: {
+      validators: {
+          notEmpty: {
+              message: 'Por favor introduzca un numero de guias a solicitar'
+          }
+      }
+  },
+  mermas: {
+    validators: {
+        notEmpty: {
+            message: 'Por favor introduzca un numero de guias a solicitar'
+        }
+    }
+},
+    plantas: {
+      validators: {
+          notEmpty: {
+              message: 'Por favor introduzca un numero de guias a solicitar'
+          }
+      }
+  },
+
+  },
+  plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+              return '.mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+          }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  //e.preventDefault();
+  var formData = new FormData(addGuiaForm);
 
   $.ajax({
-    url: '/catalago-list',
-    type: 'POST',
-    data: formData,
-    processData: false, // Evita la conversión automática de datos a cadena
-    contentType: false, // Evita que se establezca el tipo de contenido
-    success: function (response) {
-      $('#addMarca').modal('hide');
-      $('.datatables-users').DataTable().ajax.reload();
+      url: '/guias/store', // Actualiza con la URL correcta
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+          $('#addGuias').modal('hide');
+          $('.datatables-users').DataTable().ajax.reload();
 
-      // Mostrar alerta de éxito
-      Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: response.success,
-        customClass: {
-          confirmButton: 'btn btn-success'
-        }
-      });
-    },
-    error: function (xhr) {
-      // Mostrar alerta de error
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al agregar la marca',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    }
+          // Mostrar alerta de éxito
+          Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.success,
+              customClass: {
+                  confirmButton: 'btn btn-success'
+              }
+          });
+      },
+      error: function (xhr) {
+          // Mostrar alerta de error
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al registrar el lote envasado',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      }
   });
 });
 
@@ -53,7 +131,7 @@ $(function () {
   var dt_user_table = $('.datatables-users'),
     select2Elements = $('.select2'),
     userView = baseUrl + 'app/user/view/account',
-    offCanvasForm = $('#addMarca');
+    offCanvasForm = $('#addGuias');
 
   // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
@@ -92,7 +170,14 @@ $(function () {
         { data: 'id_guia' },
         { data: 'id_empresa' },
         { data: 'razon_social' },
-        { data: 'Folio' },
+        { data: 'folio' },
+        { data: 'id_predio' },
+        { data: 'numero_plantas' },
+        { data: 'numero_guias' },
+        { data: 'id_plantacion' },
+        { data: 'num_anterior' },
+        { data: 'num_comercializadas' },
+        { data: 'mermas_plantas' },
         { data: 'action' }
       ],
       columnDefs: [

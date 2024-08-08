@@ -53,6 +53,13 @@
           <th>id empresa</th>
           <th>Nombre cliente</th>
           <th>Folio</th>
+          <th>No. predio</th>
+          <th>No. Plantas</th>
+          <th>No. Guias</th>
+          <th>Plantacion</th>
+          <th>No. anterior</th>
+          <th>comercializadas</th>
+          <th>No. mermas</th>
           <th>Acciones</th>
         </tr>
       </thead>

@@ -14,6 +14,7 @@ class Predios extends Model
 
     // Define los campos que se pueden llenar de forma masiva
     protected $fillable = [
+        'id_predio',
         'id_empresa',
         'nombre_productor',
         'nombre_predio',
@@ -36,5 +37,10 @@ class Predios extends Model
     public function tipo()
     {
         return $this->belongsTo(Tipos::class, 'id_tipo');
+    }
+
+    public function plantaciones()
+    {
+        return $this->hasMany(predio_plantacion::class, 'id_tipo');
     }
 }

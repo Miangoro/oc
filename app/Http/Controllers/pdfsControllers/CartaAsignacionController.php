@@ -31,9 +31,21 @@ class CartaAsignacionController extends Controller
     //vista servicio persona vigente
     public function ServicioPersonaVigente()
     {
-      $pdf = Pdf::loadView('pdfs.prestacion_servicios_vigente');
-    return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 VIGENTE.pdf');
+        $pdf = Pdf::loadView('pdfs.prestacion_servicios_vigente');
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->render();
+
+        $canvas = $pdf->getDomPDF()->getCanvas();
+        $font = $pdf->getDomPDF()->getFontMetrics()->get_font("Arial", "normal");
+
+        $canvas->page_script(function ($pageNumber, $pageCount, $canvas, $font) {
+            $canvas->text(270, 820, "Página $pageNumber de $pageCount", $font, 12);
+        });
+
+        return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 VIGENTE.pdf');
     }
+
+
 
     public function Contrato_NMX_052()
     {
@@ -105,3 +117,6 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
 }
+
+
+
