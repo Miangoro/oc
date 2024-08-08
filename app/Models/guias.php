@@ -19,7 +19,11 @@ class Guias extends Model
         'id_predio',
         'numero_plantas',
         'numero_guias',
+        'num_anterior',
+        'num_comercializadas',
+        'mermas_plantas',
     ];
+    
 
     public function empresa()
     {

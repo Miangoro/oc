@@ -17,6 +17,13 @@ const fv = FormValidation.formValidation(addGuiaForm, {
               }
           }
       },
+      presentacion: {
+        validators: {
+            notEmpty: {
+                message: 'Por favor introduzca un numero de guias a solicitar'
+            }
+        }
+    },
       predios: {
           validators: {
               notEmpty: {
@@ -38,13 +45,34 @@ const fv = FormValidation.formValidation(addGuiaForm, {
               }
           }
       },
-      presentacion: {
+      anterior: {
         validators: {
             notEmpty: {
                 message: 'Por favor introduzca un numero de guias a solicitar'
             }
         }
     },
+    comercializadas: {
+      validators: {
+          notEmpty: {
+              message: 'Por favor introduzca un numero de guias a solicitar'
+          }
+      }
+  },
+  mermas: {
+    validators: {
+        notEmpty: {
+            message: 'Por favor introduzca un numero de guias a solicitar'
+        }
+    }
+},
+    plantas: {
+      validators: {
+          notEmpty: {
+              message: 'Por favor introduzca un numero de guias a solicitar'
+          }
+      }
+  },
 
   },
   plugins: {
@@ -147,6 +175,9 @@ $(function () {
         { data: 'numero_plantas' },
         { data: 'numero_guias' },
         { data: 'id_plantacion' },
+        { data: 'num_anterior' },
+        { data: 'num_comercializadas' },
+        { data: 'mermas_plantas' },
         { data: 'action' }
       ],
       columnDefs: [

@@ -25,11 +25,6 @@ class predio_plantacion extends Model
         return $this->belongsTo(Empresa::class, 'id_empresa');
     }
 
-    public function Catalagotipo()
-    {
-        return $this->belongsTo(catalogo_tipo::class, 'id_tipo', 'nombre');
-    }
-
     public function tipo()
     {
         return $this->belongsTo(Tipos::class, 'id_tipo');
