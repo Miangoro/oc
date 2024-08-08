@@ -50,13 +50,9 @@
       "icon": "menu-icon ri-map-pin-user-fill",
       "slug": "domicilio",
       "submenu": [
+       
         {
-          "url": "laravel/user-management",
-          "name": "Fiscal",
-          "slug": "domicilios-fiscal"
-        },
-        {
-          "url": "domicilios/instalaciones",
+          "url": "domicilios/predios",
           "name": "Predios",
           "slug": "domicilios-predios"
         },
@@ -121,9 +117,9 @@
           "slug": "catalogo-clases"
         },
         {
-          "url": "catalogo/tipos",
+          "url": "/catalogo/tipos",
           "name": "Tipos de agave",
-          "slug": "tipos-maguey-agave"
+          "slug": "catalogo-tipos"
         }
       ]
     },
