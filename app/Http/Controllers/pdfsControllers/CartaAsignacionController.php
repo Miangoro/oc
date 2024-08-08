@@ -72,7 +72,7 @@ class CartaAsignacionController extends Controller
     public function dictamenp()
     {
         $pdf = Pdf::loadView('pdfs.DictamenProductor');
-        return $pdf->stream('Dictamen de productor de mezcal.pdf');
+        return $pdf->stream('F-UV-02-04 Ver 10, Dictamen de cumplimiento de Instalaciones como productor.pdf');//ya
     }
     public function dictamene()
     {
@@ -82,7 +82,7 @@ class CartaAsignacionController extends Controller
     public function dictamenc()
     {
         $pdf = Pdf::loadView('pdfs.DictamenComercializador');
-        return $pdf->stream('Dictamen de Comercializador.pdf');
+        return $pdf->stream('F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones como comercializador.pdf');
     }
 
     public function solicitudservi()
