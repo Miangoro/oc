@@ -50,11 +50,7 @@
       "icon": "menu-icon ri-map-pin-user-fill",
       "slug": "domicilio",
       "submenu": [
-        {
-          "url": "laravel/user-management",
-          "name": "Fiscal",
-          "slug": "domicilios-fiscal"
-        },
+       
         {
           "url": "domicilios/predios",
           "name": "Predios",
@@ -80,12 +76,29 @@
       "submenu": [
         {
           "url": "laravel/user-management",
-          "name": "Prospectos",
+          "name": "Dictaminación de instalaciones",
           "slug": "laravel-example-user-management"
         },
         {
           "url": "laravel/user-management",
           "name": "Activos",
+          "slug": "laravel-example-user-management"
+        }
+      ]
+    },
+    {
+      "name": "Dictámenes de cumplimiento",
+      "icon": "menu-icon ri-auction-fill",
+      "slug": "laravel-example",
+      "submenu": [
+        {
+          "url": "laravel/user-management",
+          "name": "Instalaciones",
+          "slug": "laravel-example-user-management"
+        },
+        {
+          "url": "laravel/user-management",
+          "name": "Lote a granel",
           "slug": "laravel-example-user-management"
         }
       ]
@@ -121,9 +134,9 @@
           "slug": "catalogo-clases"
         },
         {
-          "url": "catalogo/tipos",
+          "url": "/catalogo/tipos",
           "name": "Tipos de agave",
-          "slug": "tipos-maguey-agave"
+          "slug": "catalogo-tipos"
         }
       ]
     },
