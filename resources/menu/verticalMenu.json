@@ -50,13 +50,9 @@
       "icon": "menu-icon ri-map-pin-user-fill",
       "slug": "domicilio",
       "submenu": [
+       
         {
-          "url": "laravel/user-management",
-          "name": "Fiscal",
-          "slug": "domicilios-fiscal"
-        },
-        {
-          "url": "domicilios/instalaciones",
+          "url": "domicilios/predios",
           "name": "Predios",
           "slug": "domicilios-predios"
         },
