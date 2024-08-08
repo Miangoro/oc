@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class guias extends Model
+class Guias extends Model
 {
     use HasFactory;
 
@@ -19,13 +19,15 @@ class guias extends Model
         'id_predio',
         'numero_plantas',
         'numero_guias',
-
-
     ];
 
     public function empresa()
     {
         return $this->belongsTo(Empresa::class, 'id_empresa');
     }
-    
+
+    public function predio()
+    {
+        return $this->belongsTo(predio_plantacion::class, 'id_predio');
+    }
 }

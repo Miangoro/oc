@@ -5,19 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class predio_plantacion extends Model
+class catalogo_tipo extends Model
 {
     use HasFactory;
 
-    protected $table = 'predio_plantacion';
-    protected $primaryKey = 'id_plantacion';
+    protected $table = 'catalogo_tipo_agave';
+    protected $primaryKey = 'id_tipo';
     protected $fillable = [
-        'id_plantacion',
-        'id_predio',
         'id_tipo',
-        'num_plantas',
-        'anio_plantacion',
-        'tipo_plantacion',
+        'nombre',
+        'cientifico',
     ];
 
     public function empresa()
@@ -25,14 +22,13 @@ class predio_plantacion extends Model
         return $this->belongsTo(Empresa::class, 'id_empresa');
     }
 
-    public function Catalagotipo()
+    public function plantaciones()
     {
-        return $this->belongsTo(catalogo_tipo::class, 'id_tipo', 'nombre');
+        return $this->hasMany(predio_plantacion::class, 'id_tipo');
     }
 
     public function tipo()
     {
         return $this->belongsTo(Tipos::class, 'id_tipo');
     }
-    
 }

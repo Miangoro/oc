@@ -140,13 +140,13 @@ $(function () {
         // columns according to JSON
         { data: '' },
         { data: 'id_guia' },
-        { data: 'id_plantacion' },
         { data: 'id_empresa' },
         { data: 'razon_social' },
         { data: 'folio' },
         { data: 'id_predio' },
         { data: 'numero_plantas' },
         { data: 'numero_guias' },
+        { data: 'id_plantacion' },
         { data: 'action' }
       ],
       columnDefs: [

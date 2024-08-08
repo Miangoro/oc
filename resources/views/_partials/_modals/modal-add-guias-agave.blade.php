@@ -105,13 +105,13 @@
 
                 // Cargar los detalles en el modal
                 var contenido = "";
-                for (let index = 0; index < response.predio_plantacion.length; index++) {
-                    contenido = '<option value="' + response.predio_plantacion[index].id_predio + '">' + response
-                        .predio_plantacion[index].num_plantas + '</option>' + contenido;
+                for (let index = 0; index < response.predios.length; index++) {
+                    contenido = '<option value="' + response.predios[index].id_predio + '">' + response
+                        .predios[index].id_predio + '</option>' + contenido;
                     // console.log(response.normas[index].norma);
                 }
 
-                if (response.predio_plantacion.length == 0) {
+                if (response.predios.length == 0) {
                     contenido = '<option value="">Sin predios registradas</option>';
                 }
                 $('#numero_plantas').html(contenido);
