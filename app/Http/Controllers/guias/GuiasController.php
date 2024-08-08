@@ -127,7 +127,7 @@ public function store(Request $request)
         'empresa' => 'required|exists:empresa,id_empresa',
         'presentacion' => 'required|numeric',
         'predios' => 'required|exists:predios,id_predio',
-        'plantacion' => 'required|exists:plantacion,id_plantacion',
+        'plantacion' => 'required|exists:predio_plantacion,id_plantacion',
         'folio' => 'required|string|max:255',
         'anterior' => 'required|numeric',
         'comercializadas' => 'required|numeric',
