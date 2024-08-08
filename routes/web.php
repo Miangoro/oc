@@ -520,6 +520,7 @@ Route::resource('/personal-list', UsuariosPersonalController::class);
 Route::get('/documentacion', [documentacionController::class, 'index'])->name('documentacion');
 Route::get('/documentacion/getNormas', [documentacionController::class, 'getNormas'])->name('documentacion.getNormas');
 Route::get('documentacion/getActividades', [documentacionController::class, 'getActividades'])->name('documentacion.getActividades');
+Route::post('/upload', [documentacionController::class, 'upload'])->name('upload');
 
 
 /*-------------------Tipos de maguey/agave-------------------*/

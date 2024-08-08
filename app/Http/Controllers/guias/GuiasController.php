@@ -122,12 +122,12 @@ class GuiasController  extends Controller
 
 public function store(Request $request)
 {
-    // Validar los datos recibidos
+    
     $request->validate([
         'empresa' => 'required|exists:empresa,id_empresa',
         'presentacion' => 'required|numeric',
-        'predios' => 'required|exists:predios,id_predio',
-        'plantacion' => 'required|exists:predio_plantacion,id_plantacion',
+        'predios' => 'required',
+        'plantacion' => 'required',
         'folio' => 'required|string|max:255',
         'anterior' => 'required|numeric',
         'comercializadas' => 'required|numeric',
