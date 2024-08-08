@@ -524,7 +524,7 @@ Route::get('documentacion/getActividades', [documentacionController::class, 'get
 
 /*-------------------Tipos de maguey/agave-------------------*/
 /*mostrar*/
-Route::get('/catalogo/tipos', [tiposController::class, 'UserManagement'])->name('tipos-maguey-agave');
+Route::get('/catalogo/tipos', [tiposController::class, 'UserManagement'])->name('catalogo-tipos');
 Route::resource('/tipos-list', tiposController::class);
 /*eliminar*/
 Route::delete('/tipos-list/{id_tipo}', [tiposController::class, 'destroy'])->name('tipos.destroy');
