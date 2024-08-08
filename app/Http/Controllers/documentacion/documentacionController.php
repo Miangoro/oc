@@ -4,6 +4,7 @@ namespace App\Http\Controllers\documentacion;
 
 use App\Http\Controllers\Controller;
 use App\Models\Documentacion;
+use App\Models\Documentacion_url;
 use App\Models\empresa;
 use App\Models\Instalaciones;
 use Illuminate\Http\Request;
@@ -133,7 +134,7 @@ class documentacionController extends Controller
           $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
           $razonSocial = $empresa->razon_social;
           
-  
+          
 
           foreach ($documentos2 as $indexD => $documento) {
 
@@ -157,7 +158,9 @@ class documentacionController extends Controller
                       <td>' . ($indexD + 1) . '</td>
                       <td class="text-wrap text-break"><b>' . $documento->nombre . '</b></td>
                       <td class="text-end">
-                          <input class="form-control form-control-sm" type="file" id="formFile">
+                          <input class="form-control" type="file" id="file'.$documento->id_documento.'" data-id="'.$documento->id_documento.'" name="url[]">
+                                <input value="'. $documento->id_documento .'" class="form-control" type="hidden" name="id_documento[]">
+                                <input value="'. $documento->nombre .'" class="form-control" type="hidden" name="nombre_documento[]">
                       </td>
                       <td class="text-end fw-medium">   
                       
@@ -198,9 +201,11 @@ class documentacionController extends Controller
           $contenidoDocumentos = $contenidoDocumentos . '
                     <tr>
                       <td>' . ($indexD + 1) . '</td>
-                      <td class="text-wrap text-break"><b>' . $documento->id_documento . ' ' . $documento->nombre . '</b></td>
+                      <td class="text-wrap text-break"><b>' . $documento->nombre . '</b></td>
                       <td class="text-end">
-                          <input class="form-control form-control-sm" type="file" id="formFile">
+                          <input class="form-control" type="file" id="file'.$documento->id_documento.'" data-id="'.$documento->id_documento.'" name="url[]">
+                                <input value="'. $documento->id_documento .'" class="form-control" type="hidden" name="id_documento[]">
+                                <input value="'. $documento->nombre .'" class="form-control" type="hidden" name="nombre_documento[]">
                       </td>
                       <td class="text-end fw-medium">   
                       
@@ -301,6 +306,8 @@ class documentacionController extends Controller
       <div class="card-header d-flex justify-content-between">
         <div>
           <h5 class="card-title mb-1">' . $numeroCliente . ' ' . $razonSocial . ' (' . $norma . ')</h5>
+
+          <input name="numCliente" type="hidden" value="' . $numeroCliente . '">
           
         </div>
         
@@ -365,4 +372,28 @@ class documentacionController extends Controller
 
     return response()->json($actividades);
   }
+
+  public function upload(Request $request)
+    {
+      
+      if ($request->hasFile('url')) {
+        $numeroCliente = $request->numCliente;
+        foreach ($request->file('url') as $index => $file) {
+            $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+
+            $documentacion_url = new Documentacion_url ();
+            $documentacion_url->id_relacion = 0;
+            $documentacion_url->id_documento = $request->id_documento[$index];
+            $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+            $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+            $documentacion_url->id_empresa = $request->id_empresa;
+            $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index] ?? null; // Usa null si no hay fecha
+            $documentacion_url->save();
+        }
+    }
+        
+
+        return response()->json(['success' => 'Files uploaded successfully!']);
+    }
 }
