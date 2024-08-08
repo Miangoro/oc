@@ -39,6 +39,9 @@ class GuiasController  extends Controller
             5 => 'id_predio',
             6 => 'numero_plantas',
             7 => 'numero_guias',
+            8 => 'num_anterior',
+            9 => 'num_comercializadas',
+            10 => 'mermas_plantas',
 
         ];
 
@@ -88,6 +91,9 @@ class GuiasController  extends Controller
                     'id_predio' => $user->id_predio,
                     'numero_plantas' => $user->numero_plantas,
                     'numero_guias' => $user->numero_guias,
+                    'num_anterior' => $user->num_anterior,
+                    'num_comercializadas' => $user->num_comercializadas,
+                    'mermas_plantas' => $user->mermas_plantas,
 
 
                 ];
@@ -114,26 +120,37 @@ class GuiasController  extends Controller
         return response()->json(['success' => 'Clase eliminada correctamente']);
     }
 
-    public function store(Request $request)
-    {
-        // Validar los datos del formulario
-        $request->validate([
-            'presentacion' => 'required|numeric',
-            'empresa' => 'required|exists:empresa,id_empresa',
-            'predios' => 'required|string|max:255',
-            'plantacion' => 'required|string|max:255',
-            'folio' => 'required|string|max:255',
-        ]);
+public function store(Request $request)
+{
+    // Validar los datos recibidos
+    $request->validate([
+        'empresa' => 'required|exists:empresa,id_empresa',
+        'presentacion' => 'required|numeric',
+        'predios' => 'required|exists:predios,id_predio',
+        'plantacion' => 'required|exists:plantacion,id_plantacion',
+        'folio' => 'required|string|max:255',
+        'anterior' => 'required|numeric',
+        'comercializadas' => 'required|numeric',
+        'mermas' => 'required|numeric',
+        'plantas' => 'required|numeric',
+    ]);
 
-        // Crear una nueva instancia del modelo `guias`
-        $guia = new guias();
-        $guia->numero_guias = $request->input('presentacion');
-        $guia->id_empresa = $request->input('empresa');
-        $guia->nombre_predio = $request->input('predios');
-        $guia->numero_plantas = $request->input('plantacion');
-        $guia->Folio = $request->input('sku');
-        $guia->save();
+    // Crear una nueva instancia del modelo Guia
+    $guia = new guias();
+    $guia->id_empresa = $request->input('empresa');
+    $guia->id_predio = $request->input('predios');
+    $guia->id_plantacion = $request->input('plantacion');
+    $guia->folio = $request->input('folio');
+    $guia->num_anterior = $request->input('anterior', 0);
+    $guia->num_comercializadas = $request->input('comercializadas', 0);
+    $guia->mermas_plantas = $request->input('mermas', 0);
+    $guia->numero_plantas = $request->input('plantas', 0);
+    $guia->numero_guias = $request->input('presentacion');
+    $guia->save();
 
-        return response()->json(['success' => 'Guía registrada correctamente']);
-    }
+    // Responder con éxito
+    return response()->json(['success' => 'Guía registrada correctamente']);
+}
+
+
 }
