@@ -105,13 +105,16 @@
 
                 // Cargar los detalles en el modal
                 var contenido = "";
-                for (let index = 0; index < response.predios.length; index++) {
-                    contenido = '<option value="' + response.predios[index].id_predio + '">' + response
-                        .predios[index].id_predio + '</option>' + contenido;
+                for (let index = 0; index < response.plantacion.length; index++) {
+                    contenido = '<option value="' + response.plantacion[index].id_plantacion + '">Número de plantas: ' + response
+                        .plantacion[index].num_plantas + ' | Tipo de agave: ' + response
+                        .plantacion[index].nombre + ' ' + response
+                        .plantacion[index].cientifico + ' | Año de platanción: ' + response
+                        .plantacion[index].anio_plantacion + '</option>' + contenido;
                     // console.log(response.normas[index].norma);
                 }
 
-                if (response.predios.length == 0) {
+                if (response.plantacion.length == 0) {
                     contenido = '<option value="">Sin predios registradas</option>';
                 }
                 $('#numero_plantas').html(contenido);

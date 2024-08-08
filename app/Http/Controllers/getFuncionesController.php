@@ -49,8 +49,7 @@ class getFuncionesController extends Controller
             'marcas' => $empresa->marcas(),
             'guias' => $empresa->guias(),
             'predios' => $empresa->predios(),
-            
-
+            'plantacion' => $empresa->plantacion(),
 
 
 
