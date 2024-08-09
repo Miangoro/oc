@@ -2,9 +2,11 @@
 
 namespace App\Helpers;
 
+use App\Models\Guias;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use App\Models\marcas;
+use App\Models\Predios;
 use Carbon\Carbon;
 
 class Helpers
@@ -13,6 +15,17 @@ class Helpers
   {
       $count = marcas::where('id_empresa', $id_empresa)->count();
       return chr(65 + ($count % 26)); // 65 es el código ASCII para 'A'
+  }
+
+  public static function generarFolioGuia($id_predio)
+  {
+      $predio = Predios::where('id_predio', $id_predio)->first();
+      $count = Guias::where('id_predio', $id_predio)->count();
+      $numPredio = str_replace('UVEM', '', $predio->num_predio);
+       // Rellenar el contador con ceros hasta 3 dígitos
+      $countPadded = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
+      // Generar el folio concatenando el número del predio con la letra 'G' y el contador relleno
+      return $numPredio . 'G' . $countPadded; 
   }
 
   public static function formatearFecha($fecha)

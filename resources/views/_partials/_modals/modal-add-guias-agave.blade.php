@@ -25,9 +25,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" placeholder="Numero de guias solicitadas"
-                                    id="presentacion" name="presentacion" required />
-                                <label for="presentacion">Numero de guias solicitadas</label>
+                                <input class="form-control" type="number" placeholder="Número de guias solicitadas"
+                                    id="numero_guias" name="numero_guias" required />
+                                <label for="numero_guias">Número de guias solicitadas</label>
                             </div>
                         </div>
                     </div>
@@ -46,12 +46,6 @@
                         <label for="id_plantacion">Caaracateristicas del predio</label>
                     </div>
 
-
-                    <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" id="folio" class="form-control" placeholder="folio" aria-label="folio"
-                            name="folio" required />
-                        <label for="folio">Folio</label>
-                    </div>
 
 
                     <div class="text-center mb-6">
@@ -122,7 +116,7 @@
                 // Cargar los detalles en el modal
                 var contenido = "";
                 for (let index = 0; index < response.predios.length; index++) {
-                    contenido = '<option value="' + response.predios[index].id_empresa + '">' + response
+                    contenido = '<option value="' + response.predios[index].id_predio + '">' + response
                         .predios[index].nombre_predio + '</option>' + contenido;
                     // console.log(response.normas[index].norma);
                 }

@@ -50,15 +50,13 @@
         <tr>
           <th></th>
           <th>Id</th>
-          <th>id empresa</th>
+          <th>Número de cliente</th>
           <th>Nombre cliente</th>
           <th>Folio</th>
-          <th>No. predio</th>
-          <th>No. Plantas</th>
-          <th>No. Guias</th>
-          <th>Plantacion</th>
+          <th>Predio</th>
+          <th>Plantas actuales</th>
           <th>No. anterior</th>
-          <th>comercializadas</th>
+          <th>Comercializadas</th>
           <th>No. mermas</th>
           <th>Acciones</th>
         </tr>
