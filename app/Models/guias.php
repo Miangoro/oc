@@ -34,4 +34,9 @@ class Guias extends Model
     {
         return $this->belongsTo(predio_plantacion::class, 'id_predio');
     }
+
+    public function predios()
+    {
+        return $this->belongsTo(Predios ::class, 'id_predio');
+    }
 }

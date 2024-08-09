@@ -17,7 +17,7 @@ const fv = FormValidation.formValidation(addGuiaForm, {
               }
           }
       },
-      presentacion: {
+      numero_guias: {
         validators: {
             notEmpty: {
                 message: 'Por favor introduzca un numero de guias a solicitar'
@@ -37,15 +37,9 @@ const fv = FormValidation.formValidation(addGuiaForm, {
                   message: 'Por favor seleccione una empresa para continuar'
               }
           }
-      },
-      folio: {
-          validators: {
-              notEmpty: {
-                  message: 'Por favor ingrese un numero de pedido/SKU'
-              }
-          }
-      },
+      }
 
+   
 
   },
   plugins: {
@@ -146,11 +140,10 @@ $(function () {
         { data: 'folio' },
         { data: 'id_predio' },
         { data: 'numero_plantas' },
-        { data: 'numero_guias' },
-        { data: 'id_plantacion' },
         { data: 'num_anterior' },
         { data: 'num_comercializadas' },
         { data: 'mermas_plantas' },
+        { data: '' },
         { data: 'action' }
       ],
       columnDefs: [
@@ -233,16 +226,15 @@ $(function () {
             }`;
           }
         },*/
-        /*{
+        {
            // email verify
-           targets: 5,
+           targets: 10,
            className: 'text-center',
            render: function (data, type, full, meta) {
-             var $id = full['id_marca'];
-             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_marca']}" data-registro="${full['folio']} "></i>`;
+             var $id = full['id_guia'];
+             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_guia']}" data-registro="${full['razon_social']} "></i>`;
            }
-         },*/
-
+         },
         {
           // Actions
           targets: -1,
@@ -538,18 +530,20 @@ $(function () {
       }
     });
   });
+  
 
-  /*$(document).on('click', '.pdf', function () {
+  $(document).on('click', '.pdf', function () {
         var id = $(this).data('id');
         var registro = $(this).data('registro');
             var iframe = $('#pdfViewer');
-            iframe.attr('src', '../solicitudinfo_cliente/'+id);
+            iframe.attr('src', '../guia_de_translado/');
 
-            $("#titulo_modal").text("Solicitud de información del cliente");
+            $("#titulo_modal").text("Guia de translado");
             $("#subtitulo_modal").text(registro);
             
           
-  });*/
+  });
+
 $(document).ready(function () {
 
   
