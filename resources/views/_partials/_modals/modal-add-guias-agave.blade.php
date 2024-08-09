@@ -47,11 +47,11 @@
                     </div>
 
 
-                    <div class="form-floating form-floating-outline mb-5">
+{{--                     <div class="form-floating form-floating-outline mb-5">
                         <input type="text" id="folio" class="form-control" placeholder="folio" aria-label="folio"
                             name="folio" required />
                         <label for="folio">Folio</label>
-                    </div>
+                    </div> --}}
 
 
                     <div class="text-center mb-6">
@@ -63,16 +63,16 @@
                         <div class="col-md-6">
 
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" placeholder="Numero de guias solicitadas"
-                                    id="num_anterior" name="anterior" required />
+                                <input class="form-control" type="number" placeholder="Numero de plantas anterior"
+                                    id="num_anterior" name="anterior"  />
                                 <label for="num_anterior">Numero de plantas anterior</label>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" placeholder="Numero de guias solicitadas"
-                                    id="num_comercializadas" name="comercializadas" required />
+                                <input class="form-control" type="number" placeholder="Numero de plantas comercializadas"
+                                    id="num_comercializadas" name="comercializadas"  />
                                 <label for="num_comercializadas">Numero de plantas comercializadas</label>
                             </div>
                         </div>
@@ -81,16 +81,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" placeholder="Numero de guias solicitadas"
-                                    id="mermas_plantas" name="mermas" required />
+                                <input class="form-control" type="number" placeholder="Mermas plantas"
+                                    id="mermas_plantas" name="mermas"  />
                                 <label for="mermas_plantas">Mermas plantas</label>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" placeholder="Numero de guias solicitadas"
-                                    id="numero_plantas" name="plantas" required />
+                                <input class="form-control" type="number" placeholder="Numero de plantas actualmente"
+                                    id="numero_plantas" name="plantas"  />
                                 <label for="numero_plantas">Numero de plantas actualmente</label>
                             </div>
                         </div>

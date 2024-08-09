@@ -45,34 +45,7 @@ const fv = FormValidation.formValidation(addGuiaForm, {
               }
           }
       },
-      anterior: {
-        validators: {
-            notEmpty: {
-                message: 'Por favor introduzca un numero de guias a solicitar'
-            }
-        }
-    },
-    comercializadas: {
-      validators: {
-          notEmpty: {
-              message: 'Por favor introduzca un numero de guias a solicitar'
-          }
-      }
-  },
-  mermas: {
-    validators: {
-        notEmpty: {
-            message: 'Por favor introduzca un numero de guias a solicitar'
-        }
-    }
-},
-    plantas: {
-      validators: {
-          notEmpty: {
-              message: 'Por favor introduzca un numero de guias a solicitar'
-          }
-      }
-  },
+
 
   },
   plugins: {
