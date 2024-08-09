@@ -12,6 +12,8 @@ class Predios extends Model
     // Puedes especificar la tabla si no sigue la convención
     protected $table = 'predios';
 
+    protected $primaryKey = 'id_predio'; // Clave primaria de la tabla
+
     // Define los campos que se pueden llenar de forma masiva
     protected $fillable = [
         'id_predio',
@@ -22,13 +24,8 @@ class Predios extends Model
         'tipo_predio',
         'puntos_referencia',
         'cuenta_con_coordenadas',
-        'latitud',
-        'longitud',
         'superficie',
-        'id_tipo',
-        'numero_plantas',
-        'edad_plantacion',
-        'tipo_plantacion',
+
     ];
     public function empresa()
     {
