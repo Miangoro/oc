@@ -646,13 +646,6 @@ $(document).on('click', '.edit-record', function () {
 
 
 
-
-
-
-
-
-
-
     const edit_tipoLoteSelect = document.getElementById('edit_tipo_lote');
     const edit_ocCidamFields = document.getElementById('edit_oc_cidam_fields');
     const edit_otroOrganismoFields = document.getElementById('edit_otro_organismo_fields');

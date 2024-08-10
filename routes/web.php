@@ -501,8 +501,11 @@ Route::put('instalaciones/{id_instalacion}', [DomiciliosController::class, 'upda
 //Domicilio predios
 Route::get('/domicilios/predios', [PrediosController::class, 'UserManagement'])->name('domicilios-predios');
 Route::resource('/predios-list', PrediosController::class);
-Route::get('/predios-list', [PrediosController::class, 'index'])->name('predios-list');
-Route::delete('/predios-list/{id}', [PrediosController::class, 'destroy'])->name('predios-list.destroy');
+Route::delete('/predios-list/{id_predio}', [PrediosController::class, 'destroy'])->name('predios-list.destroy');
+Route::post('/predios-register/store', [PrediosController::class, 'store'])->name('predios-register.store');
+Route::get('/domicilios-predios/{id_predio}/edit', [PrediosController::class, 'edit'])->name('domicilios-predios.edit');
+Route::post('/domicilios-predios/{id_predio}', [PrediosController::class, 'update'])->name('domicilios-predios.update');
+
 
 
 //Usuarios

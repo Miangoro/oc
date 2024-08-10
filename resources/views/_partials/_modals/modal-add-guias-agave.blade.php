@@ -25,9 +25,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" placeholder="Numero de guias solicitadas"
-                                    id="presentacion" name="presentacion" required />
-                                <label for="presentacion">Numero de guias solicitadas</label>
+                                <input class="form-control" type="number" placeholder="Número de guias solicitadas"
+                                    id="numero_guias" name="numero_guias" required />
+                                <label for="numero_guias">Número de guias solicitadas</label>
                             </div>
                         </div>
                     </div>
@@ -47,12 +47,6 @@
                     </div>
 
 
-                    <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" id="folio" class="form-control" placeholder="folio" aria-label="folio"
-                            name="folio" required />
-                        <label for="folio">Folio</label>
-                    </div>
-
 
                     <div class="text-center mb-6">
                         <h4 class="address-title mb-2">Datos para Guía de traslado</h4>
@@ -63,16 +57,16 @@
                         <div class="col-md-6">
 
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" placeholder="Numero de guias solicitadas"
-                                    id="num_anterior" name="anterior" required />
+                                <input class="form-control" type="number" placeholder="Numero de plantas anterior"
+                                    id="num_anterior" name="anterior"  />
                                 <label for="num_anterior">Numero de plantas anterior</label>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" placeholder="Numero de guias solicitadas"
-                                    id="num_comercializadas" name="comercializadas" required />
+                                <input class="form-control" type="number" placeholder="Numero de plantas comercializadas"
+                                    id="num_comercializadas" name="comercializadas"  />
                                 <label for="num_comercializadas">Numero de plantas comercializadas</label>
                             </div>
                         </div>
@@ -81,16 +75,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" placeholder="Numero de guias solicitadas"
-                                    id="mermas_plantas" name="mermas" required />
+                                <input class="form-control" type="number" placeholder="Mermas plantas"
+                                    id="mermas_plantas" name="mermas"  />
                                 <label for="mermas_plantas">Mermas plantas</label>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" placeholder="Numero de guias solicitadas"
-                                    id="numero_plantas" name="plantas" required />
+                                <input class="form-control" type="number" placeholder="Numero de plantas actualmente"
+                                    id="numero_plantas" name="plantas"  />
                                 <label for="numero_plantas">Numero de plantas actualmente</label>
                             </div>
                         </div>
@@ -122,7 +116,7 @@
                 // Cargar los detalles en el modal
                 var contenido = "";
                 for (let index = 0; index < response.predios.length; index++) {
-                    contenido = '<option value="' + response.predios[index].id_empresa + '">' + response
+                    contenido = '<option value="' + response.predios[index].id_predio + '">' + response
                         .predios[index].nombre_predio + '</option>' + contenido;
                     // console.log(response.normas[index].norma);
                 }

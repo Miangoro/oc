@@ -289,6 +289,8 @@ class LotesGranelController extends Controller
             'success' => true,
             'message' => 'Lote registrado exitosamente',
         ]);
+
+        
     }
     
     

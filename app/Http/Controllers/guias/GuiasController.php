@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\guias;
 
+use App\Helpers\Helpers;
 use App\Models\guias;
 use App\Models\empresa;
 use App\Http\Controllers\Controller;
@@ -36,7 +37,7 @@ class GuiasController  extends Controller
             2 => 'id_plantacion',
             3 => 'folio',
             4 => 'id_empresa',
-            5 => 'id_predio',
+            5 => 'nombre_predio',
             6 => 'numero_plantas',
             7 => 'numero_guias',
             8 => 'num_anterior',
@@ -53,7 +54,7 @@ class GuiasController  extends Controller
 
         $searchValue = $request->input('search.value');
 
-        $query = guias::with('empresa');
+        $query = Guias::with(['empresa', 'predios']);
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
@@ -88,9 +89,8 @@ class GuiasController  extends Controller
                     'folio' => $user->folio,
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
                     'id_empresa' => $numero_cliente, // Asignar numero_cliente a id_empresa
-                    'id_predio' => $user->id_predio,
+                    'id_predio' => $user->predios ? $user->predios->nombre_predio : '',
                     'numero_plantas' => $user->numero_plantas,
-                    'numero_guias' => $user->numero_guias,
                     'num_anterior' => $user->num_anterior,
                     'num_comercializadas' => $user->num_comercializadas,
                     'mermas_plantas' => $user->mermas_plantas,
@@ -125,32 +125,31 @@ public function store(Request $request)
     
     $request->validate([
         'empresa' => 'required|exists:empresa,id_empresa',
-        'presentacion' => 'required|numeric',
+        'numero_guias' => 'required|numeric',
         'predios' => 'required',
         'plantacion' => 'required',
-        'folio' => 'required|string|max:255',
         'anterior' => 'required|numeric',
         'comercializadas' => 'required|numeric',
         'mermas' => 'required|numeric',
         'plantas' => 'required|numeric',
     ]);
 
-    // Crear una nueva instancia del modelo Guia
-    $guia = new guias();
-    $guia->id_empresa = $request->input('empresa');
-    $guia->id_predio = $request->input('predios');
-    $guia->id_plantacion = $request->input('plantacion');
-    $guia->folio = $request->input('folio');
-    $guia->num_anterior = $request->input('anterior', 0);
-    $guia->num_comercializadas = $request->input('comercializadas', 0);
-    $guia->mermas_plantas = $request->input('mermas', 0);
-    $guia->numero_plantas = $request->input('plantas', 0);
-    $guia->numero_guias = $request->input('presentacion');
-    $guia->save();
+    for ($i=0; $i < $request->input('numero_guias'); $i++) { 
 
-    // Responder con éxito
-    return response()->json(['success' => 'Guía registrada correctamente']);
-}
-
-
+        // Crear una nueva instancia del modelo Guia
+        $guia = new guias();
+        $guia->id_empresa = $request->input('empresa');
+        $guia->numero_guias = $request->input('numero_guias');
+        $guia->id_predio = $request->input('predios');
+        $guia->id_plantacion = $request->input('plantacion');
+        $guia->folio = Helpers::generarFolioGuia($request->predios);
+        $guia->num_anterior = $request->input('anterior', 0);
+        $guia->num_comercializadas = $request->input('comercializadas', 0);
+        $guia->mermas_plantas = $request->input('mermas', 0);
+        $guia->numero_plantas = $request->input('plantas', 0);
+        $guia->save();
+    }
+        // Responder con éxito
+        return response()->json(['success' => 'Guía registrada correctamente']);
+    }
 }

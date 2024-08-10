@@ -171,10 +171,14 @@
         }
 
         .footer-page {
-            text-align: right;
-            margin-top: 5px;
-            font-size: 12px;
-        }
+        text-align: right;
+        margin-top: 5px;
+        font-size: 12px;
+    }
+
+    .footer .page:after {
+        content: counter(page);
+    }
     </style>
 
 
@@ -193,10 +197,9 @@
             Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
         </p>
         <p class="footer-page">
-            Página <!-- Número de página será añadido aquí por el controlador -->
+            Página <span class="page"></span> de 11
         </p>
     </div>
-
     <br>
     <div class="container mt-3">
         <div class="row">
