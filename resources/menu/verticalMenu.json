@@ -87,6 +87,12 @@
       ]
     },
     {
+      "name": "Inspecciones",
+      "url": "inspecciones",
+      "icon": "menu-icon ri-user-search-fill",
+      "slug": "inspecciones"
+    },
+    {
       "name": "Dictámenes de cumplimiento",
       "icon": "menu-icon ri-auction-fill",
       "slug": "laravel-example",
