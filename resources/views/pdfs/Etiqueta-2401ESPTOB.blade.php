@@ -621,7 +621,7 @@ table {
                 <td colspan="2" style="font-size: 10px;"><strong>Por definir</strong></td>
             </tr>
             <tr>
-                <td class="header-cell" style="font-size: 10px;">Categoría y clase:</td>
+                <td class="header-cell" style="font-size: 10px; text-align: left;">Categoría y clase:</td>
                 <td style="font-size: 10px;"><strong>Mezcal Artesanal, Blanco o Joven</strong></td>
                 <td class="header-cell" style="font-size: 10px;">Especie de agave:</td>
                 <td style="font-size: 10px;"><strong>A. Angustifolia- A. Potatorum</strong></td>
@@ -631,7 +631,7 @@ table {
                 <td style="font-size: 10px;"><strong>NA</strong></td>
             </tr>
             <tr>
-                <td class="header-cell" style="font-size: 10px;">No. de Análisis Fisicoquímicos:</td>
+                <td class="header-cell" style="font-size: 10px; text-align: left;">No. de Análisis Fisicoquímicos:</td>
                 <td style="font-size: 10px;"><strong>NNMZ-46335-S1</strong></td>
                 <td class="header-cell" style="font-size: 10px;">ID del tanque:</td>
                 <td style="font-size: 10px;"><strong>REMOLQUE 204</strong></td>
@@ -639,7 +639,7 @@ table {
                 <td colspan="2" style="font-size: 10px;"><strong>CIDAM C-GRA-180/2024</strong></td>
             </tr>
             <tr>
-                <td colspan="1" class="header-cell" style="font-size: 10px;">Nombre y firma del inspector:</td>
+                <td colspan="1" class="header-cell" style="font-size: 10px; text-align: left;">Nombre y firma del inspector:</td>
                 <td colspan="3" style="font-size: 10px;"><strong>Idalia González Zarate</strong></td>
                 <td colspan="2" class="header-cell" style="font-size: 10px;">Nombre y firma del responsable:</td>
                 <td colspan="2" style="font-size: 10px;"><strong>Juan Carlos López Hernández</strong></td>
@@ -649,7 +649,7 @@ table {
 
      <!-- Tabla 8 -->
      <table class="unique-final-table top">
-        <tbody>
+     <tbody>
             <tr>
                 <td rowspan="3" class="logo-cell" style="font-size: 12px;">
                     <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo" class="custom-logo">
@@ -678,7 +678,7 @@ table {
                 <td colspan="2" style="font-size: 10px;"><strong>Por definir</strong></td>
             </tr>
             <tr>
-                <td class="header-cell" style="font-size: 10px;">Categoría y clase:</td>
+                <td class="header-cell" style="font-size: 10px; text-align: left;">Categoría y clase:</td>
                 <td style="font-size: 10px;"><strong>Mezcal Artesanal, Blanco o Joven</strong></td>
                 <td class="header-cell" style="font-size: 10px;">Especie de agave:</td>
                 <td style="font-size: 10px;"><strong>A. Angustifolia- A. Potatorum</strong></td>
@@ -688,7 +688,7 @@ table {
                 <td style="font-size: 10px;"><strong>NA</strong></td>
             </tr>
             <tr>
-                <td class="header-cell" style="font-size: 10px;">No. de Análisis Fisicoquímicos:</td>
+                <td class="header-cell" style="font-size: 10px; text-align: left;">No. de Análisis Fisicoquímicos:</td>
                 <td style="font-size: 10px;"><strong>NNMZ-46335-S1</strong></td>
                 <td class="header-cell" style="font-size: 10px;">ID del tanque:</td>
                 <td style="font-size: 10px;"><strong>REMOLQUE 204</strong></td>
@@ -696,7 +696,7 @@ table {
                 <td colspan="2" style="font-size: 10px;"><strong>CIDAM C-GRA-180/2024</strong></td>
             </tr>
             <tr>
-                <td colspan="1" class="header-cell" style="font-size: 10px;">Nombre y firma del inspector:</td>
+                <td colspan="1" class="header-cell" style="font-size: 10px; text-align: left;">Nombre y firma del inspector:</td>
                 <td colspan="3" style="font-size: 10px;"><strong>Idalia González Zarate</strong></td>
                 <td colspan="2" class="header-cell" style="font-size: 10px;">Nombre y firma del responsable:</td>
                 <td colspan="2" style="font-size: 10px;"><strong>Juan Carlos López Hernández</strong></td>
@@ -707,7 +707,7 @@ table {
 
      <!-- Tabla 7 -->
      <table class="unique-final-table top">
-        <tbody>
+     <tbody>
             <tr>
                 <td rowspan="3" class="logo-cell" style="font-size: 12px;">
                     <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo" class="custom-logo">
@@ -736,7 +736,7 @@ table {
                 <td colspan="2" style="font-size: 10px;"><strong>Por definir</strong></td>
             </tr>
             <tr>
-                <td class="header-cell" style="font-size: 10px;">Categoría y clase:</td>
+                <td class="header-cell" style="font-size: 10px; text-align: left;">Categoría y clase:</td>
                 <td style="font-size: 10px;"><strong>Mezcal Artesanal, Blanco o Joven</strong></td>
                 <td class="header-cell" style="font-size: 10px;">Especie de agave:</td>
                 <td style="font-size: 10px;"><strong>A. Angustifolia- A. Potatorum</strong></td>
@@ -746,7 +746,7 @@ table {
                 <td style="font-size: 10px;"><strong>NA</strong></td>
             </tr>
             <tr>
-                <td class="header-cell" style="font-size: 10px;">No. de Análisis Fisicoquímicos:</td>
+                <td class="header-cell" style="font-size: 10px; text-align: left;">No. de Análisis Fisicoquímicos:</td>
                 <td style="font-size: 10px;"><strong>NNMZ-46335-S1</strong></td>
                 <td class="header-cell" style="font-size: 10px;">ID del tanque:</td>
                 <td style="font-size: 10px;"><strong>REMOLQUE 204</strong></td>
@@ -754,7 +754,7 @@ table {
                 <td colspan="2" style="font-size: 10px;"><strong>CIDAM C-GRA-180/2024</strong></td>
             </tr>
             <tr>
-                <td colspan="1" class="header-cell" style="font-size: 10px;">Nombre y firma del inspector:</td>
+                <td colspan="1" class="header-cell" style="font-size: 10px; text-align: left;">Nombre y firma del inspector:</td>
                 <td colspan="3" style="font-size: 10px;"><strong>Idalia González Zarate</strong></td>
                 <td colspan="2" class="header-cell" style="font-size: 10px;">Nombre y firma del responsable:</td>
                 <td colspan="2" style="font-size: 10px;"><strong>Juan Carlos López Hernández</strong></td>
