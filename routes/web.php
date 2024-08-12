@@ -429,7 +429,6 @@ Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamenp'])->name('dictamen_productor');
 Route::get('/dictamen_envasador', [CartaAsignacionController::class, 'dictamene'])->name('dictamen_envasador');
 Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dictamenc'])->name('dictamen_comercializador');
-Route::get('/guia_de_translado', [CartaAsignacionController::class, 'guiasTranslado'])->name('Guias_Translado');
 
 
 //Clientes prospecto y confirmado
@@ -538,3 +537,19 @@ Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])-
 Route::resource('/guias-list', GuiasController::class);
 Route::post('/guias/store', [GuiasController::class, 'store']);
 //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
+
+//Documentacion
+Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
+Route::resource('/documentos-list', DocumentosController::class);
+Route::delete('/documentos/{id}', [DocumentosController::class, 'destroy'])->name('documentos.destroy');
+Route::post('/documentos', [DocumentosController::class, 'store']);
+
+// Ruta para obtener los datos del documento para editar
+Route::get('/documentos/{id}/edit', [DocumentosController::class, 'edit']);
+
+// Ruta para actualizar el documento
+Route::put('/documentos/{id}', [DocumentosController::class, 'update']);
+
+Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado');
+Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
+Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias.update');
