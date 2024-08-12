@@ -5,6 +5,7 @@ namespace App\Http\Controllers\guias;
 use App\Helpers\Helpers;
 use App\Models\guias;
 use App\Models\empresa;
+use App\Models\Predios;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -17,6 +18,7 @@ class GuiasController  extends Controller
 
         $guias = guias::all();
         $empresa = Empresa::where('tipo', 2)->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $predios = Predios::all();
         $userCount = $guias->count();
         $verified = 5;
         $notVerified = 10;
@@ -29,6 +31,8 @@ class GuiasController  extends Controller
             'userDuplicates' => $userDuplicates,
             'guias' => $guias,
             'empresa' => $empresa,
+            'predios' => $predios,
+
         ]);
     }
 
@@ -121,6 +125,7 @@ class GuiasController  extends Controller
 
         return response()->json(['success' => 'Clase eliminada correctamente']);
     }
+    
     //Metodo para registrar
     public function store(Request $request)
     {
@@ -156,6 +161,50 @@ class GuiasController  extends Controller
     }
 
 
+
+
+     // Método para obtener una guía por ID
+     public function edit($id_guia)
+     {
+         try {
+             $guia = guias::findOrFail($id_guia);
+             return response()->json($guia);
+         } catch (\Exception $e) {
+             return response()->json(['error' => 'Error al obtener la guía'], 500);
+         }
+     }
+ 
+     // Método para actualizar una guía existente
+     public function update(Request $request, $id_guia)
+     {
+         $request->validate([
+             'empresa' => 'required|exists:empresa,id_empresa',
+             'numero_guias' => 'required|numeric',
+             'predios' => 'required',
+             'plantacion' => 'required',
+             'anterior' => 'required|numeric',
+             'comercializadas' => 'required|numeric',
+             'mermas' => 'required|numeric',
+             'plantas' => 'required|numeric',
+         ]);
+ 
+         try {
+             $guia = guias::findOrFail($id_guia);
+             $guia->id_empresa = $request->input('empresa');
+             $guia->numero_guias = $request->input('numero_guias');
+             $guia->id_predio = $request->input('predios');
+             $guia->id_plantacion = $request->input('plantacion');
+             $guia->num_anterior = $request->input('anterior');
+             $guia->num_comercializadas = $request->input('comercializadas');
+             $guia->mermas_plantas = $request->input('mermas');
+             $guia->numero_plantas = $request->input('plantas');
+             $guia->save();
+ 
+             return response()->json(['success' => 'Guía actualizada correctamente']);
+         } catch (\Exception $e) {
+             return response()->json(['error' => 'Error al actualizar la guía'], 500);
+         }
+     }
  
       
 
@@ -173,5 +222,5 @@ class GuiasController  extends Controller
             $pdf = Pdf::loadView('pdfs.GuiaDeTranslado',['datos' =>$res]);
             return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
         }
-        
+
 }
