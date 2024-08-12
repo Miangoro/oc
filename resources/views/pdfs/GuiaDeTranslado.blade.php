@@ -162,6 +162,17 @@
             background-repeat: no-repeat;
             background-position: center;
         }
+        .text-with-background {
+    background-image: url('{{ storage_path("app/public/firmas/firma_erik.png") }}'); /* Ruta a tu imagen */
+    background-size: cover; /* Ajusta el tamaño de la imagen al contenedor */
+    position: absolute; /* Posiciona el elemento de manera absoluta */
+    height: 110px; /* Altura del contenedor */
+    width: 125px; /* Ancho del contenedor */
+    top: 86%; /* Posiciona el elemento al 50% de la altura de la ventana */
+    left: 50%; /* Posiciona el elemento al 50% del ancho de la ventana */
+    transform: translate(-50%, -50%); /* Desplaza el elemento hacia arriba e izquierda para centrarlo completamente */
+}
+
     </style>
 </head>
 
@@ -177,7 +188,7 @@
             <b class="tituloLetter" >Folio de Guía No. : <b class="colorRed"> {{ $datos[0]->folio }}</b> No. de predio: {{ $datos[0]->num_predio }} <br>
                 Nombre del predio: {{ $datos[0]->nombre_predio }} <br>
                 Nombre de la empresa/productor: {{ $datos[0]->razon_social }} <br>
-                No. del cliente: NOM-070-005C
+                No. del cliente:  {{ $datos[0]->numero_cliente }}
             <div  style="margin-top: 3%">
                 <b class="bigLetter">Guía de traslado de maguey o agave</b>
             </div>
@@ -190,7 +201,7 @@
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> Tipo de maguey (Tipo de agave):</td>
-            <td class="leftLetter" colspan="2">N° de cliente:</td>
+            <td class="leftLetter" colspan="2"> {{ $datos[0]->nombre }} {{ $datos[0]->cientifico }}</td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> Edad:</td>
@@ -202,15 +213,15 @@
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de piñas comercializadas:</td>
-            <td class="leftLetter" colspan="2">N° de cliente:</td>
+            <td class="leftLetter" colspan="2">{{ $datos[0]->num_comercializadas }}</td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de piñas anterior:</td>
-            <td class="leftLetter" colspan="2">N° de cliente:</td>
+            <td class="leftLetter" colspan="2">{{ $datos[0]->num_anterior }}</td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de piñas actual:</td>
-            <td class="leftLetter" colspan="2">N° de cliente:</td>
+            <td class="leftLetter" colspan="2">{{ $datos[0]->numero_plantas }}</td>
         </tr>
         <tr>
              <td class="leftLetter"> Kg de maguey: </td>
@@ -227,7 +238,7 @@
         <br>
         <tr>
             <td class="leftLetter">Nombre del cliente:</td>
-            <td class="leftLetter">Yucli Emmanuel Baza Ortuño</td>
+            <td class="leftLetter">{{ $datos[0]->nombre_productor }}</td>
             <td class="leftLetter">No. de cliente:</td>
             <td class="leftLetter">124342432</td>
         </tr>
@@ -252,7 +263,8 @@
         </tr>
     </table>
     <div style="margin-bottom: 1px; text-align: center">
-        <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/firma_erik.png') }}">
+        <div class="text-with-background">
+        </div>        
         <p style="font-size: 18px">B.T.G. Erick antonio Mejía Vaca <br>
             Gerente Técnico Sustituto de la Unidad de Inspección</p>
     </div>

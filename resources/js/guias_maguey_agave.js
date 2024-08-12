@@ -531,7 +531,7 @@ $(function () {
     });
   });
   
-
+//Reciben los datos del pdf
   $(document).on('click', '.pdf', function () {
         var id = $(this).data('id');
         var registro = $(this).data('registro');
