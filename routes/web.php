@@ -431,6 +431,7 @@ Route::get('/dictamen_envasador', [CartaAsignacionController::class, 'dictamene'
 Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dictamenc'])->name('dictamen_comercializador');
 Route::get('/guia_de_translado', [CartaAsignacionController::class, 'guiasTranslado'])->name('Guias_Translado');
 
+
 //Clientes prospecto y confirmado
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');
 Route::resource('/empresas-list', clientesProspectoController::class);
@@ -537,15 +538,3 @@ Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])-
 Route::resource('/guias-list', GuiasController::class);
 Route::post('/guias/store', [GuiasController::class, 'store']);
 //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
-
-//Documentacion
-Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
-Route::resource('/documentos-list', DocumentosController::class);
-Route::delete('/documentos/{id}', [DocumentosController::class, 'destroy'])->name('documentos.destroy');
-Route::post('/documentos', [DocumentosController::class, 'store']);
-// Ruta para obtener los datos del documento para editar
-Route::get('/documentos/{id}/edit', [DocumentosController::class, 'edit']);
-
-// Ruta para actualizar el documento
-Route::put('/documentos/{id}', [DocumentosController::class, 'update']);
-
