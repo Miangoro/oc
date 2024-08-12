@@ -155,43 +155,21 @@ class GuiasController  extends Controller
         return response()->json(['success' => 'Guía registrada correctamente']);
     }
 
-/*     //Metodo para llenar el pdf
-    public function info($id)
-    {
-        $res = DB::select('SELECT p.id_producto, n.id_norma, a.id_actividad, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono
-      FROM empresa e 
-      JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
-      JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
-      JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
-      JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
-      WHERE e.id_empresa=' . $id);
-        $pdf = Pdf::loadView('pdfs.SolicitudInfoCliente', ['datos' => $res]);
-        return $pdf->stream('F7.1-01-02  Solicitud de Información del Cliente NOM-070-SCFI-2016 y NMX-V-052-NORMEX-2016 Ed.pdf');
-    } */
 
+ 
+      
 
-        //Metodo para llenar el pdf
-        public function infoprueba($id)
-        {
-            $res = DB::select('SELECT a.razon_social, p.nombre, p.cientifico, s.num_plantas, s.anio_plantacion, e.id_guia, e.folio, e.id_empresa, e.num_predio, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas
-              FROM guias e 
-              JOIN predio_plantacion s ON (e.id_predio = s.id_predio) 
-              JOIN catalogo_tipo_agave p ON (p.id_tipo = s.id_tipo) 
-              JOIN empresa a ON (a.id_empresa = e.id_empresa)
-              WHERE e.id_predio=' . $id);
-            $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', ['datos' => $res]);
+        //Guias de translado
+        public function guiasTranslado($id_guia)
+        {   
+            $res = DB::select('SELECT a.razon_social, p.nombre_predio, p.num_predio, a.razon_social, t.nombre, t.cientifico, s.num_plantas, s.anio_plantacion, e.id_guia, e.folio, e.id_empresa, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas 
+            FROM guias e 
+            JOIN predios p ON (e.id_predio = p.id_predio) 
+            JOIN predio_plantacion s ON (e.id_plantacion = s.id_plantacion) 
+            JOIN catalogo_tipo_agave t ON (t.id_tipo = s.id_tipo) 
+            JOIN empresa a ON (a.id_empresa = e.id_empresa) 
+            WHERE e.id_guia=' . $id_guia);
+            $pdf = Pdf::loadView('pdfs.GuiaDeTranslado',['datos' =>$res]);
             return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
         }
-
-        
-/*                 //Metodo para llenar el pdf
-                public function infoprueba($id)
-                {
-                    $res = DB::select('SELECT s.num_predio, s.nombre_predio, e.id_guia, e.id_plantacion, e.folio, e.id_predio, e.num_predio, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas
-                      FROM guias e 
-                      JOIN predios s ON (e.id_empresa = s.id_empresa) 
-                      WHERE e.id_empresa=' . $id);
-                    $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', ['datos' => $res]);
-                    return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
-                } */
 }

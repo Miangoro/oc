@@ -174,9 +174,9 @@
 
     <div class="section">
         <center>
-            <b class="tituloLetter" >Folio de Guía No. : <b class="colorRed"> 539G005</b> No. de predio: UVEM539 <br>
-                Nombre del predio: TRES CRUCES M20464 <br>
-                Nombre de la empresa/productor: CRISTA LA SANTA S.A.P.I. DE C.V. <br>
+            <b class="tituloLetter" >Folio de Guía No. : <b class="colorRed"> {{ $datos[0]->folio }}</b> No. de predio: {{ $datos[0]->num_predio }} <br>
+                Nombre del predio: {{ $datos[0]->nombre_predio }} <br>
+                Nombre de la empresa/productor: {{ $datos[0]->razon_social }} <br>
                 No. del cliente: NOM-070-005C
             <div  style="margin-top: 3%">
                 <b class="bigLetter">Guía de traslado de maguey o agave</b>
@@ -237,7 +237,7 @@
             <td class="leftLetter"colspan="3">123123123</td>
         </tr>
         <tr>
-            <td class="leftLetter">Domicilio de
+            <td class="leftLetter">Domicilio de 
                 entrega:
             </td>
             <td class="leftLetter" colspan="3">Jose Inicente lugo</td>
@@ -252,6 +252,7 @@
         </tr>
     </table>
     <div style="margin-bottom: 1px; text-align: center">
+        <img style="display: block; margin: 0 auto;" height="60px" src="{{ storage_path('app/public/firmas/firma_erik.png') }}">
         <p style="font-size: 18px">B.T.G. Erick antonio Mejía Vaca <br>
             Gerente Técnico Sustituto de la Unidad de Inspección</p>
     </div>

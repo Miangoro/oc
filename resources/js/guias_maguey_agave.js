@@ -536,7 +536,7 @@ $(function () {
         var id = $(this).data('id');
         var registro = $(this).data('registro');
             var iframe = $('#pdfViewer');
-            iframe.attr('src', '../guia_de_translado/');
+            iframe.attr('src', '../guia_de_translado/'+id);
 
             $("#titulo_modal").text("Guia de translado");
             $("#subtitulo_modal").text(registro);
