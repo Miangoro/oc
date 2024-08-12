@@ -8,7 +8,7 @@ use App\Models\Predios;
 use App\Models\Empresa;
 use App\Models\Tipos;
 use App\Models\PredioCoordenadas;
-use App\Models\PredioPlantacion;
+use App\Models\predio_plantacion;
 use Illuminate\Support\Facades\Log;
 
 
@@ -162,7 +162,7 @@ class PrediosController extends Controller
             // Almacenar los datos de plantación en la tabla predio_plantacion
             if ($request->has('id_tipo')) {
                 foreach ($request->id_tipo as $index => $id_tipo) {
-                    PredioPlantacion::create([
+                    predio_plantacion::create([
                         'id_predio' => $predio->id_predio,
                         'id_tipo' => $id_tipo,
                         'num_plantas' => $request->numero_plantas[$index],
@@ -183,22 +183,21 @@ class PrediosController extends Controller
         public function edit($id_predio)
         {
             try {
-                // Cargar el lote y las guías asociadas
-                /* $lote = LotesGranel::with('lotesGuias.guia')->findOrFail($id_lote_granel); */
-
-                $predio = Predios::findOrFail($id_predio);
-                // Obtener los IDs de las guías asociadas
-                /* $guiasIds = $lote->lotesGuias->pluck('id_guia')->toArray(); */
-
+                // Usa 'predio_plantaciones' en lugar de 'plantaciones'
+                $predio = Predios::with(['coordenadas', 'predio_plantaciones'])->findOrFail($id_predio);
+        
                 return response()->json([
                     'success' => true,
                     'predio' => $predio,
+                    'coordenadas' => $predio->coordenadas,
+                    'plantaciones' => $predio->predio_plantaciones, // Asegúrate de usar la relación correcta aquí
                 ]);
             } catch (ModelNotFoundException $e) {
                 return response()->json(['success' => false], 404);
             }
-        }        
-
+        }
+        
+        
 
         public function update(Request $request, $id_predio)
         {

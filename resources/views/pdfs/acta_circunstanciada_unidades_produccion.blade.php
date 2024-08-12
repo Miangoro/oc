@@ -13,7 +13,6 @@
         body {
             font-family: 'Times New Roman', Times, serif;
             margin: 35px;
-            border: 3px dotted #14aa80;
             padding: 10px;
         }
         
@@ -26,8 +25,40 @@
             text-align: left;
             vertical-align: middle;
         }
-        .header-table td {
-            padding-top: 0px;
+        .header {
+            border: 1px solid rgb(212, 212, 212);
+            position: fixed;
+            top: 10px;
+            left: 40px;
+            width: 80%;
+            padding: 10px;
+            background-color: #fff;
+            text-align: right;
+            z-index: 1;
+            margin-bottom: 30px;
+        }
+
+
+        .header img {
+            border: 1px solid rgb(212, 212, 212);
+            width: 160px;
+            height: 80px;
+            margin-right: 500px;
+        }
+
+        .line {
+            position: absolute;
+            top: 70px;
+            right: 10px;
+            width: 68%;
+            border-bottom: 1.5px solid black;
+        }
+        .header-text {
+            right: 10px;
+            line-height: 1.5;
+            font-size: 12px;
+            margin-top: -50;
+            padding: 0;
         }
 
         .img img {
@@ -136,34 +167,24 @@
 
     <div class="watermark">Acta Circunstanciada</div>
     {{-- cabecera --}}
-    <table class="header-table">
-        <tr>
-            <td class="img">
-                <img src="{{ public_path('img_pdf/logo_uvem.png') }}" alt="Logo UVEM">
-            </td>
-            <td class="text-titulo">
-                <div class="centro">
-                    <p style="font-size: 23px; margin-bottom: 0px;">Acta Circunstanciada</p>
-                    <p style="font-size: 14px; margin-top: 0px; ">Para unidades de producción</p>        
-                </div>
-            </td>
-            <td class="text-center">
-                <div class="label"><span class="text">F-UV-02-02 VERSIÓN 6</span> </div>
-            </td>
-        </tr>
-    </table>
+        <div class="header">
+            <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo CIDAM">
+            <div class="header-text">
+            Acta circunstanciada para unidades de producción F-UV-02-02 <br> Edición 7, 15-07-2024<br></div>
+            <div class="line"></div>
+        </div>
+
+
     {{-- contenedor --}}
     <div class="contenedor">
-
+        Acta circunstanciada para Unidades de producción
         <table class="content-table" style="margin-top: 15px;">
             <tr>
-                <td style="text-align: left; width: 105px;"><strong>Acta número:</strong></td>
-                <td style="border: 2px solid #0e695e; width: 180px; font-family: sans-serif;">
-                    <b style="font-size: 13.5px;">UMS-____________/2024</b>
+                <td style="border: 2px solid #0e695e; width: 80%; font-family: sans-serif;">Acta número:<b style="font-size: 13.5px;">UMS-____________/2024</b>
                 </td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td style="border: 2px solid #0e695e;">
+
+                </td>
             </tr>
         </table>
         <br>

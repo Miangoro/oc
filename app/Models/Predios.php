@@ -35,9 +35,21 @@ class Predios extends Model
     {
         return $this->belongsTo(Tipos::class, 'id_tipo');
     }
-
+      
     public function plantaciones()
     {
         return $this->hasMany(predio_plantacion::class, 'id_tipo');
     }
+
+      // Relación con PredioCoordenadas
+      public function coordenadas()
+      {
+          return $this->hasMany(PredioCoordenadas::class, 'id_predio');
+      }
+      // Relación con PredioPlantacion
+      public function predio_plantaciones()
+    {
+        return $this->hasMany(predio_plantacion::class, 'id_predio');
+    }
+
 }

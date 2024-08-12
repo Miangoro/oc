@@ -29,5 +29,8 @@ class predio_plantacion extends Model
     {
         return $this->belongsTo(Tipos::class, 'id_tipo');
     }
-    
+    public function predio()
+    {
+        return $this->belongsTo(Predios::class, 'id_predio');
+    }
 }
