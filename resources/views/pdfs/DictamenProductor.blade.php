@@ -101,7 +101,7 @@
 
         .text2 {
             text-align: justify; 
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .images-container {
@@ -132,9 +132,11 @@
         }
 
         .numpag {
-            font-size: 10px; 
-            text-align: right;
-            margin: 0; 
+            font-size: 10px;
+            position: fixed; 
+            bottom: 10px;
+            right: 15px; 
+            margin: 0;
             padding: 0;
         }
 
@@ -145,7 +147,7 @@
             padding: 0; 
             position: absolute;
             right: 40px; 
-            top: 850px; 
+            top: 805px; 
         }
     </style>
 </head>
@@ -160,7 +162,7 @@
     <br>
     <div class="textimg">No.: UMC-00__/20___</div>
     <br>
-    <div class="title">Dictamen de cumplimiento de Instalaciones como <br> productor</div>
+    <div class="title">Dictamen de cumplimiento de Instalaciones como productor</div>
 
     <div class="text">
         <p>De acuerdo a lo establecido en los procedimientos internos de la Unidad de Inspección No. UVNOM 129 para
@@ -241,9 +243,7 @@
     No5v5rvZPkbUthYT2r5M0sGP5Y+s97oLa8GA5hqyDAgE9P0d1u0uwU7Q8SF0GYfe lavijxvsWaZg5QA5og==
     </p>
 
-    <br>
-    <p class = "numpag">Entrada en vigor: 15-07-2024</p>
-    <p class = "numpag">F-UV-02-12 Ver 5.</p>
+    <p class = "numpag">Entrada en vigor: 15-07-2024 <br>F-UV-02-04 Ver 10.</p>
 
     <div class="footer-bar">
         <p><strong>www.cidam.org . unidadverificacion@cidam.org <unidadverificacion@cidam.org></strong</p>

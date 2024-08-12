@@ -6,6 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones como comercializador</title>
     <style>
+        @page {
+            size: 227mm 292mm;
+            margin: 15mm;  
+        }      
+
+        body {
+            font-family: Arial, Helvetica, Verdana;
+        }
+
         .header img {
             float: left; 
             margin-left: -10px;
@@ -13,16 +22,16 @@
         }
 
         .description1 {
-            margin-right: 70px;
+            font-size: 18px;
+            font-weight: bold;
             text-align: right;
-            font-size: 16px;
             color: #151442; 
         }
 
         .description2 {
-            margin-right: 25px;
+            font-weight: bold;
             text-align: right;
-            font-size: 9px;
+            font-size: 9.5px;
             color: #151442;
         }
 
@@ -34,15 +43,19 @@
         }
 
         .textimg {
+            font-weight: bold;
+            font-size: 13px;
             margin-top: 10px; 
             margin-left: 5px; 
         }
 
         .text {
             text-align: justify; 
+            font-size: 14px;
         }
 
         .title {
+            font-weight: bold;
             text-align: center;
             font-size: 20px; 
         }
@@ -50,8 +63,8 @@
         .footer-bar {
             position: fixed;
             bottom: -55px;
-            left: -45px;
-            right: -45px;
+            left: -60px;
+            right: -60px;
             width: calc(100% - 40px);
             height: 30px;
             background-color: #158F60;
@@ -72,6 +85,7 @@
             border-collapse: collapse;
             margin: auto;
             font-size: 14px;
+            vertical-align: top;
         }
 
         td, th {
@@ -87,31 +101,7 @@
 
         .text2 {
             text-align: justify; 
-            font-size: 13px;
-        }
-
-        .line {
-            text-align: center; 
-            margin: 10px 0; 
-        }
-
-        .line::after {
-            content: "";
-            display: block;
-            width: 30%; 
-            height: 2px; 
-            background-color: black; 
-            margin: 0 auto;
-        }
-
-        .firma {
-            text-align: center; 
-            font-size: 10px;
-        }
-
-        .firma p {
-            margin: 0; 
-            line-height: 1.2; 
+            font-size: 12px;
         }
 
         .images-container {
@@ -119,58 +109,51 @@
             display: flex;
             justify-content: space-between;
             align-items: center; 
-            margin-top: 20px; 
+            margin-top: -20px; 
             width: 100%; 
             position: relative; 
         }
 
         .image-right {
-            width: 30%; 
+            width: 25%; 
             height: auto;
         }
 
         .image-left {
-            margin-right: 59%;
-            width: 10%; 
+            margin-right: 60%;
+            width: 12%; 
         }
 
         .textsello {
-         text-align: left;
-        font-size: 10px; 
-        margin: 0;
-        padding: 0; 
-        }
-
-        .textsello1 {
-        text-align: left;
-        font-size: 5px; 
-        margin: 0;
-        padding: 0; 
+            text-align: left;
+            font-size: 8px; 
+            margin: 0;
+            padding: 0; 
         }
 
         .numpag {
-            font-size: 10px; 
-            text-align: right;
-            margin: 0; 
+            font-size: 10px;
+            position: fixed;
+            bottom: 10px;
+            right: 15px;
+            margin: 0;
             padding: 0;
         }
 
         .sello {
-        text-align: right; 
-        font-size: 10px; 
-        margin: 0; 
-        padding: 0; 
-        position: absolute;
-        right: 110px; 
-        top: 845px; 
+            text-align: right; 
+            font-size: 11px; 
+            margin: 0; 
+            padding: 0; 
+            position: absolute;
+            right: 40px; 
+            top: 722px; 
         }
-
-
     </style>
 </head>
 <body>
     <div class="header">
-        <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="250px">
+        <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="270px">
     </div>
 
     <div class="description1">Unidad de Inspección No. UVNOM-129</div>
@@ -186,7 +169,7 @@
         la revisión de procesos de producción del producto Mezcal, su envasado y comercialización; y con fundamento
         en los artículos 56 Fracción I y 60 fracción I de la Ley de Infraestructura de la Calidad que establece el
         funcionamiento de las Unidades de Inspección.</p>
-
+        
         <p>Después de realizar la inspección de las instalaciones en fecha del ____de ______del 20 ___partiendo del acta
         circunstanciada o número de inspección: _____</p>
 
@@ -196,31 +179,29 @@
     <table>
         <tbody>
             <tr>
-                <td><p><strong>Domicilio Fiscal:</strong></p></td>
-                <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Beatae culpa qui omnis cumque enim dolore, quod animi tempora, dolorem soluta vel quisquam hic quis ut nostrum? Eum cumque atque ducimus.</td>
-            </tr>
+                <td style="text-align: justify;"><strong>Domicilio Fiscal:</strong></td>
+                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit.</td>
             <tr>
-                <td><strong>Domicilio de instalaciones del
-                comercializador:</strong></td>
-                <td>Lorem ipsum dolor sit amet consectetur adipisicing elit.</td>
+                <td><strong>Domicilio de instalaciones del comercializador:</strong></td>
+                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit.</td>
             </tr>
             <tr>
                 <td><strong>Domicilio de instalaciones del almacen:</strong></td>
-                <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium, atque!</td>
+                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium, atque!</td>
             </tr>
             <tr>
                 <td><strong>Responsable de la inspección:</strong></td>
-                <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium, atque!</td>
+                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium, atque!</td>
             </tr>
             <tr>
                 <td><strong>Fecha de emisión de dictamen:</strong></td>
-                <td>08/082024</td>
+                <td style="text-align: center; vertical-align: middle;">08/082024</td>
             </tr>
         </tbody>
     </table>
 
     <p class="text">Se dictamina que la <strong>Unidad de comercialización y/almacen</strong> cuenta con la infraestructura, el equipo y los
-    procesos necesarios para el envasado de <strong>Mezcal_______, clase (s)________,</strong> requisitos establecidos en la NOM-
+    procesos necesarios para el envasado de <strong>Mezcal_______, clase (s)________, </strong> requisitos establecidos en la NOM-
     070-SCFI-2016, Bebidas alcohólicas-Mezcal- Especificaciones y por el Organismo de Certificación del Centro
     de Innovación y Desarrollo Agroalimentario de Michoacán A.C. (CIDAM).</p>
 
@@ -229,34 +210,39 @@
     de 1994, así como sus modificaciones subsecuentes.</p>
     <br><br>
 
-    <p class="line"></p>
-    
-    <div class="firma">
-        <p>QFB. Mario Villanueva Flores</p>
-        <p>Gerente Técnico Sustituto de la Unidad de Inspección</p>
-    </div>
-
-    <p class = "sello">Sello Unidad de Inspección</p>
+    <p class = "sello"><strong>Sello de Unidad de Inspección</strong></p>
     <div class="images-container">
         <img src="{{ public_path('img_pdf/qr_umc-075.png') }}" alt="Imagen izquierda" class="image-left"> <!-- Imagen PROVISONAL -->
-        <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right"
+        <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
     </div>
 
-    <p class = "textsello">Cadena Original UMG-159/2024|2024-06-26|UMS-1094/2024 Sello Digital</p>
+    <p style="font-size: 10px; margin: 1;">
+    <strong>AUTORIZÓ</strong>
+    <span style="margin-left: 50px;">
+        <strong>Gerente Técnico Sustituto de la Unidad de Inspección | BTG. Erik Antonio Mejía Vaca</strong>
+    </span>
+    </p>
 
-    <p class = "textsello1">e2N1P+r+E79e0YxKzS/jMssKuASlmYXy2ppP+2PJN8vKUeFRxYTSY99MEWrgiHOnA N3pLUrdUBiD39v25Y648G4TK5qQ0LwZPLofRmjRQ2Ty5rHlDwnPRm37zaOkMjkRD <br>
+    <p style="font-size: 10px; margin: 1;">
+    <strong>Cadena Origina</strong>
+    <span style="margin-left: 29px;">
+        <strong>UMG-159/2024|2024-06-26|UMS-1094/2024 S</strong>
+    </span>
+    </p>
+
+    <p style="font-size: 10px; margin: 1;">
+    <strong>Sello Digital</strong>
+    </p>
+
+    <p class = "textsello">e2N1P+r+E79e0YxKzS/jMssKuASlmYXy2ppP+2PJN8vKUeFRxYTSY99MEWrgiHOnA N3pLUrdUBiD39v25Y648G4TK5qQ0LwZPLofRmjRQ2Ty5rHlDwnPRm37zaOkMjkRD <br>
     xC0ikyHPD+T3EFhEc9sgAFI6bZUd88yevfS+ZFZ7j9f5EA44Sz76jsN3P4e7lyePHmNz Jxg5ZupHICg5xBZu5ygOniMZNbzG6w0ZDPL58yoMQK1JDi8lwwiGJBaCNHN6krn <br>
     No5v5rvZPkbUthYT2r5M0sGP5Y+s97oLa8GA5hqyDAgE9P0d1u0uwU7Q8SF0GYfe lavijxvsWaZg5QA5og==
     </p>
 
-    <center><p style="font-size: 12px;"><strong>FIN DEL DOCUMENTO</strong></p></center>
-
-    <br><br>
-    <p class = "numpag">Entrada en vigor: 15-07-2024</p>
-    <p class = "numpag">F-UV-02-04 Ver 10.</p>
+    <p class = "numpag">Entrada en vigor: 15-07-2024 <br>F-UV-02-12 Ver 5.</p>
 
     <div class="footer-bar">
-        <p>www.cidam.org . unidadverificacion@cidam.org <unidadverificacion@cidam.org></p>
+        <p><strong>www.cidam.org . unidadverificacion@cidam.org <unidadverificacion@cidam.org></strong</p>
         <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341. Morelia Michoacán</p>
     </div>
 </body>
