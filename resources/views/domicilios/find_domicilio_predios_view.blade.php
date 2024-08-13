@@ -285,7 +285,7 @@
                             <input type="hidden" id="edit_id_predio" name="id_predio" value="">
                             <!-- Select de Empresa Cliente -->
                             <div class="form-floating form-floating-outline mb-4">
-                                <select id="edit_id_empresa" name="id_empresa" class="select2 form-select" required>
+                                <select id="edit_id_empresa" name="id_empresa" class="select2 form-select">
                                     <option value="" disabled selected>Selecciona la empresa cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
@@ -299,7 +299,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
                                         <input type="text" class="form-control" id="edit_nombre_productor"
-                                            name="nombre_productor" placeholder="Nombre del productor" required>
+                                            name="nombre_productor" placeholder="Nombre del productor" >
                                         <label for="nombre_productor">Nombre del Productor</label>
                                     </div>
                                 </div>
@@ -308,7 +308,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
                                         <input type="text" class="form-control" id="edit_nombre_predio" name="nombre_predio"
-                                            placeholder="Nombre del predio" required>
+                                            placeholder="Nombre del predio" >
                                         <label for="nombre_predio">Nombre del Predio</label>
                                     </div>
                                 </div>
@@ -317,7 +317,7 @@
                             <!-- Ubicación del Predio -->
                             <div class="form-floating form-floating-outline mb-3">
                                 <input type="text" class="form-control" id="edit_ubicacion_predio" name="ubicacion_predio"
-                                    placeholder="Ubicación del predio" required></input>
+                                    placeholder="Ubicación del predio" ></input>
                                 <label for="ubicacion_predio">Ubicación del Predio</label>
                             </div>
                             <!-- Tipo de Predio y Puntos de Referencia -->
@@ -325,7 +325,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
                                         <select class="form-select" id="edit_tipo_predio" name="tipo_predio"
-                                            aria-label="Tipo de Predio" required>
+                                            aria-label="Tipo de Predio">
                                             <option value="">Seleccione un tipo de predio</option>
                                             <option value="Comunal">Comunal</option>
                                             <option value="Ejidal">Ejidal</option>
@@ -351,7 +351,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
                                         <select class="form-select" id="edit_tiene_coordenadas" name="tiene_coordenadas"
-                                            aria-label="¿Cuenta con coordenadas?" required>
+                                            aria-label="¿Cuenta con coordenadas?">
                                             <option value="" disabled selected>Seleccione una opción</option>
                                             <option value="Si">Sí</option>
                                             <option value="No">No</option>
@@ -363,7 +363,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
                                         <input type="number" class="form-control" id="edit_superficie" name="superficie"
-                                            placeholder="Superficie del predio (Ha)" step="0.01" required>
+                                            placeholder="Superficie del predio (Ha)" step="0.01">
                                         <label for="superficie">Superficie del Predio (Ha)</label>
                                     </div>
                                 </div>
