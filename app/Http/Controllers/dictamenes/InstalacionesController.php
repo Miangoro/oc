@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dictamen_instalaciones;
 use App\Models\Clases; 
+use App\Models\inspecciones; 
 
 
 class InstalacionesController extends Controller
@@ -15,7 +16,8 @@ class InstalacionesController extends Controller
     {
         $dictamenes = Dictamen_instalaciones::all(); // Obtener todos los datos
         $clases = Clases::all();
-        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases'));
+        $inspeccion = inspecciones::all();
+        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'inspeccion'));
     }
 
 
