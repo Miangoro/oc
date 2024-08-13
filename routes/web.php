@@ -182,6 +182,7 @@ use App\Http\Controllers\documentacion\DocumentosController;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\InstalacionesController;
+use App\Http\Controllers\inspecciones\inspeccionesController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -568,3 +569,8 @@ Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTransl
 Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
 Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias.update');
 
+
+
+//Inspecciones
+Route::get('/inspecciones', [inspeccionesController::class, 'UserManagement'])->name('inspecciones');
+Route::resource('inspecciones-list', inspeccionesController::class);

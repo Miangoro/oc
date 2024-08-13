@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-6">
-                        <select class="select2 form-select " id="nombre_predio" name="predios" aria-label="Marca"
+                        <select onchange="obtenerPlantacionPredio()" class="select2 form-select " id="nombre_predio" name="predios" aria-label="Marca"
                             required>
                             <option value="" selected>Lista de predios</option>
                         </select>
@@ -141,18 +141,33 @@
                 var contenido = "";
                 for (let index = 0; index < response.plantacion.length; index++) {
                     contenido = '<option value="' + response.plantacion[index].id_plantacion +
-                        '">Número de plantas: ' + response
+                        '" " data-num-plantas="' + response.plantacion[index].num_plantas + '">Número de plantas: ' + response
                         .plantacion[index].num_plantas + ' | Tipo de agave: ' + response
                         .plantacion[index].nombre + ' ' + response
                         .plantacion[index].cientifico + ' | Año de platanción: ' + response
                         .plantacion[index].anio_plantacion + '</option>' + contenido;
                     // console.log(response.normas[index].norma);
+
+                    
                 }
 
                 if (response.plantacion.length == 0) {
                     contenido = '<option value="">Sin predios registradas</option>';
                 }
                 $('#id_plantacion').html(contenido);
+
+         
+                
+            // Agregar evento change para actualizar el valor de #num_anterior
+            $('#id_plantacion').on('change', function() {
+                var selectedOption = $(this).find('option:selected');
+                var numPlantas = selectedOption.data('num-plantas');
+                $('#num_anterior').val(numPlantas);
+            });
+                    
+            $('#id_plantacion').trigger('change');
+              
+
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');
