@@ -178,6 +178,7 @@ use App\Http\Controllers\usuarios\UsuariosController;
 use App\Http\Controllers\usuarios\UsuariosInspectoresController;
 use App\Http\Controllers\usuarios\UsuariosPersonalController;
 use App\Http\Controllers\catalogo\LotesGranelController;
+use App\Http\Controllers\documentacion\DocumentosController;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\InstalacionesController;
@@ -426,11 +427,9 @@ Route::get('/acta_circunstanciada_unidades_produccion', [CartaAsignacionControll
 Route::get('/solicitud_Info_ClienteNOM-199', [CartaAsignacionController::class, 'solicitudInfoNOM_199'])->name('solicitud_Info_ClienteNOM-199');
 Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'])->name('Etiqueta-2401ESPTOB');
 
-
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamenp'])->name('dictamen_productor');
 Route::get('/dictamen_envasador', [CartaAsignacionController::class, 'dictamene'])->name('dictamen_envasador');
 Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dictamenc'])->name('dictamen_comercializador');
-Route::get('/guia_de_translado', [CartaAsignacionController::class, 'guiasTranslado'])->name('Guias_Translado');
 
 
 //Clientes prospecto y confirmado
@@ -453,7 +452,6 @@ Route::post('/marcas-list/{id}', [marcasCatalogoController::class, 'store']);
 Route::post('/update-fecha-vigencia/{id_documento}', [marcasCatalogoController::class, 'updateFechaVigencia']);
 Route::post('/marcas-list/{id}/update', [marcasCatalogoController::class, 'update'])->name('marcas.update');
 
-
 /* ruta de clases catalogo */
 Route::get('/catalogo/clases', [ClaseController::class, 'UserManagement'])->name('catalogo-clases');
 Route::get('/clases-list', [ClaseController::class, 'index']);
@@ -470,15 +468,12 @@ Route::post('/categorias', [categoriasController::class, 'store'])->name('catego
 Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit');
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
 
-
-
 Route::get('/catalogo/lotes_granel', [LotesGranelController::class, 'UserManagement'])->name('catalogo-lotes-granel');
 Route::resource('/lotes-granel-list', LotesGranelController::class);
 Route::delete('/lotes-granel-list/{id_lote_granel}', [LotesGranelController::class, 'destroy']);
 Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->name('lotes-register.store');
 Route::get('/lotes-a-granel/{id_lote_granel}/edit', [LotesGranelController::class, 'edit'])->name('lotes-a-granel.edit');
 Route::put('/lotes-a-granel/{id_lote_granel}', [LotesGranelController::class, 'update']);
-
 
 //Lotes de envasado
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
@@ -489,7 +484,6 @@ Route::put('/lotes-envasado/{id}', [lotesEnvasadoController::class, 'update']);
 
 //Domicilios fiscal
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
-
 
 //Domicilios Instalaciones
 Route::get('/domicilios/instalaciones', [DomiciliosController::class, 'UserManagement'])->name('domicilio-instalaciones');
@@ -506,8 +500,6 @@ Route::delete('/predios-list/{id_predio}', [PrediosController::class, 'destroy']
 Route::post('/predios-register/store', [PrediosController::class, 'store'])->name('predios-register.store');
 Route::get('/domicilios-predios/{id_predio}/edit', [PrediosController::class, 'edit'])->name('domicilios-predios.edit');
 Route::post('/domicilios-predios/{id_predio}', [PrediosController::class, 'update'])->name('domicilios-predios.update');
-
-
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
@@ -526,7 +518,6 @@ Route::get('/documentacion/getNormas', [documentacionController::class, 'getNorm
 Route::get('documentacion/getActividades', [documentacionController::class, 'getActividades'])->name('documentacion.getActividades');
 Route::post('/upload', [documentacionController::class, 'upload'])->name('upload');
 
-
 /*-------------------Tipos de maguey/agave-------------------*/
 /*mostrar*/
 Route::get('/catalogo/tipos', [tiposController::class, 'UserManagement'])->name('catalogo-tipos');
@@ -540,12 +531,7 @@ Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name(
 /*editar*/
 Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('tipos.update');
 
-
-
 Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');
-
-
-
 
 //Guias de agave o maguey
 Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('translado-guias');
@@ -553,6 +539,7 @@ Route::resource('/guias-list', GuiasController::class);
 Route::post('/guias/store', [GuiasController::class, 'store']);
 //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
 
+<<<<<<< HEAD
 
 
 /*-------------------Dictamenes de instalaciones-------------------*/
@@ -567,3 +554,20 @@ Route::resource('/insta', InstalacionesController::class);
 //Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name('tipos.edit');
 /*editar*/
 //Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('tipos.update');
+=======
+//Documentacion
+Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
+Route::resource('/documentos-list', DocumentosController::class);
+Route::delete('/documentos/{id}', [DocumentosController::class, 'destroy'])->name('documentos.destroy');
+Route::post('/documentos', [DocumentosController::class, 'store']);
+
+// Ruta para obtener los datos del documento para editar
+Route::get('/documentos/{id}/edit', [DocumentosController::class, 'edit']);
+
+// Ruta para actualizar el documento
+Route::put('/documentos/{id}', [DocumentosController::class, 'update']);
+
+Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado');
+Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
+Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias.update');
+>>>>>>> 70ac9b0bea2346f5330a82a8856a249d5a31180c

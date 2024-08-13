@@ -126,7 +126,7 @@
                                     <div class="form-floating form-floating-outline">
                                         <select class="form-select" id="tiene_coordenadas" name="tiene_coordenadas"
                                             aria-label="¿Cuenta con coordenadas?" >
-                                            <option value="">Seleccione una opción</option>
+                                            <option value="" disabled selected>Seleccione una opción</option>
                                             <option value="Si">Sí</option>
                                             <option value="No">No</option>
                                         </select>
@@ -156,8 +156,7 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <button type="button" class="btn btn-danger remove-row-cordenadas"
-                                                        disabled><i class="ri-delete-bin-5-fill"></i></button>
+                                                    <button type="button" class="btn btn-danger remove-row-cordenadas" disabled><i class="ri-delete-bin-5-fill"></i></button>
                                                 </td>
                                                 <td>
                                                     <div class="form-floating form-floating-outline">
@@ -233,7 +232,7 @@
                                                 </td>
                                                     <td>
                                                     <div class="form-floating form-floating-outline">
-                                                        <input type="text" class="form-control"
+                                                        <input type="number" class="form-control"
                                                             name="edad_plantacion[]"
                                                             placeholder="Edad de la plantación (años)" step="1">
                                                         <label for="edad_plantacion">Edad de la Plantación</label>
@@ -259,8 +258,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
-
                             <div class="d-flex justify-content-end mt-3">
                                 <button type="submit" class="btn btn-primary me-2">Registrar</button>
                                 <button type="reset" class="btn btn-outline-secondary"
@@ -355,7 +352,7 @@
                                     <div class="form-floating form-floating-outline">
                                         <select class="form-select" id="edit_tiene_coordenadas" name="tiene_coordenadas"
                                             aria-label="¿Cuenta con coordenadas?" required>
-                                            <option value="">Seleccione una opción</option>
+                                            <option value="" disabled selected>Seleccione una opción</option>
                                             <option value="Si">Sí</option>
                                             <option value="No">No</option>
                                         </select>
@@ -372,7 +369,7 @@
                                 </div>
                             </div>
 
-                            <div id="coordenadas" class="d-none mb-3">
+                            <div id="edit_coordenadas" class="d-none mb-3">
                                 <div class="card">
                                     <table class="table table-bordered">
                                         <thead>
@@ -385,8 +382,7 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <button type="button" class="btn btn-danger remove-row-cordenadas"
-                                                        disabled><i class="ri-delete-bin-5-fill"></i></button>
+                                                    <button type="button" class="btn btn-danger remove-row-cordenadas" disabled><i class="ri-delete-bin-5-fill"></i></button>
                                                 </td>
                                                 <td>
                                                     <div class="form-floating form-floating-outline">
@@ -409,73 +405,84 @@
 
                             </div>
 
-                            <div class="informacionAgave mb-3">
+                            <div class="edit_InformacionAgave mb-3">
                                 <!-- Información sobre el Agave/Maguey y Plantación combinada -->
                                 <div class="card">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                        <h5 class="card-title mb-0">Información del Agave/Maguey y Plantación</h5>
-                                    </div>
                                     <div class="card-body">
-                                        <table class="table table-bordered mb-3">
-                                            <thead>
-                                                <tr>
-                                                    <th><button type="button" class="btn btn-primary add-row-plantacion"><i class="ri-add-line"></i></button></th>
-                                                    <th>Nombre y Especie de Agave/Maguey</th>
-                                                    <th>Número de Plantas</th>
-                                                    <th>Edad de la Plantación</th>
-                                                    <th>Tipo de Plantación</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="contenidoPlantacion">
-                                                <tr>
+                                        <table class="table table-bordered table-striped mb-3" >
+                                            <tr>
+                                                <th><button type="button" class="btn btn-primary add-row-plantacion"><i class="ri-add-line"></i></button></th>
+                                               <th colspan="2"><h5 class="card-title mb-0 text-center">Información del Agave/Maguey y Plantación</h5></th> 
+                                            </tr>                                                       
+                                        <tbody class="edit_ContenidoPlantacion">
+                                            <tr>
+                                                <td rowspan="4">
+                                                    <!-- El botón de eliminar estará en cada fila que se agregue -->
+                                                    <button type="button"
+                                                        class="btn btn-danger remove-row-plantacion" disabled><i
+                                                            class="ri-delete-bin-5-fill"></i></button>
+                                                </td>
+                                                <td>
+                                                    <b>Nombre y Especie de Agave/Maguey</b>
+                                                </td>
+                                                <td>
+                                                    <div class="form-floating form-floating-outline mb-3">
+                                                        <select id="edit_id_tipo" name="id_tipo[]" class="select2 form-select tipo_agave">
+                                                            <option value="" disabled selected>Tipo de agave</option>
+                                                            @foreach ($tipos as $tipo)
+                                                                <option value="{{ $tipo->id_tipo }}">
+                                                                    {{ $tipo->nombre }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <label for="especie_agave">Nombre y Especie de
+                                                            Agave/Maguey</label>
+                                                    </div>
+                                                </td>
+                                            </tr >
+                                            <tr>
+                                                <td>
+                                                    <b>Número de Plantas</b>
+                                                </td>
+                                                <td>
+                                                    <div class="form-floating form-floating-outline">
+                                                        <input type="number" class="form-control" id="edit_numero_plantas"
+                                                            name="numero_plantas[]" placeholder="Número de plantas"
+                                                            step="1">
+                                                        <label for="numero_plantas">Número de Plantas</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <b>Edad de la Plantación</b>
+                                                </td>
                                                     <td>
-                                                        <!-- El botón de eliminar estará en cada fila que se agregue -->
-                                                        <button type="button"
-                                                            class="btn btn-danger remove-row-plantacion" disabled><i
-                                                                class="ri-delete-bin-5-fill"></i></button>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-floating form-floating-outline mb-3">
-                                                            <select id="edit_id_tipo" name="id_tipo[]" class="select2 form-select tipo_agave">
-                                                                <option value="" disabled selected>Tipo de agave</option>
-                                                                @foreach ($tipos as $tipo)
-                                                                    <option value="{{ $tipo->id_tipo }}">
-                                                                        {{ $tipo->nombre }}</option>
-                                                                @endforeach
-                                                            </select>
-                                                            <label for="especie_agave">Nombre y Especie de
-                                                                Agave/Maguey</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-floating form-floating-outline">
-                                                            <input type="number" class="form-control" id="edit_numero_plantas" name="numero_plantas[]" placeholder="Número de plantas"
-                                                                step="1">
-                                                            <label for="numero_plantas">Número de Plantas</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-floating form-floating-outline">
-                                                            <input type="text" class="form-control" id="edit_edad_plantacion"
-                                                                name="edad_plantacion[]"
-                                                                placeholder="Edad de la plantación (años)" step="1">
-                                                            <label for="edad_plantacion">Edad de la Plantación</label>
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="form-floating form-floating-outline">
-                                                            <input type="text" class="form-control" id="edit_tipo_plantacion"
-                                                                name="tipo_plantacion[]" placeholder="Tipo de plantación">
-                                                            <label for="tipo_plantacion">Tipo de Plantación</label>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                                    <div class="form-floating form-floating-outline">
+                                                        <input type="number" class="form-control" id="edit_edad_plantacion"
+                                                            name="edad_plantacion[]"
+                                                            placeholder="Edad de la plantación (años)" step="1">
+                                                        <label for="edad_plantacion">Edad de la Plantación</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <p>Tipo de Plantación</p>
+                                                </td>
+                                                <td>
+                                                    <div class="form-floating form-floating-outline">
+                                                        <input type="text" class="form-control" id="edit_tipo_plantacion"
+                                                            name="tipo_plantacion[]" placeholder="Tipo de plantación">
+                                                        <label for="tipo_plantacion">Tipo de Plantación</label>
+                                                    </div>
+                                                </td>
+                                            </tr>               
+                                        </tbody>
+                                    </table>
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <div class="d-flex justify-content-end mt-3">
                                 <button type="submit" class="btn btn-primary me-2">Actualizar</button>
                                 <button type="reset" class="btn btn-outline-secondary"

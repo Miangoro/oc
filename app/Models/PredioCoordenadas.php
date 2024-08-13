@@ -25,5 +25,9 @@ class PredioCoordenadas extends Model
         {
             return $this->belongsTo(Guias::class, 'id_guia');
         }
-
+        // Define la relación inversa
+        public function predio()
+        {
+            return $this->belongsTo(Predios::class, 'id_predio');
+        }
 }

@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Documentacion extends Model
 {   
+    use HasFactory;
+    public $timestamps = false;
     protected $table = 'documentacion';
     protected $primaryKey = 'id_documento';
-    use HasFactory;
+    protected $fillable = ['nombre', 'tipo', 'subtipo'];
 
     public function documentacionUrls()
     {

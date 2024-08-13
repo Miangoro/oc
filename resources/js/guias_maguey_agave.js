@@ -244,7 +244,7 @@ $(function () {
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
               `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
@@ -500,7 +500,7 @@ $(function () {
         // delete the data
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}lotes-list/${user_id}`,
+          url: `${baseUrl}guias-list/${user_id}`,
           success: function () {
             dt_user.draw();
           },
@@ -531,12 +531,12 @@ $(function () {
     });
   });
   
-
+//Reciben los datos del pdf
   $(document).on('click', '.pdf', function () {
         var id = $(this).data('id');
         var registro = $(this).data('registro');
             var iframe = $('#pdfViewer');
-            iframe.attr('src', '../guia_de_translado/');
+            iframe.attr('src', '../guia_de_translado/'+id);
 
             $("#titulo_modal").text("Guia de translado");
             $("#subtitulo_modal").text(registro);
@@ -544,84 +544,72 @@ $(function () {
           
   });
 
-$(document).ready(function () {
+  $(document).on('click', '.edit-record', function () {
+    var id_guia = $(this).data('id');
 
-  
-    // Abrir el modal y cargar datos para editar
-    $('.datatables-users').on('click', '.edit-record', function () {
-        var id_marca = $(this).data('id');
+    $.get('/edit/' + id_guia, function (data) {
+        // Rellenar el formulario con los datos obtenidos
+        $('#edit_id_guia').val(data.id_guia);
+        $('#edit_id_empresa').val(data.id_empresa).trigger('change');
+        $('#edit_numero_guias').val(data.numero_guias);
+        $('#edit_nombre_predio').val(data.nombre_predio).trigger('change');
+        $('#edit_id_plantacion').val(data.id_plantacion).trigger('change');
+        $('#edit_num_anterior').val(data.num_anterior);
+        $('#edit_num_comercializadas').val(data.num_comercializadas);
+        $('#edit_mermas_plantas').val(data.mermas_plantas);
+        $('#edit_numero_plantas').val(data.numero_plantas);
 
-        // Limpiar campos y contenido residual del formulario de edición
-        $('#editMarcaForm')[0].reset();
-        $('.existing-file').html(''); // Asegúrate de que todos los contenedores de archivos existentes estén vacíos
-        $('.existing-date').text(''); // Asegúrate de que todos los contenedores de fechas existentes estén vacíos
-
-        // Realizar la solicitud AJAX para obtener los datos de la marca
-        $.get('/marcas-list/' + id_marca + '/edit', function (data) {
-            var marca = data.marca;
-            var documentacion_urls = data.documentacion_urls;
-
-            // Rellenar el formulario con los datos obtenidos
-            $('#edit_marca_id').val(marca.id_marca);
-            $('#edit_marca_nombre').val(marca.marca);
-            $('#edit_cliente').val(marca.id_empresa).trigger('change');
-
-            // Mostrar archivos existentes en los mismos espacios de entrada de archivo
-            documentacion_urls.forEach(function (doc) {
-                var existingFileDivId = '#existing_file_' + doc.id_documento;
-                $(existingFileDivId).html(`<p>Archivo existente: <a href="/storage/uploads/${marca.id_empresa}/${doc.url}" target="_blank">${doc.url}</a></p>`);
-                
-                var existingDateId = '#existing_date_' + doc.id_documento;
-                $(existingDateId).text('Fecha de vigencia: ' + doc.fecha_vigencia);
-                
-                $('#date' + doc.id_documento).val(doc.fecha_vigencia);  // Rellenar la fecha existente en el campo de fecha
-            });
-
-            $('#editMarca').modal('show');
-        });
-    });
-
-    // Enviar el formulario de actualización de marca
-    $('#editMarcaForm').submit(function (e) {
-        e.preventDefault();
-        
-        var formData = new FormData(this);
-        
-        $.ajax({
-            url: '/marcas-list',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                Swal.fire({
-                    title: 'Éxito',
-                    text: response.success,
-                    icon: 'success',
-                    buttonsStyling: false,
-                    customClass: {
-                      confirmButton: 'btn btn-success'
-                    }
-                });
-                $('#editMarca').modal('hide');
-                $('#editMarcaForm')[0].reset();
-                $('.datatables-users').DataTable().ajax.reload();
-            },
-            error: function (response) {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Ocurrió un error al actualizar la marca.',
-                    icon: 'error',
-                    buttonsStyling: false,
-                    customClass: {
-                      confirmButton: 'btn btn-success'
-                    }
-                });
+        // Mostrar el modal de edición
+        $('#editGuias').modal('show');
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        console.error('Error: ' + textStatus + ' - ' + errorThrown);
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al obtener los datos de la guía',
+            customClass: {
+                confirmButton: 'btn btn-danger'
             }
         });
     });
 });
 
+$('#editGuiaForm').on('submit', function (e) {
+    e.preventDefault();
+
+    var formData = $(this).serialize();
+    var id_guia = $('#edit_id_guia').val();
+
+    $.ajax({
+        url: '/update/' + id_guia,
+        method: 'PUT',
+        data: formData,
+        success: function (response) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: 'Guía actualizada correctamente',
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            }).then(function () {
+                $('#editGuias').modal('hide');
+                $('.datatables-users').DataTable().ajax.reload();
+            });
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error('Error: ' + textStatus + ' - ' + errorThrown);
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al actualizar la guía',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+        }
+    });
+});
 
 
 
