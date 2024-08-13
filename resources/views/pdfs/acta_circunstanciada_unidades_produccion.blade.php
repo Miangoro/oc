@@ -18,8 +18,9 @@
             font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
             margin: 35px;
             padding: 10px;
-            margin-top: 80px;
-            font-size: 13px;
+            margin-top: 100px;
+            margin-bottom: 50px;
+            font-size: 15px;
         }
 
         table {
@@ -34,13 +35,11 @@
         }
 
         .header {
-            border: 1px solid rgb(212, 212, 212);
             position: fixed;
             top: 0px;
             left: 40px;
             width: 80%;
             padding: 10px;
-            background-color: #fff;
             text-align: right;
             z-index: 1;
             margin-bottom: 30px;
@@ -48,7 +47,6 @@
 
 
         .header img {
-            border: 1px solid rgb(212, 212, 212);
             width: 170px;
             height: 80px;
             margin-right: 490px;
@@ -56,7 +54,7 @@
 
         .line {
             position: absolute;
-            top: 80px;
+            top: 90px;
             right: 10px;
             width: 68%;
             border-bottom: 1.5px solid black;
@@ -86,49 +84,12 @@
             /* Alinea el contenido en la parte superior */
         }
 
-        .centro {
-            opacity: 0.5;
-            position: relative;
-            left: -52px;
-            /* Mueve el contenido 5 píxeles a la izquierda */
-            top: 15px;
-            /* Mueve el contenido 5 píxeles hacia arriba */
-        }
-
-        .centro p {
-            margin: 0;
-        }
-
         .text-center {
             width: 25%;
         }
 
         .text-bold {
             font-weight: bold;
-        }
-
-        .label {
-            background-color: rgba(31, 179, 117, 0.5);
-            /* Verde con 50% de opacidad */
-            color: #ffffff;
-            text-align: center;
-            padding: 10px 15px;
-            /* Ajusta estos valores para reducir la altura */
-            font-family: sans-serif;
-            font-size: 13px;
-            font-weight: bold;
-            white-space: nowrap;
-            display: inline-block;
-            /* Asegura que el div solo ocupe el ancho necesario */
-            width: auto;
-            /* Asegura que el ancho se ajuste al contenido */
-            margin-bottom: 0;
-            /* Ajusta esto si necesitas un margen inferior específico */
-            line-height: 1.2;
-            /* Ajusta la altura de la línea para reducir la altura total */
-            height: auto;
-            /* Asegura que la altura se ajuste al contenido */
-            box-sizing: border-box;
         }
 
         .content-table td {
@@ -146,7 +107,7 @@
         }
 
         .sign-table td {
-            border: 2px solid #31849B;
+            border: 2px solid #2B8080;
             text-align: center;
             vertical-align: middle;
         }
@@ -169,13 +130,6 @@
             word-spacing: 1px;
         }
 
-        .footer {
-            text-align: right;
-            font-size: 13px;
-            margin-right: 44px;
-            opacity: 0.5;
-        }
-
         .watermark {
             position: fixed;
             top: 50%;
@@ -184,9 +138,10 @@
             /* Ajusta la posición horizontalmente */
             transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.5);
             /* Rotación y escala para mejor apariencia */
-            opacity: 0.2;
+            opacity: 0.1;
             /* Ajusta la opacidad según sea necesario */
-            font-size: 60px;
+            letter-spacing: 3px;
+            font-size: 68px;
             /* Tamaño del texto de la marca de agua */
             white-space: nowrap;
             /* Evita que el texto se divida en múltiples líneas */
@@ -195,12 +150,46 @@
             pointer-events: none;
             /* No afecta la interacción del usuario */
         }
+
+        .footer {
+            position: fixed;
+            bottom: 15px;
+            left: 75px;
+            width: 80%;
+            font-size: 10.5px;
+        }
+
+        .footer-text {
+            margin: 0;
+            text-align: center;
+            width: 80%;
+            position: relative;
+        }
+
+        .footer-page {
+            position: absolute;
+            left: 580px;
+            top: 0;
+            font-size: 10.5px;
+        }
+
+        .footer-text2 {
+            width: 100%;
+            text-align: right;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #151442;
+        }
+
+        .footer .page:after {
+            content: counter(page);
+        }
     </style>
 </head>
 
 <body>
 
-    <div class="watermark">Acta Circunstanciada</div>
+    <div class="watermark">Acta circunstanciada</div>
     {{-- cabecera --}}
     <div class="header">
         <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo CIDAM">
@@ -209,11 +198,23 @@
         <div class="line"></div>
     </div>
 
+    <div class="footer">
+        <p class="footer-text">
+            Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
+            puede ser distribuido externamente sin la autorización escrita del Ejecutivo.
+        </p>
+        <p class="footer-page">
+            Página <span class="page"></span> de 4
+        </p>
+        <p class="footer-text2">No. de acreditación UVNOM129 Aprobación por DGN 312.01.2017.1017</p>
+    </div>
+
+
 
     {{-- contenedor --}}
     <div class="contenedor">
-        <div style="text-align: center; margin-top: 20px;">
-            <b style="font-size: 15px ">
+        <div style="text-align: center; margin-top: 20px; font-size: 21px ">
+            <b>
                 Acta circunstanciada para Unidades de producción
             </b>
         </div>
@@ -235,7 +236,7 @@
             <p>Planta de Envasado ( )</p>
             <p>Comercializadora ( )</p>
             <p>Almacén ( ).</p>
-
+            <br>
             <p>En _______________________________ siendo las _______ horas del día _____ del mes de ______ del 202_____.
             </p> <br>
             <p>El suscrito Inspector comisionado por la Unidad de Inspección CIDAM A.C. con domicilio en Kilómetro 8
@@ -305,26 +306,37 @@
                 </tr>
             </table>
             <br>
-            <p>Cuyo original se entrega en el presente acto al C._____________________________, quien dijo tener el cargo de responsable de instalaciones y ante quien me identifiqué debidamente exhibiendo la credencial vigente número ______________, expedida por CIDAM A.C. misma que la persona con quien se entiende la diligencia tiene a la vista, examina y devuelve al Inspector.</p>
-        <br>
-        <b>Designación de testigos</b>
-        <br>
-        <p>Acto seguido se requiere al visitado nombrar a dos testigos, a lo cual manifiesta de conformidad que los designó, comunicándome que:</p>
-    <table>
-    <tr>
-        <td>si</td>
-        <td></td>
-        <td>no</td>
-        <td></td>
-        designa testigos
-    </tr>
-</table>    
+            <p>Cuyo original se entrega en el presente acto al C._____________________________, quien dijo tener el
+                cargo de responsable de instalaciones y ante quien me identifiqué debidamente exhibiendo la credencial
+                vigente número ______________, expedida por CIDAM A.C. misma que la persona con quien se entiende la
+                diligencia tiene a la vista, examina y devuelve al Inspector.</p>
+            <br>
+            <b>Designación de testigos</b>
+            <br>
+            <br>
+            <p>Acto seguido se requiere al visitado nombrar a dos testigos, a lo cual manifiesta de conformidad que los
+                designó, comunicándome que:</p>
+
+            <table class="table-sign">
+                <tr>
+                    <td style="width: 5%;">si</td>
+                    <td style="width: 5%;"></td>
+                    <td style="width: 5%;">no</td>
+                    <td style="width: 5%;"></td>
+                    <td style="border: none;">designa testigos</td>
+                    <td style="border: none;"></td>
+                </tr>
+            </table>
         </div>
-
-
-        <table class="sign-table" style="margin-top: 20px; font-size: 10;">
+        <br>
+        <p>En caso de ausencia o negativa de los suscritos, se procederá con la actividad encomendada, a lo cual
+            manifiesta que se puede proceder con la diligencia.</p>
+        <br>
+        <p>En caso contrario las personas designadas por el interesado son las siguientes:</p>
+        <br>
+        <table class="sign-table" style="margin-top: 10px; font-size: 10;">
             <tr>
-                <td style="width: 100px;">No. de testigo</td>
+                <td style="width: 80px; height: 40px;">No. de testigo</td>
                 <td>Nombre y firma del testigo</td>
                 <td style="width: 280px;">Domicilio</td>
             </tr>
@@ -339,43 +351,18 @@
                 <td></td>
             </tr>
         </table>
-</div>
-
-    <br><br><br>
-    <div class="footer">
-        <p>Entrada en vigor: 16-09-2021</p>
-        <p>Página 1 de 4</p>
     </div>
-
-
-    {{-- seccion 2 --}}
-
-    <table class="header-table">
-        <tr>
-            <td class="img">
-                <img src="{{ public_path('img_pdf/logo_uvem.png') }}" alt="Logo UVEM">
-            </td>
-            <td class="text-titulo">
-                <div class="centro">
-                    <p style="font-size: 23px; margin-bottom: 0px;">Acta Circunstanciada</p>
-                    <p style="font-size: 14px; margin-top: 0px; ">Para unidades de producción</p>
-                </div>
-            </td>
-            <td class="text-center">
-                <div class="label"><span class="text">F-UV-02-02 VERSIÓN 6</span> </div>
-            </td>
-        </tr>
-    </table>
     <br>
     {{-- contenedor --}}
     <div class="contenedor">
         <div class="texto">
             <p><strong>Parte I Unidad de producción de ________________.</strong></p>
+            <br>
             <p>Se constató físicamente la existencia de la unidad de producción de agave: </p>
         </div>
         <table class="sign-table" style="margin-top: 20px; font-size: 10;">
             <tr>
-                <td style="width: 90px; height: 40px;">Nombre del predio</td>
+                <td style="width: 90px; height: 55px;">Nombre del predio</td>
                 <td>Especie de agave</td>
                 <td>Superficie (hectáreas)</td>
                 <td>Madurez del agave (años)</td>
@@ -410,7 +397,7 @@
         </div>
         <table class="sign-table" style=" font-size: 10;">
             <tr>
-                <td style="width: 90px; height: 40px;">Recepción (materia prima)</td>
+                <td style="width: 90px; height: 60px;">Recepción (materia prima)</td>
                 <td>Área de pesado</td>
                 <td>Área de cocción</td>
                 <td>Área de maguey cocido</td>
@@ -437,7 +424,7 @@
         <table class="sign-table" style="margin-top: 20px; font-size: 10;">
             <thead>
                 <tr>
-                    <td style="width: 240px; height: 19px;">Equipo</td>
+                    <td style="width: 240px; height: 40px;">Equipo</td>
                     <td style="width: 120px;">Cantidad</td>
                     <td>Capacidad</td>
                     <td>Tipo de material</td>
@@ -445,85 +432,13 @@
             </thead>
             <tbody>
                 <tr>
-                    <td style="height: 19px;"></td>
+                    <td style="height: 40px;"></td>
                     <td></td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td style="height: 19px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 15px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 19px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 19px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 19px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 19px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 19px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 19px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 19px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 15px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 15px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 19px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 19px;"></td>
+                    <td style="height: 40px;"></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -533,45 +448,27 @@
 
     </div>
     <br><br>
-    <div class="footer">
-        <p>Entrada en vigor: 16-09-2021</p>
-        <p>Página 2 de 4</p>
-    </div>
+
 
 
     {{-- seccion 3 --}}
 
-    <table class="header-table">
-        <tr>
-            <td class="img">
-                <img src="{{ public_path('img_pdf/logo_uvem.png') }}" alt="Logo UVEM">
-            </td>
-            <td class="text-titulo">
-                <div class="centro">
-                    <p style="font-size: 23px; margin-bottom: 0px;">Acta Circunstanciada</p>
-                    <p style="font-size: 14px; margin-top: 0px; ">Para unidades de producción</p>
-                </div>
-            </td>
-            <td class="text-center">
-                <div class="label"><span class="text">F-UV-02-02 VERSIÓN 6</span></div>
-            </td>
-        </tr>
-    </table>
     <br>
     {{-- contenedor --}}
     <div class="contenedor">
         <div class="texto">
-            <p>Se constató que (_______) cuenta con la infraestructura y equipo para producir <u>Mezcal:</u></p>
+            <p>Se constató que ( ) cuenta con la infraestructura y equipo para producir <u>_______</u></p>
             <br>
             <p>Categoría(s): ____________________ Clase(s): _________________ Otra: ______________.</p>
             <br>
             <p><strong>Parte III Unidad de envasado</strong></p>
+            <br>
             <p>Se constató físicamente la existencia del siguiente de las áreas y equipo:</p>
         </div>
 
         <table class="sign-table" style="margin-top: 20px; font-size: 10;">
             <tr>
-                <td style="width: 90px; height: 40px;">Almacén de insumos</td>
+                <td style="width: 90px; height: 80px;">Almacén de insumos</td>
                 <td style="width: 105px;">Almacén a gráneles</td>
                 <td>Sistema de filtrado</td>
                 <td>Área de envasado</td>
@@ -580,7 +477,7 @@
                 <td style="width: 115px;">Área de aseo personal</td>
             </tr>
             <tr>
-                <td style="height: 20px;"></td>
+                <td style="height: 40px;"></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -597,10 +494,10 @@
             <p>Se constató físicamente la existencia de los siguientes equipos: </p>
         </div>
 
-        <table class="sign-table" style="margin-top: 15px; font-size: 10;">
+        <table class="sign-table" style="margin-top: 20px; font-size: 10;">
             <thead>
                 <tr>
-                    <td style="width: 245px; height: 19px;">Equipo</td>
+                    <td style="width: 240px; height: 45px;">Equipo</td>
                     <td style="width: 120px;">Cantidad</td>
                     <td>Capacidad</td>
                     <td>Tipo de material</td>
@@ -608,49 +505,13 @@
             </thead>
             <tbody>
                 <tr>
-                    <td style="height: 19px;"></td>
+                    <td style="height: 48px;"></td>
                     <td></td>
                     <td></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td style="height: 19px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 15px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 19px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 19px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 19px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 19px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td style="height: 19px;"></td>
+                    <td style="height: 48px;"></td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -668,14 +529,14 @@
 
         <table class="sign-table" style=" font-size: 10;">
             <tr>
-                <td style="width: 180px; height: 16px;">Bodega o almacén</td>
+                <td style="width: 180px; height: 55px;">Bodega o almacén</td>
                 <td>Tarimas</td>
                 <td>Bitácoras</td>
                 <td style="width: 120px;">Otro:</td>
                 <td style="width: 120px;">Otro:</td>
             </tr>
             <tr>
-                <td style="height: 19px;"></td>
+                <td style="height: 55px;"></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -687,46 +548,28 @@
             <p>Se procede a tomar evidencias fotográficas de la infraestructura y equipo relacionadas a la actividad
                 realizada, las cuales serán integradas en su expediente.</p>
             <br>
-            <p>Se cierra la presente acta. - Respecto a los hechos consignados en el presente acta y de conformidad con
-                los artículos 53, 54, 55, 56, 57 y 69 de la Ley de Infraestructura de la Calidad, </p>
-            <br>
         </div>
     </div>
 
-    <div class="footer">
-        <p>Entrada en vigor: 16-09-2021</p>
-        <p>Página 3 de 4</p>
-    </div>
+
 
     {{-- seccion 4 --}}
-    <table class="header-table">
-        <tr>
-            <td class="img">
-                <img src="{{ public_path('img_pdf/logo_uvem.png') }}" alt="Logo UVEM">
-            </td>
-            <td class="text-titulo">
-                <div class="centro">
-                    <p style="font-size: 23px; margin-bottom: 0px;">Acta Circunstanciada</p>
-                    <p style="font-size: 14px; margin-top: 0px; ">Para unidades de producción</p>
-                </div>
-            </td>
-            <td class="text-center">
-                <div class="label"><span class="text">F-UV-02-02 VERSIÓN 6</span></div>
-            </td>
-        </tr>
-    </table>
+
     <br>
     <div class="contenedor">
         <div class="texto">
-            <p>La Norma Oficial Mexicana NOM-070-SCFI-2016, Bebidas alcohólicas-Mezcal-Especificaciones y el apartado
-                7.4 de la Norma Mexicana NMX-EC-17020-IMNC-2014
+            <p>Se cierra la presente acta. - Respecto a los hechos consignados en el presente acta y de
+                conformidad con los artículos 53, 54, 55, 56, 57 y 69 de la Ley de Infraestructura de la
+                Calidad, la Norma Oficial Mexicana NOM-070-SCFI-2016, Bebidas alcohólicas-Mezcal-
+                Especificaciones y el apartado 7.4 de la Norma Mexicana NMX-EC-17020-IMNC-2014
                 “Evaluación de la conformidad- Requisitos para el funcionamiento de diferentes tipos de
-                unidades (organismos) que realizan la verificación (Inspección)”, se da oportunidad al visitado
-                para que haga las observaciones y ofrezca pruebas en relación con los hechos contenidos en
-                ella o por escrito hacer uso de tal derecho dentro del término de cinco días hábiles siguientes a
-                la fecha en que se haya levantado la presente acta.</p>
-            <p>Se da por terminada la presente diligencia siendo las ____:____ horas del día ______ del mes
-                de ____________________ del dos mil veinticuatro.
+                unidades (organismos) que realizan la verificación (Inspección)”, se da oportunidad al
+                visitado para que haga las observaciones y ofrezca pruebas en relación con los hechos
+                contenidos en ella o por escrito hacer uso de tal derecho dentro del término de cinco días
+                hábiles siguientes a la fecha en que se haya levantado la presente acta.</p>
+            <br>
+            <p>Se da por terminada la presente diligencia siendo las _______ horas del día ______ del mes
+                de _____________ del dos mil veinticuatro.
             </p>
         </div>
 
@@ -738,7 +581,7 @@
                 </tr>
                 <tr>
                     <td style="height: 90px;"></td>
-                    <td style="text-align: end; vertical-align: top; padding-top: 70px;">Mario Villanueva Flores</td>
+                    <td style="text-align: end; vertical-align: top; padding-top: 70px;"></td>
                 </tr>
             </table>
 
@@ -746,24 +589,21 @@
 
             <table class="sign-table">
                 <tr>
-                    <td colspan="2">No conformidades identificadas en la inspección</td>
+                    <td colspan="2" style="height: 35px;">No conformidades identificadas en la inspección</td>
                 </tr>
                 <tr>
-                    <td style="width: 45%; height: 33px; text-align: start;  vertical-align: top;">Infraestructura</td>
-                    <td style="height: 33px; text-align: start;  vertical-align: top;">Equipo</td>
+                    <td style="width: 45%; height: 35px; text-align: start;  vertical-align: top;">Infraestructura</td>
+                    <td style="height: 35px; text-align: start;  vertical-align: top;">Equipo</td>
                 </tr>
                 <tr>
-                    <td style="height: 350px;"></td>
-                    <td style="height: 350px;"></td>
+                    <td style="height: 35px;"></td>
+                    <td style="height: 35px;"></td>
                 </tr>
             </table>
         </div>
     </div>
     <br>
-    <div class="footer">
-        <p>Entrada en vigor: 16-09-2021</p>
-        <p>Página 4 de 4</p>
-    </div>
+
 
 
 </body>
