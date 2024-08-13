@@ -100,12 +100,12 @@
         {
           "url": "dictamenes/instalaciones",
           "name": "Instalaciones",
-          "slug": "dictamen-instalaciones"
+          "slug": "dictamenes-instalaciones"
         },
         {
-          "url": "laravel/user-management",
-          "name": "Lote a granel",
-          "slug": "laravel-example-user-management"
+          "url": "dictamenes/productos",
+          "name": "Productos",
+          "slug": "dictamenes-productos"
         }
       ]
     },
@@ -152,10 +152,10 @@
       ]
     },
     {
-      "name": "Guías de translado",
+      "name": "Guías de traslado",
       "url": "guias/guias_de_agave",
       "icon": "menu-icon ri-truck-fill",
-      "slug": "translado-guias"
+      "slug": "traslado-guias"
     }
 
 

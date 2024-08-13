@@ -49,6 +49,12 @@ class GuiasController  extends Controller
             8 => 'num_anterior',
             9 => 'num_comercializadas',
             10 => 'mermas_plantas',
+            11 => 'id_art',
+            12 => 'kg_magey',
+            13 => 'no_lote_pedido',
+            14 => 'fecha_corte',
+            15 => 'id_observaciones',
+
 
         ];
 
@@ -100,7 +106,11 @@ class GuiasController  extends Controller
                     'num_anterior' => $user->num_anterior,
                     'num_comercializadas' => $user->num_comercializadas,
                     'mermas_plantas' => $user->mermas_plantas,
-
+                    'id_art' => $user->id_art,
+                    'kg_magey' => $user->kg_magey,
+                    'no_lote_pedido' => $user->no_lote_pedido,
+                    'fecha_corte' => $user->fecha_corte,
+                    'id_observaciones' => $user->id_observaciones,
 
                 ];
 
@@ -163,48 +173,45 @@ class GuiasController  extends Controller
 
 
 
-     // Método para obtener una guía por ID
-     public function edit($id_guia)
-     {
-         try {
-             $guia = guias::findOrFail($id_guia);
-             return response()->json($guia);
-         } catch (\Exception $e) {
-             return response()->json(['error' => 'Error al obtener la guía'], 500);
-         }
-     }
- 
-     // Método para actualizar una guía existente
-     public function update(Request $request, $id_guia)
-     {
-         $request->validate([
-             'empresa' => 'required|exists:empresa,id_empresa',
-             'numero_guias' => 'required|numeric',
-             'predios' => 'required',
-             'plantacion' => 'required',
-             'anterior' => 'required|numeric',
-             'comercializadas' => 'required|numeric',
-             'mermas' => 'required|numeric',
-             'plantas' => 'required|numeric',
-         ]);
- 
-         try {
-             $guia = guias::findOrFail($id_guia);
-             $guia->id_empresa = $request->input('empresa');
-             $guia->numero_guias = $request->input('numero_guias');
-             $guia->id_predio = $request->input('predios');
-             $guia->id_plantacion = $request->input('plantacion');
-             $guia->num_anterior = $request->input('anterior');
-             $guia->num_comercializadas = $request->input('comercializadas');
-             $guia->mermas_plantas = $request->input('mermas');
-             $guia->numero_plantas = $request->input('plantas');
-             $guia->save();
- 
-             return response()->json(['success' => 'Guía actualizada correctamente']);
-         } catch (\Exception $e) {
-             return response()->json(['error' => 'Error al actualizar la guía'], 500);
-         }
-     }
+// Método para obtener una guía por ID
+public function edit($id_guia)
+{
+    try {
+        $guia = guias::findOrFail($id_guia);
+        return response()->json($guia);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al obtener la guía'], 500);
+    }
+}
+
+// Método para actualizar una guía existente
+public function update(Request $request, $id_guia)
+{
+    
+
+    try {
+        $guia = guias::findOrFail($id_guia);
+        $guia->id_empresa = $request->input('empresa');
+        $guia->numero_guias = $request->input('numero_guias');
+        $guia->id_predio = $request->input('predios');
+        $guia->id_plantacion = $request->input('plantacion');
+        $guia->num_anterior = $request->input('anterior');
+        $guia->num_comercializadas = $request->input('comercializadas');
+        $guia->mermas_plantas = $request->input('mermas');
+        $guia->numero_plantas = $request->input('plantas');
+        $guia->art = $request->input('art');
+        $guia->kg_maguey = $request->input('kg_maguey');
+        $guia->no_lote_pedido = $request->input('no_lote_pedido');
+        $guia->fecha_corte = $request->input('fecha_corte');
+        $guia->observaciones = $request->input('observaciones');
+        $guia->save();
+
+        return response()->json(['success' => 'Guía actualizada correctamente']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al actualizar la guía'], 500);
+    }
+}
+
  
       
 

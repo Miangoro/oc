@@ -5,7 +5,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Registrar nueva Guia de translado Agave/Maguey</h4>
+                    <h4 class="address-title mb-2">Registrar nueva Guia de traslado Agave/Maguey</h4>
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="addGuiaForm">
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-6">
-                        <select class="select2 form-select " id="nombre_predio" name="predios" aria-label="Marca"
+                        <select onchange="obtenerPlantacionPredio()" class="select2 form-select " id="nombre_predio" name="predios" aria-label="Marca"
                             required>
                             <option value="" selected>Lista de predios</option>
                         </select>
@@ -73,7 +73,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number" placeholder="Mermas plantas"
-                                    id="mermas_plantas" name="mermas" />
+                                    id="mermas_plantas" name="mermas"   oninput="calcularPlantasActualmente()"/>
                                 <label for="mermas_plantas">Mermas plantas</label>
                             </div>
                         </div>
@@ -139,20 +139,35 @@
 
                 // Cargar los detalles en el modal
                 var contenido = "";
-                for (let index = 0; index < response.plantacion.length; index++) {
-                    contenido = '<option value="' + response.plantacion[index].id_plantacion +
-                        '">Número de plantas: ' + response
-                        .plantacion[index].num_plantas + ' | Tipo de agave: ' + response
-                        .plantacion[index].nombre + ' ' + response
-                        .plantacion[index].cientifico + ' | Año de platanción: ' + response
-                        .plantacion[index].anio_plantacion + '</option>' + contenido;
+                for (let index = 0; index < response.predio_plantacion.length; index++) {
+                    contenido = '<option value="' + response.predio_plantacion[index].id_plantacion +
+                        '" " data-num-plantas="' + response.predio_plantacion[index].num_plantas + '">Número de plantas: ' + response
+                        .predio_plantacion[index].num_plantas + ' | Tipo de agave: ' + response
+                        .predio_plantacion[index].nombre + ' ' + response
+                        .predio_plantacion[index].cientifico + ' | Año de platanción: ' + response
+                        .predio_plantacion[index].anio_plantacion + '</option>' + contenido;
                     // console.log(response.normas[index].norma);
+
+                    
                 }
 
-                if (response.plantacion.length == 0) {
+                if (response.predio_plantacion.length == 0) {
                     contenido = '<option value="">Sin predios registradas</option>';
                 }
                 $('#id_plantacion').html(contenido);
+
+         
+                
+            // Agregar evento change para actualizar el valor de #num_anterior
+            $('#id_plantacion').on('change', function() {
+                var selectedOption = $(this).find('option:selected');
+                var numPlantas = selectedOption.data('num-plantas');
+                $('#num_anterior').val(numPlantas);
+            });
+                    
+            $('#id_plantacion').trigger('change');
+              
+
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');
@@ -160,14 +175,16 @@
         });
     }
 
+
 // Función para restar los campos
 function calcularPlantasActualmente() {
     // Obtener los valores de los inputs
     const numAnterior = parseFloat(document.getElementById('num_anterior').value) || 0;
     const numComercializadas = parseFloat(document.getElementById('num_comercializadas').value) || 0;
+    const mermasPlantas = parseFloat(document.getElementById('mermas_plantas').value) || 0;
 
     // Calcular el número de plantas actualmente
-    let plantasActualmente = numAnterior - numComercializadas;
+    let plantasActualmente = numAnterior - numComercializadas - mermasPlantas;
 
     // Evitar números negativos
     if (plantasActualmente < 0) {
@@ -177,6 +194,7 @@ function calcularPlantasActualmente() {
     // Asignar el valor calculado al input
     document.getElementById('numero_plantas').value = plantasActualmente;
 }
+
 
 
 

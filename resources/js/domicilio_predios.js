@@ -27,7 +27,7 @@ $(function () {
     const editCoordenadasDiv = document.getElementById('edit_coordenadas');
     const editLatitudInputs = document.querySelectorAll('input[name="latitud[]"]');
     const editLongitudInputs = document.querySelectorAll('input[name="longitud[]"]');
-    
+
     editTieneCoordenadasSelect.addEventListener('change', function () {
         if (editTieneCoordenadasSelect.value === 'Si') {
             editCoordenadasDiv.classList.remove('d-none');
@@ -38,7 +38,7 @@ $(function () {
             editLongitudInputs.forEach(input => input.value = '');
         }
     });
-    
+
 
 
 
@@ -480,7 +480,7 @@ $(function () {
         function generateOptions(tipos) {
             return tipos.map(tipo => `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`).join('');
         }
-    
+
         // Función para agregar una nueva sección de plantación
         function addRow(container) {
             var options = generateOptions(tiposAgave);
@@ -527,16 +527,16 @@ $(function () {
                     </div>
                 </td>
             </tr>`;
-    
+
             // Agregar la nueva sección al contenedor correspondiente
             $(container).append(newSection);
-    
+
             // Habilitar el botón de eliminación para las nuevas filas, pero no para la primera
             if ($(container).find('.plantacion-row').length > 1) {
                 $(container).find('.remove-row-plantacion').not(':first').prop('disabled', false);
             }
         }
-    
+
         // Evento para agregar filas de plantación
         $('.add-row-plantacion').on('click', function () {
             if ($('.edit_InformacionAgave').is(':visible')) {
@@ -545,33 +545,33 @@ $(function () {
                 addRow('.contenidoPlantacion');
             }
         });
-    
+
         // Evento para eliminar filas de plantación
         $(document).on('click', '.remove-row-plantacion', function () {
             var $currentRow = $(this).closest('tr');
-    
+
             // Asegurarse de que la primera fila no pueda ser eliminada
             if ($currentRow.index() === 0) return;
-    
+
             // Eliminar la fila actual y las siguientes filas hasta el próximo elemento que no sea '.plantacion-row'
             $currentRow.nextUntil('tr:not(.plantacion-row)').addBack().remove();
-            
+
             // Deshabilitar el botón de eliminación si queda solo una fila
             var $container = $currentRow.closest('table').find('tbody');
             if ($container.find('.plantacion-row').length <= 1) {
                 $container.find('.remove-row-plantacion').prop('disabled', true);
             }
         });
-    
+
         // Deshabilitar el botón de eliminación en la primera fila de agregar
         $('.contenidoPlantacion').find('.remove-row-plantacion').first().prop('disabled', true);
-    
+
         // Deshabilitar el botón de eliminación en la primera fila de editar
         $('.edit_ContenidoPlantacion').find('.remove-row-plantacion').first().prop('disabled', true);
     });
-    
-    
-    
+
+
+
 
     $(document).ready(function () {
 
@@ -595,36 +595,36 @@ $(function () {
                     </div>
                 </td>
             </tr>`;
-    
+
             // Determinar a qué tabla añadir la fila
             if ($('#edit_coordenadas').is(':visible')) {
                 $('#edit_coordenadas tbody').append(newRow);
             } else {
                 $('#coordenadas tbody').append(newRow);
             }
-    
+
             // Habilitar el botón de eliminar si hay más de una fila en la tabla correspondiente
             if ($('#coordenadas tbody tr').length > 1 || $('#edit_coordenadas tbody tr').length > 1) {
                 $('.remove-row-cordenadas').prop('disabled', false);
             }
         });
-    
+
         // Eliminar fila de coordenadas
         $(document).on('click', '.remove-row-cordenadas', function () {
             var $tableBody = $(this).closest('tbody');
             var $table = $(this).closest('table');
-    
+
             // Solo permitir eliminar si no es la primera fila
             if ($tableBody.children('tr').length > 1) {
                 $(this).closest('tr').remove();
             }
-    
+
             // Deshabilitar el botón de eliminar si solo queda una fila
             if ($tableBody.children('tr').length <= 1) {
                 $table.find('.remove-row-cordenadas').prop('disabled', true);
             }
         });
-    
+
         // Deshabilitar el botón de eliminar si solo hay una fila inicial en ambas tablas
         if ($('#coordenadas tbody tr').length <= 1) {
             $('#coordenadas').find('.remove-row-cordenadas').prop('disabled', true);
@@ -633,7 +633,7 @@ $(function () {
             $('#edit_coordenadas').find('.remove-row-cordenadas').prop('disabled', true);
         }
     });
-    
+
 
     /* registrar un nuevo predio */
 
@@ -646,7 +646,7 @@ $(function () {
                         message: 'Por favor selecciona la empresa cliente'
                     }
                 }
-            },/*
+            },/* 
       nombre_productor: {
             validators: {
                 notEmpty: {
@@ -726,36 +726,37 @@ $(function () {
         });
     });
 
-// Manejar el clic en el botón de editar
-$(document).on('click', '.edit-record', function () {
-    var predioId = $(this).data('id'); // Obtener el ID del predio a editar
-    $('#edit_id_predio').val(predioId);
 
-    // Solicitar los datos del predio desde el servidor
-    $.ajax({
-        url: '/domicilios-predios/' + predioId + '/edit',
-        method: 'GET',
-        success: function (data) {
-            if (data.success) {
-                var predio = data.predio;
+    // Manejar el clic en el botón de editar
+    $(document).on('click', '.edit-record', function () {
+        var predioId = $(this).data('id'); // Obtener el ID del predio a editar
+        $('#edit_id_predio').val(predioId);
 
-                // Rellenar el formulario con los datos del predio
-                $('#edit_id_empresa').val(predio.id_empresa).trigger('change');
-                $('#edit_nombre_productor').val(predio.nombre_productor);
-                $('#edit_nombre_predio').val(predio.nombre_predio);
-                $('#edit_ubicacion_predio').val(predio.ubicacion_predio);
-                $('#edit_tipo_predio').val(predio.tipo_predio);
-                $('#edit_puntos_referencia').val(predio.puntos_referencia);
-                $('#edit_tiene_coordenadas').val(predio.cuenta_con_coordenadas).trigger('change');
-                $('#edit_superficie').val(predio.superficie);
+        // Solicitar los datos del predio desde el servidor
+        $.ajax({
+            url: '/domicilios-predios/' + predioId + '/edit',
+            method: 'GET',
+            success: function (data) {
+                if (data.success) {
+                    var predio = data.predio;
 
-                // Limpiar las filas de coordenadas anteriores
-                $('#edit_coordenadas tbody').empty();
+                    // Rellenar el formulario con los datos del predio
+                    $('#edit_id_empresa').val(predio.id_empresa).trigger('change');
+                    $('#edit_nombre_productor').val(predio.nombre_productor);
+                    $('#edit_nombre_predio').val(predio.nombre_predio);
+                    $('#edit_ubicacion_predio').val(predio.ubicacion_predio);
+                    $('#edit_tipo_predio').val(predio.tipo_predio);
+                    $('#edit_puntos_referencia').val(predio.puntos_referencia);
+                    $('#edit_tiene_coordenadas').val(predio.cuenta_con_coordenadas).trigger('change');
+                    $('#edit_superficie').val(predio.superficie);
 
-                // Rellenar coordenadas o añadir una fila vacía si no hay coordenadas
-                if (data.coordenadas.length > 0) {
-                    data.coordenadas.forEach(function (coordenada) {
-                        var newRow = `
+                    // Limpiar las filas de coordenadas anteriores
+                    $('#edit_coordenadas tbody').empty();
+
+                    // Rellenar coordenadas o añadir una fila vacía si no hay coordenadas
+                    if (data.coordenadas.length > 0) {
+                        data.coordenadas.forEach(function (coordenada) {
+                            var newRow = `
                         <tr>
                             <td>
                                 <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
@@ -773,10 +774,10 @@ $(document).on('click', '.edit-record', function () {
                                 </div>
                             </td>
                         </tr>`;
-                        $('#edit_coordenadas tbody').append(newRow);
-                    });
-                } else {
-                    var emptyRow = `
+                            $('#edit_coordenadas tbody').append(newRow);
+                        });
+                    } else {
+                        var emptyRow = `
                     <tr>
                         <td>
                             <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
@@ -794,19 +795,24 @@ $(document).on('click', '.edit-record', function () {
                             </div>
                         </td>
                     </tr>`;
-                    $('#edit_coordenadas tbody').append(emptyRow);
-                }
+                        $('#edit_coordenadas tbody').append(emptyRow);
+                    }
 
-                // Mostrar la sección de coordenadas si hay coordenadas o una fila vacía
-                $('#edit_coordenadas').removeClass('d-none');
+                    // Mostrar la sección de coordenadas si hay coordenadas o una fila vacía
+                    $('#edit_coordenadas').removeClass('d-none');
 
-                // Limpiar las filas de plantaciones anteriores
-                $('.edit_ContenidoPlantacion').empty();
+                    // Limpiar las filas de plantaciones anteriores
+                    $('.edit_ContenidoPlantacion').empty();
 
-                // Rellenar plantaciones o añadir una fila vacía si no hay plantaciones
-                if (data.plantaciones.length > 0) {
-                    data.plantaciones.forEach(function (plantacion) {
-                        var newRow = `
+                    // Cargar tipos de agave en el select
+                    var tipoOptions = data.tipos.map(function (tipo) {
+                        return `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`;
+                    }).join('');
+
+                    // Rellenar plantaciones o añadir una fila vacía si no hay plantaciones
+                    if (data.plantaciones.length > 0) {
+                        data.plantaciones.forEach(function (plantacion) {
+                            var newRow = `
                         <tr class="plantacion-row">
                             <td rowspan="4">
                                 <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
@@ -814,8 +820,9 @@ $(document).on('click', '.edit-record', function () {
                             <td><b>Nombre y Especie de Agave/Maguey</b></td>
                             <td>
                                 <div class="form-floating form-floating-outline mb-3">
-                                    <select name="id_tipo[]" class=" form-select tipo_agave">
-                                        <option  disabled selected>Tipo de agave</option>
+                                    <select name="id_tipo[]" class="form-select tipo_agave">
+                                        <option disabled>Tipo de agave</option>
+                                        ${tipoOptions}
                                     </select>
                                     <label for="especie_agave">Nombre y Especie de Agave/Maguey</label>
                                 </div>
@@ -825,7 +832,7 @@ $(document).on('click', '.edit-record', function () {
                             <td><b>Número de Plantas</b></td>
                             <td>
                                 <div class="form-floating form-floating-outline">
-                                    <input type="number" class="form-control" name="numero_plantas[]" value="${plantacion.num_plantas}" placeholder="Número de plantas" step="1">
+                                    <input type="number" class="form-control" required name="numero_plantas[]" value="${plantacion.num_plantas}" placeholder="Número de plantas" step="1">
                                     <label for="numero_plantas">Número de Plantas</label>
                                 </div>
                             </td>
@@ -834,7 +841,7 @@ $(document).on('click', '.edit-record', function () {
                             <td><b>Edad de la Plantación</b></td>
                             <td>
                                 <div class="form-floating form-floating-outline">
-                                    <input type="number" class="form-control" name="edad_plantacion[]" value="${plantacion.anio_plantacion}" placeholder="Edad de la plantación (años)" step="1">
+                                    <input type="number" class="form-control" required name="edad_plantacion[]" value="${plantacion.anio_plantacion}" placeholder="Edad de la plantación (años)" step="1">
                                     <label for="edad_plantacion">Edad de la Plantación</label>
                                 </div>
                             </td>
@@ -843,16 +850,18 @@ $(document).on('click', '.edit-record', function () {
                             <td><b>Tipo de Plantación</b></td>
                             <td>
                                 <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" name="tipo_plantacion[]" value="${plantacion.tipo_plantacion}" placeholder="Tipo de plantación">
+                                    <input type="text" class="form-control" required name="tipo_plantacion[]" value="${plantacion.tipo_plantacion}" placeholder="Tipo de plantación">
                                     <label for="tipo_plantacion">Tipo de Plantación</label>
                                 </div>
                             </td>
                         </tr>`;
-                        
-                        $('.edit_ContenidoPlantacion').append(newRow);
-                    });
-                } else {
-                    var emptyRow = `
+
+                            $('.edit_ContenidoPlantacion').append(newRow);
+                            // Seleccionar el tipo de agave actual
+                            $('.edit_ContenidoPlantacion').find('select[name="id_tipo[]"]').last().val(plantacion.id_tipo);
+                        });
+                    } else {
+                        var emptyRow = `
                     <tr>
                         <td rowspan="4">
                             <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
@@ -860,9 +869,9 @@ $(document).on('click', '.edit-record', function () {
                         <td><b>Nombre y Especie de Agave/Maguey</b></td>
                         <td>
                             <div class="form-floating form-floating-outline mb-3">
-                                <select name="id_tipo[]" class=" form-select tipo_agave">
+                                <select name="id_tipo[]" class="form-select tipo_agave">
                                     <option value="" disabled>Tipo de agave</option>
-                                    <!-- Opciones se añadirán aquí -->
+                                    ${tipoOptions}
                                 </select>
                                 <label for="especie_agave">Nombre y Especie de Agave/Maguey</label>
                             </div>
@@ -891,16 +900,28 @@ $(document).on('click', '.edit-record', function () {
                         <td>
                             <div class="form-floating form-floating-outline">
                                 <input type="text" class="form-control" name="tipo_plantacion[]" placeholder="Tipo de plantación">
-                                <label for="tipo_plantacion">Tipo de Plantación</label>
-                            </div>
-                        </td>
-                    </tr>`;
-                    $('.edit_ContenidoPlantacion').append(emptyRow);
-                }
+                               <label for="tipo_plantacion">Tipo de Plantación</label>
+                               </div>
+                           </td>
+                       </tr>`;
+                        $('.edit_ContenidoPlantacion').append(emptyRow);
+                    }
 
-                // Mostrar el modal
-                $('#modalEditPredio').modal('show');
-            } else {
+                    // Mostrar el modal
+                    $('#modalEditPredio').modal('show');
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo cargar los datos del predio.',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+            },
+            error: function (error) {
+                console.error('Error al cargar los datos del predio:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -910,23 +931,11 @@ $(document).on('click', '.edit-record', function () {
                     }
                 });
             }
-        },
-        error: function (error) {
-            console.error('Error al cargar los datos del predio:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo cargar los datos del predio.',
-                customClass: {
-                    confirmButton: 'btn btn-danger'
-                }
-            });
-        }
+        });
     });
-});
 
-    
-    
+
+
 
 
     /* boton de actualizar */

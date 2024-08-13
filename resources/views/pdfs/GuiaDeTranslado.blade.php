@@ -4,14 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>539G005_Guia_de_traslado_de_maguey_o_agave</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>{{ $datos[0]->folio }} Guía de traslado de agave o maguey</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Century Gothic', sans-serif;
             margin: 30px;
             font-size: 15px;
             color: #000000;
+        }
+
+        b{
+            font-family: 'Century Gothic', sans-serif;   
         }
 
         .header {
@@ -153,7 +156,7 @@
             top: -120px; /* Ajusta aquí la posición hacia arriba */
             left:-45px;
             margin-top: 70px; /* Desplaza la imagen hacia abajo */
-            width: 800px;
+            width: 830px;
             height: 1200px;
             z-index: -1;
             pointer-events: none; /* La marca de agua no es clickeable */
@@ -238,7 +241,7 @@
         <br>
         <tr>
             <td class="leftLetter">Nombre del cliente:</td>
-            <td class="leftLetter">{{ $datos[0]->nombre_productor }}</td>
+            <td class="leftLetter">a</td>
             <td class="leftLetter">No. de cliente:</td>
             <td class="leftLetter">124342432</td>
         </tr>

@@ -182,6 +182,7 @@ use App\Http\Controllers\documentacion\DocumentosController;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\InstalacionesController;
+use App\Http\Controllers\inspecciones\inspeccionesController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -539,17 +540,17 @@ Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('ti
 Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');
 
 //Guias de agave o maguey
-Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('translado-guias');
+Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('traslado-guias');
 Route::resource('/guias-list', GuiasController::class);
 Route::post('/guias/store', [GuiasController::class, 'store']);
 //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
 
 /*-------------------Dictamenes de instalaciones-------------------*/
 /*mostrar*/
-Route::get('dictamenes/instalaciones', [InstalacionesController::class, 'UserManagement'])->name('dictamen-instalaciones');
+Route::get('dictamenes/instalaciones', [InstalacionesController::class, 'UserManagement'])->name('dictamenes-instalaciones');
 Route::resource('insta', InstalacionesController::class);
 /*eliminar*/
-//Route::delete('/tipos-list/{id_tipo}', [tiposController::class, 'destroy'])->name('tipos.destroy');
+Route::delete('insta/{id_dictamen}', [InstalacionesController::class, 'destroy'])->name('instalacion.delete');
 /*registrar*/
 Route::post('insta', [InstalacionesController::class, 'store'])->name('instalacion.store');
 /*obtener el editar*/
@@ -573,3 +574,8 @@ Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTransl
 Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
 Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias.update');
 
+
+
+//Inspecciones
+Route::get('/inspecciones', [inspeccionesController::class, 'UserManagement'])->name('inspecciones');
+Route::resource('inspecciones-list', inspeccionesController::class);
