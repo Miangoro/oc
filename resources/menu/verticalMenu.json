@@ -95,12 +95,12 @@
     {
       "name": "Dictámenes de cumplimiento",
       "icon": "menu-icon ri-auction-fill",
-      "slug": "laravel-example",
+      "slug": "dictamenes",
       "submenu": [
         {
-          "url": "laravel/user-management",
+          "url": "dictamenes/instalaciones",
           "name": "Instalaciones",
-          "slug": "laravel-example-user-management"
+          "slug": "dictamen-instalaciones"
         },
         {
           "url": "laravel/user-management",

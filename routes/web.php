@@ -180,6 +180,7 @@ use App\Http\Controllers\usuarios\UsuariosPersonalController;
 use App\Http\Controllers\catalogo\LotesGranelController;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
+use App\Http\Controllers\dictamenes\InstalacionesController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -551,3 +552,18 @@ Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])-
 Route::resource('/guias-list', GuiasController::class);
 Route::post('/guias/store', [GuiasController::class, 'store']);
 //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
+
+
+
+/*-------------------Dictamenes de instalaciones-------------------*/
+/*mostrar*/
+Route::get('dictamenes/instalaciones', [InstalacionesController::class, 'UserManagement'])->name('dictamen-instalaciones');
+Route::resource('/insta', InstalacionesController::class);
+/*eliminar*/
+//Route::delete('/tipos-list/{id_tipo}', [tiposController::class, 'destroy'])->name('tipos.destroy');
+/*registrar*/
+//Route::post('/tipos-list', [tiposController::class, 'store'])->name('tipo.store');
+/*obtener el editar*/
+//Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name('tipos.edit');
+/*editar*/
+//Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('tipos.update');
