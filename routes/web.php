@@ -537,7 +537,10 @@ Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->
 Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('translado-guias');
 Route::resource('/guias-list', GuiasController::class);
 Route::post('/guias/store', [GuiasController::class, 'store']);
-//Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
+Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado');
+Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
+Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias.update');
+
 
 
 
