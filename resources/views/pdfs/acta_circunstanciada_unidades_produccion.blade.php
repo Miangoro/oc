@@ -47,9 +47,9 @@
 
 
         .header img {
-            width: 170px;
+            width: 200px;
             height: 80px;
-            margin-right: 490px;
+            margin-right: 450px;
         }
 
         .line {
