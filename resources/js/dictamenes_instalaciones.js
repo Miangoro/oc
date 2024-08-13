@@ -372,11 +372,11 @@ $('#NuevoDictamen').on('submit', function (e) {//id del formulario #addNewCatego
     var formData = $(this).serialize();
   
     $.ajax({
-        url: '../insta',
+        url: '/insta',
         type: 'POST',
         data: formData,
         success: function (response) {
-            $('#addDictamen').offcanvas('hide');//id del div que encierra al formulario #offcanvaadduser
+            //$('#addDictamen').offcanvas('hide');//id del div que encierra al formulario #offcanvaadduser
             $('#NuevoDictamen')[0].reset();
   
             // Actualizar la tabla sin reinicializar DataTables

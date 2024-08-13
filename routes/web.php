@@ -541,7 +541,7 @@ Route::post('/guias/store', [GuiasController::class, 'store']);
 
 /*-------------------Dictamenes de instalaciones-------------------*/
 /*mostrar*/
-Route::get('dictamenes/instalaciones', [InstalacionesController::class, 'UserManagement'])->name('dictamen-instalaciones');
+Route::get('dictamenes/instalaciones', [InstalacionesController::class, 'UserManagement'])->name('dictamenes-instalaciones');
 Route::resource('insta', InstalacionesController::class);
 /*eliminar*/
 //Route::delete('/tipos-list/{id_tipo}', [tiposController::class, 'destroy'])->name('tipos.destroy');
