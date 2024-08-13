@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>F-UV-02-02 ACTA CIRCUNSTANCIADA V6</title>
     <style>
+
+    
         @page {
             size: 216mm 279mm;
             /* Establece el tamaño de página a 216mm de ancho por 279mm de alto */
@@ -15,12 +17,17 @@
         }
 
         body {
-            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-family: 'Century Gothic', sans-serif;
             margin: 35px;
             padding: 10px;
             margin-top: 100px;
             margin-bottom: 50px;
             font-size: 15px;
+        }
+
+        strong, b {
+
+            font-weight: bold;
         }
 
         table {
@@ -214,7 +221,7 @@
     {{-- contenedor --}}
     <div class="contenedor">
         <div style="text-align: center; margin-top: 20px; font-size: 21px ">
-            <b>
+            <b style=" font-family: 'Century Gothic', sans-serif; font-weight: bold;">
                 Acta circunstanciada para Unidades de producción
             </b>
         </div>

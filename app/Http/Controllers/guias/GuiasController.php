@@ -187,21 +187,7 @@ public function edit($id_guia)
 // Método para actualizar una guía existente
 public function update(Request $request, $id_guia)
 {
-    $request->validate([
-        'empresa' => 'required|exists:empresa,id_empresa',
-        'numero_guias' => 'required|numeric',
-        'predios' => 'required|exists:predios,id_predio',
-        'plantacion' => 'required|exists:plantaciones,id_plantacion',
-        'anterior' => 'required|numeric',
-        'comercializadas' => 'required|numeric',
-        'mermas' => 'required|numeric',
-        'plantas' => 'required|numeric',
-        'art' => 'required|numeric',
-        'kgmaguey' => 'required|numeric',
-        'lotepedido' => 'required|string',
-        'fechacorte' => 'required|date',
-        'observaciones' => 'required|string',
-    ]);
+    
 
     try {
         $guia = guias::findOrFail($id_guia);
@@ -214,9 +200,9 @@ public function update(Request $request, $id_guia)
         $guia->mermas_plantas = $request->input('mermas');
         $guia->numero_plantas = $request->input('plantas');
         $guia->art = $request->input('art');
-        $guia->kg_maguey = $request->input('kgmaguey');
-        $guia->lote_pedido = $request->input('lotepedido');
-        $guia->fecha_corte = $request->input('fechacorte');
+        $guia->kg_maguey = $request->input('kg_maguey');
+        $guia->no_lote_pedido = $request->input('no_lote_pedido');
+        $guia->fecha_corte = $request->input('fecha_corte');
         $guia->observaciones = $request->input('observaciones');
         $guia->save();
 

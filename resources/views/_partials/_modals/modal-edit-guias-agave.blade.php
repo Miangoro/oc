@@ -93,16 +93,16 @@
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-5">
-                        <input class="form-control" type="number" placeholder="%ART"
+                        <input step="any" class="form-control" type="number" placeholder="%ART"
                             id="edit_id_art" name="art" />
                         <label for="edit_id_art">%ART</label>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number"
+                                <input step="any" class="form-control" type="number"
                                     placeholder="Ingrese la cantiad de maguey" id="edit_kg_magey"
-                                    name="kgmaguey" />
+                                    name="kg_maguey" />
                                 <label for="edit_kg_magey">KG de maguey</label>
                             </div>
                         </div>
@@ -111,7 +111,7 @@
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="text"
                                     placeholder="Ingrese un numero de lote o tapada" id="edit_no_lote_pedido"
-                                    name="lotepedido" />
+                                    name="no_lote_pedido" />
                                 <label for="edit_no_lote_pedido">No. de lote o No. de tapada</label>
                             </div>
                         </div>
@@ -119,13 +119,12 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input type="date" class="form-control" id="edit_fecha_corte" placeholder="fecha"
-                                    name="fechacorte" aria-label="fechacorte">
+                                    name="fecha_corte" aria-label="fechacorte">
                                 <label for="edit_fecha_corte">Fecha de corte</label>
                             </div>
                         </div>
                         <div class="form-floating form-floating-outline mb-5">
-                            <input class="form-control" type="text" placeholder="Ingrese observaciones"
-                                id="edit_id_observaciones" name="observaciones" />
+                            <textarea name="observaciones" class="form-control h-px-100" id="exampleFormControlTextarea1" placeholder="Observaciones..."></textarea>
                             <label for="edit_id_observaciones">Observaciones</label>
                         </div>
 {{--                         <div class="form-floating form-floating-outline">
