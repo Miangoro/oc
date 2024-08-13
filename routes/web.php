@@ -544,7 +544,7 @@ Route::post('/guias/store', [GuiasController::class, 'store']);
 Route::get('dictamenes/instalaciones', [InstalacionesController::class, 'UserManagement'])->name('dictamenes-instalaciones');
 Route::resource('insta', InstalacionesController::class);
 /*eliminar*/
-//Route::delete('/tipos-list/{id_tipo}', [tiposController::class, 'destroy'])->name('tipos.destroy');
+Route::delete('insta/{id_dictamen}', [InstalacionesController::class, 'destroy'])->name('instalacion.delete');
 /*registrar*/
 Route::post('insta', [InstalacionesController::class, 'store'])->name('instalacion.store');
 /*obtener el editar*/

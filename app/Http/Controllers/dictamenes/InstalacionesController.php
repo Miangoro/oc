@@ -107,11 +107,12 @@ class InstalacionesController extends Controller
                 'fecha_vigencia' => 'nullable|date',
                 'categorias' => 'required|string|max:100',
                 'clases' => 'required|string|max:100',
+                'id_inspeccion' => 'required|integer',
             ]);
     
             try {
                 $var = new Dictamen_instalaciones();
-                $var->id_inspeccion = 1;
+                $var->id_inspeccion = $request->id_inspeccion;
                 $var->tipo_dictamen = $request->tipo_dictamen;
                 $var->id_instalacion = 1;
                 $var->num_dictamen = $request->num_dictamen;
@@ -127,6 +128,24 @@ class InstalacionesController extends Controller
                 return response()->json(['error' => 'Error al agregar'], 500);
             }
         }
+
+
+
+
+// Función para eliminar una clase
+    public function destroy($id_dictamen)
+    {
+        try {
+            $eliminar = Dictamen_instalaciones::findOrFail($id_dictamen);
+            $eliminar->delete();
+
+            return response()->json(['success' => 'Eliminado correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al eliminar'], 500);
+        }
+    }
+
+
 
 
 }

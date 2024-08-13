@@ -1,9 +1,10 @@
 <!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="addDictamen" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple">
+    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
             
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Crear nuevo dictamen</h4>
                 </div>
@@ -14,7 +15,7 @@
                     <div class="form-floating form-floating-outline mb-4">
                         <select class="form-select" id="tipo_dictamen"
                             name="tipo_dictamen" aria-label="Default select example">
-                            <option value="0" disabled selected>Selecciona una opcion</option>
+                            <option value="" disabled selected>Selecciona una opcion</option>
                             <option value="1">Productor</option>
                             <option value="2">Envasador</option>
                             <option value="3">Comercializador</option>
@@ -47,10 +48,10 @@
         </div>
 
         <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-6">
-                        <select id="" name="id_inspeccion" class="select2 form-select" aria-label="Default select example">
-                            <option value="0" disabled selected>Selecciona una clase</option>
+                        <select id="" name="id_inspeccion" class="form-select" aria-label="Default select example">
+                            <option value="" disabled selected>Elige el número de servicio</option>
                                 @foreach ($inspeccion as $insp)
                                 <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option>
                                 @endforeach
@@ -61,15 +62,15 @@
 
                 <div class="col-md-3">
                     <div class="form-floating form-floating-outline mb-6">
-                    <input type="text" class="form-control" id="categorias" placeholder="categoria" name="categorias" aria-label="Nombre" required>
-                    <label for="nombre">Categoria</label>
+                    <input type="text" class="form-control" id="categorias" placeholder="categoría" name="categorias" aria-label="Nombre" required>
+                    <label for="nombre">Categorías</label>
                     </div>
                 </div>
 
                 <div class="col-md-3">
                     <div class="form-floating form-floating-outline mb-4">
                         <select  name="clases" class="form-select" >
-                            <option value="0" disabled selected>Selecciona una clase</option>
+                            <option value="" disabled selected>Selecciona una clase</option>
                                 @foreach ($clases as $clase)
                                     <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
                                 @endforeach
@@ -86,6 +87,7 @@
                     </div>
             </form>
             
+            </div>
         </div>
     </div>
 </div>

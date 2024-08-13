@@ -365,18 +365,89 @@
  
 
    
-// Función para agregar registro
-$('#NuevoDictamen').on('submit', function (e) {//id del formulario #addNewCategory
+// Agregar nuevo registro
+// validating form and updating user's data
+//const NuevoDictamen = document.getElementById('NuevoDictamen');
+
+// Validación del formulario
+const fv = FormValidation.formValidation(NuevoDictamen, {
+    fields: {
+      tipo_dictamen: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una opcion'
+                }
+            }
+        },
+        num_dictamen: {
+            validators: {
+                notEmpty: {
+                    message: 'Introduzca el no. de dictamen'
+                }
+            }
+        },
+        fecha_emision: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una fecha'
+                }
+            }
+        },
+        fecha_vigencia: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una fecha'
+                }
+            }
+        },
+        id_inspeccion: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una opcion'
+                }
+            }
+        },
+        categorias: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una opcion'
+                }
+            }
+        },
+        clases: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una opcion'
+                }
+            }
+        },
+        
+    },
+    plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+            eleValidClass: '',
+            rowSelector: function (field, ele) {
+                return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+            }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+}).on('core.form.valid', function (e) {
+
+  var formData = new FormData(NuevoDictamen);
+/*$('#NuevoDictamen').on('submit', function (e) {//id del formulario #addNewCategory
     e.preventDefault();
-  
-    var formData = $(this).serialize();
-  
+    var formData = $(this).serialize();*/
     $.ajax({
         url: '/insta',
         type: 'POST',
         data: formData,
+        processData: false,
+        contentType: false,
         success: function (response) {
-            //$('#addDictamen').offcanvas('hide');//id del div que encierra al formulario #offcanvaadduser
+            $('#addDictamen').modal('hide');//div que encierra al formulario #addDictamen
             $('#NuevoDictamen')[0].reset();
   
             // Actualizar la tabla sin reinicializar DataTables
@@ -408,6 +479,86 @@ $('#NuevoDictamen').on('submit', function (e) {//id del formulario #addNewCatego
   });
 
   
+
+
+
+  // Eliminar registro
+  $(document).on('click', '.delete-record', function () {
+    var id_dictamen = $(this).data('id'); // Obtener el ID de la clase
+    var dtrModal = $('.dtr-bs-modal.show');
+
+    // Ocultar modal responsivo en pantalla pequeña si está abierto
+    if (dtrModal.length) {
+        dtrModal.modal('hide');
+    }
+
+    // SweetAlert para confirmar la eliminación
+    Swal.fire({
+        title: '¿Está seguro?',
+        text: 'No podrá revertir este evento',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+            confirmButton: 'btn btn-primary me-3',
+            cancelButton: 'btn btn-label-secondary'
+        },
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            // Enviar solicitud DELETE al servidor
+            $.ajax({
+                type: 'DELETE',
+                url: `${baseUrl}insta/${id_dictamen}`,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function () {
+                    // Actualizar la tabla después de eliminar el registro
+                    dt_user.draw();
+
+                    // Mostrar SweetAlert de éxito
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Eliminado!',
+                        text: '¡La clase ha sido eliminada correctamente!',
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.log(error);
+
+                    // Mostrar SweetAlert de error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo eliminar la clase. Inténtalo de nuevo más tarde.',
+                        footer: `<pre>${error.responseText}</pre>`,
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            // Acción cancelada, mostrar mensaje informativo
+            Swal.fire({
+                title: 'Cancelado',
+                text: 'La eliminación de la clase ha sido cancelada',
+                icon: 'info',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
+                }
+            });
+        }
+    });
+});
+
+
 
 
  
