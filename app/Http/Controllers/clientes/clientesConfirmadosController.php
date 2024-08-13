@@ -23,6 +23,8 @@ class clientesConfirmadosController extends Controller
         $empresas = empresa::where('tipo', 2)->count();
         $fisicas = empresa::where('tipo', 2)->where('regimen', 'Persona física')->count();
         $morales = empresa::where('tipo', 2)->where('regimen', 'Persona moral')->count();
+        //$usuarios = User::all();
+        $usuarios = User::where("tipo",1)->get();
         // $userCount = $empresas->count();
         $verified = 5;
         $notVerified = 10;
@@ -35,6 +37,7 @@ class clientesConfirmadosController extends Controller
             'empresas' => $empresas,
             'fisicas' => $fisicas,
             'morales' => $morales,
+            'usuarios' => $usuarios,
 
         ]);
     }
@@ -73,8 +76,40 @@ class clientesConfirmadosController extends Controller
         return response()->json('Validada');
     }
 
+    //Editar cliente
+    //funcion para llenar el campo del formulario
+public function editarCliente($id)
+{
+    try {
+        $var1 = empresaNumCliente::findOrFail($id);
+        return response()->json($var1);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al obtener la clase'], 500);
+    }
+}
 
+// Función para EDITAR una clase existente
+    public function update_cliente(Request $request, $id)
+{
+    $request->validate([
+        'id_empresa' => 'required|integer',
+        'num_cliente' => 'required|string|max:255',
+        'id_norma' => 'required|integer',
+    ]);
 
+    try {
+        $var2 = empresaNumCliente::findOrFail($id);
+        $var2->id_empresa = $request->numero_cliente;
+        $var2->num_cliente = $request->num_cliente;
+        $var2->id_norma = $request->id_norma;
+        $var2->save();
+
+        return response()->json(['success' => 'Editado correctamente']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al editar'], 500);
+    }
+}
+//Aqui termina editar cliente
     public function pdfCartaAsignacion($id)
     {
         $res = DB::select('SELECT ac.actividad, nc.numero_cliente, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,

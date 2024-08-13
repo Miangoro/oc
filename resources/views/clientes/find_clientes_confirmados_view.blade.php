@@ -240,7 +240,7 @@
 
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
-
+@include('_partials/_modals/modal-edit-cliente_confirmado')
 <!-- /Modal -->
 @endsection
 
@@ -263,7 +263,7 @@
             $('.contenido').html(contenido);
            
             // Abrir el modal
-            $('#aceptarCliente').modal('show');
+            $('#editarCliente').modal('show');
         },
         error: function() {
             alert('Error al cargar los detalles de la empresa.');
