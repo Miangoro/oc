@@ -13,7 +13,7 @@ class DocumentosController extends Controller
         $documentacion = Documentacion::all();
         return view('documentacion.documentos_view', ['documentacion' => $documentacion]);
     }
-
+    
     public function index(Request $request)
     {
         $columns = [
@@ -21,18 +21,18 @@ class DocumentosController extends Controller
             2 => 'nombre',
             3 => 'tipo',
         ];
-
+    
         $search = $request->input('search.value');
         $totalData = Documentacion::count();
         $totalFiltered = $totalData;
-
+    
         $limit = $request->input('length');
         $start = $request->input('start');
         $order = $columns[$request->input('order.0.column')] ?? 'id_documento';
         $dir = $request->input('order.0.dir');
-
+    
         $query = Documentacion::query();
-
+    
         if (!empty($search)) {
             $query->where(function ($query) use ($search) {
                 $query->where('id_documento', 'LIKE', "%{$search}%")
@@ -41,22 +41,25 @@ class DocumentosController extends Controller
             });
             $totalFiltered = $query->count();
         }
-
+    
         $documentacion = $query->offset($start)
             ->limit($limit)
             ->orderBy($order, $dir)
             ->get();
-
+    
         $data = [];
+        $counter = $start + 1; // Iniciar el contador en el índice adecuado
+    
         foreach ($documentacion as $documento) {
+            $nestedData['fake_id'] = $counter++;
             $nestedData['id_documento'] = $documento->id_documento ?? 'N/A';
             $nestedData['nombre'] = $documento->nombre ?? 'N/A';
             $nestedData['tipo'] = $documento->tipo ?? 'N/A';
             $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $documento->id_documento . '">Eliminar</button>';
-
+    
             $data[] = $nestedData;
         }
-
+    
         return response()->json([
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
@@ -64,7 +67,7 @@ class DocumentosController extends Controller
             'code' => 200,
             'data' => $data,
         ]);
-    }
+    }    
 
 //funcion para agregar registro
 public function store(Request $request)

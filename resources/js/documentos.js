@@ -29,12 +29,13 @@ $(function () {
         ],
         columnDefs: [
             {
+                // For Responsive
                 className: 'control',
                 searchable: false,
                 orderable: false,
                 responsivePriority: 2,
                 targets: 0,
-                render: function () {
+                render: function (data, type, full, meta) {
                     return '';
                 }
             },
@@ -42,8 +43,8 @@ $(function () {
                 searchable: false,
                 orderable: true,
                 targets: 1,
-                render: function (data) {
-                    return `<span>${data}</span>`;
+                render: function (data, type, full, meta) {
+                    return `<span>${full.fake_id}</span>`;
                 }
             },
             {
@@ -66,18 +67,18 @@ $(function () {
                             </button>
                         </div>`
                     );
-                }                
+                }
             }
         ],
         order: [[1, 'desc']],
         dom: '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
-             '<"me-5 ms-n2"f>' +
-             '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
-             '>t' +
-             '<"row mx-1"' +
-             '<"col-sm-12 col-md-6"i>' +
-             '<"col-sm-12 col-md-6"p>' +
-             '>',
+            '<"me-5 ms-n2"f>' +
+            '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
+            '>t' +
+            '<"row mx-1"' +
+            '<"col-sm-12 col-md-6"i>' +
+            '<"col-sm-12 col-md-6"p>' +
+            '>',
         lengthMenu: [10, 20, 50, 70, 100],
         language: {
             sLengthMenu: '_MENU_',
@@ -138,6 +139,9 @@ $(function () {
                                     if (columnIndex === 1) {
                                         return inner.replace(/<[^>]*>/g, '');
                                     }
+                                    if (columnIndex === 4) {
+                                        return 'ViewSuspend';
+                                    }
                                     return inner;
                                 }
                             }
@@ -154,6 +158,9 @@ $(function () {
                                 body: function (inner, rowIndex, columnIndex) {
                                     if (columnIndex === 1) {
                                         return inner.replace(/<[^>]*>/g, '');
+                                    }
+                                    if (columnIndex === 4) {
+                                        return 'ViewSuspend';
                                     }
                                     return inner;
                                 }
@@ -172,6 +179,9 @@ $(function () {
                                     if (columnIndex === 1) {
                                         return inner.replace(/<[^>]*>/g, '');
                                     }
+                                    if (columnIndex === 4) {
+                                        return 'ViewSuspend';
+                                    }
                                     return inner;
                                 }
                             }
@@ -188,6 +198,9 @@ $(function () {
                                 body: function (inner, rowIndex, columnIndex) {
                                     if (columnIndex === 1) {
                                         return inner.replace(/<[^>]*>/g, '');
+                                    }
+                                    if (columnIndex === 4) {
+                                        return 'ViewSuspend';
                                     }
                                     return inner;
                                 }
@@ -257,6 +270,7 @@ $(function () {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
             customClass: {
                 confirmButton: 'btn btn-primary me-3',
                 cancelButton: 'btn btn-label-secondary'
@@ -272,7 +286,7 @@ $(function () {
                         Swal.fire({
                             icon: 'success',
                             title: '¡Eliminado!',
-                            text: '¡La solicitud ha sido eliminada correctamente!',
+                            text: '¡El registro ha sido eliminado correctamente!',
                             customClass: {
                                 confirmButton: 'btn btn-success'
                             }
@@ -290,8 +304,8 @@ $(function () {
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 Swal.fire({
                     title: 'Cancelado',
-                    text: 'La solicitud no ha sido eliminada',
-                    icon: 'error',
+                    text: 'La eliminación del registro ha sido cancelada.',
+                    icon: 'info',
                     customClass: {
                         confirmButton: 'btn btn-success'
                     }
@@ -299,6 +313,7 @@ $(function () {
             }
         });
     });
+
 
     $(function () {
         $.ajaxSetup({
@@ -348,7 +363,7 @@ $(function () {
                     Swal.fire({
                         icon: 'success',
                         title: '¡Éxito!',
-                        text: response.success,
+                        text: 'Documento agregado exitosamente.',
                         customClass: {
                             confirmButton: 'btn btn-success'
                         }
@@ -370,36 +385,37 @@ $(function () {
         });
     });
     
+
     $(function () {
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-    
-        $('.datatables-users').on('click', '.edit-record', function() {
+
+        $('.datatables-users').on('click', '.edit-record', function () {
             var id_documento = $(this).data('id');
-    
-            $.get('/documentos/' + id_documento + '/edit', function(data) {
+
+            $.get('/documentos/' + id_documento + '/edit', function (data) {
                 console.log('Datos recibidos:', data);
                 if (data && data.id_documento) {
                     $('#documentoId').val(data.id_documento);
                     $('#nombreEdit').val(data.nombre);
-                    
+
                     var tipoSelect = $('#tipoEdit');
-                    var tipoOptions = tipoSelect.find('option').map(function() {
+                    var tipoOptions = tipoSelect.find('option').map(function () {
                         return $(this).val();
                     }).get();
-                    
+
                     if (tipoOptions.includes(data.tipo)) {
                         tipoSelect.val(data.tipo);
                     } else {
                         tipoSelect.append(new Option(data.tipo, data.tipo, true, true));
                         tipoSelect.val(data.tipo);
                     }
-                    
+
                     tipoSelect.trigger('change');
-                    
+
                     $('#offcanvasEditInstalacion').offcanvas('show');
                 } else {
                     Swal.fire({
@@ -411,7 +427,7 @@ $(function () {
                         }
                     });
                 }
-            }).fail(function(xhr) {
+            }).fail(function (xhr) {
                 console.error('Error en la solicitud:', xhr);
                 Swal.fire({
                     icon: 'error',
@@ -423,7 +439,7 @@ $(function () {
                 });
             });
         });
-    
+
         const editForm = document.getElementById('formEditDocumentacion');
         const fvEdit = FormValidation.formValidation(editForm, {
             fields: {
@@ -455,15 +471,15 @@ $(function () {
         }).on('core.form.valid', function (e) {
             var formData = $(editForm).serialize();
             var id_documento = $('#documentoId').val();
-    
+
             $.ajax({
                 url: '/documentos/' + id_documento,
                 type: 'PUT',
                 data: formData,
-                success: function(response) {
+                success: function (response) {
                     $('#offcanvasEditInstalacion').offcanvas('hide');
                     $('#formEditDocumentacion')[0].reset();
-    
+
                     Swal.fire({
                         icon: 'success',
                         title: '¡Éxito!',
@@ -472,10 +488,10 @@ $(function () {
                             confirmButton: 'btn btn-success'
                         }
                     });
-    
+
                     $('.datatables-users').DataTable().ajax.reload();
                 },
-                error: function(xhr) {
+                error: function (xhr) {
                     Swal.fire({
                         icon: 'error',
                         title: '¡Error!',
@@ -488,7 +504,7 @@ $(function () {
             });
         });
     });
-    
 
-//end
+
+    //end
 });
