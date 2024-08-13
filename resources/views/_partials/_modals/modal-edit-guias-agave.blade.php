@@ -5,7 +5,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Editar Guía de Traslado Agave/Maguey</h4>
+                    <h4 class="address-title mb-2">Llenar Guía de Traslado Agave/Maguey</h4>
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="editGuiaForm">
@@ -15,7 +15,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="editobtenerNombrePredio(); editobtenerPlantacionPredio();" id="edit_id_empresa" name="empresa" class="select2 form-select" required>
+                                <select onchange="editobtenerNombrePredio(); editobtenerPlantacionPredio();"
+                                    id="edit_id_empresa" name="empresa" class="select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($empresa as $id_cliente)
                                         <option value="{{ $id_cliente->id_empresa }}">{{ $id_cliente->razon_social }}
@@ -78,7 +79,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number" placeholder="Mermas plantas"
-                                    id="edit_mermas_plantas" name="mermas" />
+                                    id="edit_mermas_plantas" name="mermas"   oninput="editcalcularPlantasActualmente()"/>
                                 <label for="edit_mermas_plantas">Mermas plantas</label>
                             </div>
                         </div>
@@ -103,8 +104,7 @@
 
 
 <script>
-
-function editobtenerNombrePredio() {
+    function editobtenerNombrePredio() {
         var empresa = $("#edit_id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
@@ -165,20 +165,22 @@ function editobtenerNombrePredio() {
     }
 
     // Función para restar los campos
-function editcalcularPlantasActualmente() {
-    // Obtener los valores de los inputs
-    const numAnterior = parseFloat(document.getElementById('edit_num_anterior').value) || 0;
-    const numComercializadas = parseFloat(document.getElementById('edit_num_comercializadas').value) || 0;
+    function editcalcularPlantasActualmente() {
+        // Obtener los valores de los inputs
+        const numAnterior = parseFloat(document.getElementById('edit_num_anterior').value) || 0;
+        const numComercializadas = parseFloat(document.getElementById('edit_num_comercializadas').value) || 0;
+        const mermasPlantas = parseFloat(document.getElementById('edit_mermas_plantas').value) || 0;
 
-    // Calcular el número de plantas actualmente
-    let plantasActualmente = numAnterior - numComercializadas;
 
-    // Evitar números negativos
-    if (plantasActualmente < 0) {
-        plantasActualmente = 0;
+        // Calcular el número de plantas actualmente
+        let plantasActualmente = numAnterior - numComercializadas - mermasPlantas;
+
+        // Evitar números negativos
+        if (plantasActualmente < 0) {
+            plantasActualmente = 0;
+        }
+
+        // Asignar el valor calculado al input
+        document.getElementById('edit_numero_plantas').value = plantasActualmente;
     }
-
-    // Asignar el valor calculado al input
-    document.getElementById('edit_numero_plantas').value = plantasActualmente;
-}
 </script>

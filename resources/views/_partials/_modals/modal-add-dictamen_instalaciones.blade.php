@@ -72,7 +72,7 @@
                         <select  name="clases" class="form-select" >
                             <option value="" disabled selected>Selecciona una clase</option>
                                 @foreach ($clases as $clase)
-                                    <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
+                                    <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
                                 @endforeach
                         </select>
                         <label for="">Clases</label>
