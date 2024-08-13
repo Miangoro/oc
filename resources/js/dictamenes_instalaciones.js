@@ -417,7 +417,3 @@ $('#NuevoDictamen').on('submit', function (e) {//id del formulario #addNewCatego
  
 
 
-
-  // Agregar nuevo registro
-// validating form and updating user's data
-const addNewLoteForm = document.getElementById('addNewLoteForm');

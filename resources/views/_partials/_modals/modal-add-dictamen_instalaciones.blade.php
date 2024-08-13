@@ -36,14 +36,14 @@
 
                 <div class="col-md-3">
                     <div class="form-floating form-floating-outline mb-6">
-                <input type="text" class="form-control" id="fecha_emision" placeholder="fecha" name="fecha_emision" aria-label="Nombre" required>
+                <input type="date" class="form-control" id="fecha_emision" placeholder="fecha" name="fecha_emision" aria-label="Nombre" required>
                     <label for="">Fecha de emisión</label>
                     </div>
                 </div>
 
                 <div class="col-md-3">
                         <div class="form-floating form-floating-outline mb-6">
-        <input class="form-control" type="text" placeholder="vigencia" id="fecha_vigencia" name="fecha_vigencia" required />
+        <input class="form-control" type="date" placeholder="vigencia" id="fecha_vigencia" name="fecha_vigencia" required />
                             <label for="">Vigencia hasta</label>
                         </div>
                 </div>
@@ -71,7 +71,7 @@
                     <label for="nombre">Clase</label>
                     </div>
                 </div> -->
-                <div class="col-md-3">
+                <!-- <div class="col-md-3">
                     <div class="form-floating form-floating-outline mb-4">
                         <select  class="form-select" >
                             <option value="clases" disabled selected>Selecciona una clase</option>
@@ -81,7 +81,7 @@
                         </select>
                         <label for="">Clases</label>
                     </div>
-                </div> 
+                </div>  -->
 
             </div>
 

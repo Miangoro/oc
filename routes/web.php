@@ -546,7 +546,7 @@ Route::resource('insta', InstalacionesController::class);
 /*eliminar*/
 //Route::delete('/tipos-list/{id_tipo}', [tiposController::class, 'destroy'])->name('tipos.destroy');
 /*registrar*/
-//Route::post('/tipos-list', [tiposController::class, 'store'])->name('tipo.store');
+Route::post('insta', [InstalacionesController::class, 'store'])->name('instalacion.store');
 /*obtener el editar*/
 //Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name('tipos.edit');
 /*editar*/

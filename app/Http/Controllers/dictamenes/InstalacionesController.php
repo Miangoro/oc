@@ -104,7 +104,7 @@ class InstalacionesController extends Controller
                 'fecha_emision' => 'nullable|date',
                 'fecha_vigencia' => 'nullable|date',
                 'categorias' => 'required|string|max:255',
-                'id_clase' => 'required|integer|exists:catalogo_clases,id_clase',
+                //'id_clase' => 'integer|exists:catalogo_clases,id_clase',
             ]);
     
             try {
@@ -112,9 +112,10 @@ class InstalacionesController extends Controller
                 $var->tipo_dictamen = $request->tipo_dictamen;
                 $var->num_dictamen = $request->num_dictamen;
                 $var->fecha_emision = $request->fecha_emision;
+                //$var->fecha_emision = $request->fecha_emision[$index] ?? null;
                 $var->fecha_vigencia = $request->fecha_vigencia;
                 $var->categorias = $request->categorias;
-                $var->id_clase = $validatedData['id_clase'];
+                //$var->id_clase = $request['id_clase'];
     
                 $var->save();//guardar en BD
     
