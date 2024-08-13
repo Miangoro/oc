@@ -58,7 +58,7 @@ class empresa extends Model
         return Predios::where('id_empresa', $this->id_empresa)->get();
     }
 
-    public function plantacion(){
+    public function predio_plantacion(){
         return Predios::where('id_empresa', $this->id_empresa)
         ->join('predio_plantacion AS pl', 'predios.id_predio', '=', 'pl.id_predio')
         ->join('catalogo_tipo_agave AS t', 'pl.id_tipo', '=', 't.id_tipo')

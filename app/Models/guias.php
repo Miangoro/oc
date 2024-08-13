@@ -22,6 +22,12 @@ class Guias extends Model
         'num_anterior',
         'num_comercializadas',
         'mermas_plantas',
+        'id_art',
+        'kg_magey',
+        'no_lote_pedido',
+        'fecha_corte',
+        'id_observaciones',
+
     ];
     
 

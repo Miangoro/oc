@@ -556,12 +556,17 @@ $(function () {
         $('#edit_id_guia').val(data.id_guia);
         $('#edit_id_empresa').val(data.id_empresa).trigger('change');
         $('#edit_numero_guias').val(data.numero_guias);
-        $('#edit_nombre_predio').val(data.nombre_predio).trigger('change');
+        $('#edit_nombre_predio').val(data.id_predio).trigger('change'); // Cambiado a 'id_predio'
         $('#edit_id_plantacion').val(data.id_plantacion).trigger('change');
         $('#edit_num_anterior').val(data.num_anterior);
         $('#edit_num_comercializadas').val(data.num_comercializadas);
         $('#edit_mermas_plantas').val(data.mermas_plantas);
         $('#edit_numero_plantas').val(data.numero_plantas);
+        $('#edit_id_art').val(data.art);
+        $('#edit_kg_magey').val(data.kg_maguey);
+        $('#edit_no_lote_pedido').val(data.lote_pedido);
+        $('#edit_fecha_corte').val(data.fecha_corte);
+        $('#edit_id_observaciones').val(data.observaciones);
 
         // Mostrar el modal de edición
         $('#editGuias').modal('show');
@@ -614,6 +619,7 @@ $('#editGuiaForm').on('submit', function (e) {
         }
     });
 });
+
 
 
 

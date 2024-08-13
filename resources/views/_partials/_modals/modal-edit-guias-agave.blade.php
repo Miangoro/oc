@@ -79,7 +79,8 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number" placeholder="Mermas plantas"
-                                    id="edit_mermas_plantas" name="mermas"   oninput="editcalcularPlantasActualmente()"/>
+                                    id="edit_mermas_plantas" name="mermas"
+                                    oninput="editcalcularPlantasActualmente()" />
                                 <label for="edit_mermas_plantas">Mermas plantas</label>
                             </div>
                         </div>
@@ -91,6 +92,94 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-floating form-floating-outline mb-5">
+                        <input class="form-control" type="number" placeholder="%ART"
+                            id="edit_id_art" name="art" />
+                        <label for="edit_id_art">%ART</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input class="form-control" type="number"
+                                    placeholder="Ingrese la cantiad de maguey" id="edit_kg_magey"
+                                    name="kgmaguey" />
+                                <label for="edit_kg_magey">KG de maguey</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input class="form-control" type="text"
+                                    placeholder="Ingrese un numero de lote o tapada" id="edit_no_lote_pedido"
+                                    name="lotepedido" />
+                                <label for="edit_no_lote_pedido">No. de lote o No. de tapada</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input type="date" class="form-control" id="edit_fecha_corte" placeholder="fecha"
+                                    name="fechacorte" aria-label="fechacorte">
+                                <label for="edit_fecha_corte">Fecha de corte</label>
+                            </div>
+                        </div>
+                        <div class="form-floating form-floating-outline mb-5">
+                            <input class="form-control" type="text" placeholder="Ingrese observaciones"
+                                id="edit_id_observaciones" name="observaciones" />
+                            <label for="edit_id_observaciones">Observaciones</label>
+                        </div>
+{{--                         <div class="form-floating form-floating-outline">
+                            <input class="form-control form-control-sm" type="file" id="file" name="url[]">
+                            <input value="0" class="form-control" type="hidden" name="id_documento[]">
+                            <input value="Certificado de instalaciones" class="form-control" type="hidden" name="nombre_documento[]">
+                            <label for="certificado_instalaciones">Adjuntar Certificado de instalaciones</label>
+                        </div>
+
+                        <div class="form-floating form-floating-outline">
+                            <input class="form-control form-control-sm" type="file" id="file" name="url[]">
+                            <input value="0" class="form-control" type="hidden" name="id_documento[]">
+                            <input value="Certificado de instalaciones" class="form-control" type="hidden" name="nombre_documento[]">
+                            <label for="certificado_instalaciones">Adjuntar Certificado de instalaciones</label>
+                        </div> --}}
+                    </div>
+{{-- 
+                    <div class="text-center mb-6">
+                        <h4 class="address-title mb-2">Datos del comprador</h4>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input class="form-control" type="text"
+                                    placeholder="Número de plantas actualmente" id=""
+                                    name="plantas" />
+                                <label for="">Nombre del cliente/comprador</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input class="form-control" type="number"
+                                    placeholder="Número de plantas actualmente" id=""
+                                    name="plantas" />
+                                <label for="">No del cliente/comprador</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input type="date" class="form-control" id="" placeholder="fecha"
+                                    name="fecha_emision" aria-label="Nombre">
+                                <label for="">Fecha de ingreso</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-floating form-floating-outline mb-5">
+                        <input class="form-control" type="text" placeholder="Número de plantas actualmente"
+                            id="" name="plantas" />
+                        <label for="">Domicilio de entrega</label>
+                    </div>                    
+                </div> --}}
+                
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Actualizar</button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
@@ -143,17 +232,17 @@
 
                 // Cargar los detalles en el modal
                 var contenido = "";
-                for (let index = 0; index < response.plantacion.length; index++) {
-                    contenido = '<option value="' + response.plantacion[index].id_plantacion +
+                for (let index = 0; index < response.predio_plantacion.length; index++) {
+                    contenido = '<option value="' + response.predio_plantacion[index].id_plantacion +
                         '">Número de plantas: ' + response
-                        .plantacion[index].num_plantas + ' | Tipo de agave: ' + response
-                        .plantacion[index].nombre + ' ' + response
-                        .plantacion[index].cientifico + ' | Año de platanción: ' + response
-                        .plantacion[index].anio_plantacion + '</option>' + contenido;
+                        .predio_plantacion[index].num_plantas + ' | Tipo de agave: ' + response
+                        .predio_plantacion[index].nombre + ' ' + response
+                        .predio_plantacion[index].cientifico + ' | Año de platanción: ' + response
+                        .predio_plantacion[index].anio_plantacion + '</option>' + contenido;
                     // console.log(response.normas[index].norma);
                 }
 
-                if (response.plantacion.length == 0) {
+                if (response.predio_plantacion.length == 0) {
                     contenido = '<option value="">Sin predios registradas</option>';
                 }
                 $('#edit_id_plantacion').html(contenido);
