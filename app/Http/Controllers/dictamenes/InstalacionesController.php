@@ -103,19 +103,20 @@ class InstalacionesController extends Controller
                 'num_dictamen' => 'required|string|max:255',
                 'fecha_emision' => 'nullable|date',
                 'fecha_vigencia' => 'nullable|date',
-                'categorias' => 'required|string|max:255',
-                //'id_clase' => 'integer|exists:catalogo_clases,id_clase',
+                'categorias' => 'required|string|max:100',
+                'clases' => 'required|string|max:100',
             ]);
     
             try {
                 $var = new Dictamen_instalaciones();
+                $var->id_inspeccion = 1;
                 $var->tipo_dictamen = $request->tipo_dictamen;
+                $var->id_instalacion = 1;
                 $var->num_dictamen = $request->num_dictamen;
                 $var->fecha_emision = $request->fecha_emision;
-                //$var->fecha_emision = $request->fecha_emision[$index] ?? null;
                 $var->fecha_vigencia = $request->fecha_vigencia;
                 $var->categorias = $request->categorias;
-                //$var->id_clase = $request['id_clase'];
+                $var->clases = $request->clases;
     
                 $var->save();//guardar en BD
     

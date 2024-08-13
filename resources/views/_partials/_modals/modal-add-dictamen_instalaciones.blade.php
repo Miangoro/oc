@@ -71,9 +71,9 @@
                     <label for="nombre">Clase</label>
                     </div>
                 </div> -->
-                <!-- <div class="col-md-3">
+              <div class="col-md-3">
                     <div class="form-floating form-floating-outline mb-4">
-                        <select  class="form-select" >
+                        <select  name="clases" class="form-select" >
                             <option value="clases" disabled selected>Selecciona una clase</option>
                                 @foreach ($clases as $clase)
                                     <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
@@ -81,7 +81,7 @@
                         </select>
                         <label for="">Clases</label>
                     </div>
-                </div>  -->
+                </div>  
 
             </div>
 
