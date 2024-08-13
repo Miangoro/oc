@@ -100,12 +100,12 @@
         {
           "url": "dictamenes/instalaciones",
           "name": "Instalaciones",
-          "slug": "dictamen-instalaciones"
+          "slug": "dictamenes-instalaciones"
         },
         {
-          "url": "laravel/user-management",
-          "name": "Lote a granel",
-          "slug": "laravel-example-user-management"
+          "url": "dictamenes/productos",
+          "name": "Productos",
+          "slug": "dictamenes-productos"
         }
       ]
     },

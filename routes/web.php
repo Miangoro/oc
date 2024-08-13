@@ -537,25 +537,21 @@ Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->
 Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('traslado-guias');
 Route::resource('/guias-list', GuiasController::class);
 Route::post('/guias/store', [GuiasController::class, 'store']);
-Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado');
-Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
-Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias.update');
-
-
-
+//Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
 
 /*-------------------Dictamenes de instalaciones-------------------*/
 /*mostrar*/
-Route::get('dictamenes/instalaciones', [InstalacionesController::class, 'UserManagement'])->name('dictamen-instalaciones');
+Route::get('dictamenes/instalaciones', [InstalacionesController::class, 'UserManagement'])->name('dictamenes-instalaciones');
 Route::resource('insta', InstalacionesController::class);
 /*eliminar*/
 //Route::delete('/tipos-list/{id_tipo}', [tiposController::class, 'destroy'])->name('tipos.destroy');
 /*registrar*/
-//Route::post('/tipos-list', [tiposController::class, 'store'])->name('tipo.store');
+Route::post('insta', [InstalacionesController::class, 'store'])->name('instalacion.store');
 /*obtener el editar*/
 //Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name('tipos.edit');
 /*editar*/
 //Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('tipos.update');
+
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
 Route::resource('/documentos-list', DocumentosController::class);
@@ -571,3 +567,4 @@ Route::put('/documentos/{id}', [DocumentosController::class, 'update']);
 Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado');
 Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
 Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias.update');
+
