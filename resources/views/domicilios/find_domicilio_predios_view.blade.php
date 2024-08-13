@@ -100,7 +100,7 @@
                                     <div class="form-floating form-floating-outline">
                                         <select class="form-select" id="tipo_predio" name="tipo_predio"
                                             aria-label="Tipo de Predio">
-                                            <option value="">Seleccione un tipo de predio</option>
+                                            <option value="" disabled selected>Seleccione un tipo de predio</option>
                                             <option value="Comunal">Comunal</option>
                                             <option value="Ejidal">Ejidal</option>
                                             <option value="Propiedad privada">Propiedad privada</option>
@@ -326,7 +326,7 @@
                                     <div class="form-floating form-floating-outline">
                                         <select class="form-select" id="edit_tipo_predio" name="tipo_predio"
                                             aria-label="Tipo de Predio">
-                                            <option value="">Seleccione un tipo de predio</option>
+                                            <option value="" disabled selected>Seleccione un tipo de predio</option>
                                             <option value="Comunal">Comunal</option>
                                             <option value="Ejidal">Ejidal</option>
                                             <option value="Propiedad privada">Propiedad privada</option>
