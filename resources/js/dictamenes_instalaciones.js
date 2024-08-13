@@ -522,7 +522,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
                     Swal.fire({
                         icon: 'success',
                         title: '¡Eliminado!',
-                        text: '¡La clase ha sido eliminada correctamente!',
+                        text: '¡El Dictamen ha sido eliminada correctamente!',
                         customClass: {
                             confirmButton: 'btn btn-success'
                         }
@@ -535,7 +535,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'No se pudo eliminar la clase. Inténtalo de nuevo más tarde.',
+                        text: 'No se pudo eliminar el dictamen. Inténtalo de nuevo más tarde.',
                         footer: `<pre>${error.responseText}</pre>`,
                         customClass: {
                             confirmButton: 'btn btn-danger'
@@ -548,7 +548,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
             // Acción cancelada, mostrar mensaje informativo
             Swal.fire({
                 title: 'Cancelado',
-                text: 'La eliminación de la clase ha sido cancelada',
+                text: 'La eliminación del Dictamen ha sido cancelada',
                 icon: 'info',
                 customClass: {
                     confirmButton: 'btn btn-primary'
