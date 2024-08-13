@@ -537,12 +537,7 @@ Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->
 Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('translado-guias');
 Route::resource('/guias-list', GuiasController::class);
 Route::post('/guias/store', [GuiasController::class, 'store']);
-Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado');
-Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
-Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias.update');
-
-
-
+//Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
 
 /*-------------------Dictamenes de instalaciones-------------------*/
 /*mostrar*/
@@ -556,6 +551,7 @@ Route::resource('insta', InstalacionesController::class);
 //Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name('tipos.edit');
 /*editar*/
 //Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('tipos.update');
+
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
 Route::resource('/documentos-list', DocumentosController::class);
@@ -571,3 +567,4 @@ Route::put('/documentos/{id}', [DocumentosController::class, 'update']);
 Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado');
 Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
 Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias.update');
+
