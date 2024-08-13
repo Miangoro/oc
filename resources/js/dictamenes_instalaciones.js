@@ -372,7 +372,7 @@ $('#NuevoDictamen').on('submit', function (e) {//id del formulario #addNewCatego
     var formData = $(this).serialize();
   
     $.ajax({
-        url: 'insta',
+        url: '../insta',
         type: 'POST',
         data: formData,
         success: function (response) {
