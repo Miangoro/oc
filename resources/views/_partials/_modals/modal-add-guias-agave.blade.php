@@ -139,19 +139,19 @@
 
                 // Cargar los detalles en el modal
                 var contenido = "";
-                for (let index = 0; index < response.plantacion.length; index++) {
-                    contenido = '<option value="' + response.plantacion[index].id_plantacion +
-                        '" " data-num-plantas="' + response.plantacion[index].num_plantas + '">Número de plantas: ' + response
-                        .plantacion[index].num_plantas + ' | Tipo de agave: ' + response
-                        .plantacion[index].nombre + ' ' + response
-                        .plantacion[index].cientifico + ' | Año de platanción: ' + response
-                        .plantacion[index].anio_plantacion + '</option>' + contenido;
+                for (let index = 0; index < response.predio_plantacion.length; index++) {
+                    contenido = '<option value="' + response.predio_plantacion[index].id_plantacion +
+                        '" " data-num-plantas="' + response.predio_plantacion[index].num_plantas + '">Número de plantas: ' + response
+                        .predio_plantacion[index].num_plantas + ' | Tipo de agave: ' + response
+                        .predio_plantacion[index].nombre + ' ' + response
+                        .predio_plantacion[index].cientifico + ' | Año de platanción: ' + response
+                        .predio_plantacion[index].anio_plantacion + '</option>' + contenido;
                     // console.log(response.normas[index].norma);
 
                     
                 }
 
-                if (response.plantacion.length == 0) {
+                if (response.predio_plantacion.length == 0) {
                     contenido = '<option value="">Sin predios registradas</option>';
                 }
                 $('#id_plantacion').html(contenido);
@@ -175,36 +175,7 @@
         });
     }
 
-/*     function obtenerNumplanta() {
-        var empresa = $("#id_empresa").val();
-        // Hacer una petición AJAX para obtener los detalles de la empresa
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
 
-                // Cargar los detalles en el modal
-                var contenido = "";
-                for (let index = 0; index < response.plantacion.length; index++) {
-                    contenido = '<option value="' + response.plantacion[index].id_plantacion +
-                        '">Número de plantas: ' + response
-                        .plantacion[index].num_plantas + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
-                }
-
-                if (response.plantacion.length == 0) {
-                    contenido = '<option value="">Sin predios registradas</option>';
-                }
-                $('#num_anterior').html(contenido);
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
-            }
-        });
-    } */
-
-// Función para restar los campos
 // Función para restar los campos
 function calcularPlantasActualmente() {
     // Obtener los valores de los inputs

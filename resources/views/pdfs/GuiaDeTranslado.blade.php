@@ -238,7 +238,7 @@
         <br>
         <tr>
             <td class="leftLetter">Nombre del cliente:</td>
-            <td class="leftLetter">{{ $datos[0]->nombre_productor }}</td>
+            <td class="leftLetter">a</td>
             <td class="leftLetter">No. de cliente:</td>
             <td class="leftLetter">124342432</td>
         </tr>
