@@ -132,19 +132,19 @@
                             <textarea name="observaciones" class="form-control h-px-100" id="edit_id_observaciones" placeholder="Observaciones..."></textarea>
                             <label for="edit_id_observaciones">Observaciones</label>
                         </div>
-{{--                         <div class="form-floating form-floating-outline">
+                         <div class="form-floating form-floating-outline mb-5">
                             <input class="form-control form-control-sm" type="file" id="file" name="url[]">
                             <input value="0" class="form-control" type="hidden" name="id_documento[]">
                             <input value="Certificado de instalaciones" class="form-control" type="hidden" name="nombre_documento[]">
-                            <label for="certificado_instalaciones">Adjuntar Certificado de instalaciones</label>
+                            <label for="certificado_instalaciones">Adjuntar Guia escaneada</label>
                         </div>
 
-                        <div class="form-floating form-floating-outline">
+                        <div class="form-floating form-floating-outline mb-5">
                             <input class="form-control form-control-sm" type="file" id="file" name="url[]">
                             <input value="0" class="form-control" type="hidden" name="id_documento[]">
                             <input value="Certificado de instalaciones" class="form-control" type="hidden" name="nombre_documento[]">
-                            <label for="certificado_instalaciones">Adjuntar Certificado de instalaciones</label>
-                        </div> --}}
+                            <label for="certificado_instalaciones">Adjuntar resultados  de ART</label>
+                        </div> 
                     </div>
 
                     <div class="text-center mb-6">
