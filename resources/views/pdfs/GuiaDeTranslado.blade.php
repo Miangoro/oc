@@ -219,7 +219,7 @@
     </div>
     <table>
         <tr>
-            <td style=" text-align: left" colspan="2"> Fecha de corte:</td>
+            <td class="leftLetter" colspan="2"> Fecha de corte:</td>
             <td class="leftLetter" colspan="2">{{ $datos[0]->fecha_corte }}</td>
         </tr>
         <tr>
