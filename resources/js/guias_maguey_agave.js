@@ -562,11 +562,17 @@ $(function () {
         $('#edit_num_comercializadas').val(data.num_comercializadas);
         $('#edit_mermas_plantas').val(data.mermas_plantas);
         $('#edit_numero_plantas').val(data.numero_plantas);
+        $('#edit_edad').val(data.edad);
         $('#edit_id_art').val(data.art);
         $('#edit_kg_magey').val(data.kg_maguey);
-        $('#edit_no_lote_pedido').val(data.lote_pedido);
+        $('#edit_no_lote_pedido').val(data.no_lote_pedido);
         $('#edit_fecha_corte').val(data.fecha_corte);
         $('#edit_id_observaciones').val(data.observaciones);
+        $('#edit_nombre_cliente').val(data.nombre_cliente);
+        $('#edit_no_cliente').val(data.no_cliente);
+        $('#edit_fecha_ingreso').val(data.fecha_ingreso);
+        $('#edit_domicilio').val(data.domicilio);
+
 
         // Mostrar el modal de edición
         $('#editGuias').modal('show');

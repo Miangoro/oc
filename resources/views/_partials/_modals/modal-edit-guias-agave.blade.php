@@ -75,6 +75,11 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-floating form-floating-outline mb-5">
+                        <input class="form-control" type="text" placeholder="edad"
+                            id="edit_edad" name="edad"/>
+                        <label for="edit_edad">Edad</label>
+                    </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
@@ -118,13 +123,13 @@
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="date" class="form-control" id="edit_fecha_corte" placeholder="fecha"
+                                <input type="date" class="form-control" id="edit_fecha_corte" placeholder="fecha_corte"
                                     name="fecha_corte" aria-label="fechacorte">
                                 <label for="edit_fecha_corte">Fecha de corte</label>
                             </div>
                         </div>
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="observaciones" class="form-control h-px-100" id="exampleFormControlTextarea1" placeholder="Observaciones..."></textarea>
+                            <textarea name="observaciones" class="form-control h-px-100" id="edit_id_observaciones" placeholder="Observaciones..."></textarea>
                             <label for="edit_id_observaciones">Observaciones</label>
                         </div>
 {{--                         <div class="form-floating form-floating-outline">
@@ -141,7 +146,7 @@
                             <label for="certificado_instalaciones">Adjuntar Certificado de instalaciones</label>
                         </div> --}}
                     </div>
-{{-- 
+
                     <div class="text-center mb-6">
                         <h4 class="address-title mb-2">Datos del comprador</h4>
                     </div>
@@ -149,35 +154,36 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="text"
-                                    placeholder="Número de plantas actualmente" id=""
-                                    name="plantas" />
-                                <label for="">Nombre del cliente/comprador</label>
+                                    placeholder="Número de plantas actualmente" id="edit_nombre_cliente"
+                                    name="nombre_cliente" />
+                                <label for="edit_nombre_cliente">Nombre del cliente/comprador</label>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number"
-                                    placeholder="Número de plantas actualmente" id=""
-                                    name="plantas" />
-                                <label for="">No del cliente/comprador</label>
+                                    placeholder="Número de plantas actualmente" id="edit_no_cliente"
+                                    name="no_cliente" />
+                                <label for="edit_no_cliente">No del cliente/comprador</label>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="date" class="form-control" id="" placeholder="fecha"
-                                    name="fecha_emision" aria-label="Nombre">
-                                <label for="">Fecha de ingreso</label>
+                                <input type="date" class="form-control" id="edit_fecha_ingreso" placeholder="fecha_ingreso"
+                                    name="fecha_ingreso" aria-label="fecha_ingreso">
+                                <label for="edit_fecha_ingreso">Fecha de ingreso</label>
+                                
                             </div>
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-5">
                         <input class="form-control" type="text" placeholder="Número de plantas actualmente"
-                            id="" name="plantas" />
-                        <label for="">Domicilio de entrega</label>
+                            id="edit_domicilio" name="domicilio" />
+                        <label for="edit_domicilio">Domicilio de entrega</label>
                     </div>                    
-                </div> --}}
+                </div> 
                 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Actualizar</button>
@@ -271,4 +277,6 @@
         // Asignar el valor calculado al input
         document.getElementById('edit_numero_plantas').value = plantasActualmente;
     }
+
+    
 </script>

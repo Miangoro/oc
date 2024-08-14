@@ -12,6 +12,9 @@
             font-size: 15px;
             color: #000000;
         }
+        @page {
+            margin: 30px; /* Elimina los márgenes */
+        }
 
         b{
             font-family: 'Century Gothic', sans-serif;   
@@ -33,13 +36,14 @@
 
         .leftLetter{
             text-align: left;
+            font-size: 12px;
         }
         .rightLetter {
             text-align: right;
         }
 
         .bigLetter {
-            font-size: 31px;
+            font-size: 29px;
         }
 
         .text_marge {
@@ -156,7 +160,7 @@
             top: -120px; /* Ajusta aquí la posición hacia arriba */
             left:-45px;
             margin-top: 70px; /* Desplaza la imagen hacia abajo */
-            width: 830px;
+            width: 831px;
             height: 1200px;
             z-index: -1;
             pointer-events: none; /* La marca de agua no es clickeable */
@@ -200,7 +204,7 @@
     <table>
         <tr>
             <td style=" text-align: left" colspan="2"> Fecha de corte:</td>
-            <td class="leftLetter" colspan="2">N° de cliente:</td>
+            <td class="leftLetter" colspan="2">{{ $datos[0]->fecha_corte }}</td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> Tipo de maguey (Tipo de agave):</td>
@@ -208,11 +212,11 @@
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> Edad:</td>
-            <td class="leftLetter" colspan="2">Maguey Espadín (A. angustifolia)</td>
+            <td class="leftLetter" colspan="2">{{ $datos[0]->edad }}</td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de lote o No. de tapada:</td>
-            <td class="leftLetter" colspan="2">N° de cliente:</td>
+            <td class="leftLetter" colspan="2">{{ $datos[0]->no_lote_pedido }} </td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de piñas comercializadas:</td>
@@ -228,9 +232,9 @@
         </tr>
         <tr>
              <td class="leftLetter"> Kg de maguey: </td>
-             <td class="leftLetter">&nbsp;</td>
+             <td class="leftLetter">{{ $datos[0]->kg_maguey }}</td>
              <td class="leftLetter"> %ART</td>
-             <td class="leftLetter">&nbsp;</td>
+             <td class="leftLetter">{{ $datos[0]->art }}</td>
         </tr>
     </table>
 
@@ -241,34 +245,34 @@
         <br>
         <tr>
             <td class="leftLetter">Nombre del cliente:</td>
-            <td class="leftLetter">a</td>
+            <td class="leftLetter">{{ $datos[0]->nombre_cliente }}</td>
             <td class="leftLetter">No. de cliente:</td>
-            <td class="leftLetter">124342432</td>
+            <td class="leftLetter">{{ $datos[0]->no_cliente }}</td>
         </tr>
         <tr>
             <td class="leftLetter">Fecha de ingreso a
                 fábrica:</td>
-            <td class="leftLetter"colspan="3">123123123</td>
+            <td class="leftLetter"colspan="3">{{ $datos[0]->fecha_ingreso }}</td>
         </tr>
         <tr>
             <td class="leftLetter">Domicilio de 
                 entrega:
             </td>
-            <td class="leftLetter" colspan="3">Jose Inicente lugo</td>
+            <td class="leftLetter" colspan="3">{{ $datos[0]->domicilio }}</td>
         </tr>
     </table>
 
-    <table style="margin-bottom: 32px">
+    <table style="margin-bottom: 25px">
         <br>
-        <tr style="font-size: 18px;">
-            <td colspan="2" class="td-no-margins leftLetter"> &nbsp; &nbsp;  &nbsp; &nbsp;Firma del vendedor</td>
-            <td colspan="2" class="td-no-margins rightLetter">Firma del comprador &nbsp; &nbsp;  &nbsp; &nbsp;</td>
+        <tr style="font-size: 15px;">
+            <td colspan="2" style="text-align: left" class="td-no-margins"> &nbsp; &nbsp;  &nbsp; &nbsp;Firma del vendedor</td>
+            <td colspan="2" style="text-align: right" class="td-no-margins">Firma del comprador &nbsp; &nbsp;  &nbsp; &nbsp;</td>
         </tr>
     </table>
     <div style="margin-bottom: 1px; text-align: center">
         <div class="text-with-background">
         </div>        
-        <p style="font-size: 18px">B.T.G. Erick antonio Mejía Vaca <br>
+        <p style="font-size: 15px">B.T.G. Erick antonio Mejía Vaca <br>
             Gerente Técnico Sustituto de la Unidad de Inspección</p>
     </div>
 
