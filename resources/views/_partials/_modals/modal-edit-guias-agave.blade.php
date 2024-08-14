@@ -75,11 +75,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-floating form-floating-outline mb-5">
-                        <input class="form-control" type="text" placeholder="edad"
-                            id="edit_edad" name="edad"/>
-                        <label for="edit_edad">Edad</label>
-                    </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
@@ -96,6 +91,11 @@
                                 <label for="edit_numero_plantas">Número de plantas actualmente</label>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-floating form-floating-outline mb-5">
+                        <input class="form-control" type="text" placeholder="Ingrese la edad"
+                            id="edit_edad" name="edad"/>
+                        <label for="edit_edad">Edad</label>
                     </div>
                     <div class="form-floating form-floating-outline mb-5">
                         <input step="any" class="form-control" type="number" placeholder="%ART"
@@ -154,7 +154,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="text"
-                                    placeholder="Número de plantas actualmente" id="edit_nombre_cliente"
+                                    placeholder="Ingrese el nombre del cliente/comprador" id="edit_nombre_cliente"
                                     name="nombre_cliente" />
                                 <label for="edit_nombre_cliente">Nombre del cliente/comprador</label>
                             </div>
@@ -163,7 +163,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number"
-                                    placeholder="Número de plantas actualmente" id="edit_no_cliente"
+                                    placeholder="Ingrese el No. del cliente/comprador" id="edit_no_cliente"
                                     name="no_cliente" />
                                 <label for="edit_no_cliente">No del cliente/comprador</label>
                             </div>
@@ -179,7 +179,7 @@
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-5">
-                        <input class="form-control" type="text" placeholder="Número de plantas actualmente"
+                        <input class="form-control" type="text" placeholder="Ingrese el domicilio de entrega"
                             id="edit_domicilio" name="domicilio" />
                         <label for="edit_domicilio">Domicilio de entrega</label>
                     </div>                    
