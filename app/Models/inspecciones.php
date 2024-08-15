@@ -27,11 +27,10 @@ class inspecciones extends Model
     {
         return $this->belongsTo(User::class, 'id_inspector', 'id');
     }
-    
-    public function instalaciones()
-    {
-        return $this->hasMany(Dictamen_instalaciones::class, 'id_inspeccion');
 
+    public function dictamen()
+    {
+        return $this->hasOne(Dictamen_instalaciones::class, 'id_inspeccion', 'id_inspeccion');
     }
 
 }
