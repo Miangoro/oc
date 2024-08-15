@@ -11,7 +11,7 @@ return array(
     | in dompdf_config.inc.php. You can also override the entire config file.
     |
     */
-    'show_warnings' => false,   // Throw an Exception on warnings from dompdf
+    'show_warnings' => true,   // Throw an Exception on warnings from dompdf
 
     'public_path' => null,  // Override the public path if needed
 
@@ -67,6 +67,16 @@ return array(
                 'I'  => 'GOTHICI.TTF', // Italic (si la tienes)
                 'BI' => 'GOTHICBI.TTF' // Bold Italic (si la tienes)
             ],
+
+            'Lucida Sans Unicode' => [
+                'R'  => 'lsansuni.ttf',    // Regular
+                'B'  => 'LSANSD.TTF', // Bold (si la tienes)
+                'I'  => 'LSANSDI.TTF', // Italic (si la tienes)
+            ],
+
+            'Arial Negrita' => [
+                'R'  => 'arial-negrita.ttf', 
+            ]
         ],
 
         /**

@@ -17,5 +17,16 @@ class inspecciones extends Model
         'num_servicio',
         'fecha_servicio',
     ];
+
+    public function solicitud()
+    {
+        return $this->belongsTo(solicitudesModel::class, 'id_solicitud', 'id_solicitud');
+    }
+
+    public function inspector()
+    {
+        return $this->belongsTo(User::class, 'id_inspector', 'id');
+    }
+
 }
 

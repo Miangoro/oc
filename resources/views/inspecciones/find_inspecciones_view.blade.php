@@ -1,6 +1,6 @@
 @extends('layouts.layoutMaster')
 
-@section('title', 'Catálogo Instalaciones')
+@section('title', 'Inspecciones')
 
 @section('vendor-style')
 @vite([
@@ -29,7 +29,7 @@
 @endsection
 
 @section('page-script')
-@vite(['resources/js/instalaciones.js'])
+@vite(['resources/js/inspecciones.js'])
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const certificacionSelectAdd = document.getElementById('certificacion');
@@ -155,16 +155,16 @@
             <thead class="table-dark">
                 <tr>
                     <th></th>
-                    <th>ID</th>
-                    <th>Cliente</th>
-                    <th>Tipo</th>
-                    <th>Estado</th>
-                    <th>Dirección</th>
+                    <th>No.</th>
                     <th>Folio</th>
-                    <th>Organismo</th>
+                    <th>Cliente</th>
+                    <th>Fecha de solicitud</th>
+                    <th>No. de servicio</th>
+                    <th>Solicitud</th>
+                    <th>Fecha y hora de visita estimada</th>
+                    <th>Inspector asignado</th>
+                    <th>Fecha y hora de inspección</th>
                     <th>Certificado de instalaciones</th>
-                    <th>Fecha Emision</th>
-                    <th>Fecha Vigencia</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
