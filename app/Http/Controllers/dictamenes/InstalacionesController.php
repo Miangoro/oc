@@ -27,7 +27,7 @@ class InstalacionesController extends Controller
             1 => 'id_dictamen',
             2 => 'tipo_dictamen',
             3 => 'num_dictamen',
-            4 => 'id_inspeccion',
+            4 => 'num_servicio',
             5 => 'fecha_emision',
         ];
 
@@ -43,14 +43,16 @@ class InstalacionesController extends Controller
         $dir = $request->input('order.0.dir');
 
         if (empty($request->input('search.value'))) {
-            $users = Dictamen_instalaciones::offset($start)
+            $users = Dictamen_instalaciones::with('inspeccion')
+                ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
         } else {
             $search = $request->input('search.value');
 
-            $users = Dictamen_instalaciones::where('id_dictamen', 'LIKE', "%{$search}%")
+            $users = Dictamen_instalaciones::with('inspeccion')
+                ->where('id_dictamen', 'LIKE', "%{$search}%")
                 ->orWhere('tipo_dictamen', 'LIKE', "%{$search}%")
                 ->offset($start)
                 ->limit($limit)
@@ -72,7 +74,7 @@ class InstalacionesController extends Controller
                 $nestedData['fake_id'] = ++$ids;
                 $nestedData['tipo_dictamen'] = $user->tipo_dictamen;
                 $nestedData['num_dictamen'] = $user->num_dictamen;
-                $nestedData['id_inspeccion'] = $user->id_inspeccion;
+                $nestedData['id_inspeccion'] = $user->inspeccion->num_servicio;
                 $nestedData['fecha_emision'] = $user->fecha_emision;
 
                 $data[] = $nestedData;
