@@ -28,9 +28,10 @@ class inspecciones extends Model
         return $this->belongsTo(User::class, 'id_inspector', 'id');
     }
     
-    public function dictamen()
+    public function instalaciones()
     {
-        return $this->hasOne(Dictamen_instalaciones::class, 'id_inspeccion', 'id_inspeccion');
+        return $this->hasMany(Dictamen_instalaciones::class, 'id_inspeccion');
+
     }
 
 }
