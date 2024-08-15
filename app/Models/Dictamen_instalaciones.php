@@ -21,5 +21,10 @@ class Dictamen_instalaciones extends Model
         'categorias',
         'clases',
       ];
+
+      public function inspecciones()
+      {
+          return $this->belongsTo(inspecciones::class, 'id_inspeccion');
+      }
       
 }

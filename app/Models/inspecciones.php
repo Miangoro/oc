@@ -17,5 +17,11 @@ class inspecciones extends Model
         'num_servicio',
         'fecha_servicio',
     ];
+
+    public function instalaciones()
+    {
+        return $this->hasMany(Dictamen_instalaciones::class, 'id_inspeccion');
+    }
+
 }
 
