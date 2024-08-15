@@ -18,7 +18,6 @@ class inspecciones extends Model
         'fecha_servicio',
     ];
 
-<<<<<<< HEAD
     public function solicitud()
     {
         return $this->belongsTo(solicitudesModel::class, 'id_solicitud', 'id_solicitud');
@@ -27,11 +26,6 @@ class inspecciones extends Model
     public function inspector()
     {
         return $this->belongsTo(User::class, 'id_inspector', 'id');
-=======
-    public function instalaciones()
-    {
-        return $this->hasMany(Dictamen_instalaciones::class, 'id_inspeccion');
->>>>>>> 9cab7a888117f58c6a01321c8489349e1ab378d2
     }
 
 }
