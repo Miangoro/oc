@@ -34,10 +34,12 @@ $(function () {
         { data: 'fecha_visita' },
         { data: 'inspector' },
         { data: 'fecha_servicio' },
-        { data: 'fecha_servicio' },
+        { data: '' },
+        { data: 'action' }
+   
         
    
-        { data: 'actions' } // Asegúrate de que el campo de acción esté correctamente definido
+
       ],
       columnDefs: [
         {
@@ -61,7 +63,7 @@ $(function () {
         },
         {
           // email verify
-          targets: 11,
+          targets: 10,
           className: 'text-center',
           render: function (data, type, full, meta) {
   
@@ -73,26 +75,27 @@ $(function () {
           }
         },
         {
-          // Actions
-          targets: -1,
-          title: 'Acciones',
-          searchable: false,
-          orderable: false,
-          render: function (data, type, full, meta) {
-            return (
-              '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}" data-bs-toggle="modal" data-bs-target="#modalEditInstalacion"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                '<a href="' +
-                userView +
-                '" class="dropdown-item">View</a>' +
-                '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-              '</div>' +
-              '</div>'
-            );
+            // Acciones
+            targets: -1,
+            title: 'Acciones',
+            searchable: false,
+            orderable: false,
+            render: function (data, type, full, meta) {
+              return (
+                '<div class="d-flex align-items-center gap-50">' +
+               
+                '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
+                '<div class="dropdown-menu dropdown-menu-end m-0">' +
+  
+                `<a data-id="${full['id']}"  onclick="abrirModal(${full['id_solicitud']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
+                `<a data-id="${full['id']}"  onclick="abrirModal(${full['id_solicitud']})" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
+                `<a data-id="${full['id']}"  onclick="abrirModal(${full['id_solicitud']})" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
+                
+                '</div>' +
+                '</div>'
+              );
+            }
           }
-        }
       ],
       order: [[1, 'desc']],
       dom: '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
@@ -904,3 +907,4 @@ $(function () {
   //end
   });
   
+

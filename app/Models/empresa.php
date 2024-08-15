@@ -74,7 +74,7 @@ class empresa extends Model
 
     public function solicitudes()
     {
-        return $this->hasMany(solicitudesModel::class, 'id_empresa');
+        return $this->hasMany(solicitudesModel::class, 'id_empresa','id_empresa');
     }
     
 }

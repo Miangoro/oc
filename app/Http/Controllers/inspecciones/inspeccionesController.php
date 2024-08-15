@@ -105,10 +105,8 @@ class inspeccionesController extends Controller
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? 'Sin asignar';
                 $nestedData['inspector'] = $solicitud->inspector->name ?? 'Sin asignar'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? 'Sin asignar';
-                //$nestedData['url'] = !empty($instalacion->documentos->pluck('url')->toArray()) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first().'/'.implode(',', $instalacion->documentos->pluck('url')->toArray()) : '';
-                //$nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);
-                //$nestedData['fecha_vigencia'] = Helpers::formatearFecha($instalacion->fecha_vigencia);
-                $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $solicitud->id_solicitud . '">Eliminar</button>';
+
+
 
                 $data[] = $nestedData;
             }
