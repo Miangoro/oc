@@ -67,8 +67,14 @@ class empresa extends Model
     }
 
 
+    /*public function solicitudes(){
+        return solicitudesModel::where('id_empresa', $this->id_empresa)->get();
+    }*/
 
 
-
+    public function solicitudes()
+    {
+        return $this->hasMany(solicitudesModel::class, 'id_empresa','id_empresa');
+    }
     
 }

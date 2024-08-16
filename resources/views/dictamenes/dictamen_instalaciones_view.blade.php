@@ -53,7 +53,7 @@
                     <th>ID</th>
                     <th>Tipo de dictamen</th>
                     <th>No. dictamen</th>
-                    <th>Inspeccion</th>
+                    <th>No. Servicio</th>
                     <th>Fecha de emisión</th>
                     <th>Dictamen</th>
                     <th>ACCIONES</th>

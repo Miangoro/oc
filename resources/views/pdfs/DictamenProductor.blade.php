@@ -6,19 +6,28 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>F-UV-02-04 Ver 10, Dictamen de cumplimiento de Instalaciones como productor</title>
     <style>
+
+@font-face {
+            font-family: 'Lucida Sans Unicode';
+            src: url('/lsansuni.ttf') format('truetype');
+        }
+
         @page {
             size: 227mm 292mm;
-            margin: 15mm;  
+            margin-left: 1.83cm;  
+            margin-right: 1.83cm; 
+            margin-top: 0.92cm;
         }      
 
         body {
-            font-family: Arial, Helvetica, Verdana;
+            font-family: 'Lucida Sans Unicode';
         }
 
         .header img {
             float: left; 
             margin-left: -10px;
-            margin-top: -30px; 
+            margin-top: -15px; 
+            
         }
 
         .description1 {
@@ -26,6 +35,7 @@
             font-weight: bold;
             text-align: right;
             color: #151442; 
+            width: 95%;
         }
 
         .description2 {
@@ -33,6 +43,7 @@
             text-align: right;
             font-size: 9.5px;
             color: #151442;
+            width: 95%;
         }
 
         .description3 {
@@ -40,6 +51,7 @@
             text-align: right;
             font-size: 10px;
             color: #151442;
+            width: 95%;
         }
 
         .textimg {
@@ -55,16 +67,18 @@
         }
 
         .title {
-            font-weight: bold;
+          
             text-align: center;
-            font-size: 20px; 
+            font-size: 28px; 
+            font-family: 'Arial Negrita', Gadget, sans-serif;
+          
         }
 
         .footer-bar {
             position: fixed;
             bottom: -55px;
-            left: -60px;
-            right: -60px;
+            left: -70px;
+            right: -70px;
             width: calc(100% - 40px);
             height: 30px;
             background-color: #158F60;
@@ -153,12 +167,12 @@
 </head>
 <body>
     <div class="header">
-        <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="270px">
+        <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="275px">
     </div>
-
-    <div class="description1">Unidad de Inspección No. UVNOM-129</div>
-    <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
-    <div class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C</div>
+    <br>
+    <div style="border: 2px solid" class="description1">Unidad de Inspección No. UVNOM-129</div>
+    <div style="border: 2px solid" class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
+    <div style="border: 2px solid" class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C</div>
     <br>
     <div class="textimg">No.: UMC-00__/20___</div>
     <br>

@@ -1,6 +1,6 @@
 @extends('layouts.layoutMaster')
 
-@section('title', 'Catálogo Instalaciones')
+@section('title', 'Inspecciones')
 
 @section('vendor-style')
 @vite([
@@ -29,7 +29,7 @@
 @endsection
 
 @section('page-script')
-@vite(['resources/js/instalaciones.js'])
+@vite(['resources/js/inspecciones.js'])
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const certificacionSelectAdd = document.getElementById('certificacion');
@@ -155,16 +155,16 @@
             <thead class="table-dark">
                 <tr>
                     <th></th>
-                    <th>ID</th>
-                    <th>Cliente</th>
-                    <th>Tipo</th>
-                    <th>Estado</th>
-                    <th>Dirección</th>
+                    <th>No.</th>
                     <th>Folio</th>
-                    <th>Organismo</th>
+                    <th>Cliente</th>
+                    <th>Fecha de solicitud</th>
+                    <th>No. de servicio</th>
+                    <th>Solicitud</th>
+                    <th>Fecha y hora de visita estimada</th>
+                    <th>Inspector asignado</th>
+                    <th>Fecha y hora de inspección</th>
                     <th>Certificado de instalaciones</th>
-                    <th>Fecha Emision</th>
-                    <th>Fecha Vigencia</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -402,7 +402,37 @@
 
     <!-- Modal -->
     @include('_partials._modals.modal-pdfs-frames')
+    @include('_partials._modals.modal-expediente-servicio')
     <!-- /Modal -->
 
 </div>
 @endsection
+
+<script>
+    function abrirModal(id_empresa) {
+    // Hacer una petición AJAX para obtener los detalles de la empresa
+    $.ajax({
+        url: '/lista_empresas/' + id_empresa,
+        method: 'GET',
+        success: function(response) {
+            // Cargar los detalles en el modal
+            var contenido = "";
+
+          for (let index = 0; index < response.normas.length; index++) {
+            contenido = '<input value="'+response.normas[index].id_norma+'" type="hidden" name="id_norma[]"/><div class="col-12 col-md-12 col-sm-12"><div class="form-floating form-floating-outline"><input type="text" id="numero_cliente'+response.normas[index].id_norma+'" name="numero_cliente[]" class="form-control" placeholder="Introducir el número de cliente" /><label for="modalAddressFirstName">Número de cliente para la norma '+response.normas[index].norma+'</label></div></div><br>' + contenido;
+            console.log(response.normas[index].norma);
+          }
+           
+
+         //   $('.contenido').html(contenido);
+           
+            // Abrir el modal
+            $('#expedienteServicio').modal('show');
+        },
+        error: function() {
+            alert('Error al cargar los detalles de la empresa.');
+        }
+    });
+  }
+</script>
+
