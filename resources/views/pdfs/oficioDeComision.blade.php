@@ -54,6 +54,7 @@
         .signature {
             margin-top: 20px;
             text-align: center;
+            font-size: 14px;
         }
 
 
@@ -62,9 +63,8 @@
     margin-top: 0;
   }
   .footer{
-    margin-top: 20%;
+    margin-top: 45px;
     font-size: 10px;
-    margin: 25px;
     text-align: center;
   }
     </style>
@@ -89,13 +89,13 @@
             <p>
                 Oficio No. _____/20___<br>
                 Oficina: Gerencia Técnica<br>
-                _______ , ___ a ___ de ____ del 20___
+                ______________ , ___ a ___ de ____ del 20___
             </p>
         </div>
 
 
         <p>
-            C. ____________________<br>
+            C. __________________________<br>
             Inspector designado
         </p>
 
