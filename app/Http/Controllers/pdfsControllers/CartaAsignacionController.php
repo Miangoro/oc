@@ -114,6 +114,14 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
         return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
+
+//PDF oficio de comisión
+public function Comision()
+{
+    $pdf = Pdf::loadView('pdfs.oficioDeComision');
+    return $pdf->stream('F-UV-02-09 Oficio de Comisión Ed.5, Vigente.pdf');
+}
+    
 }
 
 
