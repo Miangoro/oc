@@ -18,7 +18,7 @@ class PrediosController extends Controller
     public function UserManagement()
     {
         $predios = Predios::with('empresa')->get(); // Obtener todos los registros con la relación cargada
-        $empresas = Empresa::all(); // Obtener todas las empresas
+        $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $tipos = Tipos::all(); // Obtén todos los tipos de agave
     
         return view('domicilios.find_domicilio_predios_view', [
@@ -45,7 +45,10 @@ class PrediosController extends Controller
     
         $search = [];
     
-        $totalData = Predios::count();
+        // Obtener el total de registros filtrados
+        $totalData = Predios::whereHas('empresa', function ($query) {
+            $query->where('tipo', 2);
+        })->count();
     
         $totalFiltered = $totalData;
     
@@ -56,6 +59,9 @@ class PrediosController extends Controller
     
         if (empty($request->input('search.value'))) {
             $predios = Predios::with('empresa') // Carga la relación
+                ->whereHas('empresa', function ($query) {
+                    $query->where('tipo', 2);
+                })
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
@@ -64,6 +70,9 @@ class PrediosController extends Controller
             $search = $request->input('search.value');
     
             $predios = Predios::with('empresa')
+                ->whereHas('empresa', function ($query) {
+                    $query->where('tipo', 2);
+                })
                 ->where(function ($query) use ($search) {
                     $query->whereHas('empresa', function ($q) use ($search) {
                         $q->where('razon_social', 'LIKE', "%{$search}%");
@@ -81,6 +90,9 @@ class PrediosController extends Controller
                 ->get();
     
             $totalFiltered = Predios::with('empresa')
+                ->whereHas('empresa', function ($query) {
+                    $query->where('tipo', 2);
+                })
                 ->where(function ($query) use ($search) {
                     $query->whereHas('empresa', function ($q) use ($search) {
                         $q->where('razon_social', 'LIKE', "%{$search}%");
@@ -123,6 +135,7 @@ class PrediosController extends Controller
             'data' => $data,
         ]);
     }
+    
 
         // Función para eliminar un predio
         public function destroy($id_predio)

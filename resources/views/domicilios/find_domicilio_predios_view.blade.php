@@ -276,7 +276,7 @@
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 id="modalAddPredioLabel" class="modal-title">Nuevo Predio</h5>
+                        <h5 id="modalAddPredioLabel" class="modal-title">Editar Predio</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
