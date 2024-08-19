@@ -664,6 +664,8 @@ $(function () {
 
    /* registrar un nuevo predio */
 
+
+
    $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -704,6 +706,13 @@ $(function () {
                     }
                 }
             },
+            puntos_referencia: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa los puntos de referencia'
+                    }
+                }
+            },       
             ubicacion_predio: {
                 validators: {
                     notEmpty: {
@@ -725,6 +734,40 @@ $(function () {
                 validators: {
                     notEmpty: {
                         message: 'Por favor selecciona si el predio cuenta con coordenadas'
+                    }
+                }
+            },
+            'id_tipo[]': {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor selecciona el tipo de agave/maguey'
+                    }
+                }
+            },
+            'numero_plantas[]': {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa el número de plantas'
+                    },
+                    numeric: {
+                        message: 'Por favor ingresa un valor numérico válido'
+                    }
+                }
+            },
+            'edad_plantacion[]': {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa la edad de la plantación'
+                    },
+                    numeric: {
+                        message: 'Por favor ingresa un valor numérico válido'
+                    }
+                }
+            },
+            'tipo_plantacion[]': {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa el tipo de plantación'
                     }
                 }
             }
@@ -872,99 +915,99 @@ $(document).on('click', '.edit-record', function () {
                 if (data.plantaciones.length > 0) {
                     data.plantaciones.forEach(function (plantacion) {
                         var newRow = `
-                    <tr class="plantacion-row">
-                        <td rowspan="4">
-                            <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
-                        </td>
-                        <td><b>Nombre y Especie de Agave/Maguey</b></td>
-                        <td>
-                            <div class="form-floating form-floating-outline mb-3">
-                                <select name="id_tipo[]" class="form-select tipo_agave">
-                                    <option disabled>Tipo de agave</option>
-                                    ${tipoOptions}
-                                </select>
-                                <label for="especie_agave">Nombre y Especie de Agave/Maguey</label>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="plantacion-row">
-                        <td><b>Número de Plantas</b></td>
-                        <td>
-                            <div class="form-floating form-floating-outline">
-                                <input type="number" class="form-control" required name="numero_plantas[]" value="${plantacion.num_plantas}" placeholder="Número de plantas" step="1">
-                                <label for="numero_plantas">Número de Plantas</label>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="plantacion-row">
-                        <td><b>Edad de la Plantación</b></td>
-                        <td>
-                            <div class="form-floating form-floating-outline">
-                                <input type="number" class="form-control" required name="edad_plantacion[]" value="${plantacion.anio_plantacion}" placeholder="Edad de la plantación (años)" step="1">
-                                <label for="edad_plantacion">Edad de la Plantación</label>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="plantacion-row">
-                        <td><b>Tipo de Plantación</b></td>
-                        <td>
-                            <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" required name="tipo_plantacion[]" value="${plantacion.tipo_plantacion}" placeholder="Tipo de plantación">
-                                <label for="tipo_plantacion">Tipo de Plantación</label>
-                            </div>
-                        </td>
-                    </tr>`;
-
+                            <tr class="plantacion-row">
+                                <td rowspan="4">
+                                    <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
+                                </td>
+                                <td><b>Nombre y Especie de Agave/Maguey</b></td>
+                                <td>
+                                    <div class="form-floating form-floating-outline mb-3">
+                                        <select name="id_tipo[]" class="form-select tipo_agave">
+                                            <option disabled>Tipo de agave</option>
+                                            ${tipoOptions}
+                                        </select>
+                                        <label for="especie_agave">Nombre y Especie de Agave/Maguey</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="plantacion-row">
+                                <td><b>Número de Plantas</b></td>
+                                <td>
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="number" class="form-control" name="numero_plantas[]" value="${plantacion.num_plantas}" placeholder="Número de plantas" step="1">
+                                        <label for="numero_plantas">Número de Plantas</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="plantacion-row">
+                                <td><b>Edad de la Plantación</b></td>
+                                <td>
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="number" class="form-control" name="edad_plantacion[]" value="${plantacion.anio_plantacion}" placeholder="Edad de la plantación (años)" step="1">
+                                        <label for="edad_plantacion">Edad de la Plantación</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="plantacion-row">
+                                <td><b>Tipo de Plantación</b></td>
+                                <td>
+                                    <div class="form-floating form-floating-outline">
+                                        <input type="text" class="form-control" name="tipo_plantacion[]" value="${plantacion.tipo_plantacion}" placeholder="Tipo de plantación">
+                                        <label for="tipo_plantacion">Tipo de Plantación</label>
+                                    </div>
+                                </td>
+                            </tr>`;
                         $('.edit_ContenidoPlantacion').append(newRow);
                         // Seleccionar el tipo de agave actual
                         $('.edit_ContenidoPlantacion').find('select[name="id_tipo[]"]').last().val(plantacion.id_tipo);
                     });
                 } else {
                     var emptyRow = `
-                <tr>
-                    <td rowspan="4">
-                        <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
-                    </td>
-                    <td><b>Nombre y Especie de Agave/Maguey</b></td>
-                    <td>
-                        <div class="form-floating form-floating-outline mb-3">
-                            <select name="id_tipo[]" class="form-select tipo_agave">
-                                <option value="" disabled>Tipo de agave</option>
-                                ${tipoOptions}
-                            </select>
-                            <label for="especie_agave">Nombre y Especie de Agave/Maguey</label>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>Número de Plantas</b></td>
-                    <td>
-                        <div class="form-floating form-floating-outline">
-                            <input type="number" class="form-control" name="numero_plantas[]" placeholder="Número de plantas" step="1">
-                            <label for="numero_plantas">Número de Plantas</label>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>Edad de la Plantación</b></td>
-                    <td>
-                        <div class="form-floating form-floating-outline">
-                            <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Edad de la plantación (años)" step="1">
-                            <label for="edad_plantacion">Edad de la Plantación</label>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td><b>Tipo de Plantación</b></td>
-                    <td>
-                        <div class="form-floating form-floating-outline">
-                            <input type="text" class="form-control" name="tipo_plantacion[]" placeholder="Tipo de plantación">
-                           <label for="tipo_plantacion">Tipo de Plantación</label>
-                           </div>
-                       </td>
-                   </tr>`;
+                        <tr>
+                            <td rowspan="4">
+                                <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
+                            </td>
+                            <td><b>Nombre y Especie de Agave/Maguey</b></td>
+                            <td>
+                                <div class="form-floating form-floating-outline mb-3">
+                                    <select name="id_tipo[]" class="form-select tipo_agave">
+                                        <option value="" disabled>Tipo de agave</option>
+                                        ${tipoOptions}
+                                    </select>
+                                    <label for="especie_agave">Nombre y Especie de Agave/Maguey</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Número de Plantas</b></td>
+                            <td>
+                                <div class="form-floating form-floating-outline">
+                                    <input type="number" class="form-control" name="numero_plantas[]" placeholder="Número de plantas" step="1">
+                                    <label for="numero_plantas">Número de Plantas</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Edad de la Plantación</b></td>
+                            <td>
+                                <div class="form-floating form-floating-outline">
+                                    <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Edad de la plantación (años)" step="1">
+                                    <label for="edad_plantacion">Edad de la Plantación</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Tipo de Plantación</b></td>
+                            <td>
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" class="form-control" name="tipo_plantacion[]" placeholder="Tipo de plantación">
+                                    <label for="tipo_plantacion">Tipo de Plantación</label>
+                                </div>
+                            </td>
+                        </tr>`;
                     $('.edit_ContenidoPlantacion').append(emptyRow);
                 }
+                
 
                 // Mostrar el modal
                 $('#modalEditPredio').modal('show');
@@ -1035,6 +1078,13 @@ $(function () {
                     }
                 }
             },
+            puntos_referencia: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa los puntos de referencia'
+                    }
+            }
+         },
             ubicacion_predio: {
                 validators: {
                     notEmpty: {
