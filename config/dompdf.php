@@ -11,7 +11,7 @@ return array(
     | in dompdf_config.inc.php. You can also override the entire config file.
     |
     */
-    'show_warnings' => false,   // Throw an Exception on warnings from dompdf
+    'show_warnings' => true,   // Throw an Exception on warnings from dompdf
 
     'public_path' => null,  // Override the public path if needed
 
@@ -45,7 +45,7 @@ return array(
          * Times-Roman, Times-Bold, Times-BoldItalic, Times-Italic,
          * Symbol, ZapfDingbats.
          */
-        "font_dir" => storage_path('fonts'), // advised by dompdf (https://github.com/dompdf/dompdf/pull/782)
+        'font_dir' => public_path('fonts/'), // advised by dompdf (https://github.com/dompdf/dompdf/pull/782)
 
         /**
          * The location of the DOMPDF font cache directory
@@ -55,7 +55,29 @@ return array(
          *
          * Note: This directory must exist and be writable by the webserver process.
          */
-        "font_cache" => storage_path('fonts'),
+        "font_cache" => storage_path('fonts/'),
+
+        
+
+
+        'fonts' => [
+            'Century Gothic' => [
+                'R'  => 'GOTHIC.TTF',    // Regular
+                'B'  => 'centuryGhoticNegrita.ttf', // Bold (si la tienes)
+                'I'  => 'GOTHICI.TTF', // Italic (si la tienes)
+                'BI' => 'GOTHICBI.TTF' // Bold Italic (si la tienes)
+            ],
+
+            'Lucida Sans Unicode' => [
+                'R'  => 'lsansuni.ttf',    // Regular
+                'B'  => 'LSANSD.TTF', // Bold (si la tienes)
+                'I'  => 'LSANSDI.TTF', // Italic (si la tienes)
+            ],
+
+            'Arial Negrita' => [
+                'R'  => 'arial-negrita.ttf', 
+            ]
+        ],
 
         /**
          * The location of a temporary directory.
@@ -169,7 +191,7 @@ return array(
          *
          * @see CPDF_Adapter::PAPER_SIZES for valid sizes ('letter', 'legal', 'A4', etc.)
          */
-        "default_paper_size" => "a4",
+        "default_paper_size" => "letter",
 
          /**
           * The default paper orientation.

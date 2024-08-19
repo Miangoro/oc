@@ -93,16 +93,21 @@
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-5">
-                        <input class="form-control" type="number" placeholder="%ART"
+                        <input class="form-control" type="text" placeholder="Ingrese la edad"
+                            id="edit_edad" name="edad"/>
+                        <label for="edit_edad">Edad</label>
+                    </div>
+                    <div class="form-floating form-floating-outline mb-5">
+                        <input step="any" class="form-control" type="number" placeholder="%ART"
                             id="edit_id_art" name="art" />
                         <label for="edit_id_art">%ART</label>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number"
+                                <input step="any" class="form-control" type="number"
                                     placeholder="Ingrese la cantiad de maguey" id="edit_kg_magey"
-                                    name="kgmaguey" />
+                                    name="kg_maguey" />
                                 <label for="edit_kg_magey">KG de maguey</label>
                             </div>
                         </div>
@@ -111,38 +116,37 @@
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="text"
                                     placeholder="Ingrese un numero de lote o tapada" id="edit_no_lote_pedido"
-                                    name="lotepedido" />
+                                    name="no_lote_pedido" />
                                 <label for="edit_no_lote_pedido">No. de lote o No. de tapada</label>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="date" class="form-control" id="edit_fecha_corte" placeholder="fecha"
-                                    name="fechacorte" aria-label="fechacorte">
+                                <input type="date" class="form-control" id="edit_fecha_corte" placeholder="fecha_corte"
+                                    name="fecha_corte" aria-label="fechacorte">
                                 <label for="edit_fecha_corte">Fecha de corte</label>
                             </div>
                         </div>
                         <div class="form-floating form-floating-outline mb-5">
-                            <input class="form-control" type="text" placeholder="Ingrese observaciones"
-                                id="edit_id_observaciones" name="observaciones" />
+                            <textarea name="observaciones" class="form-control h-px-100" id="edit_id_observaciones" placeholder="Observaciones..."></textarea>
                             <label for="edit_id_observaciones">Observaciones</label>
                         </div>
-{{--                         <div class="form-floating form-floating-outline">
+                         <div class="form-floating form-floating-outline mb-5">
                             <input class="form-control form-control-sm" type="file" id="file" name="url[]">
                             <input value="0" class="form-control" type="hidden" name="id_documento[]">
                             <input value="Certificado de instalaciones" class="form-control" type="hidden" name="nombre_documento[]">
-                            <label for="certificado_instalaciones">Adjuntar Certificado de instalaciones</label>
+                            <label for="certificado_instalaciones">Adjuntar Guia escaneada</label>
                         </div>
 
-                        <div class="form-floating form-floating-outline">
+                        <div class="form-floating form-floating-outline mb-5">
                             <input class="form-control form-control-sm" type="file" id="file" name="url[]">
                             <input value="0" class="form-control" type="hidden" name="id_documento[]">
                             <input value="Certificado de instalaciones" class="form-control" type="hidden" name="nombre_documento[]">
-                            <label for="certificado_instalaciones">Adjuntar Certificado de instalaciones</label>
-                        </div> --}}
+                            <label for="certificado_instalaciones">Adjuntar resultados  de ART</label>
+                        </div> 
                     </div>
-{{-- 
+
                     <div class="text-center mb-6">
                         <h4 class="address-title mb-2">Datos del comprador</h4>
                     </div>
@@ -150,35 +154,36 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="text"
-                                    placeholder="Número de plantas actualmente" id=""
-                                    name="plantas" />
-                                <label for="">Nombre del cliente/comprador</label>
+                                    placeholder="Ingrese el nombre del cliente/comprador" id="edit_nombre_cliente"
+                                    name="nombre_cliente" />
+                                <label for="edit_nombre_cliente">Nombre del cliente/comprador</label>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number"
-                                    placeholder="Número de plantas actualmente" id=""
-                                    name="plantas" />
-                                <label for="">No del cliente/comprador</label>
+                                    placeholder="Ingrese el No. del cliente/comprador" id="edit_no_cliente"
+                                    name="no_cliente" />
+                                <label for="edit_no_cliente">No del cliente/comprador</label>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="date" class="form-control" id="" placeholder="fecha"
-                                    name="fecha_emision" aria-label="Nombre">
-                                <label for="">Fecha de ingreso</label>
+                                <input type="date" class="form-control" id="edit_fecha_ingreso" placeholder="fecha_ingreso"
+                                    name="fecha_ingreso" aria-label="fecha_ingreso">
+                                <label for="edit_fecha_ingreso">Fecha de ingreso</label>
+                                
                             </div>
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-5">
-                        <input class="form-control" type="text" placeholder="Número de plantas actualmente"
-                            id="" name="plantas" />
-                        <label for="">Domicilio de entrega</label>
+                        <input class="form-control" type="text" placeholder="Ingrese el domicilio de entrega"
+                            id="edit_domicilio" name="domicilio" />
+                        <label for="edit_domicilio">Domicilio de entrega</label>
                     </div>                    
-                </div> --}}
+                </div> 
                 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Actualizar</button>
@@ -272,4 +277,6 @@
         // Asignar el valor calculado al input
         document.getElementById('edit_numero_plantas').value = plantasActualmente;
     }
+
+    
 </script>

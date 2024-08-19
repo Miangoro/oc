@@ -49,6 +49,7 @@
          { data: 'num_dictamen' },
          { data: 'id_inspeccion' },
          { data: 'fecha_emision' },
+         { data: '' },
          { data: 'action' }
  
        ],
@@ -114,6 +115,15 @@
             render: function (data, type, full, meta) {
               var $fecha = full['fecha_emision'];
               return '<span class="user-email">' + $fecha + '</span>';
+            }
+          },
+          {
+            // email verify
+            targets: 6,
+            className: 'text-center',
+            render: function (data, type, full, meta) {
+              var $id = full['id_guia'];
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
             }
           },
  
@@ -559,7 +569,19 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
 });
 
 
+  
+//Reciben los datos del pdf
+$(document).on('click', '.pdf', function () {
+  var id = $(this).data('id');
+  var registro = $(this).data('registro');
+      var iframe = $('#pdfViewer');
+      iframe.attr('src', '../dictamen_productor/');
 
+      $("#titulo_modal").text("Dictamen de productor");
+      $("#subtitulo_modal").text(registro);
+      
+    
+});
 
  
  

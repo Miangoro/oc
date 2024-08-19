@@ -175,9 +175,10 @@ $(function () {
              
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
+
+              `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editCliente"   onclick="abrirModal(${full['id_empresa']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-edit-fill"></i>Editar</a>` +
+              `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-search-eye-line"></i>Otra opción</a>` +
               
-              `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-search-eye-line"></i> Validar solicitud</a>` +
-              `<a data-id="${full['id_empresa']}"  data-bs-toggle="modal" data-bs-dismiss="modal" onclick="abrirModal(${full['id_empresa']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-success ri-checkbox-circle-fill"></i> Aceptar cliente</a>` +
               '</div>' +
               '</div>'
             );
@@ -729,4 +730,80 @@ $(function () {
       });
     });
   }
+  //AQUI termina
+  
+
+// FUNCION PARA EDITAR un registro
+$(document).ready(function() {
+   // Abrir el modal y cargar datos para editar
+   $(document).on('click', '.edit-record', function () { 
+    var id = $(this).data('id');
+
+   
+    // Realizar la solicitud AJAX para obtener los datos de la clase
+    $.get('/cliente_confirmado/' + id + '/edit', function (data) {
+      $('#edit_id').val(data.id);
+      $('#edit_id_empresa').val(data.id_empresa);
+      $('#edit_num_cliente').val(data.num_cliente);
+      $('#edit_id_norma').val(data.id_norma);
+
+      
+          // Mostrar el modal de edición
+          $('#editCliente').offcanvas('show');
+      }).fail(function() {
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al obtener los datos',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      });
+  });
+
+  // Manejar el envío del formulario de edición
+  $('#editClienteForm').on('submit', function(e) {
+      e.preventDefault();
+
+      var formData = $(this).serialize();
+      var id = $('#edit_id').val(); // Obtener el ID de la clase desde el campo oculto
+
+      $.ajax({
+          url: '/cliente_confirmado/' + id_tipo,
+          type: 'PUT',
+          data: formData,
+          success: function(response) {
+              $('#editCliente').offcanvas('hide'); // Ocultar el modal de edición "DIV"
+              $('#editClienteForm')[0].reset(); // Limpiar el formulario "FORM"
+
+              // Mostrar alerta de éxito
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.success,
+                  customClass: {
+                      confirmButton: 'btn btn-success'
+                  }
+              });
+
+              // Recargar los datos en la tabla sin reinicializar DataTables
+              $('.datatables-users').DataTable().ajax.reload();
+          },
+          error: function(xhr) {
+            console.log('Error:', xhr.responseText);
+              // Mostrar alerta de error
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Error al actualizar la clase',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+      });
+  });
+});
+
 });

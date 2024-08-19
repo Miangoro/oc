@@ -53,7 +53,11 @@ class GuiasController  extends Controller
             12 => 'kg_magey',
             13 => 'no_lote_pedido',
             14 => 'fecha_corte',
-            15 => 'id_observaciones',
+            15 => 'observaciones',
+            16 => 'nombre_cliente',
+            17 => 'no_cliente',
+            18 => 'fecha_ingreso',
+            19 => 'domicilio',
 
 
         ];
@@ -110,7 +114,12 @@ class GuiasController  extends Controller
                     'kg_magey' => $user->kg_magey,
                     'no_lote_pedido' => $user->no_lote_pedido,
                     'fecha_corte' => $user->fecha_corte,
-                    'id_observaciones' => $user->id_observaciones,
+                    'observaciones' => $user->observaciones,
+                    'nombre_cliente' => $user->nombre_cliente,
+                    'no_cliente' => $user->no_cliente,
+                    'fecha_ingreso' => $user->fecha_ingreso,
+                    'domicilio' => $user->domicilio,
+
 
                 ];
 
@@ -187,21 +196,7 @@ public function edit($id_guia)
 // Método para actualizar una guía existente
 public function update(Request $request, $id_guia)
 {
-    $request->validate([
-        'empresa' => 'required|exists:empresa,id_empresa',
-        'numero_guias' => 'required|numeric',
-        'predios' => 'required|exists:predios,id_predio',
-        'plantacion' => 'required|exists:plantaciones,id_plantacion',
-        'anterior' => 'required|numeric',
-        'comercializadas' => 'required|numeric',
-        'mermas' => 'required|numeric',
-        'plantas' => 'required|numeric',
-        'art' => 'required|numeric',
-        'kgmaguey' => 'required|numeric',
-        'lotepedido' => 'required|string',
-        'fechacorte' => 'required|date',
-        'observaciones' => 'required|string',
-    ]);
+    
 
     try {
         $guia = guias::findOrFail($id_guia);
@@ -213,11 +208,17 @@ public function update(Request $request, $id_guia)
         $guia->num_comercializadas = $request->input('comercializadas');
         $guia->mermas_plantas = $request->input('mermas');
         $guia->numero_plantas = $request->input('plantas');
+        $guia->edad = $request->input('edad');
         $guia->art = $request->input('art');
-        $guia->kg_maguey = $request->input('kgmaguey');
-        $guia->lote_pedido = $request->input('lotepedido');
-        $guia->fecha_corte = $request->input('fechacorte');
+        $guia->kg_maguey = $request->input('kg_maguey');
+        $guia->no_lote_pedido = $request->input('no_lote_pedido');
+        $guia->fecha_corte = $request->input('fecha_corte');
         $guia->observaciones = $request->input('observaciones');
+        $guia->nombre_cliente = $request->input('nombre_cliente');
+        $guia->no_cliente = $request->input('no_cliente');
+        $guia->fecha_ingreso = $request->input('fecha_ingreso');
+        $guia->domicilio = $request->input('domicilio');
+
         $guia->save();
 
         return response()->json(['success' => 'Guía actualizada correctamente']);
@@ -232,7 +233,8 @@ public function update(Request $request, $id_guia)
         //Metodo para llenar el pdf
         public function guiasTranslado($id_guia)
         {   
-            $res = DB::select('SELECT f.numero_cliente, p.nombre_productor, a.razon_social, p.nombre_predio, p.num_predio, a.razon_social, t.nombre, t.cientifico, s.num_plantas, s.anio_plantacion, e.id_guia, e.folio, e.id_empresa, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas 
+            $res = DB::select('SELECT f.numero_cliente, p.nombre_productor, a.razon_social, p.nombre_predio, p.num_predio, a.razon_social, t.nombre, t.cientifico, s.num_plantas, s.anio_plantacion, e.id_guia, e.folio, e.id_empresa, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas,
+            e.art,e.kg_maguey,e.no_lote_pedido,e.fecha_corte, e.edad, e.nombre_cliente,e.no_cliente,e.fecha_ingreso,e.domicilio
             FROM guias e 
             JOIN predios p ON (e.id_predio = p.id_predio) 
             JOIN predio_plantacion s ON (e.id_plantacion = s.id_plantacion) 

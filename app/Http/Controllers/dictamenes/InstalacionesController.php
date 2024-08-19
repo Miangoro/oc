@@ -8,6 +8,10 @@ use App\Models\Dictamen_instalaciones;
 use App\Models\Clases; 
 use App\Models\inspecciones; 
 
+use App\Models\empresa; 
+use App\Models\solicitudesModel; 
+
+
 
 class InstalacionesController extends Controller
 {
@@ -17,7 +21,9 @@ class InstalacionesController extends Controller
         $dictamenes = Dictamen_instalaciones::all(); // Obtener todos los datos
         $clases = Clases::all();
         $inspeccion = inspecciones::all();
-        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'inspeccion'));
+        $empresa = empresa::all();
+        $soli = solicitudesModel::all();
+        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'inspeccion', 'empresa', 'soli'));
     }
 
 
@@ -27,7 +33,7 @@ class InstalacionesController extends Controller
             1 => 'id_dictamen',
             2 => 'tipo_dictamen',
             3 => 'num_dictamen',
-            4 => 'id_inspeccion',
+            4 => 'num_servicio',
             5 => 'fecha_emision',
         ];
 
@@ -43,14 +49,16 @@ class InstalacionesController extends Controller
         $dir = $request->input('order.0.dir');
 
         if (empty($request->input('search.value'))) {
-            $users = Dictamen_instalaciones::offset($start)
+            $users = Dictamen_instalaciones::with('inspeccione')
+                ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
         } else {
             $search = $request->input('search.value');
 
-            $users = Dictamen_instalaciones::where('id_dictamen', 'LIKE', "%{$search}%")
+            $users = Dictamen_instalaciones::with('inspeccione')
+                ->where('id_dictamen', 'LIKE', "%{$search}%")
                 ->orWhere('tipo_dictamen', 'LIKE', "%{$search}%")
                 ->offset($start)
                 ->limit($limit)
@@ -72,7 +80,7 @@ class InstalacionesController extends Controller
                 $nestedData['fake_id'] = ++$ids;
                 $nestedData['tipo_dictamen'] = $user->tipo_dictamen;
                 $nestedData['num_dictamen'] = $user->num_dictamen;
-                $nestedData['id_inspeccion'] = $user->id_inspeccion;
+                $nestedData['id_inspeccion'] = $user->inspeccione->num_servicio;
                 $nestedData['fecha_emision'] = $user->fecha_emision;
 
                 $data[] = $nestedData;

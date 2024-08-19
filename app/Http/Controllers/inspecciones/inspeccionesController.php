@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\Helpers;
+use App\Models\solicitudesModel;
 
 class inspeccionesController extends Controller
 {
@@ -23,28 +24,27 @@ class inspeccionesController extends Controller
         $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = Estados::all(); // Obtener todos los estados
         $organismos = Organismos::all(); // Obtener todos los organismos
-        return view('domicilios.find_domicilio_instalaciones_view', compact('instalaciones', 'empresas', 'estados', 'organismos'));
+        return view('inspecciones.find_inspecciones_view', compact('instalaciones', 'empresas', 'estados', 'organismos'));
     }
 
     public function index(Request $request)
     {
         $columns = [
-            1 => 'id_instalacion',
-            2 => 'direccion_completa',
-            3 => 'estado',
-            4 => 'folio',
-            5 => 'tipo',
-            6 => 'id_organismo',
-            7 => 'url',
-            8 => 'fecha_emision',
-            9 => 'fecha_vigencia'
+            1 => 'id_solicitud',
+            2 => 'folio',
+            3 => 'razon_social',
+            4 => 'fecha_solicitud',
+            5 => 'num_servicio',
+            6 => 'tipo',
+            7 => 'inspector',
+            8 => 'fecha_servicio',
+            9 => 'fecha_visita',
+            10 => 'name',
         ];
 
         $search = [];
 
-        $totalData = Instalaciones::whereHas('empresa', function ($query) {
-            $query->where('tipo', 2);
-        })->count();
+        $totalData = solicitudesModel::count();
 
         $totalFiltered = $totalData;
 
@@ -53,87 +53,60 @@ class inspeccionesController extends Controller
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
 
+       
+
         if (empty($request->input('search.value'))) {
-            $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
-                ->whereHas('empresa', function ($query) {
-                    $query->where('tipo', 2);
-                }) ->where(function ($query) {
-                    $query->whereHas('documentos', function ($query) {
-                        $query->whereIn('id_documento', [127, 128, 129]);
-                    })
-                    ->orWhereDoesntHave('documentos');
-                })
+           
+
+                $solicitudes = solicitudesModel::with('empresa','inspeccion','inspector')
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
+
         } else {
             $search = $request->input('search.value');
 
-            $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
-                ->whereHas('empresa', function ($query) {
-                    $query->where('tipo', 2);
-                }) ->where(function ($query) {
-                    $query->whereHas('documentos', function ($query) {
-                        $query->whereIn('id_documento', [127, 128, 129]);
-                    })
-                    ->orWhereDoesntHave('documentos');
-                })
+            $query = solicitudesModel::with('empresa');
+            dd($query->toSql());
+            
+
+            $solicitudes = solicitudesModel::with('empresa','inspeccion','inspector')
                 ->where(function ($query) use ($search) {
-                    $query->where('id_instalacion', 'LIKE', "%{$search}%")
-                        ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
-                        ->orWhere('estado', 'LIKE', "%{$search}%")
-                        ->orWhere('folio', 'LIKE', "%{$search}%")
-                        ->orWhere('tipo', 'LIKE', "%{$search}%")
-                        ->orWhere('id_organismo', 'LIKE', "%{$search}%")
-                        ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
-                        ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%");
+                    $query->where('id_solicitud', 'LIKE', "%{$search}%")
+                        ->orWhere('razon_social', 'LIKE', "%{$search}%");
                 })
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
 
-            $totalFiltered = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
-                ->whereHas('empresa', function ($query) {
-                    $query->where('tipo', 2);
-                })->where(function ($query) {
-                    $query->whereHas('documentos', function ($query) {
-                        $query->whereIn('id_documento', [127, 128, 129]);
-                    })
-                    ->orWhereDoesntHave('documentos');
-                })
+            $totalFiltered =  solicitudesModel::with('empresa','inspeccion','inspector')
                 ->where(function ($query) use ($search) {
-                    $query->where('id_instalacion', 'LIKE', "%{$search}%")
-                        ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
-                        ->orWhere('estado', 'LIKE', "%{$search}%")
-                        ->orWhere('folio', 'LIKE', "%{$search}%")
-                        ->orWhere('tipo', 'LIKE', "%{$search}%")
-                        ->orWhere('id_organismo', 'LIKE', "%{$search}%")
-                        ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
-                        ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%");
+                    $query->where('id_solicitud', 'LIKE', "%{$search}%")
+                        ->orWhere('razon_social', 'LIKE', "%{$search}%");
                 })
                 ->count();
         }
 
         $data = [];
 
-        if (!empty($instalaciones)) {
+        if (!empty($solicitudes)) {
             $ids = $start;
 
-            foreach ($instalaciones as $instalacion) {
-                $nestedData['id_instalacion'] = $instalacion->id_instalacion ?? 'N/A';
+            foreach ($solicitudes as $solicitud) {
+                $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids  ?? 'N/A';
-                $nestedData['razon_social'] = $instalacion->empresa->razon_social  ?? 'N/A';
-                $nestedData['tipo'] = $instalacion->tipo  ?? 'N/A';
-                $nestedData['estado'] = $instalacion->estados->nombre  ?? 'N/A';
-                $nestedData['direccion_completa'] = $instalacion->direccion_completa  ?? 'N/A';
-                $nestedData['folio'] = $instalacion->folio ?? 'N/A'; // Corregido 'folion' a 'folio'
-                $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; // Maneja el caso donde el organismo sea nulo
-                $nestedData['url'] = !empty($instalacion->documentos->pluck('url')->toArray()) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first().'/'.implode(',', $instalacion->documentos->pluck('url')->toArray()) : '';
-                $nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);
-                $nestedData['fecha_vigencia'] = Helpers::formatearFecha($instalacion->fecha_vigencia);
-                $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
+                $nestedData['folio'] = $solicitud->folio  ?? 'N/A';
+                $nestedData['razon_social'] = $solicitud->empresa->razon_social  ?? 'N/A';
+                $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
+                $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? 'Sin asignar';
+                $nestedData['tipo'] = $solicitud->tipo  ?? 'N/A';
+                $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? 'Sin asignar';
+                $nestedData['inspector'] = $solicitud->inspector->name ?? 'Sin asignar'; // Maneja el caso donde el organismo sea nulo
+                $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? 'Sin asignar';
+
+
 
                 $data[] = $nestedData;
             }

@@ -431,6 +431,8 @@ Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamenp'])->name('dictamen_productor');
 Route::get('/dictamen_envasador', [CartaAsignacionController::class, 'dictamene'])->name('dictamen_envasador');
 Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dictamenc'])->name('dictamen_comercializador');
+Route::get('/oficio_de_comision', [CartaAsignacionController::class, 'Comision'])->name('oficioDeComision');
+
 
 
 //Clientes prospecto y confirmado
@@ -438,6 +440,11 @@ Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserMana
 Route::resource('/empresas-list', clientesProspectoController::class);
 Route::post('/aceptar-cliente', [clientesProspectoController::class, 'aceptarCliente']);
 Route::get('/lista_empresas/{id}', [getFuncionesController::class, 'find_clientes_prospecto']);
+
+/*obtener el editar*/
+Route::get('/cliente_confirmado/{id}/edit', [clientesConfirmadosController::class, 'editarCliente'])->name('editarCliente');
+/*editar*/
+Route::put('/cliente_confirmado/{id}', [clientesConfirmadosController::class, 'update_cliente'])->name('editarCliente');
 
 Route::get('/clientes/confirmados', [clientesConfirmadosController::class, 'UserManagement'])->name('clientes-confirmados');
 Route::resource('/clientes-list', clientesConfirmadosController::class);
