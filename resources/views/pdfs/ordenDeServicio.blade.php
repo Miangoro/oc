@@ -15,7 +15,7 @@
             margin-left: 70px;
             margin-right: 70px;
 
-        } 
+        }
 
         .header {
             text-align: right;
@@ -31,8 +31,10 @@
             font-weight: bold;
             font-size: 18px;
         }
+
         .footer {
-            transform: translate(0px, 220px); /* Mueve el elemento 50px en X y 50px en Y */
+            transform: translate(0px, 220px);
+            /* Mueve el elemento 50px en X y 50px en Y */
             text-align: center;
             font-size: 11px;
         }
@@ -92,18 +94,22 @@
         .rightLetter {
             text-align: right;
         }
+
+        .no-margin-top {
+            margin-top: 0;
+        }
     </style>
 </head>
 
 <body>
-    <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" style="width: 140px; float: left;" class="no-margin-top"
-        alt="Logo CIDAM" class="logo">
+    <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" style="width: 140px; float: left;margin-left: -30px;"
+        class="no-margin-top" alt="Logo CIDAM" class="logo">
 
     <div class="header">
         <p>
             Orden de servicio F-UV-02-01<br>
             Edición 5, 15/07/2024 <br>
-            ________________________________________________________________________________
+            _______________________________________________________________________________________
         </p>
     </div>
     <div class="title">
@@ -111,7 +117,8 @@
     </div>
     <table>
         <tr>
-            <td class="leftLetter" style="background-color: #93cddc">Datos del cliente(Nombre, <br> teléfono, correo)</td>
+            <td class="leftLetter" style="background-color: #93cddc">Datos del cliente(Nombre, <br> teléfono, correo)
+            </td>
             <td class="leftLetter">Yucli Emmanuel Baza Ortuño</td>
             <td class="leftLetter" style="background-color: #93cddc">No. de orden de <br> servicio:</td>
             <td class="leftLetter">1231231</td>
@@ -130,7 +137,8 @@
             <td class="leftLetter">1231231</td>
         </tr>
         <tr>
-            <td class="leftLetter" style="background-color: #93cddc">Nombre de la persona que <br> atenderá la visita:</td>
+            <td class="leftLetter" style="background-color: #93cddc">Nombre de la persona que <br> atenderá la visita:
+            </td>
             <td class="leftLetter">Yucli Emmanuel Baza Ortuño</td>
             <td class="leftLetter" style="background-color: #93cddc">No. de contrato:</td>
             <td class="leftLetter">1231231</td>
@@ -185,11 +193,11 @@
         <tr style="background-color: #d9d9d9">
             <td>&nbsp;&nbsp;5&nbsp;&nbsp;</td>
             <td class="leftLetter">Ajuste, homogenización o muestreo</td>
-            <td></td>
+            <td>12123</td>
             <td>&nbsp;&nbsp;10&nbsp;&nbsp;</td>
             <td class="leftLetter">Vigilancia de producto <br>
                 terminado</td>
-            <td>&nbsp;</td>
+            <td>12312</td>
         </tr>
         <tr style="background-color: #93cddc">
             <td colspan="4"><b>Observaciones</b></td>
@@ -201,10 +209,11 @@
                 Nombre, fecha y firma <br> &nbsp;</td>
         </tr>
 
-        
+
     </table>
     <div class="footer">
-        Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser 
+        Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede
+        ser
         <br>
         distribuido externamente sin la autorización escrita del Director Ejecutivo
     </div>
