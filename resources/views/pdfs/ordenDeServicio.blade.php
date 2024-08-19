@@ -32,7 +32,7 @@
             font-size: 18px;
         }
         .footer {
-            margin-top: 190px;
+            transform: translate(0px, 220px); /* Mueve el elemento 50px en X y 50px en Y */
             text-align: center;
             font-size: 11px;
         }
