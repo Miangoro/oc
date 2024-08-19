@@ -25,6 +25,11 @@
           "url": "/usuarios/clientes",
           "name": "Clientes",
           "slug": "usuarios-clientes"
+        },
+        {
+          "url": "/usuarios/consejo",
+          "name": "Usuarios consejo",
+          "slug": "consejos-usuarios"
         }
       ]
     },
