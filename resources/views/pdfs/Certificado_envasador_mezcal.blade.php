@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificado de comercializador</title>
+    <title>Certificado de envasador de mezcal</title>
     <style>
 
         @page {
@@ -138,6 +138,10 @@
             white-space: nowrap; 
         }
 
+        .cellx {
+            white-space: nowrap; 
+        }
+
         .cent {
             white-space: normal; 
         }
@@ -145,7 +149,7 @@
         .signature {
             margin: 50px 20px; 
             text-align: center; 
-            margin-top: 70px; 
+            margin-top: 30px; 
         }
 
         .signature-line {
@@ -249,26 +253,26 @@
 
 <div class="description1">ORGANISMO CERTIFICADOR</div>
 <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C</div>
-<div class="description3">No. CERTIFICADO: CIDAM C-INS-089/2024</div>
+<div class="description3">No. CERTIFICADO: CIDAM C-INS-088/2024</div>
 
 <p class="text1">
 Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditado como organismo de certificación de producto con número de acreditación 144/18 ante la Entidad Mexicana de Acreditación, A.C. otorga el siguiente:
 </p>
 
 <p class="title">CERTIFICADO NOM</p>
-<p class="title2">COMO COMERCIALIZADOR DE MEZCAL A</p>
+<p class="title2">COMO ENVASADOR DE MEZCAL A</p>
 <p class="title3">"ALBERTO FRANCO MORGADO"</p>
 
 <table>
     <tbody>
         <tr>
-            <td class="cell"><strong>Domicilio</strong>:</td>
+            <td class="cellx"><strong>Domicilio Fiscal:</strong></td>
             <td colspan="3" class="cent" style="text-align: center; vertical-align: middle;">Av, Periférico 5ur, No. Ext. 3915 No. Int. Escorpion 801, Pedregal De Carrasco, Coyoacán, Ciudad De México. C.P.04700.</td>
         </tr>
         <tr>
             <td class="cell"><strong>RFC:</strong></td>
             <td>FAMA860914190</td>
-            <td><strong>Tel:</strong></td>
+            <td class="cell"><strong>Tel:</strong></td>
             <td>5537449304</td>
         </tr>
         <tr>
@@ -276,7 +280,7 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
             <td colspan="3">albertofranci1313@gmail.com</td>
         </tr>
         <tr>
-            <td class="cell"><strong>Fecha de inicio vigencia:</strong></td>
+            <td class="cellx"><strong>Fecha de inicio vigencia:</strong></td>
             <td>22/julio/2024</td>
             <td class="cell1"><strong>Fecha de Vencimiento:</strong></td>
             <td>23/Julio/2025</td>
@@ -286,22 +290,17 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
 
 <p class="text">La presente certificación se realiza de acuerdo a la Norma Oficial Mexicana NOM-070-SCFI-2016, Bebidas
 Alcohólicas-Mezcal-Especificaciones, en vigor, mediante el esquema dé certificación para productos con
-Denominación de Origen.</p>
-
-<p class="text">Esta empresa a demostrado que cuenta con la infraestructura, conocimientos y la práctica necesaria para ejecutar
+Denominación de Origen.<br>Esta empresa a demostrado que cuenta con la infraestructura, conocimientos y la práctica necesaria para ejecutar
 las etapas de comercializació¡ de la Bebida Alcohólica Destil_ada Denominada Mezcal de conformidad con lo
-establecido en la NOM-070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones.
-</p>
-
-<p class="text">Esta certificación ampara exclusivamente la comercialización del'producto Mezcal, Mezcal Artesanal, Mezcal
+establecido en la NOM-070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones.<br>Esta certificación ampara exclusivamente la comercialización del'producto Mezcal, Mezcal Artesanal, Mezcal
 Ancestral, <strong>Clase:</strong> Joven, Madurado en Vidrio, Reposado, AñeJo, flbocadocon, Destilado con, que se realice en las
-instalaciones indicadas a continuación.</p>
+instalaciones indicadas a continuación.<br><strong>Domicilio de la unidad de Envasado:</strong> Francisco l. Madero, 12 A, Col. 20 De Noviembre,<br>
+Chilpancingo de los Bravo, Guerrero, C.P. 39096.<br><strong>No. De Dictamen de cumplimiento con la NOM:</strong>  UMC-076/2024<br></p>
 
-<p class="text"><strong>Domicilio de la unidad de Comercialización:</strong> Francisco l. Madero, 12 A, Col. 20 De Noviembre,<br>
-Chilpancingo de los Bravo, Guerrero, C.P. 39096.
-</p>
-
-<p class="text"><strong>No. De Dictamen de cumplimiento con la NOM:</strong> UMC-07712024</p>
+<P class="text">Dichas instalaciones cuentan con el equipg requerido para el envasado del producto Mezcal y se encuentran
+dentro dé los estados y municipios que contempla la Resolución mediante la cua,l se otorga la protección prevista
+a la Denominación de Origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre,.publicada el 28
+de Noviembre de l-994. así como sus subsecuentes modificaciones</P>
 
 <div class="signature">
     <p class="signature-line"></p>
@@ -309,8 +308,7 @@ Chilpancingo de los Bravo, Guerrero, C.P. 39096.
     <p class="signature-name">Gerente del Organismo Certificador CIDAM</p>
 </div>
 
-<p class="down">Certificado como Comercializador de Mezcal NOM-070-SCFI-2016 F7.1-01-37</p>
-<P class="down1">Edición 5 Entrada en vigor 12/01/2024</P>
+<p class="down">Este cértificado sustituye al: No aplica<br>Certificado como Comercializador de Mezcal NOM-070-SCFI-2016 F7.1-01-37<br>Edición 5 Entrada en vigor 12/01/2024</p>
 
 <footer class="footer">
     <div class="footer-container">

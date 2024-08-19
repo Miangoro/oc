@@ -122,6 +122,11 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.Certificado_comercializador');
         return $pdf->stream('Certificado de comercializador.pdf');
     }
+    public function Certificadoenv()
+    {
+        $pdf = Pdf::loadView('pdfs.Certificado_envasador_mezcal');
+        return $pdf->stream('Certificado de envasador de mezcal.pdf');
+    }
 }
 
 
