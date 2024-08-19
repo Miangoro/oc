@@ -149,8 +149,10 @@ $(function () {
                     render: function (data, type, full, meta) {
                         return (
                             '<div class="d-flex align-items-center gap-50">' +
-                            `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredio"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-                            `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_predio']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+                            '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
+                            '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                            `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredio" href="javascrip:;" class="dropdown-item edit-record text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+                            `<a data-id="${full['id_predio']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
                             '</div>' +
@@ -159,6 +161,7 @@ $(function () {
                     }
                 }
             ],
+
             order: [[2, 'desc']],
             dom:
                 '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
@@ -182,8 +185,6 @@ $(function () {
                     "sPrevious": "Anterior"
                 }
             },
-
-
             // Buttons with Dropdown
             buttons: [
                 {
@@ -193,11 +194,11 @@ $(function () {
                     buttons: [
                         {
                             extend: 'print',
-                            title: 'catalogo clases',
+                            title: 'Predios',
                             text: '<i class="ri-printer-line me-1" ></i>Print',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be print
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -205,12 +206,18 @@ $(function () {
                                         var el = $.parseHTML(inner);
                                         var result = '';
                                         $.each(el, function (index, item) {
+
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }
                                         });
+
                                         return result;
                                     }
                                 }
@@ -231,11 +238,11 @@ $(function () {
                         },
                         {
                             extend: 'csv',
-                            title: 'catalogo clases',
+                            title: 'Users',
                             text: '<i class="ri-file-text-line me-1" ></i>Csv',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be print
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -243,11 +250,17 @@ $(function () {
                                         var el = $.parseHTML(inner);
                                         var result = '';
                                         $.each(el, function (index, item) {
+
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }
+
                                         });
                                         return result;
                                     }
@@ -256,11 +269,11 @@ $(function () {
                         },
                         {
                             extend: 'excel',
-                            title: 'catalogo clases',
+                            title: 'Predios',
                             text: '<i class="ri-file-excel-line me-1"></i>Excel',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be display
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -269,10 +282,14 @@ $(function () {
                                         var result = '';
                                         $.each(el, function (index, item) {
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }
                                         });
                                         return result;
                                     }
@@ -281,11 +298,11 @@ $(function () {
                         },
                         {
                             extend: 'pdf',
-                            title: 'catalogo clases',
+                            title: 'Predios',
                             text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be display
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -294,10 +311,14 @@ $(function () {
                                         var result = '';
                                         $.each(el, function (index, item) {
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }
                                         });
                                         return result;
                                     }
@@ -306,11 +327,11 @@ $(function () {
                         },
                         {
                             extend: 'copy',
-                            title: 'catalogo clases',
+                            title: 'Predios',
                             text: '<i class="ri-file-copy-line me-1"></i>Copy',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be copy
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -319,10 +340,14 @@ $(function () {
                                         var result = '';
                                         $.each(el, function (index, item) {
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }
                                         });
                                         return result;
                                     }

@@ -127,7 +127,7 @@
                                         <select class="form-select" id="tiene_coordenadas" name="tiene_coordenadas"
                                             aria-label="¿Cuenta con coordenadas?" >
                                             <option value="" disabled selected>Seleccione una opción</option>
-                                            <option value="Si">Sí</option>
+                                            <option value="Si">Si</option>
                                             <option value="No">No</option>
                                         </select>
                                         <label for="tiene_coordenadas">¿Cuenta con Coordenadas?</label>
@@ -353,7 +353,7 @@
                                         <select class="form-select" id="edit_tiene_coordenadas" name="tiene_coordenadas"
                                             aria-label="¿Cuenta con coordenadas?">
                                             <option value="" disabled selected>Seleccione una opción</option>
-                                            <option value="Si">Sí</option>
+                                            <option value="Si">Si</option>
                                             <option value="No">No</option>
                                         </select>
                                         <label for="tiene_coordenadas">¿Cuenta con Coordenadas?</label>
