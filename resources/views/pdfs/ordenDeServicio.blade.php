@@ -14,6 +14,7 @@
         @page {
             margin-left: 70px;
             margin-right: 70px;
+            margin
 
         }
 
@@ -33,6 +34,7 @@
         }
 
         .footer {
+            position: absolute;
             transform: translate(0px, 180px);
             /* Mueve el elemento 50px en X y 50px en Y */
             text-align: center;
