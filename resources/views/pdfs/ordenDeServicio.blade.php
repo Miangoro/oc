@@ -11,28 +11,28 @@
             font-family: 'Century Gothic', sans-serif;
         }
 
-/*         @page {
-            margin: 30px;
-        } */
+        @page {
+            margin-left: 70px;
+            margin-right: 70px;
+
+        } 
 
         .header {
             text-align: right;
             font-size: 12px;
-            margin-right: 10px;
-            margin-bottom: 0;
+            margin-right: -30px;
 
         }
 
         .title {
             text-align: center;
             margin-top: 0;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             font-weight: bold;
             font-size: 18px;
         }
         .footer {
             margin-top: 190px;
-            font-size: 10px;
             text-align: center;
             font-size: 11px;
         }
