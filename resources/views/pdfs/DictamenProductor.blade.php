@@ -7,9 +7,15 @@
     <title>F-UV-02-04 Ver 10, Dictamen de cumplimiento de Instalaciones como productor</title>
     <style>
 
-@font-face {
+        @font-face {
             font-family: 'Lucida Sans Unicode';
-            src: url('/lsansuni.ttf') format('truetype');
+            src: url('fonts/lsansuni.ttf') format('truetype');
+            
+        }
+
+        @font-face{
+            font-family: 'Arial Negrita';
+            src: url('fonts/arial-negrita.ttf') format('truetype');
         }
 
         @page {
@@ -32,18 +38,20 @@
 
         .description1 {
             font-size: 18px;
-            font-weight: bold;
+        
             text-align: right;
             color: #151442; 
             width: 95%;
+            font-family: 'Arial Negrita' !important;
         }
 
         .description2 {
-            font-weight: bold;
+            
             text-align: right;
-            font-size: 9.5px;
+            font-size: 11px;
             color: #151442;
             width: 95%;
+            font-family: 'Arial Negrita' !important;
         }
 
         .description3 {
@@ -52,6 +60,7 @@
             font-size: 10px;
             color: #151442;
             width: 95%;
+            font-family: 'Lucida Sans Unicode';
         }
 
         .textimg {
@@ -64,13 +73,15 @@
         .text {
             text-align: justify; 
             font-size: 14px;
+            line-height: 15px;
         }
 
         .title {
           
             text-align: center;
-            font-size: 28px; 
+            font-size: 25px; 
             font-family: 'Arial Negrita', Gadget, sans-serif;
+            line-height: 20px;
           
         }
 
@@ -170,12 +181,10 @@
         <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="275px">
     </div>
     <br>
-    <div style="border: 2px solid" class="description1">Unidad de Inspección No. UVNOM-129</div>
-    <div style="border: 2px solid" class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
-    <div style="border: 2px solid" class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C</div>
-    <br>
+    <div class="description1">Unidad de Inspección No. UVNOM-129</div>
+    <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
+    <div class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C</div>
     <div class="textimg">No.: UMC-00__/20___</div>
-    <br>
     <div class="title">Dictamen de cumplimiento de Instalaciones como productor</div>
 
     <div class="text">

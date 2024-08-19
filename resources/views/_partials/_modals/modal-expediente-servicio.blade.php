@@ -42,7 +42,7 @@
                 </tr>
                 <tr class="table-danger">
                   <td><i class="ri-palette-line ri-22px text-danger me-4"></i><span class="fw-medium">2. Oficio de comisión</span></td>
-                  <td><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></td>
+                  <td><a href="oficio_de_comision"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
                   <td><span class="badge rounded-pill bg-label-primary me-1">Active</span></td>
                   <td>
                     <div class="dropdown">
@@ -56,7 +56,7 @@
                 </tr>
                 <tr class="table-warning">
                   <td><i class="ri-shield-user-line ri-22px text-info me-4"></i><span class="fw-medium">3. Orden de servicio</span></td>
-                  <td><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></td>
+                  <td><a href="orden_de_servicio"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
                   <td><span class="badge rounded-pill bg-label-info me-1">Scheduled</span></td>
                   <td>
                     <div class="dropdown">
