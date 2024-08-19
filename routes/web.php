@@ -177,6 +177,7 @@ use App\Http\Controllers\getFuncionesController;
 use App\Http\Controllers\usuarios\UsuariosController;
 use App\Http\Controllers\usuarios\UsuariosInspectoresController;
 use App\Http\Controllers\usuarios\UsuariosPersonalController;
+use App\Http\Controllers\usuarios\UsuariosConsejoController;
 use App\Http\Controllers\catalogo\LotesGranelController;
 use App\Http\Controllers\documentacion\DocumentosController;
 //Tipos maguey/agave
@@ -522,6 +523,10 @@ Route::resource('/inspectores-list', UsuariosInspectoresController::class);
 
 Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal'])->name('usuarios-personal');
 Route::resource('/personal-list', UsuariosPersonalController::class);
+
+//Consejo usuarios
+Route::get('/usuarios/consejo', [UsuariosConsejoController::class, 'consejo'])->name('consejos-usuarios');
+Route::resource('/consejo-list', UsuariosConsejoController::class);
 
 //Documentacion
 Route::get('/documentacion', [documentacionController::class, 'index'])->name('documentacion');
