@@ -49,6 +49,7 @@
          { data: 'num_dictamen' },
          { data: 'id_inspeccion' },
          { data: 'fecha_emision' },
+         { data: '' },
          { data: 'action' }
  
        ],
@@ -116,6 +117,15 @@
               return '<span class="user-email">' + $fecha + '</span>';
             }
           },
+          {
+            // email verify
+            targets: 6,
+            className: 'text-center',
+            render: function (data, type, full, meta) {
+              var $id = full['id_guia'];
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
+            }
+          },
  
          {
            // Actions
@@ -126,7 +136,7 @@
            render: function (data, type, full, meta) {
              return (
                '<div class="d-flex align-items-center gap-50">' +
-                   `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_dictamen']}" data-bs-toggle="offcanvas" data-bs-target="#editTipo"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+                   `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_dictamen']} data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#editDictamen"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
                    `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_dictamen']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
                    //'<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
@@ -365,18 +375,89 @@
  
 
    
-// Función para agregar registro
-$('#NuevoDictamen').on('submit', function (e) {//id del formulario #addNewCategory
+// Agregar nuevo registro
+// validating form and updating user's data
+//const NuevoDictamen = document.getElementById('NuevoDictamen');
+
+// Validación del formulario
+const fv = FormValidation.formValidation(NuevoDictamen, {
+    fields: {
+      tipo_dictamen: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una opcion'
+                }
+            }
+        },
+        num_dictamen: {
+            validators: {
+                notEmpty: {
+                    message: 'Introduzca el no. de dictamen'
+                }
+            }
+        },
+        fecha_emision: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una fecha'
+                }
+            }
+        },
+        fecha_vigencia: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una fecha'
+                }
+            }
+        },
+        id_inspeccion: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una opcion'
+                }
+            }
+        },
+        categorias: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una opcion'
+                }
+            }
+        },
+        clases: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una opcion'
+                }
+            }
+        },
+        
+    },
+    plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+            eleValidClass: '',
+            rowSelector: function (field, ele) {
+                return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+            }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+}).on('core.form.valid', function (e) {
+
+  var formData = new FormData(NuevoDictamen);
+/*$('#NuevoDictamen').on('submit', function (e) {//id del formulario #addNewCategory
     e.preventDefault();
-  
-    var formData = $(this).serialize();
-  
+    var formData = $(this).serialize();*/
     $.ajax({
-        url: '../insta',
+        url: '/insta',
         type: 'POST',
         data: formData,
+        processData: false,
+        contentType: false,
         success: function (response) {
-            $('#addDictamen').offcanvas('hide');//id del div que encierra al formulario #offcanvaadduser
+            $('#addDictamen').modal('hide');//div que encierra al formulario #addDictamen
             $('#NuevoDictamen')[0].reset();
   
             // Actualizar la tabla sin reinicializar DataTables
@@ -410,6 +491,174 @@ $('#NuevoDictamen').on('submit', function (e) {//id del formulario #addNewCatego
   
 
 
+
+  // Eliminar registro
+  $(document).on('click', '.delete-record', function () {
+    var id_dictamen = $(this).data('id'); // Obtener el ID de la clase
+    var dtrModal = $('.dtr-bs-modal.show');
+
+    // Ocultar modal responsivo en pantalla pequeña si está abierto
+    if (dtrModal.length) {
+        dtrModal.modal('hide');
+    }
+
+    // SweetAlert para confirmar la eliminación
+    Swal.fire({
+        title: '¿Está seguro?',
+        text: 'No podrá revertir este evento',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+            confirmButton: 'btn btn-primary me-3',
+            cancelButton: 'btn btn-label-secondary'
+        },
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            // Enviar solicitud DELETE al servidor
+            $.ajax({
+                type: 'DELETE',
+                url: `${baseUrl}insta/${id_dictamen}`,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function () {
+                    // Actualizar la tabla después de eliminar el registro
+                    dt_user.draw();
+
+                    // Mostrar SweetAlert de éxito
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Eliminado!',
+                        text: '¡El Dictamen ha sido eliminada correctamente!',
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.log(error);
+
+                    // Mostrar SweetAlert de error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo eliminar el dictamen. Inténtalo de nuevo más tarde.',
+                        footer: `<pre>${error.responseText}</pre>`,
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            // Acción cancelada, mostrar mensaje informativo
+            Swal.fire({
+                title: 'Cancelado',
+                text: 'La eliminación del Dictamen ha sido cancelada',
+                icon: 'info',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
+                }
+            });
+        }
+    });
+});
+
+
+  
+//Reciben los datos del pdf
+$(document).on('click', '.pdf', function () {
+  var id = $(this).data('id');
+  var registro = $(this).data('registro');
+      var iframe = $('#pdfViewer');
+      iframe.attr('src', '../dictamen_productor/');
+
+      $("#titulo_modal").text("Dictamen de productor");
+      $("#subtitulo_modal").text(registro);  
+});
+
+
+
+
+// FUNCION PARA EDITAR un registro
+$(document).ready(function() {
+  // Abrir el modal y cargar datos para editar
+  $('.datatables-users').on('click', '.edit-record', function() {
+      var id_dictamen = $(this).data('id');
+
+      // Realizar la solicitud AJAX para obtener los datos de la clase
+      $.get('/insta/' + id_dictamen + '/edit', function(data) {
+          // Rellenar el formulario con los datos obtenidos
+          $('#edit_id_dictamen').val(data.id_dictamen);
+          $('#edit_tipo_dictamen').val(data.tipo_dictamen);
+          $('#edit_num_dictamen').val(data.num_dictamen);
+          $('#edit_fecha_emision').val(data.fecha_emision);
+          $('#edit_fecha_vigencia').val(data.fecha_vigencia);
+          $('#edit_id_inspeccion').val(data.id_inspeccion);
+          $('#edit_categorias').val(data.categorias);
+          $('#edit_clases').val(data.clases);
+
+          // Mostrar el modal de edición
+          $('#editDictamen').modal('show');
+      }).fail(function() {
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al obtener los datos',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      });
+  });
+
+  // Manejar el envío del formulario de edición
+  $('#EditarDictamen').on('submit', function(e) {
+      e.preventDefault();
+
+      var formData = $(this).serialize();
+      var id_dictamen = $('#edit_id_dictamen').val(); // Obtener el ID de la clase desde el campo oculto
+
+      $.ajax({
+          url: '/insta/' + id_dictamen,
+          type: 'PUT',
+          data: formData,
+          success: function(response) {
+              $('#editDictamen').modal('hide'); // Ocultar el modal de edición "DIV"
+              $('#EditarDictamen')[0].reset(); // Limpiar el formulario "FORM"
+              // Mostrar alerta de éxito
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.success,
+                  customClass: {
+                      confirmButton: 'btn btn-success'
+                  }
+              });
+              // Recargar los datos en la tabla sin reinicializar DataTables
+              $('.datatables-users').DataTable().ajax.reload();
+          },
+          error: function(xhr) {
+            console.log('Error:', xhr.responseText);
+              // Mostrar alerta de error
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Error al actualizar el dictamen',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+      });
+  });
+});
+
+
  
  
  
@@ -417,7 +666,3 @@ $('#NuevoDictamen').on('submit', function (e) {//id del formulario #addNewCatego
  
 
 
-
-  // Agregar nuevo registro
-// validating form and updating user's data
-const addNewLoteForm = document.getElementById('addNewLoteForm');

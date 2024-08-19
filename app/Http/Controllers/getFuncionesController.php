@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\empresa;
 use App\Models\normas;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -41,6 +42,12 @@ class getFuncionesController extends Controller
         return $this->renderVista('_partials._modals.modal-add-aceptar-cliente',$id_empresa);
     }
 
+    public function usuariosInspectores()
+    {   
+        $inspectores = User::all();
+        return $this->renderVista('_partials._modals.modal-add-asignar-inspector',$inspectores);
+    }
+
 
     public function getDatos(empresa $empresa){
         return response()->json([
@@ -49,7 +56,7 @@ class getFuncionesController extends Controller
             'marcas' => $empresa->marcas(),
             'guias' => $empresa->guias(),
             'predios' => $empresa->predios(),
-            'plantacion' => $empresa->plantacion(),
+            'predio_plantacion' => $empresa->predio_plantacion(),
 
 
 

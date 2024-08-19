@@ -244,8 +244,12 @@ $(function () {
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
+              '<div class="dropdown-menu dropdown-menu-end m-0">' +
+              `<a data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Llenar guia de traslado</a>` +
+              `<a data-id="${full['id_guia']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar guia de traslado</a>` +
+/*               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` + */
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
               userView +
@@ -428,7 +432,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nueva Solicitud de Guia de Translado</span>',
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nueva Solicitud de Guia de Traslado</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'modal',
@@ -538,7 +542,7 @@ $(function () {
             var iframe = $('#pdfViewer');
             iframe.attr('src', '../guia_de_translado/'+id);
 
-            $("#titulo_modal").text("Guia de translado");
+            $("#titulo_modal").text("Guia de traslado");
             $("#subtitulo_modal").text(registro);
             
           
@@ -552,12 +556,23 @@ $(function () {
         $('#edit_id_guia').val(data.id_guia);
         $('#edit_id_empresa').val(data.id_empresa).trigger('change');
         $('#edit_numero_guias').val(data.numero_guias);
-        $('#edit_nombre_predio').val(data.nombre_predio).trigger('change');
+        $('#edit_nombre_predio').val(data.id_predio).trigger('change'); // Cambiado a 'id_predio'
         $('#edit_id_plantacion').val(data.id_plantacion).trigger('change');
         $('#edit_num_anterior').val(data.num_anterior);
         $('#edit_num_comercializadas').val(data.num_comercializadas);
         $('#edit_mermas_plantas').val(data.mermas_plantas);
         $('#edit_numero_plantas').val(data.numero_plantas);
+        $('#edit_edad').val(data.edad);
+        $('#edit_id_art').val(data.art);
+        $('#edit_kg_magey').val(data.kg_maguey);
+        $('#edit_no_lote_pedido').val(data.no_lote_pedido);
+        $('#edit_fecha_corte').val(data.fecha_corte);
+        $('#edit_id_observaciones').val(data.observaciones);
+        $('#edit_nombre_cliente').val(data.nombre_cliente);
+        $('#edit_no_cliente').val(data.no_cliente);
+        $('#edit_fecha_ingreso').val(data.fecha_ingreso);
+        $('#edit_domicilio').val(data.domicilio);
+
 
         // Mostrar el modal de edición
         $('#editGuias').modal('show');
@@ -610,6 +625,7 @@ $('#editGuiaForm').on('submit', function (e) {
         }
     });
 });
+
 
 
 

@@ -25,6 +25,11 @@
           "url": "/usuarios/clientes",
           "name": "Clientes",
           "slug": "usuarios-clientes"
+        },
+        {
+          "url": "/usuarios/consejo",
+          "name": "Consejo",
+          "slug": "usuarios-consejo"
         }
       ]
     },
@@ -100,12 +105,29 @@
         {
           "url": "dictamenes/instalaciones",
           "name": "Instalaciones",
-          "slug": "dictamen-instalaciones"
+          "slug": "dictamenes-instalaciones"
         },
         {
-          "url": "laravel/user-management",
-          "name": "Lote a granel",
-          "slug": "laravel-example-user-management"
+          "url": "dictamenes/productos",
+          "name": "Producto",
+          "slug": "dictamenes-productos"
+        }
+      ]
+    },
+    {
+      "name": "Certificados",
+      "icon": "menu-icon ri-file-paper-2-fill",
+      "slug": "certificados",
+      "submenu": [
+        {
+          "url": "certificados/instalaciones",
+          "name": "Instalaciones",
+          "slug": "certificados-instalaciones"
+        },
+        {
+          "url": "certificados/producto",
+          "name": "Producto",
+          "slug": "certificados-producto"
         }
       ]
     },
@@ -152,10 +174,10 @@
       ]
     },
     {
-      "name": "Guías de translado",
+      "name": "Guías de traslado",
       "url": "guias/guias_de_agave",
       "icon": "menu-icon ri-truck-fill",
-      "slug": "translado-guias"
+      "slug": "traslado-guias"
     }
 
 

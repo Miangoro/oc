@@ -6,33 +6,52 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>F-UV-02-04 Ver 10, Dictamen de cumplimiento de Instalaciones como productor</title>
     <style>
+
+        @font-face {
+            font-family: 'Lucida Sans Unicode';
+            src: url('fonts/lsansuni.ttf') format('truetype');
+            
+        }
+
+        @font-face{
+            font-family: 'Arial Negrita';
+            src: url('fonts/arial-negrita.ttf') format('truetype');
+        }
+
         @page {
             size: 227mm 292mm;
-            margin: 15mm;  
+            margin-left: 1.83cm;  
+            margin-right: 1.83cm; 
+            margin-top: 0.92cm;
         }      
 
         body {
-            font-family: Arial, Helvetica, Verdana;
+            font-family: 'Lucida Sans Unicode';
         }
 
         .header img {
             float: left; 
             margin-left: -10px;
-            margin-top: -30px; 
+            margin-top: -15px; 
+            
         }
 
         .description1 {
             font-size: 18px;
-            font-weight: bold;
+        
             text-align: right;
             color: #151442; 
+            width: 95%;
+            font-family: 'Arial Negrita' !important;
         }
 
         .description2 {
-            font-weight: bold;
+            
             text-align: right;
-            font-size: 9.5px;
+            font-size: 11px;
             color: #151442;
+            width: 95%;
+            font-family: 'Arial Negrita' !important;
         }
 
         .description3 {
@@ -40,6 +59,8 @@
             text-align: right;
             font-size: 10px;
             color: #151442;
+            width: 95%;
+            font-family: 'Lucida Sans Unicode';
         }
 
         .textimg {
@@ -52,19 +73,23 @@
         .text {
             text-align: justify; 
             font-size: 14px;
+            line-height: 15px;
         }
 
         .title {
-            font-weight: bold;
+          
             text-align: center;
-            font-size: 20px; 
+            font-size: 25px; 
+            font-family: 'Arial Negrita', Gadget, sans-serif;
+            line-height: 20px;
+          
         }
 
         .footer-bar {
             position: fixed;
             bottom: -55px;
-            left: -60px;
-            right: -60px;
+            left: -70px;
+            right: -70px;
             width: calc(100% - 40px);
             height: 30px;
             background-color: #158F60;
@@ -153,15 +178,13 @@
 </head>
 <body>
     <div class="header">
-        <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="270px">
+        <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="275px">
     </div>
-
+    <br>
     <div class="description1">Unidad de Inspección No. UVNOM-129</div>
     <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
     <div class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C</div>
-    <br>
     <div class="textimg">No.: UMC-00__/20___</div>
-    <br>
     <div class="title">Dictamen de cumplimiento de Instalaciones como productor</div>
 
     <div class="text">

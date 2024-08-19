@@ -6,6 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dictamen_instalaciones;
 use App\Models\Clases; 
+use App\Models\inspecciones; 
+
+use App\Models\empresa; 
+use App\Models\solicitudesModel; 
+
 
 
 class InstalacionesController extends Controller
@@ -15,7 +20,10 @@ class InstalacionesController extends Controller
     {
         $dictamenes = Dictamen_instalaciones::all(); // Obtener todos los datos
         $clases = Clases::all();
-        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases'));
+        $inspeccion = inspecciones::all();
+        $empresa = empresa::all();
+        $soli = solicitudesModel::all();
+        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'inspeccion'));
     }
 
 
@@ -25,7 +33,7 @@ class InstalacionesController extends Controller
             1 => 'id_dictamen',
             2 => 'tipo_dictamen',
             3 => 'num_dictamen',
-            4 => 'id_inspeccion',
+            4 => 'num_servicio',
             5 => 'fecha_emision',
         ];
 
@@ -41,14 +49,16 @@ class InstalacionesController extends Controller
         $dir = $request->input('order.0.dir');
 
         if (empty($request->input('search.value'))) {
-            $users = Dictamen_instalaciones::offset($start)
+            $users = Dictamen_instalaciones::with('inspeccione')
+                ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
         } else {
             $search = $request->input('search.value');
 
-            $users = Dictamen_instalaciones::where('id_dictamen', 'LIKE', "%{$search}%")
+            $users = Dictamen_instalaciones::with('inspeccione')
+                ->where('id_dictamen', 'LIKE', "%{$search}%")
                 ->orWhere('tipo_dictamen', 'LIKE', "%{$search}%")
                 ->offset($start)
                 ->limit($limit)
@@ -70,7 +80,7 @@ class InstalacionesController extends Controller
                 $nestedData['fake_id'] = ++$ids;
                 $nestedData['tipo_dictamen'] = $user->tipo_dictamen;
                 $nestedData['num_dictamen'] = $user->num_dictamen;
-                $nestedData['id_inspeccion'] = $user->id_inspeccion;
+                $nestedData['id_inspeccion'] = $user->inspeccione->num_servicio;
                 $nestedData['fecha_emision'] = $user->fecha_emision;
 
                 $data[] = $nestedData;
@@ -103,18 +113,21 @@ class InstalacionesController extends Controller
                 'num_dictamen' => 'required|string|max:255',
                 'fecha_emision' => 'nullable|date',
                 'fecha_vigencia' => 'nullable|date',
-                'categorias' => 'required|string|max:255',
-                'id_clase' => 'required|integer|exists:catalogo_clases,id_clase',
+                'categorias' => 'required|string|max:100',
+                'clases' => 'required|string|max:100',
+                'id_inspeccion' => 'required|integer',
             ]);
     
             try {
                 $var = new Dictamen_instalaciones();
+                $var->id_inspeccion = $request->id_inspeccion;
                 $var->tipo_dictamen = $request->tipo_dictamen;
+                $var->id_instalacion = 1;
                 $var->num_dictamen = $request->num_dictamen;
                 $var->fecha_emision = $request->fecha_emision;
                 $var->fecha_vigencia = $request->fecha_vigencia;
                 $var->categorias = $request->categorias;
-                $var->id_clase = $validatedData['id_clase'];
+                $var->clases = $request->clases;
     
                 $var->save();//guardar en BD
     
@@ -123,6 +136,69 @@ class InstalacionesController extends Controller
                 return response()->json(['error' => 'Error al agregar'], 500);
             }
         }
+
+
+
+
+// Función para eliminar una clase
+    public function destroy($id_dictamen)
+    {
+        try {
+            $eliminar = Dictamen_instalaciones::findOrFail($id_dictamen);
+            $eliminar->delete();
+
+            return response()->json(['success' => 'Eliminado correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al eliminar'], 500);
+        }
+    }
+
+
+
+    
+//funcion para llenar el campo del formulario
+public function edit($id_dictamen)
+{
+    try {
+        $var1 = Dictamen_instalaciones::findOrFail($id_dictamen);
+        return response()->json($var1);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al obtener el dictamen'], 500);
+    }
+}
+
+// Función para EDITAR una clase existente
+    public function update(Request $request, $id_dictamen)
+{
+    $request->validate([
+        'tipo_dictamen' => 'required|integer',
+        'num_dictamen' => 'required|string|max:255',
+        'fecha_emision' => 'nullable|date',
+        'fecha_vigencia' => 'nullable|date',
+        'categorias' => 'required|string|max:100',
+        'clases' => 'required|string|max:100',
+        'id_inspeccion' => 'required|integer',
+    ]);
+    try {
+        $var2 = Dictamen_instalaciones::findOrFail($id_dictamen);
+        $var2->id_inspeccion = $request->id_inspeccion;
+        $var2->tipo_dictamen = $request->tipo_dictamen;
+        //$var2->id_instalacion = 1;
+        $var2->num_dictamen = $request->num_dictamen;
+        $var2->fecha_emision = $request->fecha_emision;
+        $var2->fecha_vigencia = $request->fecha_vigencia;
+        $var2->categorias = $request->categorias;
+        $var2->clases = $request->clases;
+        $var2->save();
+
+        return response()->json(['success' => 'Editado correctamente']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al editar'], 500);
+    }
+}
+
+
+
 
 
 }

@@ -63,17 +63,35 @@ class PrediosController extends Controller
         } else {
             $search = $request->input('search.value');
     
-            $predios = Predios::with('empresa') // Carga la relación
-                ->where('id_predio', 'LIKE', "%{$search}%")
-                ->orWhere('id_empresa', 'LIKE', "%{$search}%")
+            $predios = Predios::with('empresa')
+                ->where(function ($query) use ($search) {
+                    $query->whereHas('empresa', function ($q) use ($search) {
+                        $q->where('razon_social', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('nombre_productor', 'LIKE', "%{$search}%")
+                    ->orWhere('nombre_predio', 'LIKE', "%{$search}%")
+                    ->orWhere('ubicacion_predio', 'LIKE', "%{$search}%")
+                    ->orWhere('tipo_predio', 'LIKE', "%{$search}%")
+                    ->orWhere('puntos_referencia', 'LIKE', "%{$search}%")
+                    ->orWhere('superficie', 'LIKE', "%{$search}%");
+                })
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
     
             $totalFiltered = Predios::with('empresa')
-                ->where('id_predio', 'LIKE', "%{$search}%")
-                ->orWhere('id_empresa', 'LIKE', "%{$search}%")
+                ->where(function ($query) use ($search) {
+                    $query->whereHas('empresa', function ($q) use ($search) {
+                        $q->where('razon_social', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('nombre_productor', 'LIKE', "%{$search}%")
+                    ->orWhere('nombre_predio', 'LIKE', "%{$search}%")
+                    ->orWhere('ubicacion_predio', 'LIKE', "%{$search}%")
+                    ->orWhere('tipo_predio', 'LIKE', "%{$search}%")
+                    ->orWhere('puntos_referencia', 'LIKE', "%{$search}%")
+                    ->orWhere('superficie', 'LIKE', "%{$search}%");
+                })
                 ->count();
         }
     
@@ -148,27 +166,33 @@ class PrediosController extends Controller
             // Guardar el nuevo predio en la base de datos
             $predio->save();
         
-            // Guardar coordenadas, si existen
+            // Guardar coordenadas, si existen y no son nulas
             if ($request->has('latitud') && $request->has('longitud')) {
                 foreach ($request->latitud as $index => $latitud) {
-                    PredioCoordenadas::create([
-                        'id_predio' => $predio->id_predio,
-                        'latitud' => $latitud,
-                        'longitud' => $request->longitud[$index],
-                    ]);
+                    // Asegurarse de que tanto latitud como longitud no sean nulas
+                    if (!is_null($latitud) && !is_null($request->longitud[$index])) {
+                        PredioCoordenadas::create([
+                            'id_predio' => $predio->id_predio,
+                            'latitud' => $latitud,
+                            'longitud' => $request->longitud[$index],
+                        ]);
+                    }
                 }
             }
         
-            // Almacenar los datos de plantación en la tabla predio_plantacion
+            // Almacenar los datos de plantación en la tabla predio_plantacion, si existen
             if ($request->has('id_tipo')) {
                 foreach ($request->id_tipo as $index => $id_tipo) {
-                    predio_plantacion::create([
-                        'id_predio' => $predio->id_predio,
-                        'id_tipo' => $id_tipo,
-                        'num_plantas' => $request->numero_plantas[$index],
-                        'anio_plantacion' => $request->edad_plantacion[$index],
-                        'tipo_plantacion' => $request->tipo_plantacion[$index],
-                    ]);
+                    // Asegurarse de que los campos no sean nulos
+                    if (!is_null($id_tipo) && !is_null($request->numero_plantas[$index]) && !is_null($request->edad_plantacion[$index]) && !is_null($request->tipo_plantacion[$index])) {
+                        predio_plantacion::create([
+                            'id_predio' => $predio->id_predio,
+                            'id_tipo' => $id_tipo,
+                            'num_plantas' => $request->numero_plantas[$index],
+                            'anio_plantacion' => $request->edad_plantacion[$index],
+                            'tipo_plantacion' => $request->tipo_plantacion[$index],
+                        ]);
+                    }
                 }
             }
         
@@ -178,24 +202,27 @@ class PrediosController extends Controller
                 'message' => 'Predio registrado exitosamente',
             ]);
         }
-
         
+        
+
         public function edit($id_predio)
         {
             try {
-                // Usa 'predio_plantaciones' en lugar de 'plantaciones'
                 $predio = Predios::with(['coordenadas', 'predio_plantaciones'])->findOrFail($id_predio);
-        
+                $tipos = Tipos::all(); // Asegúrate de cargar los tipos de agave disponibles
+
                 return response()->json([
                     'success' => true,
                     'predio' => $predio,
                     'coordenadas' => $predio->coordenadas,
-                    'plantaciones' => $predio->predio_plantaciones, // Asegúrate de usar la relación correcta aquí
+                    'plantaciones' => $predio->predio_plantaciones,
+                    'tipos' => $tipos, // Incluye los tipos de agave
                 ]);
             } catch (ModelNotFoundException $e) {
                 return response()->json(['success' => false], 404);
             }
         }
+
         
         
 
@@ -203,7 +230,7 @@ class PrediosController extends Controller
         {
             try {
                 Log::info('Datos recibidos:', $request->all());
-    
+        
                 // Validar los datos del formulario
                 $validated = $request->validate([
                     'id_empresa' => 'required|exists:empresa,id_empresa',
@@ -214,10 +241,22 @@ class PrediosController extends Controller
                     'puntos_referencia' => 'required|string',
                     'tiene_coordenadas' => 'nullable|string|max:2',
                     'superficie' => 'required|string',
+                    'latitud' => 'nullable|array',
+                    'latitud.*' => 'nullable|numeric',
+                    'longitud' => 'nullable|array',
+                    'longitud.*' => 'nullable|numeric',
+                    'id_tipo' => 'nullable|array',
+                    'id_tipo.*' => 'nullable|exists:catalogo_tipo_agave,id_tipo',
+                    'numero_plantas' => 'nullable|array',
+                    'numero_plantas.*' => 'nullable|numeric',
+                    'edad_plantacion' => 'nullable|array',
+                    'edad_plantacion.*' => 'nullable|numeric',
+                    'tipo_plantacion' => 'nullable|array',
+                    'tipo_plantacion.*' => 'nullable|string',
                 ]);
-    
+        
                 $predio = Predios::findOrFail($id_predio);
-    
+        
                 // Actualizar predio
                 $predio->update([
                     'id_empresa' => $validated['id_empresa'],
@@ -229,7 +268,44 @@ class PrediosController extends Controller
                     'cuenta_con_coordenadas' => $validated['tiene_coordenadas'],
                     'superficie' => $validated['superficie'],
                 ]);
-    
+        
+                // Manejar coordenadas
+                if ($validated['tiene_coordenadas'] === 'no') {
+                    $predio->coordenadas()->delete(); // Eliminar todas las coordenadas
+                } else {
+                    // Actualizar coordenadas
+                    if (isset($validated['latitud']) && isset($validated['longitud'])) {
+                        $predio->coordenadas()->delete(); // Borra las coordenadas actuales
+        
+                        foreach ($validated['latitud'] as $index => $latitud) {
+                            if ($latitud && isset($validated['longitud'][$index])) {
+                                $predio->coordenadas()->create([
+                                    'latitud' => $latitud,
+                                    'longitud' => $validated['longitud'][$index],
+                                ]);
+                            }
+                        }
+                    }
+                }
+        
+                // Manejar plantaciones
+                if (isset($validated['id_tipo']) && isset($validated['numero_plantas']) &&
+                    isset($validated['edad_plantacion']) && isset($validated['tipo_plantacion'])) {
+        
+                    $predio->predio_plantaciones()->delete(); // Borra las plantaciones actuales
+        
+                    foreach ($validated['id_tipo'] as $index => $id_tipo) {
+                        if ($id_tipo && isset($validated['numero_plantas'][$index])) {
+                            $predio->predio_plantaciones()->create([
+                                'id_tipo' => $id_tipo,
+                                'num_plantas' => $validated['numero_plantas'][$index],
+                                'anio_plantacion' => $validated['edad_plantacion'][$index],
+                                'tipo_plantacion' => $validated['tipo_plantacion'][$index],
+                            ]);
+                        }
+                    }
+                }
+        
                 return response()->json([
                     'success' => true,
                     'message' => 'Predio actualizado exitosamente',
@@ -242,6 +318,8 @@ class PrediosController extends Controller
                 ], 500);
             }
         }
+        
+        
         
 
 }

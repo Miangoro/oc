@@ -53,8 +53,9 @@
                     <th>ID</th>
                     <th>Tipo de dictamen</th>
                     <th>No. dictamen</th>
-                    <th>Inspeccion</th>
+                    <th>No. Servicio</th>
                     <th>Fecha de emisión</th>
+                    <th>Dictamen</th>
                     <th>ACCIONES</th>
                 </tr>
             </thead>
@@ -91,6 +92,7 @@
 </div>
 
 <!-- Modal -->
+@include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-dictamen_instalaciones')
 <!-- /Modal -->
 

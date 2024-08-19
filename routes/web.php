@@ -177,11 +177,13 @@ use App\Http\Controllers\getFuncionesController;
 use App\Http\Controllers\usuarios\UsuariosController;
 use App\Http\Controllers\usuarios\UsuariosInspectoresController;
 use App\Http\Controllers\usuarios\UsuariosPersonalController;
+use App\Http\Controllers\usuarios\UsuariosConsejoController;
 use App\Http\Controllers\catalogo\LotesGranelController;
 use App\Http\Controllers\documentacion\DocumentosController;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\InstalacionesController;
+use App\Http\Controllers\inspecciones\inspeccionesController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -431,6 +433,10 @@ Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamenp'])->name('dictamen_productor');
 Route::get('/dictamen_envasador', [CartaAsignacionController::class, 'dictamene'])->name('dictamen_envasador');
 Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dictamenc'])->name('dictamen_comercializador');
+Route::get('/oficio_de_comision', [CartaAsignacionController::class, 'Comision'])->name('oficioDeComision');
+Route::get('/orden_de_servicio', [CartaAsignacionController::class, 'Servicio'])->name('ordenDeServicio');
+
+
 
 //Certificados de instalaciones
 Route::get('/certificado_comercializador', [CartaAsignacionController::class, 'certificadocom'])->name('certificado_comercializador');
@@ -441,6 +447,12 @@ Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserMana
 Route::resource('/empresas-list', clientesProspectoController::class);
 Route::post('/aceptar-cliente', [clientesProspectoController::class, 'aceptarCliente']);
 Route::get('/lista_empresas/{id}', [getFuncionesController::class, 'find_clientes_prospecto']);
+Route::get('/lista_inspetores', [getFuncionesController::class, 'usuariosInspectores']);
+
+/*obtener el editar*/
+Route::get('/cliente_confirmado/{id}/edit', [clientesConfirmadosController::class, 'editarCliente'])->name('editarCliente');
+/*editar*/
+Route::put('/cliente_confirmado/{id}', [clientesConfirmadosController::class, 'update_cliente'])->name('editarCliente');
 
 Route::get('/clientes/confirmados', [clientesConfirmadosController::class, 'UserManagement'])->name('clientes-confirmados');
 Route::resource('/clientes-list', clientesConfirmadosController::class);
@@ -516,6 +528,10 @@ Route::resource('/inspectores-list', UsuariosInspectoresController::class);
 Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal'])->name('usuarios-personal');
 Route::resource('/personal-list', UsuariosPersonalController::class);
 
+//Consejo usuarios
+Route::get('/usuarios/consejo', [UsuariosConsejoController::class, 'consejo'])->name('usuarios-consejo');
+Route::resource('/consejo-list', UsuariosConsejoController::class);
+
 //Documentacion
 Route::get('/documentacion', [documentacionController::class, 'index'])->name('documentacion');
 Route::get('/documentacion/getNormas', [documentacionController::class, 'getNormas'])->name('documentacion.getNormas');
@@ -538,23 +554,23 @@ Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('ti
 Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');
 
 //Guias de agave o maguey
-Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('translado-guias');
+Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('traslado-guias');
 Route::resource('/guias-list', GuiasController::class);
 Route::post('/guias/store', [GuiasController::class, 'store']);
 //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
 
 /*-------------------Dictamenes de instalaciones-------------------*/
 /*mostrar*/
-Route::get('dictamenes/instalaciones', [InstalacionesController::class, 'UserManagement'])->name('dictamen-instalaciones');
+Route::get('dictamenes/instalaciones', [InstalacionesController::class, 'UserManagement'])->name('dictamenes-instalaciones');
 Route::resource('insta', InstalacionesController::class);
 /*eliminar*/
-//Route::delete('/tipos-list/{id_tipo}', [tiposController::class, 'destroy'])->name('tipos.destroy');
+Route::delete('insta/{id_dictamen}', [InstalacionesController::class, 'destroy'])->name('instalacion.delete');
 /*registrar*/
-//Route::post('/tipos-list', [tiposController::class, 'store'])->name('tipo.store');
+Route::post('insta', [InstalacionesController::class, 'store'])->name('instalacion.store');
 /*obtener el editar*/
-//Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name('tipos.edit');
+Route::get('insta/{id_dictamen}/edit', [InstalacionesController::class, 'edit'])->name('instalacion.edit');
 /*editar*/
-//Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('tipos.update');
+Route::put('insta/{id_dictamen}', [InstalacionesController::class, 'update'])->name('tipos.update');
 
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
@@ -572,3 +588,8 @@ Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTransl
 Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
 Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias.update');
 
+
+
+//Inspecciones
+Route::get('/inspecciones', [inspeccionesController::class, 'UserManagement'])->name('inspecciones');
+Route::resource('inspecciones-list', inspeccionesController::class);
