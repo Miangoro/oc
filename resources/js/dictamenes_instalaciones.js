@@ -136,7 +136,7 @@
            render: function (data, type, full, meta) {
              return (
                '<div class="d-flex align-items-center gap-50">' +
-                   `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_dictamen']}" data-bs-toggle="offcanvas" data-bs-target="#editTipo"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+                   `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_dictamen']} data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#editDictamen"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
                    `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_dictamen']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
                    //'<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
@@ -578,10 +578,86 @@ $(document).on('click', '.pdf', function () {
       iframe.attr('src', '../dictamen_productor/');
 
       $("#titulo_modal").text("Dictamen de productor");
-      $("#subtitulo_modal").text(registro);
-      
-    
+      $("#subtitulo_modal").text(registro);  
 });
+
+
+
+
+// FUNCION PARA EDITAR un registro
+$(document).ready(function() {
+  // Abrir el modal y cargar datos para editar
+  $('.datatables-users').on('click', '.edit-record', function() {
+      var id_dictamen = $(this).data('id');
+
+      // Realizar la solicitud AJAX para obtener los datos de la clase
+      $.get('/insta/' + id_dictamen + '/edit', function(data) {
+          // Rellenar el formulario con los datos obtenidos
+          $('#edit_id_dictamen').val(data.id_dictamen);
+          $('#edit_tipo_dictamen').val(data.tipo_dictamen);
+          $('#edit_num_dictamen').val(data.num_dictamen);
+          $('#edit_fecha_emision').val(data.fecha_emision);
+          $('#edit_fecha_vigencia').val(data.fecha_vigencia);
+          $('#edit_id_inspeccion').val(data.id_inspeccion);
+          $('#edit_categorias').val(data.categorias);
+          $('#edit_clases').val(data.clases);
+
+          // Mostrar el modal de edición
+          $('#editDictamen').modal('show');
+      }).fail(function() {
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al obtener los datos',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      });
+  });
+
+  // Manejar el envío del formulario de edición
+  $('#EditarDictamen').on('submit', function(e) {
+      e.preventDefault();
+
+      var formData = $(this).serialize();
+      var id_dictamen = $('#edit_id_dictamen').val(); // Obtener el ID de la clase desde el campo oculto
+
+      $.ajax({
+          url: '/insta/' + id_dictamen,
+          type: 'PUT',
+          data: formData,
+          success: function(response) {
+              $('#editDictamen').modal('hide'); // Ocultar el modal de edición "DIV"
+              $('#EditarDictamen')[0].reset(); // Limpiar el formulario "FORM"
+              // Mostrar alerta de éxito
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.success,
+                  customClass: {
+                      confirmButton: 'btn btn-success'
+                  }
+              });
+              // Recargar los datos en la tabla sin reinicializar DataTables
+              $('.datatables-users').DataTable().ajax.reload();
+          },
+          error: function(xhr) {
+            console.log('Error:', xhr.responseText);
+              // Mostrar alerta de error
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Error al actualizar el dictamen',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+      });
+  });
+});
+
 
  
  

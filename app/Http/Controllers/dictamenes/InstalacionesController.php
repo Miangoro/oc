@@ -155,5 +155,50 @@ class InstalacionesController extends Controller
 
 
 
+    
+//funcion para llenar el campo del formulario
+public function edit($id_dictamen)
+{
+    try {
+        $var1 = Dictamen_instalaciones::findOrFail($id_dictamen);
+        return response()->json($var1);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al obtener el dictamen'], 500);
+    }
+}
+
+// Función para EDITAR una clase existente
+    public function update(Request $request, $id_dictamen)
+{
+    $request->validate([
+        'tipo_dictamen' => 'required|integer',
+        'num_dictamen' => 'required|string|max:255',
+        'fecha_emision' => 'nullable|date',
+        'fecha_vigencia' => 'nullable|date',
+        'categorias' => 'required|string|max:100',
+        'clases' => 'required|string|max:100',
+        'id_inspeccion' => 'required|integer',
+    ]);
+    try {
+        $var2 = Dictamen_instalaciones::findOrFail($id_dictamen);
+        $var2->id_inspeccion = $request->id_inspeccion;
+        $var2->tipo_dictamen = $request->tipo_dictamen;
+        //$var2->id_instalacion = 1;
+        $var2->num_dictamen = $request->num_dictamen;
+        $var2->fecha_emision = $request->fecha_emision;
+        $var2->fecha_vigencia = $request->fecha_vigencia;
+        $var2->categorias = $request->categorias;
+        $var2->clases = $request->clases;
+        $var2->save();
+
+        return response()->json(['success' => 'Editado correctamente']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al editar'], 500);
+    }
+}
+
+
+
+
 
 }

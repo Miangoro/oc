@@ -559,9 +559,9 @@ Route::delete('insta/{id_dictamen}', [InstalacionesController::class, 'destroy']
 /*registrar*/
 Route::post('insta', [InstalacionesController::class, 'store'])->name('instalacion.store');
 /*obtener el editar*/
-//Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name('tipos.edit');
+Route::get('insta/{id_dictamen}/edit', [InstalacionesController::class, 'edit'])->name('instalacion.edit');
 /*editar*/
-//Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('tipos.update');
+Route::put('insta/{id_dictamen}', [InstalacionesController::class, 'update'])->name('tipos.update');
 
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
