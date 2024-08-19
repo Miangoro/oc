@@ -114,6 +114,14 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
         return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
+
+
+    //
+    public function Certificadocom()
+    {
+        $pdf = Pdf::loadView('pdfs.Certificado_comercializador');
+        return $pdf->stream('Certificado de comercializador.pdf');
+    }
 }
 
 
