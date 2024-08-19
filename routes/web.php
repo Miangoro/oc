@@ -525,7 +525,7 @@ Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal']
 Route::resource('/personal-list', UsuariosPersonalController::class);
 
 //Consejo usuarios
-Route::get('/usuarios/consejo', [UsuariosConsejoController::class, 'consejo'])->name('consejos-usuarios');
+Route::get('/usuarios/consejo', [UsuariosConsejoController::class, 'consejo'])->name('usuarios-consejo');
 Route::resource('/consejo-list', UsuariosConsejoController::class);
 
 //Documentacion
