@@ -7,39 +7,42 @@
 // Datatable (jquery)
 $(function () {
 
-
     const tieneCoordenadasSelect = document.getElementById('tiene_coordenadas');
     const coordenadasDiv = document.getElementById('coordenadas');
     const latitudInputs = document.querySelectorAll('input[name="latitud[]"]');
     const longitudInputs = document.querySelectorAll('input[name="longitud[]"]');
-
-    tieneCoordenadasSelect.addEventListener('change', function () {
-        if (tieneCoordenadasSelect.value === 'Si') {
-            coordenadasDiv.classList.remove('d-none');
-        } else {
-            coordenadasDiv.classList.add('d-none');
-            // Limpiar los valores de los inputs de latitud y longitud
-            latitudInputs.forEach(input => input.value = '');
-            longitudInputs.forEach(input => input.value = '');
-        }
-    });
+    
+    if (tieneCoordenadasSelect && coordenadasDiv) {
+        tieneCoordenadasSelect.addEventListener('change', function () {
+            if (tieneCoordenadasSelect.value === 'Si') {
+                coordenadasDiv.classList.remove('d-none');
+            } else {
+                coordenadasDiv.classList.add('d-none');
+                // Limpiar los valores de los inputs de latitud y longitud
+                latitudInputs.forEach(input => input.value = '');
+                longitudInputs.forEach(input => input.value = '');
+            }
+        });
+    }
+    
     const editTieneCoordenadasSelect = document.getElementById('edit_tiene_coordenadas');
     const editCoordenadasDiv = document.getElementById('edit_coordenadas');
     const editLatitudInputs = document.querySelectorAll('input[name="latitud[]"]');
     const editLongitudInputs = document.querySelectorAll('input[name="longitud[]"]');
-
-    editTieneCoordenadasSelect.addEventListener('change', function () {
-        if (editTieneCoordenadasSelect.value === 'Si') {
-            editCoordenadasDiv.classList.remove('d-none');
-        } else {
-            editCoordenadasDiv.classList.add('d-none');
-            // Limpiar los valores de los inputs de latitud y longitud
-            editLatitudInputs.forEach(input => input.value = '');
-            editLongitudInputs.forEach(input => input.value = '');
-        }
-    });
-
-
+    
+    if (editTieneCoordenadasSelect && editCoordenadasDiv) {
+        editTieneCoordenadasSelect.addEventListener('change', function () {
+            if (editTieneCoordenadasSelect.value === 'Si') {
+                editCoordenadasDiv.classList.remove('d-none');
+            } else {
+                editCoordenadasDiv.classList.add('d-none');
+                // Limpiar los valores de los inputs de latitud y longitud
+                editLatitudInputs.forEach(input => input.value = '');
+                editLongitudInputs.forEach(input => input.value = '');
+            }
+        });
+    }
+    
 
 
     // Variable declaration for table
@@ -149,8 +152,10 @@ $(function () {
                     render: function (data, type, full, meta) {
                         return (
                             '<div class="d-flex align-items-center gap-50">' +
-                            `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredio"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-                            `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_predio']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+                            '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
+                            '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                            `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredio" href="javascrip:;" class="dropdown-item edit-record text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+                            `<a data-id="${full['id_predio']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
                             '</div>' +
@@ -159,6 +164,7 @@ $(function () {
                     }
                 }
             ],
+
             order: [[2, 'desc']],
             dom:
                 '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
@@ -182,8 +188,6 @@ $(function () {
                     "sPrevious": "Anterior"
                 }
             },
-
-
             // Buttons with Dropdown
             buttons: [
                 {
@@ -193,11 +197,11 @@ $(function () {
                     buttons: [
                         {
                             extend: 'print',
-                            title: 'catalogo clases',
+                            title: 'Predios',
                             text: '<i class="ri-printer-line me-1" ></i>Print',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be print
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -205,12 +209,18 @@ $(function () {
                                         var el = $.parseHTML(inner);
                                         var result = '';
                                         $.each(el, function (index, item) {
+
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }
                                         });
+
                                         return result;
                                     }
                                 }
@@ -231,11 +241,11 @@ $(function () {
                         },
                         {
                             extend: 'csv',
-                            title: 'catalogo clases',
+                            title: 'Users',
                             text: '<i class="ri-file-text-line me-1" ></i>Csv',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be print
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -243,11 +253,17 @@ $(function () {
                                         var el = $.parseHTML(inner);
                                         var result = '';
                                         $.each(el, function (index, item) {
+
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }
+
                                         });
                                         return result;
                                     }
@@ -256,11 +272,11 @@ $(function () {
                         },
                         {
                             extend: 'excel',
-                            title: 'catalogo clases',
+                            title: 'Predios',
                             text: '<i class="ri-file-excel-line me-1"></i>Excel',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be display
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -269,10 +285,14 @@ $(function () {
                                         var result = '';
                                         $.each(el, function (index, item) {
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }
                                         });
                                         return result;
                                     }
@@ -281,11 +301,11 @@ $(function () {
                         },
                         {
                             extend: 'pdf',
-                            title: 'catalogo clases',
+                            title: 'Predios',
                             text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be display
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -294,10 +314,14 @@ $(function () {
                                         var result = '';
                                         $.each(el, function (index, item) {
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }
                                         });
                                         return result;
                                     }
@@ -306,11 +330,11 @@ $(function () {
                         },
                         {
                             extend: 'copy',
-                            title: 'catalogo clases',
+                            title: 'Predios',
                             text: '<i class="ri-file-copy-line me-1"></i>Copy',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be copy
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -319,10 +343,14 @@ $(function () {
                                         var result = '';
                                         $.each(el, function (index, item) {
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }
                                         });
                                         return result;
                                     }
@@ -480,7 +508,6 @@ $(function () {
         function generateOptions(tipos) {
             return tipos.map(tipo => `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`).join('');
         }
-
         // Función para agregar una nueva sección de plantación
         function addRow(container) {
             var options = generateOptions(tiposAgave);
@@ -571,8 +598,6 @@ $(function () {
     });
 
 
-
-
     $(document).ready(function () {
 
         // Añadir nueva fila de coordenadas
@@ -637,6 +662,17 @@ $(function () {
 
     /* registrar un nuevo predio */
 
+   /* registrar un nuevo predio */
+
+   $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // Inicializar FormValidation
     const addNewPredio = document.getElementById('addNewPredioForm');
     const fv = FormValidation.formValidation(addNewPredio, {
         fields: {
@@ -646,45 +682,60 @@ $(function () {
                         message: 'Por favor selecciona la empresa cliente'
                     }
                 }
-            },/* 
-      nombre_productor: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor ingresa el nombre del productor'
+            },
+            nombre_productor: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa el nombre del productor'
+                    }
+                }
+            },
+            nombre_predio: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa el nombre del predio'
+                    }
+                }
+            },
+            tipo_predio: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor selecciona el tipo de predio'
+                    }
+                }
+            },
+            ubicacion_predio: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa la ubicación del predio'
+                      }
+                    }              
+            },
+            superficie: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa la superficie del predio'
+                    },
+                    numeric: {
+                        message: 'Por favor ingresa un valor numérico válido'
+                    }
+                }
+            },
+            tiene_coordenadas: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor selecciona si el predio cuenta con coordenadas'
+                    }
                 }
             }
-        }, 
-        nombre_predio: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor ingresa el nombre del predio'
-                }
-            }
-        },
-        tipo_predio: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor selecciona el tipo de predio'
-                }
-            }
-        },
-        superficie: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor ingresa la superficie del predio'
-                },
-                numeric: {
-                    message: 'Por favor ingresa un valor numérico válido'
-                }
-            }
-        }   */
         },
         plugins: {
             trigger: new FormValidation.plugins.Trigger(),
             bootstrap5: new FormValidation.plugins.Bootstrap5({
                 eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
                 rowSelector: function (field, ele) {
-                    return '.mb-4';
+                    return '.form-floating';
                 }
             }),
             submitButton: new FormValidation.plugins.SubmitButton(),
@@ -725,144 +776,103 @@ $(function () {
             }
         });
     });
+});
 
 
-    // Manejar el clic en el botón de editar
-    $(document).on('click', '.edit-record', function () {
-        var predioId = $(this).data('id'); // Obtener el ID del predio a editar
-        $('#edit_id_predio').val(predioId);
 
-        // Solicitar los datos del predio desde el servidor
-        $.ajax({
-            url: '/domicilios-predios/' + predioId + '/edit',
-            method: 'GET',
-            success: function (data) {
-                if (data.success) {
-                    var predio = data.predio;
 
-                    // Rellenar el formulario con los datos del predio
-                    $('#edit_id_empresa').val(predio.id_empresa).trigger('change');
-                    $('#edit_nombre_productor').val(predio.nombre_productor);
-                    $('#edit_nombre_predio').val(predio.nombre_predio);
-                    $('#edit_ubicacion_predio').val(predio.ubicacion_predio);
-                    $('#edit_tipo_predio').val(predio.tipo_predio);
-                    $('#edit_puntos_referencia').val(predio.puntos_referencia);
-                    $('#edit_tiene_coordenadas').val(predio.cuenta_con_coordenadas).trigger('change');
-                    $('#edit_superficie').val(predio.superficie);
 
-                    // Limpiar las filas de coordenadas anteriores
-                    $('#edit_coordenadas tbody').empty();
+// Manejar el clic en el botón de editar
+$(document).on('click', '.edit-record', function () {
+    var predioId = $(this).data('id'); // Obtener el ID del predio a editar
+    $('#edit_id_predio').val(predioId);
 
-                    // Rellenar coordenadas o añadir una fila vacía si no hay coordenadas
-                    if (data.coordenadas.length > 0) {
-                        data.coordenadas.forEach(function (coordenada) {
-                            var newRow = `
-                        <tr>
-                            <td>
-                                <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
-                            </td>
-                            <td>
-                                <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" name="latitud[]" value="${coordenada.latitud}" placeholder="Latitud">
-                                    <label for="latitud">Latitud</label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" name="longitud[]" value="${coordenada.longitud}" placeholder="Longitud">
-                                    <label for="longitud">Longitud</label>
-                                </div>
-                            </td>
-                        </tr>`;
-                            $('#edit_coordenadas tbody').append(newRow);
-                        });
-                    } else {
-                        var emptyRow = `
+    // Solicitar los datos del predio desde el servidor
+    $.ajax({
+        url: '/domicilios-predios/' + predioId + '/edit',
+        method: 'GET',
+        success: function (data) {
+            if (data.success) {
+                var predio = data.predio;
+
+                // Rellenar el formulario con los datos del predio
+                $('#edit_id_empresa').val(predio.id_empresa).trigger('change');
+                $('#edit_nombre_productor').val(predio.nombre_productor);
+                $('#edit_nombre_predio').val(predio.nombre_predio);
+                $('#edit_ubicacion_predio').val(predio.ubicacion_predio);
+                $('#edit_tipo_predio').val(predio.tipo_predio);
+                $('#edit_puntos_referencia').val(predio.puntos_referencia);
+                $('#edit_tiene_coordenadas').val(predio.cuenta_con_coordenadas).trigger('change');
+                $('#edit_superficie').val(predio.superficie);
+
+                // Limpiar las filas de coordenadas anteriores
+                $('#edit_coordenadas tbody').empty();
+
+                // Rellenar coordenadas o añadir una fila vacía si no hay coordenadas
+                if (predio.cuenta_con_coordenadas === 'Si' && data.coordenadas.length > 0) {
+                    data.coordenadas.forEach(function (coordenada) {
+                        var newRow = `
                     <tr>
                         <td>
                             <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
                         </td>
                         <td>
                             <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" name="latitud[]" placeholder="Latitud">
+                                <input type="text" class="form-control" name="latitud[]" value="${coordenada.latitud}" placeholder="Latitud">
                                 <label for="latitud">Latitud</label>
                             </div>
                         </td>
                         <td>
                             <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" name="longitud[]" placeholder="Longitud">
+                                <input type="text" class="form-control" name="longitud[]" value="${coordenada.longitud}" placeholder="Longitud">
                                 <label for="longitud">Longitud</label>
                             </div>
                         </td>
                     </tr>`;
-                        $('#edit_coordenadas tbody').append(emptyRow);
-                    }
+                        $('#edit_coordenadas tbody').append(newRow);
+                    });
+                } else {
+                    var emptyRow = `
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
+                    </td>
+                    <td>
+                        <div class="form-floating form-floating-outline">
+                            <input type="text" class="form-control" name="latitud[]" placeholder="Latitud">
+                            <label for="latitud">Latitud</label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-floating form-floating-outline">
+                            <input type="text" class="form-control" name="longitud[]" placeholder="Longitud">
+                            <label for="longitud">Longitud</label>
+                        </div>
+                    </td>
+                </tr>`;
+                    $('#edit_coordenadas tbody').append(emptyRow);
+                }
 
-                    // Mostrar la sección de coordenadas si hay coordenadas o una fila vacía
+                // Mostrar u ocultar la sección de coordenadas basado en la presencia de coordenadas
+                if (predio.cuenta_con_coordenadas === 'Si' && data.coordenadas.length > 0) {
                     $('#edit_coordenadas').removeClass('d-none');
+                } else {
+                    $('#edit_coordenadas').addClass('d-none');
+                }
 
-                    // Limpiar las filas de plantaciones anteriores
-                    $('.edit_ContenidoPlantacion').empty();
+                // Limpiar las filas de plantaciones anteriores
+                $('.edit_ContenidoPlantacion').empty();
 
-                    // Cargar tipos de agave en el select
-                    var tipoOptions = data.tipos.map(function (tipo) {
-                        return `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`;
-                    }).join('');
+                // Cargar tipos de agave en el select
+                var tipoOptions = data.tipos.map(function (tipo) {
+                    return `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`;
+                }).join('');
 
-                    // Rellenar plantaciones o añadir una fila vacía si no hay plantaciones
-                    if (data.plantaciones.length > 0) {
-                        data.plantaciones.forEach(function (plantacion) {
-                            var newRow = `
-                        <tr class="plantacion-row">
-                            <td rowspan="4">
-                                <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
-                            </td>
-                            <td><b>Nombre y Especie de Agave/Maguey</b></td>
-                            <td>
-                                <div class="form-floating form-floating-outline mb-3">
-                                    <select name="id_tipo[]" class="form-select tipo_agave">
-                                        <option disabled>Tipo de agave</option>
-                                        ${tipoOptions}
-                                    </select>
-                                    <label for="especie_agave">Nombre y Especie de Agave/Maguey</label>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="plantacion-row">
-                            <td><b>Número de Plantas</b></td>
-                            <td>
-                                <div class="form-floating form-floating-outline">
-                                    <input type="number" class="form-control" required name="numero_plantas[]" value="${plantacion.num_plantas}" placeholder="Número de plantas" step="1">
-                                    <label for="numero_plantas">Número de Plantas</label>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="plantacion-row">
-                            <td><b>Edad de la Plantación</b></td>
-                            <td>
-                                <div class="form-floating form-floating-outline">
-                                    <input type="number" class="form-control" required name="edad_plantacion[]" value="${plantacion.anio_plantacion}" placeholder="Edad de la plantación (años)" step="1">
-                                    <label for="edad_plantacion">Edad de la Plantación</label>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="plantacion-row">
-                            <td><b>Tipo de Plantación</b></td>
-                            <td>
-                                <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" required name="tipo_plantacion[]" value="${plantacion.tipo_plantacion}" placeholder="Tipo de plantación">
-                                    <label for="tipo_plantacion">Tipo de Plantación</label>
-                                </div>
-                            </td>
-                        </tr>`;
-
-                            $('.edit_ContenidoPlantacion').append(newRow);
-                            // Seleccionar el tipo de agave actual
-                            $('.edit_ContenidoPlantacion').find('select[name="id_tipo[]"]').last().val(plantacion.id_tipo);
-                        });
-                    } else {
-                        var emptyRow = `
-                    <tr>
+                // Rellenar plantaciones o añadir una fila vacía si no hay plantaciones
+                if (data.plantaciones.length > 0) {
+                    data.plantaciones.forEach(function (plantacion) {
+                        var newRow = `
+                    <tr class="plantacion-row">
                         <td rowspan="4">
                             <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
                         </td>
@@ -870,58 +880,95 @@ $(function () {
                         <td>
                             <div class="form-floating form-floating-outline mb-3">
                                 <select name="id_tipo[]" class="form-select tipo_agave">
-                                    <option value="" disabled>Tipo de agave</option>
+                                    <option disabled>Tipo de agave</option>
                                     ${tipoOptions}
                                 </select>
                                 <label for="especie_agave">Nombre y Especie de Agave/Maguey</label>
                             </div>
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="plantacion-row">
                         <td><b>Número de Plantas</b></td>
                         <td>
                             <div class="form-floating form-floating-outline">
-                                <input type="number" class="form-control" name="numero_plantas[]" placeholder="Número de plantas" step="1">
+                                <input type="number" class="form-control" required name="numero_plantas[]" value="${plantacion.num_plantas}" placeholder="Número de plantas" step="1">
                                 <label for="numero_plantas">Número de Plantas</label>
                             </div>
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="plantacion-row">
                         <td><b>Edad de la Plantación</b></td>
                         <td>
                             <div class="form-floating form-floating-outline">
-                                <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Edad de la plantación (años)" step="1">
+                                <input type="number" class="form-control" required name="edad_plantacion[]" value="${plantacion.anio_plantacion}" placeholder="Edad de la plantación (años)" step="1">
                                 <label for="edad_plantacion">Edad de la Plantación</label>
                             </div>
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="plantacion-row">
                         <td><b>Tipo de Plantación</b></td>
                         <td>
                             <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" name="tipo_plantacion[]" placeholder="Tipo de plantación">
-                               <label for="tipo_plantacion">Tipo de Plantación</label>
-                               </div>
-                           </td>
-                       </tr>`;
-                        $('.edit_ContenidoPlantacion').append(emptyRow);
-                    }
+                                <input type="text" class="form-control" required name="tipo_plantacion[]" value="${plantacion.tipo_plantacion}" placeholder="Tipo de plantación">
+                                <label for="tipo_plantacion">Tipo de Plantación</label>
+                            </div>
+                        </td>
+                    </tr>`;
 
-                    // Mostrar el modal
-                    $('#modalEditPredio').modal('show');
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudo cargar los datos del predio.',
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
+                        $('.edit_ContenidoPlantacion').append(newRow);
+                        // Seleccionar el tipo de agave actual
+                        $('.edit_ContenidoPlantacion').find('select[name="id_tipo[]"]').last().val(plantacion.id_tipo);
                     });
+                } else {
+                    var emptyRow = `
+                <tr>
+                    <td rowspan="4">
+                        <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
+                    </td>
+                    <td><b>Nombre y Especie de Agave/Maguey</b></td>
+                    <td>
+                        <div class="form-floating form-floating-outline mb-3">
+                            <select name="id_tipo[]" class="form-select tipo_agave">
+                                <option value="" disabled>Tipo de agave</option>
+                                ${tipoOptions}
+                            </select>
+                            <label for="especie_agave">Nombre y Especie de Agave/Maguey</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Número de Plantas</b></td>
+                    <td>
+                        <div class="form-floating form-floating-outline">
+                            <input type="number" class="form-control" name="numero_plantas[]" placeholder="Número de plantas" step="1">
+                            <label for="numero_plantas">Número de Plantas</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Edad de la Plantación</b></td>
+                    <td>
+                        <div class="form-floating form-floating-outline">
+                            <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Edad de la plantación (años)" step="1">
+                            <label for="edad_plantacion">Edad de la Plantación</label>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Tipo de Plantación</b></td>
+                    <td>
+                        <div class="form-floating form-floating-outline">
+                            <input type="text" class="form-control" name="tipo_plantacion[]" placeholder="Tipo de plantación">
+                           <label for="tipo_plantacion">Tipo de Plantación</label>
+                           </div>
+                       </td>
+                   </tr>`;
+                    $('.edit_ContenidoPlantacion').append(emptyRow);
                 }
-            },
-            error: function (error) {
-                console.error('Error al cargar los datos del predio:', error);
+
+                // Mostrar el modal
+                $('#modalEditPredio').modal('show');
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -931,18 +978,102 @@ $(function () {
                     }
                 });
             }
-        });
+        },
+        error: function (error) {
+            console.error('Error al cargar los datos del predio:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo cargar los datos del predio.',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+        }
+    });
+});
+
+
+
+$(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
     });
 
-
-
-
-
-    /* boton de actualizar */
-    $('#addEditPredioForm').on('submit', function (e) {
-        e.preventDefault();
-
-        var formData = new FormData(this);
+    // Inicializar FormValidation para el formulario de edición
+    const addEditPredioForm = document.getElementById('addEditPredioForm');
+    const fvEdit = FormValidation.formValidation(addEditPredioForm, {
+        fields: {
+            id_empresa: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor selecciona la empresa cliente'
+                    }
+                }
+            },
+            nombre_productor: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa el nombre del productor'
+                    }
+                }
+            },
+            nombre_predio: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa el nombre del predio'
+                    }
+                }
+            },
+            tipo_predio: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor selecciona el tipo de predio'
+                    }
+                }
+            },
+            ubicacion_predio: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa la ubicación del predio'
+                    }
+                }
+            },
+            superficie: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa la superficie del predio'
+                    },
+                    numeric: {
+                        message: 'Por favor ingresa un valor numérico válido'
+                    }
+                }
+            },
+            tiene_coordenadas: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor selecciona si el predio cuenta con coordenadas'
+                    }
+                }
+            }
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: function (field, ele) {
+                    return '.form-floating';
+                }
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+    }).on('core.form.valid', function (e) {
+        var formData = new FormData(addEditPredioForm);
         var predioId = $('#edit_id_predio').val(); // Asegúrate de que este ID esté correctamente asignado
 
         $.ajax({
@@ -951,14 +1082,10 @@ $(function () {
             data: formData,
             contentType: false,
             processData: false,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
             success: function (response) {
-                console.log(response); // Verifica la respuesta del servidor
+                addEditPredioForm.reset();
                 $('#modalEditPredio').modal('hide');
                 $('.datatables-users').DataTable().ajax.reload();
-
                 Swal.fire({
                     icon: 'success',
                     title: '¡Éxito!',
@@ -969,7 +1096,6 @@ $(function () {
                 });
             },
             error: function (xhr) {
-                console.error('Error al actualizar el predio:', xhr);
                 if (xhr.status === 422) {
                     var errors = xhr.responseJSON.errors;
                     var errorMessages = Object.keys(errors).map(function (key) {
@@ -997,6 +1123,7 @@ $(function () {
             }
         });
     });
+});
 
 
 });

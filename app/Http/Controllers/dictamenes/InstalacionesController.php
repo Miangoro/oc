@@ -23,7 +23,7 @@ class InstalacionesController extends Controller
         $inspeccion = inspecciones::all();
         $empresa = empresa::all();
         $soli = solicitudesModel::all();
-        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'inspeccion', 'empresa', 'soli'));
+        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'inspeccion'));
     }
 
 

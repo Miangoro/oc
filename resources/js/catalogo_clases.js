@@ -162,10 +162,14 @@ $(function () {
                                         var result = '';
                                         $.each(el, function (index, item) {
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }                                      
                                         });
                                         return result;
                                     }
@@ -200,10 +204,14 @@ $(function () {
                                         var result = '';
                                         $.each(el, function (index, item) {
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }                                         
                                         });
                                         return result;
                                     }
@@ -225,10 +233,14 @@ $(function () {
                                         var result = '';
                                         $.each(el, function (index, item) {
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }                                     
                                         });
                                         return result;
                                     }
@@ -250,10 +262,14 @@ $(function () {
                                         var result = '';
                                         $.each(el, function (index, item) {
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }                                    
                                         });
                                         return result;
                                     }
@@ -275,10 +291,14 @@ $(function () {
                                         var result = '';
                                         $.each(el, function (index, item) {
                                             if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
+                                                if (item.lastChild && item.lastChild.firstChild) {
+                                                    result = result + item.lastChild.firstChild.textContent;
+                                                }
                                             } else if (item.innerText === undefined) {
                                                 result = result + item.textContent;
-                                            } else result = result + item.innerText;
+                                            } else {
+                                                result = result + item.innerText;
+                                            }                                        
                                         });
                                         return result;
                                     }

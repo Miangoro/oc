@@ -63,17 +63,35 @@ class PrediosController extends Controller
         } else {
             $search = $request->input('search.value');
     
-            $predios = Predios::with('empresa') // Carga la relación
-                ->where('id_predio', 'LIKE', "%{$search}%")
-                ->orWhere('id_empresa', 'LIKE', "%{$search}%")
+            $predios = Predios::with('empresa')
+                ->where(function ($query) use ($search) {
+                    $query->whereHas('empresa', function ($q) use ($search) {
+                        $q->where('razon_social', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('nombre_productor', 'LIKE', "%{$search}%")
+                    ->orWhere('nombre_predio', 'LIKE', "%{$search}%")
+                    ->orWhere('ubicacion_predio', 'LIKE', "%{$search}%")
+                    ->orWhere('tipo_predio', 'LIKE', "%{$search}%")
+                    ->orWhere('puntos_referencia', 'LIKE', "%{$search}%")
+                    ->orWhere('superficie', 'LIKE', "%{$search}%");
+                })
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
     
             $totalFiltered = Predios::with('empresa')
-                ->where('id_predio', 'LIKE', "%{$search}%")
-                ->orWhere('id_empresa', 'LIKE', "%{$search}%")
+                ->where(function ($query) use ($search) {
+                    $query->whereHas('empresa', function ($q) use ($search) {
+                        $q->where('razon_social', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('nombre_productor', 'LIKE', "%{$search}%")
+                    ->orWhere('nombre_predio', 'LIKE', "%{$search}%")
+                    ->orWhere('ubicacion_predio', 'LIKE', "%{$search}%")
+                    ->orWhere('tipo_predio', 'LIKE', "%{$search}%")
+                    ->orWhere('puntos_referencia', 'LIKE', "%{$search}%")
+                    ->orWhere('superficie', 'LIKE', "%{$search}%");
+                })
                 ->count();
         }
     

@@ -23,51 +23,51 @@ class CartaAsignacionController extends Controller
     //vista
     public function ServicioPersonaFisica()
     {
-      $pdf = Pdf::loadView('pdfs.prestacion_servicio_fisica');
-    return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 persona fisica VIGENTE.pdf');
+        $pdf = Pdf::loadView('pdfs.prestacion_servicio_fisica');
+        return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 persona fisica VIGENTE.pdf');
     }
 
 
     //vista servicio persona vigente
-    
+
     public function ServicioPersonaVigente()
-{
-    $pdf = Pdf::loadView('pdfs.prestacion_servicios_vigente');
-    $pdf->setPaper('A4', 'portrait');
-    $pdf->render();
+    {
+        $pdf = Pdf::loadView('pdfs.prestacion_servicios_vigente');
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->render();
 
-    // Añadir script de página después de renderizar
-    $pdf->getDomPDF()->getCanvas()->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
-        $canvas->text(520, 820, "Página $pageNumber de $pageCount", $fontMetrics->get_font("Arial", "normal"), 12);
-    });
+        // Añadir script de página después de renderizar
+        $pdf->getDomPDF()->getCanvas()->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
+            $canvas->text(520, 820, "Página $pageNumber de $pageCount", $fontMetrics->get_font("Arial", "normal"), 12);
+        });
 
-    return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 VIGENTE.pdf');
+        return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 VIGENTE.pdf');
     }
 
 
     public function Contrato_NMX_052()
     {
-      $pdf = Pdf::loadView('pdfs.CONTRATO_NMX-052');
-    return $pdf->stream('F4.1-01-12 CONTRATO NMX-052 Ed 0.pdf');
+        $pdf = Pdf::loadView('pdfs.CONTRATO_NMX-052');
+        return $pdf->stream('F4.1-01-12 CONTRATO NMX-052 Ed 0.pdf');
     }
 
     public function Contrato_prestacion_servicio_NOM_199()
     {
-      $pdf = Pdf::loadView('pdfs.Contrato_prestacion_servicio_NOM_199');
-    return $pdf->stream('F4.1-01-07 Contrato Prestación de Servicios NOM-199 Ed 5 VIGENTE.pdf');
+        $pdf = Pdf::loadView('pdfs.Contrato_prestacion_servicio_NOM_199');
+        return $pdf->stream('F4.1-01-07 Contrato Prestación de Servicios NOM-199 Ed 5 VIGENTE.pdf');
     }
 
     public function acta_circunstanciada_produccion()
     {
-      $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion');
-    return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
+        $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion');
+        return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
     }
 
 
     public function solicitudInfoNOM_199()
     {
-      $pdf = Pdf::loadView('pdfs.solicitudInfoClienteNOM-199');
-    return $pdf->stream('F7.1-03-02 Solicitud de Información al Cliente NOM-199-SCFI-2017 Ed. 4 VIGENTE.pdf');
+        $pdf = Pdf::loadView('pdfs.solicitudInfoClienteNOM-199');
+        return $pdf->stream('F7.1-03-02 Solicitud de Información al Cliente NOM-199-SCFI-2017 Ed. 4 VIGENTE.pdf');
     }
 
 
@@ -114,7 +114,18 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
         return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
+
+    //PDF oficio de comisión
+    public function Comision()
+    {
+        $pdf = Pdf::loadView('pdfs.oficioDeComision');
+        return $pdf->stream('F-UV-02-09 Oficio de Comisión Ed.5, Vigente.pdf');
+    }
+
+    //PDF orden de servicio
+    public function Servicio()
+    {
+        $pdf = Pdf::loadView('pdfs.ordenDeServicio');
+        return $pdf->stream('F-UV-02-01 Orden de servicio Ed. 5, Vigente.pdf');
+    }
 }
-
-
-
