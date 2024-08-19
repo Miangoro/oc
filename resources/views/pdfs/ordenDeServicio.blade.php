@@ -144,9 +144,11 @@
             <td class="leftLetter">1231231</td>
         </tr>
         <tr>
-            <td class="leftLetter" style="background-color: #93cddc">Dirección del servicio:</td>
-            <td class="leftLetter" colspan="3"></td>
+            <td class="leftLetter" style="background-color: #93cddc" >Dirección del servicio: <br> &nbsp;</td>
+            <td class="leftLetter" colspan="3" >	CARRETERA VIEJA MÉXICO-ACAPULCO KM 13+500 COL. LA HERRADURA, LOCALIDAD PETAQUILLAS, MUNICIPIO CHILPA SN, LA HERRADURA, PETAQUILLAS, 39105 CHILPANCINGO DE LOS BRAVOS, GUERRERO.</td>
         </tr>
+
+
     </table>
     <br>
     <table>
