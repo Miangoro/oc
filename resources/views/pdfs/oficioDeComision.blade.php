@@ -60,18 +60,20 @@
 
 
         .no-margin-top {
-    margin-top: 0;
-  }
-  .footer{
-    margin-top: 45px;
-    font-size: 10px;
-    text-align: center;
-  }
+            margin-top: 0;
+        }
+
+        .footer {
+            margin-top: 45px;
+            font-size: 10px;
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
-        <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" style="width: 140px; float: left;" class="no-margin-top" alt="Logo CIDAM" class="logo">
+    <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" style="width: 140px; float: left;" class="no-margin-top"
+        alt="Logo CIDAM" class="logo">
 
     <div class="header">
         <p>
@@ -84,7 +86,7 @@
         Oficio de Comisión
     </div>
 
-    <div class="content" >
+    <div class="content">
         <div style="text-align: right; margin-top: 0px;">
             <p>
                 Oficio No. _____/20___<br>
@@ -131,7 +133,8 @@
     </div>
 
     <div class="footer">
-        Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede <br>
+        Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede
+        <br>
         ser distribuido externamente sin la autorización escrita del Director Ejecutivo
     </div>
 
