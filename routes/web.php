@@ -438,6 +438,7 @@ Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserMana
 Route::resource('/empresas-list', clientesProspectoController::class);
 Route::post('/aceptar-cliente', [clientesProspectoController::class, 'aceptarCliente']);
 Route::get('/lista_empresas/{id}', [getFuncionesController::class, 'find_clientes_prospecto']);
+Route::get('/lista_inspetores', [getFuncionesController::class, 'usuariosInspectores']);
 
 /*obtener el editar*/
 Route::get('/cliente_confirmado/{id}/edit', [clientesConfirmadosController::class, 'editarCliente'])->name('editarCliente');

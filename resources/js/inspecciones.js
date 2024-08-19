@@ -34,7 +34,6 @@ $(function () {
         { data: 'fecha_visita' },
         { data: 'inspector' },
         { data: 'fecha_servicio' },
-        { data: '' },
         { data: 'action' }
    
         
@@ -61,8 +60,8 @@ $(function () {
             return `<span>${full.fake_id}</span>`;
           }
         },
-        {
-          // email verify
+       /* {
+      
           targets: 10,
           className: 'text-center',
           render: function (data, type, full, meta) {
@@ -73,7 +72,7 @@ $(function () {
               return '---';
           }
           }
-        },
+        },¨*/
         {
             // Acciones
             targets: -1,
@@ -87,7 +86,7 @@ $(function () {
                 '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
                 '<div class="dropdown-menu dropdown-menu-end m-0">' +
   
-                `<a data-id="${full['id']}"  onclick="abrirModal(${full['id_solicitud']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
+                `<a data-id="${full['id']}"  onclick="abrirModalAsignarInspector(${full['id_solicitud']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
                 `<a data-id="${full['id']}"  onclick="abrirModal(${full['id_solicitud']})" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
                 `<a data-id="${full['id']}"  onclick="abrirModal(${full['id_solicitud']})" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
                 

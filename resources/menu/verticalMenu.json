@@ -104,8 +104,25 @@
         },
         {
           "url": "dictamenes/productos",
-          "name": "Productos",
+          "name": "Producto",
           "slug": "dictamenes-productos"
+        }
+      ]
+    },
+    {
+      "name": "Certificados",
+      "icon": "menu-icon ri-file-paper-2-fill",
+      "slug": "certificados",
+      "submenu": [
+        {
+          "url": "certificados/instalaciones",
+          "name": "Instalaciones",
+          "slug": "certificados-instalaciones"
+        },
+        {
+          "url": "certificados/producto",
+          "name": "Producto",
+          "slug": "certificados-producto"
         }
       ]
     },

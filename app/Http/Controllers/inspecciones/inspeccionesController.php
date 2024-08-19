@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\Helpers;
 use App\Models\solicitudesModel;
+use App\Models\User;
 
 class inspeccionesController extends Controller
 {
@@ -23,8 +24,9 @@ class inspeccionesController extends Controller
         $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
         $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = Estados::all(); // Obtener todos los estados
-        $organismos = Organismos::all(); // Obtener todos los organismos
-        return view('inspecciones.find_inspecciones_view', compact('instalaciones', 'empresas', 'estados', 'organismos'));
+     
+        $inspectores = User::where('tipo','=','2')->get(); // Obtener todos los organismos
+        return view('inspecciones.find_inspecciones_view', compact('instalaciones', 'empresas', 'estados', 'inspectores'));
     }
 
     public function index(Request $request)
@@ -97,14 +99,14 @@ class inspeccionesController extends Controller
             foreach ($solicitudes as $solicitud) {
                 $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids  ?? 'N/A';
-                $nestedData['folio'] = $solicitud->folio  ?? 'N/A';
+                $nestedData['folio'] = '<b class="text-primary">'.$solicitud->folio.'</b>';
                 $nestedData['razon_social'] = $solicitud->empresa->razon_social  ?? 'N/A';
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
-                $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? 'Sin asignar';
+                $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? '<span class="badge bg-danger">Sin asignar</apan>';
                 $nestedData['tipo'] = $solicitud->tipo  ?? 'N/A';
-                $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? 'Sin asignar';
-                $nestedData['inspector'] = $solicitud->inspector->name ?? 'Sin asignar'; // Maneja el caso donde el organismo sea nulo
-                $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? 'Sin asignar';
+                $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</apan>';
+                $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</apan>'; // Maneja el caso donde el organismo sea nulo
+                $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</apan>';
 
 
 
