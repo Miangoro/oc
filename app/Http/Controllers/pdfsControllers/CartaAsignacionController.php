@@ -127,7 +127,6 @@ class CartaAsignacionController extends Controller
     {
         $pdf = Pdf::loadView('pdfs.Certificado_envasador_mezcal');
         return $pdf->stream('Certificado de envasador de mezcal.pdf');
-
     }
 
     //PDF oficio de comisión
