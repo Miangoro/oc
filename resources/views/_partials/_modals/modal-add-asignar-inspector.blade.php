@@ -8,18 +8,18 @@
             <h4 class="address-title mb-2">Asignar inspector</h4>
             <p class="address-subtitle">Folio de solicitud</p>
           </div>
-          <form id="addNewCliente" class="row g-5" onsubmit="return false">
-            <input name="id_empresa" type="hidden" id="empresaID">
+          <form id="addAsignarInspector" class="row g-5" onsubmit="return false">
+            <input name="id_solicitud" type="hidden" id="id_solicitud">
   
 
             <div class="col-12">
               <div class="form-floating form-floating-outline">
-                <select id="id_contacto" name="id_contacto" class="select2 form-select" data-allow-clear="true">
+                <select id="id_inspector" name="id_inspector" class="select2 form-select" data-allow-clear="true">
                  @foreach ($inspectores as $inspector)
                    <option value="{{$inspector->id}}">{{$inspector->name}}</option>
                  @endforeach
                 </select>
-                <label for="id_contacto">Inspector de la unidad de inspección</label>
+                <label for="id_inspector">Inspector de la unidad de inspección</label>
               </div>
             </div>
             
@@ -28,21 +28,21 @@
 
             <div class="col-md-6 col-sm-12">
                 <div class="form-floating form-floating-outline">
-                  <input type="text" id="modalAddressAddress2" name="idcif" class="form-control" placeholder="Número de servicio" />
-                  <label for="modalAddressAddress2">Número de servicio</label>
+                  <input type="text" id="num_servicio" name="num_servicio" class="form-control" placeholder="Número de servicio" />
+                  <label for="num_servicio">Número de servicio</label>
                 </div>
             </div>
   
             <div class="col-md-6 col-sm-12">
               <div class="form-floating form-floating-outline">
-                <input type="date" id="modalAddressAddress1" name="fecha_cedula" class="form-control" placeholder="Fecha y hora de visita" />
-                <label for="modalAddressAddress1">Fecha y hora de visita</label>
+                <input type="date" id="fecha_servicio" name="fecha_servicio" class="form-control" placeholder="Fecha y hora de visita" />
+                <label for="fecha_servicio">Fecha y hora de visita</label>
               </div>
             </div>
 
             <div class="form-floating form-floating-outline mb-6">
-                <textarea class="form-control h-px-100" id="exampleFormControlTextarea1" placeholder="Indicaciones..."></textarea>
-                <label for="exampleFormControlTextarea1">Indicaciones u observaciones para la inspección</label>
+                <textarea name="observaciones" class="form-control h-px-100" id="observaciones" placeholder="Indicaciones..."></textarea>
+                <label for="observaciones">Indicaciones u observaciones para la inspección</label>
               </div>
             
 

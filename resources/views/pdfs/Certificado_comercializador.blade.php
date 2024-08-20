@@ -19,6 +19,10 @@
             transform: translate(-50%, -50%);
             opacity: 0.3;
             z-index: -1; 
+<<<<<<< HEAD
+            
+=======
+>>>>>>> 6992792300159390f24051b20ea1af744c22949b
         }
 
         .header img {

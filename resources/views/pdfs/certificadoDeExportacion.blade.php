@@ -112,7 +112,7 @@
 
         .titulos {
             font-size: 15px;
-            padding: 8px;
+            padding: 10px;
             text-align: center;
             font-weight: bold;
         }
@@ -120,7 +120,6 @@
         .titutlos-footer {
             font-size: 12px;
             text-align: center;
-            font-weight: bold;
             padding: 10px;
         }
     </style>
@@ -324,16 +323,17 @@
             en forma parcial.</p>
     </div>
     <div class="titutlos-footer">
-        AUTORIZÓ
+       <b>AUTORIZÓ</b> 
     </div>
-    <div class="titutlos-footer">
-        XXXXX <br> XXXX del Organismo Certificador CIDAM
-    </div>
-    <div style="text-align: right; font-size: 7px;">Certificado de Exportación NOM-070-SCFI-2016 F7.1-01-23 Ed 12 <br>
-        Entrada en vigor: XX-XX-2024</div>
-    <div>
-        <center> <img src="{{ public_path('img_pdf/pie_certificado.png') }}" style="height: 50px; width: 750px; position: absolute"
+    <div class="titutlos-footer" style="margin-top: 0;">
+       <b> XXXXX <br> XXXX del Organismo Certificador CIDAM</b>
+        <p style="text-align: right; font-size: 7.5px; margin-top: 0; ">Certificado de Exportación NOM-070-SCFI-2016 F7.1-01-23 Ed 12 <br>
+            Entrada en vigor: XX-XX-2024</p>
+            <center> <img src="{{ public_path('img_pdf/pie_certificado.png') }}" style="height: 40px; width: 710px; position: absolute; margin-top: 0;"
                 alt="pie de certificado"></center>
+    </div>
+    <div>
+
     </div>
 
 </body>
