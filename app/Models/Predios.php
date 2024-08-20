@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\TranslatableActivityLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Predios extends Model
 {
-    use HasFactory;
+    use LogsActivity, TranslatableActivityLog, HasFactory;
 
     // Puedes especificar la tabla si no sigue la convención
     protected $table = 'predios';
@@ -27,6 +29,12 @@ class Predios extends Model
         'superficie',
 
     ];
+
+    public function getLogName2(): string
+    {
+        return 'predio'; // Devuelve el nombre que desees
+    }
+
     public function empresa()
     {
         return $this->belongsTo(empresa::class, 'id_empresa');

@@ -259,24 +259,9 @@ Michoacán.</p>
 
 <div class="down">Certificado como Comercializador de Mezcal NOM-070-2016 F7.1-01-37 <br>Edición 5 Entrada en vigor 12/01/2024</div>
 
-<<<<<<< HEAD
-<footer class="footer">
-    <div class="footer-container">
-        
-        <div class="footer-center">
-            <div class="footer-item">
-                <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="205px">
-                <a>organismocertificadorcidam@gmail.com</a>
-            </div>
-        </div>
-     
-    </div>
-</footer>
-=======
 <div class="foother">
     <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="300px">
 </div>
->>>>>>> 6992792300159390f24051b20ea1af744c22949b
 
 </body>
 </html>

@@ -23,7 +23,7 @@ trait TranslatableActivityLog
         ];
 
         $action = $eventTranslations[$eventName] ?? $eventName; // Usar la traducción o el nombre original
-        return "El usuario " . auth()->user()->name . " {$action} un registro en " . $this->getLogName() . " el " . now()->format('d/m/Y');
+        return "El usuario " . auth()->user()->name . " {$action} un registro de " . $this->getLogName2() . " el " . now()->format('d/m/Y');
     }
 
     protected function getLogName(): string

@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use App\Traits\TranslatableActivityLog;
 
 class LotesGranel extends Model
 {
-    use HasFactory;
+    use LogsActivity, TranslatableActivityLog, HasFactory;
 
     protected $table = 'lotes_granel';
 
@@ -19,6 +21,12 @@ class LotesGranel extends Model
         'edad', 'id_guia', 'folio_certificado', 'id_organismo', 
         'fecha_emision', 'fecha_vigencia'
     ];
+
+// Método para obtener el nombre del registro
+public function getLogName2(): string
+{
+    return 'lotes a granel'; // Devuelve el nombre que desees
+}
 
 
     public function empresa()

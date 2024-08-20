@@ -594,3 +594,5 @@ Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias
 //Inspecciones
 Route::get('/inspecciones', [inspeccionesController::class, 'UserManagement'])->name('inspecciones');
 Route::resource('inspecciones-list', inspeccionesController::class);
+
+Route::post('/asignar-inspector', [inspeccionesController::class, 'asignarInspector']);

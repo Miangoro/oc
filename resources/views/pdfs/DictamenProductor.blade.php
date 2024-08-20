@@ -123,7 +123,7 @@
             font-size: 9px;
             text-align: center;
             padding: 5px 0px;
-            box-sizing: border-box;
+            
             vertical-align: middle
         }
 
@@ -160,9 +160,8 @@
 
         .images-container {
             position: relative; 
-            display: flex;
-            justify-content: space-between;
-            align-items: center; 
+         
+          
             margin-top: -20px; 
             width: 100%; 
             position: relative; 
