@@ -115,6 +115,20 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
 
+
+    //Certificados
+    public function Certificadocom()
+    {
+        $pdf = Pdf::loadView('pdfs.Certificado_comercializador');
+        return $pdf->stream('Certificado de comercializador.pdf');
+    }
+    
+    public function Certificadoenv()
+    {
+        $pdf = Pdf::loadView('pdfs.Certificado_envasador_mezcal');
+        return $pdf->stream('Certificado de envasador de mezcal.pdf');
+    }
+
     //PDF oficio de comisión
     public function Comision()
     {
