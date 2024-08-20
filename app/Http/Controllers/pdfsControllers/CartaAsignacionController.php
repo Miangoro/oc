@@ -129,6 +129,12 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Certificado de envasador de mezcal.pdf');
     }
 
+    public function Certificadoprod()
+    {
+        $pdf = Pdf::loadView('pdfs.Certificado_productor_mezcal');
+        return $pdf->stream('Certificado de productor de mezcal.pdf');
+    }
+
     //PDF oficio de comisión
     public function Comision()
     {
@@ -141,5 +147,11 @@ class CartaAsignacionController extends Controller
     {
         $pdf = Pdf::loadView('pdfs.ordenDeServicio');
         return $pdf->stream('F-UV-02-01 Orden de servicio Ed. 5, Vigente.pdf');
+    }
+    //PDF certificado de exportacion
+    public function certificadoDeExportacion()
+    {
+        $pdf = Pdf::loadView('pdfs.certificadoDeExportacion');
+        return $pdf->stream('F7.1-01-23 Certificado de Exportación NOM-070-SCFI-2016.pdf');
     }
 }

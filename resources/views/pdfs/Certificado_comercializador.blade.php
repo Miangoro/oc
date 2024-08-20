@@ -5,13 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Certificado de comercializador</title>
     <style>
-
-        @page {
-            size: 216mm 279mm;
-        }
-
+    
         body {
-           font-family: 'Calibri', sans-serif;
+        font-family: 'Calibri', sans-serif;
         }
 
         .watermark {
@@ -23,7 +19,10 @@
             transform: translate(-50%, -50%);
             opacity: 0.3;
             z-index: -1; 
+<<<<<<< HEAD
             
+=======
+>>>>>>> 6992792300159390f24051b20ea1af744c22949b
         }
 
         .header img {
@@ -164,87 +163,37 @@
             line-height: 0.5;
         }
 
-        .down{
+        .down {
             text-align: right;
             font-size: 11px;
             margin-top: -40px; 
-            margin-right: 50px;
-        }
-
-        .down1{
-            text-align: right;
-            font-size: 11px;
-            margin-top: -5px; 
-            margin-right: 50px;
-        }
-
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px;
-            color: #333;
-            transform: translateY(50px);
-        }
-
-        .footer-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .footer-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 12px; 
-            font-weight: bold;
-            color: #5A5768;
-            margin: 2; 
-        }
-
-        .footer-item img {
-            width: 20px;
-            height: 20px;
-        }
-
-        .footer-left {
-            flex: 1;
-            text-align: left;
-        }
-
-        .footer-center {
-            flex: 1;
-            text-align: center;
-            position: relative;
-            margin-top: -25px; 
-        }
-
-        .footer-right {
-            flex: 1;
-            text-align: right;
-            position: relative;
-            margin-top: -25px; 
-            margin-right: 60px;
-        }
-
-        .footer-address, .footer-phone {
-            flex-basis: 100%;
-            text-align: center; 
-            font-size: 12px;
-            font-weight: bold;
-            color: #5A5768;
             margin-right: 20px;
         }
+
+        .foother {
+            position: fixed;
+            bottom: -40; 
+            left: 0; 
+            width: 100%; 
+            text-align: center; 
+            margin: 0;
+            padding: 10px 0; 
+        }
+
+        .foother img {
+            margin-top: 40px;
+            width: 700px; 
+            height: auto;
+            display: inline-block;
+        }
+
     </style>
 </head>
 <body>
 <img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Marca de Agua" class="watermark">
 
 <div class="header">
-    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" width="320px">
+    <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" width="300px">
 </div>
 
 <div class="description1">ORGANISMO CERTIFICADOR</div>
@@ -262,13 +211,13 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
 <table>
     <tbody>
         <tr>
-            <td class="cell"><strong>Domicilio</strong>:</td>
+            <td class="cell"><strong>Domicilio:</strong></td>
             <td colspan="3" class="cent" style="text-align: center; vertical-align: middle;">Av, Periférico 5ur, No. Ext. 3915 No. Int. Escorpion 801, Pedregal De Carrasco, Coyoacán, Ciudad De México. C.P.04700.</td>
         </tr>
         <tr>
             <td class="cell"><strong>RFC:</strong></td>
             <td>FAMA860914190</td>
-            <td><strong>Tel:</strong></td>
+            <td class="cell"><strong>Tel:</strong></td>
             <td>5537449304</td>
         </tr>
         <tr>
@@ -276,7 +225,7 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
             <td colspan="3">albertofranci1313@gmail.com</td>
         </tr>
         <tr>
-            <td class="cell"><strong>Fecha de inicio vigencia:</strong></td>
+            <td class="cell1"><strong>Fecha de inicio vigencia:</strong></td>
             <td>22/julio/2024</td>
             <td class="cell1"><strong>Fecha de Vencimiento:</strong></td>
             <td>23/Julio/2025</td>
@@ -289,29 +238,28 @@ Alcohólicas-Mezcal-Especificaciones, en vigor, mediante el esquema dé certific
 Denominación de Origen.</p>
 
 <p class="text">Esta empresa a demostrado que cuenta con la infraestructura, conocimientos y la práctica necesaria para ejecutar
-las etapas de comercializació¡ de la Bebida Alcohólica Destil_ada Denominada Mezcal de conformidad con lo
+las etapas de comercialización de la Bebida Alcohólica Destilada Denominada Mezcal de conformidad con lo
 establecido en la NOM-070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones.
 </p>
 
-<p class="text">Esta certificación ampara exclusivamente la comercialización del'producto Mezcal, Mezcal Artesanal, Mezcal
-Ancestral, <strong>Clase:</strong> Joven, Madurado en Vidrio, Reposado, AñeJo, flbocadocon, Destilado con, que se realice en las
+<p class="text">Esta certificación ampara exclusivamente la comercialización del producto Mezcal, Mezcal Artesanal, Mezcal
+Ancestral, <strong>Clase:</strong> Joven, Madurado en Vidrio, Reposado, Añejo, Abocado con, Destilado con, que se realice en las
 instalaciones indicadas a continuación.</p>
 
-<p class="text"><strong>Domicilio de la unidad de Comercialización:</strong> Francisco l. Madero, 12 A, Col. 20 De Noviembre,<br>
-Chilpancingo de los Bravo, Guerrero, C.P. 39096.
-</p>
+<p class="text"><strong>Domicilio de la unidad de Comercialización:</strong>Francisco l. Madero, 12 A, Col. 20 De Noviembre, Chilpancingo de los Bravo, Guerrero, C.P. 39096.
+Michoacán.</p>
 
-<p class="text"><strong>No. De Dictamen de cumplimiento con la NOM:</strong> UMC-07712024</p>
+<p class="text"><strong>No. De Dictamen de cumplimiento con la NOM:</strong> UMC-077/2024</p>
 
 <div class="signature">
-    <p class="signature-line"></p>
-    <p class="signature-name">M.S.LG. Eia Viviana Soto Barrlentos</p>
-    <p class="signature-name">Gerente del Organismo Certificador CIDAM</p>
+    <div class="signature-line"></div>
+    <div class="signature-name">M.S.LG. Eia Viviana Soto Barrlentos</div>
+    <div class="signature-name">Gerente del Organismo Certificador CIDAM</div>
 </div>
 
-<p class="down">Certificado como Comercializador de Mezcal NOM-070-SCFI-2016 F7.1-01-37</p>
-<P class="down1">Edición 5 Entrada en vigor 12/01/2024</P>
+<div class="down">Certificado como Comercializador de Mezcal NOM-070-2016 F7.1-01-37 <br>Edición 5 Entrada en vigor 12/01/2024</div>
 
+<<<<<<< HEAD
 <footer class="footer">
     <div class="footer-container">
         
@@ -324,6 +272,11 @@ Chilpancingo de los Bravo, Guerrero, C.P. 39096.
      
     </div>
 </footer>
+=======
+<div class="foother">
+    <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="300px">
+</div>
+>>>>>>> 6992792300159390f24051b20ea1af744c22949b
 
 </body>
 </html>

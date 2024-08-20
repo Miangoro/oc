@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $datos[0]->folio }} Guía de traslado de agave o maguey</title>
+    <title> Guía de traslado de agave o maguey</title>
     <style>
         body {
             font-family: 'Century Gothic', sans-serif;
@@ -206,11 +206,11 @@
 
     <div class="section">
         <center>
-            <b class="tituloLetter">Folio de Guía No. : <b class="colorRed"> {{ $datos[0]->folio }}</b> No. de predio:
-                {{ $datos[0]->num_predio }} <br>
-                Nombre del predio: {{ $datos[0]->nombre_predio }} <br>
-                Nombre de la empresa/productor: {{ $datos[0]->razon_social }} <br>
-                No. del cliente: {{ $datos[0]->numero_cliente }}
+            <b class="tituloLetter">Folio de Guía No. : <b class="colorRed"> </b> No. de predio:
+                 <br>
+                Nombre del predio:  <br>
+                Nombre de la empresa/productor:  <br>
+                No. del cliente: 
                 <div style="margin-top: 3%">
                     <b class="bigLetter">Guía de traslado de maguey o agave</b>
                 </div>
@@ -219,37 +219,37 @@
     <table>
         <tr>
             <td class="leftLetter" colspan="2"> Fecha de corte:</td>
-            <td class="leftLetter" colspan="2">{{ $datos[0]->fecha_corte }}</td>
+            <td class="leftLetter" colspan="2"></td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> Tipo de maguey (Tipo de agave):</td>
-            <td class="leftLetter" colspan="2"> {{ $datos[0]->nombre }} {{ $datos[0]->cientifico }}</td>
+            <td class="leftLetter" colspan="2"></td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> Edad:</td>
-            <td class="leftLetter" colspan="2">{{ $datos[0]->edad }}</td>
+            <td class="leftLetter" colspan="2"></td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de lote o No. de tapada:</td>
-            <td class="leftLetter" colspan="2">{{ $datos[0]->no_lote_pedido }} </td>
+            <td class="leftLetter" colspan="2"></td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de piñas comercializadas:</td>
-            <td class="leftLetter" colspan="2">{{ $datos[0]->num_comercializadas }}</td>
+            <td class="leftLetter" colspan="2"></td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de piñas anterior:</td>
-            <td class="leftLetter" colspan="2">{{ $datos[0]->num_anterior }}</td>
+            <td class="leftLetter" colspan="2"></td>
         </tr>
         <tr>
             <td class="leftLetter" colspan="2"> No. de piñas actual:</td>
-            <td class="leftLetter" colspan="2">{{ $datos[0]->numero_plantas }}</td>
+            <td class="leftLetter" colspan="2"></td>
         </tr>
         <tr>
             <td class="leftLetter"> Kg de maguey: </td>
-            <td class="leftLetter">{{ $datos[0]->kg_maguey }}</td>
+            <td class="leftLetter"></td>
             <td class="leftLetter"> %ART</td>
-            <td class="leftLetter">{{ $datos[0]->art }}</td>
+            <td class="leftLetter"></td>
         </tr>
     </table>
 
@@ -260,20 +260,20 @@
         <br>
         <tr>
             <td class="leftLetter">Nombre del cliente:</td>
-            <td class="leftLetter">{{ $datos[0]->nombre_cliente }}</td>
+            <td class="leftLetter"></td>
             <td class="leftLetter">No. de cliente:</td>
-            <td class="leftLetter">{{ $datos[0]->no_cliente }}</td>
+            <td class="leftLetter"></td>
         </tr>
         <tr>
             <td class="leftLetter">Fecha de ingreso a
                 fábrica:</td>
-            <td class="leftLetter"colspan="3">{{ $datos[0]->fecha_ingreso }}</td>
+            <td class="leftLetter"colspan="3"></td>
         </tr>
         <tr>
             <td class="leftLetter">Domicilio de
                 entrega:
             </td>
-            <td class="leftLetter" colspan="3">{{ $datos[0]->domicilio }}</td>
+            <td class="leftLetter" colspan="3"></td>
         </tr>
     </table>
 
