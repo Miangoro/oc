@@ -44,7 +44,6 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 VIGENTE.pdf');
     }
 
-
     public function Contrato_NMX_052()
     {
         $pdf = Pdf::loadView('pdfs.CONTRATO_NMX-052');
@@ -69,8 +68,6 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.solicitudInfoClienteNOM-199');
         return $pdf->stream('F7.1-03-02 Solicitud de Información al Cliente NOM-199-SCFI-2017 Ed. 4 VIGENTE.pdf');
     }
-
-
 
     public function access_user()
     {
@@ -101,7 +98,6 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
     }
 
-
     //Guias de translado
     public function guiasTranslado()
     {
@@ -114,7 +110,6 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
         return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
-
 
     //Certificados
     public function Certificadocom()
@@ -148,10 +143,17 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.ordenDeServicio');
         return $pdf->stream('F-UV-02-01 Orden de servicio Ed. 5, Vigente.pdf');
     }
+
     //PDF certificado de exportacion
     public function certificadoDeExportacion()
     {
         $pdf = Pdf::loadView('pdfs.certificadoDeExportacion');
         return $pdf->stream('F7.1-01-23 Certificado de Exportación NOM-070-SCFI-2016.pdf');
+    }
+
+    //Pre-registro de predios
+    Public function PreRegistroPredios(){
+        $pdf = Pdf::loadView('pdfs.Pre-registro_predios');
+        return $pdf->stream('F-UV-21-01 Pre-registro de predios de maguey o agave Ed.1 Vigente.pdf');
     }
 }
