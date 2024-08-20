@@ -122,12 +122,11 @@
 
 
     <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" style="width: 300px; float: left; margin-left: -20px; margin-top: -20px;" alt="logo de CIDAM 3D">
-    <div class="letter-color">
+    <div class="letter-color" style="margin-bottom: 15px">
         <b style="font-size: 16px;">CENTRO DE INNOVACIÓN Y DESARROLLO <br> AGROALIMENTARIO DE MICHOACÁN A.C.</b> 
         <p style="font-size: 10px">Organismo de Certificación de producto acreditado ante la <br> entidad mexicana de acreditación ema A.C. con <b> No.
             144/18</b></p>
     </div>
-    <br>
     <div class="titulos">
         CERTIFICADO DE AUTENTICIDAD DE EXPORTACIÓN DE MEZCAL
     </div>
