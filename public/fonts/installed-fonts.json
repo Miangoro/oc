@@ -7,5 +7,13 @@
     },
     "arial negrita": {
         "normal": "arial_negrita_normal_77d34e52dd1e4ce6845e48cc82473274"
+    },
+<<<<<<< HEAD
+    "lucida sans unicode negrita": {
+        "normal": "lucida_sans_unicode_negrita_normal_522be8df29874da4df1275d4a1a88296"
+=======
+    "lucida sans seminegrita": {
+        "normal": "lucida_sans_seminegrita_normal_522be8df29874da4df1275d4a1a88296"
+>>>>>>> 568cb52f9bb04b483b9befaaafeb89f78eb7dc75
     }
 }

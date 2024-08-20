@@ -210,30 +210,10 @@
     });
   }
 
-  function abrirModalAsignarInspector(id_empresa) {
-    // Hacer una petición AJAX para obtener los detalles de la empresa
-    $.ajax({
-        url: '/lista_empresas/' + id_empresa,
-        method: 'GET',
-        success: function(response) {
-            // Cargar los detalles en el modal
-            var contenido = "";
+  function abrirModalAsignarInspector(id_solicitud) {
 
-          for (let index = 0; index < response.normas.length; index++) {
-            contenido = '<input value="'+response.normas[index].id_norma+'" type="hidden" name="id_norma[]"/><div class="col-12 col-md-12 col-sm-12"><div class="form-floating form-floating-outline"><input type="text" id="numero_cliente'+response.normas[index].id_norma+'" name="numero_cliente[]" class="form-control" placeholder="Introducir el número de cliente" /><label for="modalAddressFirstName">Número de cliente para la norma '+response.normas[index].norma+'</label></div></div><br>' + contenido;
-            console.log(response.normas[index].norma);
-          }
-           
-
-         //   $('.contenido').html(contenido);
-           
-            // Abrir el modal
-            $('#asignarInspector').modal('show');
-        },
-        error: function() {
-            alert('Error al cargar los detalles de la empresa.');
-        }
-    });
+     $("#id_solicitud").val(id_solicitud);
+      $('#asignarInspector').modal('show');
   }
 </script>
 

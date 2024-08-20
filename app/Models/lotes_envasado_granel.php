@@ -1,12 +1,11 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class lotes_envasado_granel extends Model
-{
+{   
     use HasFactory;
     protected $table = 'lotes_envasado_granel';
     protected $primaryKey = 'id';
@@ -20,4 +19,7 @@ class lotes_envasado_granel extends Model
     {
         return $this->belongsTo(lotes_envasado::class, 'id_lote_envasado', 'id_lote_envasado');
     }
+
+   
+    
 }

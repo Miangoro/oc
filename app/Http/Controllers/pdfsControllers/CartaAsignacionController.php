@@ -44,7 +44,6 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 VIGENTE.pdf');
     }
 
-
     public function Contrato_NMX_052()
     {
         $pdf = Pdf::loadView('pdfs.CONTRATO_NMX-052');
@@ -69,8 +68,6 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.solicitudInfoClienteNOM-199');
         return $pdf->stream('F7.1-03-02 Solicitud de Información al Cliente NOM-199-SCFI-2017 Ed. 4 VIGENTE.pdf');
     }
-
-
 
     public function access_user()
     {
@@ -101,7 +98,6 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
     }
 
-
     //Guias de translado
     public function guiasTranslado()
     {
@@ -114,7 +110,6 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
         return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
     }
-
 
     //Certificados
     public function Certificadocom()
@@ -148,25 +143,11 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.ordenDeServicio');
         return $pdf->stream('F-UV-02-01 Orden de servicio Ed. 5, Vigente.pdf');
     }
+
     //PDF certificado de exportacion
     public function certificadoDeExportacion()
     {
         $pdf = Pdf::loadView('pdfs.certificadoDeExportacion');
         return $pdf->stream('F7.1-01-23 Certificado de Exportación NOM-070-SCFI-2016.pdf');
     }
-
-
-    public function InspeccionGeoReferenciacion()
-    {
-    $pdf = Pdf::loadView('pdfs.inspeccion_geo_referenciacion');
-/*     $pdf->setPaper('A4', 'portrait');
-    $pdf->render();
-
-    // Añadir script de página después de renderizar
-    $pdf->getDomPDF()->getCanvas()->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
-        $canvas->text(520, 820, "Página $pageNumber de $pageCount", $fontMetrics->get_font("Arial", "normal"), 12);
-    }); */
-    return $pdf->stream('F-UV-21-02 Inspección para la geo-referenciación de los predios de maguey o agave Ed. 6 Vigente.pdf');
-    }
-
 }

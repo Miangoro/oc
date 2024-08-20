@@ -438,6 +438,8 @@ Route::get('/oficio_de_comision', [CartaAsignacionController::class, 'Comision']
 Route::get('/orden_de_servicio', [CartaAsignacionController::class, 'Servicio'])->name('ordenDeServicio');
 Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion');
 
+//Pre-registro de predios
+Route::get('/pre-registro_predios', [CartaAsignacionController::class, 'PreRegistroPredios'])->name('pre-registro_predios');
 
 //Certificados de instalaciones
 Route::get('/certificado_comercializador', [CartaAsignacionController::class, 'certificadocom'])->name('certificado_comercializador');
@@ -595,3 +597,5 @@ Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias
 //Inspecciones
 Route::get('/inspecciones', [inspeccionesController::class, 'UserManagement'])->name('inspecciones');
 Route::resource('inspecciones-list', inspeccionesController::class);
+
+Route::post('/asignar-inspector', [inspeccionesController::class, 'asignarInspector']);

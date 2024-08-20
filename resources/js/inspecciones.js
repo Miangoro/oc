@@ -375,41 +375,13 @@ $(function () {
       });
   
       // Inicializar FormValidation
-      const form = document.getElementById('addNewInstalacionForm');
+      const form = document.getElementById('addAsignarInspector');
       const fv = FormValidation.formValidation(form, {
         fields: {
-          'id_empresa': {
+          'num_servicio': {
             validators: {
               notEmpty: {
-                message: 'Selecciona una empresa.'
-              }
-            }
-          },
-          'tipo': {
-            validators: {
-              notEmpty: {
-                message: 'Selecciona un tipo de instalación.'
-              }
-            }
-          },
-          'estado': {
-            validators: {
-              notEmpty: {
-                message: 'Selecciona un estado.'
-              }
-            }
-          },
-          'direccion_completa': {
-            validators: {
-              notEmpty: {
-                message: 'Ingrese la dirección completa.'
-              }
-            }
-          },
-          'certificacion': {
-            validators: {
-              notEmpty: {
-                message: 'Selecciona el tipo de certificación.'
+                message: 'Introduce el número de servicio.'
               }
             }
           },
@@ -430,14 +402,14 @@ $(function () {
         var formData = new FormData(form);
   
         $.ajax({
-          url: '/instalaciones',
+          url: '/asignar-inspector',
           type: 'POST',
           data: formData,
           processData: false,
           contentType: false,
           success: function (response) {
-            $('#modalAddInstalacion').modal('hide');
-            $('#addNewInstalacionForm')[0].reset();
+            $('#asignarInspector').modal('hide');
+            $('#addAsignarInspector')[0].reset();
             $('.select2').val(null).trigger('change');
             $('.datatables-users').DataTable().ajax.reload();
             console.log(response);
@@ -457,7 +429,7 @@ $(function () {
             Swal.fire({
               icon: 'error',
               title: '¡Error!',
-              text: 'Error al agregar la instalación',
+              text: 'Error al asignar la inspección',
               customClass: {
                 confirmButton: 'btn btn-danger'
               }

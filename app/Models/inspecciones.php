@@ -16,6 +16,8 @@ class inspecciones extends Model
         'id_inspector',
         'num_servicio',
         'fecha_servicio',
+        'observaciones',
+        'estatus_inspeccion',
     ];
 
     public function solicitud()
