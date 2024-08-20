@@ -128,4 +128,10 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.ordenDeServicio');
         return $pdf->stream('F-UV-02-01 Orden de servicio Ed. 5, Vigente.pdf');
     }
+    //PDF certificado de exportacion
+    public function certificadoDeExportacion()
+    {
+        $pdf = Pdf::loadView('pdfs.certificadoDeExportacion');
+        return $pdf->stream('F7.1-01-23 Certificado de Exportación NOM-070-SCFI-2016.pdf');
+    }
 }
