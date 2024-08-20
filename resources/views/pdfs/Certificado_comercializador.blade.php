@@ -23,7 +23,7 @@
             transform: translate(-50%, -50%);
             opacity: 0.3;
             z-index: -1; 
-            pointer-events: none; 
+            
         }
 
         .header img {
@@ -314,30 +314,14 @@ Chilpancingo de los Bravo, Guerrero, C.P. 39096.
 
 <footer class="footer">
     <div class="footer-container">
-        <div class="footer-left">
-            <div class="footer-item">
-                <img src="{{ public_path('img_pdf/internet.png') }}" alt="Logo CIDAM" width="20px">
-                <a>www.cidam.org</a>
-            </div>
-        </div>
+        
         <div class="footer-center">
             <div class="footer-item">
-                <img src="{{ public_path('img_pdf/mail.png') }}" alt="Logo CIDAM" width="20px">
+                <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="205px">
                 <a>organismocertificadorcidam@gmail.com</a>
             </div>
         </div>
-        <div class="footer-right">
-            <div class="footer-item">
-                <img src="{{ public_path('img_pdf/facebook.png') }}" alt="Logo CIDAM" width="20px">
-                <a>cidam</a>
-            </div>
-        </div>
-        <div class="footer-address">
-            Kilómetro 8 Antigua Carretera a Pátzcuaro S/N - Colonia otra no especificada en el catálogo - C.P. 58341 - Morelia, Mich
-        </div>
-        <div class="footer-phone">
-            Tels: 443 299 0181 · 443 299 0264
-        </div>
+     
     </div>
 </footer>
 
