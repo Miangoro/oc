@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificado de comercializador</title>
+    <title>Certificado productor demezcal</title>
     <style>
     
         body {
@@ -140,7 +140,7 @@
         .signature {
             margin: 50px 20px; 
             text-align: center; 
-            margin-top: 70px; 
+            margin-top: 20px; 
         }
 
         .signature-line {
@@ -194,20 +194,20 @@
 
 <div class="description1">ORGANISMO CERTIFICADOR</div>
 <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C</div>
-<div class="description3">No. CERTIFICADO: CIDAM C-INS-089/2024</div>
+<div class="description3">No. CERTIFICADO: CIDAM C-INS-084/2024</div>
 
 <p class="text1">
 Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditado como organismo de certificación de producto con número de acreditación 144/18 ante la Entidad Mexicana de Acreditación, A.C. otorga el siguiente:
 </p>
 
 <p class="title">CERTIFICADO NOM</p>
-<p class="title2">COMO COMERCIALIZADOR DE MEZCAL A</p>
-<p class="title3">"ALBERTO FRANCO MORGADO"</p>
+<p class="title2">COMO PRODUCTOR DE MEZCAL A</p>
+<p class="title3">"MEZCAL BUENAVISTA S.P.R. DE R.L."</p>
 
 <table>
     <tbody>
         <tr>
-            <td class="cell"><strong>Domicilio:</strong></td>
+            <td class="cell1"><strong>Domieilio Fiscal:</strong></td>
             <td colspan="3" class="cent" style="text-align: center; vertical-align: middle;">Av, Periférico 5ur, No. Ext. 3915 No. Int. Escorpion 801, Pedregal De Carrasco, Coyoacán, Ciudad De México. C.P.04700.</td>
         </tr>
         <tr>
@@ -229,31 +229,33 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
     </tbody>
 </table>
 
-<p class="text">La presente certificación se realiza de acuerdo a la Norma Oficial Mexicana NOM-070-SCFI-2016, Bebidas
-Alcohólicas-Mezcal-Especificaciones, en vigor, mediante el esquema dé certificación para productos con
-Denominación de Origen.</p>
+<p class="text">El presente certificado se realiza deacuerdo a la Norma Oficial Mexicana NOM-070-SCFI-2016, Bebidas Alcohólical
+-Mezcal-Especificaciones, en vigor, mediante el esquema de certificación para productos con Denominación de
+Origen, ya que ha demostrado que cumple con el proceso de elaboración de Mezcal y produce la (s) categoría (s) y
+clase (s): <strong>Mézcal Artesanal, Blanco o Joven, Reposado, Añejo</strong></p>
 
-<p class="text">Esta empresa a demostrado que cuenta con la infraestructura, conocimientos y la práctica necesaria para ejecutar
-las etapas de comercialización de la Bebida Alcohólica Destilada Denominada Mezcal de conformidad con lo
-establecido en la NOM-070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones.
+<p class="text">Este certificado ampara exclusivamente la producción del productb Mezcal que se realice en las instalaciones
+indicadas a continuacion:</p>
+
+<p class="text"><strong>Maestro Mezcalero:------------------------------</strong><br>
+<strong>Domicilio de la Unidad de Produccíón:</strong>  Janamóro , S/N, Libramiento Norte Km 6+800, C.P. 61040, Hidalgo, Michoacán de Ocampo <br>
+<strong>No. DeAutorización para el Uso de la Denominación de Origen Mezcal:</strong> 1117 <br>
+<strong>No. De Dictamen de cumplimiento con la NOM:</strong>  UMC-078/2024 <br>
+<strong>No. De Cliente ante el Organismo Certificador CIDAM A.C:</strong>  NOM-070-085C
 </p>
 
-<p class="text">Esta certificación ampara exclusivamente la comercialización del producto Mezcal, Mezcal Artesanal, Mezcal
-Ancestral, <strong>Clase:</strong> Joven, Madurado en Vidrio, Reposado, Añejo, Abocado con, Destilado con, que se realice en las
-instalaciones indicadas a continuación.</p>
-
-<p class="text"><strong>Domicilio de la unidad de Comercialización:</strong>Francisco l. Madero, 12 A, Col. 20 De Noviembre, Chilpancingo de los Bravo, Guerrero, C.P. 39096.
-Michoacán.</p>
-
-<p class="text"><strong>No. De Dictamen de cumplimiento con la NOM:</strong> UMC-077/2024</p>
+<p class="text">Dichas instalaciones cuentan con el equipo requerido para la producción del producto Mezcal y se encuentran
+dentro de los estados y municipios que contempla lafiesolución mediante la cualse otorga la protección prevista
+a la Denominación de Origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre, publicada el 28
+de Noviembre de L994, así como sus subsecuentes modificaciones.</p>
 
 <div class="signature">
     <div class="signature-line"></div>
-    <div class="signature-name">M.S.LG. Eia Viviana Soto Barrlentos</div>
-    <div class="signature-name">Gerente del Organismo Certificador CIDAM</div>
+    <div class="signature-name">Q.F.B. Mayra Gutiérrez Romero</div>
+    <div class="signature-name">Gerente Técnico del Organismo Certificador ClDAM</div>
 </div>
 
-<div class="down">Certificado como Comercializador de Mezcal NOM-070-2016 F7.1-01-37 <br>Edición 5 Entrada en vigor 12/01/2024</div>
+<div class="down">Este cert¡ficado sustituye al: No aplica<br>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35<br>Edición 5 Entrada en vigor 08/03/2023</div>
 
 <div class="foother">
     <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="300px">
