@@ -88,7 +88,7 @@
             top: 250px;
             left: 100px;
             width: 530px;
-            height: 440px;
+            height: 444px;
             z-index: -1;
             background-image: url('{{ public_path('img_pdf/logo_fondo.png') }}');
             background-size: cover;
