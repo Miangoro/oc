@@ -319,7 +319,7 @@
     <p class="textx" style="font-size: 10px; margin: 1;">
     <strong>Cadena Origina</strong>
     <span style="margin-left: 29px;">
-        <strong>UMG-159/2024|2024-06-26|UMS-1094/2024 S</strong>
+        <strong>UMG-159/2024|2024-06-26|UMS-1094/2024</strong>
     </span>
     </p>
 
