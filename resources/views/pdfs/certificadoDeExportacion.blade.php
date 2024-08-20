@@ -99,10 +99,10 @@
 
         .img-background-left {
             position: absolute;
-            top: 158px;
+            top: 130px;
             left: -70px;
             width: 87px;
-            height: 690px;
+            height: 740px;
             z-index: -1;
             background-image: url('{{ public_path('img_pdf/exportacion.png') }}');
             background-size: cover;
@@ -332,7 +332,7 @@
     <div style="text-align: right; font-size: 7px;">Certificado de Exportación NOM-070-SCFI-2016 F7.1-01-23 Ed 12 <br>
         Entrada en vigor: XX-XX-2024</div>
     <div>
-        <center> <img src="{{ public_path('img_pdf/pie_certificado.png') }}" style="height: 50px; width: 750px;"
+        <center> <img src="{{ public_path('img_pdf/pie_certificado.png') }}" style="height: 50px; width: 750px; position: absolute"
                 alt="pie de certificado"></center>
     </div>
 
