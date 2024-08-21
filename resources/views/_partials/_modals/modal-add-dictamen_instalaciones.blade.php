@@ -52,7 +52,7 @@
         <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-6">
-                        <select id="" name="id_inspeccion" class="form-select" aria-label="Default select example">
+                        <select id="" name="id_inspeccion" class="form-select select2" aria-label="Default select example">
                             <option value="" disabled selected>Elige el número de servicio</option>
                                 @foreach ($inspeccion as $insp)
                                 <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option>
@@ -62,14 +62,14 @@
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-6">
                     <input type="text" class="form-control" id="categorias" placeholder="categoría" name="categorias" aria-label="Nombre" required>
                     <label for="nombre">Categorías</label>
                     </div>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-4">
                         <select  name="clases" class="form-select" >
                             <option value="" disabled selected>Selecciona una clase</option>

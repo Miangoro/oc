@@ -32,4 +32,9 @@ class solicitudesModel extends Model
     {
         return $this->hasOneThrough(User::class, inspecciones::class, 'id_solicitud', 'id', 'id_solicitud', 'id_inspector');
     }
+
+    public function instalacion()
+    {
+        return $this->hasOne(instalaciones::class, 'id_instalacion', 'id_instalacion');
+    }
 }
