@@ -168,6 +168,4 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.DictamenDeCumplimientoMezcalGranel');
         return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
     }
-    
-
 }

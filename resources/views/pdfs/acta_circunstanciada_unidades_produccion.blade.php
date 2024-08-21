@@ -14,9 +14,21 @@
             /* Elimina todos los márgenes */
         }
 
+        @font-face {
+            font-family: 'Century Gothic';
+            src: url('fonts/CenturyGothic.ttf') format('truetype');
+            
+        }
+
+        @font-face {
+            font-family: 'Century Gothic Negrita';
+            src: url('fonts/GOTHICB.TTF') format('truetype');
+            
+        }
+
         body {
             font-family: 'Century Gothic', sans-serif;
-            margin: 35px;
+            margin: 30px;
             padding: 10px;
             margin-top: 100px;
             margin-bottom: 55px;
@@ -37,17 +49,20 @@
         th {
             text-align: left;
             vertical-align: middle;
+            position: relative;
+        
         }
 
         .header {
             position: fixed;
             top: 0px;
             left: 40px;
-            width: 80%;
+            width: 84%;
             padding: 10px;
             text-align: right;
             z-index: 1;
             margin-bottom: 30px;
+            
         }
 
 
@@ -67,10 +82,10 @@
 
         .header-text {
             right: 10px;
-            line-height: 1.5;
-            font-size: 13px;
-            margin-top: -40;
+            font-size: 12px;
+            margin-top: -30;
             padding: 0;
+            line-height: 1;
         }
 
         .img img {
@@ -105,8 +120,8 @@
         }
 
         .contenedor {
-            margin-left: 44px;
-            margin-right: 44px;
+            margin-left: 40px;
+            margin-right: 40px;
             position: relative;
             /* Asegura que la posición sea relativa para que la marca de agua se posicione correctamente */
         }
@@ -133,6 +148,7 @@
         .texto {
             text-align: justify;
             word-spacing: 1px;
+            line-height: 14px;
         }
 
         .watermark {
@@ -141,7 +157,7 @@
             /* Ajusta la posición verticalmente */
             left: 50%;
             /* Ajusta la posición horizontalmente */
-            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.5);
+            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
             /* Rotación y escala para mejor apariencia */
             opacity: 0.1;
             /* Ajusta la opacidad según sea necesario */
@@ -164,7 +180,7 @@
         .footer-text {
             margin: 0;
             text-align: center;
-            width: 80%;
+            width: 85%;
             position: relative;
         }
 
@@ -180,11 +196,34 @@
             text-align: right;
             margin-top: 15px;
             font-weight: bold;
-            color: #151442;
+            color: #1f4b90;
         }
 
         .footer .page:after {
             content: counter(page);
+        }
+
+        .cat{
+          
+            margin-bottom: -3;
+        }
+
+        /* Clase para la celda con la línea diagonal */
+        .diagonal-cell {
+            position: relative;
+        }
+
+        .diagonal-cell::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-top: 2px solid black;
+           
+            transform: rotate(60deg);
+            transform-origin: center;
         }
     </style>
 </head>
@@ -214,15 +253,15 @@
 
     {{-- contenedor --}}
     <div class="contenedor">
-        <div style="text-align: center; margin-top: 20px; font-size: 21px ">
-            <b style=" font-family: 'Century Gothic', sans-serif; font-weight: bold;">
+        <div style="text-align: center;  font-size: 21px ">
+            <span style=" font-family: 'Century Gothic Negrita'; !important">
                 Acta circunstanciada para Unidades de producción
-            </b>
+            </span>
         </div>
         <table class="content-table" style="margin-top: 15px;">
             <tr>
-                <td style="border: 2px solid #31849B; width: 80%; font-family: sans-serif;">Acta número:<b
-                        style="font-size: 13.5px;">UMS-____________/2024</b>
+                <td style="border: 2px solid #31849B; width: 80%; padding: 0px;">Acta número: <span
+                        style="font-size: 13.5px;  font-family: Century Gothic Negrita;">UMS-____________/2024</span>
                 </td>
                 <td style="border: 2px solid ##31849B;">
 
@@ -231,12 +270,12 @@
         </table>
         <br>
         <div class="texto">
-            <p>En la categoría de</p>
-            <p>Unidad de producción de Agave ( ), </p>
-            <p>Unidad de producción de Mezcal ( )</p>
-            <p>Planta de Envasado ( )</p>
-            <p>Comercializadora ( )</p>
-            <p>Almacén ( ).</p>
+            <p class="cat">En la categoría de:</p>
+            <p class="cat">Unidad de producción de Agave ( ), </p>
+            <p class="cat">Unidad de producción de Mezcal ( )</p>
+            <p class="cat">Planta de Envasado ( )</p>
+            <p class="cat">Comercializadora ( )</p>
+            <p class="cat">Almacén ( ).</p>
             <br>
             <p>En _______________________________ siendo las _______ horas del día _____ del mes de ______ del 202_____.
             </p> <br>
@@ -246,34 +285,28 @@
             <br>
             <table class="table-sign">
                 <tr>
-                    <td colspan="2" style="text-align: center;"><b>Datos de la Unidad de Producción</b></td>
+                    <td colspan="2" style="text-align: center; font-family: Century Gothic Negrita;">Datos de la Unidad de Producción</td>
                     <td style="border: none;">
                     </td>
                 </tr>
                 <tr>
-                    <td style="width: 200px;"><b>Denominación social:</b></td>
-                    <td style="width: 200px;">
-
+                    <td style="width: ; font-family:Century Gothic Negrita;">Denominación social:</td>
+                    <td style="width: 450px;">
+                        MEZCAL BUENAVISTA S.P.R. DE R.L.
                     </td>
                     <td style="border: none;">
 
                     </td>
                 </tr>
                 <tr>
-                    <td><b>Dirección:</b>
-                    </td>
+                    <td style="width: 200px; font-family:Century Gothic Negrita;">Dirección:</td>
+                    <td style="width: 450px">Janamoro , S/N, Libramiento Norte Km 6+800, Ciudad Hidalgo, Hidalgo, Michoacán de Ocampo, C.P. 61040.</td>
+                    <td style="border: none;"></td>
+                </tr>
+                <tr>
+                    <td style="width: 200px; font-family:Century Gothic Negrita;">RFC</td>
                     <td></td>
-                    <td style="border: none;">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>RFC</b>
-                    </td>
-                    <td></td>
-                    <td style="border: none;">
-
-                    </td>
+                    <td style="border: none;"></td>
                 </tr>
             </table>
             <br>
@@ -320,9 +353,9 @@
 
             <table class="table-sign">
                 <tr>
-                    <td style="width: 5%;">si</td>
+                    <td style="width: 5%;">SI</td>
                     <td style="width: 5%;"></td>
-                    <td style="width: 5%;">no</td>
+                    <td style="width: 5%;">NO</td>
                     <td style="width: 5%;"></td>
                     <td style="border: none;">designa testigos</td>
                     <td style="border: none;"></td>
@@ -337,7 +370,7 @@
         <br>
         <table class="sign-table" style="margin-top: 10px; font-size: 10;">
             <tr>
-                <td style="width: 80px; height: 40px;">No. de testigo</td>
+                <td style="width: 80px; height: 40px;">No. de testigo.</td>
                 <td>Nombre y firma del testigo</td>
                 <td style="width: 280px;">Domicilio</td>
             </tr>
@@ -373,7 +406,7 @@
             </tr>
             <tr>
                 <td style="height: 40px;"></td>
-                <td></td>
+                <td class="diagonal-cell"></td>
                 <td></td>
                 <td></td>
                 <td></td>

@@ -420,7 +420,7 @@ Route::get('/enviar-correo', [EnviarCorreoController::class, 'enviarCorreo']);
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
 Route::get('/solicitudinfo_cliente/{id}', [clientesProspectoController::class, 'info'])->name('solicitud_cliente');
 Route::get('/asignacion_usuario', [CartaAsignacionController::class, 'access_user'])->name('asignacion_usuario');
-Route::get('/solicitudservi', [CartaAsignacionController::class, 'solicitudservi'])->name('solicitudservi');
+Route::get('/solicitud_de_servicio', [CartaAsignacionController::class, 'solicitudservi'])->name('solicitudservi');
 Route::get('/prestacion_servicio_fisica/{id}', [clientesConfirmadosController::class, 'pdfServicioPersonaFisica070'])->name('prestacion_servicio_fisica');
 Route::get('/prestacion_servicio_moral/{id}', [clientesConfirmadosController::class, 'pdfServicioPersonaMoral070'])->name('prestacion_servicio_moral');
 Route::get('/Contrato_NMX-052', [CartaAsignacionController::class, 'CONTRATO_NMX_052'])->name('Contrato_NMX-052');
@@ -442,6 +442,9 @@ Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'ce
 
 //Pre-registro de predios
 Route::get('/pre-registro_predios', [CartaAsignacionController::class, 'PreRegistroPredios'])->name('pre-registro_predios');
+
+//Dictamen de cumplimiento de Instalaciones maduracion de mezcal
+Route::get('/dictamen_maduracion_mezcal', [CartaAsignacionController::class, 'DictamenMaduracionMez'])->name('dictamen_maduracion_mezcal');
 
 //Certificados de instalaciones
 Route::get('/certificado_comercializador', [CartaAsignacionController::class, 'certificadocom'])->name('certificado_comercializador');
