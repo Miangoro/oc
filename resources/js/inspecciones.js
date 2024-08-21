@@ -27,10 +27,11 @@ $(function () {
         { data: '' },
         { data: '' },
         { data: 'folio' },
+        { data: 'num_servicio' },
         { data: 'razon_social' },
         { data: 'fecha_solicitud' },
-        { data: 'num_servicio' },
         { data: 'tipo' },
+        { data: 'direccion_completa' },
         { data: 'fecha_visita' },
         { data: 'inspector' },
         { data: 'fecha_servicio' },
@@ -382,6 +383,13 @@ $(function () {
             validators: {
               notEmpty: {
                 message: 'Introduce el número de servicio.'
+              }
+            }
+          },
+          'fecha_servicio': {
+            validators: {
+              notEmpty: {
+                message: 'Introduce la fecha del servicio.'
               }
             }
           },
