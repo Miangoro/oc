@@ -162,4 +162,12 @@ class CartaAsignacionController extends Controller
     }); */
     return $pdf->stream('F-UV-21-02 Inspección para la geo-referenciación de los predios de maguey o agave Ed. 6 Vigente.pdf');
     }
+
+    public function dictamenDeCumplimientoGranel()
+    {
+        $pdf = Pdf::loadView('pdfs.DictamenDeCumplimientoMezcalGranel');
+        return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
+    }
+    
+
 }

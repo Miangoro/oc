@@ -429,6 +429,8 @@ Route::get('/acta_circunstanciada_unidades_produccion', [CartaAsignacionControll
 Route::get('/solicitud_Info_ClienteNOM-199', [CartaAsignacionController::class, 'solicitudInfoNOM_199'])->name('solicitud_Info_ClienteNOM-199');
 Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'])->name('Etiqueta-2401ESPTOB');
 Route::get('/inspeccion_geo_referenciacion', [CartaAsignacionController::class, 'InspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion');
+Route::get('/dictamen_cumplimiento_mezcal_granel', [CartaAsignacionController::class, 'dictamenDeCumplimientoGranel'])->name('dictamen-cumplimiento-granel');
+
 
 //Dictamen de instalaciones
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamenp'])->name('dictamen_productor');

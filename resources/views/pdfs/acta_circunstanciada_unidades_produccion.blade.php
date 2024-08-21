@@ -7,8 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>F-UV-02-02 ACTA CIRCUNSTANCIADA V6</title>
     <style>
-
-    
         @page {
             size: 216mm 279mm;
             /* Establece el tamaño de página a 216mm de ancho por 279mm de alto */
@@ -192,7 +190,6 @@
 </head>
 
 <body>
-
     <div class="watermark">Acta circunstanciada</div>
     {{-- cabecera --}}
     <div class="header">
