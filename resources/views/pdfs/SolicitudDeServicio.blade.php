@@ -14,9 +14,20 @@
             margin-bottom: 1px;
         }
 
+        @font-face {
+            font-family: 'Century Gothic';
+            src: url('fonts/CenturyGothic.ttf') format('truetype');
+            
+        }
+
+        @font-face {
+            font-family: 'Century Gothic Negrita';
+            src: url('fonts/GOTHICB.TTF') format('truetype');
+        }
+
         body {
             font-family: 'Century Gothic', sans-serif;
-            font-size: 8px;
+            font-size: 10px;
 
         }
 
@@ -27,7 +38,7 @@
 
         th,
         td {
-            border: 1px solid black;
+            border: 1.5px solid black;
             padding: 3px;
             text-align: center;
         }
@@ -46,6 +57,7 @@
             border-top: none;
             border-right: 0.5px solid black;
             border-left: 0.5px solid black;
+           
         }
 
         .td-no-margins {
@@ -68,7 +80,7 @@
         }
 
         .con-negra {
-            font-weight: bold;
+            font-family: 'Century Gothic Negrita';
         }
     </style>
 </head>
@@ -77,12 +89,12 @@
     <table>
         <tr>
             <td rowspan="3" colspan="3" style="padding: 0; height: auto;">
-                <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" style="width: 100px; margin: 0;" alt="Logo CIDAM">
+                <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" style="width: 170px; margin: 0;" alt="Logo CIDAM">
             </td>
 
             <td class="con-negra" rowspan="2" colspan="5"
-                style="font-size: 11px; padding-left: 13px; padding-right: 13px;">SOLICITUD DE SERVICIOS</td>
-            <td colspan="5" style="text-align: right; font-size: 7.2px; padding-left: 0; padding-top: 0;">Solicitud de
+                style="font-size: 14px; padding-left: 13px; padding-right: 13px;">SOLICITUD DE SERVICIOS</td>
+            <td colspan="5" style="text-align: right; font-size: 8.5px; padding-left: 0; padding-top: 0;">Solicitud de
                 servicios NOM-070-SCFI-2016
                 F7.1-01-32 <br>
                 Edición 10 Entrada en vigor:
@@ -154,7 +166,7 @@
             <td colspan="7">&nbsp;</td>
         </tr>
         <tr>
-            <td class="td-margins" colspan="13" style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
         </tr>
         <tr>
             <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Vigilancia en producción de lote</td>
@@ -360,7 +372,7 @@
                 </div>
             </td>
             <td class="con-negra" rowspan="2" colspan="4" style="font-size: 12px">SOLICITUD DE SERVICIOS</td>
-            <td colspan="3" style="text-align: right">Solicitud de servicios NOM-070-SCFI-2016
+            <td colspan="3" style="text-align: right; font-size: 10px !important;">Solicitud de servicios NOM-070-SCFI-2016
                 F7.1-01-32 <br>
                 Edición 10 Entrada en vigor:
                 20/06/2024</td>
