@@ -164,4 +164,11 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.Dictamen_Instalaciones_maduracion_mezcal');
         return $pdf->stream('F-UV-02-14 Ver 1, Dictamen de cumplimiento de Instalaciones maduracion de mezcal.pdf');
     }
+
+    //
+    public function Etiqueta_muestra()
+    {
+        $pdf = Pdf::loadView('pdfs.Etiqueta_tapa_muestra');
+        return $pdf->stream('Etiqueta_para_tapa_de_la_muestra.pdf');
+    }
 }

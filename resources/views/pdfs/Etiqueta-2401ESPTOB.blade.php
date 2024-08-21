@@ -89,15 +89,15 @@
             margin-top: 20px;
             font-size: 12px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            /* justify-content: space-between; */
+           /*  align-items: center; */
         }
 
         .footer-left {
             width: 65%;
             text-align: left;
             padding-right: 20px;
-            box-sizing: border-box;
+            /* box-sizing: border-box; */
             text-align: center;
         }
 
