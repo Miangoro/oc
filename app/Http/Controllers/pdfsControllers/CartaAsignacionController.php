@@ -157,4 +157,11 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.Pre-registro_predios');
         return $pdf->stream('F-UV-21-01 Pre-registro de predios de maguey o agave Ed.1 Vigente.pdf');
     }
+
+    //PDF Pre-registro de predios de maguey o agave 
+    public function DictamenMaduracionMez()
+    {
+        $pdf = Pdf::loadView('pdfs.Dictamen_Instalaciones_maduracion_mezcal');
+        return $pdf->stream('F-UV-02-14 Ver 1, Dictamen de cumplimiento de Instalaciones maduracion de mezcal.pdf');
+    }
 }

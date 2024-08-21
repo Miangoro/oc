@@ -13,5 +13,14 @@
     },
     "century gothic negrita": {
         "normal": "century_gothic_negrita_normal_d2a105cdbb35a480eaf86819474f91e2"
+    },
+    "calibri": {
+        "normal": "calibri_normal_f904fb7aec4aa6a102cede8230e668a1"
+    },
+    "calibri-bold": {
+        "normal": "calibri_bold_normal_1ace44c4fc3ba5f149a4a64fb7120658"
+    },
+    "century": {
+        "normal": "century_normal_701952a5e60038be5565a072d04a6565"
     }
 }

@@ -441,6 +441,9 @@ Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'ce
 //Pre-registro de predios
 Route::get('/pre-registro_predios', [CartaAsignacionController::class, 'PreRegistroPredios'])->name('pre-registro_predios');
 
+//Dictamen de cumplimiento de Instalaciones maduracion de mezcal
+Route::get('/dictamen_maduracion_mezcal', [CartaAsignacionController::class, 'DictamenMaduracionMez'])->name('dictamen_maduracion_mezcal');
+
 //Certificados de instalaciones
 Route::get('/certificado_comercializador', [CartaAsignacionController::class, 'certificadocom'])->name('certificado_comercializador');
 Route::get('/certificado_envasador_mezcal', [CartaAsignacionController::class, 'certificadoenv'])->name('certificado_envasador_mezcal');

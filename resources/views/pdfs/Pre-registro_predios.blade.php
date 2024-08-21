@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>F-UV-21-01 Pre-registro de predios de maguey o agave Ed.1 Vigente</title>
 
     <style>
     @font-face {
