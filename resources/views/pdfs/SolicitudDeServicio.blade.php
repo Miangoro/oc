@@ -143,9 +143,7 @@
             <td class="con-negra" colspan="2" style="padding-top: 1px; padding-bottom: 1px;">Domicilio Fiscal:</td>
             <td colspan="4">&nbsp;</td>
             <td class="con-negra" rowspan="2" style="width: 90px; padding: 4px" colspan="3">
-                Dirección de destino:
-                <br><br> Empresa de destino:
-                <br>
+                Dirección de destino: <br><br> Empresa de destino:
             </td>
             <td colspan="4" rowspan="2">&nbsp;</td>
         </tr>
@@ -467,7 +465,7 @@
 
         </tr>
         <tr>
-            <th>V:</th>
+            <th style="width:60px;">V:</th>
             <th colspan="8" style="padding-top: 5px;padding-bottom: 5px;">ANEXOS</th>
         </tr>
         <tr>
@@ -525,7 +523,7 @@
                 certificación</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td colspan="3" rowspan="2" style="padding-top: 0; margin-top: 0">Nombre y firma<br></td>
+            <td colspan="3" rowspan="2" style="padding-top: 0; margin-top: 0; vertical-align: top">Nombre y firma<br></td>
         </tr>
         <td class="sin-negrita" colspan="2">Comentarios:</td>
         <td colspan="4"></td>
