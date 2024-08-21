@@ -6,21 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>F-UV-02-11 Ver 5, Dictamen de cumplimiento de Instalaciones como envasador</title>
     <style>
-        @font-face {
-            font-family: 'Lucida Sans Unicode';
-            src: url('fonts/lsansuni.ttf') format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Lucida Sans Seminegrita';
-            src: url('fonts/LSANSD.ttf') format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Arial Negrita';
-            src: url('fonts/arial-negrita.ttf') format('truetype');
-        }
-
         body {
             font-family: 'Lucida Sans Unicode';
             margin-left: 20px; 
@@ -131,11 +116,6 @@
             display: flex;
             margin-top: -40px;
             width: 100%;
-        }
-
-        .image-right {
-            width: 25%;
-            height: auto;
         }
 
         .image-left {

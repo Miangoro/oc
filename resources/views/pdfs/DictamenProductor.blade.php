@@ -153,11 +153,6 @@
             width: 100%;
         }
 
-        .image-right {
-            width: 25%;
-            height: auto;
-        }
-
         .image-left {
             margin-right: 60%;
             width: 12%;
