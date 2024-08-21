@@ -6,43 +6,92 @@
 
 // Datatable (jquery)
 $(function () {
+    // Selecciona los elementos para el formulario de edición
 
+
+$(document).on('change', '#edit_tiene_coordenadas', function() {
+    var tieneCoordenadasSelectEdit = $(this);
+    var coordenadasDivEdit = $('#edit_coordenadas');
+
+    if (tieneCoordenadasSelectEdit.val() === 'Si') {
+        coordenadasDivEdit.removeClass('d-none');
+    } else {
+        coordenadasDivEdit.addClass('d-none');
+    }
+});
+
+    
     const tieneCoordenadasSelect = document.getElementById('tiene_coordenadas');
     const coordenadasDiv = document.getElementById('coordenadas');
     const latitudInputs = document.querySelectorAll('input[name="latitud[]"]');
     const longitudInputs = document.querySelectorAll('input[name="longitud[]"]');
-    
+
+    const fv = FormValidation.formValidation(document.getElementById('addNewPredioForm'), {
+        fields: {
+            // Otras validaciones...
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: '.form-floating',
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus(),
+        }
+    });
+
     if (tieneCoordenadasSelect && coordenadasDiv) {
         tieneCoordenadasSelect.addEventListener('change', function () {
             if (tieneCoordenadasSelect.value === 'Si') {
                 coordenadasDiv.classList.remove('d-none');
+
+                // Agregar validaciones para los campos de latitud y longitud
+                latitudInputs.forEach((input, index) => {
+                    fv.addField(`latitud[]`, {
+                        validators: {
+                            notEmpty: {
+                                message: 'Por favor ingresa la latitud'
+                            },
+                            numeric: {
+                                message: 'Por favor ingresa un valor numérico válido'
+                            }
+                        }
+                    });
+                });
+
+                longitudInputs.forEach((input, index) => {
+                    fv.addField(`longitud[]`, {
+                        validators: {
+                            notEmpty: {
+                                message: 'Por favor ingresa la longitud'
+                            },
+                            numeric: {
+                                message: 'Por favor ingresa un valor numérico válido'
+                            }
+                        }
+                    });
+                });
+
             } else {
                 coordenadasDiv.classList.add('d-none');
+
+                // Eliminar validaciones cuando se ocultan los campos
+                latitudInputs.forEach((input, index) => {
+                    fv.removeField(`latitud[]`);
+                });
+
+                longitudInputs.forEach((input, index) => {
+                    fv.removeField(`longitud[]`);
+                });
+
                 // Limpiar los valores de los inputs de latitud y longitud
                 latitudInputs.forEach(input => input.value = '');
                 longitudInputs.forEach(input => input.value = '');
             }
         });
     }
-    
-    const editTieneCoordenadasSelect = document.getElementById('edit_tiene_coordenadas');
-    const editCoordenadasDiv = document.getElementById('edit_coordenadas');
-    const editLatitudInputs = document.querySelectorAll('input[name="latitud[]"]');
-    const editLongitudInputs = document.querySelectorAll('input[name="longitud[]"]');
-    
-    if (editTieneCoordenadasSelect && editCoordenadasDiv) {
-        editTieneCoordenadasSelect.addEventListener('change', function () {
-            if (editTieneCoordenadasSelect.value === 'Si') {
-                editCoordenadasDiv.classList.remove('d-none');
-            } else {
-                editCoordenadasDiv.classList.add('d-none');
-                // Limpiar los valores de los inputs de latitud y longitud
-                editLatitudInputs.forEach(input => input.value = '');
-                editLongitudInputs.forEach(input => input.value = '');
-            }
-        });
-    }
-    
 
 
     // Variable declaration for table
@@ -501,13 +550,13 @@ $(function () {
     });
 
 
-
-
+    /* creacion de seccion de plantacion y sus validaciones */
     $(document).ready(function () {
         // Función para generar las opciones de tipos de agave
         function generateOptions(tipos) {
             return tipos.map(tipo => `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`).join('');
         }
+    
         // Función para agregar una nueva sección de plantación
         function addRow(container) {
             var options = generateOptions(tiposAgave);
@@ -554,16 +603,16 @@ $(function () {
                     </div>
                 </td>
             </tr>`;
-
+    
             // Agregar la nueva sección al contenedor correspondiente
             $(container).append(newSection);
-
+    
             // Habilitar el botón de eliminación para las nuevas filas, pero no para la primera
             if ($(container).find('.plantacion-row').length > 1) {
                 $(container).find('.remove-row-plantacion').not(':first').prop('disabled', false);
             }
         }
-
+    
         // Evento para agregar filas de plantación
         $('.add-row-plantacion').on('click', function () {
             if ($('.edit_InformacionAgave').is(':visible')) {
@@ -572,34 +621,35 @@ $(function () {
                 addRow('.contenidoPlantacion');
             }
         });
-
+    
         // Evento para eliminar filas de plantación
         $(document).on('click', '.remove-row-plantacion', function () {
             var $currentRow = $(this).closest('tr');
-
+    
             // Asegurarse de que la primera fila no pueda ser eliminada
             if ($currentRow.index() === 0) return;
-
+    
             // Eliminar la fila actual y las siguientes filas hasta el próximo elemento que no sea '.plantacion-row'
             $currentRow.nextUntil('tr:not(.plantacion-row)').addBack().remove();
-
+    
             // Deshabilitar el botón de eliminación si queda solo una fila
             var $container = $currentRow.closest('table').find('tbody');
             if ($container.find('.plantacion-row').length <= 1) {
                 $container.find('.remove-row-plantacion').prop('disabled', true);
             }
         });
-
+    
         // Deshabilitar el botón de eliminación en la primera fila de agregar
         $('.contenidoPlantacion').find('.remove-row-plantacion').first().prop('disabled', true);
-
+    
         // Deshabilitar el botón de eliminación en la primera fila de editar
         $('.edit_ContenidoPlantacion').find('.remove-row-plantacion').first().prop('disabled', true);
     });
+    
+    
 
-
+    /* funcion para creacion de seccion de coordenadas y sus respectivas validaciones */
     $(document).ready(function () {
-
         // Añadir nueva fila de coordenadas
         $(document).on('click', '.add-row-cordenadas', function () {
             var newRow = `
@@ -620,241 +670,238 @@ $(function () {
                     </div>
                 </td>
             </tr>`;
-
+    
             // Determinar a qué tabla añadir la fila
             if ($('#edit_coordenadas').is(':visible')) {
                 $('#edit_coordenadas tbody').append(newRow);
             } else {
                 $('#coordenadas tbody').append(newRow);
             }
-
+    
             // Habilitar el botón de eliminar si hay más de una fila en la tabla correspondiente
-            if ($('#coordenadas tbody tr').length > 1 || $('#edit_coordenadas tbody tr').length > 1) {
-                $('.remove-row-cordenadas').prop('disabled', false);
-            }
+            updateRemoveButtonState();
         });
-
+    
         // Eliminar fila de coordenadas
         $(document).on('click', '.remove-row-cordenadas', function () {
             var $tableBody = $(this).closest('tbody');
             var $table = $(this).closest('table');
-
+    
             // Solo permitir eliminar si no es la primera fila
             if ($tableBody.children('tr').length > 1) {
                 $(this).closest('tr').remove();
             }
-
-            // Deshabilitar el botón de eliminar si solo queda una fila
-            if ($tableBody.children('tr').length <= 1) {
-                $table.find('.remove-row-cordenadas').prop('disabled', true);
-            }
+    
+            // Actualizar el estado del botón de eliminar
+            updateRemoveButtonState();
         });
-
-        // Deshabilitar el botón de eliminar si solo hay una fila inicial en ambas tablas
-        if ($('#coordenadas tbody tr').length <= 1) {
-            $('#coordenadas').find('.remove-row-cordenadas').prop('disabled', true);
+    
+        // Función para actualizar el estado del botón de eliminar
+        function updateRemoveButtonState() {
+            $('#coordenadas tbody tr').each(function () {
+                $(this).find('.remove-row-cordenadas').prop('disabled', $(this).siblings('tr').length === 0);
+            });
+            $('#edit_coordenadas tbody tr').each(function () {
+                $(this).find('.remove-row-cordenadas').prop('disabled', $(this).siblings('tr').length === 0);
+            });
         }
-        if ($('#edit_coordenadas tbody tr').length <= 1) {
-            $('#edit_coordenadas').find('.remove-row-cordenadas').prop('disabled', true);
-        }
+    
+        // Inicializar el estado del botón de eliminar en ambas tablas al cargar la página
+        updateRemoveButtonState();
     });
+    
 
 
     /* registrar un nuevo predio */
-
-   /* registrar un nuevo predio */
-
-
-
-   $(function () {
-    // Configuración CSRF para Laravel
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    // Inicializar FormValidation
-    const addNewPredio = document.getElementById('addNewPredioForm');
-    const fv = FormValidation.formValidation(addNewPredio, {
-        fields: {
-            id_empresa: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor selecciona la empresa cliente'
-                    }
-                }
-            },
-            nombre_productor: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingresa el nombre del productor'
-                    }
-                }
-            },
-            nombre_predio: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingresa el nombre del predio'
-                    }
-                }
-            },
-            tipo_predio: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor selecciona el tipo de predio'
-                    }
-                }
-            },
-            puntos_referencia: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingresa los puntos de referencia'
-                    }
-                }
-            },       
-            ubicacion_predio: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingresa la ubicación del predio'
-                      }
-                    }              
-            },
-            superficie: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingresa la superficie del predio'
-                    },
-                    numeric: {
-                        message: 'Por favor ingresa un valor numérico válido'
-                    }
-                }
-            },
-            tiene_coordenadas: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor selecciona si el predio cuenta con coordenadas'
-                    }
-                }
-            },
-            'id_tipo[]': {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor selecciona el tipo de agave/maguey'
-                    }
-                }
-            },
-            'numero_plantas[]': {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingresa el número de plantas'
-                    },
-                    numeric: {
-                        message: 'Por favor ingresa un valor numérico válido'
-                    }
-                }
-            },
-            'edad_plantacion[]': {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingresa la edad de la plantación'
-                    },
-                    numeric: {
-                        message: 'Por favor ingresa un valor numérico válido'
-                    }
-                }
-            },
-            'tipo_plantacion[]': {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingresa el tipo de plantación'
-                    }
-                }
-            }
-        },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: function (field, ele) {
-                    return '.form-floating';
-                }
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-    }).on('core.form.valid', function (e) {
-        var formData = new FormData(addNewPredio);
-
-        $.ajax({
-            url: '/predios-list',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                addNewPredio.reset();
-                $('#id_empresa').val('').trigger('change');
-                $('#modalAddPredio').modal('hide');
-                $('.datatables-users').DataTable().ajax.reload();
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.message,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
-            },
-            error: function (xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: 'Error al agregar el predio',
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
+    $(function () {
+        // Configuración CSRF para Laravel
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        // Inicializar FormValidation
+        const addNewPredio = document.getElementById('addNewPredioForm');
+        const fv = FormValidation.formValidation(addNewPredio, {
+            fields: {
+                id_empresa: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor selecciona la empresa cliente'
+                        }
+                    }
+                },
+                nombre_productor: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa el nombre del productor'
+                        }
+                    }
+                },
+                nombre_predio: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa el nombre del predio'
+                        }
+                    }
+                },
+                tipo_predio: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor selecciona el tipo de predio'
+                        }
+                    }
+                },
+                puntos_referencia: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa los puntos de referencia'
+                        }
+                    }
+                },
+                ubicacion_predio: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa la ubicación del predio'
+                        }
+                    }
+                },
+                superficie: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa la superficie del predio'
+                        },
+                        numeric: {
+                            message: 'Por favor ingresa un valor numérico válido'
+                        }
+                    }
+                },
+                tiene_coordenadas: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor selecciona si el predio cuenta con coordenadas'
+                        }
+                    }
+                },
+                'id_tipo[]': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor selecciona el tipo de agave/maguey'
+                        }
+                    }
+                },
+                'numero_plantas[]': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa el número de plantas'
+                        },
+                        numeric: {
+                            message: 'Por favor ingresa un valor numérico válido'
+                        }
+                    }
+                },
+                'edad_plantacion[]': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa la edad de la plantación'
+                        },
+                        numeric: {
+                            message: 'Por favor ingresa un valor numérico válido'
+                        }
+                    }
+                },
+                'tipo_plantacion[]': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa el tipo de plantación'
+                        }
+                    }
+                }
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5({
+                    eleValidClass: '',
+                    eleInvalidClass: 'is-invalid',
+                    rowSelector: function (field, ele) {
+                        return '.form-floating';
+                    }
+                }),
+                submitButton: new FormValidation.plugins.SubmitButton(),
+                autoFocus: new FormValidation.plugins.AutoFocus()
+            }
+        }).on('core.form.valid', function (e) {
+            var formData = new FormData(addNewPredio);
+
+            $.ajax({
+                url: '/predios-list',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    addNewPredio.reset();
+                    $('#id_empresa').val('').trigger('change');
+                    $('#modalAddPredio').modal('hide');
+                    $('.datatables-users').DataTable().ajax.reload();
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: response.message,
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: 'Error al agregar el predio',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+            });
+        });
     });
-});
 
 
 
 
 
-// Manejar el clic en el botón de editar
-$(document).on('click', '.edit-record', function () {
-    var predioId = $(this).data('id'); // Obtener el ID del predio a editar
-    $('#edit_id_predio').val(predioId);
+    // Manejar el clic en el botón de editar
+    $(document).on('click', '.edit-record', function () {
+        var predioId = $(this).data('id'); // Obtener el ID del predio a editar
+        $('#edit_id_predio').val(predioId);
 
-    // Solicitar los datos del predio desde el servidor
-    $.ajax({
-        url: '/domicilios-predios/' + predioId + '/edit',
-        method: 'GET',
-        success: function (data) {
-            if (data.success) {
-                var predio = data.predio;
+        // Solicitar los datos del predio desde el servidor
+        $.ajax({
+            url: '/domicilios-predios/' + predioId + '/edit',
+            method: 'GET',
+            success: function (data) {
+                if (data.success) {
+                    var predio = data.predio;
 
-                // Rellenar el formulario con los datos del predio
-                $('#edit_id_empresa').val(predio.id_empresa).trigger('change');
-                $('#edit_nombre_productor').val(predio.nombre_productor);
-                $('#edit_nombre_predio').val(predio.nombre_predio);
-                $('#edit_ubicacion_predio').val(predio.ubicacion_predio);
-                $('#edit_tipo_predio').val(predio.tipo_predio);
-                $('#edit_puntos_referencia').val(predio.puntos_referencia);
-                $('#edit_tiene_coordenadas').val(predio.cuenta_con_coordenadas).trigger('change');
-                $('#edit_superficie').val(predio.superficie);
+                    // Rellenar el formulario con los datos del predio
+                    $('#edit_id_empresa').val(predio.id_empresa).trigger('change');
+                    $('#edit_nombre_productor').val(predio.nombre_productor);
+                    $('#edit_nombre_predio').val(predio.nombre_predio);
+                    $('#edit_ubicacion_predio').val(predio.ubicacion_predio);
+                    $('#edit_tipo_predio').val(predio.tipo_predio);
+                    $('#edit_puntos_referencia').val(predio.puntos_referencia);
+                    $('#edit_tiene_coordenadas').val(predio.cuenta_con_coordenadas).trigger('change');
+                    $('#edit_superficie').val(predio.superficie);
 
-                // Limpiar las filas de coordenadas anteriores
-                $('#edit_coordenadas tbody').empty();
+                    // Limpiar las filas de coordenadas anteriores
+                    $('#edit_coordenadas tbody').empty();
 
-                // Rellenar coordenadas o añadir una fila vacía si no hay coordenadas
-                if (predio.cuenta_con_coordenadas === 'Si' && data.coordenadas.length > 0) {
-                    data.coordenadas.forEach(function (coordenada) {
-                        var newRow = `
+                    // Rellenar coordenadas o añadir una fila vacía si no hay coordenadas
+                    if (predio.cuenta_con_coordenadas === 'Si' && data.coordenadas.length > 0) {
+                        data.coordenadas.forEach(function (coordenada) {
+                            var newRow = `
                     <tr>
                         <td>
                             <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
@@ -872,10 +919,10 @@ $(document).on('click', '.edit-record', function () {
                             </div>
                         </td>
                     </tr>`;
-                        $('#edit_coordenadas tbody').append(newRow);
-                    });
-                } else {
-                    var emptyRow = `
+                            $('#edit_coordenadas tbody').append(newRow);
+                        });
+                    } else {
+                        var emptyRow = `
                 <tr>
                     <td>
                         <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
@@ -893,28 +940,28 @@ $(document).on('click', '.edit-record', function () {
                         </div>
                     </td>
                 </tr>`;
-                    $('#edit_coordenadas tbody').append(emptyRow);
-                }
+                        $('#edit_coordenadas tbody').append(emptyRow);
+                    }
 
-                // Mostrar u ocultar la sección de coordenadas basado en la presencia de coordenadas
-                if (predio.cuenta_con_coordenadas === 'Si' && data.coordenadas.length > 0) {
-                    $('#edit_coordenadas').removeClass('d-none');
-                } else {
-                    $('#edit_coordenadas').addClass('d-none');
-                }
+                    // Mostrar u ocultar la sección de coordenadas basado en la presencia de coordenadas
+                    if (predio.cuenta_con_coordenadas === 'Si' && data.coordenadas.length > 0) {
+                        $('#edit_coordenadas').removeClass('d-none');
+                    } else {
+                        $('#edit_coordenadas').addClass('d-none');
+                    }
 
-                // Limpiar las filas de plantaciones anteriores
-                $('.edit_ContenidoPlantacion').empty();
+                    // Limpiar las filas de plantaciones anteriores
+                    $('.edit_ContenidoPlantacion').empty();
 
-                // Cargar tipos de agave en el select
-                var tipoOptions = data.tipos.map(function (tipo) {
-                    return `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`;
-                }).join('');
+                    // Cargar tipos de agave en el select
+                    var tipoOptions = data.tipos.map(function (tipo) {
+                        return `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`;
+                    }).join('');
 
-                // Rellenar plantaciones o añadir una fila vacía si no hay plantaciones
-                if (data.plantaciones.length > 0) {
-                    data.plantaciones.forEach(function (plantacion) {
-                        var newRow = `
+                    // Rellenar plantaciones o añadir una fila vacía si no hay plantaciones
+                    if (data.plantaciones.length > 0) {
+                        data.plantaciones.forEach(function (plantacion) {
+                            var newRow = `
                             <tr class="plantacion-row">
                                 <td rowspan="4">
                                     <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
@@ -957,12 +1004,12 @@ $(document).on('click', '.edit-record', function () {
                                     </div>
                                 </td>
                             </tr>`;
-                        $('.edit_ContenidoPlantacion').append(newRow);
-                        // Seleccionar el tipo de agave actual
-                        $('.edit_ContenidoPlantacion').find('select[name="id_tipo[]"]').last().val(plantacion.id_tipo);
-                    });
-                } else {
-                    var emptyRow = `
+                            $('.edit_ContenidoPlantacion').append(newRow);
+                            // Seleccionar el tipo de agave actual
+                            $('.edit_ContenidoPlantacion').find('select[name="id_tipo[]"]').last().val(plantacion.id_tipo);
+                        });
+                    } else {
+                        var emptyRow = `
                         <tr>
                             <td rowspan="4">
                                 <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
@@ -1005,13 +1052,25 @@ $(document).on('click', '.edit-record', function () {
                                 </div>
                             </td>
                         </tr>`;
-                    $('.edit_ContenidoPlantacion').append(emptyRow);
-                }
-                
+                        $('.edit_ContenidoPlantacion').append(emptyRow);
+                    }
 
-                // Mostrar el modal
-                $('#modalEditPredio').modal('show');
-            } else {
+
+                    // Mostrar el modal
+                    $('#modalEditPredio').modal('show');
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo cargar los datos del predio.',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+            },
+            error: function (error) {
+                console.error('Error al cargar los datos del predio:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -1021,159 +1080,146 @@ $(document).on('click', '.edit-record', function () {
                     }
                 });
             }
-        },
-        error: function (error) {
-            console.error('Error al cargar los datos del predio:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo cargar los datos del predio.',
-                customClass: {
-                    confirmButton: 'btn btn-danger'
-                }
-            });
-        }
-    });
-});
-
-
-
-$(function () {
-    // Configuración CSRF para Laravel
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    // Inicializar FormValidation para el formulario de edición
-    const addEditPredioForm = document.getElementById('addEditPredioForm');
-    const fvEdit = FormValidation.formValidation(addEditPredioForm, {
-        fields: {
-            id_empresa: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor selecciona la empresa cliente'
-                    }
-                }
-            },
-            nombre_productor: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingresa el nombre del productor'
-                    }
-                }
-            },
-            nombre_predio: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingresa el nombre del predio'
-                    }
-                }
-            },
-            tipo_predio: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor selecciona el tipo de predio'
-                    }
-                }
-            },
-            puntos_referencia: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingresa los puntos de referencia'
-                    }
-            }
-         },
-            ubicacion_predio: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingresa la ubicación del predio'
-                    }
-                }
-            },
-            superficie: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingresa la superficie del predio'
-                    },
-                    numeric: {
-                        message: 'Por favor ingresa un valor numérico válido'
-                    }
-                }
-            },
-            tiene_coordenadas: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor selecciona si el predio cuenta con coordenadas'
-                    }
-                }
-            }
-        },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: function (field, ele) {
-                    return '.form-floating';
-                }
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-    }).on('core.form.valid', function (e) {
-        var formData = new FormData(addEditPredioForm);
-        var predioId = $('#edit_id_predio').val(); // Asegúrate de que este ID esté correctamente asignado
-
-        $.ajax({
-            url: '/domicilios-predios/' + predioId,
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                addEditPredioForm.reset();
-                $('#modalEditPredio').modal('hide');
-                $('.datatables-users').DataTable().ajax.reload();
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.message,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
-            },
-            error: function (xhr) {
-                if (xhr.status === 422) {
-                    var errors = xhr.responseJSON.errors;
-                    var errorMessages = Object.keys(errors).map(function (key) {
-                        return errors[key].join('<br>');
-                    }).join('<br>');
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        html: errorMessages,
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Ha ocurrido un error al actualizar el predio.',
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
-                    });
-                }
-            }
         });
     });
-});
+
+
+    $(function () {
+        // Configuración CSRF para Laravel
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        // Inicializar FormValidation para el formulario de edición
+        const addEditPredioForm = document.getElementById('addEditPredioForm');
+        const fvEdit = FormValidation.formValidation(addEditPredioForm, {
+            fields: {
+                id_empresa: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor selecciona la empresa cliente'
+                        }
+                    }
+                },
+                nombre_productor: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa el nombre del productor'
+                        }
+                    }
+                },
+                nombre_predio: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa el nombre del predio'
+                        }
+                    }
+                },
+                tipo_predio: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor selecciona el tipo de predio'
+                        }
+                    }
+                },
+                puntos_referencia: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa los puntos de referencia'
+                        }
+                    }
+                },
+                ubicacion_predio: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa la ubicación del predio'
+                        }
+                    }
+                },
+                superficie: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa la superficie del predio'
+                        },
+                        numeric: {
+                            message: 'Por favor ingresa un valor numérico válido'
+                        }
+                    }
+                },
+                tiene_coordenadas: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor selecciona si el predio cuenta con coordenadas'
+                        }
+                    }
+                }
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5({
+                    eleValidClass: '',
+                    eleInvalidClass: 'is-invalid',
+                    rowSelector: function (field, ele) {
+                        return '.form-floating';
+                    }
+                }),
+                submitButton: new FormValidation.plugins.SubmitButton(),
+                autoFocus: new FormValidation.plugins.AutoFocus()
+            }
+        }).on('core.form.valid', function (e) {
+            var formData = new FormData(addEditPredioForm);
+            var predioId = $('#edit_id_predio').val(); // Asegúrate de que este ID esté correctamente asignado
+
+            $.ajax({
+                url: '/domicilios-predios/' + predioId,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    addEditPredioForm.reset();
+                    $('#modalEditPredio').modal('hide');
+                    $('.datatables-users').DataTable().ajax.reload();
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: response.message,
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorMessages = Object.keys(errors).map(function (key) {
+                            return errors[key].join('<br>');
+                        }).join('<br>');
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            html: errorMessages,
+                            customClass: {
+                                confirmButton: 'btn btn-danger'
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al actualizar el predio.',
+                            customClass: {
+                                confirmButton: 'btn btn-danger'
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    });
 
 
 });

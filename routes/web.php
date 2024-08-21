@@ -428,6 +428,7 @@ Route::get('/Contrato_prestacion_servicio_NOM-199', [CartaAsignacionController::
 Route::get('/acta_circunstanciada_unidades_produccion', [CartaAsignacionController::class, 'acta_circunstanciada_produccion'])->name('acta_circunstanciada_unidades_produccion');
 Route::get('/solicitud_Info_ClienteNOM-199', [CartaAsignacionController::class, 'solicitudInfoNOM_199'])->name('solicitud_Info_ClienteNOM-199');
 Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'])->name('Etiqueta-2401ESPTOB');
+Route::get('/inspeccion_geo_referenciacion', [CartaAsignacionController::class, 'InspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion');
 
 //Dictamen de instalaciones
 Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamenp'])->name('dictamen_productor');
@@ -437,6 +438,8 @@ Route::get('/oficio_de_comision', [CartaAsignacionController::class, 'Comision']
 Route::get('/orden_de_servicio', [CartaAsignacionController::class, 'Servicio'])->name('ordenDeServicio');
 Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion');
 
+//Pre-registro de predios
+Route::get('/pre-registro_predios', [CartaAsignacionController::class, 'PreRegistroPredios'])->name('pre-registro_predios');
 
 //Certificados de instalaciones
 Route::get('/certificado_comercializador', [CartaAsignacionController::class, 'certificadocom'])->name('certificado_comercializador');

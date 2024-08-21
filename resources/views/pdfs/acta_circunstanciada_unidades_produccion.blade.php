@@ -21,7 +21,7 @@
             margin: 35px;
             padding: 10px;
             margin-top: 100px;
-            margin-bottom: 50px;
+            margin-bottom: 55px;
             font-size: 15px;
         }
 
@@ -153,9 +153,6 @@
             white-space: nowrap;
             /* Evita que el texto se divida en múltiples líneas */
             z-index: -1;
-            /* Asegura que esté detrás del contenido */
-            pointer-events: none;
-            /* No afecta la interacción del usuario */
         }
 
         .footer {

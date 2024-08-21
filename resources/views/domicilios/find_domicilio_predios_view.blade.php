@@ -445,7 +445,7 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-floating form-floating-outline">
-                                                        <input type="number" class="form-control" id="edit_numero_plantas"
+                                                        <input type="number" class="form-control" id="edit_numero_plantas" 
                                                             name="numero_plantas[]" placeholder="Número de plantas"
                                                             step="1">
                                                         <label for="numero_plantas">Número de Plantas</label>
