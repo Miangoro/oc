@@ -113,7 +113,7 @@
             <td colspan="5">&nbsp;</td>
         </tr>
         <tr>
-            <th style="width:40px;">I:</th>
+            <th style="width:60px;">I:</th>
             <th colspan="12" style="padding-top: 2px;padding-bottom: 2px;">INFORMACIÓN DEL SOLICITANTE</th>
         </tr>
         <tr>
@@ -342,14 +342,14 @@
         <tr>
             <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Dictaminación de instalaciones:
             </td>
-            <td style="width: 50px;"></td>
-            <td class="td-no-margins" style="width: 10px"></td>
-            <td style="width: 50px" style="font-weight: bold">Productor de <br> Mezca</td>
-            <td style="width: 30px"></td>
-            <td style="width: 30px" style="font-weight: bold">Envasador</td>
-            <td style="width: 30px"></td>
-            <td style="width: 30px" colspan="2" style="font-weight: bold">Comercializador</td>
-            <td style="width: 30px" colspan="2"></td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td class="td-no-margins " style="width: 10px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px" style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Productor de <br> Mezcal</td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;font-weight: bold">Envasador</td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0; font-weight: bold" colspan="2">Comercializador</td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;" colspan="2"></td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
@@ -369,24 +369,24 @@
         <tr>
             <td class="td-margins letra_td" colspan="3" style="font-weight: bold; padding-left: 0;">Renovación de
                 dictaminación de instalaciones:</td>
-            <td style="width: 50px;"></td>
-            <td class="td-no-margins" style="width: 1px"></td>
-            <td style="width: 70px" style="font-weight: bold">Productor de <br> Mezca</td>
-            <td style="width: 20px"></td>
-            <td style="width: 30px" style="font-weight: bold">Envasador</td>
-            <td style="width: 30px"></td>
-            <td style="width: 30px" colspan="2" style="font-weight: bold">Comercializador</td>
-            <td style="width: 30px" colspan="2"></td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td class="td-no-margins" style="width: 1px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 70px; padding-top: 0;padding-bottom: 0;font-weight: bold" >Productor de <br> Mezcal</td>
+            <td style="width: 20px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;font-weight: bold" >Envasador</td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;font-weight: bold" colspan="2" >Comercializador</td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;" colspan="2"></td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
 
         </tr>
         <tr>
-            <td class="td-barra" colspan="4"></td>
-            <td colspan="2" class="td-no-margins" style="text-align: right" style="font-weight: bold">Fecha y
+            <td class="td-barra" colspan="4" style="padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class="td-no-margins" style="text-align: right" style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Fecha y
                 hora de visita propuesta:</td>
-            <td colspan="7"></td>
+            <td colspan="7" style="padding-top: 0;padding-bottom: 0;"></td>
         </tr>
 
         <tr>
@@ -477,8 +477,8 @@
                 continuación se enlistan:</td>
         </tr>
         <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
+            <td style="width:70px;">&nbsp;</td>
+            <td style="width:70px;">&nbsp;</td>
             <td colspan="7" style="font-size: 8px">Copia del análisis de laboratorio de cada uno de los lotes en
                 cumplimiento con el
                 apartado 4.3 de la NOM-070-SCFI-2016. En caso de <br>
@@ -525,11 +525,10 @@
                 certificación</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td colspan="3" style="padding-top: 0; border-bottom: none;border-right: none;">Nombre y firma<br></td>
+            <td colspan="3" rowspan="2" style="padding-top: 0; margin-top: 0">Nombre y firma<br></td>
         </tr>
         <td class="sin-negrita" colspan="2">Comentarios:</td>
         <td colspan="4"></td>
-        <td colspan="2" style="border-bottom: none;border-right: none; border-top: none"></td>
         </tr>
     </table>
     <table>
