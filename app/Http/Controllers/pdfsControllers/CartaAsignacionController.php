@@ -150,4 +150,11 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.certificadoDeExportacion');
         return $pdf->stream('F7.1-01-23 Certificado de Exportación NOM-070-SCFI-2016.pdf');
     }
+
+    //PDF Pre-registro de predios de maguey o agave 
+    public function PreRegistroPredios()
+    {
+        $pdf = Pdf::loadView('pdfs.Pre-registro_predios');
+        return $pdf->stream('F-UV-21-01 Pre-registro de predios de maguey o agave Ed.1 Vigente.pdf');
+    }
 }
