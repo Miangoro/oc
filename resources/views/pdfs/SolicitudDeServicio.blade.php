@@ -8,7 +8,7 @@
     <title>Document</title>
     <style>
         @page {
-            margin-top: 50px;
+            margin-top: 40px;
             margin-right: 50px;
             margin-left: 50px;
             margin-bottom: 1px;
@@ -17,7 +17,7 @@
         @font-face {
             font-family: 'Century Gothic';
             src: url('fonts/CenturyGothic.ttf') format('truetype');
-            
+
         }
 
         @font-face {
@@ -57,7 +57,7 @@
             border-top: none;
             border-right: 0.5px solid black;
             border-left: 0.5px solid black;
-           
+
         }
 
         .td-no-margins {
@@ -94,11 +94,13 @@
 
             <td class="con-negra" rowspan="2" colspan="5"
                 style="font-size: 14px; padding-left: 13px; padding-right: 13px;">SOLICITUD DE SERVICIOS</td>
-            <td colspan="5" style="text-align: right; font-size: 8.5px; padding-left: 0; padding-top: 0;">Solicitud de
+            <td colspan="5" style="text-align: right; font-size: 8.5px; padding-left: 0; padding-top: 0;">Solicitud
+                de
                 servicios NOM-070-SCFI-2016
                 F7.1-01-32 <br>
                 Edición 10 Entrada en vigor:
-                20/06/2024</td>
+                20/06/2024
+            </td>
         </tr>
         <tr>
             <td colspan="5" style="padding-top: 0; font-size: 9px;">
@@ -106,11 +108,12 @@
             </td>
         <tr>
             <td colspan="3">&nbsp;</td>
-            <td class="th-color con-negra" colspan="2" style="padding-top: 5px;padding-bottom: 5px;">N° DE SOLICITUD:</td>
+            <td class="th-color con-negra" colspan="2" style="padding-top: 5px;padding-bottom: 5px;">N° DE SOLICITUD:
+            </td>
             <td colspan="5">&nbsp;</td>
         </tr>
         <tr>
-            <th style="width:40px;">I:</th>
+            <th style="width:60px;">I:</th>
             <th colspan="12" style="padding-top: 2px;padding-bottom: 2px;">INFORMACIÓN DEL SOLICITANTE</th>
         </tr>
         <tr>
@@ -130,7 +133,8 @@
             <td colspan="4">&nbsp;</td>
         </tr>
         <tr>
-            <td class="con-negra" style="padding-top: 0; padding-bottom: 0;" colspan="2">Responsable de las <br> instalaciones</td>
+            <td class="con-negra" style="padding-top: 0; padding-bottom: 0;" colspan="2">Responsable de las <br>
+                instalaciones</td>
             <td colspan="4">&nbsp;</td>
             <td class="con-negra" colspan="3">SKU:</td>
             <td colspan="4">&nbsp;</td>
@@ -138,10 +142,10 @@
         <tr>
             <td class="con-negra" colspan="2" style="padding-top: 1px; padding-bottom: 1px;">Domicilio Fiscal:</td>
             <td colspan="4">&nbsp;</td>
-            <td class="con-negra" rowspan="2" style="width: 90px;" colspan="3">
-                <br>Dirección de destino:
-                <br>&nbsp;<br> Empresa de destino:
-                <br>&nbsp;<br>
+            <td class="con-negra" rowspan="2" style="width: 90px; padding: 4px" colspan="3">
+                Dirección de destino:
+                <br><br> Empresa de destino:
+                <br>
             </td>
             <td colspan="4" rowspan="2">&nbsp;</td>
         </tr>
@@ -157,168 +161,232 @@
             </th>
         </tr>
         <tr>
-            <td class="td-margins con-negra" colspan="13" style="color: red; padding: 0;">Seleccione el servicio solicitado colocando una X en la casilla correspondiente.</td>
+            <td class="td-margins con-negra" colspan="13" style="color: red; padding: 0;">Seleccione el servicio
+                solicitado colocando una X en la casilla correspondiente.</td>
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Muestreo de agave (ART)</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td colspan="2" class="td-no-margins letra_td" style="font-weight: bold"">Fecha y hora de visita propuesta</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3" style="font-weight: bold; padding-top: 0;padding-bottom: 0;">
+                Muestreo de agave (ART)</td>
+            <td style="width: 50px; padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class="td-no-margins letra_td"
+                style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
+                propuesta</td>
+            <td colspan="7"></td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Vigilancia en producción de lote</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td colspan="2" class="td-no-margins letra_td" style="font-weight: bold">Fecha y hora de visita propuesta</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3" style="font-weight: bold;padding-top: 0;padding-bottom: 0;">
+                Vigilancia en producción de lote
+            </td>
+            <td style="width: 50px; padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class="td-no-margins letra_td"
+                style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Fecha y hora de visita propuesta
+            </td>
+            <td colspan="7"></td>
 
         </tr>
         <tr>
-            <td class="td-margins" colspan="13"style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Muestreo de lote a granel</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td colspan="2" class="td-no-margins letra_td" style="font-weight: bold">Fecha y hora de visita propuesta</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3" style="font-weight: bold; padding-top: 0;padding-bottom: 0;">
+                Muestreo de lote a granel</td>
+            <td style="width: 50px; padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class="td-no-margins letra_td"
+                style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Fecha y hora de visita propuesta
+            </td>
+            <td colspan="7"></td>
         </tr>
         <tr>
-            <td class="td-margins" colspan="13" style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
+
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Vigilancia en el traslado del lote</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td colspan="2" class="td-no-margins letra_td" style="font-weight: bold">Fecha y hora de visita propuesta</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Vigilancia en el traslado del
+                lote</td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class="td-no-margins letra_td"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
+                propuesta</td>
+            <td colspan="7"></td>
         </tr>
         <tr>
-            <td class="td-margins" colspan="13"style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Inspección de envasado</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td colspan="2" class="td-no-margins letra_td" style="font-weight: bold">Fecha y hora de visita propuesta</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Inspección de envasado</td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class="td-no-margins letra_td"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
+                propuesta</td>
+            <td colspan="7"></td>
         </tr>
         <tr>
-            <td class="td-margins" colspan="13" style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
+
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Muestreo de lote envasado</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td colspan="2" class="td-no-margins letra_td" style="font-weight: bold">Fecha y hora de visita propuesta</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Muestreo de lote envasado</td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class="td-no-margins letra_td"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
+                propuesta</td>
+            <td colspan="7"></td>
         </tr>
         <tr>
-            <td class="td-margins" colspan="13" style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
+
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Inspeccion ingreso a barrica/ contenedor de vidrio</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td colspan="2" class="td-no-margins letra_td" style="font-weight: bold">Fecha y hora de visita propuesta</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Inspeccion ingreso a barrica/
+                contenedor de vidrio</td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class="td-no-margins letra_td"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
+                propuesta</td>
+            <td colspan="7"></td>
         </tr>
         <tr>
-            <td class="td-margins" colspan="13" style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
+
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Liberación de productoterminado</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td colspan="2" class="td-no-margins letra_td" style="font-weight: bold">Fecha y hora de visita propuesta</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Liberación de productoterminado
+            </td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class="td-no-margins letra_td"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
+                propuesta</td>
+            <td colspan="7"></td>
         </tr>
         <tr>
-            <td class="td-margins" colspan="13" style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
+
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Inspección de liberación a barrica/contenedor de vidrio</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td colspan="2" class="td-no-margins letra_td" style="font-weight: bold">Fecha y hora de visita propuesta</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Inspección de liberación a
+                barrica/contenedor de vidrio</td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class="td-no-margins letra_td"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
+                propuesta</td>
+            <td colspan="7"></td>
         </tr>
         <tr>
-            <td class="td-margins" colspan="13" style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
+
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Georreferenciación</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td colspan="2" class=" td-no-margins letra_td" style="font-weight: bold">Fecha y hora de visita propuesta</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Georreferenciación</td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class=" td-no-margins letra_td"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
+                propuesta</td>
+            <td colspan="7"></td>
         </tr>
         <tr>
-            <td class="td-margins" colspan="13" style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
+
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Pedidos para exportación</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td colspan="2" class=" td-no-margins letra_td" style="font-weight: bold">Fecha y hora de visita propuesta</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Pedidos para exportación</td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class=" td-no-margins letra_td"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
+                propuesta</td>
+            <td colspan="7"></td>
         </tr>
         <tr>
-            <td class="td-margins" colspan="13" style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
+
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Emisión de certificado NOM a granel</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td colspan="2" class="td-no-margins letra_td" style="font-weight: bold">Fecha de emisión propuesta:</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Emisión de certificado NOM a
+                granel</td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class="td-no-margins letra_td"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha de emisión propuesta:
+            </td>
+            <td colspan="7"></td>
         </tr>
 
         <tr>
-            <td class="td-margins" colspan="13" style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
+
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Emisión de certificado venta nacional</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td colspan="2" class="td-no-margins letra_td" style="font-weight: bold">Fecha de emisión propuesta:</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Emisión de certificado venta
+                nacional</td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class="td-no-margins letra_td"
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha de emisión propuesta:
+            </td>
+            <td colspan="7"></td>
         </tr>
         <tr>
-            <td class="td-margins" colspan="13" style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
+
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Dictaminación de instalaciones:</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td class="td-no-margins" style="width: 10px">&nbsp;</td>
-            <td style="width: 50px" style="font-weight: bold">Productor de <br> Mezca</td>
-            <td style="width: 10px">&nbsp;</td>
-            <td style="width: 30px" style="font-weight: bold">Envasador</td>
-            <td style="width: 30px">&nbsp;</td>
-            <td style="width: 30px" colspan="2" style="font-weight: bold">Comercializador</td>
-            <td style="width: 30px" colspan="2">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Dictaminación de instalaciones:
+            </td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td class="td-no-margins " style="width: 10px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px" style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Productor de <br> Mezcal</td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;font-weight: bold">Envasador</td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0; font-weight: bold" colspan="2">Comercializador</td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;" colspan="2"></td>
         </tr>
         <tr>
-            <td class="td-margins" colspan="13" style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
+
         </tr>
         <tr>
-            <td class="td-barra" colspan="4">&nbsp;</td>
-            <td colspan="2" class="td-no-margins" style="text-align: right" style="font-weight: bold">Fecha y hora de visita <br> propuesta:</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-barra" colspan="4"></td>
+            <td colspan="2" class="td-no-margins" style="text-align: right" style="font-weight: bold">Fecha y
+                hora de visita propuesta:</td>
+            <td colspan="7"></td>
         </tr>
 
         <tr>
-            <td class="td-margins" colspan="13" style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
+
         </tr>
         <tr>
-            <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Renovación de dictaminación de instalaciones:</td>
-            <td style="width: 50px;">&nbsp;</td>
-            <td class="td-no-margins" style="width: 1px">&nbsp;</td>
-            <td style="width: 70px" style="font-weight: bold">Productor de <br> Mezca</td>
-            <td style="width: 20px">&nbsp;</td>
-            <td style="width: 30px" style="font-weight: bold">Envasador</td>
-            <td style="width: 30px">&nbsp;</td>
-            <td style="width: 30px" colspan="2" style="font-weight: bold">Comercializador</td>
-            <td style="width: 30px" colspan="2">&nbsp;</td>
+            <td class="td-margins letra_td" colspan="3" style="font-weight: bold; padding-left: 0;">Renovación de
+                dictaminación de instalaciones:</td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td class="td-no-margins" style="width: 1px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 70px; padding-top: 0;padding-bottom: 0;font-weight: bold" >Productor de <br> Mezcal</td>
+            <td style="width: 20px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;font-weight: bold" >Envasador</td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;font-weight: bold" colspan="2" >Comercializador</td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;" colspan="2"></td>
         </tr>
         <tr>
-            <td class="td-margins" colspan="13" style="padding: 0;">&nbsp;</td>
+            <td class="td-margins" colspan="13" style="padding: 2px;"></td>
+
         </tr>
         <tr>
-            <td class="td-barra" colspan="4">&nbsp;</td>
-            <td colspan="2" class="td-no-margins" style="text-align: right" style="font-weight: bold">Fecha y hora de visita <br> propuesta:</td>
-            <td colspan="7">&nbsp;</td>
+            <td class="td-barra" colspan="4" style="padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="2" class="td-no-margins" style="text-align: right" style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Fecha y
+                hora de visita propuesta:</td>
+            <td colspan="7" style="padding-top: 0;padding-bottom: 0;"></td>
         </tr>
 
         <tr>
@@ -328,7 +396,8 @@
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">1) No. de lote granel:</td>
             <td colspan="3">&nbsp;</td>
-            <td class="con-negra" colspan="4" style="text-align: left">6) No. de certificado NOM de Mezcal <br> a granel vigente:</td>
+            <td class="con-negra" colspan="4" style="text-align: left">6) No. de certificado NOM de Mezcal <br> a
+                granel vigente:</td>
             <td colspan="4">&nbsp;</td>
         </tr>
         <tr>
@@ -363,19 +432,17 @@
     <br>
     <table>
         <tr>
-            <td rowspan="3" colspan="2">
-                <div>
-                    <center>
-                        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM"
-                            style="max-width: 100px; height: auto;">
-                    </center>
-                </div>
+            <td rowspan="3" colspan="2" style="padding: 0; ">
+                <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM"
+                    style="max-width: 170px; margin: 0;">
             </td>
             <td class="con-negra" rowspan="2" colspan="4" style="font-size: 12px">SOLICITUD DE SERVICIOS</td>
-            <td colspan="3" style="text-align: right; font-size: 10px !important;">Solicitud de servicios NOM-070-SCFI-2016
+            <td colspan="3" style="text-align: right; font-size: 8.5px !important;">Solicitud de servicios
+                NOM-070-SCFI-2016
                 F7.1-01-32 <br>
                 Edición 10 Entrada en vigor:
-                20/06/2024</td>
+                20/06/2024
+            </td>
         </tr>
         <tr>
             <td colspan="3">
@@ -383,7 +450,7 @@
             </td>
         <tr>
             <td colspan="3">&nbsp;</td>
-            <td class="th-color con-negra" style="width: 80px">N° DE SOLICITUD:</td>
+            <td class="th-color con-negra" style="width: 100px">N° DE SOLICITUD:</td>
             <td colspan="3">&nbsp;</td>
 
         </tr>
@@ -401,7 +468,7 @@
         </tr>
         <tr>
             <th>V:</th>
-            <th colspan="8">ANEXOS</th>
+            <th colspan="8" style="padding-top: 5px;padding-bottom: 5px;">ANEXOS</th>
         </tr>
         <tr>
             <td>&nbsp;</td>
@@ -410,9 +477,9 @@
                 continuación se enlistan:</td>
         </tr>
         <tr>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td colspan="7">Copia del análisis de laboratorio de cada uno de los lotes en
+            <td style="width:70px;">&nbsp;</td>
+            <td style="width:70px;">&nbsp;</td>
+            <td colspan="7" style="font-size: 8px">Copia del análisis de laboratorio de cada uno de los lotes en
                 cumplimiento con el
                 apartado 4.3 de la NOM-070-SCFI-2016. En caso de <br>
                 producto cuente con ajuste de grado alcohólico, reposado o añejo adjuntar copia de los analisis de
@@ -420,21 +487,21 @@
                 en cumplimiento con el numeral 5 de la NOM-070-SCFI-2016.</td>
         </tr>
         <tr>
-            <td class="con-negra" colspan="9">La empresa se da por enterada que: la Unidad de Verificación
+            <td class="con-negra" colspan="9" style="font-size: 8px">La empresa se da por enterada que: la Unidad de Verificación
                 establecerá una vigilancia
-                de cumplimiento con la NOM permanente a sus instalaciones una vez que <br>
+                de cumplimiento con la NOM permanente a sus instalaciones una vez que 
                 el Certificado NOM sea emitido. Para validar la información el OC podrá solicitar los documentos
                 originales para su cotejo respectivo</td>
         </tr>
         <tr>
-            <th colspan="6">VIABILIDAD DEL SERVICIO</th>
+            <th colspan="6" style="padding-top: 5px;padding-bottom: 5px;">VIABILIDAD DEL SERVICIO</th>
             <th rowspan="2" colspan="3">Validó solicitud y verificó la
                 viabilidad del servicio:</th>
         </tr>
         <tr>
-            <th colspan="4">DESCRIPCIÓN:</th>
-            <th>SI</th>
-            <th style="width: 40px">NO</th>
+            <th colspan="4" style="padding-top: 5px;padding-bottom: 5px;">DESCRIPCIÓN:</th>
+            <th style="width: 90px">SI</th>
+            <th >NO</th>
         </tr>
 
         <tr>
@@ -443,7 +510,7 @@
                 Certificación:</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td rowspan="2" colspan="3">Validó solicitud y verificó la viabilidad del servicio: <br>&nbsp;<br>
+            <td rowspan="2" colspan="3">Validó solicitud y verificó la viabilidad del servicio:
             </td>
         </tr>
         <tr>
@@ -458,10 +525,10 @@
                 certificación</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
-            <td rowspan="2" colspan="3">Nombre y firma<br>&nbsp;<br></td>
+            <td colspan="3" rowspan="2" style="padding-top: 0; margin-top: 0">Nombre y firma<br></td>
         </tr>
         <td class="sin-negrita" colspan="2">Comentarios:</td>
-        <td colspan="4">&nbsp;</td>
+        <td colspan="4"></td>
         </tr>
     </table>
     <table>
