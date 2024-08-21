@@ -420,7 +420,7 @@ Route::get('/enviar-correo', [EnviarCorreoController::class, 'enviarCorreo']);
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
 Route::get('/solicitudinfo_cliente/{id}', [clientesProspectoController::class, 'info'])->name('solicitud_cliente');
 Route::get('/asignacion_usuario', [CartaAsignacionController::class, 'access_user'])->name('asignacion_usuario');
-Route::get('/solicitudservi', [CartaAsignacionController::class, 'solicitudservi'])->name('solicitudservi');
+Route::get('/solicitud_de_servicio', [CartaAsignacionController::class, 'solicitudservi'])->name('solicitudservi');
 Route::get('/prestacion_servicio_fisica/{id}', [clientesConfirmadosController::class, 'pdfServicioPersonaFisica070'])->name('prestacion_servicio_fisica');
 Route::get('/prestacion_servicio_moral/{id}', [clientesConfirmadosController::class, 'pdfServicioPersonaMoral070'])->name('prestacion_servicio_moral');
 Route::get('/Contrato_NMX-052', [CartaAsignacionController::class, 'CONTRATO_NMX_052'])->name('Contrato_NMX-052');
@@ -428,6 +428,8 @@ Route::get('/Contrato_prestacion_servicio_NOM-199', [CartaAsignacionController::
 Route::get('/acta_circunstanciada_unidades_produccion', [CartaAsignacionController::class, 'acta_circunstanciada_produccion'])->name('acta_circunstanciada_unidades_produccion');
 Route::get('/solicitud_Info_ClienteNOM-199', [CartaAsignacionController::class, 'solicitudInfoNOM_199'])->name('solicitud_Info_ClienteNOM-199');
 Route::get('/inspeccion_geo_referenciacion', [CartaAsignacionController::class, 'InspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion');
+Route::get('/dictamen_cumplimiento_mezcal_granel', [CartaAsignacionController::class, 'dictamenDeCumplimientoGranel'])->name('dictamen-cumplimiento-granel');
+
 
 //Etiquetas
 Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'])->name('Etiqueta-2401ESPTOB');

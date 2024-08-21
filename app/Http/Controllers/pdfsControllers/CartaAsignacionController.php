@@ -150,19 +150,23 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.certificadoDeExportacion');
         return $pdf->stream('F7.1-01-23 Certificado de Exportación NOM-070-SCFI-2016.pdf');
     }
-
-    //PDF Pre-registro de predios de maguey o agave 
-    public function PreRegistroPredios()
+    public function InspeccionGeoReferenciacion()
     {
-        $pdf = Pdf::loadView('pdfs.Pre-registro_predios');
-        return $pdf->stream('F-UV-21-01 Pre-registro de predios de maguey o agave Ed.1 Vigente.pdf');
+    $pdf = Pdf::loadView('pdfs.inspeccion_geo_referenciacion');
+/*     $pdf->setPaper('A4', 'portrait');
+    $pdf->render();
+
+    // Añadir script de página después de renderizar
+    $pdf->getDomPDF()->getCanvas()->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
+        $canvas->text(520, 820, "Página $pageNumber de $pageCount", $fontMetrics->get_font("Arial", "normal"), 12);
+    }); */
+    return $pdf->stream('F-UV-21-02 Inspección para la geo-referenciación de los predios de maguey o agave Ed. 6 Vigente.pdf');
     }
 
-    //PDF Pre-registro de predios de maguey o agave 
-    public function DictamenMaduracionMez()
+    public function dictamenDeCumplimientoGranel()
     {
-        $pdf = Pdf::loadView('pdfs.Dictamen_Instalaciones_maduracion_mezcal');
-        return $pdf->stream('F-UV-02-14 Ver 1, Dictamen de cumplimiento de Instalaciones maduracion de mezcal.pdf');
+        $pdf = Pdf::loadView('pdfs.DictamenDeCumplimientoMezcalGranel');
+        return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
     }
 
     //

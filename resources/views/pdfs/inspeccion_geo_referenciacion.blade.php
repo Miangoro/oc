@@ -12,7 +12,7 @@
             font-family: Verdana, 'Geneva', Tahoma, sans-serif;
             margin: 35px;
             padding: 10px;
-            margin-top: 45px;
+            margin-top: 60px;
             margin-bottom: 55px;
             font-size: 15px;
         }
@@ -239,7 +239,9 @@
         }
 
         .firma-texto {
+            font-family: 'Times New Roman', Times, serif;
             font-weight: bold;
+
         }
     </style>
 </head>
@@ -343,7 +345,7 @@
         <br>
         <table class="tabla-coordenadas">
             <tr>
-                <td rowspan="3" style="width: 25%;">Grados decimales</td>
+                <td rowspan="10" style="width: 25%;">Grados decimales</td>
                 <td>Latitud</td>
                 <td></td>
             </tr>
@@ -353,6 +355,34 @@
             </tr>
             <tr>
                 <td>Latitud</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Longitud</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Latitud</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Longitud</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Latitud</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Longitud</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Latitud</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Longitud</td>
                 <td></td>
             </tr>
             <tr>
@@ -402,6 +432,7 @@
                         <p style="margin: 0;">d2=</p>
                         <p style="margin: 0;">d3=</p>
                         <p style="margin: 0;">d4=</p>
+                        <p></p>
                         <p style="margin: 0;">D=</p>
                     </td>
 
@@ -416,8 +447,8 @@
             </tbody>
         </table>
         <br>
-        <p class="indice">V. &nbsp;&nbsp;&nbsp;&nbsp; Características del maguey</p>
-        <p class="indice">Edad</p>
+        <p style="margin: 0;" class="indice">V. &nbsp;&nbsp;&nbsp;&nbsp; Características del maguey</p>
+        <p style="margin: 0;" class="indice">&nbsp;&nbsp; Edad</p>
         <br>
         <table class="caracteristicas">
             <tr>
@@ -510,6 +541,7 @@
                 <td></td>
             </tr>
         </table>
+        <br>
         <table class="firma-section">
             <tr>
                 <td>
