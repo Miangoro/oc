@@ -52,12 +52,12 @@
         }
 
         #encabezado p {
-    margin-bottom: 1px; /* Ajusta el espacio entre los párrafos */
-}
+            margin-bottom: 1px; /* Ajusta el espacio entre los párrafos */
+        }
 
-#encabezado p:last-child {
-    margin-bottom: 0; /* Elimina el margen inferior del último párrafo */
-}
+        #encabezado p:last-child {
+            margin-bottom: 0; /* Elimina el margen inferior del último párrafo */
+        }
 
 
         #encabezado #logo{
@@ -65,8 +65,6 @@
             text-align: left;
             float: left;
         }
-
-       
 
         .description1 {
             font-size: 18px;
@@ -339,7 +337,7 @@
     <p class="textx" style="font-size: 10px; margin: 1;">
     <strong>AUTORIZÓ</strong>
     <span style="margin-left: 50px;">
-        <span class="negrita">Gerente Técnico Sustituto de la Unidad de Inspección | BTG. Erik Antonio Mejía Vaca</span>
+        <strong>Gerente Técnico Sustituto de la Unidad de Inspección | BTG. Erik Antonio Mejía Vaca</strong>
     </span>
     </p>
 
