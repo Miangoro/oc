@@ -19,7 +19,8 @@
 
     .description1-container {
         position: absolute;
-        right: 0;   /* Alinea el contenido a la derecha */
+        top: 0px; 
+        right: 0;  
         text-align: right; 
     }
 
@@ -28,12 +29,19 @@
         font-size: 13px;
         line-height: 1;
         display: inline-block;
-        width: auto; /* Permite que el contenedor se ajuste al contenido */
-        white-space: nowrap; /* Evita que el texto se divida en líneas */
+        width: auto; 
+        white-space: nowrap; 
         border-bottom: 1px solid black;
         padding-bottom: 5px;
     }
-</style>
+
+    .title {
+        font-family: 'Lucida Sans Unicode';
+        font-size: 20px;
+        text-align: center;
+        margin-top: 20px;
+    }
+    </style>
 
 </head>
 <body>

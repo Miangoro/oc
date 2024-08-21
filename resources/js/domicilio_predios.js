@@ -141,6 +141,7 @@ $(document).on('change', '#edit_tiene_coordenadas', function() {
                 { data: 'puntos_referencia' },
                 { data: 'cuenta_con_coordenadas' },
                 { data: 'superficie' },
+                { data: '' },
                 { data: 'action' },
             ],
 
@@ -164,6 +165,15 @@ $(document).on('change', '#edit_tiene_coordenadas', function() {
                         return `<span>${full.fake_id}</span>`;
                     }
                 },
+                {
+                    // Pdf de pre-registro
+                    targets: 10,
+                    className: 'text-center',
+                    render: function (data, type, full, meta) {
+                      var $id = full['id_guia'];
+                      return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
+                    }
+                  },
                 {
                     // User full name
                     targets: 2,
@@ -1220,6 +1230,17 @@ $(document).on('change', '#edit_tiene_coordenadas', function() {
             });
         });
     });
+
+    //Reciben los datos del pdf
+$(document).on('click', '.pdf', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+        var iframe = $('#pdfViewer');
+        iframe.attr('src', '../dictamen_productor/');
+  
+        $("#titulo_modal").text("Pre-registro de predios de maguey o agave");
+        $("#subtitulo_modal").text(registro);  
+  });
 
 
 });

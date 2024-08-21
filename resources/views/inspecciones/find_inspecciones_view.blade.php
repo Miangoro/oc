@@ -157,10 +157,11 @@
                     <th></th>
                     <th>No.</th>
                     <th>Folio</th>
+                    <th>No. de servicio</th>
                     <th>Cliente</th>
                     <th>Fecha de solicitud</th>
-                    <th>No. de servicio</th>
                     <th>Solicitud</th>
+                    <th>Domicilio de inspección</th>
                     <th>Fecha y hora de visita estimada</th>
                     <th>Inspector asignado</th>
                     <th>Fecha y hora de inspección</th>

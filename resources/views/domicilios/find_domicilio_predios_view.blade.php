@@ -39,6 +39,7 @@
                         <th>Puntos Referencia</th>
                         <th>Cuenta con Coordenadas</th>
                         <th>Superficie</th>
+                        <th>Pre-registro</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
