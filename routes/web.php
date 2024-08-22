@@ -444,8 +444,7 @@ Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'ce
 //Pre-registro de predios
 
 
-//Dictamen de cumplimiento de Instalaciones maduracion de mezcal
-Route::get('/dictamen_maduracion_mezcal', [CartaAsignacionController::class, 'DictamenMaduracionMez'])->name('dictamen_maduracion_mezcal');
+
 
 //Certificados de instalaciones
 Route::get('/certificado_comercializador', [CartaAsignacionController::class, 'certificadocom'])->name('certificado_comercializador');
@@ -584,9 +583,11 @@ Route::get('insta/{id_dictamen}/edit', [InstalacionesController::class, 'edit'])
 Route::put('insta/{id_dictamen}', [InstalacionesController::class, 'update'])->name('tipos.update');
 
 //Pdfs de dictamen de instalaciones
-Route::get('/dictamen_productor/{id_dictamen}', [InstalacionesController::class, 'dictamenp'])->name('dictamen_productor');
-Route::get('/dictamen_envasador/{id_dictamen}', [InstalacionesController::class, 'dictamene'])->name('dictamen_envasador');
-Route::get('/dictamen_comercializador/{id_dictamen}', [InstalacionesController::class, 'dictamenc'])->name('dictamen_comercializador');
+Route::get('/dictamen_productor/{id_dictamen}', [InstalacionesController::class, 'dictamen_productor'])->name('dictamen_productor');
+Route::get('/dictamen_envasador/{id_dictamen}', [InstalacionesController::class, 'dictamen_envasador'])->name('dictamen_envasador');
+Route::get('/dictamen_comercializador/{id_dictamen}', [InstalacionesController::class, 'dictamen_comercializador'])->name('dictamen_comercializador');
+Route::get('/dictamen_almacen/{id_dictamen}', [InstalacionesController::class, 'dictamen_almacen'])->name('dictamen_almacen');
+Route::get('/dictamen_maduracion/{id_dictamen}', [InstalacionesController::class, 'dictamen_maduracion'])->name('dictamen_maduracion');
 
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');

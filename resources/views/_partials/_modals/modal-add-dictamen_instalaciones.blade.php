@@ -22,6 +22,7 @@
                             <option value="2">Envasador</option>
                             <option value="3">Comercializador</option>
                             <option value="4">Almacen y bodega</option>
+                            <option value="5">Área de maduración</option>
                         </select>
                             <label for="">Tipo de Dictamen</label>
                     </div>
