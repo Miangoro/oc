@@ -172,6 +172,7 @@ use App\Http\Controllers\clientes\clientesConfirmadosController;
 use App\Http\Controllers\documentacion\documentacionController;
 use App\Http\Controllers\domicilios\DomiciliosController;
 use App\Http\Controllers\domicilios\prediosController;
+use App\Http\Controllers\domicilios\DestinosController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\getFuncionesController;
 use App\Http\Controllers\usuarios\UsuariosController;
@@ -525,6 +526,12 @@ Route::delete('/predios-list/{id_predio}', [PrediosController::class, 'destroy']
 Route::post('/predios-register/store', [PrediosController::class, 'store'])->name('predios-register.store');
 Route::get('/domicilios-predios/{id_predio}/edit', [PrediosController::class, 'edit'])->name('domicilios-predios.edit');
 Route::post('/domicilios-predios/{id_predio}', [PrediosController::class, 'update'])->name('domicilios-predios.update');
+
+//Domicilio Destinos
+Route::get('/domicilios/destinos', [DestinosController::class, 'UserManagement'])->name('domicilio-destinos');
+Route::resource('/destinos-list', DestinosController::class);
+Route::delete('/destinos-list/{id_direccion}', [DestinosController::class, 'destroy'])->name('destinos-list.destroy');
+Route::post('destinos-register/{id_direccion}', [DestinosController::class, 'store'])->name('destinos-register.store');
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
