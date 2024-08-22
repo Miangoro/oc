@@ -29,9 +29,9 @@
             src: url('fonts/GOTHICB.TTF') format('truetype');
         }
 
-        .b{
-            font-weight: bold;
-
+        .negrita{
+          
+            font-family:  'Century Gothic Negrita';
         }
 
 
@@ -131,7 +131,7 @@
 
         .letra-fondo{
             color: white;
-            font-weight: bold;
+            
             font-size: 19px;
             background-color: #006fc0;
             padding-bottom: 21px;
@@ -180,10 +180,10 @@
     <br>
     <table>
         <tr>
-            <td colspan="2" class="letra-fondo">Solicita</td>
+            <td colspan="2" class="letra-fondo negrita">Solicita</td>
         </tr>
         <tr>
-            <td class="rightLetter" style="width: 250px"> <b>Nombre:</b></td>
+            <td class="rightLetter negrita" style="width: 250px">Nombre:</td>
             <td class="letra-up"> MAYTE ERÉNDIRA ENRÍQUEZ ROJAS</td>
         </tr>
         <tr>

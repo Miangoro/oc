@@ -8,7 +8,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Crear nuevo dictamen</h4>
+                    <h4 class="address-title mb-2">Crear nuevo dictamen de instalaciones</h4>
                 </div>
 
         <form id="NuevoDictamen">
@@ -72,8 +72,8 @@
 
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-4">
-                        <select  name="clases" class="form-select" >
-                            <option value="" disabled selected>Selecciona una clase</option>
+                        <select  name="clases[]" class="select2 form-select" multiple  data-error-message="Por favor selecciona una clase">
+                           
                                 @foreach ($clases as $clase)
                                     <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
                                 @endforeach

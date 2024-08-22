@@ -15,14 +15,19 @@
      userView = baseUrl + 'app/user/view/account',
      offCanvasForm = $('#offcanvasAddUser');
  
-   if (select2.length) {
-     var $this = select2;
-     select2Focus($this);
-     $this.wrap('<div class="position-relative"></div>').select2({
-       placeholder: 'Select Country',
-       dropdownParent: $this.parent()
-     });
-   }
+     var select2Elements = $('.select2');
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+
+  initializeSelect2(select2Elements);
  
  
    // ajax setup
