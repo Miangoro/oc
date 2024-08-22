@@ -131,7 +131,7 @@
 
         .letra-fondo{
             color: white;
-            font-size: 19px;
+            font-size: 17px;
             background-color: #006fc0;
             padding-bottom: 18px;
             text-align: center;
@@ -250,7 +250,7 @@
 </tr>
     </table>
     <div style="margin-bottom: 15px">
-        <p style="font-size: 12px; margin-top: 50px; text-align: center">Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la
+        <p style="font-size: 12px; margin-top: 60px; text-align: center">Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido externamente sin la
             autorización escrita del Director Ejecutivo.</p>
     </div>
 
