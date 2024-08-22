@@ -254,7 +254,7 @@
     <p class="text">
     Se dictamina que la <span class="font-lucida-sans-seminegrita">Unidad de comercialización y/almacen</span> cuenta con la infraestructura, el equipo y los procesos necesarios
     para el envasado de <span class="font-lucida-sans-seminegrita">Mezcal_______, clase (s)________,</span>, requisitos establecidos en la NOM-070-SCFI-2016,
-    Bebidas alcohólicas-Mezcal- Especificaciones y por el Organismo de Certificación del Centro de Innovación y
+    Bebidas alcohólicas-Mezcal-Especificaciones y por el Organismo de Certificación del Centro de Innovación y
     Desarrollo Agroalimentario de Michoacán A.C. (CIDAM)
    </p>
 

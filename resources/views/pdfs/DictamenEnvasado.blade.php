@@ -215,9 +215,9 @@
         la revisión de procesos de producción del producto Mezcal, su envasado y comercialización; y con fundamento
         en los artículos 56 Fracción I y 60 fracción I de la Ley de Infraestructura de la Calidad que establece el
         funcionamiento de las Unidades de Inspección.</p>
-        <p>Después de realizar la inspección de las instalaciones en fecha del ____de ______del 20 ___partiendo del acta
+        <p>Después de realizar la inspección de las instalaciones en fecha del <span class="font-lucida-sans-seminegrita"><u>{{ $fecha_inspeccion }}</u></span> partiendo del acta
         circunstanciada o número de inspección: _____</p>
-        <p class="textp">Nombre del productor/empresa: _______________________________________________________</p>
+        <p class="textp">Nombre del productor/empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social }}</u></p>
     </div>
     <table>
         <tbody>
@@ -247,7 +247,7 @@
     <p class="text">
     Se dictamina que la <span class="font-lucida-sans-seminegrita">Unidad de envasado</span> cuenta con la infraestructura, el equipo y los procesos necesarios
     para el envasado de <span class="font-lucida-sans-seminegrita">Mezcal_______, clase (s)________,</span>, requisitos establecidos en la NOM-070-SCFI-2016,
-    Bebidas alcohólicas-Mezcal- Especificaciones y por el Organismo de Certificación del Centro de Innovación y
+    Bebidas alcohólicas-Mezcal-Especificaciones y por el Organismo de Certificación del Centro de Innovación y
     Desarrollo Agroalimentario de Michoacán A.C. (CIDAM)
    </p>
 

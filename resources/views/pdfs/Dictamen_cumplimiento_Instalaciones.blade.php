@@ -181,7 +181,7 @@
             padding: 0;
             position: absolute;
             right: 50px;
-            top: 790px;
+            top: 825px;
             font-family: 'Arial Negrita' !important;
         }
 
@@ -227,16 +227,28 @@
         }
 
         .pie {
-            margin-top: 60px;
             text-align: right;
             font-size: 9px;
             line-height: 1;
+            position: fixed;
+            bottom: -10;
+            left: 0;   
+            right: 0;  
+            width: calc(100% - 40px); 
+            height: 45px;
+            margin-right: 30px; 
+            padding: 10px 0px;
+            font-family: 'Lucida Sans Unicode';
         }
 
         .negrita{
             font-family: 'Lucida Sans Unicode Negrita' !important;
         }
        
+        .blue-text {
+            color: #365F91; 
+        }
+
     </style>
 </head>
 <body>
@@ -248,56 +260,55 @@
     <div class="description1">Unidad de Inspección No. UVNOM-129</div>
     <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
     <div class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C</div>
-    <div class="textimg font-lucida-sans-seminegrita">No.: <u>{{ $datos->num_dictamen }}</u></div>
-    <div class="title">Dictamen de cumplimiento de Instalaciones como <br> productor</div>
+    <div class="textimg font-lucida-sans-seminegrita">No.: UMC-00__/20___</div>
+    <div class="title">Dictamen de cumplimiento de Instalaciones como <br> <span class="blue-text">ALMACÉN DE MEZCAL</span></div>
     <div class="text">
         <p>De acuerdo a lo establecido en los procedimientos internos de la Unidad de Inspección No. UVNOM 129 para
         la revisión de procesos de producción del producto Mezcal, su envasado y comercialización; y con fundamento
         en los artículos 56 Fracción I y 60 fracción I de la Ley de Infraestructura de la Calidad que establece el
         funcionamiento de las Unidades de Inspección.</p>
-        <p>Después de realizar la inspección de las instalaciones en fecha del <u><span  class="font-lucida-sans-seminegrita">{{ $fecha_inspeccion }}</span></u> partiendo del acta
-        circunstanciada o número de inspección: <u><span  class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio }}</u></span></p>
-        <p class="textp">Nombre del productor/empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social }}</u></p>
+        <p>Después de realizar la inspección de las instalaciones en fecha del ____de ______del 20 ___partiendo del acta
+        circunstanciada o número de inspección: _____</p>
+        <p class="textp">Nombre de la empresa: _______________________________________________________</p>
     </div>
     <table>
         <tbody id="tabla">
             <tr>
             <td style="text-align: justify;">
-            <span class="font-lucida-sans-seminegrita">Número de cliente:</span><br>
-            (Otorgado por el Organismo Certificador del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C.) (CIDAM)
+            <span class="font-lucida-sans-seminegrita">Domicilio Fiscal: <br>&nbsp;</span>
             </td>
-                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente }}</td>
+                <td style="text-align: center; vertical-align: middle;"></td>
             </tr>
             <tr>
             <td>
-            <span class="font-lucida-sans-seminegrita">Domicilio Fiscal:</span>
+            <span class="font-lucida-sans-seminegrita">Domicilio de almacén: <br>&nbsp;</span>
             </td>
 
-                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal }}</td>
+                <td style="text-align: center; vertical-align: middle;"></td>
             </tr>
             <tr>
             <td>
-            <span class="font-lucida-sans-seminegrita">Domicilio de la unidad de producción:</span>
+            <span class="font-lucida-sans-seminegrita">Categorías del mezcal: <br>&nbsp;</span>
             </td>
-                <td style="text-align: center; vertical-align: middle;">{{ $datos->instalaciones->direccion_completa }}</td>
+                <td style="text-align: center; vertical-align: middle;"></td>
             </tr>
             <tr>
-                <td class="font-lucida-sans-seminegrita">Responsable de la inspección:</td>
-                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->inspector->name }}</td>
+                <td class="font-lucida-sans-seminegrita">Clases de mezcal que almacena: <br>&nbsp;</td>
+                <td style="text-align: center; vertical-align: middle;"></td>
             </tr>
             <tr>
-                <td class="font-lucida-sans-seminegrita">Fecha de emisión de dictamen:</td>
-                <td style="text-align: center; vertical-align: middle;">{{ $fecha_emision }}</td>
+                <td class="font-lucida-sans-seminegrita">Fecha de emisión de dictamen: <br>&nbsp;</td>
+                <td style="text-align: center; vertical-align: middle;"></td>
             </tr>
             <tr>
-                <td class="font-lucida-sans-seminegrita">Periodo de vigencia hasta:</td>
-                <td style="text-align: center; vertical-align: middle;">{{ $fecha_vigencia }}</td>
+                <td class="font-lucida-sans-seminegrita">Fecha de vigencia del dictamen: <br>&nbsp;</td>
+                <td style="text-align: center; vertical-align: middle;"></td>
             </tr>
         </tbody>
     </table>
     <p class="text">
-    Se dictamina que la <span class="font-lucida-sans-seminegrita">Unidad de producción</span> cuenta con la infraestructura, el equipo y los procesos necesarios
-    para la producción de <span class="font-lucida-sans-seminegrita">Mezcal, clase (s)</span>, requisitos establecidos en la NOM-070-SCFI-2016,
+    Se dictamina que la <span class="font-lucida-sans-seminegrita">Unidad de comercialización y/almacén</span> cuenta con la infraestructura, el equipo y los procesos necesarios
+    para para el envasado de <span class="font-lucida-sans-seminegrita"> Mezcal_______, clase (s)________,</span> requisitos establecidos en la NOM-070-SCFI-2016,
     Bebidas alcohólicas-Mezcal-Especificaciones y por el Organismo de Certificación del Centro de Innovación y
     Desarrollo Agroalimentario de Michoacán A.C. (CIDAM)
    </p>
@@ -339,8 +350,8 @@
         <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341. Morelia Michoacán</p>
     </div>
 
-    <p class="pie">Entrada en vigor: 15-07-2024 <br>
-    F-UV-02-04 Ver 10
+    <p class="pie">Entrada en vigor: 15-07-2024<br>
+    F-UV-02-13 Ver 1.
     </p>
 </div>
 </body>

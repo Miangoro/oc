@@ -15,14 +15,19 @@
      userView = baseUrl + 'app/user/view/account',
      offCanvasForm = $('#offcanvasAddUser');
  
-   if (select2.length) {
-     var $this = select2;
-     select2Focus($this);
-     $this.wrap('<div class="position-relative"></div>').select2({
-       placeholder: 'Select Country',
-       dropdownParent: $this.parent()
-     });
-   }
+     var select2Elements = $('.select2');
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+
+  initializeSelect2(select2Elements);
  
  
    // ajax setup
@@ -87,9 +92,13 @@
              else if($name == 3){ 
                 return '<span class="user-email">Dictamen Comercializador</span>';
             }
-            else{
+            else if($name == 4){ 
                 return '<span class="user-email">Almacén y bodega</span>';
             }
+            else if($name == 5){ 
+              return '<span class="user-email">Área de maduración</span>';
+            }
+            
              //return $name;
            }
          },
@@ -118,12 +127,12 @@
             }
           },
           {
-            // email verify
+            // Abre el pdf del dictamen
             targets: 6,
             className: 'text-center',
             render: function (data, type, full, meta) {
               var $id = full['id_guia'];
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
             }
           },
  
@@ -570,14 +579,43 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
 
 
   
-//Reciben los datos del pdf
+//Reciben los datos del pdf del dictamen
 $(document).on('click', '.pdf', function () {
   var id = $(this).data('id');
   var registro = $(this).data('registro');
       var iframe = $('#pdfViewer');
-      iframe.attr('src', '../dictamen_productor/');
 
-      $("#titulo_modal").text("Dictamen de productor");
+      var tipo = $(this).data('tipo');
+
+      if(tipo == 1){ // Productor
+        var tipo_dictamen = '../dictamen_productor/'+id;
+        var titulo = "Dictamen de productor";
+      }
+
+      if(tipo == 2){ // Envasador
+        var tipo_dictamen = '../dictamen_envasador/'+id;
+        var titulo = "Dictamen de envasador";
+      }
+
+      if(tipo == 3){ // Comercializador
+        var tipo_dictamen = '../dictamen_comercializador/'+id;
+        var titulo = "Dictamen de comercializador";
+      }
+
+      if(tipo == 4){ // Almacén y bodega
+        var tipo_dictamen = '../dictamen_comercializador/'+id;
+        var titulo = "Dictamen de almacén y bodega";
+      }
+
+      if(tipo == 5){ // Área de maduración
+        var tipo_dictamen = '../dictamen_maduracion/'+id;
+        var titulo = "Dictamen de área de maduración de mezcal";
+      }
+      
+
+      iframe.attr('src', tipo_dictamen);
+
+      $("#titulo_modal").text(titulo);
       $("#subtitulo_modal").text(registro);  
 });
 

@@ -54,4 +54,9 @@ class Instalaciones extends Model
       
         return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_instalacion');
     }
+
+    public function dictamen()
+    {
+        return $this->belongsTo(Dictamen_instalaciones::class, 'id_instalacion', 'id_instalacion');
+    }
 }

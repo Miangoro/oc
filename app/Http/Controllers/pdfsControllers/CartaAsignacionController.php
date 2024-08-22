@@ -150,6 +150,14 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.certificadoDeExportacion');
         return $pdf->stream('F7.1-01-23 Certificado de Exportación NOM-070-SCFI-2016.pdf');
     }
+
+    //PDF de solicitud de hologramas
+    public function solicitudHologramas()
+    {
+        $pdf = Pdf::loadView('pdfs.solicitudDeHologramas');
+        return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
+    }
+
     public function InspeccionGeoReferenciacion()
     {
     $pdf = Pdf::loadView('pdfs.inspeccion_geo_referenciacion');
@@ -167,5 +175,17 @@ class CartaAsignacionController extends Controller
     {
         $pdf = Pdf::loadView('pdfs.DictamenDeCumplimientoMezcalGranel');
         return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
+    }
+
+    public function Etiqueta_muestra()
+    {
+        $pdf = Pdf::loadView('pdfs.Etiqueta_tapa_muestra');
+        return $pdf->stream('Etiqueta_para_tapa_de_la_muestra.pdf');
+    }
+
+    public function Dictamen_Cumplimiento()
+    {
+        $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_Instalaciones');
+        return $pdf->stream('F-UV-02-13 Ver 1, Dictamen de cumplimiento de Instalaciones almacen.pdf');
     }
 }

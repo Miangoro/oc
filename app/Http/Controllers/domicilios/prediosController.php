@@ -10,6 +10,7 @@ use App\Models\Tipos;
 use App\Models\PredioCoordenadas;
 use App\Models\predio_plantacion;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 
@@ -333,6 +334,34 @@ class PrediosController extends Controller
         }
         
         
+        public function PdfPreRegistroPredios($id_predio)
+        {   
+
+            $datos = Predios::with(['predio_plantaciones.tipo','empresa.empresaNumClientes'])->find($id_predio);
+            $comunal = '___';
+            $ejidal = '___';
+            $propiedad = '___';
+            $otro = '___';
+
+            switch ($datos->tipo_predio) {
+                case 'Comunal':
+                    $comunal = 'X';
+                    break;
+                case 'Ejidal':
+                    $ejidal = 'X';
+                    break;
+                case 'Propiedad Privada':
+                    $propiedad = 'X';
+                    break;
+                case 'Otro':
+                    $otro = 'X';
+                    break;
+            }
+
+
+            $pdf = Pdf::loadView('pdfs.Pre-registro_predios', ['datos'=>$datos, 'comunal' => $comunal, 'ejidal' => $ejidal, 'propiedad' => $propiedad, 'otro' => $otro]);
+            return $pdf->stream('F-UV-21-01 Pre-registro de predios de maguey o agave Ed.1 Vigente.pdf');
+        }
         
 
 }
