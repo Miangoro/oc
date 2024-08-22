@@ -271,16 +271,16 @@
     <div class="description1">Unidad de Inspección No. UVNOM-129</div>
     <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
     <div class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C</div>
-    <div class="textimg font-lucida-sans-seminegrita">No.: UMC-00_/20</div>
+    <div class="textimg font-lucida-sans-seminegrita">No.: <u>{{ $datos->num_dictamen }}</u></div>
     <div class="title">Dictamen de cumplimiento de Instalaciones como <br> productor</div>
     <div class="text">
         <p>De acuerdo a lo establecido en los procedimientos internos de la Unidad de Inspección No. UVNOM 129 para
         la revisión de procesos de producción del producto Mezcal, su envasado y comercialización; y con fundamento
         en los artículos 56 Fracción I y 60 fracción I de la Ley de Infraestructura de la Calidad que establece el
         funcionamiento de las Unidades de Inspección.</p>
-        <p>Después de realizar la inspección de las instalaciones en fecha del ____de ______del 20 ___partiendo del acta
-        circunstanciada o número de inspección: _____</p>
-        <p class="textp">Nombre del productor/empresa: _______________________________________________________</p>
+        <p>Después de realizar la inspección de las instalaciones en fecha del <u><span  class="font-lucida-sans-seminegrita">{{ $fecha_inspeccion }}</span></u> partiendo del acta
+        circunstanciada o número de inspección: <u><span  class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio }}</u></span></p>
+        <p class="textp">Nombre del productor/empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social }}</u></p>
     </div>
     <table>
         <tbody id="tabla">
@@ -289,32 +289,32 @@
             <span class="font-lucida-sans-seminegrita">Número de cliente:</span><br>
             (Otorgado por el Organismo Certificador del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C.) (CIDAM)
             </td>
-                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit.</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente }}</td>
             </tr>
             <tr>
             <td>
             <span class="font-lucida-sans-seminegrita">Domicilio Fiscal:</span>
             </td>
 
-                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit.</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal }}</td>
             </tr>
             <tr>
             <td>
             <span class="font-lucida-sans-seminegrita">Domicilio de la unidad de producción:</span>
             </td>
-                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium, atque!</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->instalaciones->direccion_completa }}</td>
             </tr>
             <tr>
                 <td class="font-lucida-sans-seminegrita">Responsable de la inspección:</td>
-                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium, atque!</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->inspector->name }}</td>
             </tr>
             <tr>
                 <td class="font-lucida-sans-seminegrita">Fecha de emisión de dictamen:</td>
-                <td style="text-align: center; vertical-align: middle;">08/08/2024</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $fecha_emision }}</td>
             </tr>
             <tr>
                 <td class="font-lucida-sans-seminegrita">Periodo de vigencia hasta:</td>
-                <td style="text-align: center; vertical-align: middle;">08/08/2024</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $fecha_vigencia }}</td>
             </tr>
         </tbody>
     </table>

@@ -171,7 +171,7 @@ $(document).on('change', '#edit_tiene_coordenadas', function() {
                     className: 'text-center',
                     render: function (data, type, full, meta) {
                       var $id = full['id_guia'];
-                      return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
+                      return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_predio']}" data-registro="${full['id_empresa']} "></i>`;
                     }
                   },
                 {
@@ -1236,7 +1236,7 @@ $(document).on('click', '.pdf', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
         var iframe = $('#pdfViewer');
-        iframe.attr('src', '../dictamen_productor/');
+        iframe.attr('src', '../pre-registro_predios/'+id);
   
         $("#titulo_modal").text("Pre-registro de predios de maguey o agave");
         $("#subtitulo_modal").text(registro);  

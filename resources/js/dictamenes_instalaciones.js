@@ -575,7 +575,7 @@ $(document).on('click', '.pdf', function () {
   var id = $(this).data('id');
   var registro = $(this).data('registro');
       var iframe = $('#pdfViewer');
-      iframe.attr('src', '../dictamen_productor/');
+      iframe.attr('src', '../dictamen_productor/'+id);
 
       $("#titulo_modal").text("Dictamen de productor");
       $("#subtitulo_modal").text(registro);  
