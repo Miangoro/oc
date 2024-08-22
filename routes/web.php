@@ -436,18 +436,15 @@ Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'
 Route::get('/Etiqueta-Muestra', [CartaAsignacionController::class, 'Etiqueta_muestra'])->name('Etiqueta-Muestra');
 
 //Dictamen de instalaciones
-Route::get('/dictamen_productor', [CartaAsignacionController::class, 'dictamenp'])->name('dictamen_productor');
-Route::get('/dictamen_envasador', [CartaAsignacionController::class, 'dictamene'])->name('dictamen_envasador');
-Route::get('/dictamen_comercializador', [CartaAsignacionController::class, 'dictamenc'])->name('dictamen_comercializador');
+
 Route::get('/oficio_de_comision', [CartaAsignacionController::class, 'Comision'])->name('oficioDeComision');
 Route::get('/orden_de_servicio', [CartaAsignacionController::class, 'Servicio'])->name('ordenDeServicio');
 Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion');
 
 //Pre-registro de predios
-Route::get('/pre-registro_predios', [CartaAsignacionController::class, 'PreRegistroPredios'])->name('pre-registro_predios');
 
-//Dictamen de cumplimiento de Instalaciones maduracion de mezcal
-Route::get('/dictamen_maduracion_mezcal', [CartaAsignacionController::class, 'DictamenMaduracionMez'])->name('dictamen_maduracion_mezcal');
+
+
 
 //Certificados de instalaciones
 Route::get('/certificado_comercializador', [CartaAsignacionController::class, 'certificadocom'])->name('certificado_comercializador');
@@ -528,6 +525,7 @@ Route::delete('/predios-list/{id_predio}', [PrediosController::class, 'destroy']
 Route::post('/predios-register/store', [PrediosController::class, 'store'])->name('predios-register.store');
 Route::get('/domicilios-predios/{id_predio}/edit', [PrediosController::class, 'edit'])->name('domicilios-predios.edit');
 Route::post('/domicilios-predios/{id_predio}', [PrediosController::class, 'update'])->name('domicilios-predios.update');
+Route::get('/pre-registro_predios/{id_predio}', [prediosController::class, 'PdfPreRegistroPredios'])->name('pre-registro_predios');
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
@@ -583,6 +581,13 @@ Route::post('insta', [InstalacionesController::class, 'store'])->name('instalaci
 Route::get('insta/{id_dictamen}/edit', [InstalacionesController::class, 'edit'])->name('instalacion.edit');
 /*editar*/
 Route::put('insta/{id_dictamen}', [InstalacionesController::class, 'update'])->name('tipos.update');
+
+//Pdfs de dictamen de instalaciones
+Route::get('/dictamen_productor/{id_dictamen}', [InstalacionesController::class, 'dictamen_productor'])->name('dictamen_productor');
+Route::get('/dictamen_envasador/{id_dictamen}', [InstalacionesController::class, 'dictamen_envasador'])->name('dictamen_envasador');
+Route::get('/dictamen_comercializador/{id_dictamen}', [InstalacionesController::class, 'dictamen_comercializador'])->name('dictamen_comercializador');
+Route::get('/dictamen_almacen/{id_dictamen}', [InstalacionesController::class, 'dictamen_almacen'])->name('dictamen_almacen');
+Route::get('/dictamen_maduracion/{id_dictamen}', [InstalacionesController::class, 'dictamen_maduracion'])->name('dictamen_maduracion');
 
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');

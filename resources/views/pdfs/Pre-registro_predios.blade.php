@@ -75,9 +75,9 @@
     }
 
     table , td, th {
-        margin-left:40px;
+        margin-left:25px;
         font-size: 13px;
-        width: 90%;
+        width: 93.5%;
         height: auto;
 	    border: 2px solid #006666;
 	    border-collapse: collapse;
@@ -150,24 +150,24 @@
 
 <p class="title">Pre-registro de predios de maguey o agave</p>
 
-<p class="sub-title"><span class="first-letter">I</span>Datos del productor de agave o maguey</p>
+<p class="sub-title"><span class="first-letter">I.</span>Datos del productor de agave o maguey</p>
 <table>
 	<tbody>
 		<tr>
 			<td><strong>Nombre del productor</strong><br>(Name of producer)</td>
-			<td colspan="3">Lorem ipsum dolor sit amet consectetur adipisicing elit #0</td>
+			<td colspan="3">{{ $datos->nombre_productor }}</td>
 		</tr>
 		<tr>
-			<td><strong>Número de cliente</strong><br>(client number)</td>
-			<td>Lorem ipsum dolor sit amet consectetur adipisicing #1</td>
-			<td><strong>Número de teléfono</strong><br>(phone number)</td>
-			<td>Lorem ipsum dolor sit amet consectetur adipisicing #2</td>
+			<td style="width: 87px"><strong>Número de cliente</strong><br>(client number)</td>
+			<td>{{ $datos->empresa->empresaNumClientes[0]->numero_cliente }}</td>
+			<td style="width: 90px"><strong>Número de teléfono</strong><br>(phone number)</td>
+			<td>{{ $datos->empresa->telefono }}</td>
 		</tr>
 		<tr>
 			<td><strong>Dirección fiscal</strong><br>(Fiscal address)</td>
-			<td>Lorem ipsum dolor sit amet consectetur adipisicing #3</td>
+			<td style="width: 150px">{{ $datos->empresa->domicilio_fiscal }}</td>
 			<td><strong>Correo electrónico</strong><br>(email)</td>
-			<td>Lorem ipsum dolor sit amet consectetur adipisicing #4</td>
+			<td>{{ $datos->empresa->correo }}</td>
 		</tr>
 		<tr>
 			<td><strong>Fecha de servicio</strong></td>
@@ -178,41 +178,41 @@
 	</tbody>
 </table><br>
 
-<p class="sub-title"><span class="first-letter">II</span>Datos del predio de agave o maguey</p>
+<p class="sub-title"><span class="first-letter">II.</span>Datos del predio de agave o maguey</p>
 <table>
 	<tbody>
 		<tr>
 			<td  class="left"><strong>Nombre del predio</strong><br>(Property name)</td>
-			<td colspan="3">Lorem ipsum dolor sit amet consectetur adipisicing elit #0</td>
+			<td colspan="3">{{ $datos->nombre_predio }}</td>
 		</tr>
 		<tr>
 			<td  class="left"><strong>Ubicación del predio</strong><br>(Location of the property)</td>
-			<td>Lorem ipsum dolor sit amet consectetur adipisicing #1</td>
+			<td>{{ $datos->ubicacion_predio }}</td>
 			<td><strong>Tipo de predio</strong><br>(Type of property)</td>
-			<td  class="left"><strong>Comunal __</strong><br>
-            <strong>Ejidal ____</strong><br>
-            <strong>Propiedad Privada __</strong><br>
-            <strong>Otro: ______</strong>        
+			<td  class="left"><strong>Comunal <u> {{ $comunal }} </u> </strong><br>
+            <strong>Ejidal <u> {{ $ejidal }} </u></strong><br>
+            <strong>Propiedad Privada  {{ $propiedad }} </strong><br>
+            <strong>Otro:  {{ $otro }} </strong>        
         </td>
 		</tr>
 		<tr>
         <td class="no-border-right left"><strong>Puntos de referencia:</strong><br>(Points of reference)</td>
-            <td colspan="3">Lorem ipsum dolor sit amet consectetur adipisicing elit #00</td>
+            <td colspan="3">{{ $datos->puntos_referencia }}</td>
 		</tr>
 	</tbody>
 </table><br>
 
-<p class="sub-title"><span class="first-letter">III</span>Datos de geo-referenciación del predio</p>
+<p class="sub-title"><span class="first-letter">III.</span>Datos de geo-referenciación del predio</p>
 <table>
 	<tbody>
 		<tr>
 			<td style="width: 20px; max-width: 20px; overflow: hidden; white-space: nowrap; text-align: center; vertical-align: middle; padding: 0; border: 1px solid #000;"><strong>Superficie</strong> (area)</td>
-			<td>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Debitis nesciunt eaque ipsam harum cum vitae, libero quas reprehenderit dicta velit.</td>
+			<td>{{ $datos->superficie }}</td>
 		</tr>
 	</tbody>
 </table><br>
 
-<p class="sub-title"><span class="first-letter">IV</span>Datos del predio de agave o maguey</p>
+<p class="sub-title"><span class="first-letter">IV.</span>Datos del predio de agave o maguey</p>
 <table>
 	<tbody>
 		<tr>
@@ -222,20 +222,19 @@
 			<td><strong>Edad (años)</strong><br>(Age (years)</td>
 			<td><strong>Tipo de plantación</strong><br>(Type of plantation)</td>
 		</tr>
-		<tr>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		<tr>
-			<td><strong></strong></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
+
+    
+        @foreach ($datos->predio_plantaciones as $plantacion) 
+            <tr style="height: 5px">
+                <td>{{ $plantacion->tipo->nombre }}</td>
+                <td>{{ $plantacion->tipo->cientifico }}</td>
+                <td>{{ $plantacion->num_plantas }}</td>
+                <td>{{ $plantacion->anio_plantacion }}</td>
+                <td>{{ $plantacion->tipo_plantacion }}</td>
+		    </tr>
+        @endforeach
+     
+
 	</tbody>
 </table>
 

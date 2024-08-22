@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\dictamenes;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dictamen_instalaciones;
@@ -9,9 +10,9 @@ use App\Models\Clases;
 use App\Models\inspecciones; 
 
 use App\Models\empresa; 
-use App\Models\solicitudesModel; 
-
-
+use App\Models\solicitudesModel;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Faker\Extension\Helper;
 
 class InstalacionesController extends Controller
 {
@@ -196,6 +197,46 @@ public function edit($id_dictamen)
         return response()->json(['error' => 'Error al editar'], 500);
     }
 }
+
+
+    //PDF Dictamen de instalaciones
+    public function dictamen_productor($id_dictamen)
+    {   
+        $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
+
+        $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
+        $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
+        $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+        $pdf = Pdf::loadView('pdfs.DictamenProductor',['datos'=>$datos, 'fecha_inspeccion'=>$fecha_inspeccion,'fecha_emision'=>$fecha_emision,'fecha_vigencia'=>$fecha_vigencia]);
+        return $pdf->stream('F-UV-02-04 Ver 10, Dictamen de cumplimiento de Instalaciones como productor.pdf');
+    }
+    public function dictamen_envasador($id_dictamen)
+    {   
+        $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
+
+        $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
+        $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
+        $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+        $pdf = Pdf::loadView('pdfs.DictamenEnvasado',['datos'=>$datos, 'fecha_inspeccion'=>$fecha_inspeccion,'fecha_emision'=>$fecha_emision,'fecha_vigencia'=>$fecha_vigencia]);
+        return $pdf->stream('F-UV-02-11 Ver 5, Dictamen de cumplimiento de Instalaciones como envasador.pdf');
+    }
+    public function dictamen_comercializador($id_dictamen)
+    {
+        $pdf = Pdf::loadView('pdfs.DictamenComercializador');
+        return $pdf->stream('F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones como comercializador.pdf');
+    }
+
+    public function dictamen_almacen($id_dictamen)
+    {
+        $pdf = Pdf::loadView('pdfs.DictamenComercializador');
+        return $pdf->stream('F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones como comercializador.pdf');
+    }
+
+    public function dictamen_maduracion($id_dictamen)
+    {
+        $pdf = Pdf::loadView('pdfs.Dictamen_Instalaciones_maduracion_mezcal');
+        return $pdf->stream('F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones del área de maduración.pdf');
+    }
 
 
 
