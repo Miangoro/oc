@@ -247,7 +247,7 @@ Instalaciones a:</p>
 
 <p class="text">El presente dictamen ampara exclusivamente la maduración del producto mezcal que se elabora en las instalaciones
 referidas en el presente documento. Dichas Instalaciones de maduración cuentan con la infraestructura y equipamiento
-requerido para la producción de mezcal indicados en la NOM-070-SCFI-2016, Bebidas alcohólicas-Mezcal- Especificaciones
+requerido para la producción de mezcal indicados en la NOM-070-SCFI-2016, Bebidas alcohólicas-Mezcal-Especificaciones
 y se encuentran dentro de los estados y municipios que contempla la resolución mediante el cual se otorga la protección
 prevista a la denominación de origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre, publicada el 28
 de noviembre de 1994, así como sus modificaciones subsecuente.</p>

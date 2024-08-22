@@ -318,7 +318,7 @@
         </table>
 
         <p>Este dictamen de cumplimiento de mezcal a granel se expide de acuerdo a la Norma Oficial Mexicana
-            NOM-070-SCFI-2016. Bebidas alcohólicas –mezcal-especificaciones.</p>
+            NOM-070-SCFI-2016. Bebidas alcohólicas -mezcal-especificaciones.</p>
     </div>
 
     <div class="contentt">

@@ -177,10 +177,15 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
     }
 
-    //
     public function Etiqueta_muestra()
     {
         $pdf = Pdf::loadView('pdfs.Etiqueta_tapa_muestra');
         return $pdf->stream('Etiqueta_para_tapa_de_la_muestra.pdf');
+    }
+
+    public function Dictamen_Cumplimiento()
+    {
+        $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_Instalaciones');
+        return $pdf->stream('F-UV-02-13 Ver 1, Dictamen de cumplimiento de Instalaciones almacen.pdf');
     }
 }
