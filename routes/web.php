@@ -439,12 +439,10 @@ Route::get('/Etiqueta-Muestra', [CartaAsignacionController::class, 'Etiqueta_mue
 
 Route::get('/oficio_de_comision', [CartaAsignacionController::class, 'Comision'])->name('oficioDeComision');
 Route::get('/orden_de_servicio', [CartaAsignacionController::class, 'Servicio'])->name('ordenDeServicio');
-Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion');
+Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion');/*  */
 
-//Pre-registro de predios
-
-
-
+// Dictamen de cumplimiento de Instalaciones almacen
+Route::get('/dictamen_cumplimiento_instalaciones', [CartaAsignacionController::class, 'Dictamen_Cumplimiento'])->name('dictamen_cumplimiento_instalaciones');
 
 //Certificados de instalaciones
 Route::get('/certificado_comercializador', [CartaAsignacionController::class, 'certificadocom'])->name('certificado_comercializador');
