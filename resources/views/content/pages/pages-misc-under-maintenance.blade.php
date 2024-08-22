@@ -14,7 +14,7 @@
 <style>
     .glow {
         color: #ffffff;
-        font-size: 5rem;
+        font-size: 4rem;
         line-height: 6rem;
         text-align: center;
         text-transform: uppercase;
