@@ -150,6 +150,14 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.certificadoDeExportacion');
         return $pdf->stream('F7.1-01-23 Certificado de Exportación NOM-070-SCFI-2016.pdf');
     }
+
+    //PDF de solicitud de hologramas
+    public function solicitudHologramas()
+    {
+        $pdf = Pdf::loadView('pdfs.solicitudDeHologramas');
+        return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
+    }
+
     public function InspeccionGeoReferenciacion()
     {
     $pdf = Pdf::loadView('pdfs.inspeccion_geo_referenciacion');
