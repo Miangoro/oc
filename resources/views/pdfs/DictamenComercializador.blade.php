@@ -6,21 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones como comercializador</title>
     <style>
-        @font-face {
-            font-family: 'Lucida Sans Unicode';
-            src: url('fonts/lsansuni.ttf') format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Lucida Sans Seminegrita';
-            src: url('fonts/LSANSD.ttf') format('truetype');
-        }
-
-        @font-face {
-            font-family: 'Arial Negrita';
-            src: url('fonts/arial-negrita.ttf') format('truetype');
-        }
-
         body {
             font-family: 'Lucida Sans Unicode';
             margin-left: 20px; 
@@ -104,24 +89,6 @@
             margin-top: 10px; 
         }
 
-        .footer-bar {
-            position: fixed;
-            margin-bottom: 10px; /* Ajusta el valor según el espacio que necesites */
-            left: -70px;
-            right: -70px;
-            width: calc(100% - 40px);
-            height: 30px;
-            background-color: #158F60;
-            color: white;
-            font-size: 12px;
-            text-align: center;
-            padding: 10px 0;
-        }
-
-        .footer-bar p {
-            margin: 0;
-        }
-
         table {
             width: 100%;
             border: 2px solid #1E4678;
@@ -149,11 +116,6 @@
             display: flex;
             margin-top: -40px;
             width: 100%;
-        }
-
-        .image-right {
-            width: 25%;
-            height: auto;
         }
 
         .image-left {
@@ -212,7 +174,7 @@
             left: -70px;
             right: -70px;
             width: calc(100% - 40px);
-            height: 30px;
+            height: 45px;
             background-color: #158F60;
             color: white;
             font-size: 10px;

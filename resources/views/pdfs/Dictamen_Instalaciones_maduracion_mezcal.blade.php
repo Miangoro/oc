@@ -3,13 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>F-UV-02-11 Ver 5, Dictamen de cumplimiento de Instalaciones como envasador</title>
+    <title>F-UV-02-14 Ver 1, Dictamen de cumplimiento de Instalaciones maduracion de mezcal</title>
+
     <style>
         body {
-            font-family: 'Lucida Sans Unicode';
             margin-left: 20px; 
             margin-right: 20px; 
+        }
+
+        .font-lucida-sans-seminegrita {
+            font-family: 'Lucida Sans Seminegrita', sans-serif;
+        }
+
+        .container {
+            margin-top: 0px;
+            position: relative;
         }
 
         .header {
@@ -43,9 +51,11 @@
             font-family: 'Arial Negrita' !important;
             font-size: 9.5px;
             top: 30px; 
+            font-size
         }
 
         .description3 {
+            font-family: 'Lucida Sans Unicode';
             font-size: 10px;
             top: 42px; 
             margin-right: 40px; 
@@ -60,17 +70,20 @@
             font-size: 13px;
         }
 
+        .title {
+            text-align: center;
+            font-size: 22px;
+            font-family: 'Arial Negrita', Gadget, sans-serif;
+            line-height: 20px;
+            margin-top: 20px; 
+        }
+
         .text {
+            font-family: 'Lucida Sans Unicode';
             text-align: justify;
             font-size: 13px;
             line-height: 0.7;
             margin-right: 10px;
-        }
-        
-        .text1 {
-            text-align: justify;
-            font-size: 11px;
-            line-height: 0.7;
         }
 
         .textp {
@@ -81,20 +94,12 @@
             font-family: 'Lucida Sans Seminegrita';
         }
 
-        .title {
-            text-align: center;
-            font-size: 22px;
-            font-family: 'Arial Negrita', Gadget, sans-serif;
-            line-height: 20px;
-            margin-top: 10px; 
-        }
-
         table {
             width: 100%;
             border: 2px solid #1E4678;
             border-collapse: collapse;
             margin: auto;
-            font-size: 12px;
+            font-size: 13px;
             line-height: 1;
             vertical-align: top;
             font-family: Arial, Helvetica, Verdana;
@@ -111,32 +116,9 @@
             width: 50%;
         }
 
-        .images-container {
-            position: relative;
-            display: flex;
-            margin-top: -40px;
-            width: 100%;
-        }
-
-        .image-left {
-            margin-right: 60%;
-            width: 12%;
-        }
-
-        .textsello {
-            text-align: left;
-            font-size: 8px;
-            margin: 0;
-            padding: 0;
-        }
-
-        .numpag {
-            font-size: 10px;
-            position: fixed;
-            bottom: 10px;
-            right: 15px;
-            margin: 0;
-            padding: 0;
+        .center {
+            text-align: center; 
+            vertical-align: middle;
         }
 
         .sello {
@@ -145,19 +127,9 @@
             margin: 0;
             padding: 0;
             position: absolute;
-            right: 50px;
-            top: 740px;
+            right: 70px;
+            top: 775px;
             font-family: 'Arial Negrita' !important;
-        }
-
-        .container {
-            margin-top: 0px;
-            position: relative;
-        }
-
-        .textx, .textsello {
-            line-height: 1.2;
-            font-family: Arial, Helvetica, Verdana;
         }
 
         .image-right {
@@ -167,6 +139,24 @@
             width: 240px;
         }
 
+        .images-container {
+            position: relative;
+            display: flex;
+            margin-top: 40px;
+            width: 100%;
+        }
+
+        .textx, .textsello {
+            line-height: 1.2;
+            font-family: Arial, Helvetica, Verdana;
+        }
+
+        .textsello {
+            text-align: left;
+            font-size: 8px;
+            margin: 0;
+            padding: 0;
+        }
 
         .footer-bar {
             position: fixed;
@@ -187,15 +177,19 @@
             line-height: 1;
         }
 
-        .font-lucida-sans-seminegrita {
-            font-family: 'Lucida Sans Seminegrita', sans-serif;
-        }
-
         .pie {
-            margin-top: 100px;
             text-align: right;
             font-size: 9px;
             line-height: 1;
+            position: fixed;
+            bottom: -10;
+            left: 0;   
+            right: 0;  
+            width: calc(100% - 40px); 
+            height: 45px;
+            margin-right: 30px; 
+            padding: 10px 0px;
+            font-family: 'Lucida Sans Unicode';
         }
     </style>
 </head>
@@ -209,53 +203,56 @@
     <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
     <div class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C</div>
     <div class="textimg font-lucida-sans-seminegrita">No.: UMC-00_/20</div>
-    <div class="title">Dictamen de cumplimiento de Instalaciones como <br> envasador</div>
-    <div class="text">
-        <p>De acuerdo a lo establecido en los procedimientos internos de la Unidad de Inspección No. UVNOM 129 para
-        la revisión de procesos de producción del producto Mezcal, su envasado y comercialización; y con fundamento
-        en los artículos 56 Fracción I y 60 fracción I de la Ley de Infraestructura de la Calidad que establece el
-        funcionamiento de las Unidades de Inspección.</p>
-        <p>Después de realizar la inspección de las instalaciones en fecha del ____de ______del 20 ___partiendo del acta
-        circunstanciada o número de inspección: _____</p>
-        <p class="textp">Nombre del productor/empresa: _______________________________________________________</p>
-    </div>
-    <table>
-        <tbody>
-            <tr>
-            <td style="text-align: justify;">
-            <span class="font-lucida-sans-seminegrita">Domicilio Fiscal:</span><br>
-            </td>
-                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Enim, minus saepe optio harum corrupti, natus ipsam.</td>
-            </tr>
-            <tr>
-            <td>
-            <span class="font-lucida-sans-seminegrita">Domicilio de la unidad de envasado:</span>
-            </td>
+    <div class="title">Dictamen de cumplimiento de Instalaciones como<br>ÁREA DE MADURACIÓN DE MEZCAL</div>
+</div>
 
-                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Enim, minus saepe optio harum corrupti, natus ipsam.</td>
-            </tr>
-            <tr>
-                <td class="font-lucida-sans-seminegrita">Responsable de la inspección:</td>
-                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium, atque!</td>
-            </tr>
-            <tr>
-                <td class="font-lucida-sans-seminegrita">Fecha de emisión de dictamen:</td>
-                <td style="text-align: center; vertical-align: middle;">08/08/2024</td>
-            </tr>
-        </tbody>
-    </table>
-    <p class="text">
-    Se dictamina que la <span class="font-lucida-sans-seminegrita">Unidad de envasado</span> cuenta con la infraestructura, el equipo y los procesos necesarios
-    para el envasado de <span class="font-lucida-sans-seminegrita">Mezcal_______, clase (s)________,</span>, requisitos establecidos en la NOM-070-SCFI-2016,
-    Bebidas alcohólicas-Mezcal- Especificaciones y por el Organismo de Certificación del Centro de Innovación y
-    Desarrollo Agroalimentario de Michoacán A.C. (CIDAM)
-   </p>
+<p class="text">De acuerdo a lo establecido en los procedimientos internos de la Unidad de Inspección No. UVNOM
+129 para la revisión de procesos de producción del producto Mezcal, su envasado y comercialización;
+y con fundamento en los artículos 56 Fracción I y 60 fracción I de la Ley de Infraestructura de la
+Calidad que establece el funcionamiento de las Unidades de Inspección.</p>
+<p class="text">Después de realizar la inspección de las instalaciones en fecha del ____de ______del 20
+___partiendo del acta circunstanciada o número de inspección: _____ se otorga el dictamen de
+Instalaciones a:</p>
 
-    <p class="text1">Las instalaciones se encuentran en región de los estados y municipios que contempla la resolución mediante el cual se otorga la protección
-    prevista a la denominación de origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre, publicada el 28 de noviembre
-    de 1994, así como sus modificaciones subsecuentes.</p>
-    <br><br>
-    <p class="sello">Sello de Unidad de Inspección</p>
+<p class="textp">Nombre del productor/empresa: _______________________________________________________</p>
+
+<table>
+	<tbody>
+		<tr>
+			<td><strong>Domicilio Fiscal:</strong></td>
+			<td class="center">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni eum velit impedit minima earum, eaque sunt.?</td>
+		</tr>
+		<tr>
+			<td><strong>Domicilio del área de maduración:</strong></td>
+			<td class="center">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni eum velit impedit minima earum, eaque sunt.?</td>
+		</tr>
+		<tr>
+			<td><strong>Categorías del mezcal:</strong></td>
+			<td class="center">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni eum velit impedit minima earum, eaque sunt.?</td>
+		</tr>
+		<tr>
+			<td><strong>Clases de mezcal que producen:</strong></td>
+			<td class="center">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni eum velit impedit minima earum, eaque sunt.?</td>
+		</tr>
+		<tr>
+			<td><strong>Fecha de emisión de dictamen:</strong></td>
+			<td class="center">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni eum velit impedit minima earum, eaque sunt.?</td>
+		</tr>
+		<tr>
+			<td><strong>Fecha de vigencia del dictamen:</strong></td>
+			<td class="center">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni eum velit impedit minima earum, eaque sunt.?</td>
+		</tr>
+	</tbody>
+</table>
+
+<p class="text">El presente dictamen ampara exclusivamente la maduración del producto mezcal que se elabora en las instalaciones
+referidas en el presente documento. Dichas Instalaciones de maduración cuentan con la infraestructura y equipamiento
+requerido para la producción de mezcal indicados en la NOM-070-SCFI-2016, Bebidas alcohólicas-Mezcal- Especificaciones
+y se encuentran dentro de los estados y municipios que contempla la resolución mediante el cual se otorga la protección
+prevista a la denominación de origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre, publicada el 28
+de noviembre de 1994, así como sus modificaciones subsecuente.</p>
+
+<p class="sello">Sello de Unidad de Inspección</p>
     <div class="images-container">
     <img src="{{ public_path('img_pdf/qr_umc-074.png') }}" alt="Logo UVEM" width="90px">
     <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
@@ -270,7 +267,7 @@
     <p class="textx" style="font-size: 10px; margin: 1;">
     <strong>Cadena Origina</strong>
     <span style="margin-left: 29px;">
-        <strong>UMG-159/2024|2024-06-26|UMS-1094/2024</strong>
+        <strong> UMG-159/2024|2024-06-26|UMS-1094/2024</strong>
     </span>
     </p>
 
@@ -289,8 +286,7 @@
     </div>
 
     <p class="pie">Entrada en vigor: 15-07-2024<br>
-    F-UV-02-11 Ver 5.
+    F-UV-02-14 Ver 1.
     </p>
-</div>
 </body>
 </html>
