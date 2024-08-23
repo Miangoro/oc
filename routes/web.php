@@ -185,6 +185,7 @@ use App\Http\Controllers\documentacion\DocumentosController;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\InstalacionesController;
+use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\inspecciones\inspeccionesController;
 
 // Main Page Route
@@ -622,3 +623,8 @@ Route::resource('inspecciones-list', inspeccionesController::class);
 Route::post('/asignar-inspector', [inspeccionesController::class, 'asignarInspector']);
 Route::get('/oficio_de_comision/{id_inspeccion}', [inspeccionesController::class, 'pdf_oficio_comision'])->name('oficioDeComision');
 Route::get('/orden_de_servicio/{id_inspeccion}', [inspeccionesController::class, 'pdf_orden_servicio'])->name('ordenDeServicio');
+
+
+//Hologramas - solicitud hologramas
+Route::get('/hologramas/solicitud', [solicitudHolograma::class, 'UserManagement'])->name('hologramas-solicitud');
+Route::resource('/hologramas-list', solicitudHolograma::class);

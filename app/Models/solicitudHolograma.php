@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Hologramas extends Model
+class solicitudHolograma extends Model
 {
     use HasFactory;
 
@@ -27,7 +27,4 @@ class Hologramas extends Model
     {
         return $this->belongsTo(Empresa::class, 'id_empresa');
     }
-
-
 }
-

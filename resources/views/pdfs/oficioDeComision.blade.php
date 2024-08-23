@@ -100,7 +100,7 @@
             <p>
                 Oficio No. _____/20___<br>
                 Oficina: Gerencia Técnica<br>
-                ______________ , ___ a ___ de ____ del 20___
+                <span class="negrita">Morelia, Michoacán, a {{ $fecha_servicio }}</span>
             </p>
         </div>
 

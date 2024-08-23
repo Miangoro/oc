@@ -192,19 +192,17 @@ class inspeccionesController extends Controller
         
         $datos = inspecciones::with(['inspector', 'solicitud.instalacion'])->find($id_inspeccion);
 
-        
-        $pdf = Pdf::loadView('pdfs.oficioDeComision',['datos'=>$datos]);
+        $fecha_servicio = Helpers::formatearFecha($datos->fecha_servicio);
+        $pdf = Pdf::loadView('pdfs.oficioDeComision',['datos'=>$datos,'fecha_servicio'=>$fecha_servicio]);
         return $pdf->stream('F-UV-02-09 Oficio de Comisión Ed.5, Vigente.pdf');
     }
 
-    public function pdf_orden_servicio($id_dictamen)
+    public function pdf_orden_servicio($id_inspeccion)
     {   
-        $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
+        $datos = inspecciones::with(['inspector', 'solicitud.instalacion','solicitud.empresa.empresaNumClientes'])->find($id_inspeccion);
 
-        $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
-        $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
-        $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
-        $pdf = Pdf::loadView('pdfs.ordenDeServicio',['datos'=>$datos, 'fecha_inspeccion'=>$fecha_inspeccion,'fecha_emision'=>$fecha_emision,'fecha_vigencia'=>$fecha_vigencia]);
+        $fecha_servicio = Helpers::formatearFecha($datos->fecha_servicio);
+        $pdf = Pdf::loadView('pdfs.ordenDeServicio',['datos'=>$datos, 'fecha_servicio'=>$fecha_servicio]);
         return $pdf->stream('F-UV-02-01 Orden de servicio Ed. 5, Vigente.pdf');
     }
 
