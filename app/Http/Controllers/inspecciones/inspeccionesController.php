@@ -17,6 +17,7 @@ use App\Helpers\Helpers;
 use App\Models\inspecciones;
 use App\Models\solicitudesModel;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class inspeccionesController extends Controller
 {
@@ -182,6 +183,31 @@ class inspeccionesController extends Controller
                 );
         }
 
+
+
+        //Pdfs de inspecciones
+
+    public function pdf_oficio_comision($id_inspeccion)
+    {   
+        
+        $datos = inspecciones::with(['inspector', 'solicitud.instalacion'])->find($id_inspeccion);
+
+        $fecha_servicio = Helpers::formatearFecha($datos->fecha_servicio);
+        $pdf = Pdf::loadView('pdfs.oficioDeComision',['datos'=>$datos,'fecha_servicio'=>$fecha_servicio]);
+        return $pdf->stream('F-UV-02-09 Oficio de Comisión Ed.5, Vigente.pdf');
+    }
+
+    public function pdf_orden_servicio($id_inspeccion)
+    {   
+        $datos = inspecciones::with(['inspector', 'solicitud.instalacion','solicitud.empresa.empresaNumClientes'])->find($id_inspeccion);
+
+        $fecha_servicio = Helpers::formatearFecha($datos->fecha_servicio);
+        $pdf = Pdf::loadView('pdfs.ordenDeServicio',['datos'=>$datos, 'fecha_servicio'=>$fecha_servicio]);
+        return $pdf->stream('F-UV-02-01 Orden de servicio Ed. 5, Vigente.pdf');
+    }
+
+    
+    
 
  
 }

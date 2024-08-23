@@ -168,6 +168,7 @@ use App\Http\Controllers\catalogo\marcasCatalogoController;
 use App\Http\Controllers\catalogo\ClaseController;
 use App\Http\Controllers\catalogo\lotesEnvasadoController;
 use App\Http\Controllers\guias\GuiasController;
+use App\Http\Controllers\hologramas\solicitudHologramaController;
 use App\Http\Controllers\clientes\clientesConfirmadosController;
 use App\Http\Controllers\documentacion\documentacionController;
 use App\Http\Controllers\domicilios\DomiciliosController;
@@ -184,6 +185,7 @@ use App\Http\Controllers\documentacion\DocumentosController;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\InstalacionesController;
+use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\inspecciones\inspeccionesController;
 
 // Main Page Route
@@ -433,18 +435,18 @@ Route::get('/dictamen_cumplimiento_mezcal_granel', [CartaAsignacionController::c
 Route::get('/solicitud_de_holograma', [CartaAsignacionController::class, 'solicitudHologramas'])->name('solicitudDeHologramas');
 
 
-//Etiquetas
+//Etiquetas Etiqueta_Barrica
 Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'])->name('Etiqueta-2401ESPTOB');
 Route::get('/Etiqueta-Muestra', [CartaAsignacionController::class, 'Etiqueta_muestra'])->name('Etiqueta-Muestra');
+Route::get('/Etiqueta-Barrica', [CartaAsignacionController::class, 'Etiqueta_Barrica'])->name('Etiqueta-Barrica');
 
 //Dictamen de instalaciones
 
-Route::get('/oficio_de_comision', [CartaAsignacionController::class, 'Comision'])->name('oficioDeComision');
-Route::get('/orden_de_servicio', [CartaAsignacionController::class, 'Servicio'])->name('ordenDeServicio');
+
 Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion');/*  */
 
 // Dictamen de cumplimiento de Instalaciones almacen
-Route::get('/dictamen_cumplimiento_instalaciones', [CartaAsignacionController::class, 'Dictamen_Cumplimiento'])->name('dictamen_cumplimiento_instalaciones');
+
 
 //Certificados de instalaciones
 Route::get('/certificado_comercializador', [CartaAsignacionController::class, 'certificadocom'])->name('certificado_comercializador');
@@ -595,6 +597,8 @@ Route::get('/dictamen_comercializador/{id_dictamen}', [InstalacionesController::
 Route::get('/dictamen_almacen/{id_dictamen}', [InstalacionesController::class, 'dictamen_almacen'])->name('dictamen_almacen');
 Route::get('/dictamen_maduracion/{id_dictamen}', [InstalacionesController::class, 'dictamen_maduracion'])->name('dictamen_maduracion');
 
+
+
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
 Route::resource('/documentos-list', DocumentosController::class);
@@ -616,5 +620,11 @@ Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias
 //Inspecciones
 Route::get('/inspecciones', [inspeccionesController::class, 'UserManagement'])->name('inspecciones');
 Route::resource('inspecciones-list', inspeccionesController::class);
-
 Route::post('/asignar-inspector', [inspeccionesController::class, 'asignarInspector']);
+Route::get('/oficio_de_comision/{id_inspeccion}', [inspeccionesController::class, 'pdf_oficio_comision'])->name('oficioDeComision');
+Route::get('/orden_de_servicio/{id_inspeccion}', [inspeccionesController::class, 'pdf_orden_servicio'])->name('ordenDeServicio');
+
+
+//Hologramas - solicitud hologramas
+Route::get('/hologramas/solicitud', [solicitudHolograma::class, 'UserManagement'])->name('hologramas-solicitud');
+Route::resource('/hologramas-list', solicitudHolograma::class);

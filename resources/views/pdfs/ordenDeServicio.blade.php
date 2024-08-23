@@ -7,6 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Orden de servicio</title>
     <style>
+
+        @font-face {
+            font-family: 'Century Gothic Negrita';
+            src: url('fonts/GOTHICB.TTF') format('truetype');
+        }
+
         body {
             font-family: 'Century Gothic', sans-serif;
         }
@@ -29,7 +35,6 @@
             text-align: center;
             margin-top: 0;
             margin-bottom: 20px;
-            font-weight: bold;
             font-size: 18px;
         }
 
@@ -100,6 +105,10 @@
         .no-margin-top {
             margin-top: 0;
         }
+
+        .negrita{
+            font-family: 'Century Gothic Negrita';
+        }
     </style>
 </head>
 
@@ -114,29 +123,33 @@
             _______________________________________________________________________________________
         </p>
     </div>
-    <div class="title">
+    <div class="title negrita">
         ORDEN DE SERVICIO
     </div>
     <table>
         <tr>
             <td class="leftLetter" style="background-color: #93cddc">Datos del cliente(Nombre, <br> teléfono, correo)
             </td>
-            <td class="leftLetter">Yucli Emmanuel Baza Ortuño</td>
+            <td class="leftLetter">
+                <span class="negrita">{{ $datos->solicitud->empresa->razon_social }}</span><br>
+                <span class="negrita">{{ $datos->solicitud->empresa->telefono }}</span><br>
+                <span class="negrita">{{ $datos->solicitud->empresa->correo }}</span>
+            </td>
             <td class="leftLetter" style="background-color: #93cddc">No. de orden de <br> servicio:</td>
-            <td class="leftLetter">1231231</td>
+            <td class="leftLetter"><span class="negrita">{{ $datos->num_servicio }}</span></td>
 
         </tr>
         <tr>
             <td class="leftLetter" style="background-color: #93cddc">Número de cliente:</td>
-            <td class="leftLetter">Yucli Emmanuel Baza Ortuño</td>
+            <td class="leftLetter"> <span class="negrita">{{ $datos->solicitud->empresa->empresaNumClientes[0]->numero_cliente }}</span></td>
             <td class="leftLetter" style="background-color: #93cddc">Hora del servicio:</td>
             <td class="leftLetter">1231231</td>
         </tr>
         <tr>
             <td class="leftLetter" style="background-color: #93cddc">Inspector asignado:</td>
-            <td class="leftLetter">Yucli Emmanuel Baza Ortuño</td>
+            <td class="leftLetter"><span class="negrita">{{ $datos->inspector->name }}</span></td>
             <td class="leftLetter" style="background-color: #93cddc">Fecha de servicio:</td>
-            <td class="leftLetter">1231231</td>
+            <td class="leftLetter"><span class="negrita">{{ $fecha_servicio }}</span></td>
         </tr>
         <tr>
             <td class="leftLetter" style="background-color: #93cddc">Nombre de la persona que <br> atenderá la visita:
@@ -147,7 +160,7 @@
         </tr>
         <tr>
             <td class="leftLetter" style="background-color: #93cddc" >Dirección del servicio: <br> &nbsp;</td>
-            <td class="leftLetter" colspan="3" >	CARRETERA VIEJA MÉXICO-ACAPULCO KM 13+500 COL. LA HERRADURA, LOCALIDAD PETAQUILLAS, MUNICIPIO CHILPA SN, LA HERRADURA, PETAQUILLAS, 39105 CHILPANCINGO DE LOS BRAVOS, GUERRERO.</td>
+            <td class="leftLetter" colspan="3" ><span class="negrita">{{ $datos->solicitud->instalacion->direccion_completa }}</span>.</td>
         </tr>
 
 

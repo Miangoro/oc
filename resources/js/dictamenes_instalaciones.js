@@ -26,8 +26,24 @@
       });
     });
   }
+  
 
   initializeSelect2(select2Elements);
+
+  $('#fecha_emision').on('change', function() {
+    var fechaInicial = new Date($(this).val());
+    
+    // Sumar 1 año a la fecha inicial
+    fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+    
+    // Formatear la fecha en YYYY-MM-DD
+    var year = fechaInicial.getFullYear();
+    var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2); // Los meses empiezan desde 0
+    var day = ('0' + fechaInicial.getDate()).slice(-2);
+    
+    // Asignar la fecha final al input correspondiente
+    $('#fecha_vigencia').val(year + '-' + month + '-' + day);
+});
  
  
    // ajax setup
@@ -84,20 +100,22 @@
            render: function (data, type, full, meta) {
              var $name = full['tipo_dictamen'];
              if ($name == 1){
-                return '<span class="user-email">Dictamen Productor</span>';
+                return '<span class="text-primary">Productor</span>';
              }
              else if($name == 2){ 
-                    return '<span class="user-email">Dictamen Envasador</span>';
+                    return '<span class="text-success">Envasador</span>';
              }
              else if($name == 3){ 
-                return '<span class="user-email">Dictamen Comercializador</span>';
+                return '<span class="text-info">Comercializador</span>';
             }
             else if($name == 4){ 
-                return '<span class="user-email">Almacén y bodega</span>';
+                return '<span class="text-danger">Almacén y bodega</span>';
             }
             else if($name == 5){ 
-              return '<span class="user-email">Área de maduración</span>';
+              return '<span class="text-warning">Área de maduración</span>';
             }
+
+             
             
              //return $name;
            }
@@ -426,17 +444,17 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
                 }
             }
         },
-        categorias: {
+        'categorias[]': {
             validators: {
                 notEmpty: {
-                    message: 'Seleccione una opcion'
+                    message: 'Seleccione una categoría de agave'
                 }
             }
         },
-        clases: {
+        'clases[]': {
             validators: {
                 notEmpty: {
-                    message: 'Seleccione una opcion'
+                    message: 'Seleccione una clase de agave'
                 }
             }
         },
@@ -603,7 +621,7 @@ $(document).on('click', '.pdf', function () {
       }
 
       if(tipo == 4){ // Almacén y bodega
-        var tipo_dictamen = '../dictamen_comercializador/'+id;
+        var tipo_dictamen = '../dictamen_almacen/'+id;
         var titulo = "Dictamen de almacén y bodega";
       }
 

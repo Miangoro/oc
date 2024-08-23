@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oficio de Comisión</title>
     <style>
+
+        @font-face {
+            font-family: 'Century Gothic Negrita';
+            src: url('fonts/GOTHICB.TTF') format('truetype');
+        }
+
         body {
             font-family: 'Century Gothic', sans-serif;
         }
@@ -34,15 +40,14 @@
 
         .title {
             text-align: center;
-            margin-top: 30px;
-            font-weight: bold;
+            margin-top: 20px;
             font-size: 18px;
         }
 
         .content {
             margin-right: 50px;
             margin-left: 50px;
-            font-size: 16px;
+            font-size: 15px;
             line-height: 1.5;
             text-align: justify;
         }
@@ -68,6 +73,10 @@
             font-size: 10px;
             text-align: center;
         }
+
+        .negrita{
+            font-family: 'Century Gothic Negrita';
+        }
     </style>
 </head>
 
@@ -82,7 +91,7 @@
             ________________________________________________________________________________
         </p>
     </div>
-    <div class="title">
+    <div class="title negrita">
         Oficio de Comisión
     </div>
 
@@ -91,13 +100,13 @@
             <p>
                 Oficio No. _____/20___<br>
                 Oficina: Gerencia Técnica<br>
-                ______________ , ___ a ___ de ____ del 20___
+                <span class="negrita">Morelia, Michoacán, a {{ $fecha_servicio }}</span>
             </p>
         </div>
 
 
         <p>
-            C. __________________________<br>
+            C. <u class="negrita">{{ $datos->inspector->name }}</u><br>
             Inspector designado
         </p>
 
@@ -107,8 +116,8 @@
 
         <p>
             Mediante el presente designo a Usted para que realice el servicio ________________, indicado en la orden de
-            servicio No. ______/20___, en el domicilio y con el responsable que indica la misma. Para esta diligencia
-            debe presentarse en las instalaciones referidas a las ______.
+            servicio No. <u class="negrita">{{ $datos->num_servicio }}</u>, en el domicilio y con el responsable que indica la misma. Para esta diligencia
+            debe presentarse en las instalaciones referidas a las <u class="negrita">{{ $datos->solicitud->instalacion->direccion_completa }}</u>.
         </p>
 
         <p>
