@@ -15,14 +15,35 @@
      userView = baseUrl + 'app/user/view/account',
      offCanvasForm = $('#offcanvasAddUser');
  
-   if (select2.length) {
-     var $this = select2;
-     select2Focus($this);
-     $this.wrap('<div class="position-relative"></div>').select2({
-       placeholder: 'Select Country',
-       dropdownParent: $this.parent()
-     });
-   }
+     var select2Elements = $('.select2');
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+  
+
+  initializeSelect2(select2Elements);
+
+  $('#fecha_emision').on('change', function() {
+    var fechaInicial = new Date($(this).val());
+    
+    // Sumar 1 año a la fecha inicial
+    fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+    
+    // Formatear la fecha en YYYY-MM-DD
+    var year = fechaInicial.getFullYear();
+    var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2); // Los meses empiezan desde 0
+    var day = ('0' + fechaInicial.getDate()).slice(-2);
+    
+    // Asignar la fecha final al input correspondiente
+    $('#fecha_vigencia').val(year + '-' + month + '-' + day);
+});
  
  
    // ajax setup
@@ -421,17 +442,17 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
                 }
             }
         },
-        categorias: {
+        'categorias[]': {
             validators: {
                 notEmpty: {
-                    message: 'Seleccione una opcion'
+                    message: 'Seleccione una categoría de agave'
                 }
             }
         },
-        clases: {
+        'clases[]': {
             validators: {
                 notEmpty: {
-                    message: 'Seleccione una opcion'
+                    message: 'Seleccione una clase de agave'
                 }
             }
         },

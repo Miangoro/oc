@@ -65,6 +65,11 @@
           "url": "domicilios/instalaciones",
           "name": "Instalaciones",
           "slug": "domicilio-instalaciones"
+        },
+        {
+          "url": "domicilios/destinos",
+          "name": "Destinos",
+          "slug": "domicilio-destinos"
         }
       ]
     },
