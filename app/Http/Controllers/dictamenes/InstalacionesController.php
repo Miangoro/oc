@@ -114,21 +114,24 @@ class InstalacionesController extends Controller
                 'num_dictamen' => 'required|string|max:255',
                 'fecha_emision' => 'nullable|date',
                 'fecha_vigencia' => 'nullable|date',
-                'categorias' => 'required|string|max:100',
-                'clases' => 'required|string|max:100',
+               
                 'id_inspeccion' => 'required|integer',
             ]);
     
             try {
+                
+                $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
+
                 $var = new Dictamen_instalaciones();
                 $var->id_inspeccion = $request->id_inspeccion;
                 $var->tipo_dictamen = $request->tipo_dictamen;
-                $var->id_instalacion = 1;
+                $var->id_instalacion =  $instalaciones->solicitud->instalacion->id_instalacion;
                 $var->num_dictamen = $request->num_dictamen;
                 $var->fecha_emision = $request->fecha_emision;
                 $var->fecha_vigencia = $request->fecha_vigencia;
-                $var->categorias = $request->categorias;
-                $var->clases = $request->clases;
+                $var->categorias =json_encode($request->categorias);
+                $var->clases =  json_encode($request->clases);
+
     
                 $var->save();//guardar en BD
     
