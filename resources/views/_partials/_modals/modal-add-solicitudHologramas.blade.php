@@ -44,7 +44,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select " id="id_direccion" name="id_direccion"
+                            <select class="select2 form-select id_direccion" id="id_direccion" name="id_direccion"
                                 aria-label="Direccion">
                                 <option value="id_direccion" selected>Selecciona una direccion</option>
 
@@ -89,6 +89,33 @@
                     contenido = '<option value="">Sin marcas registradas</option>';
                 }
                 $('#id_marca').html(contenido);
+            },
+            error: function() {
+                //alert('Error al cargar los lotes a granel.');
+            }
+        });
+    }
+
+    function obtenerDirecciones() {
+        var empresa = $("#id_empresa").val();
+        // Hacer una petición AJAX para obtener los detalles de la empresa
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                // Cargar los detalles en el modal
+                var contenido = "";
+                for (let index = 0; index < response.direcciones.length; index++) {
+                    contenido = '<option value="' + response.direcciones[index].id_empresa + 
+                    '">Tipo direccion: ' + response + response.direcciones[index].tipo_direccion + '">Número de plantas: ' + response
+                    .direcciones[index].direccion + '</option>' + contenido;
+                    // console.log(response.normas[index].norma);
+                }
+
+                if (response.direcciones.length == 0) {
+                    contenido = '<option value="">Sin lotes a granel registrados</option>';
+                }
+                $('.id_direccion').html(contenido);
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');
