@@ -106,8 +106,8 @@
                                     </div><!-- Celular -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="celular_recibe"
-                                                name="celular_recibe" placeholder="Número de celular">
+                                            <input type="tel" class="form-control" id="celular_recibe"
+                                                name="celular_recibe" placeholder="Número de teléfono ">
                                             <label for="celular_recibe">Celular</label>
                                         </div>
                                     </div>
@@ -128,20 +128,37 @@
         </div>
 
         <script>
-            function handleDireccionChange() {
-                var tipoDireccion = document.getElementById('tipo_direccion').value;
-                var exportacionFields = document.getElementById('exportacionFields');
-                var hologramasFields = document.getElementById('hologramasFields');
+function handleDireccionChange() {
+    var tipoDireccion = document.getElementById('tipo_direccion').value;
+    var exportacionFields = document.getElementById('exportacionFields');
+    var hologramasFields = document.getElementById('hologramasFields');
 
-                // Ocultar ambos conjuntos de campos por defecto
-                exportacionFields.style.display = 'none';
-                hologramasFields.style.display = 'none';
+    // Ocultar ambos conjuntos de campos por defecto
+    exportacionFields.style.display = 'none';
+    hologramasFields.style.display = 'none';
 
-                // Mostrar los campos según el tipo de dirección seleccionado
-                if (tipoDireccion === '1') { // Exportación
-                    exportacionFields.style.display = 'block';
-                } else if (tipoDireccion === '3') { // Envío de hologramas
-                    hologramasFields.style.display = 'block';
-                }
-            }
+    // Mostrar los campos según el tipo de dirección seleccionado
+    if (tipoDireccion === '1') { // Exportación
+        exportacionFields.style.display = 'block';
+        hologramasFields.style.display = 'none';
+        updateValidation(['destinatario', 'aduana', 'pais_destino']);
+    } else if (tipoDireccion === '3') { // Envío de hologramas
+        hologramasFields.style.display = 'block';
+        exportacionFields.style.display = 'none';
+        updateValidation(['correo_recibe', 'nombre_recibe', 'celular_recibe']);
+    } else if (tipoDireccion === '2') { // Venta Nacional
+        exportacionFields.style.display = 'none';
+        hologramasFields.style.display = 'none';
+        updateValidation([]);
+    }
+}
+
+function updateValidation(fieldsToValidate) {
+    const allFields = ['destinatario', 'aduana', 'pais_destino', 'correo_recibe', 'nombre_recibe', 'celular_recibe'];
+    const fieldsToRemove = allFields.filter(field => !fieldsToValidate.includes(field));
+    
+    fieldsToValidate.forEach(field => fv.addField(field));
+    fieldsToRemove.forEach(field => fv.removeField(field));
+}
+
         </script>

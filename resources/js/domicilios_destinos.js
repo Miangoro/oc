@@ -369,6 +369,23 @@ $(function () {
         });
     }
 
+    var dt_user_table = $('.datatables-users'),
+    select2Elements = $('.select2'),
+    userView = baseUrl + 'app/user/view/account'
+// Función para inicializar Select2 en elementos específicos
+function initializeSelect2($elements) {
+    $elements.each(function () {
+        var $this = $(this);
+        select2Focus($this);
+        $this.wrap('<div class="position-relative"></div>').select2({
+            dropdownParent: $this.parent()
+        });
+    });
+}
+
+initializeSelect2(select2Elements);
+
+
     // Delete Record
     $(document).on('click', '.delete-record', function () {
         var id_destino = $(this).data('id'); // Obtener el ID de la clase
@@ -442,16 +459,14 @@ $(function () {
         });
     });
 
-
-       /* registrar un nuevo predio */
-       $(function () {
+    $(function () {
         // Configuración CSRF para Laravel
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
+    
         // Inicializar FormValidation
         const addNewDestino = document.getElementById('addNewDestinoForm');
         const fv = FormValidation.formValidation(addNewDestino, {
@@ -460,6 +475,68 @@ $(function () {
                     validators: {
                         notEmpty: {
                             message: 'Por favor selecciona la empresa cliente'
+                        }
+                    }
+                },
+                tipo_direccion: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor selecciona el tipo de direccion'
+                        }
+                    }
+                },
+                direccion: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa la direccion'
+                        }
+                    }
+                },
+                destinatario: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa el nombre del destinatario'
+                        }
+                    }
+                },
+                aduana: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa la aduana de despacho'
+                        }
+                    }
+                },
+                pais_destino: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor selecciona el país de destino'
+                        }
+                    }
+                },
+                correo_recibe: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa el correo electrónico'
+                        },
+                        emailAddress: {
+                            message: 'El valor ingresado no es un correo válido'
+                        }
+                    }
+                },
+                nombre_recibe: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa el nombre completo del receptor'
+                        }
+                    }
+                },
+                celular_recibe: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa el número de celular'
+                        },
+                        numeric: {
+                            message: 'El número de celular debe ser válido'
                         }
                     }
                 }
@@ -477,8 +554,9 @@ $(function () {
                 autoFocus: new FormValidation.plugins.AutoFocus()
             }
         }).on('core.form.valid', function (e) {
+            // Aquí es donde el código se ejecuta después de la validación del formulario
             var formData = new FormData(addNewDestino);
-
+    
             $.ajax({
                 url: '/destinos-list',
                 type: 'POST',
@@ -511,8 +589,38 @@ $(function () {
                 }
             });
         });
+    
+        function handleDireccionChange() {
+            var tipoDireccion = document.getElementById('tipo_direccion').value;
+    
+            // Reconfigura la validación de campos según el tipo de dirección seleccionado
+            if (tipoDireccion === '1') { // Exportación
+                fv.addField('destinatario');
+                fv.addField('aduana');
+                fv.addField('pais_destino');
+                fv.removeField('correo_recibe');
+                fv.removeField('nombre_recibe');
+                fv.removeField('celular_recibe');
+            } else if (tipoDireccion === '3') { // Envío de hologramas
+                fv.removeField('destinatario');
+                fv.removeField('aduana');
+                fv.removeField('pais_destino');
+                fv.addField('correo_recibe');
+                fv.addField('nombre_recibe');
+                fv.addField('celular_recibe');
+            } else if (tipoDireccion === '2') { // Venta Nacional
+                fv.removeField('destinatario');
+                fv.removeField('aduana');
+                fv.removeField('pais_destino');
+                fv.removeField('correo_recibe');
+                fv.removeField('nombre_recibe');
+                fv.removeField('celular_recibe');
+            }
+        }
+    
+        document.getElementById('tipo_direccion').addEventListener('change', handleDireccionChange);
     });
-
-
+    
+    
 
 });

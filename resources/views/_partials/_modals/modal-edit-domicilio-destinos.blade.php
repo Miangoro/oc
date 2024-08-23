@@ -14,7 +14,7 @@
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <select id="tipo_direccion" name="tipo_direccion" class="form-select"
+                                        <select id="edit_tipo_direccion" name="tipo_direccion" class="form-select"
                                             onchange="handleDireccionChange()">
                                             <option value="" disabled selected>Selecciona el tipo de dirección
                                             </option>
@@ -29,7 +29,7 @@
                                 <!-- Select de Empresa Cliente -->
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <select id="id_empresa" name="id_empresa" class="select2 form-select">
+                                        <select id="edit_id_empresa" name="id_empresa" class="select2 form-select">
                                             <option value="" disabled selected>Selecciona la empresa cliente
                                             </option>
                                             @foreach ($empresas as $empresa)
@@ -45,7 +45,7 @@
                             </div>
                             <!-- Domicilio Completo -->
                             <div class="form-floating form-floating-outline mb-4">
-                                <textarea class="form-control" id="direccion" name="direccion" placeholder="Domicilio completo"></textarea>
+                                <textarea class="form-control" id="edit_direccion" name="direccion" placeholder="Domicilio completo"></textarea>
                                 <label for="direccion">Domicilio Completo</label>
                             </div>
                             <!-- Campos adicionales para exportación -->
@@ -54,7 +54,7 @@
                                     <!-- Nombre del Destinatario -->
                                     <div class="col-md-12">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="destinatario"
+                                            <input type="text" class="form-control" id="edit_destinatario"
                                                 name="destinatario" placeholder="Nombre del destinatario">
                                             <label for="destinatario">Nombre del Destinatario</label>
                                         </div>
@@ -64,7 +64,7 @@
                                     <!-- Aduana de Despacho -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="aduana" name="aduana"
+                                            <input type="text" class="form-control" id="edit_aduana" name="aduana"
                                                 placeholder="Aduana de despacho">
                                             <label for="aduana">Aduana de Despacho</label>
                                         </div>
@@ -72,7 +72,7 @@
                                     <!-- País de Destino -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="pais_destino"
+                                            <input type="text" class="form-control" id="edit_pais_destino"
                                                 name="pais_destino" placeholder="País de destino">
                                             <label for="pais_destino">País de Destino</label>
                                         </div>
@@ -84,11 +84,10 @@
                             <!-- Campos adicionales para envío de hologramas -->
                             <div id="hologramasFields" style="display: none;">
                                 <div class="row mb-4">
-
                                     <!-- Correo -->
                                     <div class="col-md-12">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="email" class="form-control" id="correo_recibe"
+                                            <input type="email" class="form-control" id="edit_correo_recibe"
                                                 name="correo_recibe" placeholder="Correo electrónico">
                                             <label for="correo_recibe">Correo Electrónico</label>
                                         </div>
@@ -98,7 +97,7 @@
                                     <!-- Nombre Completo del Recibe Hologramas -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="nombre_recibe"
+                                            <input type="text" class="form-control" id="edit_nombre_recibe"
                                                 name="nombre_recibe"
                                                 placeholder="Nombre completo del receptor de hologramas">
                                             <label for="nombre_recibe">Nombre Completo del Recibe Hologramas</label>
@@ -106,8 +105,8 @@
                                     </div><!-- Celular -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="celular_recibe"
-                                                name="celular_recibe" placeholder="Número de celular">
+                                            <input type="tel" class="form-control" id="edit_celular_recibe"
+                                                name="celular_recibe" placeholder="Número de teléfono">
                                             <label for="celular_recibe">Celular</label>
                                         </div>
                                     </div>
@@ -117,7 +116,7 @@
 
 
                             <div class="d-flex justify-content-end mt-3">
-                                <button type="submit" class="btn btn-primary me-2">Registrar</button>
+                                <button type="submit" class="btn btn-primary me-2">Actualizar</button>
                                 <button type="reset" class="btn btn-outline-secondary"
                                     data-bs-dismiss="modal">Cancelar</button>
                             </div>
@@ -128,20 +127,4 @@
         </div>
 
         <script>
-            function handleDireccionChange() {
-                var tipoDireccion = document.getElementById('tipo_direccion').value;
-                var exportacionFields = document.getElementById('exportacionFields');
-                var hologramasFields = document.getElementById('hologramasFields');
-
-                // Ocultar ambos conjuntos de campos por defecto
-                exportacionFields.style.display = 'none';
-                hologramasFields.style.display = 'none';
-
-                // Mostrar los campos según el tipo de dirección seleccionado
-                if (tipoDireccion === '1') { // Exportación
-                    exportacionFields.style.display = 'block';
-                } else if (tipoDireccion === '3') { // Envío de hologramas
-                    hologramasFields.style.display = 'block';
-                }
-            }
         </script>
