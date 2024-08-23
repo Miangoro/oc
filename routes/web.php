@@ -433,9 +433,10 @@ Route::get('/dictamen_cumplimiento_mezcal_granel', [CartaAsignacionController::c
 Route::get('/solicitud_de_holograma', [CartaAsignacionController::class, 'solicitudHologramas'])->name('solicitudDeHologramas');
 
 
-//Etiquetas
+//Etiquetas Etiqueta_Barrica
 Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'])->name('Etiqueta-2401ESPTOB');
 Route::get('/Etiqueta-Muestra', [CartaAsignacionController::class, 'Etiqueta_muestra'])->name('Etiqueta-Muestra');
+Route::get('/Etiqueta-Barrica', [CartaAsignacionController::class, 'Etiqueta_Barrica'])->name('Etiqueta-Barrica');
 
 //Dictamen de instalaciones
 
