@@ -10,9 +10,9 @@
                 </div>
                 <form id="addHologramasForm">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="id_solicitud"
-                            placeholder="Introduce el nombre del lote" name="id_solicitud"
-                            aria-label="Nombre del lote" />
+                        <input type="text" class="form-control" id="folio"
+                            placeholder="Introduce el nombre del lote" name="folio"
+                            aria-label="Ingrese el folio" />
                         <label for="name">Ingresa el folio de solicitud</label>
                     </div>
                     <div class="form-floating form-floating-outline mb-4">
@@ -38,23 +38,23 @@
                     <div class="col-md-6">
                         <div class="form-floating form-floating-outline mb-6">
                             <input class="form-control" type="number" placeholder="Ingrese un valor"
-                                id="cantidad_botellas" name="cant_botellas" />
-                            <label for="cantidad_botellas">No. de hologramas solicitados</label>
+                                id="cantidad_hologramas" name="cantidad_hologramas" />
+                            <label for="cantidad_hologramas">No. de hologramas solicitados</label>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select " id="" name=""
-                                aria-label="Marca">
-                                <option value="" selected>Selecciona una direccion</option>
+                            <select class="select2 form-select " id="id_direccion" name="id_direccion"
+                                aria-label="Direccion">
+                                <option value="id_direccion" selected>Selecciona una direccion</option>
 
                             </select>
                             <label for="">Direccion</label>
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-5">
-                        <textarea name="observaciones" class="form-control h-px-100" id="edit_id_observaciones" placeholder="Observaciones..."></textarea>
-                        <label for="edit_id_observaciones">Observaciones</label>
+                        <textarea name="observaciones" class="form-control h-px-100" id="comentarios" placeholder="Observaciones..."></textarea>
+                        <label for="comentarios">Comentarios</label>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
