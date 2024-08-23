@@ -188,4 +188,11 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_Instalaciones');
         return $pdf->stream('F-UV-02-13 Ver 1, Dictamen de cumplimiento de Instalaciones almacen.pdf');
     }
+
+    public function Etiqueta_Barrica()
+    {
+        $pdf = Pdf::loadView('pdfs.Etiqueta_Barrica');
+        return $pdf->stream('Etiqueta_ingreso_a_barrica.pdf');
+    }
+
 }

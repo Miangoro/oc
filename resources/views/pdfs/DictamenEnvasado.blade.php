@@ -225,7 +225,7 @@
             <td style="text-align: justify;">
             <span class="font-lucida-sans-seminegrita">Domicilio Fiscal:</span><br>
             </td>
-                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Enim, minus saepe optio harum corrupti, natus ipsam.</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal }}</td>
             </tr>
             <tr>
             <td>

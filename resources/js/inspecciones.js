@@ -242,14 +242,6 @@ $(function () {
               }
             }
           ]
-        },
-        {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Instalación</span>',
-          className: 'add-new btn btn-primary waves-effect waves-light',
-          attr: {
-            'data-bs-toggle': 'modal',
-            'data-bs-target': '#modalAddInstalacion'
-          }
         }
       ],
             // For responsive popup
