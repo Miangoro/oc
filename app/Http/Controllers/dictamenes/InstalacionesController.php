@@ -202,7 +202,7 @@ public function edit($id_dictamen)
 }
 
 
-    //PDF Dictamen de instalaciones
+    //PDFs Dictamen de instalaciones
     public function dictamen_productor($id_dictamen)
     {   
         $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
@@ -224,15 +224,22 @@ public function edit($id_dictamen)
         return $pdf->stream('F-UV-02-11 Ver 5, Dictamen de cumplimiento de Instalaciones como envasador.pdf');
     }
     public function dictamen_comercializador($id_dictamen)
-    {
-        $pdf = Pdf::loadView('pdfs.DictamenComercializador');
+    {   
+        $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
+
+        $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
+        $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
+        $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+        $pdf = Pdf::loadView('pdfs.DictamenComercializador',['datos'=>$datos, 'fecha_inspeccion'=>$fecha_inspeccion,'fecha_emision'=>$fecha_emision,'fecha_vigencia'=>$fecha_vigencia]);
         return $pdf->stream('F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones como comercializador.pdf');
     }
 
     public function dictamen_almacen($id_dictamen)
     {
-        $pdf = Pdf::loadView('pdfs.DictamenComercializador');
-        return $pdf->stream('F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones como comercializador.pdf');
+        $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_Instalaciones');
+        return $pdf->stream('F-UV-02-13 Ver 1, Dictamen de cumplimiento de Instalaciones almacén.pdf');
+        $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_Instalaciones');
+    
     }
 
     public function dictamen_maduracion($id_dictamen)

@@ -83,7 +83,7 @@
         </p>
     </div>
     <div class="title">
-        Oficio de Comisión
+        Oficioa de Comisión
     </div>
 
     <div class="content">
@@ -97,7 +97,7 @@
 
 
         <p>
-            C. __________________________<br>
+            C. <u>{{ $datos->inspector->name }}</u><br>
             Inspector designado
         </p>
 
