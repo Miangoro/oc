@@ -44,12 +44,12 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select id_marca" id="id_marca" name="id_marca"
+                            <select class="select2 form-select " id="" name=""
                                 aria-label="Marca">
                                 <option value="" selected>Selecciona una direccion</option>
 
                             </select>
-                            <label for="id_marca">Direccion</label>
+                            <label for="">Direccion</label>
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-5">

@@ -72,9 +72,13 @@ class empresa extends Model
 
 
 
-    /*public function solicitudes(){
-        return solicitudesModel::where('id_empresa', $this->id_empresa)->get();
-    }*/
+/*     public function solicitudHolograma(){
+        return direcciones::where('id_empresa', $this->id_empresa)
+        ->join('direcciones AS pl', 'direcciones.id_direccion', '=', 'pl.id_direccion')
+        ->join('catalogo_tipo_agave AS t', 'pl.id_tipo', '=', 't.id_tipo')
+        ->select('pl.id_plantacion','t.nombre', 't.cientifico', 'pl.num_plantas', 'pl.anio_plantacion')
+        ->get();
+    } */
 
 
     public function solicitudes()
