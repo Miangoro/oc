@@ -12,11 +12,23 @@ class solicitudHolograma extends Controller
 {
     public function UserManagement()
     {
-        $instalaciones = ModelsSolicitudHolograma::all(); // Obtener todas las instalaciones
-        $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
-  
-       
-        return view('inspecciones.find_inspecciones_view', compact('instalaciones', 'empresas'));
+        $Empresa = Empresa::where('tipo', '=', '2')->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $ModelsSolicitudHolograma = ModelsSolicitudHolograma::all();
+        $userCount = $ModelsSolicitudHolograma->count();
+        $verified = 5;
+        $notVerified = 10;
+        $userDuplicates = 40;
+
+        return view('hologramas.find_solicitud_hologramas_view', [
+            'totalUser' => $userCount,
+            'verified' => $verified,
+            'notVerified' => $notVerified,
+            'userDuplicates' => $userDuplicates,
+            'Empresa' => $Empresa, // Pasa la lista de clientes a la vista
+            'ModelsSolicitudHolograma' => $ModelsSolicitudHolograma,     // Pasa la lista de marcas a la vista
+
+
+        ]);
     }
 
     public function index(Request $request)
@@ -24,83 +36,64 @@ class solicitudHolograma extends Controller
         $columns = [
             1 => 'id_solicitud',
             2 => 'folio',
-            3 => 'num_servicio',
-            4 => 'razon_social',
-            5 => 'fecha_solicitud',
-            6 => 'tipo',
-            7 => 'direccion_completa',
-            8 => 'inspector',
-            9 => 'fecha_servicio',
-            10 => 'fecha_visita',
-            11 => 'name',
+            3 => 'id_empresa',
+            4 => 'id_solicitante',
+            5 => 'id_marca',
+            6 => 'cantidad_hologramas',
+            7 => 'id_direccion',
+            8 => 'comentarios'
+
+
         ];
-
-        $search = [];
-
-        $totalData = solicitudHolograma::count();
-
-        $totalFiltered = $totalData;
 
         $limit = $request->input('length');
         $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
+        $orderColumnIndex = $request->input('order.0.column');
+        $order = $columns[$orderColumnIndex] ?? 'id_solicitud';
         $dir = $request->input('order.0.dir');
 
-       
+        $searchValue = $request->input('search.value');
 
-        if (empty($request->input('search.value'))) {
-           
+        $query = ModelsSolicitudHolograma::with(['empresa']);
 
-                $solicitudes = solicitudHolograma::with('empresa','inspeccion','inspector', 'instalacion')
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-
-        } else {
-            $search = $request->input('search.value');
-
-            $query = solicitudHolograma::with('empresa');
-            dd($query->toSql());
-            
-
-            $solicitudes = solicitudHolograma::with('empresa','inspeccion','inspector', 'instalacion')
-                ->where(function ($query) use ($search) {
-                    $query->where('id_solicitud', 'LIKE', "%{$search}%")
-                        ->orWhere('razon_social', 'LIKE', "%{$search}%");
-                })
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-
-            $totalFiltered =  solicitudHolograma::with('empresa','inspeccion','inspector', 'instalacion')
-                ->where(function ($query) use ($search) {
-                    $query->where('id_solicitud', 'LIKE', "%{$search}%")
-                        ->orWhere('razon_social', 'LIKE', "%{$search}%");
-                })
-                ->count();
+        if (!empty($searchValue)) {
+            $query->where(function ($q) use ($searchValue) {
+                $q->where('id_solicitud', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('folio', 'LIKE', "%{$searchValue}%")
+                    ->orWhere('id_empresa', 'LIKE', "%{$searchValue}%");
+            });
         }
+
+        $totalData = ModelsSolicitudHolograma::count();
+        $totalFiltered = $query->count();
+
+        $users = $query->offset($start)
+            ->limit($limit)
+            ->orderBy($order, $dir)
+            ->get();
 
         $data = [];
 
-        if (!empty($solicitudes)) {
+        if ($users->isNotEmpty()) {
             $ids = $start;
 
-            foreach ($solicitudes as $solicitud) {
-                $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
-                $nestedData['fake_id'] = ++$ids  ?? 'N/A';
-                $nestedData['folio'] = '<b class="text-primary">'.$solicitud->folio.'</b>';
-                 $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? '<span class="badge bg-danger">Sin asignar</apan>';
-                $nestedData['razon_social'] = $solicitud->empresa->razon_social  ?? 'N/A';
-                $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
-                $nestedData['tipo'] = $solicitud->tipo  ?? 'N/A';
-                $nestedData['direccion_completa'] = $solicitud->instalacion->direccion_completa  ?? 'N/A';
-                $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</apan>';
-                $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</apan>'; // Maneja el caso donde el organismo sea nulo
-                $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</apan>';
+            foreach ($users as $user) {
+                //$numero_cliente = \App\Models\Empresa::where('id_empresa', $user->id_empresa)->value('razon_social');
+                $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
 
 
+                $nestedData = [
+                    'fake_id' => ++$ids,
+                    'id_solicitud' => $user->id_solicitud,
+                    'folio' => $user->folio,
+                    'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
+                    'id_empresa' => $user->numero_cliente,
+                    'id_solicitante' => $user->id_solicitante,
+                    'id_marca' => $user->id_marca,
+                    'cantidad_hologramas' => $user->cantidad_hologramas,
+                    'id_direccion' => $user->id_direccion,
+                    'comentarios' => $user->comentarios,
+                ];
 
                 $data[] = $nestedData;
             }
@@ -114,4 +107,5 @@ class solicitudHolograma extends Controller
             'data' => $data,
         ]);
     }
+
 }
