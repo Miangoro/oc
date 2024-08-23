@@ -168,6 +168,7 @@ use App\Http\Controllers\catalogo\marcasCatalogoController;
 use App\Http\Controllers\catalogo\ClaseController;
 use App\Http\Controllers\catalogo\lotesEnvasadoController;
 use App\Http\Controllers\guias\GuiasController;
+use App\Http\Controllers\hologramas\solicitudHologramaController;
 use App\Http\Controllers\clientes\clientesConfirmadosController;
 use App\Http\Controllers\documentacion\documentacionController;
 use App\Http\Controllers\domicilios\DomiciliosController;
@@ -618,3 +619,9 @@ Route::get('/inspecciones', [inspeccionesController::class, 'UserManagement'])->
 Route::resource('inspecciones-list', inspeccionesController::class);
 
 Route::post('/asignar-inspector', [inspeccionesController::class, 'asignarInspector']);
+
+
+
+//Hologramas - solicitud hologramas
+Route::get('/hologramas/solicitud', [solicitudHologramaController::class, 'UserManagement'])->name('hologramas-solicitud');
+Route::resource('/hologramas-list', solicitudHologramaController::class);

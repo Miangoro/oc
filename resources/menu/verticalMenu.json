@@ -183,7 +183,21 @@
       "url": "guias/guias_de_agave",
       "icon": "menu-icon ri-truck-fill",
       "slug": "traslado-guias"
+    },
+    {
+      "name": "Hologramas",
+      "icon": "menu-icon ri-qr-code-fill",
+      "slug": "hologramas",
+      "submenu": [
+        {
+          "url": "/hologramas/solicitud",
+          "name": "Solicitud de hologramas",
+          "slug": "hologramas-solicitud"
+        }
+      ]
     }
+      
+    
 
 
   ]
