@@ -146,7 +146,7 @@
             padding: 0;
             position: absolute;
             right: 50px;
-            top: 770px;
+            top: 710px;
             font-family: 'Arial Negrita' !important;
         }
 
@@ -192,10 +192,18 @@
         }
 
         .pie {
-            margin-top: 80px;
             text-align: right;
             font-size: 9px;
             line-height: 1;
+            position: fixed;
+            bottom: -10;
+            left: 0;   
+            right: 0;  
+            width: calc(100% - 40px); 
+            height: 45px;
+            margin-right: 30px; 
+            padding: 10px 0px;
+            font-family: 'Lucida Sans Unicode';
         }
     </style>
 </head>
@@ -215,9 +223,9 @@
         la revisión de procesos de producción del producto Mezcal, su envasado y comercialización; y con fundamento
         en los artículos 56 Fracción I y 60 fracción I de la Ley de Infraestructura de la Calidad que establece el
         funcionamiento de las Unidades de Inspección.</p>
-        <p>Después de realizar la inspección de las instalaciones en fecha del ____de ______del 20 ___partiendo del acta
-        circunstanciada o número de inspección: _____</p>
-        <p class="textp">Nombre del productor/empresa: _______________________________________________________</p>
+        <p>Después de realizar la inspección de las instalaciones en fecha del <span class="font-lucida-sans-seminegrita"><u>{{ $fecha_inspeccion }}</u></span> partiendo del acta
+        circunstanciada o número de inspección: <u><span  class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio }}</u></span></p>
+        <p class="textp">Nombre del productor/empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social }}</u></p>
     </div>
     <table>
         <tbody>
@@ -225,29 +233,27 @@
             <td style="text-align: justify;">
             <span class="font-lucida-sans-seminegrita">Domicilio Fiscal:</span><br>
             </td>
-                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Enim, minus saepe optio harum corrupti, natus ipsam.</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal }}</td>
             </tr>
             <tr>
             <td>
-            <span class="font-lucida-sans-seminegrita">Domicilio de instalaciones del
-            comercializador:</span>
+            <span class="font-lucida-sans-seminegrita">Domicilio de instalaciones del comercializador:</span>
             </td>
-
-                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Enim, minus saepe optio harum corrupti, natus ipsam.</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->instalaciones->direccion_completa }}</td>
             </tr>
             <tr>
             <td>
             <span class="font-lucida-sans-seminegrita">Domicilio de instalaciones del almacen:</span>
             </td>
-                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium, atque!</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->instalaciones->direccion_completa }}</td>
             </tr>
             <tr>
                 <td class="font-lucida-sans-seminegrita">Responsable de la inspección:</td>
-                <td style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium, atque!</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->inspector->name }}</td>
             </tr>
             <tr>
                 <td class="font-lucida-sans-seminegrita">Fecha de emisión de dictamen:</td>
-                <td style="text-align: center; vertical-align: middle;">08/08/2024</td>
+                <td style="text-align: center; vertical-align: middle;">{{ $fecha_emision }}</td>
             </tr>
         </tbody>
     </table>
