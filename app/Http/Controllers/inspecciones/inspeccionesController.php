@@ -190,7 +190,7 @@ class inspeccionesController extends Controller
     public function pdf_oficio_comision($id_inspeccion)
     {   
         
-        $datos = inspecciones::with(['inspector'])->find($id_inspeccion);
+        $datos = inspecciones::with(['inspector', 'solicitud.instalacion'])->find($id_inspeccion);
 
         
         $pdf = Pdf::loadView('pdfs.oficioDeComision',['datos'=>$datos]);
