@@ -68,8 +68,8 @@
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
  @include('_partials/_modals/modal-add-solicitudHologramas')
-{{-- @include('_partials/_modals/modal-edit-lotesEnvasado')
- --}}
+@include('_partials/_modals/modal-edit-solicitudHologramas')
+
 
 <!-- /Modal -->
 @endsection

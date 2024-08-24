@@ -629,3 +629,5 @@ Route::get('/orden_de_servicio/{id_inspeccion}', [inspeccionesController::class,
 Route::get('/hologramas/solicitud', [solicitudHolograma::class, 'UserManagement'])->name('hologramas-solicitud');
 Route::resource('/hologramas-list', solicitudHolograma::class);
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
+Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
+Route::put('/solicitud_holograma/update/{id_solicitud}', [solicitudHolograma::class, 'update']);

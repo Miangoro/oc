@@ -262,8 +262,10 @@ $(function () {
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_solicitud']}" data-bs-toggle="offcanvas" data-bs-target="#editCategoria"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_solicitud']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
+              '<div class="dropdown-menu dropdown-menu-end m-0">' +
+              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#editHologramas" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar solicitud</a>` +
+              `<a data-id="${full['id_solicitud']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar solicitud</a>` +
 /*               '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
  */              '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
@@ -554,111 +556,77 @@ $(function () {
     });
   });
 
-// Agregar nueva solicitud de hologramas
-/* $('#addHologramasForm').on('submit', function (e) {
-  e.preventDefault();
-  var formData = $(this).serialize();
+
+// Editar registro
+// Editar registro
+$(document).on('click', '.edit-record', function () {
+  var id_solicitud = $(this).data('id');
+
+  $.get('/solicitud_holograma/edit/' + id_solicitud, function (data) {
+      // Rellenar el formulario con los datos obtenidos
+      $('#edit_id_solicitud').val(data.id_solicitud);
+      $('#edit_folio').val(data.folio);
+      $('#edit_id_empresa').val(data.id_empresa).trigger('change');
+      $('#edit_id_marca').val(data.id_marca).trigger('change');
+      $('#edit_id_solicitante').val(data.id_solicitante);
+      $('#edit_cantidad_hologramas').val(data.cantidad_hologramas);
+      $('#edit_id_direccion').val(data.id_direccion).trigger('change');
+      $('#edit_comentarios').val(data.comentarios);
+
+      // Mostrar el modal de edición
+      $('#editHologramas').modal('show');
+  }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error: ' + textStatus + ' - ' + errorThrown);
+      Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al obtener los datos de la solicitud de holograma',
+          customClass: {
+              confirmButton: 'btn btn-danger'
+          }
+      });
+  });
+});
+
+// Manejo del envío del formulario de edición de Hologramas
+$('#editHologramasForm').on('submit', function (e) {
+  e.preventDefault(); // Evita el comportamiento predeterminado del formulario
+
+  var formData = $(this).serialize(); // Serializa los datos del formulario
+  var id_solicitud = $('#edit_id_solicitud').val(); // Obtiene el ID de la solicitud
 
   $.ajax({
-      url: '/hologramas/store',
-      type: 'POST',
-      data: formData,
+      url: '/solicitud_holograma/update/' + id_solicitud, // URL de la ruta de actualización
+      method: 'PUT', // Método HTTP
+      data: formData, // Datos enviados
       success: function (response) {
-          $('#addHologramas').modal('hide'); // Cerrar el modal
-          $('#addHologramasForm')[0].reset(); // Reiniciar el formulario
-          dt_user.ajax.reload(); // Recargar la tabla de DataTables
           Swal.fire({
               icon: 'success',
               title: '¡Éxito!',
-              text: response.success,
+              text: 'Solicitud actualizada correctamente',
               customClass: {
                   confirmButton: 'btn btn-success'
               }
+          }).then(function () {
+              $('#editHologramas').modal('hide'); // Cierra el modal de edición
+              $('.datatables-users').DataTable().ajax.reload(); // Recarga la tabla de datos
           });
       },
-      error: function (xhr) {
-          console.log('Error:', xhr.responseText);
+      error: function (jqXHR, textStatus, errorThrown) {
+          console.error('Error: ' + textStatus + ' - ' + errorThrown);
           Swal.fire({
               icon: 'error',
               title: '¡Error!',
-              text: 'Error al registrar la solicitud de hologramas.',
+              text: 'Error al actualizar la solicitud',
               customClass: {
                   confirmButton: 'btn btn-danger'
               }
           });
       }
   });
-}); */
-
-
-// Editar registro
-$(document).ready(function() {
-  // Abrir el modal y cargar datos para editar
-  $('.datatables-users').on('click', '.edit-record', function() {
-      var id_categoria = $(this).data('id');
-
-      // Realizar la solicitud AJAX para obtener los datos de la clase
-      $.get('/categorias-list/' + id_categoria + '/edit', function(data) {
-          // Rellenar el formulario con los datos obtenidos
-          $('#edit_id_categoria').val(data.id_categoria);
-          $('#edit_categoria').val(data.categoria);
-
-          // Mostrar el modal de edición
-          $('#editCategoria').offcanvas('show');
-      }).fail(function() {
-          Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al obtener los datos de la clase',
-              customClass: {
-                  confirmButton: 'btn btn-danger'
-              }
-          });
-      });
-  });
-
-  // Manejar el envío del formulario de edición
-  $('#editCategoriaForm').on('submit', function(e) {
-      e.preventDefault();
-
-      var formData = $(this).serialize();
-      var id_categoria = $('#edit_id_categoria').val(); // Obtener el ID de la clase desde el campo oculto
-
-      $.ajax({
-          url: '/categorias-list/' + id_categoria,
-          type: 'PUT',
-          data: formData,
-          success: function(response) {
-              $('#editCategoria').offcanvas('hide'); // Ocultar el modal de edición
-              $('#editCategoriaForm')[0].reset(); // Limpiar el formulario
-
-              // Mostrar alerta de éxito
-              Swal.fire({
-                  icon: 'success',
-                  title: '¡Éxito!',
-                  text: response.success,
-                  customClass: {
-                      confirmButton: 'btn btn-success'
-                  }
-              });
-
-              // Recargar los datos en la tabla sin reinicializar DataTables
-              $('.datatables-users').DataTable().ajax.reload();
-          },
-          error: function(xhr) {
-              // Mostrar alerta de error
-              Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: 'Error al actualizar la clase',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
-          }
-      });
-  });
 });
+
+
 
 //end
 });
