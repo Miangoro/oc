@@ -32,8 +32,8 @@ class Dictamen_instalaciones extends Model
             return $this->belongsTo(instalaciones::class, 'id_instalacion', 'id_instalacion');
         }
 
-      
- 
+
+        
 
 
       
