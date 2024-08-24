@@ -8,6 +8,8 @@ use App\Models\empresa;
 use App\Models\solicitudHolograma as ModelsSolicitudHolograma;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 
 class solicitudHolograma extends Controller
@@ -83,15 +85,16 @@ class solicitudHolograma extends Controller
                 //$numero_cliente = \App\Models\Empresa::where('id_empresa', $user->id_empresa)->value('razon_social');
                 $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
 
+                $marca = \App\Models\Marcas::where('id_marca', $user->id_marca)->value('marca');
 
                 $nestedData = [
                     'fake_id' => ++$ids,
                     'id_solicitud' => $user->id_solicitud,
                     'folio' => $user->folio,
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
-                    'id_empresa' => $user->numero_cliente,
+                    'id_empresa' => $user->id_empresa,
                     'id_solicitante' => $user->id_solicitante,
-                    'id_marca' => $user->id_marca,
+                    'id_marca' => $marca, // Asignar el nombre de la marca a id_marca
                     'cantidad_hologramas' => $user->cantidad_hologramas,
                     'id_direccion' => $user->id_direccion,
                     'comentarios' => $user->comentarios,
@@ -190,6 +193,13 @@ class solicitudHolograma extends Controller
             // Maneja cualquier error que ocurra durante el proceso
             return response()->json(['error' => 'Error al actualizar la solicitud'], 500);
         }
+    }
+
+
+    public function solicitudHologramas()
+    {
+        $pdf = Pdf::loadView('pdfs.solicitudDeHologramas');
+        return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
     }
     
 }

@@ -163,7 +163,7 @@ $(function () {
         { data: 'id_marca' },
         { data: 'cantidad_hologramas' },
         { data: 'id_direccion' },
-
+        { data: '' },
         { data: 'action' }
 
       ],
@@ -243,16 +243,16 @@ $(function () {
                 : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
             }`;
           }
-        },
-        /* {
+        },*/
+         {
           // email verify
-          targets: 5,
+          targets: 8,
           className: 'text-center',
           render: function (data, type, full, meta) {
-            var $id = full['id_empresa'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_empresa']}" data-registro="${full['razon_social']} "></i>`;
+            var $id = full['id_solicitud'];
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_solicitud']}" data-registro="${full['razon_social']} "></i>`;
           }
-        },*/
+        },
         {
           // Actions
           targets: -1,
@@ -555,6 +555,20 @@ $(function () {
       }
     });
   });
+
+
+  //Reciben los datos del pdf
+  $(document).on('click', '.pdf', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+        var iframe = $('#pdfViewer');
+        iframe.attr('src', '../solicitud_de_holograma/'/* +id */);
+
+        $("#titulo_modal").text("Solicitud de hologramas");
+        $("#subtitulo_modal").text(registro);
+        
+      
+});
 
 
 // Editar registro
