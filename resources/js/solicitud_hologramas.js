@@ -318,7 +318,7 @@ $(function () {
               text: '<i class="ri-printer-line me-1" ></i>Print',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3],
+                columns: [1, 2, 3, 4, 5, 6, 7],
                 // prevent avatar to be print
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -356,7 +356,7 @@ $(function () {
               text: '<i class="ri-file-text-line me-1" ></i>Csv',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3],
+                columns: [1, 2, 3, 4, 5, 6, 7],
                 // prevent avatar to be print
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -381,7 +381,7 @@ $(function () {
               text: '<i class="ri-file-excel-line me-1"></i>Excel',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3],
+                columns: [1, 2, 3, 4, 5, 6, 7],
                 // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -406,8 +406,7 @@ $(function () {
               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3],
-                // prevent avatar to be display
+                columns: [1, 2, 3, 4, 5, 6, 7],                // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
                     if (inner.length <= 0) return inner;
@@ -431,7 +430,7 @@ $(function () {
               text: '<i class="ri-file-copy-line me-1"></i>Copy',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3],
+                columns: [1, 2, 3, 4, 5, 6, 7],
                 // prevent avatar to be copy
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -564,7 +563,7 @@ $(function () {
         var iframe = $('#pdfViewer');
         iframe.attr('src', '../solicitud_de_holograma/'/* +id */);
 
-        $("#titulo_modal").text("Solicitud de hologramas");
+        $("#titulo_modal").text("Solicitud de entrega de hologramas");
         $("#subtitulo_modal").text(registro);
         
       
