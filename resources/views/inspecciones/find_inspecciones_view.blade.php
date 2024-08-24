@@ -211,10 +211,20 @@
     });
   }
 
-  function abrirModalAsignarInspector(id_solicitud) {
+  function abrirModalAsignarInspector(id_solicitud,tipo ,folio) {
 
-     $("#id_solicitud").val(id_solicitud);
-      $('#asignarInspector').modal('show');
-  }
+    $("#id_solicitud").val(id_solicitud);
+
+    $('.folio').text(tipo);
+    $('#asignarInspector').modal('show');
+  } 
+
+  function abrirModalSubirResultados(id_solicitud) {
+
+    $("#id_solicitud").val(id_solicitud);
+    $('#subirResultados').modal('show');
+    }
+
+  
 </script>
 

@@ -50,10 +50,11 @@
             <thead class="table-dark">
                 <tr>
                     <th></th>
-                    <th>ID</th>
+                    <th>No.</th>
                     <th>Tipo de dictamen</th>
                     <th>No. dictamen</th>
                     <th>No. Servicio</th>
+                    <th>Cliente</th>
                     <th>Fecha de emisión</th>
                     <th>Dictamen</th>
                     <th>ACCIONES</th>

@@ -6,8 +6,16 @@
         <div class="modal-body p-0">
           <div class="text-center mb-6">
             <h4 class="address-title mb-2">Asignar inspector</h4>
-            <p class="address-subtitle">Folio de solicitud</p>
+            <p class="folio">Folio de solicitud</p>
           </div>
+
+         <!-- <div class="card mb-6">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">Cras justo odio</li>
+              <li class="list-group-item">Dapibus ac facilisis in</li>
+              <li class="list-group-item">Vestibulum at eros</li>
+            </ul>
+          </div>-->
           <form id="addAsignarInspector" class="row g-5" onsubmit="return false">
             <input name="id_solicitud" type="hidden" id="id_solicitud">
   
