@@ -4,7 +4,116 @@
 
 'use strict';
 
-// Datatable (jquery)
+// Agregar nuevo registro
+// validating form and updating user's data
+const addHologramasForm = document.getElementById('addHologramasForm');
+
+// Validación del formulario
+const fv = FormValidation.formValidation(addHologramasForm, {
+    fields: {
+      folio: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor introduzca el nombre del lote'
+                }
+            }
+        },
+        id_empresa: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor introduzca el nombre del lote'
+                }
+            }
+        },
+        id_marca: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese un numero de pedido/SKU'
+                }
+            }
+        },
+        id_solicitante: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese un numero de pedido/SKU'
+                }
+            }
+        },
+        cantidad_hologramas: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese un digito'
+                }
+            }
+        },
+        id_direccion: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese un destino de lote'
+                }
+            }
+        },
+        comentarios: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese un digito'
+                }
+            }
+        }
+        
+        
+    },
+    plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+            eleValidClass: '',
+            rowSelector: function (field, ele) {
+                return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+            }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+}).on('core.form.valid', function (e) {
+    //e.preventDefault();
+    var formData = new FormData(addHologramasForm);
+
+    $.ajax({
+        url: '/hologramas/store', // Actualiza con la URL correcta
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            $('#addHologramas').modal('hide');
+            $('.datatables-users').DataTable().ajax.reload();
+
+            // Mostrar alerta de éxito
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.success,
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
+        },
+        error: function (xhr) {
+            // Mostrar alerta de error
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al registrar el lote envasado',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+        }
+    });
+});
+
+
+
 $(function () {
     // Datatable (jquery)
     // Variable declaration for table
@@ -19,7 +128,7 @@ $(function () {
         var $this = $(this);
         select2Focus($this);
         $this.wrap('<div class="position-relative"></div>').select2({
-          placeholder: 'Selecciona cliente',
+          placeholder: 'Selecciona una opcion',
           dropdownParent: $this.parent()
         });
       });
@@ -389,7 +498,7 @@ $(function () {
 
   // Eliminar registro
   $(document).on('click', '.delete-record', function () {
-    var id_categoria = $(this).data('id'),
+    var id_solicitud = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
 
     // hide responsive modal in small screen
@@ -414,7 +523,7 @@ $(function () {
         // delete the data
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}categorias-list/${id_categoria}`,
+          url: `${baseUrl}hologramas-list/${id_solicitud}`,
           success: function () {
             dt_user.draw();
           },
@@ -445,42 +554,42 @@ $(function () {
     });
   });
 
-  // Agregar nueva categoría
-  $('#addNewCategoryForm').on('submit', function (e) {
-    e.preventDefault();
-    var formData = $(this).serialize();
+// Agregar nueva solicitud de hologramas
+/* $('#addHologramasForm').on('submit', function (e) {
+  e.preventDefault();
+  var formData = $(this).serialize();
 
-    $.ajax({
-      url: '/categorias',
+  $.ajax({
+      url: '/hologramas/store',
       type: 'POST',
       data: formData,
       success: function (response) {
-        $('#offcanvasAddUser').offcanvas('hide');
-        $('#addNewCategoryForm')[0].reset();
-        dt_user.ajax.reload();
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: response.success,
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
+          $('#addHologramas').modal('hide'); // Cerrar el modal
+          $('#addHologramasForm')[0].reset(); // Reiniciar el formulario
+          dt_user.ajax.reload(); // Recargar la tabla de DataTables
+          Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.success,
+              customClass: {
+                  confirmButton: 'btn btn-success'
+              }
+          });
       },
       error: function (xhr) {
-        console.log('Error:', xhr.responseText);
-
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al agregar la categoría',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
+          console.log('Error:', xhr.responseText);
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al registrar la solicitud de hologramas.',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
       }
-    });
   });
+}); */
+
 
 // Editar registro
 $(document).ready(function() {

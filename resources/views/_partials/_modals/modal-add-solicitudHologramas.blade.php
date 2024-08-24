@@ -9,63 +9,71 @@
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="addHologramasForm">
+                    @csrf
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="folio"
-                            placeholder="Introduce el nombre del lote" name="folio"
-                            aria-label="Ingrese el folio" />
-                        <label for="name">Ingresa el folio de solicitud</label>
+                        <input type="text" class="form-control" id="folio" name="folio" placeholder="Ingresa el folio de solicitud" aria-label="Ingrese el folio" required />
+                        <label for="folio">Ingresa el folio de solicitud</label>
                     </div>
-                    <div class="form-floating form-floating-outline mb-4">
-                        <select onchange=" obtenerMarcas(); obtenerDirecciones();" id="id_empresa" name="id_empresa"
-                            class="select2 form-select">
-                            <option value="">Selecciona cliente</option>
-                            @foreach ($Empresa as $cliente)
-                                <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
-                            @endforeach
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select onchange="obtenerMarcas(); obtenerDirecciones();" id="id_empresa" name="id_empresa" class="select2 form-select" required>
+                                    <option value="">Selecciona cliente</option>
+                                    @foreach ($Empresa as $cliente)
+                                        <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_empresa">Cliente</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select class="select2 form-select id_marca" id="id_marca" name="id_marca" required>
+                                    <option value="" selected>Selecciona una marca</option>
+                                </select>
+                                <label for="id_marca">Marca</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" type="number" id="id_solicitante" name="id_solicitante" placeholder="ID del solicitante" required />
+                                <label for="id_solicitante">ID del solicitante</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input class="form-control" type="number" id="cantidad_hologramas" name="cantidad_hologramas" placeholder="Número de hologramas solicitados" required />
+                                <label for="cantidad_hologramas">Número de hologramas solicitados</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-floating form-floating-outline mb-6">
+                        <select class="select2 form-select id_direccion" id="id_direccion" name="id_direccion" required>
+                            <option value="" selected>Selecciona una dirección</option>
                         </select>
-                        <label for="id_empresa">Cliente</label>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select id_marca" id="id_marca" name="id_marca"
-                                aria-label="Marca">
-                                <option value="" selected>Selecciona una marca</option>
-
-                            </select>
-                            <label for="id_marca">Marca</label>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-floating form-floating-outline mb-6">
-                            <input class="form-control" type="number" placeholder="Ingrese un valor"
-                                id="cantidad_hologramas" name="cantidad_hologramas" />
-                            <label for="cantidad_hologramas">No. de hologramas solicitados</label>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select id_direccion" id="id_direccion" name="id_direccion"
-                                aria-label="Direccion">
-                                <option value="id_direccion" selected>Selecciona una direccion</option>
-
-                            </select>
-                            <label for="">Direccion</label>
-                        </div>
+                        <label for="id_direccion">Dirección a la que se enviará</label>
                     </div>
                     <div class="form-floating form-floating-outline mb-5">
-                        <textarea name="observaciones" class="form-control h-px-100" id="comentarios" placeholder="Observaciones..."></textarea>
+                        <textarea name="comentarios" class="form-control h-px-100" id="comentarios" placeholder="Observaciones..."></textarea>
                         <label for="comentarios">Comentarios</label>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 
 
 
@@ -106,12 +114,16 @@
                 // Cargar los detalles en el modal
                 var contenido = "";
                 for (let index = 0; index < response.direcciones.length; index++) {
-                    contenido = '<option value="' + response.direcciones[index].id_empresa + 
-                    '">Tipo direccion: ' + response + response.direcciones[index].tipo_direccion + '">Número de plantas: ' + response
-                    .direcciones[index].direccion + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
-                }
+                    contenido += '<option value="' + response.direcciones[index].id_empresa + '">' +
+                        'Nombre de detinatario: ' + response.direcciones[index].destinatario +
+                        ' - Dirección: ' + response.direcciones[index].direccion +
+                        ' - Correo: ' + response.direcciones[index].correo_recibe +
+                        ' - Celular: ' + response.direcciones[index].celular_recibe +
 
+
+                        '</option>';
+                }
+                // console.log(response.direcciones[index].norma);
                 if (response.direcciones.length == 0) {
                     contenido = '<option value="">Sin lotes a granel registrados</option>';
                 }
@@ -122,4 +134,60 @@
             }
         });
     }
+
+
+    
+
+    //Limpia en el boton cancelar
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('#addHologramas .btn-outline-secondary').addEventListener('click',
+            function() {
+                document.getElementById('addHologramasForm').reset();
+                $('.select2').val(null).trigger('change'); // Reset select2 fields
+            });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('addHologramas');
+        const form = document.getElementById('addHologramasForm');
+
+        // Limpia los campos select2 al cerrar el modal
+        modal.addEventListener('hidden.bs.modal', () => {
+            // Limpia el formulario
+            form.reset();
+
+            // Limpia todos los campos select2
+            $('.select2').val(null).trigger('change');
+        });
+
+        // Maneja el envío del formulario
+        form.addEventListener('submit', (event) => {
+            event.preventDefault(); // Evita el comportamiento predeterminado del formulario
+
+            // Aquí puedes añadir la lógica para enviar el formulario, por ejemplo usando AJAX:
+            $.ajax({
+                url: form.action, // Asegúrate de que `form.action` sea la URL correcta
+                method: 'POST',
+                data: $(form).serialize(),
+                success: (response) => {
+                    // Manejar la respuesta del servidor aquí, por ejemplo, mostrar un mensaje de éxito
+                    console.log('Registro exitoso:', response);
+
+                    // Limpia el formulario y los campos select2 después de enviar
+                    form.reset();
+                    $('.select2').val(null).trigger('change');
+
+                    // Cierra el modal
+                    const modalInstance = bootstrap.Modal.getInstance(modal);
+                    modalInstance.hide();
+                },
+                error: (error) => {
+                    // Manejar errores aquí, por ejemplo, mostrar un mensaje de error
+                    console.error('Error al registrar:', error);
+                }
+            });
+        });
+    });
+
 </script>

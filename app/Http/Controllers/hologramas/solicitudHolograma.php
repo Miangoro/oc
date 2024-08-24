@@ -108,4 +108,63 @@ class solicitudHolograma extends Controller
         ]);
     }
 
+       //Metodo para eliminar
+       public function destroy($id_solicitud)
+       {
+           $clase = ModelsSolicitudHolograma::findOrFail($id_solicitud);
+           $clase->delete();
+   
+           return response()->json(['success' => 'Clase eliminada correctamente']);
+       }
+
+
+           //Metodo para registrar
+
+           public function store(Request $request)
+           {
+               // Validar los datos recibidos del formulario
+               $request->validate([
+                   'folio' => 'required|string|max:255',
+                   'id_empresa' => 'required|integer',
+                   'id_marca' => 'required|integer',
+                   'id_solicitante' => 'required|integer',
+                   'cantidad_hologramas' => 'required|integer',
+                   'id_direccion' => 'required|integer',
+                   'comentarios' => 'nullable|string|max:1000',
+               ]);
+           
+               // Crear una nueva instancia del modelo Hologramas
+               $holograma = new ModelsSolicitudHolograma();
+               $holograma->folio = $request->folio;
+               $holograma->id_empresa = $request->id_empresa;
+               $holograma->id_marca = $request->id_marca;
+               $holograma->id_solicitante = $request->id_solicitante;
+               $holograma->cantidad_hologramas = $request->cantidad_hologramas;
+               $holograma->id_direccion = $request->id_direccion;
+               $holograma->comentarios = $request->comentarios;
+           
+               // Guardar el nuevo registro en la base de datos
+               $holograma->save();
+           
+               // Retornar una respuesta JSON indicando éxito
+               return response()->json(['success' => 'Solicitud de Hologramas registrada correctamente']);
+           }
+           
+
+
+
+
+// Método para obtener una guía por ID
+public function edit($id_solicitud)
+{
+    try {
+        $hologramas = ModelsSolicitudHolograma::findOrFail($id_solicitud);
+        return response()->json($hologramas);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al obtener la guía'], 500);
+    }
+}
+
+
+
 }
