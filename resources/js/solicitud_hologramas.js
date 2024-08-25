@@ -10,133 +10,133 @@ const addHologramasForm = document.getElementById('addHologramasForm');
 
 // Validación del formulario
 const fv = FormValidation.formValidation(addHologramasForm, {
-    fields: {
-      folio: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor introduzca el nombre del lote'
-                }
-            }
-        },
-        id_empresa: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor introduzca el nombre del lote'
-                }
-            }
-        },
-        id_marca: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor ingrese un numero de pedido/SKU'
-                }
-            }
-        },
-        id_solicitante: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor ingrese un numero de pedido/SKU'
-                }
-            }
-        },
-        cantidad_hologramas: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor ingrese un digito'
-                }
-            }
-        },
-        id_direccion: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor ingrese un destino de lote'
-                }
-            }
-        },
-        comentarios: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor ingrese un digito'
-                }
-            }
+  fields: {
+    folio: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor introduzca un folio'
         }
-        
-        
+      }
     },
-    plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-            eleValidClass: '',
-            rowSelector: function (field, ele) {
-                return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
-            }
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-}).on('core.form.valid', function (e) {
-    //e.preventDefault();
-    var formData = new FormData(addHologramasForm);
-
-    $.ajax({
-        url: '/hologramas/store', // Actualiza con la URL correcta
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            $('#addHologramas').modal('hide');
-            $('.datatables-users').DataTable().ajax.reload();
-
-            // Mostrar alerta de éxito
-            Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-                text: response.success,
-                customClass: {
-                    confirmButton: 'btn btn-success'
-                }
-            });
-        },
-        error: function (xhr) {
-            // Mostrar alerta de error
-            Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: 'Error al registrar el lote envasado',
-                customClass: {
-                    confirmButton: 'btn btn-danger'
-                }
-            });
+    id_empresa: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione un cliente'
         }
-    });
+      }
+    },
+    id_marca: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese una marca'
+        }
+      }
+    },
+    id_solicitante: {
+      validators: {
+        notEmpty: {
+          message: 'falta el ID del usuario'
+        }
+      }
+    },
+    cantidad_hologramas: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese el numero de hologramas solicitados'
+        }
+      }
+    },
+    id_direccion: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese un destino de lote'
+        }
+      }
+    },
+    comentarios: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese un comentario'
+        }
+      }
+    }
+
+
+  },
+  plugins: {
+    trigger: new FormValidation.plugins.Trigger(),
+    bootstrap5: new FormValidation.plugins.Bootstrap5({
+      eleValidClass: '',
+      rowSelector: function (field, ele) {
+        return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+      }
+    }),
+    submitButton: new FormValidation.plugins.SubmitButton(),
+    autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  //e.preventDefault();
+  var formData = new FormData(addHologramasForm);
+
+  $.ajax({
+    url: '/hologramas/store', // Actualiza con la URL correcta
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      $('#addHologramas').modal('hide');
+      $('.datatables-users').DataTable().ajax.reload();
+
+      // Mostrar alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.success,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+    },
+    error: function (xhr) {
+      // Mostrar alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al registrar el lote envasado',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
+  });
 });
 
 
 
 $(function () {
-    // Datatable (jquery)
-    // Variable declaration for table
-    var dt_user_table = $('.datatables-users'),
-      select2Elements = $('.select2'),
-      userView = baseUrl + 'app/user/view/account',
-      offCanvasForm = $('#addHologramas');
-  
-    // Función para inicializar Select2 en elementos específicos
-    function initializeSelect2($elements) {
-      $elements.each(function () {
-        var $this = $(this);
-        select2Focus($this);
-        $this.wrap('<div class="position-relative"></div>').select2({
-          placeholder: 'Selecciona una opcion',
-          dropdownParent: $this.parent()
-        });
+  // Datatable (jquery)
+  // Variable declaration for table
+  var dt_user_table = $('.datatables-users'),
+    select2Elements = $('.select2'),
+    userView = baseUrl + 'app/user/view/account',
+    offCanvasForm = $('#addHologramas');
+
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        placeholder: 'Selecciona una opcion',
+        dropdownParent: $this.parent()
       });
-    }
-  
-    // Inicialización de Select2 para elementos con clase .select2
-    initializeSelect2(select2Elements);
-  
+    });
+  }
+
+  // Inicialización de Select2 para elementos con clase .select2
+  initializeSelect2(select2Elements);
+
 
   // ajax setup
   $.ajaxSetup({
@@ -203,7 +203,7 @@ $(function () {
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center user-name">' +
               '<div class="avatar-wrapper">' +
-/*               '<div class="avatar avatar-sm me-3">' + */
+              /*               '<div class="avatar avatar-sm me-3">' + */
 
               '</d iv>' +
               '</div>' +
@@ -226,25 +226,25 @@ $(function () {
             return '<span class="user-email">' + $email + '</span>';
           }
         }, */
-/*         {
-          // email verify
-          targets: 4,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $verified = full['regimen'];
-            if($verified=='Persona física'){
-              var $colorRegimen = 'info';
-            }else{
-              var $colorRegimen = 'warning';
-            }
-            return `${
-              $verified
-                ? '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-                : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-            }`;
-          }
-        },*/
-         {
+        /*         {
+                  // email verify
+                  targets: 4,
+                  className: 'text-center',
+                  render: function (data, type, full, meta) {
+                    var $verified = full['regimen'];
+                    if($verified=='Persona física'){
+                      var $colorRegimen = 'info';
+                    }else{
+                      var $colorRegimen = 'warning';
+                    }
+                    return `${
+                      $verified
+                        ? '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
+                        : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
+                    }`;
+                  }
+                },*/
+        {
           // email verify
           targets: 8,
           className: 'text-center',
@@ -296,11 +296,11 @@ $(function () {
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
         paginate: {
-                "sFirst":    "Primero",
-                "sLast":     "Último",
-                "sNext":     "Siguiente",
-                "sPrevious": "Anterior"
-              }
+          "sFirst": "Primero",
+          "sLast": "Último",
+          "sNext": "Siguiente",
+          "sPrevious": "Anterior"
+        }
       },
 
 
@@ -475,18 +475,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -560,22 +560,22 @@ $(function () {
   $(document).on('click', '.pdf', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
-        var iframe = $('#pdfViewer');
-        iframe.attr('src', '../solicitud_de_holograma/'/* +id */);
+    var iframe = $('#pdfViewer');
+    iframe.attr('src', '../solicitud_de_holograma/'/* +id */);
 
-        $("#titulo_modal").text("Solicitud de entrega de hologramas");
-        $("#subtitulo_modal").text(registro);
-        
-      
-});
+    $("#titulo_modal").text("Solicitud de entrega de hologramas");
+    $("#subtitulo_modal").text(registro);
 
 
-// Editar registro
-// Editar registro
-$(document).on('click', '.edit-record', function () {
-  var id_solicitud = $(this).data('id');
+  });
 
-  $.get('/solicitud_holograma/edit/' + id_solicitud, function (data) {
+
+  // Editar registro
+  // Editar registro
+  $(document).on('click', '.edit-record', function () {
+    var id_solicitud = $(this).data('id');
+
+    $.get('/solicitud_holograma/edit/' + id_solicitud, function (data) {
       // Rellenar el formulario con los datos obtenidos
       $('#edit_id_solicitud').val(data.id_solicitud);
       $('#edit_folio').val(data.folio);
@@ -588,58 +588,58 @@ $(document).on('click', '.edit-record', function () {
 
       // Mostrar el modal de edición
       $('#editHologramas').modal('show');
-  }).fail(function (jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
       console.error('Error: ' + textStatus + ' - ' + errorThrown);
       Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al obtener los datos de la solicitud de holograma',
-          customClass: {
-              confirmButton: 'btn btn-danger'
-          }
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos de la solicitud de holograma',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
       });
+    });
   });
-});
 
-// Manejo del envío del formulario de edición de Hologramas
-$('#editHologramasForm').on('submit', function (e) {
-  e.preventDefault(); // Evita el comportamiento predeterminado del formulario
+  // Manejo del envío del formulario de edición de Hologramas
+  $('#editHologramasForm').on('submit', function (e) {
+    e.preventDefault(); // Evita el comportamiento predeterminado del formulario
 
-  var formData = $(this).serialize(); // Serializa los datos del formulario
-  var id_solicitud = $('#edit_id_solicitud').val(); // Obtiene el ID de la solicitud
+    var formData = $(this).serialize(); // Serializa los datos del formulario
+    var id_solicitud = $('#edit_id_solicitud').val(); // Obtiene el ID de la solicitud
 
-  $.ajax({
+    $.ajax({
       url: '/solicitud_holograma/update/' + id_solicitud, // URL de la ruta de actualización
       method: 'PUT', // Método HTTP
       data: formData, // Datos enviados
       success: function (response) {
-          Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: 'Solicitud actualizada correctamente',
-              customClass: {
-                  confirmButton: 'btn btn-success'
-              }
-          }).then(function () {
-              $('#editHologramas').modal('hide'); // Cierra el modal de edición
-              $('.datatables-users').DataTable().ajax.reload(); // Recarga la tabla de datos
-          });
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Solicitud actualizada correctamente',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        }).then(function () {
+          $('#editHologramas').modal('hide'); // Cierra el modal de edición
+          $('.datatables-users').DataTable().ajax.reload(); // Recarga la tabla de datos
+        });
       },
       error: function (jqXHR, textStatus, errorThrown) {
-          console.error('Error: ' + textStatus + ' - ' + errorThrown);
-          Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al actualizar la solicitud',
-              customClass: {
-                  confirmButton: 'btn btn-danger'
-              }
-          });
+        console.error('Error: ' + textStatus + ' - ' + errorThrown);
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al actualizar la solicitud',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
       }
+    });
   });
-});
 
 
 
-//end
+  //end
 });
