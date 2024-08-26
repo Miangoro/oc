@@ -32,9 +32,8 @@ class Dictamen_instalaciones extends Model
             return $this->belongsTo(instalaciones::class, 'id_instalacion', 'id_instalacion');
         }
 
-      
- 
-
-
-      
+        Public function certificado()
+        {
+            return $this->belongsTo(Certificados::class, 'id_certificado', 'id_certificado');   
+        }  
 }
