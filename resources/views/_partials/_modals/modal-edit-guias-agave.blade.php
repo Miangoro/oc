@@ -8,7 +8,7 @@
                     <h4 class="address-title mb-2">Llenar Guía de Traslado Agave/Maguey</h4>
                     <p class="address-subtitle"></p>
                 </div>
-                <form id="editGuiaForm">
+                <form id="editGuiaForm" method="POST" enctype="multipart/form-data"  onsubmit="return false">
                     <!-- Hidden field to store the ID of the guia being edited -->
                     <input type="hidden" id="edit_id_guia" name="id_guia">
 
@@ -133,17 +133,17 @@
                             <label for="edit_id_observaciones">Observaciones</label>
                         </div>
                          <div class="form-floating form-floating-outline mb-5">
-                            <input class="form-control form-control-sm" type="file" id="file" name="url[]">
-                            <input value="0" class="form-control" type="hidden" name="id_documento[]">
-                            <input value="Certificado de instalaciones" class="form-control" type="hidden" name="nombre_documento[]">
-                            <label for="certificado_instalaciones">Adjuntar Guia escaneada</label>
+                            <input class="form-control form-control-sm" type="file"  name="url[]">
+                            <input value="71" class="form-control" type="hidden" name="id_documento[]">
+                            <input value="Guía de traslado de agave" class="form-control" type="hidden" name="nombre_documento[]">
+                            <label for="Guía de traslado de agave">Adjuntar Guia escaneada</label>
                         </div>
 
                         <div class="form-floating form-floating-outline mb-5">
-                            <input class="form-control form-control-sm" type="file" id="file" name="url[]">
-                            <input value="0" class="form-control" type="hidden" name="id_documento[]">
-                            <input value="Certificado de instalaciones" class="form-control" type="hidden" name="nombre_documento[]">
-                            <label for="certificado_instalaciones">Adjuntar resultados  de ART</label>
+                            <input class="form-control form-control-sm" type="file" name="url[]">
+                            <input value="132" class="form-control" type="hidden" name="id_documento[]">
+                            <input value="Resultados ART" class="form-control" type="hidden" name="nombre_documento[]">
+                            <label for="Resultados ART">Adjuntar resultados  de ART</label>
                         </div> 
                     </div>
 

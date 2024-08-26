@@ -63,7 +63,7 @@ class inspeccionesController extends Controller
         if (empty($request->input('search.value'))) {
            
 
-                $solicitudes = solicitudesModel::with('empresa','inspeccion','inspector', 'instalacion')
+                $solicitudes = solicitudesModel::with('tipo_solicitud','empresa','inspeccion','inspector', 'instalacion')
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
@@ -76,7 +76,7 @@ class inspeccionesController extends Controller
             dd($query->toSql());
             
 
-            $solicitudes = solicitudesModel::with('empresa','inspeccion','inspector', 'instalacion')
+            $solicitudes = solicitudesModel::with('tipo_solicitud','empresa','inspeccion','inspector', 'instalacion')
                 ->where(function ($query) use ($search) {
                     $query->where('id_solicitud', 'LIKE', "%{$search}%")
                         ->orWhere('razon_social', 'LIKE', "%{$search}%");
@@ -86,7 +86,7 @@ class inspeccionesController extends Controller
                 ->orderBy($order, $dir)
                 ->get();
 
-            $totalFiltered =  solicitudesModel::with('empresa','inspeccion','inspector', 'instalacion')
+            $totalFiltered =  solicitudesModel::with('tipo_solicitud','empresa','inspeccion','inspector', 'instalacion')
                 ->where(function ($query) use ($search) {
                     $query->where('id_solicitud', 'LIKE', "%{$search}%")
                         ->orWhere('razon_social', 'LIKE', "%{$search}%");
@@ -106,7 +106,7 @@ class inspeccionesController extends Controller
                  $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? '<span class="badge bg-danger">Sin asignar</apan>';
                 $nestedData['razon_social'] = $solicitud->empresa->razon_social  ?? 'N/A';
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
-                $nestedData['tipo'] = $solicitud->tipo  ?? 'N/A';
+                $nestedData['tipo'] = $solicitud->tipo_solicitud->tipo  ?? 'N/A';
                 $nestedData['direccion_completa'] = $solicitud->instalacion->direccion_completa  ?? 'N/A';
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</apan>';
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</apan>'; // Maneja el caso donde el organismo sea nulo
@@ -190,7 +190,7 @@ class inspeccionesController extends Controller
     public function pdf_oficio_comision($id_inspeccion)
     {   
         
-        $datos = inspecciones::with(['inspector', 'solicitud.instalacion'])->find($id_inspeccion);
+        $datos = inspecciones::with(['inspector', 'solicitud.instalacion','solicitud.tipo_solicitud'])->find($id_inspeccion);
 
         $fecha_servicio = Helpers::formatearFecha($datos->fecha_servicio);
         $pdf = Pdf::loadView('pdfs.oficioDeComision',['datos'=>$datos,'fecha_servicio'=>$fecha_servicio]);

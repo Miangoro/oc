@@ -30,5 +30,12 @@ class direcciones extends Model
         return $this->belongsTo(Empresa::class, 'id_empresa');
     }
 
+    public function solicitudesHologramas()
+    {
+        return $this->hasMany(solicitudHolograma::class, 'id_direccion');
+    }
+
+
+
     
 }

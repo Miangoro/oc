@@ -6,11 +6,11 @@
       <div class="modal-body p-0">
         <div class="text-center">
           <h4 class="mb-2">Expediente de inspección</h4>
-          <p class="mb-6">SOL-12065-O</p>
+          <p class="mb-6 nombre_empresa badge bg-primary"></p>
         </div>
 
         <div class="card">
-          <h5 class="card-header">Muestreo de lote a granel</h5>
+          <h5 class="card-header solicitud text-center">Muestreo de lote a granel</h5>
           <div class="table-responsive text-nowrap">
             <table class="table">
               <thead>
@@ -27,7 +27,7 @@
                 
                 <tr class="table-success">
                   <td><i class="ri-bank-fill ri-22px text-primary me-4"></i><span class="fw-medium">1. Solicitud de servicio</span></td>
-                  <td><a target="_Blank" href="solicitudservi"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                  <td><a target="_Blank" href="solicitudservi/4"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
                   
                   <td><span class="badge rounded-pill bg-label-warning me-1">Pending</span></td>
                   <td>
@@ -42,7 +42,7 @@
                 </tr>
                 <tr class="table-danger">
                   <td><i class="ri-palette-line ri-22px text-danger me-4"></i><span class="fw-medium">2. Oficio de comisión</span></td>
-                  <td><a target="_blank" href="oficio_de_comision"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                  <td><a target="_blank" href="oficio_de_comision/4"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
                   <td><span class="badge rounded-pill bg-label-primary me-1">Active</span></td>
                   <td>
                     <div class="dropdown">
@@ -56,7 +56,7 @@
                 </tr>
                 <tr class="table-warning">
                   <td><i class="ri-shield-user-line ri-22px text-info me-4"></i><span class="fw-medium">3. Orden de servicio</span></td>
-                  <td><a target="_blank" href="orden_de_servicio"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                  <td><a target="_blank" href="orden_de_servicio/4"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
                   <td><span class="badge rounded-pill bg-label-info me-1">Scheduled</span></td>
                   <td>
                     <div class="dropdown">

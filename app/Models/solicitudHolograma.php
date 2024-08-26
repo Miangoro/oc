@@ -28,10 +28,25 @@ class solicitudHolograma extends Model
         return $this->belongsTo(Empresa::class, 'id_empresa');
     }
 
-/*     public function direcciones()
+    public function direcciones()
     {
-        return $this->belongsTo(direcciones::class, 'id_direccion');
+        return $this->belongsTo(direcciones::class, 'id_direccion','id_direccion');
     }
- */
+
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,'id_solicitante', 'id');
+    }
+
+
+    public function empresanumcliente()
+    {
+        return $this->belongsTo(empresaNumCliente::class, 'id_empresa', 'id_empresa');
+    }
+
+
+
+
     
 }

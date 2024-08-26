@@ -100,7 +100,7 @@
             <p>
                 Oficio No. _____/20___<br>
                 Oficina: Gerencia Técnica<br>
-                <span class="negrita">Morelia, Michoacán, a {{ $fecha_servicio }}</span>
+                <span class="negrita">Morelia, Michoacán a {{ $fecha_servicio }}</span>
             </p>
         </div>
 
@@ -115,7 +115,7 @@
         </p>
 
         <p>
-            Mediante el presente designo a Usted para que realice el servicio ________________, indicado en la orden de
+            Mediante el presente designo a Usted para que realice el servicio <u class="negrita">{{ $datos->solicitud->tipo_solicitud->tipo }}</u>, indicado en la orden de
             servicio No. <u class="negrita">{{ $datos->num_servicio }}</u>, en el domicilio y con el responsable que indica la misma. Para esta diligencia
             debe presentarse en las instalaciones referidas a las <u class="negrita">{{ $datos->solicitud->instalacion->direccion_completa }}</u>.
         </p>

@@ -15,7 +15,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
                                         <select id="tipo_direccion" name="tipo_direccion" class="form-select"
-                                            onchange="handleDireccionChange()">
+                                           >
                                             <option value="" disabled selected>Selecciona el tipo de dirección
                                             </option>
                                             <option value="1">Para exportación</option>
@@ -107,12 +107,11 @@
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="celular_recibe"
-                                                name="celular_recibe" placeholder="Número de celular">
+                                                name="celular_recibe" placeholder="Número de teléfono ">
                                             <label for="celular_recibe">Celular</label>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
 
 
@@ -127,21 +126,3 @@
             </div>
         </div>
 
-        <script>
-            function handleDireccionChange() {
-                var tipoDireccion = document.getElementById('tipo_direccion').value;
-                var exportacionFields = document.getElementById('exportacionFields');
-                var hologramasFields = document.getElementById('hologramasFields');
-
-                // Ocultar ambos conjuntos de campos por defecto
-                exportacionFields.style.display = 'none';
-                hologramasFields.style.display = 'none';
-
-                // Mostrar los campos según el tipo de dirección seleccionado
-                if (tipoDireccion === '1') { // Exportación
-                    exportacionFields.style.display = 'block';
-                } else if (tipoDireccion === '3') { // Envío de hologramas
-                    hologramasFields.style.display = 'block';
-                }
-            }
-        </script>

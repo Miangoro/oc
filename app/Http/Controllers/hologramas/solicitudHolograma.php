@@ -6,7 +6,13 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\empresa;
 use App\Models\solicitudHolograma as ModelsSolicitudHolograma;
+use App\Models\direcciones;
+use App\Models\empresaNumCliente;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
+
 
 class solicitudHolograma extends Controller
 {
@@ -81,17 +87,22 @@ class solicitudHolograma extends Controller
                 //$numero_cliente = \App\Models\Empresa::where('id_empresa', $user->id_empresa)->value('razon_social');
                 $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
 
+                $marca = \App\Models\Marcas::where('id_marca', $user->id_marca)->value('marca');
+                $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');
+                //el segundo es el nombre de la variable del usuario
+                $name = \App\Models\User::where('id', $user->id_solicitante)->value('name');
+
 
                 $nestedData = [
                     'fake_id' => ++$ids,
                     'id_solicitud' => $user->id_solicitud,
                     'folio' => $user->folio,
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
-                    'id_empresa' => $user->numero_cliente,
-                    'id_solicitante' => $user->id_solicitante,
-                    'id_marca' => $user->id_marca,
+                    'id_empresa' => $user->id_empresa,
+                    'id_solicitante' => $name,
+                    'id_marca' => $marca, // Asignar el nombre de la marca a id_marca
                     'cantidad_hologramas' => $user->cantidad_hologramas,
-                    'id_direccion' => $user->id_direccion,
+                    'id_direccion' => $direccion,
                     'comentarios' => $user->comentarios,
                 ];
 
@@ -108,4 +119,104 @@ class solicitudHolograma extends Controller
         ]);
     }
 
+    //Metodo para eliminar
+    public function destroy($id_solicitud)
+    {
+        $clase = ModelsSolicitudHolograma::findOrFail($id_solicitud);
+        $clase->delete();
+
+        return response()->json(['success' => 'Clase eliminada correctamente']);
+    }
+
+
+    //Metodo para registrar
+
+    public function store(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['error' => 'Usuario no autenticado'], 401);
+        }
+        
+        // Validar los datos recibidos del formulario
+        $request->validate([
+            'folio' => 'required|string|max:255',
+            'id_empresa' => 'required|integer',
+            'id_marca' => 'required|integer',
+            'cantidad_hologramas' => 'required|integer',
+            'id_direccion' => 'required|integer',
+            'comentarios' => 'nullable|string|max:1000',
+        ]);
+    
+        // Crear una nueva instancia del modelo Hologramas
+        $holograma = new ModelsSolicitudHolograma();
+        $holograma->folio = $request->folio;
+        $holograma->id_empresa = $request->id_empresa;
+        $holograma->id_marca = $request->id_marca;
+        $holograma->id_solicitante = Auth::user()->id; // Obtiene el ID del usuario actual
+        $holograma->cantidad_hologramas = $request->cantidad_hologramas;
+        $holograma->id_direccion = $request->id_direccion;
+        $holograma->comentarios = $request->comentarios;
+    
+        // Guardar el nuevo registro en la base de datos
+        $holograma->save();
+    
+        // Retornar una respuesta JSON indicando éxito
+        return response()->json(['success' => 'Solicitud de Hologramas registrada correctamente']);
+    }
+    
+    
+    // Método para obtener una guía por ID
+    public function edit($id_solicitud)
+    {
+        try {
+            $holograma = ModelsSolicitudHolograma::findOrFail($id_solicitud);
+            return response()->json($holograma);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener la guía'], 500);
+        }
+    }
+
+
+    // Método para actualizar un registro existente
+    public function update(Request $request, $id_solicitud)
+    {
+        try {
+            // Encuentra la solicitud de hologramas por su ID
+            $holograma = ModelsSolicitudHolograma::findOrFail($id_solicitud);
+    
+            // Actualiza los campos con los datos del formulario
+            $holograma->folio = $request->input('edit_folio');
+            $holograma->id_empresa = $request->input('edit_id_empresa');
+            $holograma->id_marca = $request->input('edit_id_marca');
+            $holograma->id_solicitante = Auth::user()->id; // Actualiza el ID del solicitante con el ID del usuario actual
+            $holograma->cantidad_hologramas = $request->input('edit_cantidad_hologramas');
+            $holograma->id_direccion = $request->input('edit_id_direccion');
+            $holograma->comentarios = $request->input('edit_comentarios');
+    
+            // Guarda los cambios en la base de datos
+            $holograma->save();
+    
+            // Retorna una respuesta exitosa
+            return response()->json(['success' => 'Solicitud actualizada correctamente']);
+        } catch (\Exception $e) {
+            // Maneja cualquier error que ocurra durante el proceso
+            return response()->json(['error' => 'Error al actualizar la solicitud'], 500);
+        }
+    }
+    
+
+
+    public function ModelsSolicitudHolograma($id)
+    {
+        // Cargar la solicitud de holograma con la relación de la empresa
+        $datos = ModelsSolicitudHolograma::with('empresa', 'direcciones', 'user', 'empresanumcliente')->findOrFail($id);
+
+        // Pasar los datos a la vista del PDF
+        $pdf = Pdf::loadView('pdfs.solicitudDeHologramas', ['datos' => $datos]);
+    
+        // Generar y devolver el PDF
+        return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
+    }
+    
+    
 }

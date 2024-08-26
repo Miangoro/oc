@@ -1,5 +1,5 @@
 <!-- Add New Lote Envasado Modal -->
-<div class="modal fade" id="addHologramas" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="editHologramas" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -8,32 +8,34 @@
                     <h4 class="address-title mb-2">Registrar nueva Solicitud de Hologramas</h4>
                     <p class="address-subtitle"></p>
                 </div>
-                <form id="addHologramasForm">
+                <form id="editHologramasForm">
                     @csrf
+{{--                     <input type="hidden" id="edit_id_solicitud" name="id_solicitud">
+ --}}
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="folio" name="folio" placeholder="Ingresa el folio de solicitud" aria-label="Ingrese el folio" required />
+                        <input type="text" class="form-control" id="edit_folio" name="edit_folio" placeholder="Ingresa el folio de solicitud" aria-label="Ingrese el folio" required />
                         <label for="folio">Ingresa el folio de solicitud</label>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="obtenerMarcas(); obtenerDirecciones();" id="id_empresa" name="id_empresa" class="select2 form-select" required>
+                                <select onchange="editobtenerMarcas(); editobtenerDirecciones();" id="edit_id_empresa" name="edit_id_empresa" class="select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($Empresa as $cliente)
                                         <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
                                     @endforeach
                                 </select>
-                                <label for="id_empresa">Cliente</label>
+                                <label for="edit_id_empresa">Cliente</label>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="select2 form-select id_marca" id="id_marca" name="id_marca" required>
+                                <select class="select2 form-select id_marca" id="edit_id_marca" name="edit_id_marca" required>
                                     <option value="" selected>Selecciona una marca</option>
                                 </select>
-                                <label for="id_marca">Marca</label>
+                                <label for="edit_id_marca">Marca</label>
                             </div>
                         </div>
                     </div>
@@ -42,21 +44,21 @@
 
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" id="cantidad_hologramas" name="cantidad_hologramas" placeholder="Número de hologramas solicitados" required />
-                                <label for="cantidad_hologramas">Número de hologramas solicitados</label>
+                                <input class="form-control" type="number" id="edit_cantidad_hologramas" name="edit_cantidad_hologramas" placeholder="Número de hologramas solicitados" required />
+                                <label for="edit_cantidad_hologramas">Número de hologramas solicitados</label>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-floating form-floating-outline mb-6">
-                        <select class="select2 form-select id_direccion" id="id_direccion" name="id_direccion" required>
+                        <select class="select2 form-select edit_id_direccion" id="edit_id_direccion" name="edit_id_direccion" required>
                             <option value="" selected>Selecciona una dirección</option>
                         </select>
-                        <label for="id_direccion">Dirección a la que se enviará</label>
+                        <label for="edit_id_direccion">Dirección a la que se enviará</label>
                     </div>
                     <div class="form-floating form-floating-outline mb-5">
-                        <textarea name="comentarios" class="form-control h-px-100" id="comentarios" placeholder="Observaciones..."></textarea>
-                        <label for="comentarios">Comentarios</label>
+                        <textarea name="edit_comentarios" class="form-control h-px-100" id="edit_comentarios" placeholder="Observaciones..."></textarea>
+                        <label for="edit_comentarios">Comentarios</label>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
@@ -72,8 +74,8 @@
 
 
 <script>
-    function obtenerMarcas() {
-        var empresa = $("#id_empresa").val();
+    function editobtenerMarcas() {
+        var empresa = $("#edit_id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
@@ -90,7 +92,7 @@
                 if (response.marcas.length == 0) {
                     contenido = '<option value="">Sin marcas registradas</option>';
                 }
-                $('#id_marca').html(contenido);
+                $('#edit_id_marca').html(contenido);
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');
@@ -98,8 +100,8 @@
         });
     }
 
-    function obtenerDirecciones() {
-        var empresa = $("#id_empresa").val();
+    function editobtenerDirecciones() {
+        var empresa = $("#edit_id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
@@ -121,7 +123,7 @@
                 if (response.direcciones.length == 0) {
                     contenido = '<option value="">Sin lotes a granel registrados</option>';
                 }
-                $('.id_direccion').html(contenido);
+                $('.edit_id_direccion').html(contenido);
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');

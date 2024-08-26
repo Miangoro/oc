@@ -56,6 +56,7 @@
           <th>Marca</th>
           <th>cantidad hologramas</th>
           <th>direccion</th>
+          <th>pdf</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -68,8 +69,8 @@
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
  @include('_partials/_modals/modal-add-solicitudHologramas')
-{{-- @include('_partials/_modals/modal-edit-lotesEnvasado')
- --}}
+@include('_partials/_modals/modal-edit-solicitudHologramas')
+
 
 <!-- /Modal -->
 @endsection

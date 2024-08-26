@@ -4,30 +4,132 @@
 
 'use strict';
 
-// Datatable (jquery)
-$(function () {
-    // Datatable (jquery)
-    // Variable declaration for table
-    var dt_user_table = $('.datatables-users'),
-      select2Elements = $('.select2'),
-      userView = baseUrl + 'app/user/view/account',
-      offCanvasForm = $('#addHologramas');
-  
-    // Función para inicializar Select2 en elementos específicos
-    function initializeSelect2($elements) {
-      $elements.each(function () {
-        var $this = $(this);
-        select2Focus($this);
-        $this.wrap('<div class="position-relative"></div>').select2({
-          placeholder: 'Selecciona cliente',
-          dropdownParent: $this.parent()
-        });
+// Agregar nuevo registro
+// validating form and updating user's data
+const addHologramasForm = document.getElementById('addHologramasForm');
+
+// Validación del formulario
+const fv = FormValidation.formValidation(addHologramasForm, {
+  fields: {
+    folio: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor introduzca un folio'
+        }
+      }
+    },
+    id_empresa: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione un cliente'
+        }
+      }
+    },
+    id_marca: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese una marca'
+        }
+      }
+    },
+    id_solicitante: {
+      validators: {
+        notEmpty: {
+          message: 'falta el ID del usuario'
+        }
+      }
+    },
+    cantidad_hologramas: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese el numero de hologramas solicitados'
+        }
+      }
+    },
+    id_direccion: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese un destino de lote'
+        }
+      }
+    }
+
+
+  },
+  plugins: {
+    trigger: new FormValidation.plugins.Trigger(),
+    bootstrap5: new FormValidation.plugins.Bootstrap5({
+      eleValidClass: '',
+      rowSelector: function (field, ele) {
+        return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+      }
+    }),
+    submitButton: new FormValidation.plugins.SubmitButton(),
+    autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  //e.preventDefault();
+  var formData = new FormData(addHologramasForm);
+
+  $.ajax({
+    url: '/hologramas/store', // Actualiza con la URL correcta
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      $('#addHologramas').modal('hide');
+      $('.datatables-users').DataTable().ajax.reload();
+
+      // Mostrar alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.success,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+    },
+    error: function (xhr) {
+      // Mostrar alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al registrar el lote envasado',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
       });
     }
-  
-    // Inicialización de Select2 para elementos con clase .select2
-    initializeSelect2(select2Elements);
-  
+  });
+});
+
+
+
+$(function () {
+  // Datatable (jquery)
+  // Variable declaration for table
+  var dt_user_table = $('.datatables-users'),
+    select2Elements = $('.select2'),
+    userView = baseUrl + 'app/user/view/account',
+    offCanvasForm = $('#addHologramas');
+
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        placeholder: 'Selecciona una opcion',
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+
+  // Inicialización de Select2 para elementos con clase .select2
+  initializeSelect2(select2Elements);
+
 
   // ajax setup
   $.ajaxSetup({
@@ -54,7 +156,7 @@ $(function () {
         { data: 'id_marca' },
         { data: 'cantidad_hologramas' },
         { data: 'id_direccion' },
-
+        { data: '' },
         { data: 'action' }
 
       ],
@@ -94,7 +196,7 @@ $(function () {
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center user-name">' +
               '<div class="avatar-wrapper">' +
-/*               '<div class="avatar avatar-sm me-3">' + */
+              /*               '<div class="avatar avatar-sm me-3">' + */
 
               '</d iv>' +
               '</div>' +
@@ -117,33 +219,33 @@ $(function () {
             return '<span class="user-email">' + $email + '</span>';
           }
         }, */
-/*         {
+        /*         {
+                  // email verify
+                  targets: 4,
+                  className: 'text-center',
+                  render: function (data, type, full, meta) {
+                    var $verified = full['regimen'];
+                    if($verified=='Persona física'){
+                      var $colorRegimen = 'info';
+                    }else{
+                      var $colorRegimen = 'warning';
+                    }
+                    return `${
+                      $verified
+                        ? '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
+                        : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
+                    }`;
+                  }
+                },*/
+        {
           // email verify
-          targets: 4,
+          targets: 8,
           className: 'text-center',
           render: function (data, type, full, meta) {
-            var $verified = full['regimen'];
-            if($verified=='Persona física'){
-              var $colorRegimen = 'info';
-            }else{
-              var $colorRegimen = 'warning';
-            }
-            return `${
-              $verified
-                ? '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-                : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-            }`;
+            var $id = full['id_solicitud'];
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_solicitud']}" data-registro="${full['razon_social']} "></i>`;
           }
         },
-        /* {
-          // email verify
-          targets: 5,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $id = full['id_empresa'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_empresa']}" data-registro="${full['razon_social']} "></i>`;
-          }
-        },*/
         {
           // Actions
           targets: -1,
@@ -153,8 +255,10 @@ $(function () {
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center gap-50">' +
-              `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_solicitud']}" data-bs-toggle="offcanvas" data-bs-target="#editCategoria"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_solicitud']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
+              '<div class="dropdown-menu dropdown-menu-end m-0">' +
+              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#editHologramas" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar solicitud</a>` +
+              `<a data-id="${full['id_solicitud']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar solicitud</a>` +
 /*               '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
  */              '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
@@ -185,11 +289,11 @@ $(function () {
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
         paginate: {
-                "sFirst":    "Primero",
-                "sLast":     "Último",
-                "sNext":     "Siguiente",
-                "sPrevious": "Anterior"
-              }
+          "sFirst": "Primero",
+          "sLast": "Último",
+          "sNext": "Siguiente",
+          "sPrevious": "Anterior"
+        }
       },
 
 
@@ -207,7 +311,7 @@ $(function () {
               text: '<i class="ri-printer-line me-1" ></i>Print',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3],
+                columns: [1, 2, 3, 4, 5, 6, 7],
                 // prevent avatar to be print
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -245,7 +349,7 @@ $(function () {
               text: '<i class="ri-file-text-line me-1" ></i>Csv',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3],
+                columns: [1, 2, 3, 4, 5, 6, 7],
                 // prevent avatar to be print
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -270,7 +374,7 @@ $(function () {
               text: '<i class="ri-file-excel-line me-1"></i>Excel',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3],
+                columns: [1, 2, 3, 4, 5, 6, 7],
                 // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -295,8 +399,7 @@ $(function () {
               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3],
-                // prevent avatar to be display
+                columns: [1, 2, 3, 4, 5, 6, 7],                // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
                     if (inner.length <= 0) return inner;
@@ -320,7 +423,7 @@ $(function () {
               text: '<i class="ri-file-copy-line me-1"></i>Copy',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3],
+                columns: [1, 2, 3, 4, 5, 6, 7],
                 // prevent avatar to be copy
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -365,18 +468,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -389,7 +492,7 @@ $(function () {
 
   // Eliminar registro
   $(document).on('click', '.delete-record', function () {
-    var id_categoria = $(this).data('id'),
+    var id_solicitud = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
 
     // hide responsive modal in small screen
@@ -414,7 +517,7 @@ $(function () {
         // delete the data
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}categorias-list/${id_categoria}`,
+          url: `${baseUrl}hologramas-list/${id_solicitud}`,
           success: function () {
             dt_user.draw();
           },
@@ -445,35 +548,82 @@ $(function () {
     });
   });
 
-  // Agregar nueva categoría
-  $('#addNewCategoryForm').on('submit', function (e) {
-    e.preventDefault();
-    var formData = $(this).serialize();
+
+  //Reciben los datos del pdf
+  $(document).on('click', '.pdf', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+    var iframe = $('#pdfViewer');
+    iframe.attr('src', '../solicitud_de_holograma/' +id );
+
+    $("#titulo_modal").text("Solicitud de entrega de hologramas");
+    $("#subtitulo_modal").text(registro);
+
+
+  });
+
+
+  // Editar registro
+  // Editar registro
+  $(document).on('click', '.edit-record', function () {
+    var id_solicitud = $(this).data('id');
+
+    $.get('/solicitud_holograma/edit/' + id_solicitud, function (data) {
+      // Rellenar el formulario con los datos obtenidos
+      $('#edit_id_solicitud').val(data.id_solicitud);
+      $('#edit_folio').val(data.folio);
+      $('#edit_id_empresa').val(data.id_empresa).trigger('change');
+      $('#edit_id_marca').val(data.id_marca).trigger('change');
+      $('#edit_id_solicitante').val(data.id_solicitante);
+      $('#edit_cantidad_hologramas').val(data.cantidad_hologramas);
+      $('#edit_id_direccion').val(data.id_direccion).trigger('change');
+      $('#edit_comentarios').val(data.comentarios);
+
+      // Mostrar el modal de edición
+      $('#editHologramas').modal('show');
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error: ' + textStatus + ' - ' + errorThrown);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos de la solicitud de holograma',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    });
+  });
+
+  // Manejo del envío del formulario de edición de Hologramas
+  $('#editHologramasForm').on('submit', function (e) {
+    e.preventDefault(); // Evita el comportamiento predeterminado del formulario
+
+    var formData = $(this).serialize(); // Serializa los datos del formulario
+    var id_solicitud = $('#edit_id_solicitud').val(); // Obtiene el ID de la solicitud
 
     $.ajax({
-      url: '/categorias',
-      type: 'POST',
-      data: formData,
+      url: '/solicitud_holograma/update/' + id_solicitud, // URL de la ruta de actualización
+      method: 'PUT', // Método HTTP
+      data: formData, // Datos enviados
       success: function (response) {
-        $('#offcanvasAddUser').offcanvas('hide');
-        $('#addNewCategoryForm')[0].reset();
-        dt_user.ajax.reload();
         Swal.fire({
           icon: 'success',
           title: '¡Éxito!',
-          text: response.success,
+          text: 'Solicitud actualizada correctamente',
           customClass: {
             confirmButton: 'btn btn-success'
           }
+        }).then(function () {
+          $('#editHologramas').modal('hide'); // Cierra el modal de edición
+          $('.datatables-users').DataTable().ajax.reload(); // Recarga la tabla de datos
         });
       },
-      error: function (xhr) {
-        console.log('Error:', xhr.responseText);
-
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.error('Error: ' + textStatus + ' - ' + errorThrown);
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: 'Error al agregar la categoría',
+          text: 'Error al actualizar la solicitud',
           customClass: {
             confirmButton: 'btn btn-danger'
           }
@@ -482,74 +632,7 @@ $(function () {
     });
   });
 
-// Editar registro
-$(document).ready(function() {
-  // Abrir el modal y cargar datos para editar
-  $('.datatables-users').on('click', '.edit-record', function() {
-      var id_categoria = $(this).data('id');
 
-      // Realizar la solicitud AJAX para obtener los datos de la clase
-      $.get('/categorias-list/' + id_categoria + '/edit', function(data) {
-          // Rellenar el formulario con los datos obtenidos
-          $('#edit_id_categoria').val(data.id_categoria);
-          $('#edit_categoria').val(data.categoria);
 
-          // Mostrar el modal de edición
-          $('#editCategoria').offcanvas('show');
-      }).fail(function() {
-          Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al obtener los datos de la clase',
-              customClass: {
-                  confirmButton: 'btn btn-danger'
-              }
-          });
-      });
-  });
-
-  // Manejar el envío del formulario de edición
-  $('#editCategoriaForm').on('submit', function(e) {
-      e.preventDefault();
-
-      var formData = $(this).serialize();
-      var id_categoria = $('#edit_id_categoria').val(); // Obtener el ID de la clase desde el campo oculto
-
-      $.ajax({
-          url: '/categorias-list/' + id_categoria,
-          type: 'PUT',
-          data: formData,
-          success: function(response) {
-              $('#editCategoria').offcanvas('hide'); // Ocultar el modal de edición
-              $('#editCategoriaForm')[0].reset(); // Limpiar el formulario
-
-              // Mostrar alerta de éxito
-              Swal.fire({
-                  icon: 'success',
-                  title: '¡Éxito!',
-                  text: response.success,
-                  customClass: {
-                      confirmButton: 'btn btn-success'
-                  }
-              });
-
-              // Recargar los datos en la tabla sin reinicializar DataTables
-              $('.datatables-users').DataTable().ajax.reload();
-          },
-          error: function(xhr) {
-              // Mostrar alerta de error
-              Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: 'Error al actualizar la clase',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
-          }
-      });
-  });
-});
-
-//end
+  //end
 });

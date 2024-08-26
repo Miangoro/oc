@@ -433,7 +433,6 @@ Route::get('/acta_circunstanciada_unidades_produccion', [CartaAsignacionControll
 Route::get('/solicitud_Info_ClienteNOM-199', [CartaAsignacionController::class, 'solicitudInfoNOM_199'])->name('solicitud_Info_ClienteNOM-199');
 Route::get('/inspeccion_geo_referenciacion', [CartaAsignacionController::class, 'InspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion');
 Route::get('/dictamen_cumplimiento_mezcal_granel', [CartaAsignacionController::class, 'dictamenDeCumplimientoGranel'])->name('dictamen-cumplimiento-granel');
-Route::get('/solicitud_de_holograma', [CartaAsignacionController::class, 'solicitudHologramas'])->name('solicitudDeHologramas');
 
 
 //Etiquetas Etiqueta_Barrica
@@ -534,7 +533,9 @@ Route::get('/pre-registro_predios/{id_predio}', [prediosController::class, 'PdfP
 Route::get('/domicilios/destinos', [DestinosController::class, 'UserManagement'])->name('domicilio-destinos');
 Route::resource('/destinos-list', DestinosController::class);
 Route::delete('/destinos-list/{id_direccion}', [DestinosController::class, 'destroy'])->name('destinos-list.destroy');
-Route::post('destinos-register/{id_direccion}', [DestinosController::class, 'store'])->name('destinos-register.store');
+Route::post('/destinos-register/{id_direccion}', [DestinosController::class, 'store'])->name('destinos-register.store');
+route::get('/destinos-list/{id_direccion}/edit', [DestinoController::class, 'edit'])->name('destinos.edit');
+route::post('/destinos-update/{id_direccion}', [DestinosController::class, 'update'])->name('destinos.update');
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
@@ -614,7 +615,7 @@ Route::put('/documentos/{id}', [DocumentosController::class, 'update']);
 
 Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado');
 Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
-Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias.update');
+Route::post('/update', [GuiasController::class, 'update'])->name('guias.update');
 
 
 
@@ -638,3 +639,7 @@ Route::resource('certificados-list',Certificado_InstalacionesController::class);
 Route::delete('certificados/{id}', [Certificado_InstalacionesController::class, 'destroy']);
 
 Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
+Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
+Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
+Route::put('/solicitud_holograma/update/{id_solicitud}', [solicitudHolograma::class, 'update']);
+Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSolicitudHolograma'])->name('solicitudDeHologramas');
