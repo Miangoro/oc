@@ -267,9 +267,9 @@
         la revisión de procesos de producción del producto Mezcal, su envasado y comercialización; y con fundamento
         en los artículos 56 Fracción I y 60 fracción I de la Ley de Infraestructura de la Calidad que establece el
         funcionamiento de las Unidades de Inspección.</p>
-        <p>Después de realizar la inspección de las instalaciones en fecha del ____de ______del 20 ___partiendo del acta
-        circunstanciada o número de inspección: _____</p>
-        <p class="textp">Nombre de la empresa: _______________________________________________________</p>
+        <p>Después de realizar la inspección de las instalaciones en fecha del <span class="font-lucida-sans-seminegrita"><u>{{ $fecha_inspeccion }}</u></span> partiendo del acta
+        circunstanciada o número de inspección: <u><span  class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio }}</u></span></p>
+        <p class="textp">Nombre de la empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social }}</u></p>
     </div>
     <table>
         <tbody id="tabla">
@@ -277,32 +277,33 @@
             <td style="text-align: justify;">
             <span class="font-lucida-sans-seminegrita">Domicilio Fiscal: <br>&nbsp;</span>
             </td>
-                <td style="text-align: center; vertical-align: middle;"></td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal }}</td>
             </tr>
             <tr>
             <td>
             <span class="font-lucida-sans-seminegrita">Domicilio de almacén: <br>&nbsp;</span>
             </td>
 
-                <td style="text-align: center; vertical-align: middle;"></td>
+                <td style="text-align: center; vertical-align: middle;">{{ $datos->instalaciones->direccion_completa }}</td>
             </tr>
             <tr>
             <td>
             <span class="font-lucida-sans-seminegrita">Categorías del mezcal: <br>&nbsp;</span>
             </td>
-                <td style="text-align: center; vertical-align: middle;"></td>
+            <td style="text-align: center; vertical-align: middle;">{{ !empty($categorias) && is_array($categorias) ? implode(', ', $categorias) : '' }}
+            </td>
             </tr>
             <tr>
                 <td class="font-lucida-sans-seminegrita">Clases de mezcal que almacena: <br>&nbsp;</td>
-                <td style="text-align: center; vertical-align: middle;"></td>
+                <td style="text-align: center; vertical-align: middle;">{{ !empty($clases) && is_array($clases) ? implode(', ', $clases) : '' }}</td>
             </tr>
             <tr>
                 <td class="font-lucida-sans-seminegrita">Fecha de emisión de dictamen: <br>&nbsp;</td>
-                <td style="text-align: center; vertical-align: middle;"></td>
+                <td style="text-align: center; vertical-align: middle;">{{ $fecha_emision }}</td>
             </tr>
             <tr>
                 <td class="font-lucida-sans-seminegrita">Fecha de vigencia del dictamen: <br>&nbsp;</td>
-                <td style="text-align: center; vertical-align: middle;"></td>
+                <td style="text-align: center; vertical-align: middle;">{{ $fecha_vigencia }}</td>
             </tr>
         </tbody>
     </table>

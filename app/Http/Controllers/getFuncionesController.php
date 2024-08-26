@@ -57,6 +57,7 @@ class getFuncionesController extends Controller
             'guias' => $empresa->guias(),
             'predios' => $empresa->predios(),
             'predio_plantacion' => $empresa->predio_plantacion(),
+            'direcciones'=> $empresa->direcciones(),
 
 
 

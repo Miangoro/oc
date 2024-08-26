@@ -128,7 +128,7 @@
             padding: 0;
             position: absolute;
             right: 70px;
-            top: 775px;
+            top: 710px;
             font-family: 'Arial Negrita' !important;
         }
 
@@ -210,37 +210,37 @@
 129 para la revisión de procesos de producción del producto Mezcal, su envasado y comercialización;
 y con fundamento en los artículos 56 Fracción I y 60 fracción I de la Ley de Infraestructura de la
 Calidad que establece el funcionamiento de las Unidades de Inspección.</p>
-<p class="text">Después de realizar la inspección de las instalaciones en fecha del ____de ______del 20
-___partiendo del acta circunstanciada o número de inspección: _____ se otorga el dictamen de
+<p class="text">Después de realizar la inspección de las instalaciones en fecha del <span class="font-lucida-sans-seminegrita"><u>{{ $fecha_inspeccion }}</u></span>
+partiendo del acta circunstanciada o número de inspección: <u><span  class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->num_servicio }}</u></span> se otorga el dictamen de
 Instalaciones a:</p>
 
-<p class="textp">Nombre del productor/empresa: _______________________________________________________</p>
+<p class="textp">Nombre del productor/empresa: <u>{{ $datos->inspeccione->solicitud->empresa->razon_social }}</u></p>
 
 <table>
 	<tbody>
 		<tr>
 			<td><strong>Domicilio Fiscal:</strong></td>
-			<td class="center">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni eum velit impedit minima earum, eaque sunt.?</td>
+			<td class="center">{{ $datos->inspeccione->solicitud->empresa->domicilio_fiscal }}</td>
 		</tr>
 		<tr>
 			<td><strong>Domicilio del área de maduración:</strong></td>
-			<td class="center">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni eum velit impedit minima earum, eaque sunt.?</td>
+			<td class="center">{{ $datos->instalaciones->direccion_completa }}</td>
 		</tr>
 		<tr>
 			<td><strong>Categorías del mezcal:</strong></td>
-			<td class="center">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni eum velit impedit minima earum, eaque sunt.?</td>
+			<td class="center">{{ !empty($categorias) && is_array($categorias) ? implode(', ', $categorias) : '' }}</td>
 		</tr>
 		<tr>
 			<td><strong>Clases de mezcal que producen:</strong></td>
-			<td class="center">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni eum velit impedit minima earum, eaque sunt.?</td>
+			<td class="center">{{ !empty($clases) && is_array($clases) ? implode(', ', $clases) : '' }}</td>
 		</tr>
 		<tr>
 			<td><strong>Fecha de emisión de dictamen:</strong></td>
-			<td class="center">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni eum velit impedit minima earum, eaque sunt.?</td>
+			<td class="center">{{ $fecha_emision }}</td>
 		</tr>
 		<tr>
 			<td><strong>Fecha de vigencia del dictamen:</strong></td>
-			<td class="center">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Magni eum velit impedit minima earum, eaque sunt.?</td>
+			<td class="center">{{ $fecha_vigencia }}</td>
 		</tr>
 	</tbody>
 </table>

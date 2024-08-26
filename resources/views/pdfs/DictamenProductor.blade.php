@@ -227,10 +227,18 @@
         }
 
         .pie {
-            margin-top: 60px;
             text-align: right;
             font-size: 9px;
             line-height: 1;
+            position: fixed;
+            bottom: -10;
+            left: 0;   
+            right: 0;  
+            width: calc(100% - 40px); 
+            height: 45px;
+            margin-right: 30px; 
+            padding: 10px 0px;
+            font-family: 'Lucida Sans Unicode';
         }
 
         .negrita{

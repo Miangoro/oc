@@ -24,6 +24,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'id',
         'name',
         'email',
         'password',
@@ -74,5 +75,11 @@ class User extends Authenticatable
     public function inspecciones()
     {
         return $this->hasMany(inspecciones::class, 'id_inspector', 'id');
+    }
+
+
+    public function solicitudesHologramas()
+    {
+        return $this->hasMany(solicitudHolograma::class, 'id_solicitante', 'id_empresa');
     }
 }

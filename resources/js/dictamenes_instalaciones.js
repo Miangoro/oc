@@ -65,10 +65,11 @@
        columns: [
          // columns according to JSON
          { data: '' },
-         { data: 'id_dictamen' },
+         { data: '' },
          { data: 'tipo_dictamen' },
          { data: 'num_dictamen' },
-         { data: 'id_inspeccion' },
+         { data: 'num_servicio' },
+         { data: 'razon_social' },
          { data: 'fecha_emision' },
          { data: '' },
          { data: 'action' }
@@ -124,21 +125,21 @@
            // Tabla 3
            targets: 3,
            render: function (data, type, full, meta) {
-             var $email = full['num_dictamen'];
-             return '<span class="user-email">' + $email + '</span>';
+             var $num_dictamen = full['num_dictamen'];
+             return '<span class="fw-bold">' + $num_dictamen + '</span>';
            }
          }, 
          {
             // Tabla 4
             targets: 4,
             render: function (data, type, full, meta) {
-              var $email2 = full['id_inspeccion'];
-              return '<span class="user-email">' + $email2 + '</span>';
+              var $num_servicio = full['num_servicio'];
+              return '<span class="user-email">' + $num_servicio + '</span>';
             }
           }, 
           {
             // Tabla 5
-            targets: 5,
+            targets: 6,
             render: function (data, type, full, meta) {
               var $fecha = full['fecha_emision'];
               return '<span class="user-email">' + $fecha + '</span>';
@@ -146,7 +147,7 @@
           },
           {
             // Abre el pdf del dictamen
-            targets: 6,
+            targets: 7,
             className: 'text-center',
             render: function (data, type, full, meta) {
               var $id = full['id_guia'];

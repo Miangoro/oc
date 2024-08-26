@@ -42,7 +42,7 @@
 <!-- Users List Table -->
 <div class="card">
   <div class="card-header pb-0">
-    <h3 class="card-title mb-0">Listas de Lotes envasados</h3>
+    <h3 class="card-title mb-0">Solicitud de Hologramas</h3>
   </div>
   <div class="card-datatable table-responsive">
     <table class="datatables-users table">
@@ -51,13 +51,12 @@
           <th></th>
           <th>Id</th>
           <th>folio</th>
-          <th>razon social</th>
           <th>empresa</th>
           <th>Solicitante</th>
           <th>Marca</th>
           <th>cantidad hologramas</th>
           <th>direccion</th>
-          <th>Comentarios</th>
+          <th>pdf</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -69,9 +68,9 @@
 
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
-{{-- @include('_partials/_modals/modal-add-lotesEnvasado')
-@include('_partials/_modals/modal-edit-lotesEnvasado')
- --}}
+ @include('_partials/_modals/modal-add-solicitudHologramas')
+@include('_partials/_modals/modal-edit-solicitudHologramas')
+
 
 <!-- /Modal -->
 @endsection

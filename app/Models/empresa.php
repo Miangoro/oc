@@ -58,6 +58,14 @@ class empresa extends Model
         return Predios::where('id_empresa', $this->id_empresa)->get();
     }
 
+    public function solicitudHolograma(){
+        return solicitudHolograma::where('id_empresa', $this->id_empresa)->get();
+    }
+
+    public function direcciones(){
+        return direcciones::where('id_empresa', $this->id_empresa)->get();
+    }
+
     public function predio_plantacion(){
         return Predios::where('id_empresa', $this->id_empresa)
         ->join('predio_plantacion AS pl', 'predios.id_predio', '=', 'pl.id_predio')
@@ -65,11 +73,6 @@ class empresa extends Model
         ->select('pl.id_plantacion','t.nombre', 't.cientifico', 'pl.num_plantas', 'pl.anio_plantacion')
         ->get();
     }
-
-
-    /*public function solicitudes(){
-        return solicitudesModel::where('id_empresa', $this->id_empresa)->get();
-    }*/
 
 
     public function solicitudes()
