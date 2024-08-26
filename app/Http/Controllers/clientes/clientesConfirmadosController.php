@@ -167,7 +167,7 @@ public function editarCliente($id)
         JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
         JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
         JOIN empresa_contrato c ON (c.id_empresa = e.id_empresa)
-        WHERE e.id_empresa=' . $id);
+        WHERE e.id_empresa=' . $id.' Group by a.id_actividad');
         
         $fecha_cedula = Helpers::formatearFecha($res[0]->fecha_cedula);
         $fecha_vigencia = Helpers::formatearFecha($res[0]->fecha_vigencia);
@@ -225,7 +225,7 @@ public function editarCliente($id)
 
         if (empty($request->input('search.value'))) {
             $users = empresa::join('empresa_num_cliente AS n', 'empresa.id_empresa', '=', 'n.id_empresa')
-                ->select('empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
+                ->select('empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
                 ->where('tipo', 2)->offset($start)
                 ->groupBy('empresa.id_empresa', 'empresa.razon_social',  'empresa.rfc', 'empresa.regimen', 'empresa.domicilio_fiscal', 'empresa.representante')
                 ->limit($limit)
@@ -235,7 +235,7 @@ public function editarCliente($id)
             $search = $request->input('search.value');
 
             $users = empresa::join('empresa_num_cliente AS n', 'empresa.id_empresa', '=', 'n.id_empresa')
-                ->select('empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
+                ->select('empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
                 ->where('tipo', 2)->where('id_empresa', 'LIKE', "%{$search}%")
                 ->orWhere('razon_social', 'LIKE', "%{$search}%")
                 ->orWhere('domicilio_fiscal', 'LIKE', "%{$search}%")

@@ -164,8 +164,8 @@
 
         .footer-text {
             text-align: center;
-            align-items: center;
-            justify-content: center;
+           
+            
             margin: 0;
             
         }

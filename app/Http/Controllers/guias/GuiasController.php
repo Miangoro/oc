@@ -7,6 +7,7 @@ use App\Models\guias;
 use App\Models\empresa;
 use App\Models\Predios;
 use App\Http\Controllers\Controller;
+use App\Models\Documentacion_url;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -144,7 +145,7 @@ class GuiasController  extends Controller
 
         return response()->json(['success' => 'Clase eliminada correctamente']);
     }
-    
+
     //Metodo para registrar
     public function store(Request $request)
     {
@@ -182,58 +183,78 @@ class GuiasController  extends Controller
 
 
 
-// Método para obtener una guía por ID
-public function edit($id_guia)
-{
-    try {
-        $guia = guias::findOrFail($id_guia);
-        return response()->json($guia);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al obtener la guía'], 500);
+    // Método para obtener una guía por ID
+    public function edit($id_guia)
+    {
+        try {
+            $guia = guias::findOrFail($id_guia);
+            return response()->json($guia);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener la guía'], 500);
+        }
     }
-}
 
-// Método para actualizar una guía existente
-public function update(Request $request, $id_guia)
-{
-    
+    // Método para actualizar una guía existente
+    public function update(Request $request)
+    {
 
-    try {
-        $guia = guias::findOrFail($id_guia);
-        $guia->id_empresa = $request->input('empresa');
-        $guia->numero_guias = $request->input('numero_guias');
-        $guia->id_predio = $request->input('predios');
-        $guia->id_plantacion = $request->input('plantacion');
-        $guia->num_anterior = $request->input('anterior');
-        $guia->num_comercializadas = $request->input('comercializadas');
-        $guia->mermas_plantas = $request->input('mermas');
-        $guia->numero_plantas = $request->input('plantas');
-        $guia->edad = $request->input('edad');
-        $guia->art = $request->input('art');
-        $guia->kg_maguey = $request->input('kg_maguey');
-        $guia->no_lote_pedido = $request->input('no_lote_pedido');
-        $guia->fecha_corte = $request->input('fecha_corte');
-        $guia->observaciones = $request->input('observaciones');
-        $guia->nombre_cliente = $request->input('nombre_cliente');
-        $guia->no_cliente = $request->input('no_cliente');
-        $guia->fecha_ingreso = $request->input('fecha_ingreso');
-        $guia->domicilio = $request->input('domicilio');
 
-        $guia->save();
+        try {
+            $guia = guias::findOrFail($request->id_guia);
+            $guia->id_empresa = $request->input('empresa');
+            $guia->numero_guias = $request->input('numero_guias');
+            $guia->id_predio = $request->input('predios');
+            $guia->id_plantacion = $request->input('plantacion');
+            $guia->num_anterior = $request->input('anterior');
+            $guia->num_comercializadas = $request->input('comercializadas');
+            $guia->mermas_plantas = $request->input('mermas');
+            $guia->numero_plantas = $request->input('plantas');
+            $guia->edad = $request->input('edad');
+            $guia->art = $request->input('art');
+            $guia->kg_maguey = $request->input('kg_maguey');
+            $guia->no_lote_pedido = $request->input('no_lote_pedido');
+            $guia->fecha_corte = $request->input('fecha_corte');
+            $guia->observaciones = $request->input('observaciones');
+            $guia->nombre_cliente = $request->input('nombre_cliente');
+            $guia->no_cliente = $request->input('no_cliente');
+            $guia->fecha_ingreso = $request->input('fecha_ingreso');
+            $guia->domicilio = $request->input('domicilio');
 
-        return response()->json(['success' => 'Guía actualizada correctamente']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al actualizar la guía'], 500);
+            $guia->save();
+
+            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+
+            foreach ($request->id_documento as $index => $id_documento) {
+                // Agregar nuevo documento si no existe
+                if ($request->hasFile('url') && isset($request->file('url')[$index])) {
+                    $file = $request->file('url')[$index];
+                    $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+
+                    $documentacion_url = new Documentacion_url();
+                    $documentacion_url->id_relacion = $guia->id_guia;
+                    $documentacion_url->id_documento = $id_documento;
+                    $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+                    $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+                    $documentacion_url->id_empresa = $request->empresa;
+                    $documentacion_url->save();
+                }
+            }
+
+            return response()->json(['success' => 'Guía actualizada correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al actualizar la guía'], 500);
+        }
     }
-}
 
- 
-      
 
-        //Metodo para llenar el pdf
-        public function guiasTranslado($id_guia)
-        {   
-            $res = DB::select('SELECT f.numero_cliente, p.nombre_productor, a.razon_social, p.nombre_predio, p.num_predio, a.razon_social, t.nombre, t.cientifico, s.num_plantas, s.anio_plantacion, e.id_guia, e.folio, e.id_empresa, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas,
+
+
+    //Metodo para llenar el pdf
+    public function guiasTranslado($id_guia)
+    {
+        $res = DB::select('SELECT f.numero_cliente, p.nombre_productor, a.razon_social, p.nombre_predio, p.num_predio, a.razon_social, t.nombre, t.cientifico, s.num_plantas, s.anio_plantacion, e.id_guia, e.folio, e.id_empresa, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas,
             e.art,e.kg_maguey,e.no_lote_pedido,e.fecha_corte, e.edad, e.nombre_cliente,e.no_cliente,e.fecha_ingreso,e.domicilio
             FROM guias e 
             JOIN predios p ON (e.id_predio = p.id_predio) 
@@ -242,8 +263,7 @@ public function update(Request $request, $id_guia)
             JOIN empresa a ON (a.id_empresa = e.id_empresa) 
             JOIN empresa_num_cliente f ON (f.id_empresa = e.id_empresa) 
             WHERE e.id_guia=' . $id_guia);
-            $pdf = Pdf::loadView('pdfs.GuiaDeTranslado',['datos' =>$res]);
-            return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
-        }
-
+        $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', ['datos' => $res]);
+        return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
+    }
 }
