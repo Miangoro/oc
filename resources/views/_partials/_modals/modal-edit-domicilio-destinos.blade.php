@@ -8,16 +8,16 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form id="EditDestinoForm" method="POST">
+                        <form id="EditDestinoForm">
                             @csrf
+                            <input type="hidden" id="edit_destinos_id" name="id_direccion">
+
                             <!-- Tipo de Dirección -->
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <select id="edit_tipo_direccion" name="tipo_direccion" class="form-select"
-                                            onchange="handleDireccionChange()">
-                                            <option value="" disabled selected>Selecciona el tipo de dirección
-                                            </option>
+                                        <select id="edit_tipo_direccion" name="tipo_direccion" class="form-select">
+                                            <option value="" disabled selected>Selecciona el tipo de dirección</option>
                                             <option value="1">Para exportación</option>
                                             <option value="2">Para venta nacional</option>
                                             <option value="3">Para envío de hologramas</option>
@@ -49,7 +49,7 @@
                                 <label for="direccion">Domicilio Completo</label>
                             </div>
                             <!-- Campos adicionales para exportación -->
-                            <div id="exportacionFields" style="display: none;">
+                            <div id="exportacionFieldsEdit" style="display: none;">
                                 <div class="row mb-4">
                                     <!-- Nombre del Destinatario -->
                                     <div class="col-md-12">
@@ -82,7 +82,7 @@
                             </div>
 
                             <!-- Campos adicionales para envío de hologramas -->
-                            <div id="hologramasFields" style="display: none;">
+                            <div id="hologramasFieldsEdit" style="display: none;">
                                 <div class="row mb-4">
                                     <!-- Correo -->
                                     <div class="col-md-12">
@@ -105,15 +105,13 @@
                                     </div><!-- Celular -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="tel" class="form-control" id="edit_celular_recibe"
+                                            <input type="text" class="form-control" id="edit_celular_recibe"
                                                 name="celular_recibe" placeholder="Número de teléfono">
                                             <label for="celular_recibe">Celular</label>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-
 
                             <div class="d-flex justify-content-end mt-3">
                                 <button type="submit" class="btn btn-primary me-2">Actualizar</button>
@@ -125,6 +123,4 @@
                 </div>
             </div>
         </div>
-
-        <script>
-        </script>
+        

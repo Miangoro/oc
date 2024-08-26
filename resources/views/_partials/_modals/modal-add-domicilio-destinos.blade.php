@@ -15,7 +15,7 @@
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
                                         <select id="tipo_direccion" name="tipo_direccion" class="form-select"
-                                            onchange="handleDireccionChange()">
+                                           >
                                             <option value="" disabled selected>Selecciona el tipo de dirección
                                             </option>
                                             <option value="1">Para exportación</option>
@@ -106,13 +106,12 @@
                                     </div><!-- Celular -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="tel" class="form-control" id="celular_recibe"
+                                            <input type="text" class="form-control" id="celular_recibe"
                                                 name="celular_recibe" placeholder="Número de teléfono ">
                                             <label for="celular_recibe">Celular</label>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
 
 
@@ -127,38 +126,3 @@
             </div>
         </div>
 
-        <script>
-function handleDireccionChange() {
-    var tipoDireccion = document.getElementById('tipo_direccion').value;
-    var exportacionFields = document.getElementById('exportacionFields');
-    var hologramasFields = document.getElementById('hologramasFields');
-
-    // Ocultar ambos conjuntos de campos por defecto
-    exportacionFields.style.display = 'none';
-    hologramasFields.style.display = 'none';
-
-    // Mostrar los campos según el tipo de dirección seleccionado
-    if (tipoDireccion === '1') { // Exportación
-        exportacionFields.style.display = 'block';
-        hologramasFields.style.display = 'none';
-        updateValidation(['destinatario', 'aduana', 'pais_destino']);
-    } else if (tipoDireccion === '3') { // Envío de hologramas
-        hologramasFields.style.display = 'block';
-        exportacionFields.style.display = 'none';
-        updateValidation(['correo_recibe', 'nombre_recibe', 'celular_recibe']);
-    } else if (tipoDireccion === '2') { // Venta Nacional
-        exportacionFields.style.display = 'none';
-        hologramasFields.style.display = 'none';
-        updateValidation([]);
-    }
-}
-
-function updateValidation(fieldsToValidate) {
-    const allFields = ['destinatario', 'aduana', 'pais_destino', 'correo_recibe', 'nombre_recibe', 'celular_recibe'];
-    const fieldsToRemove = allFields.filter(field => !fieldsToValidate.includes(field));
-    
-    fieldsToValidate.forEach(field => fv.addField(field));
-    fieldsToRemove.forEach(field => fv.removeField(field));
-}
-
-        </script>
