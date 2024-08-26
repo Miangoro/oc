@@ -58,6 +58,33 @@ $(function () {
         }
       },
       {
+        // Para el tipo de instalacion
+        targets: 3,
+        responsivePriority: 4,
+        render: function (data, type, full, meta) {
+          var $name = full['tipo'];
+          if ($name == 'Productora'){
+             return '<span class="badge bg-primary">'+full['tipo']+'</span>';
+          }
+          else if($name == 'Envasadora'){ 
+                 return '<span class="badge bg-success">'+full['tipo']+'</span>';
+          }
+          else if($name == 'Comercializadora'){ 
+             return '<span class="badge bg-info">'+full['tipo']+'</span>';
+         }
+         else if($name == 4){ 
+             return '<span class="badge bg-danger">Almacén y bodega</span>';
+         }
+         else if($name == 5){ 
+           return '<span class="badge bg-warning">Área de maduración</span>';
+         }
+
+          
+         
+          //return $name;
+        }
+      },
+      {
         // email verify
         targets: 8,
         className: 'text-center',

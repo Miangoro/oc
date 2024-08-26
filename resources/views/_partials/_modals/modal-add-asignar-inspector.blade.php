@@ -6,7 +6,7 @@
         <div class="modal-body p-0">
           <div class="text-center mb-6">
             <h4 class="address-title mb-2">Asignar inspector</h4>
-            <p class="folio">Folio de solicitud</p>
+            <p class="solicitud"></p>
           </div>
 
          <!-- <div class="card mb-6">

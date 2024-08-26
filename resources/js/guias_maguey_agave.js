@@ -589,47 +589,49 @@ $(function () {
     });
 });
 
-$('#editGuiaForm').on('submit', function (e) {
-    e.preventDefault();
 
-    var formData = $(this).serialize();
-    var id_guia = $('#edit_id_guia').val();
 
-    $.ajax({
-        url: '/update/' + id_guia,
-        method: 'PUT',
-        data: formData,
-        success: function (response) {
-            Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-                text: 'Guía actualizada correctamente',
-                customClass: {
-                    confirmButton: 'btn btn-success'
-                }
-            }).then(function () {
-                $('#editGuias').modal('hide');
-                $('.datatables-users').DataTable().ajax.reload();
-            });
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.error('Error: ' + textStatus + ' - ' + errorThrown);
-            Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: 'Error al actualizar la guía',
-                customClass: {
-                    confirmButton: 'btn btn-danger'
-                }
-            });
-        }
-    });
+
+
+$('#editGuiaForm').submit(function (e) {
+  e.preventDefault();
+  
+  var formData = new FormData(this);
+  
+
+  $.ajax({
+      url: '/update/',
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+          Swal.fire({
+              title: 'Éxito',
+              text: response.success,
+              icon: 'success',
+              buttonsStyling: false,
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+          });
+          $('#editGuias').modal('hide');
+          $('.datatables-users').DataTable().ajax.reload();
+      },
+      error: function (response) {
+       
+          Swal.fire({
+              title: 'Error',
+              text: 'Ocurrió un error al actualizar la guía.',
+              icon: 'error',
+              buttonsStyling: false,
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+          });
+      }
+  });
 });
-
-
-
-
-
 
 
 
