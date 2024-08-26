@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\empresa;
 use App\Models\solicitudHolograma as ModelsSolicitudHolograma;
 use App\Models\direcciones;
+use App\Models\empresaNumCliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -87,6 +88,10 @@ class solicitudHolograma extends Controller
                 $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
 
                 $marca = \App\Models\Marcas::where('id_marca', $user->id_marca)->value('marca');
+                $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');
+                //el segundo es el nombre de la variable del usuario
+                $name = \App\Models\User::where('id', $user->id_solicitante)->value('name');
+
 
                 $nestedData = [
                     'fake_id' => ++$ids,
@@ -94,10 +99,10 @@ class solicitudHolograma extends Controller
                     'folio' => $user->folio,
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
                     'id_empresa' => $user->id_empresa,
-                    'id_solicitante' => $user->id_solicitante,
+                    'id_solicitante' => $name,
                     'id_marca' => $marca, // Asignar el nombre de la marca a id_marca
                     'cantidad_hologramas' => $user->cantidad_hologramas,
-                    'id_direccion' => $user->id_direccion,
+                    'id_direccion' => $direccion,
                     'comentarios' => $user->comentarios,
                 ];
 
@@ -204,7 +209,7 @@ class solicitudHolograma extends Controller
     public function ModelsSolicitudHolograma($id)
     {
         // Cargar la solicitud de holograma con la relación de la empresa
-        $datos = ModelsSolicitudHolograma::with('empresa', 'direcciones')->findOrFail($id);
+        $datos = ModelsSolicitudHolograma::with('empresa', 'direcciones', 'user', 'empresanumcliente')->findOrFail($id);
 
         // Pasar los datos a la vista del PDF
         $pdf = Pdf::loadView('pdfs.solicitudDeHologramas', ['datos' => $datos]);

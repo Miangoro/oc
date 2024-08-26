@@ -39,13 +39,6 @@
                     </div>
 
                     <div class="row">
-{{--                         <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="number" id="id_solicitante" name="id_solicitante" placeholder="ID del solicitante" value="{{ auth()->user()->id }}" required readonly/>
-                                <label for="id_solicitante">ID del solicitante</label>
-                            </div>                            
-                            
-                        </div> --}}
 
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-5">
