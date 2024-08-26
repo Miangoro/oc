@@ -561,7 +561,7 @@ $(function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
     var iframe = $('#pdfViewer');
-    iframe.attr('src', '../solicitud_de_holograma/'/* +id */);
+    iframe.attr('src', '../solicitud_de_holograma/' +id );
 
     $("#titulo_modal").text("Solicitud de entrega de hologramas");
     $("#subtitulo_modal").text(registro);

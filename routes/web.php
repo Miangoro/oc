@@ -630,4 +630,4 @@ Route::resource('/hologramas-list', solicitudHolograma::class);
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
 Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
 Route::put('/solicitud_holograma/update/{id_solicitud}', [solicitudHolograma::class, 'update']);
-Route::get('/solicitud_de_holograma', [CartaAsignacionController::class, 'solicitudHologramas'])->name('solicitudDeHologramas');
+Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSolicitudHolograma'])->name('solicitudDeHologramas');

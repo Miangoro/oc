@@ -213,11 +213,11 @@
 </tr>
 <tr>
     <td class="rightLetter negrita" style="width: 120px">Nombre Completo: </td>
-    <td colspan="3" class="letra-up">Nazareth Camacho</td>
+    <td colspan="3" class="letra-up">{{ $datos->empresa->razon_social }}</td>
 </tr>
 <tr>
     <td class="rightLetter negrita">Email./Cel./Tel.: </td>
-    <td colspan="3" class="letra-up"> mezcaldesanluis@gmail.com | 9512432784</td>
+    <td colspan="3" class="letra-up"> {{ $datos->direcciones->correo_recibe }}</td>
 </tr>
 
 <tr>

@@ -6,6 +6,7 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\empresa;
 use App\Models\solicitudHolograma as ModelsSolicitudHolograma;
+use App\Models\direcciones;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -200,10 +201,17 @@ class solicitudHolograma extends Controller
     
 
 
-    public function solicitudHologramas()
+    public function ModelsSolicitudHolograma($id)
     {
-        $pdf = Pdf::loadView('pdfs.solicitudDeHologramas');
+        // Cargar la solicitud de holograma con la relación de la empresa
+        $datos = ModelsSolicitudHolograma::with('empresa', 'direcciones')->findOrFail($id);
+
+        // Pasar los datos a la vista del PDF
+        $pdf = Pdf::loadView('pdfs.solicitudDeHologramas', ['datos' => $datos]);
+    
+        // Generar y devolver el PDF
         return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
     }
+    
     
 }
