@@ -22,4 +22,9 @@ class empresaNumCliente extends Model
     {
         return $this->belongsTo(Empresa::class, 'id_empresa', 'id_empresa');
     }
+
+    public function solicitudesHologramas()
+    {
+        return $this->hasMany(solicitudHolograma::class, 'id_empresa', 'id_empresa');
+    }
 }

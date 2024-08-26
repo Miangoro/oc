@@ -52,13 +52,6 @@ const fv = FormValidation.formValidation(addHologramasForm, {
           message: 'Por favor ingrese un destino de lote'
         }
       }
-    },
-    comentarios: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingrese un comentario'
-        }
-      }
     }
 
 

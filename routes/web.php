@@ -532,7 +532,9 @@ Route::get('/pre-registro_predios/{id_predio}', [prediosController::class, 'PdfP
 Route::get('/domicilios/destinos', [DestinosController::class, 'UserManagement'])->name('domicilio-destinos');
 Route::resource('/destinos-list', DestinosController::class);
 Route::delete('/destinos-list/{id_direccion}', [DestinosController::class, 'destroy'])->name('destinos-list.destroy');
-Route::post('destinos-register/{id_direccion}', [DestinosController::class, 'store'])->name('destinos-register.store');
+Route::post('/destinos-register/{id_direccion}', [DestinosController::class, 'store'])->name('destinos-register.store');
+route::get('/destinos-list/{id_direccion}/edit', [DestinoController::class, 'edit'])->name('destinos.edit');
+route::post('/destinos-update/{id_direccion}', [DestinosController::class, 'update'])->name('destinos.update');
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');

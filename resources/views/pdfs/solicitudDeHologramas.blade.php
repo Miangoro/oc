@@ -187,7 +187,7 @@
         </tr>
         <tr>
             <td class="rightLetter negrita" style="width: 250px">Nombre:</td>
-            <td class="letra-up"> MAYTE ERÉNDIRA ENRÍQUEZ ROJAS</td>
+            <td class="letra-up">{{ $datos->user->name }}</td>
         </tr>
         <tr>
             <td class="rightLetter negrita">Puesto: </td>
@@ -195,7 +195,7 @@
         </tr>
         <tr>
             <td class="rightLetter negrita">Email: </td>
-            <td class="letra-up">mezcaldesanluis@gmail.com</td>
+            <td class="letra-up">{{$datos->user->email}}</td>
         </tr>
         <tr>
             <td style="border-bottom: 0;" colspan="2" class="letra-fondo negrita"> Dirección de envío</td>
@@ -204,7 +204,7 @@
 
     <table>
 <tr>
-    <td colspan="4"> <br> Calle Olmo, No. 6 Col. Lomas de Sierra Juárez 2a Sección, C.P. 68288, San Andrés Huayapam, Oaxaca <br><br>
+    <td colspan="4"> <br> {{$datos->direcciones->direccion}} <br><br>
     </td>
 </tr>
 <tr>
@@ -213,11 +213,11 @@
 </tr>
 <tr>
     <td class="rightLetter negrita" style="width: 120px">Nombre Completo: </td>
-    <td colspan="3" class="letra-up">{{ $datos->empresa->razon_social }}</td>
+    <td colspan="3" class="letra-up">{{ $datos->direcciones->destinatario }}</td>
 </tr>
 <tr>
     <td class="rightLetter negrita">Email./Cel./Tel.: </td>
-    <td colspan="3" class="letra-up"> {{ $datos->direcciones->correo_recibe }}</td>
+    <td colspan="3" class="letra-up">Email. {{ $datos->direcciones->correo_recibe }}, /Cel./Tel. {{ $datos->direcciones->celular_recibe }}</td>
 </tr>
 
 <tr>
@@ -228,18 +228,18 @@
 </tr>
 <tr>
     <td class="rightLetter negrita" >Folio inicial:</td>
-    <td class="letra-up">NOM-070-054CB000000</td>
+    <td class="letra-up">{{ $datos->empresanumcliente->numero_cliente }}</td>
     <td class="rightLetter negrita">Folio final:</td>
-    <td class="letra-up">NOM-070-054CB000000</td>
+    <td class="letra-up">{{$datos->empresanumcliente->numero_cliente}}</td>
 </tr>
 <tr>
     <td class="rightLetter negrita" >Total de hologramas <br>
         enviados:</td>
-    <td colspan="3" class="letra-up">5,000 Hologramas</td>
+    <td colspan="3" class="letra-up">{{ $datos->cantidad_hologramas }} Hologramas</td>
 </tr>
 <tr >
     <td class="rightLetter negrita" style="height: 60px">Comentarios</td>
-    <td colspan="3"></td>
+    <td colspan="3">{{$datos->comentarios}}</td>
 </tr>
 <tr>
     <td colspan="4">NOTA: Se solicita reenviar vía electrónica este acuse firmado para confirmar la llegada de hologramas. <div style="height: 50px"></div>

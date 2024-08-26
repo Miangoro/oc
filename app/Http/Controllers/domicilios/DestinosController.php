@@ -161,7 +161,7 @@ class DestinosController extends Controller
                     'pais_destino' => 'nullable|string',
                     'nombre_recibe' => 'nullable|string',
                     'correo_recibe' => 'nullable|email',
-                    'celular_recibe' => 'nullable|int',
+                    'celular_recibe' => 'nullable|string',
                 ]);
             
                 // Crear una nueva instancia del modelo Predios
@@ -188,5 +188,62 @@ class DestinosController extends Controller
                     'message' => 'Domicilio de destino registrado exitosamente',
                 ]);
             }
+
+            //funcion para llenar el campo del formulario
+    public function edit($id_direccion)
+    {
+
+        try {
+            $destino = Destinos::findOrFail($id_direccion);
+            return response()->json($destino);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener el domicilio de destino'], 500);
+        }
+    }
+
+    public function update(Request $request, $id_direccion)
+    {
+        try {
+            // Validar los datos del formulario
+            $validated = $request->validate([
+                'tipo_direccion' => 'required|string',
+                'id_empresa' => 'required|exists:empresa,id_empresa',
+                'direccion' => 'required|string',
+                'destinatario' => 'nullable|string',
+                'aduana' => 'nullable|string',
+                'pais_destino' => 'nullable|string',
+                'nombre_recibe' => 'nullable|string',
+                'correo_recibe' => 'nullable|email',
+                'celular_recibe' => 'nullable|string',
+            ]);
             
+            $destino = Destinos::findOrFail($id_direccion);
+            
+            // Actualizar destino
+            $destino->update([
+                'tipo_direccion' => $validated['tipo_direccion'],
+                'id_empresa' => $validated['id_empresa'],
+                'direccion' => $validated['direccion'],
+                'destinatario' => $validated['destinatario'],
+                'aduana' => $validated['aduana'],
+                'pais_destino' => $validated['pais_destino'],
+                'nombre_recibe' => $validated['nombre_recibe'],
+                'correo_recibe' => $validated['correo_recibe'],
+                'celular_recibe' => $validated['celular_recibe'],
+            ]);
+    
+            // Devolver una respuesta de éxito
+            return response()->json([
+                'success' => true,
+                'message' => 'Destino actualizado correctamente.',
+            ]);
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar el domicilio de destino: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+               
 }
