@@ -185,9 +185,9 @@
 @endsection
 
 <script>
-    function abrirModal(id_empresa) {
-    // Hacer una petición AJAX para obtener los detalles de la empresa
-    $.ajax({
+    function abrirModal(id_solicitud,tipo ,nombre_empresa) {
+   
+   /* $.ajax({
         url: '/lista_empresas/' + id_empresa,
         method: 'GET',
         success: function(response) {
@@ -199,23 +199,23 @@
             console.log(response.normas[index].norma);
           }
            
-
-         //   $('.contenido').html(contenido);
-           
-            // Abrir el modal
             $('#expedienteServicio').modal('show');
         },
         error: function() {
             alert('Error al cargar los detalles de la empresa.');
         }
-    });
+    });*/
+    $('.solicitud').text(tipo);
+    $('.nombre_empresa').text(nombre_empresa);
+    $('#expedienteServicio').modal('show');
+
   }
 
-  function abrirModalAsignarInspector(id_solicitud,tipo ,folio) {
+  function abrirModalAsignarInspector(id_solicitud,tipo ,nombre_empresa) {
 
     $("#id_solicitud").val(id_solicitud);
 
-    $('.folio').text(tipo);
+    $('.solicitud').text(tipo);
     $('#asignarInspector').modal('show');
   } 
 

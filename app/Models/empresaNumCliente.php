@@ -20,7 +20,7 @@ class empresaNumCliente extends Model
 
     public function empresa()
     {
-        return $this->belongsTo(Empresa::class, 'id_empresa');
+        return $this->belongsTo(Empresa::class, 'id_empresa', 'id_empresa');
     }
 
     public function solicitudesHologramas()

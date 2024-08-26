@@ -614,7 +614,7 @@ Route::put('/documentos/{id}', [DocumentosController::class, 'update']);
 
 Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado');
 Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
-Route::put('/update/{id_guia}', [GuiasController::class, 'update'])->name('guias.update');
+Route::post('/update', [GuiasController::class, 'update'])->name('guias.update');
 
 
 

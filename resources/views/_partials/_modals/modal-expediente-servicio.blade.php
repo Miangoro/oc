@@ -6,11 +6,11 @@
       <div class="modal-body p-0">
         <div class="text-center">
           <h4 class="mb-2">Expediente de inspección</h4>
-          <p class="mb-6">SOL-12065-O</p>
+          <p class="mb-6 nombre_empresa badge bg-primary"></p>
         </div>
 
         <div class="card">
-          <h5 class="card-header">Muestreo de lote a granel</h5>
+          <h5 class="card-header solicitud text-center">Muestreo de lote a granel</h5>
           <div class="table-responsive text-nowrap">
             <table class="table">
               <thead>

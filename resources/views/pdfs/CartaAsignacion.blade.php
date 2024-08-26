@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>F7.1-01-27 Carta asignación del número de cliente NOM-070-SCFI-2016. Ed. 4, Vigente </title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+ 
     <style>
         body {
             font-family: Arial, sans-serif;
