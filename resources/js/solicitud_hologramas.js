@@ -662,125 +662,7 @@ $(function () {
     });
   });
 
-  /*   // Manejo del envío del formulario de edición de Hologramas
-    $('#addPagoForm').on('submit', function (e) {
-      e.preventDefault(); // Evita el comportamiento predeterminado del formulario
-  
-      var formData = $(this).serialize(); // Serializa los datos del formulario
-      var id_solicitud = $('#edit_id_solicitud').val(); // Obtiene el ID de la solicitud
-  
-      $.ajax({
-        url: '/solicitud_holograma/update2/' + id_solicitud, // URL de la ruta de actualización
-        method: 'PUT', // Método HTTP
-        data: formData, // Datos enviados
-        success: function (response) {
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: 'Solicitud actualizada correctamente',
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          }).then(function () {
-            $('#addPago').modal('hide'); // Cierra el modal de edición
-            $('.datatables-users').DataTable().ajax.reload(); // Recarga la tabla de datos
-          });
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-          console.error('Error: ' + textStatus + ' - ' + errorThrown);
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al actualizar la solicitud',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
-        }
-      });
-    }); */
-
-
-
-
-
-
-
-  $('#addPagoForm').submit(function (e) {
-    e.preventDefault();
-
-    var formData = new FormData(this);
-
-
-    $.ajax({
-      url: '/solicitud_holograma/update2',
-      type: 'POST',
-      data: formData,
-      contentType: false,
-      processData: false,
-      success: function (response) {
-        Swal.fire({
-          title: 'Éxito',
-          text: response.success,
-          icon: 'success',
-          buttonsStyling: false,
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-        $('#addPago').modal('hide');
-        $('.datatables-users').DataTable().ajax.reload();
-      },
-      error: function (response) {
-        console.log(response);
-
-        Swal.fire({
-          title: 'Error',
-          text: 'Ocurrió un error al actualizar la guía.',
-          icon: 'error',
-          buttonsStyling: false,
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      }
-    });
-  });
-
-
-
-
-
-  //envio metodo
-  $(document).on('click', '.edit-envio', function () {
-    var id_solicitud = $(this).data('id');
-
-    $.get('/solicitud_holograma/edit/' + id_solicitud, function (data) {
-
-    
-      // Rellenar el formulario con los datos obtenidos
-      $('#edit_id_solicitud2').val(data.id_solicitud);
-
-      $('#fecha_envio').val(data.fecha_envio);
-      $('#costo_envio').val(data.costo_envio);
-      $('#no_guia').val(data.no_guia);
-      $('#empresa2').val(data.id_empresa);
-      // Mostrar el modal de edición
-      $('#addEnvio').modal('show');
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-      console.error('Error: ' + textStatus + ' - ' + errorThrown);
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al obtener los datos de la solicitud de holograma',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    });
-  });
-
-  $('#addEnvioForm').submit(function (e) {
+  /*    $('#addEnvioForm').submit(function (e) {
     e.preventDefault();
 
     var formData = new FormData(this);
@@ -819,7 +701,218 @@ $(function () {
         });
       }
     });
+  }); */
+
+
+// Selección del formulario
+const addPagoForm = document.getElementById('addPagoForm');
+
+// Validación del formulario
+const fv2 = FormValidation.formValidation(addPagoForm, {
+  fields: {
+    tipo_pago: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione un tipo de pago'
+        }
+      }
+    },
+    'url[]': {
+      validators: {
+        notEmpty: {
+          message: 'Por favor adjunte un comprobante de pago'
+        },
+        file: {
+          extension: 'pdf,doc,docx,jpg,jpeg,png',
+          type: 'application/pdf,application/msword,image/jpeg,image/png',
+          maxSize: 5242880, // 5 MB
+          message: 'El archivo adjunto debe ser un documento válido (PDF, DOC, JPG, PNG) y no mayor de 5MB'
+        }
+      }
+    }
+  },
+  plugins: {
+    trigger: new FormValidation.plugins.Trigger(),
+    bootstrap5: new FormValidation.plugins.Bootstrap5({
+      eleValidClass: '',
+      rowSelector: function (field, ele) {
+        return '.mb-4, .mb-5'; // Ajusta según las clases de tus elementos
+      }
+    }),
+    submitButton: new FormValidation.plugins.SubmitButton(),
+    autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function () {
+  // Se ejecuta cuando el formulario es válido
+  var formData = new FormData(addPagoForm);
+
+  $.ajax({
+    url: '/solicitud_holograma/update2',
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      $('#addPago').modal('hide');
+      $('.datatables-users').DataTable().ajax.reload();
+
+      // Mostrar alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.success,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+    },
+    error: function (xhr) {
+      // Mostrar alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Ocurrió un error al actualizar el pago.',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
   });
+});
+
+
+
+
+
+
+  //envio metodo
+  $(document).on('click', '.edit-envio', function () {
+    var id_solicitud = $(this).data('id');
+
+    $.get('/solicitud_holograma/edit/' + id_solicitud, function (data) {
+
+    
+      // Rellenar el formulario con los datos obtenidos
+      $('#edit_id_solicitud2').val(data.id_solicitud);
+
+      $('#fecha_envio').val(data.fecha_envio);
+      $('#costo_envio').val(data.costo_envio);
+      $('#no_guia').val(data.no_guia);
+      $('#empresa2').val(data.id_empresa);
+      // Mostrar el modal de edición
+      $('#addEnvio').modal('show');
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error: ' + textStatus + ' - ' + errorThrown);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos de la solicitud de holograma',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    });
+  });
+
+// Validar el formulario y enviar los datos de envío
+const addEnvioForm = document.getElementById('addEnvioForm');
+
+const fv3 = FormValidation.formValidation(addEnvioForm, {
+  fields: {
+    fecha_envio: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor introduzca la fecha de envío'
+        }
+      }
+    },
+    costo_envio: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor introduzca el costo de envío'
+        },
+        numeric: {
+          message: 'El costo de envío debe ser un número válido'
+        }
+      }
+    },
+    no_guia: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese el número de guía'
+        }
+      }
+    },
+    'url[]': {
+      validators: {
+        notEmpty: {
+          message: 'Por favor adjunte el comprobante de pago'
+        },
+        file: {
+          extension: 'pdf,doc,docx,jpg,jpeg,png',
+          type: 'application/pdf,application/msword,image/jpeg,image/png',
+          maxSize: 5242880, // 5 MB
+          message: 'El archivo adjunto debe ser un documento válido (PDF, DOC, JPG, PNG) y no mayor de 5MB'
+        }
+      }
+    }
+  },
+  plugins: {
+    trigger: new FormValidation.plugins.Trigger(),
+    bootstrap5: new FormValidation.plugins.Bootstrap5({
+      eleValidClass: '',
+      rowSelector: function (field, ele) {
+        return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+      }
+    }),
+    submitButton: new FormValidation.plugins.SubmitButton(),
+    autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  // Prevenir el comportamiento predeterminado
+
+  var formData = new FormData(addEnvioForm);
+
+  $.ajax({
+    url: '/solicitud_holograma/update3', // URL de la acción de actualización
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      // Ocultar el modal al éxito
+      $('#addEnvio').modal('hide');
+      $('.datatables-users').DataTable().ajax.reload();
+
+      // Mostrar alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.success,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+    },
+    error: function (xhr) {
+      // Mostrar alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Ocurrió un error al actualizar la guía.',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
+  });
+});
+
+
+
+
+
+  
   
 
 

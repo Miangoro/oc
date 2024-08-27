@@ -12,8 +12,8 @@
                         de la OC, que los hologramas han sido enviados y poner la fecha correcta de envío. </b></p>
                 </div>
             </div>
-            <form id="addEnvioForm"  method="POST" enctype="multipart/form-data" onsubmit="return false">
-                <input type="hidden" id="edit_id_solicitud2" name="id_solicitud">                   
+            <form id="addEnvioForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
+                <input type="hidden" id="edit_id_solicitud2" name="id_solicitud">
                 <input type="hidden" id="empresa2" name="empresa">
 
 
@@ -47,7 +47,8 @@
                 <div class="form-floating form-floating-outline mb-5">
                     <input class="form-control form-control-sm" type="file" name="url[]">
                     <input value="51" class="form-control" type="hidden" name="id_documento[]">
-                    <input value="Comprobante de pago de holograma" class="form-control" type="hidden" name="nombre_documento[]">
+                    <input value="Comprobante de pago de holograma" class="form-control" type="hidden"
+                        name="nombre_documento[]">
                     <label for="Comprobante de pago de holograma">Adjuntar Comprobante de Pago</label>
                 </div>
 
