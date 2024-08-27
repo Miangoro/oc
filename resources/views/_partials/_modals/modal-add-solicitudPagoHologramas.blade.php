@@ -9,9 +9,8 @@
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="addPagoForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
-                    <input type="hidden" id="edit_id_solicitud" name="id_solicitud">
-                    <input type="hidden" id="empresa" name="empresa">
-
+                    <input type="hidden" id="edit_id_solicitud" name="id_s                    <input type="hidden" id="empresa" name="empresa">
+           
                     @csrf
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-4">
@@ -22,7 +21,7 @@
                             <label for="tipo_pago">Tipo de pago</label>
                         </div>
                     </div>
-
+ 
                     <div class="form-floating form-floating-outline mb-5">
                         <input class="form-control form-control-sm" type="file" name="url[]">
                         <input value="51" class="form-control" type="hidden" name="id_documento[]">

@@ -260,4 +260,10 @@ class solicitudHolograma extends Controller
             return response()->json(['error' => 'Error al actualizar la solicitud'], 500);
         }
     }
+    
+
+
+
+
+    
 }

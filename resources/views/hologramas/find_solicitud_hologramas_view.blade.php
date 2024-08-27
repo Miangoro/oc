@@ -70,7 +70,7 @@
 @include('_partials/_modals/modal-pdfs-frames')
  @include('_partials/_modals/modal-add-solicitudHologramas')
  @include('_partials/_modals/modal-add-solicitudPagoHologramas')
-
+ @include('_partials/_modals/modal-add-envioHologramas')
 @include('_partials/_modals/modal-edit-solicitudHologramas')
 
 

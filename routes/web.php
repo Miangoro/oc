@@ -644,3 +644,4 @@ Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::clas
 Route::put('/solicitud_holograma/update/{id_solicitud}', [solicitudHolograma::class, 'update']);
 Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSolicitudHolograma'])->name('solicitudDeHologramas');
 Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2']);
+
