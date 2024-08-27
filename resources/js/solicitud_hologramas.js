@@ -258,7 +258,7 @@ $(function () {
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               // Asumiendo que este es el código que ya tienes configurado
-              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addPago" href="javascript:;" class="dropdown-item open-record"><i class="ri-bank-card-line ri-20px text-warning"></i> Adjuntar comprobante de pago</a>` +
+              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addPago" href="javascript:;" class="dropdown-item edit-pay"><i class="ri-bank-card-line ri-20px text-warning"></i> Adjuntar comprobante de pago</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#editHologramas" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar solicitud</a>` +
               `<a data-id="${full['id_solicitud']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar solicitud</a>` +
 /*               '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
@@ -636,5 +636,111 @@ $(function () {
 
 
 
-  //end
+  //pago metodo
+  $(document).on('click', '.edit-pay', function () {
+    var id_solicitud = $(this).data('id');
+
+    $.get('/solicitud_holograma/edit/' + id_solicitud, function (data) {
+      // Rellenar el formulario con los datos obtenidos
+      $('#edit_id_solicitud').val(data.id_solicitud);
+
+      $('#tipo_pago').val(data.tipo_pago);
+      // Mostrar el modal de edición
+      $('#addPago').modal('show');
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error: ' + textStatus + ' - ' + errorThrown);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos de la solicitud de holograma',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    });
+  });
+
+/*   // Manejo del envío del formulario de edición de Hologramas
+  $('#addPagoForm').on('submit', function (e) {
+    e.preventDefault(); // Evita el comportamiento predeterminado del formulario
+
+    var formData = $(this).serialize(); // Serializa los datos del formulario
+    var id_solicitud = $('#edit_id_solicitud').val(); // Obtiene el ID de la solicitud
+
+    $.ajax({
+      url: '/solicitud_holograma/update2/' + id_solicitud, // URL de la ruta de actualización
+      method: 'PUT', // Método HTTP
+      data: formData, // Datos enviados
+      success: function (response) {
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Solicitud actualizada correctamente',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        }).then(function () {
+          $('#addPago').modal('hide'); // Cierra el modal de edición
+          $('.datatables-users').DataTable().ajax.reload(); // Recarga la tabla de datos
+        });
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.error('Error: ' + textStatus + ' - ' + errorThrown);
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al actualizar la solicitud',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+  }); */
+
+
+
+
+
+
+
+  $('#addPagoForm').submit(function (e) {
+    e.preventDefault();
+    
+    var formData = new FormData(this);
+    
+  
+    $.ajax({
+        url: '/solicitud_holograma/update2',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            Swal.fire({
+                title: 'Éxito',
+                text: response.success,
+                icon: 'success',
+                buttonsStyling: false,
+                customClass: {
+                  confirmButton: 'btn btn-success'
+                }
+            });
+            $('#addPago').modal('hide');
+            $('.datatables-users').DataTable().ajax.reload();
+        },
+        error: function (response) {
+         
+            Swal.fire({
+                title: 'Error',
+                text: 'Ocurrió un error al actualizar la guía.',
+                icon: 'error',
+                buttonsStyling: false,
+                customClass: {
+                  confirmButton: 'btn btn-success'
+                }
+            });
+        }
+    });
+  });
 });
