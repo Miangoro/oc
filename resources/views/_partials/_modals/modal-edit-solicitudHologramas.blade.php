@@ -10,8 +10,8 @@
                 </div>
                 <form id="editHologramasForm">
                     @csrf
-{{--                     <input type="hidden" id="edit_id_solicitud" name="id_solicitud">
- --}}
+                 <input type="hidden" id="edit_id_solicitud" name="id_solicitud">
+
                     <div class="form-floating form-floating-outline mb-5">
                         <input type="text" class="form-control" id="edit_folio" name="edit_folio" placeholder="Ingresa el folio de solicitud" aria-label="Ingrese el folio" required />
                         <label for="folio">Ingresa el folio de solicitud</label>

@@ -106,6 +106,7 @@
                     <option value="Generales Productor Mezcal">Generales Productor Mezcal</option>
                     <option value="Generales Envasador">Generales Envasador</option> 
                     <option value="Generales Comercializador">Generales Comercializador</option>
+                    <option value="Marcas">Marcas</option>
                 </select>
                 <label for="tipoEdit">Tipo</label>
             </div>
