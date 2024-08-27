@@ -229,7 +229,7 @@ class solicitudHolograma extends Controller
     {
         try {
             // Encuentra la solicitud de hologramas por su ID
-            $holograma = ModelsSolicitudHolograma::findOrFail($request->id_solicitud);
+            $holograma = ModelsSolicitudHolograma::findOrFail(1);
             $holograma->tipo_pago = $request->input('tipo_pago'); // Nuevo campo tipo_pago
 
             $holograma->save();

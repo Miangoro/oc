@@ -167,7 +167,7 @@ public function editarCliente($id)
         JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
         JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
         JOIN empresa_contrato c ON (c.id_empresa = e.id_empresa)
-        WHERE e.id_empresa=' . $id.' Group by a.id_actividad');
+        WHERE e.id_empresa=' . $id);
         
         $fecha_cedula = Helpers::formatearFecha($res[0]->fecha_cedula);
         $fecha_vigencia = Helpers::formatearFecha($res[0]->fecha_vigencia);

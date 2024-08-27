@@ -645,6 +645,7 @@ $(function () {
       $('#edit_id_solicitud').val(data.id_solicitud);
 
       $('#tipo_pago').val(data.tipo_pago);
+      $('#empresa').val(data.id_empresa);
       // Mostrar el modal de edición
       $('#addPago').modal('show');
     }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -730,6 +731,7 @@ $(function () {
             $('.datatables-users').DataTable().ajax.reload();
         },
         error: function (response) {
+          console.log(response);
          
             Swal.fire({
                 title: 'Error',
