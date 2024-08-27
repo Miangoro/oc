@@ -658,16 +658,7 @@ $(function () {
 
 
 
-
-
-
-
-
-
-
-
-
-    $(document).ready(function () {
+$(document).ready(function () {
         function hideAndClearFields(selector) {
             $(selector).hide().find('input, textarea').val('');
         }
@@ -811,7 +802,6 @@ $(function () {
         });
     });
     
-    
-    
+
 
 });

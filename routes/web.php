@@ -185,6 +185,7 @@ use App\Http\Controllers\documentacion\DocumentosController;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\InstalacionesController;
+use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\inspecciones\inspeccionesController;
 
@@ -629,6 +630,15 @@ Route::get('/orden_de_servicio/{id_inspeccion}', [inspeccionesController::class,
 //Hologramas - solicitud hologramas
 Route::get('/hologramas/solicitud', [solicitudHolograma::class, 'UserManagement'])->name('hologramas-solicitud');
 Route::resource('/hologramas-list', solicitudHolograma::class);
+
+//Certificados Instalaciones
+Route::get('certificados/instalaciones', [Certificado_InstalacionesController::class, 'UserManagement'])->name('certificados-instalaciones');
+Route::resource('certificados-list',Certificado_InstalacionesController::class);
+// web.php o api.php
+
+Route::delete('certificados/{id}', [Certificado_InstalacionesController::class, 'destroy']);
+
+Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
 Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
 Route::put('/solicitud_holograma/update/{id_solicitud}', [solicitudHolograma::class, 'update']);
