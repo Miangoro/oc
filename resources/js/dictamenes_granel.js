@@ -6,15 +6,12 @@
 
 
 $(function () {
-
-
-
     // Variable declaration for table
     var dt_user_table = $('.datatables-users'),
 
         select2 = $('.select2'),
 
-        offCanvasForm = $('#modalAddDestino');
+        offCanvasForm = $('#modalAddDictamenGranel');
 
     if (select2.length) {
         var $this = select2;
@@ -32,6 +29,14 @@ $(function () {
         }
     });
 
+    //DATE PICKER
+
+    $(document).ready(function () {
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd'
+        });
+
+    });
     // Users datatable
     if (dt_user_table.length) {
         var dt_user = dt_user_table.DataTable({
@@ -39,22 +44,19 @@ $(function () {
             processing: true,
             serverSide: true,
             ajax: {
-                url: baseUrl + 'destinos-list', // Asegúrate de que esta URL coincida con la ruta en tu archivo de rutas
+                url: baseUrl + 'dictamen-granel-list', // Asegúrate de que esta URL coincida con la ruta en tu archivo de rutas
                 type: 'GET'
             },
             columns: [
-                // columns according to JSON
                 { data: '' },
-                { data: 'id_direccion' },
-                { data: 'tipo_direccion' },
+                { data: 'id_dictamen' },
+                { data: 'num_dictamen' },
                 { data: 'id_empresa' },
-                { data: 'direccion' },
-                { data: 'destinatario' },
-                { data: 'aduana' },
-                { data: 'pais_destino' },
-                { data: 'nombre_recibe' },
-                { data: 'correo_recibe' },
-                { data: 'celular_recibe' },
+                { data: 'id_inspeccion' },
+                { data: 'id_lote_granel' },
+                { data: 'fecha_emision' },
+                { data: 'fecha_vigencia' },
+                { data: 'fecha_servicio' },
                 { data: 'action' },
             ],
 
@@ -63,7 +65,7 @@ $(function () {
                     // For Responsive
                     className: 'control',
                     searchable: false,
-                    orderable: false,
+                    orderable: true,
                     responsivePriority: 2,
                     targets: 0,
                     render: function (data, type, full, meta) {
@@ -84,7 +86,7 @@ $(function () {
                     targets: 2,
                     responsivePriority: 4,
                     render: function (data, type, full, meta) {
-                        var $name = full['tipo_direccion'];
+                        var $name = full['num_dictamen'];
 
                         // For Avatar badge
                         var stateNum = Math.floor(Math.random() * 6);
@@ -112,14 +114,14 @@ $(function () {
                     targets: -1,
                     title: 'Acciones',
                     searchable: false,
-                    orderable: false,
+                    orderable: true,
                     render: function (data, type, full, meta) {
                         return (
                             '<div class="d-flex align-items-center gap-50">' +
                             '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                            `<a data-id="${full['id_direccion']}" data-bs-toggle="modal" data-bs-target="#modalEditDestino" href="javascrip:;" class="dropdown-item edit-record text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-                            `<a data-id="${full['id_direccion']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
+                            `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalEditDestino" href="javascrip:;" class="dropdown-item edit-record text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+                            `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
                             '</div>' +
@@ -324,11 +326,11 @@ $(function () {
                     ]
                 },
                 {
-                    text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar Destino</span>',
+                    text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar dictamen a granel</span>',
                     className: 'add-new btn btn-primary waves-effect waves-light',
                     attr: {
                         'data-bs-toggle': 'modal',
-                        'data-bs-target': '#modalAddDestino'
+                        'data-bs-target': '#modalAddDictamenGranel'
                     }
                 }
             ],
@@ -387,421 +389,214 @@ $(function () {
 
     initializeSelect2(select2Elements);
 
+// Delete Record eliminar un dictamen
+$(document).on('click', '.delete-record', function () {
+    var id_dictamen= $(this).data('id'); // Obtener el ID de la clase
+    var dtrModal = $('.dtr-bs-modal.show');
 
-    // Delete Record
-    $(document).on('click', '.delete-record', function () {
-        var id_destino = $(this).data('id'); // Obtener el ID de la clase
-        var dtrModal = $('.dtr-bs-modal.show');
+    // Ocultar modal responsivo en pantalla pequeña si está abierto
+    if (dtrModal.length) {
+        dtrModal.modal('hide');
+    }
 
-        // Ocultar modal responsivo en pantalla pequeña si está abierto
-        if (dtrModal.length) {
-            dtrModal.modal('hide');
-        }
-
-        // SweetAlert para confirmar la eliminación
-        Swal.fire({
-            title: '¿Está seguro?',
-            text: 'No podrá revertir este evento',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar',
-            customClass: {
-                confirmButton: 'btn btn-primary me-3',
-                cancelButton: 'btn btn-label-secondary'
-            },
-            buttonsStyling: false
-        }).then(function (result) {
-            if (result.isConfirmed) {
-                // Enviar solicitud DELETE al servidor
-                $.ajax({
-                    type: 'DELETE',
-                    url: `${baseUrl}destinos-list/${id_destino}`,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function () {
-                        // Actualizar la tabla después de eliminar el registro
-                        dt_user.draw();
-
-                        // Mostrar SweetAlert de éxito
-                        Swal.fire({
-                            icon: 'success',
-                            title: '¡Eliminado!',
-                            text: '¡la direccion ha sido eliminada correctamente!',
-                            customClass: {
-                                confirmButton: 'btn btn-success'
-                            }
-                        });
-                    },
-                    error: function (error) {
-                        // Mostrar SweetAlert de error
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'No se pudo eliminar la direccion. Inténtalo de nuevo más tarde.',
-                            customClass: {
-                                confirmButton: 'btn btn-danger'
-                            }
-                        });
-                    }
-
-                });
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                // Acción cancelada, mostrar mensaje informativo
-                Swal.fire({
-                    title: 'Cancelado',
-                    text: 'La eliminación de la direccion ha sido cancelada',
-                    icon: 'info',
-                    customClass: {
-                        confirmButton: 'btn btn-primary'
-                    }
-                });
-            }
-        });
-    });
-
-
-
-    /* agregar nuevo direccion de destino */
-    $(document).ready(function () {
-        // Configuración CSRF para Laravel
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        // Inicializar FormValidation
-        const addNewDestino = document.getElementById('addNewDestinoForm');
-        const fv = FormValidation.formValidation(addNewDestino, {
-            fields: {
-                id_empresa: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor selecciona la empresa cliente'
-                        }
-                    }
-                },
-                tipo_direccion: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor selecciona el tipo de dirección'
-                        }
-                    }
-                },
-                direccion: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor selecciona una dirección'
-                        }
-                    }
-                },
-                // Campos de Exportación
-                destinatario: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor ingresa el destinatario'
-                        }
-                    }
-                },
-                aduana: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor ingresa la aduana'
-                        }
-                    }
-                },
-                pais_destino: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor ingresa el país de destino'
-                        }
-                    }
-                },
-                // Campos de Envío de Hologramas
-                correo_recibe: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor ingresa el correo de quien recibe'
-                        },
-                        emailAddress: {
-                            message: 'Por favor ingresa un correo válido'
-                        }
-                    }
-                },
-                nombre_recibe: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor ingresa el nombre de quien recibe'
-                        }
-                    }
-                },
-                celular_recibe: {
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor ingresa el celular de quien recibe'
-                        },
-                        regexp: {
-                            regexp: /^(\+52)?\s?\d{2}\s?\d{4}\s?\d{4}$/,
-                            message: 'El número de teléfono debe ser válido (ejemplo: +52 55 1234 5678 o 55 1234 5678)'
-                        }
-                    }
-                }
-            },
-            plugins: {
-                trigger: new FormValidation.plugins.Trigger(),
-                bootstrap5: new FormValidation.plugins.Bootstrap5({
-                    eleValidClass: '',
-                    eleInvalidClass: 'is-invalid',
-                    rowSelector: function (field, ele) {
-                        return '.form-floating';
-                    }
-                }),
-                submitButton: new FormValidation.plugins.SubmitButton(),
-                autoFocus: new FormValidation.plugins.AutoFocus()
-            }
-        });
-
-        // Manejar el cambio del tipo de dirección
-        function handleDireccionChange() {
-            var tipoDireccion = $('#tipo_direccion').val();
-
-            // Ocultar todos los campos primero
-            $('#exportacionFields, #hologramasFields').hide();
-
-            // Mostrar los campos correspondientes y habilitar/deshabilitar validaciones
-            if (tipoDireccion === '1') { // Exportación
-                $('#exportacionFields').show();
-                // Habilitar validaciones para Exportación
-                fv.enableValidator('destinatario');
-                fv.enableValidator('aduana');
-                fv.enableValidator('pais_destino');
-                // Deshabilitar validaciones de Envío de Hologramas
-                fv.disableValidator('correo_recibe');
-                fv.disableValidator('nombre_recibe');
-                fv.disableValidator('celular_recibe');
-            } else if (tipoDireccion === '3') { // Envío de Hologramas
-                $('#hologramasFields').show();
-                // Habilitar validaciones para Envío de Hologramas
-                fv.enableValidator('correo_recibe');
-                fv.enableValidator('nombre_recibe');
-                fv.enableValidator('celular_recibe');
-                // Deshabilitar validaciones de Exportación
-                fv.disableValidator('destinatario');
-                fv.disableValidator('aduana');
-                fv.disableValidator('pais_destino');
-            } else {
-                // Deshabilitar todas las validaciones específicas
-                fv.disableValidator('destinatario');
-                fv.disableValidator('aduana');
-                fv.disableValidator('pais_destino');
-                fv.disableValidator('correo_recibe');
-                fv.disableValidator('nombre_recibe');
-                fv.disableValidator('celular_recibe');
-            }
-        }
-
-        // Ejecutar la función al cambiar el valor y al cargar la página
-        $('#tipo_direccion').change(handleDireccionChange);
-        handleDireccionChange();
-
-        // Escuchar el evento de formulario válido
-        fv.on('core.form.valid', function () {
-            // Solo enviar el formulario si es válido
-            var formData = new FormData(addNewDestino);
-
+    // SweetAlert para confirmar la eliminación
+    Swal.fire({
+        title: '¿Está seguro?',
+        text: 'No podrá revertir este evento',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+            confirmButton: 'btn btn-primary me-3',
+            cancelButton: 'btn btn-label-secondary'
+        },
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            // Enviar solicitud DELETE al servidor
             $.ajax({
-                url: '/destinos-list',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    addNewDestino.reset();
-                    $('#id_empresa').val('').trigger('change');
-                    $('#modalAddDestino').modal('hide');
-                    $('.datatables-users').DataTable().ajax.reload();
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Éxito!',
-                        text: response.message,
-                        customClass: {
-                            confirmButton: 'btn btn-success'
-                        }
-                    });
-                },
-                error: function (xhr) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: '¡Error!',
-                        text: 'Error al agregar el predio',
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
-                    });
-                }
-            });
-        });
-
-        // Bloquear el envío normal del formulario
-        $('#addNewDestinoForm').on('submit', function (e) {
-            e.preventDefault();
-            // Inicia el proceso de validación
-            fv.validate();
-        });
-
-    });
-
-
-
-
-
-
-$(document).ready(function () {
-        function hideAndClearFields(selector) {
-            $(selector).hide().find('input, textarea').val('');
-        }
-    
-        // Manejo de cambio en el tipo de dirección
-        $(document).on('change', '#edit_tipo_direccion', function () {
-            var tipoDireccion = $(this).val();
-    
-            hideAndClearFields('#exportacionFieldsEdit');
-            hideAndClearFields('#hologramasFieldsEdit');
-    
-            if (tipoDireccion == '1') { // Exportación
-                $('#exportacionFieldsEdit').show();
-            } else if (tipoDireccion == '3') { // Envío de Hologramas
-                $('#hologramasFieldsEdit').show();
-            }
-        });
-    
-        $(document).on('click', '.edit-record', function () {
-            var idDireccion = $(this).data('id');
-    
-            $.ajax({
-                url: '/destinos-list/' + idDireccion + '/edit',
-                method: 'GET',
-                success: function (data) {
-                    if (data.error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: data.error,
-                            customClass: {
-                                confirmButton: 'btn btn-danger'
-                            }
-                        });
-                        return;
-                    }
-    
-                    $('#edit_tipo_direccion').val(data.tipo_direccion).trigger('change');
-                    $('#edit_id_empresa').val(data.id_empresa).trigger('change');
-                    $('#edit_direccion').val(data.direccion);
-    
-                    if (data.tipo_direccion == '1') { // Exportación
-                        $('#exportacionFieldsEdit').show();
-                        $('#hologramasFieldsEdit').hide();
-                        $('#edit_destinatario').val(data.destinatario);
-                        $('#edit_aduana').val(data.aduana);
-                        $('#edit_pais_destino').val(data.pais_destino);
-                    } else if (data.tipo_direccion == '3') { // Envío de Hologramas
-                        $('#hologramasFieldsEdit').show();
-                        $('#exportacionFieldsEdit').hide();
-                        $('#edit_correo_recibe').val(data.correo_recibe);
-                        $('#edit_nombre_recibe').val(data.nombre_recibe);
-                        $('#edit_celular_recibe').val(data.celular_recibe);
-                    } else {
-                        $('#exportacionFieldsEdit').hide();
-                        $('#hologramasFieldsEdit').hide();
-                    }
-    
-                    $('#modalEditDestino').modal('show');
-                },
-                error: function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudo cargar los datos del destino.',
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
-                    });
-                }
-            });
-        });
-    
-        $('#modalEditDestino').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var id = button.data('id');
-    
-            var modal = $(this);
-            modal.find('#edit_destinos_id').val(id);
-        });
-    
-        $('#EditDestinoForm').on('submit', function (e) {
-            e.preventDefault();
-    
-            var formData = new FormData(this);
-    
-            for (var pair of formData.entries()) {
-                console.log(pair[0] + ', ' + pair[1]);
-            }
-    
-            var id_direccion = $('#edit_destinos_id').val();
-    
-            $.ajax({
-                url: '/destinos-update/' + id_direccion,
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
+                type: 'DELETE',
+                url: `${baseUrl}dictamen/granel/${id_dictamen}`,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                success: function (response) {
-                    $('.datatables-users').DataTable().ajax.reload();
-                    $('#modalEditDestino').modal('hide');
+                success: function () {
+                    // Actualizar la tabla después de eliminar el registro
+                    dt_user.draw();
+
+                    // Mostrar SweetAlert de éxito
                     Swal.fire({
                         icon: 'success',
-                        title: '¡Éxito!',
-                        text: response.message,
+                        title: '¡Eliminado!',
+                        text: '¡El dictamen ha sido eliminada correctamente!',
                         customClass: {
                             confirmButton: 'btn btn-success'
                         }
                     });
                 },
-                error: function (xhr) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.errors;
-                        var errorMessages = Object.keys(errors).map(function (key) {
-                            return errors[key].join('<br>');
-                        }).join('<br>');
-    
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            html: errorMessages,
-                            customClass: {
-                                confirmButton: 'btn btn-danger'
-                            }
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al actualizar el domicilio de destino.',
-                            customClass: {
-                                confirmButton: 'btn btn-danger'
-                            }
-                        });
-                    }
+                error: function (error) {
+                    console.log(error);
+                    // Mostrar SweetAlert de error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo eliminar el dictamen.',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            // Acción cancelada, mostrar mensaje informativo
+            Swal.fire({
+                title: 'Cancelado',
+                text: 'La eliminación del lote ha sido cancelada',
+                icon: 'info',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
                 }
             });
+        }
+    });
+});
+
+/* agregar un nuevo dictamen */
+$(function () { 
+   
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // Inicializar FormValidation
+    const form = document.getElementById('addNewDictamenGranelForm');
+    const fv = FormValidation.formValidation(form, {
+        fields: {
+            'num_dictamen': {
+                validators: {
+                    notEmpty: {
+                        message: 'El número de dictamen es obligatorio.'
+                    },
+                    integer: {
+                        message: 'Debe ingresar un número válido.'
+                    }
+                }
+            },
+            'id_empresa': {
+                validators: {
+                    notEmpty: {
+                        message: 'Selecciona una empresa cliente.'
+                    }
+                }
+            },
+            'id_inspeccion': {
+                validators: {
+                    notEmpty: {
+                        message: 'Selecciona el número de servicio.'
+                    }
+                }
+            },
+            'id_lote_granel': {
+                validators: {
+                    notEmpty: {
+                        message: 'Selecciona el lote.'
+                    }
+                }
+            },
+            'fecha_emision': {
+                validators: {
+                    notEmpty: {
+                        message: 'La fecha de emisión es obligatoria.'
+                    },
+                    date: {
+                        format: 'YYYY-MM-DD',
+                        message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                    }
+                }
+            },
+            'fecha_vigencia': {
+                validators: {
+                    notEmpty: {
+                        message: 'La fecha de vigencia es obligatoria.'
+                    },
+                    date: {
+                        format: 'YYYY-MM-DD',
+                        message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                    }
+                }
+            },
+            'fecha_servicio': {
+                validators: {
+                    notEmpty: {
+                        message: 'La fecha de servicio es obligatoria.'
+                    },
+                    date: {
+                        format: 'YYYY-MM-DD',
+                        message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                    }
+                }
+            }
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: '.form-floating'
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+        
+    }).on('core.form.valid', function () {
+        var formData = new FormData(form);
+
+        // Imprimir los datos del formulario para verificar
+        console.log('Form Data:', Object.fromEntries(formData.entries()));
+
+        $.ajax({
+            url: '/dictamenes-granel',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                // Ocultar el modal y resetear el formulario
+                $('#modalAddDictamenGranel').modal('hide');
+                $('#addNewDictamenGranelForm')[0].reset();
+                $('.select2').val(null).trigger('change');
+                $('.datatables-users').DataTable().ajax.reload();
+
+                // Mostrar mensaje de éxito
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.message,
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                });
+            },
+            error: function (xhr) {
+                console.log('Error:', xhr.responseText);
+                // Mostrar mensaje de error
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Error al registrar el dictamen de granel',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
         });
     });
-    
+});
 
 
 });

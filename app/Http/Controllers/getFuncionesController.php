@@ -50,6 +50,7 @@ class getFuncionesController extends Controller
 
 
     public function getDatos(empresa $empresa){
+        
         return response()->json([
             'instalaciones' => $empresa->obtenerInstalaciones(),
             'lotes_granel' => $empresa->lotes_granel(),
