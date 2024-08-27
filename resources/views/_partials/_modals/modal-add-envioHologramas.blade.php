@@ -12,7 +12,10 @@
                         de la OC, que los hologramas han sido enviados y poner la fecha correcta de envío. </b></p>
                 </div>
             </div>
-            <form id="addEnvioForm" >
+            <form id="addEnvioForm"  method="POST" enctype="multipart/form-data" onsubmit="return false">
+                <input type="hidden" id="edit_id_solicitud" name="id_solicitud">                   
+                <input type="hidden" id="empresa" name="empresa">
+
 
                 @csrf
                 <div class="row">
@@ -28,17 +31,17 @@
                     <div class="col-md-6">
                         <div class="form-floating form-floating-outline mb-6">
                             <input class="form-control" type="text" step="0.01" placeholder="Costo de envio"
-                                id="no_guia" name="no_guia" />
-                            <label for="no_guia">Costo de envío</label>
+                                id="costo_envio" name="costo_envio" />
+                            <label for="costo_envio">Costo de envío</label>
                         </div>
                     </div>
 
                 </div>
 
                 <div class="form-floating form-floating-outline mb-5">
-                    <input type="text" class="form-control" id="folio" name="folio"
-                        placeholder="Ingresa el folio de solicitud" aria-label="Ingrese el folio" required />
-                    <label for="folio">No. De guía</label>
+                    <input type="text" class="form-control" id="no_guia" name="no_guia"
+                        placeholder="Ingresa el No. guia" aria-label="Ingresa el No. guia" />
+                    <label for="no_guia">No. De guía</label>
                 </div>
 
                 <div class="form-floating form-floating-outline mb-5">

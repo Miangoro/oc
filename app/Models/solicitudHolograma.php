@@ -21,6 +21,9 @@ class solicitudHolograma extends Model
         'id_direccion',
         'comentarios',
         'tipo_pago',
+        'fecha_envio',
+        'costo_envio',
+        'no_guia',
  
     ];
     

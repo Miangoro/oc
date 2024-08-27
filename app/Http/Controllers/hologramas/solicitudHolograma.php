@@ -49,7 +49,11 @@ class solicitudHolograma extends Controller
             6 => 'cantidad_hologramas',
             7 => 'id_direccion',
             8 => 'comentarios',
-            9 => 'tipo_pago'
+            9 => 'tipo_pago',
+            10 => 'fecha_envio',
+            11 => 'costo_envio',
+            12 => 'no_guia'
+            
 
 
 
@@ -109,6 +113,10 @@ class solicitudHolograma extends Controller
                     'id_direccion' => $direccion,
                     'comentarios' => $user->comentarios,
                     'tipo_pago' => $user->tipo_pago,
+                    'fecha_envio' => $user->fecha_envio,
+                    'costo_envio' => $user->costo_envio,
+                    'no_guia' => $user->no_guia,
+
 
                 ];
 
@@ -229,7 +237,7 @@ class solicitudHolograma extends Controller
     {
         try {
             // Encuentra la solicitud de hologramas por su ID
-            $holograma = ModelsSolicitudHolograma::findOrFail(1);
+            $holograma = ModelsSolicitudHolograma::findOrFail($request->input('id_solicitud'));
             $holograma->tipo_pago = $request->input('tipo_pago'); // Nuevo campo tipo_pago
 
             $holograma->save();
@@ -260,10 +268,45 @@ class solicitudHolograma extends Controller
             return response()->json(['error' => 'Error al actualizar la solicitud'], 500);
         }
     }
-    
 
 
-
-
-    
+    public function update3(Request $request)
+    {
+        try {
+            // Encuentra la solicitud de hologramas por su ID
+            $holograma = ModelsSolicitudHolograma::findOrFail($request->input('id_solicitud'));
+            $holograma->fecha_envio = $request->input('fecha_envio');
+            $holograma->costo_envio = $request->input('costo_envio');
+            $holograma->no_guia = $request->input('no_guia');
+        
+            $holograma->save();
+            //metodo para guardar pdf
+            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        
+            foreach ($request->id_documento as $index => $id_documento) {
+                // Agregar nuevo documento si no existe
+                if ($request->hasFile('url') && isset($request->file('url')[$index])) {
+                    $file = $request->file('url')[$index];
+                    $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+        
+                    $documentacion_url = new Documentacion_url();
+                    $documentacion_url->id_relacion = $holograma->id_solicitud;
+                    $documentacion_url->id_documento = $id_documento;
+                    $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+                    $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+                    $documentacion_url->id_empresa = $request->empresa;
+                    $documentacion_url->save();
+                }
+            }
+            // Retorna una respuesta exitosa
+            return response()->json(['success' => 'Solicitud actualizada correctamente']);
+        } catch (\Exception $e) {
+            // Maneja cualquier error que ocurra durante el proceso
+            return response()->json(['error' => 'Error al actualizar la solicitud'], 500);
+        }
+    }
 }
+
+
