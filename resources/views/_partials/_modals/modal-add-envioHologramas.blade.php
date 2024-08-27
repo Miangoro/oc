@@ -13,8 +13,8 @@
                 </div>
             </div>
             <form id="addEnvioForm"  method="POST" enctype="multipart/form-data" onsubmit="return false">
-                <input type="hidden" id="edit_id_solicitud" name="id_solicitud">                   
-                <input type="hidden" id="empresa" name="empresa">
+                <input type="hidden" id="edit_id_solicitud2" name="id_solicitud">                   
+                <input type="hidden" id="empresa2" name="empresa">
 
 
                 @csrf
@@ -46,9 +46,9 @@
 
                 <div class="form-floating form-floating-outline mb-5">
                     <input class="form-control form-control-sm" type="file" name="url[]">
-                    <input value="52" class="form-control" type="hidden" name="id_documento[]">
-                    <input value="Documento de No. de guía" class="form-control" type="hidden" name="nombre_documento[]">
-                    <label for="Documento de No. de guía">Adjuntar Comprobante de Pago</label>
+                    <input value="51" class="form-control" type="hidden" name="id_documento[]">
+                    <input value="Comprobante de pago de holograma" class="form-control" type="hidden" name="nombre_documento[]">
+                    <label for="Comprobante de pago de holograma">Adjuntar Comprobante de Pago</label>
                 </div>
 
                 <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">

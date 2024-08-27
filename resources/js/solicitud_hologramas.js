@@ -756,13 +756,15 @@ $(function () {
     var id_solicitud = $(this).data('id');
 
     $.get('/solicitud_holograma/edit/' + id_solicitud, function (data) {
+
+    
       // Rellenar el formulario con los datos obtenidos
-      $('#edit_id_solicitud').val(data.id_solicitud);
+      $('#edit_id_solicitud2').val(data.id_solicitud);
 
       $('#fecha_envio').val(data.fecha_envio);
       $('#costo_envio').val(data.costo_envio);
       $('#no_guia').val(data.no_guia);
-      $('#empresa').val(data.id_empresa);
+      $('#empresa2').val(data.id_empresa);
       // Mostrar el modal de edición
       $('#addEnvio').modal('show');
     }).fail(function (jqXHR, textStatus, errorThrown) {
