@@ -32,7 +32,7 @@ class direcciones extends Model
 
     public function solicitudesHologramas()
     {
-        return $this->hasMany(solicitudHolograma::class, 'id_direccion');
+        return $this->hasMany(solicitudHolograma::class, 'id_direccion','id_direccion');
     }
 
 

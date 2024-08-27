@@ -47,7 +47,10 @@ class solicitudHolograma extends Controller
             5 => 'id_marca',
             6 => 'cantidad_hologramas',
             7 => 'id_direccion',
-            8 => 'comentarios'
+            8 => 'comentarios',
+            9 => 'tipo_pago'
+
+
 
 
         ];
@@ -104,6 +107,7 @@ class solicitudHolograma extends Controller
                     'cantidad_hologramas' => $user->cantidad_hologramas,
                     'id_direccion' => $direccion,
                     'comentarios' => $user->comentarios,
+
                 ];
 
                 $data[] = $nestedData;
