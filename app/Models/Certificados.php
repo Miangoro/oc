@@ -23,17 +23,7 @@ class Certificados extends Model
 
     public function dictamen()
     {
-        return $this->belongsTo(Dictamen::class, 'id_dictamen', 'id_dictamen');
+        return $this->belongsTo(Dictamen_instalaciones::class, 'id_dictamen', 'id_dictamen');
     }
-
-    public function empresa()
-    {
-        return $this->belongsTo(Empresa::class, 'id_empresa', 'id_empresa');
-    }
-
-    public function dictamenes()
-    {
-        return $this->hasMany(Dictamen_instalaciones::class, 'id_certificado', 'id_certificado');
-    }
-
+    
 }

@@ -185,6 +185,7 @@ use App\Http\Controllers\documentacion\DocumentosController;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\InstalacionesController;
+use App\Http\Controllers\dictamenes\DictamenGranelController;;
 use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\inspecciones\inspeccionesController;
@@ -599,6 +600,11 @@ Route::get('/dictamen_comercializador/{id_dictamen}', [InstalacionesController::
 Route::get('/dictamen_almacen/{id_dictamen}', [InstalacionesController::class, 'dictamen_almacen'])->name('dictamen_almacen');
 Route::get('/dictamen_maduracion/{id_dictamen}', [InstalacionesController::class, 'dictamen_maduracion'])->name('dictamen_maduracion');
 
+/* dictamen a granel*/
+Route::get('/dictamenes/productos', [DictamenGranelController::class, 'UserManagement'])->name('dictamenes-productos');
+Route::resource('/dictamen-granel-list', DictamenGranelController::class);
+Route::delete('dictamen/granel/{id_dictamen}', [DictamenGranelController::class, 'destroy'])->name('dictamen.delete');
+Route::post('dictamenes-granel',[DictamenGranelController::class, 'store'])->name('dictamen.store');
 
 
 //Documentacion
@@ -634,9 +640,8 @@ Route::resource('/hologramas-list', solicitudHolograma::class);
 //Certificados Instalaciones
 Route::get('certificados/instalaciones', [Certificado_InstalacionesController::class, 'UserManagement'])->name('certificados-instalaciones');
 Route::resource('certificados-list',Certificado_InstalacionesController::class);
-// web.php o api.php
+Route::post('certificados-list', [Certificado_InstalacionesController::class, 'store'])->name('certificados-list.store');
 
-Route::delete('certificados/{id}', [Certificado_InstalacionesController::class, 'destroy']);
 
 Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
