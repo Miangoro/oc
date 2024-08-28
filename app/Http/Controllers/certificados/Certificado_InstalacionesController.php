@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers\certificados;
 
+use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Certificados;
 use App\Models\Dictamen_instalaciones;
-use App\Models\Empresa; // Asegúrate de tener este modelo si `id_empresa` es una clave foránea
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class Certificado_InstalacionesController extends Controller
 {
     public function UserManagement()
     {
-        // Obtener todos los dictámenes
         $dictamenes = Dictamen_instalaciones::all();
-
-        // Pasar los dictámenes a la vista
         return view('certificados.certificados_instalaciones_view', compact('dictamenes'));
     }
 
@@ -31,7 +29,6 @@ class Certificado_InstalacionesController extends Controller
 
         $search = [];
 
-        // Obtener el total de registros sin filtro
         $certificados_temp = Certificados::with('dictamen')->get();
         $totalData = $certificados_temp->count();
 
@@ -42,9 +39,8 @@ class Certificado_InstalacionesController extends Controller
         $orderIndex = $request->input('order.0.column');
         $orderDir = $request->input('order.0.dir');
 
-        // Validar el índice del orden
-        $order = isset($columns[$orderIndex]) ? $columns[$orderIndex] : 'num_certificado'; // Valor predeterminado
-        $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc'; // Valor predeterminado
+        $order = isset($columns[$orderIndex]) ? $columns[$orderIndex] : 'num_certificado'; 
+        $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc'; 
 
         if (empty($request->input('search.value'))) {
             $certificados = Certificados::with('dictamen')
@@ -72,17 +68,16 @@ class Certificado_InstalacionesController extends Controller
         $data = [];
 
         if (!empty($certificados)) {
-            // Providing a dummy id instead of database ids
             $ids = $start;
 
             foreach ($certificados as $certificado) {
                 $nestedData['id_certificado'] = $certificado->id_certificado;
                 $nestedData['fake_id'] = ++$ids;
                 $nestedData['num_certificado'] = $certificado->num_certificado;
-                $nestedData['fecha_vigencia'] = $certificado->fecha_vigencia;
-                $nestedData['fecha_vencimiento'] = $certificado->fecha_vencimiento;
+                $nestedData['fecha_vigencia']  = Helpers::formatearFecha($certificado->fecha_vigencia);
+                $nestedData['fecha_vencimiento'] = Helpers::formatearFecha($certificado->fecha_vencimiento);
                 $nestedData['maestro_mezcalero'] = $certificado->maestro_mezcalero;
-                $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No disponible';
+                $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'N/A';
 
                 $data[] = $nestedData;
             }
@@ -114,4 +109,40 @@ class Certificado_InstalacionesController extends Controller
         return response()->json(['success' => 'Certificado eliminado correctamente']);
     }
 
+    // Funcion para registrar
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'id_dictamen' => 'required|integer',
+            'num_certificado' => 'required|string|max:25',
+            'fecha_vigencia' => 'required|date',
+            'fecha_vencimiento' => 'required|date',
+            'maestro_mezcalero' => 'nullable|string|max:60',
+        ]);
+    
+        $certificado = Certificados::create([
+            'id_dictamen' => $validatedData['id_dictamen'],
+            'num_certificado' => $validatedData['num_certificado'],
+            'fecha_vigencia' => $validatedData['fecha_vigencia'],
+            'fecha_vencimiento' => $validatedData['fecha_vencimiento'],
+            'maestro_mezcalero' => $validatedData['maestro_mezcalero'] ?: 'N/A',
+        ]);
+    
+        return response()->json([
+            'message' => 'Certificado registrado exitosamente',
+            'certificado' => $certificado
+        ]);
+    }
+    
+    public function edit($id)
+    {
+        $certificado = Certificados::find($id);
+    
+        if ($certificado) {
+            return response()->json($certificado);
+        }
+    
+        return response()->json(['error' => 'Certificado no encontrado'], 404);
+    }
+    
 }

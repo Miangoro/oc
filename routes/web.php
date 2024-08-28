@@ -640,8 +640,8 @@ Route::resource('/hologramas-list', solicitudHolograma::class);
 //Certificados Instalaciones
 Route::get('certificados/instalaciones', [Certificado_InstalacionesController::class, 'UserManagement'])->name('certificados-instalaciones');
 Route::resource('certificados-list',Certificado_InstalacionesController::class);
-Route::post('certificados-list', [Certificado_InstalacionesController::class, 'store'])->name('certificados-list.store');
-
+Route::post('certificados-list', [Certificado_InstalacionesController::class, 'store'])->name('certificados.store');
+Route::get('certificados-list/{id}/edit', [Certificado_InstalacionesController::class, 'edit']);
 
 Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
