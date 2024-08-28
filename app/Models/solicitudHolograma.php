@@ -19,11 +19,15 @@ class solicitudHolograma extends Model
         'id_marca',
         'cantidad_hologramas',
         'id_direccion',
+        'folio_inicial',
+        'folio_final',
+        'estatus',
         'comentarios',
         'tipo_pago',
         'fecha_envio',
         'costo_envio',
         'no_guia',
+
  
     ];
     

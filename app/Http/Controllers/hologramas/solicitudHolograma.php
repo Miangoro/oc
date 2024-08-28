@@ -97,6 +97,7 @@ class solicitudHolograma extends Controller
 
                 $marca = \App\Models\Marcas::where('id_marca', $user->id_marca)->value('marca');
                 $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');
+                
                 //el segundo es el nombre de la variable del usuario
                 $name = \App\Models\User::where('id', $user->id_solicitante)->value('name');
 
@@ -116,6 +117,8 @@ class solicitudHolograma extends Controller
                     'fecha_envio' => $user->fecha_envio,
                     'costo_envio' => $user->costo_envio,
                     'no_guia' => $user->no_guia,
+                    'estatus' => $user->estatus,
+
 
 
                 ];
@@ -192,11 +195,11 @@ class solicitudHolograma extends Controller
 
 
     // Método para actualizar un registro existente
-    public function update(Request $request, $id_solicitud)
+    public function update(Request $request)
     {
         try {
             // Encuentra la solicitud de hologramas por su ID
-            $holograma = ModelsSolicitudHolograma::findOrFail($id_solicitud);
+            $holograma = ModelsSolicitudHolograma::findOrFail($request->input('id_solicitud'));
 
             // Actualiza los campos con los datos del formulario
             $holograma->folio = $request->input('edit_folio');
@@ -218,27 +221,13 @@ class solicitudHolograma extends Controller
         }
     }
 
-
-
-    public function ModelsSolicitudHolograma($id)
-    {
-        // Cargar la solicitud de holograma con la relación de la empresa
-        $datos = ModelsSolicitudHolograma::with('empresa', 'direcciones', 'user', 'empresanumcliente')->findOrFail($id);
-
-        // Pasar los datos a la vista del PDF
-        $pdf = Pdf::loadView('pdfs.solicitudDeHologramas', ['datos' => $datos]);
-
-        // Generar y devolver el PDF
-        return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
-    }
-
-
     public function update2(Request $request)
     {
         try {
             // Encuentra la solicitud de hologramas por su ID
             $holograma = ModelsSolicitudHolograma::findOrFail($request->input('id_solicitud'));
             $holograma->tipo_pago = $request->input('tipo_pago'); // Nuevo campo tipo_pago
+            $holograma->estatus = 'Pagado';
 
             $holograma->save();
             //metodo para guardar pdf
@@ -262,10 +251,10 @@ class solicitudHolograma extends Controller
                 }
             }
             // Retorna una respuesta exitosa
-            return response()->json(['success' => 'Solicitud actualizada correctamente']);
+            return response()->json(['success' => 'Solicitud de pago actualizada correctamente']);
         } catch (\Exception $e) {
             // Maneja cualquier error que ocurra durante el proceso
-            return response()->json(['error' => 'Error al actualizar la solicitud'], 500);
+            return response()->json(['error' => 'Error al actualizar la solicitud de pago'], 500);
         }
     }
 
@@ -278,6 +267,8 @@ class solicitudHolograma extends Controller
             $holograma->fecha_envio = $request->input('fecha_envio');
             $holograma->costo_envio = $request->input('costo_envio');
             $holograma->no_guia = $request->input('no_guia');
+            $holograma->estatus = 'Enviado';
+
         
             $holograma->save();
             //metodo para guardar pdf
@@ -301,11 +292,24 @@ class solicitudHolograma extends Controller
                 }
             }
             // Retorna una respuesta exitosa
-            return response()->json(['success' => 'Solicitud actualizada correctamente']);
+            return response()->json(['success' => 'Solicitud de envio actualizada correctamente']);
         } catch (\Exception $e) {
             // Maneja cualquier error que ocurra durante el proceso
-            return response()->json(['error' => 'Error al actualizar la solicitud'], 500);
+            return response()->json(['error' => 'Error al actualizar la solicitud de envio'], 500);
         }
+    }
+
+
+    public function ModelsSolicitudHolograma($id)
+    {
+        // Cargar la solicitud de holograma con la relación de la empresa
+        $datos = ModelsSolicitudHolograma::with('empresa', 'direcciones', 'user', 'empresanumcliente')->findOrFail($id);
+
+        // Pasar los datos a la vista del PDF
+        $pdf = Pdf::loadView('pdfs.solicitudDeHologramas', ['datos' => $datos]);
+
+        // Generar y devolver el PDF
+        return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
     }
 }
 

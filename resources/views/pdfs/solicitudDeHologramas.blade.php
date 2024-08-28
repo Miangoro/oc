@@ -222,7 +222,7 @@
 
 <tr>
     <td class="rightLetter negrita">Fecha de envío:</td>
-    <td class="letra-up">2024 de Agosto del 12</td>
+    <td class="letra-up">{{$datos->fecha_envio}}</td>
     <td class="rightLetter negrita" style="width: 110px"> Fecha de recibido:</td>
     <td></td>
 </tr>
@@ -230,7 +230,7 @@
     <td class="rightLetter negrita" >Folio inicial:</td>
     <td class="letra-up">{{ $datos->empresanumcliente->numero_cliente }}</td>
     <td class="rightLetter negrita">Folio final:</td>
-    <td class="letra-up">{{$datos->empresanumcliente->numero_cliente}}</td>
+    <td class="letra-up"></td>
 </tr>
 <tr>
     <td class="rightLetter negrita" >Total de hologramas <br>

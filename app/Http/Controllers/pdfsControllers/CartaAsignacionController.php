@@ -195,4 +195,13 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Etiqueta_ingreso_a_barrica.pdf');
     }
 
+
+
+    //pdf Bitácora de revisión de certificados NOM de Instalaciones
+    public function NOM_070_SCFI2016()
+    {
+        $pdf = Pdf::loadView('pdfs.NOM_070_SCFI2016');
+        return $pdf->stream('NOM-070-SCFI-2016 Ed. 5.pdf');
+    }
+
 }
