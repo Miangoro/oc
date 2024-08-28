@@ -108,7 +108,7 @@
                 // Cargar los detalles en el modal
                 var contenido = "";
                 for (let index = 0; index < response.direcciones.length; index++) {
-                    contenido += '<option value="' + response.direcciones[index].id_empresa + '">' +
+                    contenido += '<option value="' + response.direcciones[index].id_direccion + '">' +
                         'Nombre de detinatario: ' + response.direcciones[index].destinatario +
                         ' - Dirección: ' + response.direcciones[index].direccion +
                         ' - Correo: ' + response.direcciones[index].correo_recibe +

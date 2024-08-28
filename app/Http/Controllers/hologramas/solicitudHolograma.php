@@ -96,7 +96,8 @@ class solicitudHolograma extends Controller
                 $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
 
                 $marca = \App\Models\Marcas::where('id_marca', $user->id_marca)->value('marca');
-                $direccion = \App\Models\direcciones::where('id_empresa', $user->id_direccion)->value('direccion');
+                $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');
+                
                 //el segundo es el nombre de la variable del usuario
                 $name = \App\Models\User::where('id', $user->id_solicitante)->value('name');
 
