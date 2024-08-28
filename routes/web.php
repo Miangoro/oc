@@ -478,7 +478,7 @@ Route::resource('marcas-list', marcasCatalogoController::class)->except(['create
 Route::get('/marcas-list/{id}/edit', [marcasCatalogoController::class, 'edit'])->name('marcas.edit');
 Route::post('/marcas-list/{id}', [marcasCatalogoController::class, 'store']);
 Route::post('/update-fecha-vigencia/{id_documento}', [marcasCatalogoController::class, 'updateFechaVigencia']);
-Route::post('/marcas-list/{id}/update', [marcasCatalogoController::class, 'update'])->name('marcas.update');
+Route::post('/marcas-list/update', [marcasCatalogoController::class, 'update'])->name('marcas.update');
 
 /* ruta de clases catalogo */
 Route::get('/catalogo/clases', [ClaseController::class, 'UserManagement'])->name('catalogo-clases');

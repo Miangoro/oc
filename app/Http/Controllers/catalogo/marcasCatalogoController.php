@@ -241,7 +241,7 @@ class marcasCatalogoController extends Controller
     
 
     // Método para actualizar una marca existente
-    public function update(Request $request, $id_marca)
+    public function update(Request $request)
     {
         $request->validate([
             'marca' => 'required|string|max:60',
@@ -249,7 +249,7 @@ class marcasCatalogoController extends Controller
         ]);
 
         try {
-            $marca = marcas::findOrFail($id_marca);
+            $marca = marcas::findOrFail($request->input('id_marca'));
             $marca->marca = $request->marca;
             $marca->id_empresa = $request->cliente;
             $marca->save();
