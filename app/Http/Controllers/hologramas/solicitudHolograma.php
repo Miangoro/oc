@@ -218,12 +218,13 @@ class solicitudHolograma extends Controller
         }
     }
 
-    public function update2(Request $request)
+    public function update2(Request $request) //Este es para adjuntar comprobante de pago
     {
         try {
             // Encuentra la solicitud de hologramas por su ID
             $holograma = ModelsSolicitudHolograma::findOrFail($request->input('id_solicitud'));
             $holograma->tipo_pago = $request->input('tipo_pago'); // Nuevo campo tipo_pago
+            $holograma->estatus = 'Pagado';
 
             $holograma->save();
             //metodo para guardar pdf
