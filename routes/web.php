@@ -641,7 +641,7 @@ Route::delete('certificados/{id}', [Certificado_InstalacionesController::class, 
 Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
 Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
-Route::put('/solicitud_holograma/update/{id_solicitud}', [solicitudHolograma::class, 'update']);
+Route::post('/solicitud_holograma/update/', [solicitudHolograma::class, 'update']);
 Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSolicitudHolograma'])->name('solicitudDeHologramas');
 Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2']);
 Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);

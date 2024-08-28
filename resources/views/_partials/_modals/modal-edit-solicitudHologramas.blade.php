@@ -8,9 +8,10 @@
                     <h4 class="address-title mb-2">Registrar nueva Solicitud de Hologramas</h4>
                     <p class="address-subtitle"></p>
                 </div>
-                <form id="editHologramasForm">
+                <form id="editHologramasForm"method="POST" enctype="multipart/form-data" onsubmit="return false">
+                    
                     @csrf
-                 <input type="hidden" id="edit_id_solicitud" name="id_solicitud">
+                 <input type="hidden" id="editt_id_solicitud" name="id_solicitud">
 
                     <div class="form-floating form-floating-outline mb-5">
                         <input type="text" class="form-control" id="edit_folio" name="edit_folio" placeholder="Ingresa el folio de solicitud" aria-label="Ingrese el folio" required />

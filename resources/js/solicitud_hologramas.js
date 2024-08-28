@@ -573,6 +573,8 @@ $(function () {
 
     $.get('/solicitud_holograma/edit/' + id_solicitud, function (data) {
       // Rellenar el formulario con los datos obtenidos
+      $('#editt_id_solicitud').val(data.id_solicitud);
+
       $('#edit_id_solicitud').val(data.id_solicitud);
       $('#edit_folio').val(data.folio);
       $('#edit_id_empresa').val(data.id_empresa).trigger('change');
@@ -597,17 +599,68 @@ $(function () {
     });
   });
 
-  // Manejo del envío del formulario de edición de Hologramas
-  $('#editHologramasForm').on('submit', function (e) {
-    e.preventDefault(); // Evita el comportamiento predeterminado del formulario
+  const editHologramasForm = document.getElementById('editHologramasForm');
 
-    var formData = $(this).serialize(); // Serializa los datos del formulario
+  // Validación del formulario
+  const fv = FormValidation.formValidation(editHologramasForm, {
+    fields: {
+      edit_folio: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor introduzca un folio'
+          }
+        }
+      },
+      edit_id_empresa: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un cliente'
+          }
+        }
+      },
+      edit_id_marca: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese una marca'
+          }
+        }
+      },
+      edit_cantidad_hologramas: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el número de hologramas solicitados'
+          }
+        }
+      },
+      edit_id_direccion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una dirección'
+          }
+        }
+      }
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        rowSelector: function (field, ele) {
+          return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+        }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+    var formData = new FormData(editHologramasForm);
     var id_solicitud = $('#edit_id_solicitud').val(); // Obtiene el ID de la solicitud
-
+  
     $.ajax({
-      url: '/solicitud_holograma/update/' + id_solicitud, // URL de la ruta de actualización
-      method: 'PUT', // Método HTTP
-      data: formData, // Datos enviados
+      url: '/solicitud_holograma/update/', // URL de la ruta de actualización
+      method: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
       success: function (response) {
         Swal.fire({
           icon: 'success',
@@ -634,6 +687,7 @@ $(function () {
       }
     });
   });
+  
 
 
 
