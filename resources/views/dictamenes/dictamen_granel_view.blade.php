@@ -40,16 +40,17 @@
                         <th>Fecha de emisión</th>
                         <th>Fecha de vigencia</th>
                         <th>Fecha de servicio</th>
+                        <th>PDF equisde</th>
                         <th>ACCIONES</th>
                     </tr>
                 </thead>
             </table>
         </div>
     </div>
-
     <!-- Modal -->
     @include('_partials/_modals/modal-pdfs-frames')
     @include('_partials/_modals/modal-add-dictamen-granel')
+    @include('_partials/_modals/modal-edit-dictamen-granel')
     <!-- /Modal -->
 
 @endsection

@@ -11,7 +11,7 @@
                     <div class="modal-body">
                         <form id="EditDestinoForm">
                             @csrf
-                            <input class="mb-4" id="edit_destinos_id" name="id_direccion">
+                            <input type="hidden" class="mb-4" id="edit_destinos_id" name="id_direccion">
 
                             <!-- Tipo de Dirección -->
                             <div class="row mb-4">
