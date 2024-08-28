@@ -575,7 +575,6 @@ $(function () {
       // Rellenar el formulario con los datos obtenidos
       $('#editt_id_solicitud').val(data.id_solicitud);
 
-      $('#edit_id_solicitud').val(data.id_solicitud);
       $('#edit_folio').val(data.folio);
       $('#edit_id_empresa').val(data.id_empresa).trigger('change');
       $('#edit_id_marca').val(data.id_marca).trigger('change');
