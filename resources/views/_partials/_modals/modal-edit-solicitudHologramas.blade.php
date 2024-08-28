@@ -108,6 +108,10 @@
             url: '/getDatos/' + empresa,
             method: 'GET',
             success: function(response) {
+                            // Filtrar las direcciones para que solo se incluyan las que tienen tipo_direccion igual a 3
+            var direccionesFiltradas = response.direcciones.filter(function(direccion) {
+                return direccion.tipo_direccion == 3;
+            });
                 // Cargar los detalles en el modal
                 var contenido = "";
                 for (let index = 0; index < response.direcciones.length; index++) {

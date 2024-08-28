@@ -99,35 +99,40 @@
     }
 
     function obtenerDirecciones() {
-        var empresa = $("#id_empresa").val();
-        // Hacer una petición AJAX para obtener los detalles de la empresa
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                // Cargar los detalles en el modal
-                var contenido = "";
-                for (let index = 0; index < response.direcciones.length; index++) {
-                    contenido += '<option value="' + response.direcciones[index].id_direccion + '">' +
-                        'Nombre de detinatario: ' + response.direcciones[index].destinatario +
-                        ' - Dirección: ' + response.direcciones[index].direccion +
-                        ' - Correo: ' + response.direcciones[index].correo_recibe +
-                        ' - Celular: ' + response.direcciones[index].celular_recibe +
+    var empresa = $("#id_empresa").val();
+    // Hacer una petición AJAX para obtener los detalles de la empresa
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            // Filtrar las direcciones para que solo se incluyan las que tienen tipo_direccion igual a 3
+            var direccionesFiltradas = response.direcciones.filter(function(direccion) {
+                return direccion.tipo_direccion == 3;
+            });
 
-
-                        '</option>';
-                }
-                // console.log(response.direcciones[index].norma);
-                if (response.direcciones.length == 0) {
-                    contenido = '<option value="">Sin lotes a granel registrados</option>';
-                }
-                $('.id_direccion').html(contenido);
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
+            // Cargar los detalles en el modal
+            var contenido = "";
+            for (let index = 0; index < direccionesFiltradas.length; index++) {
+                contenido += '<option value="' + direccionesFiltradas[index].id_direccion + '">' +
+                    'Nombre de destinatario: ' + direccionesFiltradas[index].destinatario +
+                    ' - Dirección: ' + direccionesFiltradas[index].direccion +
+                    ' - Correo: ' + direccionesFiltradas[index].correo_recibe +
+                    ' - Celular: ' + direccionesFiltradas[index].celular_recibe +
+                    '</option>';
             }
-        });
-    }
+
+            if (direccionesFiltradas.length == 0) {
+                contenido = '<option value="">Sin direcciones registradas</option>';
+            }
+
+            $('.id_direccion').html(contenido);
+        },
+        error: function() {
+            //alert('Error al cargar las direcciones.');
+        }
+    });
+}
+
 
 
     
