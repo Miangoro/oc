@@ -55,7 +55,7 @@
           <th>Solicitante</th>
           <th>Marca</th>
           <th>cantidad hologramas</th>
-          <th>direccion</th>
+          <th>dirección</th>
           <th>estatus</th>
           <th>pdf</th>
           <th>Acciones</th>
