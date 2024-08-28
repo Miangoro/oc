@@ -7,6 +7,7 @@ use App\Models\Documentacion;
 use App\Models\Documentacion_url;
 use App\Models\empresa;
 use App\Models\Instalaciones;
+use App\Models\marcas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -242,8 +243,39 @@ class documentacionController extends Controller
                 </tbody>
               </table>
             </div>';
-        
 
+            
+ }
+
+ $marcas = marcas::where('id_empresa', '=', $id_empresa)->get();
+            $contenidoMarcas ='';
+
+            if($act_instalacion=='comercializadora'){
+
+           
+            foreach ($marcas as $indexII => $marca) {
+              $contenidoMarcas =  $contenidoMarcas . '
+           
+            <div class="table-responsive text-nowrap col-md-6 mb-5 ">
+                  <table class="table  table-bordered">
+                    <thead class="bg-secondary text-white">
+                      <tr>
+                        <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3">Marca: <b>' . $marca->marca . '</b></th>
+                      </tr>
+                      <tr>
+                        <th class="bg-transparent border-bottom">#</th>
+                        <th class="bg-transparent border-bottom">Descripción del documento</th>
+                        <th class="text-end bg-transparent border-bottom">Subir archivo</th>
+                        <th class="text-end bg-transparent border-bottom">Documento</th>
+                        <th class="text-end bg-transparent border-bottom">Validar</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        ' . $contenidoDocumentos . '
+                    </tbody>
+                  </table>
+                </div>';
+            }
 
 
         foreach ($instalaciones as $indexI => $instalacion) {
@@ -280,6 +312,7 @@ class documentacionController extends Controller
           <div class="tab-pane fade" id="navs-orders-id-' . $actividad->id_actividad . '" role="tabpanel">
            <div class="row p-5">
             ' . $contenidoInstalaciones . '
+            ' . $contenidoMarcas . '
           </div> 
           </div>';
       }

@@ -11,7 +11,7 @@
                     <div class="modal-body">
                         <form id="EditDestinoForm">
                             @csrf
-                            <input type="hidden" id="edit_destinos_id" name="id_direccion">
+                            <input class="mb-4" id="edit_destinos_id" name="id_direccion">
 
                             <!-- Tipo de Dirección -->
                             <div class="row mb-4">
@@ -30,7 +30,7 @@
                                 <!-- Select de Empresa Cliente -->
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <select id="edit_id_empresa" name="id_empresa" class="select2 form-select">
+                                        <select id="edit_id_empresa" name="id_empresa" class=" form-select">
                                             <option value="" disabled selected>Selecciona la empresa cliente
                                             </option>
                                             @foreach ($empresas as $empresa)

@@ -20,6 +20,10 @@ class solicitudHolograma extends Model
         'cantidad_hologramas',
         'id_direccion',
         'comentarios',
+        'tipo_pago',
+        'fecha_envio',
+        'costo_envio',
+        'no_guia',
  
     ];
     
@@ -30,7 +34,7 @@ class solicitudHolograma extends Model
 
     public function direcciones()
     {
-        return $this->belongsTo(direcciones::class, 'id_direccion','id_direccion');
+        return $this->belongsTo(direcciones::class, 'id_direccion', 'id_direccion');
     }
 
 

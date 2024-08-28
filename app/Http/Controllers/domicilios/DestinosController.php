@@ -55,7 +55,7 @@ class DestinosController extends Controller
             $dir = $request->input('order.0.dir');
         
             if (empty($request->input('search.value'))) {
-                $destinos = Destinos::with('empresa') // Carga la relación
+                $destinos = Destinos::with('empresa')
                     ->whereHas('empresa', function ($query) {
                         $query->where('tipo', 2);
                     })
@@ -108,13 +108,20 @@ class DestinosController extends Controller
         
             $data = [];
         
+            // Mapea los valores de tipo_direccion a texto
+            $tipoDireccionMap = [
+                1 => 'Exportación',
+                2 => 'Nacional',
+                3 => 'Hologramas'
+            ];
+        
             if (!empty($destinos)) {
                 $ids = $start;
         
                 foreach ($destinos as $destino) {
                     $nestedData['id_direccion'] = $destino->id_direccion;
                     $nestedData['fake_id'] = ++$ids;
-                    $nestedData['tipo_direccion'] = $destino->tipo_direccion;
+                    $nestedData['tipo_direccion'] = $tipoDireccionMap[$destino->tipo_direccion] ?? 'Desconocido';
                     $nestedData['id_empresa'] = $destino->empresa->razon_social;
                     $nestedData['direccion'] = $destino->direccion;
                     $nestedData['destinatario'] = $destino->destinatario ?? 'N/A';
@@ -135,6 +142,7 @@ class DestinosController extends Controller
                 'data' => $data,
             ]);
         }
+        
 
             // Función para eliminar un predio
             public function destroy($id_direccion)
