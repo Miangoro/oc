@@ -607,7 +607,8 @@ Route::get('/dictamenes/productos', [DictamenGranelController::class, 'UserManag
 Route::resource('/dictamen-granel-list', DictamenGranelController::class);
 Route::delete('dictamen/granel/{id_dictamen}', [DictamenGranelController::class, 'destroy'])->name('dictamen.delete');
 Route::post('dictamenes-granel',[DictamenGranelController::class, 'store'])->name('dictamen.store');
-
+route::get('/dictamenes/productos/{id_dictamen}/edit', [DictamenGranelController::class, 'edit'])->name('dictamenes.edit');
+Route::post('/dictamenes/productos/{id_dictamen}/update', [DictamenGranelController::class, 'update'])->name('dictamen.update');
 
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
