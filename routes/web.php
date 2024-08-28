@@ -434,6 +434,8 @@ Route::get('/acta_circunstanciada_unidades_produccion', [CartaAsignacionControll
 Route::get('/solicitud_Info_ClienteNOM-199', [CartaAsignacionController::class, 'solicitudInfoNOM_199'])->name('solicitud_Info_ClienteNOM-199');
 Route::get('/inspeccion_geo_referenciacion', [CartaAsignacionController::class, 'InspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion');
 Route::get('/dictamen_cumplimiento_mezcal_granel', [CartaAsignacionController::class, 'dictamenDeCumplimientoGranel'])->name('dictamen-cumplimiento-granel');
+Route::get('/NOM_070_SCFI2016', [CartaAsignacionController::class, 'NOM_070_SCFI2016'])->name('NOM_070_SCFI2016');
+
 
 
 //Etiquetas Etiqueta_Barrica
@@ -478,7 +480,7 @@ Route::resource('marcas-list', marcasCatalogoController::class)->except(['create
 Route::get('/marcas-list/{id}/edit', [marcasCatalogoController::class, 'edit'])->name('marcas.edit');
 Route::post('/marcas-list/{id}', [marcasCatalogoController::class, 'store']);
 Route::post('/update-fecha-vigencia/{id_documento}', [marcasCatalogoController::class, 'updateFechaVigencia']);
-Route::post('/marcas-list/{id}/update', [marcasCatalogoController::class, 'update'])->name('marcas.update');
+Route::post('/marcas-list/update', [marcasCatalogoController::class, 'update'])->name('marcas.update');
 
 /* ruta de clases catalogo */
 Route::get('/catalogo/clases', [ClaseController::class, 'UserManagement'])->name('catalogo-clases');
@@ -605,7 +607,8 @@ Route::get('/dictamenes/productos', [DictamenGranelController::class, 'UserManag
 Route::resource('/dictamen-granel-list', DictamenGranelController::class);
 Route::delete('dictamen/granel/{id_dictamen}', [DictamenGranelController::class, 'destroy'])->name('dictamen.delete');
 Route::post('dictamenes-granel',[DictamenGranelController::class, 'store'])->name('dictamen.store');
-
+route::get('/dictamenes/productos/{id_dictamen}/edit', [DictamenGranelController::class, 'edit'])->name('dictamenes.edit');
+Route::post('/dictamenes/productos/{id_dictamen}/update', [DictamenGranelController::class, 'update'])->name('dictamen.update');
 
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
@@ -646,7 +649,7 @@ Route::get('certificados-list/{id}/edit', [Certificado_InstalacionesController::
 Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
 Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
-Route::put('/solicitud_holograma/update/{id_solicitud}', [solicitudHolograma::class, 'update']);
+Route::post('/solicitud_holograma/update/', [solicitudHolograma::class, 'update']);
 Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSolicitudHolograma'])->name('solicitudDeHologramas');
 Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2']);
 Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);

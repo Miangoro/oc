@@ -98,7 +98,7 @@ class DictamenGranelController extends Controller
             'data' => $data,
         ]);
     }
-
+/* funcion para eliminar */
     public function destroy($id_dictamen)
     {
         try {
@@ -112,7 +112,7 @@ class DictamenGranelController extends Controller
     }
 
 
-
+/* funcion para insertar datos */
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -142,7 +142,62 @@ class DictamenGranelController extends Controller
         ]);
     }
     
+    /* obtener los datos de los registros */
+    
+    public function edit($id_dictamen)
+    {
+        try {
+            // Cargar el dictamen específico
+            $dictamen = Dictamen_Granel::findOrFail($id_dictamen);
+            return response()->json([
+                'success' => true,
+                'dictamen' => $dictamen, // Enviar el dictamen específico
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['success' => false], 404);
+        }
+    }
+    
 
+    /* funcion para actualizar */
+    public function update(Request $request, $id_dictamen)
+    {
+        try {
+            // Validar los datos del formulario
+            $validated = $request->validate([
+                'num_dictamen' => 'required|string|max:70',
+                'id_empresa' => 'required|exists:empresa,id_empresa',
+                'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
+                'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
+                'fecha_emision' => 'required|date',
+                'fecha_vigencia' => 'required|date',
+                'fecha_servicio' => 'required|date'
+            ]);
+    
+            $dictamen = Dictamen_Granel::findOrFail($id_dictamen);
+
+            // Actualizar lote
+            $dictamen->update([
+                'num_dictamen' => $validated['num_dictamen'],
+                'id_empresa' => $validated['id_empresa'],
+                'id_inspeccion' => $validated['id_inspeccion'],
+                'id_lote_granel' => $validated['id_lote_granel'],
+                'fecha_emision' => $validated['fecha_emision'],
+                'fecha_vigencia' => $validated['fecha_vigencia'],
+                'fecha_servicio' => $validated['fecha_servicio'],
+            ]);
+    
+            return response()->json([
+                'success' => true,
+                'message' => 'Dictamen a granel actualizado exitosamente',
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error al actualizar el el dictamen a granel:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+        }
+    }
     
 
 }

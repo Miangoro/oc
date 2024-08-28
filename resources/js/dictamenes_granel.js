@@ -32,11 +32,14 @@ $(function () {
     //DATE PICKER
 
     $(document).ready(function () {
+
         $('.datepicker').datepicker({
-            format: 'yyyy-mm-dd'
+            format: 'yyyy-mm-dd',
+            autoclose: true
         });
 
     });
+
     // Users datatable
     if (dt_user_table.length) {
         var dt_user = dt_user_table.DataTable({
@@ -57,6 +60,7 @@ $(function () {
                 { data: 'fecha_emision' },
                 { data: 'fecha_vigencia' },
                 { data: 'fecha_servicio' },
+                { data: '' },
                 { data: 'action' },
             ],
 
@@ -80,7 +84,15 @@ $(function () {
                         return `<span>${full.fake_id}</span>`;
                     }
                 },
-
+                {
+                    // Abre el pdf del dictamen
+                    targets: 9,
+                    className: 'text-center',
+                    render: function (data, type, full, meta) {
+                      var $id = full['PDF'];
+                      return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+                    }
+                  },
                 {
                     // User full name
                     targets: 2,
@@ -120,7 +132,7 @@ $(function () {
                             '<div class="d-flex align-items-center gap-50">' +
                             '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                            `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalEditDestino" href="javascrip:;" class="dropdown-item edit-record text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+                            `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalEditDictamenGranel" href="javascrip:;" class="dropdown-item edit-record text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
                             `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
@@ -389,214 +401,406 @@ $(function () {
 
     initializeSelect2(select2Elements);
 
-// Delete Record eliminar un dictamen
-$(document).on('click', '.delete-record', function () {
-    var id_dictamen= $(this).data('id'); // Obtener el ID de la clase
-    var dtrModal = $('.dtr-bs-modal.show');
+    // Delete Record eliminar un dictamen
+    $(document).on('click', '.delete-record', function () {
+        var id_dictamen = $(this).data('id'); // Obtener el ID de la clase
+        var dtrModal = $('.dtr-bs-modal.show');
 
-    // Ocultar modal responsivo en pantalla pequeña si está abierto
-    if (dtrModal.length) {
-        dtrModal.modal('hide');
-    }
-
-    // SweetAlert para confirmar la eliminación
-    Swal.fire({
-        title: '¿Está seguro?',
-        text: 'No podrá revertir este evento',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
-        customClass: {
-            confirmButton: 'btn btn-primary me-3',
-            cancelButton: 'btn btn-label-secondary'
-        },
-        buttonsStyling: false
-    }).then(function (result) {
-        if (result.isConfirmed) {
-            // Enviar solicitud DELETE al servidor
-            $.ajax({
-                type: 'DELETE',
-                url: `${baseUrl}dictamen/granel/${id_dictamen}`,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function () {
-                    // Actualizar la tabla después de eliminar el registro
-                    dt_user.draw();
-
-                    // Mostrar SweetAlert de éxito
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Eliminado!',
-                        text: '¡El dictamen ha sido eliminada correctamente!',
-                        customClass: {
-                            confirmButton: 'btn btn-success'
-                        }
-                    });
-                },
-                error: function (error) {
-                    console.log(error);
-                    // Mostrar SweetAlert de error
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudo eliminar el dictamen.',
-                        customClass: {
-                            confirmButton: 'btn btn-danger'
-                        }
-                    });
-                }
-
-            });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-            // Acción cancelada, mostrar mensaje informativo
-            Swal.fire({
-                title: 'Cancelado',
-                text: 'La eliminación del lote ha sido cancelada',
-                icon: 'info',
-                customClass: {
-                    confirmButton: 'btn btn-primary'
-                }
-            });
+        // Ocultar modal responsivo en pantalla pequeña si está abierto
+        if (dtrModal.length) {
+            dtrModal.modal('hide');
         }
-    });
-});
 
-/* agregar un nuevo dictamen */
-$(function () { 
-   
-    // Configuración CSRF para Laravel
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    // Inicializar FormValidation
-    const form = document.getElementById('addNewDictamenGranelForm');
-    const fv = FormValidation.formValidation(form, {
-        fields: {
-            'num_dictamen': {
-                validators: {
-                    notEmpty: {
-                        message: 'El número de dictamen es obligatorio.'
+        // SweetAlert para confirmar la eliminación
+        Swal.fire({
+            title: '¿Está seguro?',
+            text: 'No podrá revertir este evento',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            customClass: {
+                confirmButton: 'btn btn-primary me-3',
+                cancelButton: 'btn btn-label-secondary'
+            },
+            buttonsStyling: false
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                // Enviar solicitud DELETE al servidor
+                $.ajax({
+                    type: 'DELETE',
+                    url: `${baseUrl}dictamen/granel/${id_dictamen}`,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    integer: {
-                        message: 'Debe ingresar un número válido.'
-                    }
-                }
-            },
-            'id_empresa': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona una empresa cliente.'
-                    }
-                }
-            },
-            'id_inspeccion': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona el número de servicio.'
-                    }
-                }
-            },
-            'id_lote_granel': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona el lote.'
-                    }
-                }
-            },
-            'fecha_emision': {
-                validators: {
-                    notEmpty: {
-                        message: 'La fecha de emisión es obligatoria.'
-                    },
-                    date: {
-                        format: 'YYYY-MM-DD',
-                        message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-                    }
-                }
-            },
-            'fecha_vigencia': {
-                validators: {
-                    notEmpty: {
-                        message: 'La fecha de vigencia es obligatoria.'
-                    },
-                    date: {
-                        format: 'YYYY-MM-DD',
-                        message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-                    }
-                }
-            },
-            'fecha_servicio': {
-                validators: {
-                    notEmpty: {
-                        message: 'La fecha de servicio es obligatoria.'
-                    },
-                    date: {
-                        format: 'YYYY-MM-DD',
-                        message: 'Ingresa una fecha válida (yyyy-mm-dd).'
-                    }
-                }
-            }
-        },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: '.form-floating'
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-        
-    }).on('core.form.valid', function () {
-        var formData = new FormData(form);
+                    success: function () {
+                        // Actualizar la tabla después de eliminar el registro
+                        dt_user.draw();
 
-        // Imprimir los datos del formulario para verificar
-        console.log('Form Data:', Object.fromEntries(formData.entries()));
-
-        $.ajax({
-            url: '/dictamenes-granel',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                // Ocultar el modal y resetear el formulario
-                $('#modalAddDictamenGranel').modal('hide');
-                $('#addNewDictamenGranelForm')[0].reset();
-                $('.select2').val(null).trigger('change');
-                $('.datatables-users').DataTable().ajax.reload();
-
-                // Mostrar mensaje de éxito
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.message,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
+                        // Mostrar SweetAlert de éxito
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Eliminado!',
+                            text: '¡El dictamen ha sido eliminada correctamente!',
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        // Mostrar SweetAlert de error
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudo eliminar el dictamen.',
+                            customClass: {
+                                confirmButton: 'btn btn-danger'
+                            }
+                        });
                     }
+
                 });
-            },
-            error: function (xhr) {
-                console.log('Error:', xhr.responseText);
-                // Mostrar mensaje de error
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // Acción cancelada, mostrar mensaje informativo
                 Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: 'Error al registrar el dictamen de granel',
+                    title: 'Cancelado',
+                    text: 'La eliminación del lote ha sido cancelada',
+                    icon: 'info',
                     customClass: {
-                        confirmButton: 'btn btn-danger'
+                        confirmButton: 'btn btn-primary'
                     }
                 });
             }
         });
     });
-});
 
+    /* agregar un nuevo dictamen */
+    $(function () {
+        // Configuración CSRF para Laravel
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        // Inicializar FormValidation
+        const form = document.getElementById('addNewDictamenGranelForm');
+        const fv = FormValidation.formValidation(form, {
+            fields: {
+                'num_dictamen': {
+                    validators: {
+                        notEmpty: {
+                            message: 'El número de dictamen es obligatorio.'
+                        },
+                        integer: {
+                            message: 'Debe ingresar un número válido.'
+                        }
+                    }
+                },
+                'id_empresa': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Selecciona una empresa cliente.'
+                        }
+                    }
+                },
+                'id_inspeccion': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Selecciona el número de servicio.'
+                        }
+                    }
+                },
+                'id_lote_granel': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Selecciona el lote.'
+                        }
+                    }
+                },
+                'fecha_emision': {
+                    validators: {
+                        notEmpty: {
+                            message: 'La fecha de emisión es obligatoria.'
+                        },
+                        date: {
+                            format: 'YYYY-MM-DD',
+                            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                        }
+                    }
+                },
+                'fecha_vigencia': {
+                    validators: {
+                        notEmpty: {
+                            message: 'La fecha de vigencia es obligatoria.'
+                        },
+                        date: {
+                            format: 'YYYY-MM-DD',
+                            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                        }
+                    }
+                },
+                'fecha_servicio': {
+                    validators: {
+                        notEmpty: {
+                            message: 'La fecha de servicio es obligatoria.'
+                        },
+                        date: {
+                            format: 'YYYY-MM-DD',
+                            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                        }
+                    }
+                }
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5({
+                    eleValidClass: '',
+                    eleInvalidClass: 'is-invalid',
+                    rowSelector: '.form-floating'
+                }),
+                submitButton: new FormValidation.plugins.SubmitButton(),
+                autoFocus: new FormValidation.plugins.AutoFocus()
+            }
+
+        }).on('core.form.valid', function () {
+            var formData = new FormData(form);
+
+            // Imprimir los datos del formulario para verificar
+            console.log('Form Data:', Object.fromEntries(formData.entries()));
+
+            $.ajax({
+                url: '/dictamenes-granel',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    // Ocultar el modal y resetear el formulario
+                    $('#modalAddDictamenGranel').modal('hide');
+                    $('#addNewDictamenGranelForm')[0].reset();
+                    $('.select2').val(null).trigger('change');
+                    $('.datatables-users').DataTable().ajax.reload();
+
+                    // Mostrar mensaje de éxito
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: response.message,
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    console.log('Error:', xhr.responseText);
+                    // Mostrar mensaje de error
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: 'Error al registrar el dictamen de granel',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+            });
+        });
+
+
+    });
+
+
+    
+
+
+    $(function () {
+        // Configuración CSRF para Laravel
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        // Inicializar FormValidation para el formulario de creación y edición
+        const form = document.getElementById('addNEditDictamenGranelForm');
+        const fv = FormValidation.formValidation(form, {
+            fields: {
+                'num_dictamen': {
+                    validators: {
+                        notEmpty: {
+                            message: 'El número de dictamen es obligatorio.'
+                        },
+                        integer: {
+                            message: 'Debe ingresar un número válido.'
+                        }
+                    }
+                },
+                'id_empresa': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Selecciona una empresa cliente.'
+                        }
+                    }
+                },
+                'id_inspeccion': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Selecciona el número de servicio.'
+                        }
+                    }
+                },
+                'id_lote_granel': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Selecciona el lote.'
+                        }
+                    }
+                },
+                'fecha_emision': {
+                    validators: {
+                        notEmpty: {
+                            message: 'La fecha de emisión es obligatoria.'
+                        },
+                        date: {
+                            format: 'YYYY-MM-DD',
+                            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                        }
+                    }
+                },
+                'fecha_vigencia': {
+                    validators: {
+                        notEmpty: {
+                            message: 'La fecha de vigencia es obligatoria.'
+                        },
+                        date: {
+                            format: 'YYYY-MM-DD',
+                            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                        }
+                    }
+                },
+                'fecha_servicio': {
+                    validators: {
+                        notEmpty: {
+                            message: 'La fecha de servicio es obligatoria.'
+                        },
+                        date: {
+                            format: 'YYYY-MM-DD',
+                            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                        }
+                    }
+                }
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5({
+                    eleValidClass: '',
+                    eleInvalidClass: 'is-invalid',
+                    rowSelector: '.form-floating'
+                }),
+                submitButton: new FormValidation.plugins.SubmitButton(),
+                autoFocus: new FormValidation.plugins.AutoFocus()
+            }
+        }).on('core.form.valid', function () {
+            // Validar y enviar el formulario cuando pase la validación
+            var formData = new FormData(form);
+            var dictamenid = $('#edit_id_dictamen').val();
+    
+            $.ajax({
+                url: '/dictamenes/productos/' + dictamenid + '/update',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    dt_user.ajax.reload();
+                    $('#modalEditDictamenGranel').modal('hide');
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: response.message,
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorMessages = Object.keys(errors).map(function (key) {
+                            return errors[key].join('<br>');
+                        }).join('<br>');
+    
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            html: errorMessages,
+                            customClass: {
+                                confirmButton: 'btn btn-danger'
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al actualizar el dictamen.',
+                            customClass: {
+                                confirmButton: 'btn btn-danger'
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    
+        // Función del botón de editar para cargar los datos del dictamen
+        $(document).on('click', '.edit-record', function () {
+            var id_dictamen = $(this).data('id');
+            $('#edit_id_dictamen').val(id_dictamen);
+    
+            $.ajax({
+                url: '/dictamenes/productos/' + id_dictamen + '/edit',
+                method: 'GET',
+                success: function (data) {
+                    if (data.success) {
+                        var dictamen = data.dictamen;
+    
+                        // Asignar valores a los campos del formulario
+                        $('#edit_num_dictamen').val(dictamen.num_dictamen);
+                        $('#edit_id_empresa').val(dictamen.id_empresa).trigger('change');
+                        $('#edit_id_inspeccion').val(dictamen.id_inspeccion).trigger('change');
+                        $('#edit_id_lote_granel').data('selectedLote', dictamen.id_lote_granel); // Guardar el lote seleccionado
+                        $('#edit_fecha_emision').val(dictamen.fecha_emision);
+                        $('#edit_fecha_vigencia').val(dictamen.fecha_vigencia);
+                        $('#edit_fecha_servicio').val(dictamen.fecha_servicio);
+    
+                        // Mostrar el modal
+                        $('#modalEditDictamenGranel').modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudo cargar los datos del dictamen a granel.',
+                            customClass: {
+                                confirmButton: 'btn btn-danger'
+                            }
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.error('Error al cargar los datos del dictamen a granel:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo cargar los datos del dictamen a granel.',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+            });
+        });
+    });
+    
 
 });

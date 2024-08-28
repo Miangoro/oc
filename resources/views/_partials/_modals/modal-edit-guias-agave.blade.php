@@ -10,7 +10,7 @@
                 </div>
                 <form id="editGuiaForm" method="POST" enctype="multipart/form-data"  onsubmit="return false">
                     <!-- Hidden field to store the ID of the guia being edited -->
-                    <input type="hidden" id="edit_id_guia" name="id_guia">
+                    <input type="hidden" id="editt_id_guia" name="id_guia">
 
                     <div class="row">
                         <div class="col-md-6">

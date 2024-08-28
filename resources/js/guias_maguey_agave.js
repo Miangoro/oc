@@ -553,7 +553,7 @@ $(function () {
 
     $.get('/edit/' + id_guia, function (data) {
         // Rellenar el formulario con los datos obtenidos
-        $('#edit_id_guia').val(data.id_guia);
+        $('#editt_id_guia').val(data.id_guia);
         $('#edit_id_empresa').val(data.id_empresa).trigger('change');
         $('#edit_numero_guias').val(data.numero_guias);
         $('#edit_nombre_predio').val(data.id_predio).trigger('change'); // Cambiado a 'id_predio'
@@ -593,47 +593,95 @@ $(function () {
 
 
 
-$('#editGuiaForm').submit(function (e) {
-  e.preventDefault();
-  var formData = new FormData(this);
-  $.ajax({
-      url: '/update/',
-      type: 'POST',
-      data: formData,
-      contentType: false,
-      processData: false,
-      success: function (response) {
-          Swal.fire({
-              title: 'Éxito',
-              text: response.success,
-              icon: 'success',
-              buttonsStyling: false,
-              customClass: {
-                confirmButton: 'btn btn-success'
-              }
-          });
-          $('#editGuias').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload();
-      },
-      error: function (response) {
-       
-          Swal.fire({
-              title: 'Error',
-              text: 'Ocurrió un error al actualizar la guía.',
-              icon: 'error',
-              buttonsStyling: false,
-              customClass: {
-                confirmButton: 'btn btn-success'
-              }
-          });
+
+
+
+
+
+const editGuiaForm = document.getElementById('editGuiaForm');
+
+// Validación del formulario
+const fv2 = FormValidation.formValidation(editGuiaForm, {
+  fields: {
+    id_empresa: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione un cliente'
+        }
       }
+    },
+    numero_guias: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese el número de guías solicitadas'
+        }
+      }
+    },
+    predios: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione un predio'
+        }
+      }
+    },
+    plantacion: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione una plantación'
+        }
+      }
+    }
+
+
+  },
+  plugins: {
+    trigger: new FormValidation.plugins.Trigger(),
+    bootstrap5: new FormValidation.plugins.Bootstrap5({
+      eleValidClass: '',
+      rowSelector: function (field, ele) {
+        return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+      }
+    }),
+    submitButton: new FormValidation.plugins.SubmitButton(),
+    autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  //e.preventDefault();
+  var formData = new FormData(editGuiaForm);
+
+  $.ajax({
+    url: '/update/', // Actualiza con la URL correcta
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      $('#editGuias').modal('hide');
+      $('.datatables-users').DataTable().ajax.reload();
+
+      // Mostrar alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.success,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+    },
+    error: function (xhr) {
+      // Mostrar alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al registrar el lote envasado',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
   });
 });
-
-
-
-
-
 
 
 
