@@ -11,89 +11,106 @@ class Certificado_InstalacionesController extends Controller
 {
     public function UserManagement()
     {
+        // Obtener todos los dictámenes
         $dictamenes = Dictamen_instalaciones::all();
+
+        // Pasar los dictámenes a la vista
         return view('certificados.certificados_instalaciones_view', compact('dictamenes'));
     }
 
     public function index(Request $request)
     {
         $columns = [
-            1 => 'id_certificado',
+            1 => 'num_dictamen',
             2 => 'num_certificado',
-            3 => 'fecha_vigencia',
-            4 => 'fecha_vencimiento',
-            5 => 'maestro_mezcalero',
+            3 => 'maestro_mezcalero',
+            4 => 'fecha_vigencia',
+            5 => 'fecha_vencimiento',
         ];
     
-        try {
-            $totalData = Certificados::count();
-            $totalFiltered = $totalData;
+        $search = [];
     
-            $limit = $request->input('length', 10);
-            $start = $request->input('start', 0);
-            $order = $columns[$request->input('order.0.column', 0)] ?? 'id_certificado';
-            $dir = $request->input('order.0.dir', 'asc');
+        // Obtener el total de registros sin filtro
+        $certificados_temp = Certificados::with('dictamen')->get();
+        $totalData = $certificados_temp->count();
     
-            if (empty($request->input('search.value'))) {
-                $certificados = Certificados::offset($start)
-                    ->limit($limit)
-                    ->orderBy($order, $dir)
-                    ->get();
-            } else {
-                $search = $request->input('search.value');
+        $totalFiltered = $totalData;
     
-                $certificados = Certificados::where('num_certificado', 'LIKE', "%{$search}%")
-                    ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
-                    ->offset($start)
-                    ->limit($limit)
-                    ->orderBy($order, $dir)
-                    ->get();
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $orderIndex = $request->input('order.0.column');
+        $orderDir = $request->input('order.0.dir');
     
-                $totalFiltered = Certificados::where('num_certificado', 'LIKE', "%{$search}%")
-                    ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
-                    ->count();
-            }
+        // Validar el índice del orden
+        $order = isset($columns[$orderIndex]) ? $columns[$orderIndex] : 'num_certificado'; // Valor predeterminado
+        $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc'; // Valor predeterminado
     
-            $data = [];
+        if (empty($request->input('search.value'))) {
+            $certificados = Certificados::with('dictamen')
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
+                ->get();
+        } else {
+            $search = $request->input('search.value');
+    
+            $certificados = Certificados::with('dictamen')
+                ->where('num_certificado', 'LIKE', "%{$search}%")
+                ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
+                ->get();
+    
+            $totalFiltered = Certificados::with('dictamen')
+                ->where('num_certificado', 'LIKE', "%{$search}%")
+                ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
+                ->count();
+        }
+    
+        $data = [];
+    
+        if (!empty($certificados)) {
+            // Providing a dummy id instead of database ids
+            $ids = $start;
+    
             foreach ($certificados as $certificado) {
-                $data[] = [
-                    'id_certificado' => $certificado->id_certificado,
-                    'num_certificado' => $certificado->num_certificado,
-                    'fecha_vigencia' => $certificado->fecha_vigencia,
-                    'fecha_vencimiento' => $certificado->fecha_vencimiento,
-                    'maestro_mezcalero' => $certificado->maestro_mezcalero,
-                ];
-            }
+                $nestedData['id_certificado'] = $certificado->id_certificado;
+                $nestedData['fake_id'] = ++$ids;
+                $nestedData['num_certificado'] = $certificado->num_certificado;
+                $nestedData['fecha_vigencia'] = $certificado->fecha_vigencia;
+                $nestedData['fecha_vencimiento'] = $certificado->fecha_vencimiento;
+                $nestedData['maestro_mezcalero'] = $certificado->maestro_mezcalero;
+                $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No disponible';
     
+                $data[] = $nestedData;
+            }
+        }
+    
+        if ($data) {
             return response()->json([
                 'draw' => intval($request->input('draw')),
                 'recordsTotal' => intval($totalData),
                 'recordsFiltered' => intval($totalFiltered),
+                'code' => 200,
                 'data' => $data,
             ]);
-    
-        } catch (\Exception $e) {
-            \Log::error('Error en el método index del controlador Certificado_InstalacionesController: ' . $e->getMessage());
-            return response()->json(['error' => 'Error interno del servidor'], 500);
+        } else {
+            return response()->json([
+                'message' => 'Internal Server Error',
+                'code' => 500,
+                'data' => [],
+            ]);
         }
-    }
+    }    
+    
+    //funcion para eliminar
+    public function destroy($id_certificado)
+    {
+        $clase = Certificados::findOrFail($id_certificado);
+        $clase->delete();
 
-public function destroy($id_certificado)
-{
-    try {
-        // Encuentra el certificado por ID
-        $certificado = Certificados::findOrFail($id_certificado);
-        
-        // Elimina el certificado
-        $certificado->delete();
-        
-        // Respuesta JSON para éxito
-        return response()->json(['success' => 'Certificado eliminado correctamente.']);
-    } catch (\Exception $e) {
-        // Respuesta JSON para error
-        return response()->json(['error' => 'Error al eliminar el certificado: ' . $e->getMessage()], 500);
+        return response()->json(['success' => 'Clase eliminada correctamente']);
     }
-}
-
 
 }
