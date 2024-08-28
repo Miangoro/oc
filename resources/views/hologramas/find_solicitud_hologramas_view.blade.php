@@ -56,6 +56,7 @@
           <th>Marca</th>
           <th>cantidad hologramas</th>
           <th>direccion</th>
+          <th>estatus</th>
           <th>pdf</th>
           <th>Acciones</th>
         </tr>

@@ -156,6 +156,7 @@ $(function () {
         { data: 'id_marca' },
         { data: 'cantidad_hologramas' },
         { data: 'id_direccion' },
+        { data: 'estatus' },
         { data: '' },
         { data: 'action' }
 
@@ -219,16 +220,22 @@ $(function () {
             return '<span class="user-email">' + $email + '</span>';
           }
         }, */
-        /*         {
+                 {
                   // email verify
-                  targets: 4,
+                  targets: 8,
                   className: 'text-center',
                   render: function (data, type, full, meta) {
-                    var $verified = full['regimen'];
-                    if($verified=='Persona física'){
-                      var $colorRegimen = 'info';
-                    }else{
-                      var $colorRegimen = 'warning';
+                    var $verified = full['estatus'];
+                    var $colorRegimen;
+
+                    if ($verified == 'Enviado') {
+                      $colorRegimen = 'info'; // Azul
+                    } else if ($verified == 'Pagado') {
+                      $colorRegimen = 'warning'; // Naranja
+                    } else if ($verified == 'Pendiente') {
+                      $colorRegimen = 'danger'; // Rojo
+                    } else {
+                      $colorRegimen = 'secondary'; // Color por defecto si no coincide con ninguno
                     }
                     return `${
                       $verified
@@ -236,10 +243,10 @@ $(function () {
                         : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
                     }`;
                   }
-                },*/
+                },
         {
           // email verify
-          targets: 8,
+          targets: 9,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $id = full['id_solicitud'];

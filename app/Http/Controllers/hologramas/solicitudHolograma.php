@@ -96,7 +96,7 @@ class solicitudHolograma extends Controller
                 $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
 
                 $marca = \App\Models\Marcas::where('id_marca', $user->id_marca)->value('marca');
-                $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');
+                $direccion = \App\Models\direcciones::where('id_empresa', $user->id_direccion)->value('direccion');
                 //el segundo es el nombre de la variable del usuario
                 $name = \App\Models\User::where('id', $user->id_solicitante)->value('name');
 
@@ -116,6 +116,8 @@ class solicitudHolograma extends Controller
                     'fecha_envio' => $user->fecha_envio,
                     'costo_envio' => $user->costo_envio,
                     'no_guia' => $user->no_guia,
+                    'estatus' => $user->estatus,
+
 
 
                 ];
@@ -224,6 +226,7 @@ class solicitudHolograma extends Controller
             // Encuentra la solicitud de hologramas por su ID
             $holograma = ModelsSolicitudHolograma::findOrFail($request->input('id_solicitud'));
             $holograma->tipo_pago = $request->input('tipo_pago'); // Nuevo campo tipo_pago
+            $holograma->estatus = 'Pagado';
 
             $holograma->save();
             //metodo para guardar pdf
@@ -263,6 +266,8 @@ class solicitudHolograma extends Controller
             $holograma->fecha_envio = $request->input('fecha_envio');
             $holograma->costo_envio = $request->input('costo_envio');
             $holograma->no_guia = $request->input('no_guia');
+            $holograma->estatus = 'Enviado';
+
         
             $holograma->save();
             //metodo para guardar pdf
