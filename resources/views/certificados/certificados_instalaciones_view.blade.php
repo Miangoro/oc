@@ -59,7 +59,7 @@
 </div>
 
 <!-- Modal Structure -->
-<div class="modal fade" id="addCertificadoForm" tabindex="-1" aria-labelledby="addCertificadoFormLabel" aria-hidden="true">
+<div class="modal fade" id="addCertificadoForm" tabindex="-1" aria-labelledby="addCertificadoFormLabel">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -87,11 +87,11 @@
 
           <!-- Input de Maestro Mezcalero -->
           <div class="form-floating form-floating-outline mb-3" id="maestroMezcaleroContainer" style="display: none;">
-              <input type="text" class="form-control" id="maestroMezcalero" placeholder="Maestro Mezcalero" name="maestro_mezcalero" aria-label="Maestro Mezcalero" required>
+              <input type="text" class="form-control" id="maestroMezcalero" placeholder="Maestro Mezcalero" name="maestro_mezcalero" aria-label="Maestro Mezcalero">
               <label for="maestroMezcalero">Maestro Mezcalero</label>
           </div>
 
-          <!-- Campo de No. de Autorización para el Uso de la Denominación de Origen Mezcal -->
+          <!-- Campo de No. de Autorización -->
           <div class="form-floating form-floating-outline mb-3">
               <input type="text" class="form-control" id="no_autorizacion" placeholder="No. de Autorización" name="no_autorizacion" aria-label="No. de Autorización" required>
               <label for="no_autorizacion">No. de Autorización</label>
@@ -120,6 +120,8 @@
       </div>
     </div>
   </div>
+</div>
+
 </div>
 
 @endsection

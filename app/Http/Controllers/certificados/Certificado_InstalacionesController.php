@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Certificados;
 use App\Models\Dictamen_instalaciones;
+use App\Models\Empresa; // Asegúrate de tener este modelo si `id_empresa` es una clave foránea
 
 class Certificado_InstalacionesController extends Controller
 {
@@ -27,24 +28,24 @@ class Certificado_InstalacionesController extends Controller
             4 => 'fecha_vigencia',
             5 => 'fecha_vencimiento',
         ];
-    
+
         $search = [];
-    
+
         // Obtener el total de registros sin filtro
         $certificados_temp = Certificados::with('dictamen')->get();
         $totalData = $certificados_temp->count();
-    
+
         $totalFiltered = $totalData;
-    
+
         $limit = $request->input('length');
         $start = $request->input('start');
         $orderIndex = $request->input('order.0.column');
         $orderDir = $request->input('order.0.dir');
-    
+
         // Validar el índice del orden
         $order = isset($columns[$orderIndex]) ? $columns[$orderIndex] : 'num_certificado'; // Valor predeterminado
         $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc'; // Valor predeterminado
-    
+
         if (empty($request->input('search.value'))) {
             $certificados = Certificados::with('dictamen')
                 ->offset($start)
@@ -53,7 +54,7 @@ class Certificado_InstalacionesController extends Controller
                 ->get();
         } else {
             $search = $request->input('search.value');
-    
+
             $certificados = Certificados::with('dictamen')
                 ->where('num_certificado', 'LIKE', "%{$search}%")
                 ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
@@ -61,19 +62,19 @@ class Certificado_InstalacionesController extends Controller
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
-    
+
             $totalFiltered = Certificados::with('dictamen')
                 ->where('num_certificado', 'LIKE', "%{$search}%")
                 ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
                 ->count();
         }
-    
+
         $data = [];
-    
+
         if (!empty($certificados)) {
             // Providing a dummy id instead of database ids
             $ids = $start;
-    
+
             foreach ($certificados as $certificado) {
                 $nestedData['id_certificado'] = $certificado->id_certificado;
                 $nestedData['fake_id'] = ++$ids;
@@ -82,11 +83,11 @@ class Certificado_InstalacionesController extends Controller
                 $nestedData['fecha_vencimiento'] = $certificado->fecha_vencimiento;
                 $nestedData['maestro_mezcalero'] = $certificado->maestro_mezcalero;
                 $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'No disponible';
-    
+
                 $data[] = $nestedData;
             }
         }
-    
+
         if ($data) {
             return response()->json([
                 'draw' => intval($request->input('draw')),
@@ -102,15 +103,15 @@ class Certificado_InstalacionesController extends Controller
                 'data' => [],
             ]);
         }
-    }    
-    
-    //funcion para eliminar
+    }
+
+    // Función para eliminar
     public function destroy($id_certificado)
     {
-        $clase = Certificados::findOrFail($id_certificado);
-        $clase->delete();
+        $certificado = Certificados::findOrFail($id_certificado);
+        $certificado->delete();
 
-        return response()->json(['success' => 'Clase eliminada correctamente']);
+        return response()->json(['success' => 'Certificado eliminado correctamente']);
     }
 
 }
