@@ -63,13 +63,13 @@ $(function () {
         responsivePriority: 4,
         render: function (data, type, full, meta) {
           var $name = full['tipo'];
-          if ($name == 'Productora'){
+          if ($name == 'productora'){
              return '<span class="badge bg-primary">'+full['tipo']+'</span>';
           }
-          else if($name == 'Envasadora'){ 
+          else if($name == 'envasadora'){ 
                  return '<span class="badge bg-success">'+full['tipo']+'</span>';
           }
-          else if($name == 'Comercializadora'){ 
+          else if($name == 'comercializadora'){ 
              return '<span class="badge bg-info">'+full['tipo']+'</span>';
          }
          else if($name == 4){ 

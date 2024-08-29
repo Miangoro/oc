@@ -602,13 +602,16 @@ Route::get('/dictamen_comercializador/{id_dictamen}', [InstalacionesController::
 Route::get('/dictamen_almacen/{id_dictamen}', [InstalacionesController::class, 'dictamen_almacen'])->name('dictamen_almacen');
 Route::get('/dictamen_maduracion/{id_dictamen}', [InstalacionesController::class, 'dictamen_maduracion'])->name('dictamen_maduracion');
 
-/* dictamen a granel*/
+/*------------------- Dictamenes a granel -------------------*/
 Route::get('/dictamenes/productos', [DictamenGranelController::class, 'UserManagement'])->name('dictamenes-productos');
 Route::resource('/dictamen-granel-list', DictamenGranelController::class);
 Route::delete('dictamen/granel/{id_dictamen}', [DictamenGranelController::class, 'destroy'])->name('dictamen.delete');
 Route::post('dictamenes-granel',[DictamenGranelController::class, 'store'])->name('dictamen.store');
 route::get('/dictamenes/productos/{id_dictamen}/edit', [DictamenGranelController::class, 'edit'])->name('dictamenes.edit');
 Route::post('/dictamenes/productos/{id_dictamen}/update', [DictamenGranelController::class, 'update'])->name('dictamen.update');
+/*------------------- PDFS de Dictamenes a granel -------------------*/
+// Ruta para el PDF con ID
+route::get('/dictamen_cumplimiento_mezcal_granel/{id_dictamen}', [DictamenGranelController::class, 'dictamenDeCumplimientoGranel'])->name('dictamen-cumplimiento-granel');
 
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
@@ -646,6 +649,11 @@ Route::resource('certificados-list',Certificado_InstalacionesController::class);
 Route::post('certificados-list', [Certificado_InstalacionesController::class, 'store'])->name('certificados.store');
 Route::get('certificados-list/{id}/edit', [Certificado_InstalacionesController::class, 'edit']);
 Route::put('certificados-list/{id}', [Certificado_InstalacionesController::class, 'update']);
+
+//Pdfs de certificados de instalaciones
+Route::get('/certificado_comercializador/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_comercializador'])->name('certificado_comercializador');
+Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
+Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
 
 Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);

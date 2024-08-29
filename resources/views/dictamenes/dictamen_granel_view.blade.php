@@ -40,7 +40,7 @@
                         <th>Fecha de emisión</th>
                         <th>Fecha de vigencia</th>
                         <th>Fecha de servicio</th>
-                        <th>PDF equisde</th>
+                        <th>Dictamen</th>
                         <th>ACCIONES</th>
                     </tr>
                 </thead>

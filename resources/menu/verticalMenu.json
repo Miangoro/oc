@@ -86,12 +86,12 @@
       "submenu": [
         {
           "url": "laravel/user-management",
-          "name": "Dictaminación de instalaciones",
+          "name": "Nueva solicitud",
           "slug": "laravel-example-user-management"
         },
         {
           "url": "laravel/user-management",
-          "name": "Activos",
+          "name": "Historial",
           "slug": "laravel-example-user-management"
         }
       ]
@@ -192,6 +192,23 @@
         {
           "url": "/hologramas/solicitud",
           "name": "Solicitud de hologramas",
+          "slug": "hologramas-solicitud"
+        }
+      ]
+    },
+    {
+      "name": "Revisión de certificados",
+      "icon": "menu-icon ri-qr-code-fill",
+      "slug": "hologramas",
+      "submenu": [
+        {
+          "url": "/hologramas/solicitud",
+          "name": "Personal",
+          "slug": "hologramas-solicitud"
+        },
+        {
+          "url": "/hologramas/solicitud",
+          "name": "Consejo",
           "slug": "hologramas-solicitud"
         }
       ]
