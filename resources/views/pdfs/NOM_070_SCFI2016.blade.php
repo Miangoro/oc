@@ -158,10 +158,12 @@
 
 
         .diagonal-line{
-            width: 100px;
-            height: 5px;
+            width: 70px;
+            height: 2px;
             background-color: black;
-            transform: rotate(-45deg);
+            transform: rotate(-20deg);
+            margin: 0;
+            padding: 0;
         }
     </style>
 
@@ -213,8 +215,29 @@
     <tr>
         <td>Solicitud del servicio</td>
         <td>C</td>
-        <td></td>
-        <td></td>
+        <td class="no-padding" style="height: 50px"><div class="diagonal-line"></div></td>
+        <td class="no-padding"><div class="diagonal-line"></div></td>
+    </tr>
+    <tr>
+        <td>Contrato de prestación de
+            servicios</td>
+        <td>C</td>
+        <td class="no-padding" style="height: 50px"><div class="diagonal-line"></div></td>
+        <td class="no-padding" style="height: 50px"><div class="diagonal-line"></div></td>
+    </tr>
+    <tr>
+        <td>Dictamen de la unidad de
+            inspección (fecha de emisión,</td>
+        <td>C</td>
+        <td class="no-padding" style="height: 50px"><div class="diagonal-line"></div></td>
+        <td class="no-padding" style="height: 50px"><div class="diagonal-line"></div></td>
+    </tr>
+    <tr>
+        <td>Acta de la Unidad de
+            Inspección (fecha de inicio y</td>
+        <td>C</td>
+        <td class="no-padding"><div class="diagonal-line"></div></td>
+        <td class="no-padding"><div class="diagonal-line"></div></td>
     </tr>
 </table>
 
