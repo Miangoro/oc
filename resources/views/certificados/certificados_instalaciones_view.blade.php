@@ -51,6 +51,7 @@
                     <th>No. Dictamen</th>
                     <th>No. Certificado</th>
                     <th>Maestro Mezcalero</th>
+                    <th>No. Autorizacion</th>
                     <th>Fecha de Vigencia</th>
                     <th>Fecha de Vencimiento</th>
                     <th>Certificado</th>
@@ -116,7 +117,7 @@
 
 
 
-<div class="modal fade" id="editCertificadoModal" tabindex="-1" aria-labelledby="editCertificadoModalLabel" aria-hidden="true">
+<div class="modal fade" id="editCertificadoModal" tabindex="-1" aria-labelledby="editCertificadoModalLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -147,25 +148,25 @@
                     </div>
 
                     <!-- Campo para Maestro Mezcalero -->
-                    <div id="edit_maestroMezcaleroContainer" class="form-floating form-floating-outline mb-3" style="display:none;">
+                    <div id="edit_maestroMezcaleroContainer" class="form-floating form-floating-outline mb-3">
                         <input type="text" class="form-control" id="edit_maestro_mezcalero" placeholder="Maestro Mezcalero" name="maestro_mezcalero" aria-label="Maestro Mezcalero">
                         <label for="edit_maestro_mezcalero">Maestro Mezcalero</label>
                     </div>
 
                     <!-- Campo para Número de Autorización -->
                     <div class="form-floating form-floating-outline mb-3">
-                        <input type="text" class="form-control" id="edit_no_autorizacion" placeholder="No. de Autorización" name="num_autorizacion" aria-label="No. de Autorización" required>
-                        <label for="edit_no_autorizacion">No. de Autorización</label>
+                         <input type="text" class="form-control" id="edit_no_autorizacion" placeholder="No. de Autorización" name="num_autorizacion" aria-label="No. de Autorización" required>
+                         <label for="edit_no_autorizacion">No. de Autorización</label>
                     </div>
 
                     <!-- Campos para Fechas -->
                     <div class="d-flex justify-content-between mb-3">
                         <div class="form-floating form-floating-outline flex-fill me-2">
-                            <input class="form-control datepicker" id="edit_fecha_vigencia" placeholder="yyyy-mm-dd" name="fecha_vigencia" aria-label="Fecha de Vigencia" required>
+                            <input type="text" class="form-control datepicker" id="edit_fecha_vigencia" placeholder="yyyy-mm-dd" name="fecha_vigencia" aria-label="Fecha de Vigencia" required>
                             <label for="edit_fecha_vigencia">Fecha de Inicio Vigencia</label>
                         </div>
                         <div class="form-floating form-floating-outline flex-fill ms-2">
-                            <input class="form-control datepicker" id="edit_fecha_vencimiento" placeholder="yyyy-mm-dd" name="fecha_vencimiento" aria-label="Fecha de Vencimiento" required>
+                            <input type="text" class="form-control datepicker" id="edit_fecha_vencimiento" placeholder="yyyy-mm-dd" name="fecha_vencimiento" aria-label="Fecha de Vencimiento" required>
                             <label for="edit_fecha_vencimiento">Fecha de Vencimiento</label>
                         </div>
                     </div>
@@ -180,7 +181,6 @@
         </div>
     </div>
 </div>
-
 
 
 </div>
