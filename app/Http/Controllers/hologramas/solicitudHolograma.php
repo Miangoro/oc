@@ -260,7 +260,7 @@ public function update(Request $request)
     
     
 
-    public function update2(Request $request)
+    public function update2(Request $request) //Este es para adjuntar comprobante de pago
     {
         try {
             // Encuentra la solicitud de hologramas por su ID

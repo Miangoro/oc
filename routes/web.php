@@ -650,6 +650,11 @@ Route::post('certificados-list', [Certificado_InstalacionesController::class, 's
 Route::get('certificados-list/{id}/edit', [Certificado_InstalacionesController::class, 'edit']);
 Route::put('certificados-list/{id}', [Certificado_InstalacionesController::class, 'update']);
 
+//Pdfs de certificados de instalaciones
+Route::get('/certificado_comercializador/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_comercializador'])->name('certificado_comercializador');
+Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
+Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
+
 Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
 Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);

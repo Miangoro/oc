@@ -26,6 +26,7 @@ class Certificado_InstalacionesController extends Controller
             4 => 'num_autorizacion', // Cambio aquí
             5 => 'fecha_vigencia',
             6 => 'fecha_vencimiento',
+            7 => 'tipo_dictamen'
         ];
     
         $search = $request->input('search.value');
@@ -79,6 +80,7 @@ class Certificado_InstalacionesController extends Controller
             $nestedData['fecha_vencimiento'] = Helpers::formatearFecha($certificado->fecha_vencimiento);
             $nestedData['maestro_mezcalero'] = $certificado->maestro_mezcalero;
             $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'N/A';
+            $nestedData['tipo_dictamen'] = $certificado->dictamen->tipo_dictamen;
     
             $data[] = $nestedData;
         }
@@ -177,5 +179,35 @@ class Certificado_InstalacionesController extends Controller
         ], 500);
     }
 }
+    
+    //Certificados de instalaciones 
+    public function pdf_certificado_productor($id_certificado)
+    {   
+        $datos = Certificados::with(['dictamen.inspeccione.solicitud.empresa.empresaNumClientes', 'dictamen.instalaciones', 'dictamen.inspeccione.inspector'])->find($id_certificado);
 
+       // $fecha_inspeccion = Helpers::formatearFecha($datos->dictamen->inspeccione->fecha_servicio);
+        $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
+        $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+        
+        $pdf = Pdf::loadView('pdfs.Certificado_productor_mezcal',['datos'=>$datos, 'fecha_emision'=>$fecha_emision,'fecha_vigencia'=>$fecha_vigencia]);
+        return $pdf->stream('Certificado de productor de mezcal.pdf');
+    }
+    
+    
+    public function pdf_certificado_envasador()
+    {
+        $pdf = Pdf::loadView('pdfs.Certificado_envasador_mezcal');
+        return $pdf->stream('Certificado de envasador de mezcal.pdf');
+    }
+
+
+   
+    public function pdf_certificado_comercializador()
+    {
+        $pdf = Pdf::loadView('pdfs.Certificado_comercializador');
+        return $pdf->stream('Certificado de comercializador.pdf');
+    }
+    
+    
+    
 }

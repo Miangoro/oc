@@ -1,7 +1,6 @@
 'use strict';
 
 document.addEventListener('DOMContentLoaded', function () {
-  // Función para actualizar la visibilidad del campo maestro_mezcalero
   function updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer) {
       const selectedOption = dictamenSelect.options[dictamenSelect.selectedIndex];
       const tipoDictamen = selectedOption ? selectedOption.getAttribute('data-tipo-dictamen') : '';
@@ -13,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
   }
 
-  // Función para inicializar el comportamiento en el formulario de agregar
   function initializeAgregar() {
       const dictamenSelect = document.getElementById('id_dictamen');
       const maestroMezcaleroContainer = document.getElementById('maestroMezcaleroContainer');
@@ -26,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }
   }
 
-  // Función para inicializar el comportamiento en el formulario de edición
   function initializeEdicion() {
       const dictamenSelect = document.getElementById('edit_id_dictamen');
       const maestroMezcaleroContainer = document.getElementById('edit_maestroMezcaleroContainer');
@@ -38,8 +35,6 @@ document.addEventListener('DOMContentLoaded', function () {
           });
       }
   }
-
-  // Inicializar el comportamiento según el formulario visible
   initializeAgregar();
   initializeEdicion();
 });
@@ -86,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
          url: baseUrl + 'certificados-list',
        },
        columns: [
-         { data: null, defaultContent: '' },
+         { data: '' },
          { data: 'num_dictamen' }, 
          { data: 'num_certificado' },
          { data: 'maestro_mezcalero' },
@@ -158,12 +153,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           },
           {
-            // Abre el pdf del dictamen
+            // Abre el pdf del certificado
             targets: 8,
             className: 'text-center',
             render: function (data, type, full, meta) {
-              var $id = full['id_guia'];
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
+             
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['razon_social']} "></i>`;
             }
           },
          {
@@ -492,14 +487,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     notEmpty: {
                         message: 'La fecha de vencimiento es obligatoria.',
                         enable: function (field) {
-                            return !$(field).val(); // Solo habilita la validación si el campo está vacío
+                            return !$(field).val();
                         }
                     },
                     date: {
                         format: 'YYYY-MM-DD',
                         message: 'La fecha no es válida.',
                         enable: function (field) {
-                            return !$(field).val(); // Solo habilita la validación si el campo está vacío
+                            return !$(field).val(); 
                         }
                     }
                 }
@@ -551,17 +546,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
   
-    // Función para actualizar la fecha y forzar la validación
     function updateDatepickerValidation() {
         $('#fecha_vigencia').on('change', function() {
             var fechaVigencia = $(this).val();
             if (fechaVigencia) {
-                // Calcular la fecha de vencimiento sumando un año a la fecha de vigencia
                 var fecha = moment(fechaVigencia, 'YYYY-MM-DD');
                 var fechaVencimiento = fecha.add(1, 'years').format('YYYY-MM-DD');
                 $('#fecha_vencimiento').val(fechaVencimiento);
                 
-                // Forzar la validación de los campos
                 validator.revalidateField('fecha_vigencia');
                 validator.revalidateField('fecha_vencimiento');
             }
@@ -575,8 +567,6 @@ document.addEventListener('DOMContentLoaded', function () {
     validator.on('core.form.valid', function () {
         var fechaVigencia = $('#fecha_vigencia').val();
         var fechaVencimiento = $('#fecha_vencimiento').val();
-  
-        // Usa moment.js para asegurarse del formato
         if (fechaVigencia) {
             $('#fecha_vigencia').val(moment(fechaVigencia).format('YYYY-MM-DD'));
         }
@@ -621,7 +611,7 @@ document.addEventListener('DOMContentLoaded', function () {
   
     dictamenSelect.addEventListener('change', updateMaestroMezcaleroValidation);
     updateMaestroMezcaleroValidation();
-    updateDatepickerValidation(); // Inicializa la validación del datepicker
+    updateDatepickerValidation();
   });
   
 $(document).ready(function() {
@@ -686,7 +676,7 @@ $(document).ready(function() {
 $(document).ready(function() {
 
   $('.datatables-users').on('click', '.edit-record', function() {
-      var id_certificado = $(this).data('id'); // Obtener el ID del certificado del botón
+      var id_certificado = $(this).data('id');
 
       $.get(`/certificados-list/${id_certificado}/edit`)
           .done(function(data) {
@@ -745,7 +735,6 @@ $(document).ready(function() {
                   }
               });
               $('#editCertificadoModal').modal('hide');
-              // Actualizar la tabla de certificados
               $('.datatables-users').DataTable().ajax.reload();
           },
           error: function(xhr) {
@@ -788,6 +777,39 @@ $(document).ready(function() {
 
       updateMaestroMezcaleroVisibility(dictamenId, maestroMezcalero);
   });
+});
+
+//Reciben los datos del pdf del dictamen
+$(document).on('click', '.pdf', function () {
+  var id = $(this).data('id');
+  
+  var registro = $(this).data('registro');
+      var iframe = $('#pdfViewer');
+
+      var tipo = $(this).data('tipo');
+      
+
+      if(tipo == 1 || tipo == 5){ // Productor
+        var tipo_dictamen = '../certificado_productor_mezcal/'+id;
+        var titulo = "Certificado de productor";
+      }
+
+      if(tipo == 2){ // Envasador
+        var tipo_dictamen = '../certificado_envasador_mezcal/'+id;
+        var titulo = "Certificado de envasador";
+      }
+
+      if(tipo == 3 || tipo  == 4){ // Comercializador
+        var tipo_dictamen = '../certificado_comercializador/'+id;
+        var titulo = "Certificado de comercializador";
+      }
+
+
+
+      iframe.attr('src', tipo_dictamen);
+
+      $("#titulo_modal").text(titulo);
+      $("#subtitulo_modal").text(registro);  
 });
 
 
