@@ -156,6 +156,8 @@ $(function () {
         { data: 'id_marca' },
         { data: 'cantidad_hologramas' },
         { data: 'id_direccion' },
+        { data: 'folio_inicial' },
+        { data: 'folio_final' },
         { data: 'estatus' },
         { data: '' },
         { data: 'action' }
@@ -222,7 +224,7 @@ $(function () {
         }, */
         {
           // email verify
-          targets: 8,
+          targets: 10,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $verified = full['estatus'];
@@ -234,6 +236,8 @@ $(function () {
               $colorRegimen = 'warning'; // Naranja
             } else if ($verified == 'Pendiente') {
               $colorRegimen = 'danger'; // Rojo
+            } else if ($verified == 'Asignado') {
+              $colorRegimen = 'secondary'; // Verde
             } else if ($verified == 'Completado') {
               $colorRegimen = 'success'; // Verde
             } else {
@@ -249,7 +253,7 @@ $(function () {
 
         {
           // email verify
-          targets: 9,
+          targets: 11,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $id = full['id_solicitud'];
@@ -268,7 +272,10 @@ $(function () {
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               // Asumiendo que este es el código que ya tienes configurado
+              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#" href="javascript:;" class="dropdown-item edit-"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +
+              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addRecepcion" href="javascript:;" class="dropdown-item edit-recepcion"><i class="ri-article-fill ri-20px text-secondary"></i> Recepcion hologramas</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addEnvio" href="javascript:;" class="dropdown-item edit-envio"><i class="ri-send-plane-fill ri-20px text-success"></i> Enviar</a>` +
+              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#asignarHolograma" href="javascript:;" class="dropdown-item edit-signar"><i class="ri-qr-scan-fill ri-20px text-dark"></i> Asignar hologramas</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addPago" href="javascript:;" class="dropdown-item edit-pay"><i class="ri-bank-card-line ri-20px text-warning"></i> Adjuntar comprobante de pago</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#editHologramas" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar solicitud</a>` +
               `<a data-id="${full['id_solicitud']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar solicitud</a>` +
@@ -975,9 +982,168 @@ $(function () {
 
 
 
+//asignar holograms
+  $(document).on('click', '.edit-signar', function () {
+    var id_solicitud = $(this).data('id');
+
+    $.get('/solicitud_holograma/edit/' + id_solicitud, function (data) {
 
 
+      // Rellenar el formulario con los datos obtenidos
+      $('#id_solicitudAsignar').val(data.id_solicitud);
+
+      $('#folio_inicial').val(data.folio_inicial);
+      $('#folio_final').val(data.folio_final);
+      $('#empresaAsignar').val(data.id_empresa);
+      // Mostrar el modal de edición
+      $('#asignarHolograma').modal('show');
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error: ' + textStatus + ' - ' + errorThrown);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos de la solicitud de holograma',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    });
+  });
 
 
+  $('#asignarHologramaForm').submit(function (e) {
+    e.preventDefault();
+
+    var formData = new FormData(this);
+    console.log()
+
+    $.ajax({
+      url: '/solicitud_holograma/updateAsignar',
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        Swal.fire({
+          title: 'Éxito',
+          text: response.success,
+          icon: 'success',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+        $('#asignarHolograma').modal('hide');
+        $('.datatables-users').DataTable().ajax.reload();
+      },
+      error: function (response) {
+        console.log(response);
+
+        Swal.fire({
+          title: 'Error',
+          text: 'Ocurrió un error al actualizar la guía.',
+          icon: 'error',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      }
+    });
+  }); 
+
+//recepcion hologramas
+$(document).on('click', '.edit-recepcion', function () {
+  var id_solicitud = $(this).data('id');
+
+  $.get('/solicitud_holograma/edit/' + id_solicitud, function (data) {
+
+
+    // Rellenar el formulario con los datos obtenidos
+    $('#recepcion_id_solicitud').val(data.id_solicitud);
+
+    $('#recepcion_empresa').val(data.id_empresa);
+    // Mostrar el modal de edición
+    $('#addRecepcion').modal('show');
+  }).fail(function (jqXHR, textStatus, errorThrown) {
+    console.error('Error: ' + textStatus + ' - ' + errorThrown);
+    Swal.fire({
+      icon: 'error',
+      title: '¡Error!',
+      text: 'Error al obtener los datos de la solicitud de holograma',
+      customClass: {
+        confirmButton: 'btn btn-danger'
+      }
+    });
+  });
+});
+
+
+const addRecepcionForm = document.getElementById('addRecepcionForm');
+
+FormValidation.formValidation(addRecepcionForm, {
+    fields: {
+        'url[]': {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor adjunte el comprobante de pago'
+                },
+                file: {
+                    extension: 'pdf,doc,docx,jpg,jpeg,png',
+                    type: 'application/pdf,application/msword,image/jpeg,image/png',
+                    maxSize: 5242880, // 5 MB
+                    message: 'El archivo adjunto debe ser un documento válido (PDF, DOC, JPG, PNG) y no mayor de 5MB'
+                }
+            }
+        }
+    },
+    plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+            eleValidClass: '',
+            rowSelector: function (field, ele) {
+                return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+            }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+}).on('core.form.valid', function (e) {
+    // Prevenir el comportamiento predeterminado
+
+    var formData = new FormData(addRecepcionForm);
+
+    $.ajax({
+        url: '/solicitud_holograma/updateRecepcion',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            Swal.fire({
+                title: 'Éxito',
+                text: response.success,
+                icon: 'success',
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
+            $('#addRecepcion').modal('hide');
+            $('.datatables-users').DataTable().ajax.reload();
+        },
+        error: function (response) {
+            Swal.fire({
+                title: 'Error',
+                text: 'Ocurrió un error al actualizar la guía.',
+                icon: 'error',
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+        }
+    });
+});
 
 });

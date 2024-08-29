@@ -55,7 +55,9 @@
           <th>Solicitante</th>
           <th>Marca</th>
           <th>cantidad hologramas</th>
-          <th>direccion</th>
+          <th>dirección</th>
+          <th>inicial</th>
+          <th>final</th>
           <th>estatus</th>
           <th>pdf</th>
           <th>Acciones</th>
@@ -70,7 +72,9 @@
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
  @include('_partials/_modals/modal-add-solicitudHologramas')
+ @include('_partials/_modals/modal-add-recepcionHologramas')
  @include('_partials/_modals/modal-add-solicitudPagoHologramas')
+ @include('_partials/_modals/modal-add-asignarHologramas')
  @include('_partials/_modals/modal-add-envioHologramas')
 @include('_partials/_modals/modal-edit-solicitudHologramas')
 

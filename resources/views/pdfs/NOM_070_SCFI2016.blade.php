@@ -108,9 +108,7 @@
 
         .leftLetter {
             text-align: left;
-            vertical-align: top;
-            padding-bottom: 8px;
-            padding-top: 0;
+
         }
 
         .rightLetter {
@@ -157,6 +155,14 @@
 
 
         }
+
+
+        .diagonal-line{
+            width: 100px;
+            height: 5px;
+            background-color: black;
+            transform: rotate(-45deg);
+        }
     </style>
 
 
@@ -168,29 +174,50 @@
 </head>
 
 <body>
-    <table>
+    <table >
         <tr>
-            <td class="letra-fondo" style="text-align: left" colspan="2">Razón social del cliente:</td>
-            <td colspan="2">ALBERTO FRANCO MORGADO</td>
+            <td class="letra-fondo" style="text-align: left" colspan="4">Razón social del cliente:</td>
+            <td class="leftLetter" colspan="2">ALBERTO FRANCO MORGADO</td>
         </tr>
         <tr>
-            <td class="letra-fondo" style="text-align: left">No. Cliente:</td>
-            <td>NOM-070-270C</td>
+            <td class="letra-fondo" style="text-align: left" colspan="2">No. Cliente:</td>
+            <td  colspan="2">NOM-070-270C</td>
             <td class="letra-fondo" style="text-align: left">Fecha de revisión:</td>
             <td>2024-07-25 11:35:43</td>
         </tr>
         <tr>
-            <td class="letra-fondo" style="text-align: left">No. De certificado:</td>
-            <td>CIDAM C-INS-088/2024</td>
+            <td class="letra-fondo" style="text-align: left"  colspan="2">No. De certificado:</td>
+            <td  colspan="2">CIDAM C-INS-088/2024</td>
             <td class="td-no-border"></td>
             <td class="td-no-border"></td>
         </tr>
+{{-- <tr><td class="td-no-border"></td></tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr> --}}
     </table>
+<br>
 
-    <table>
+<table style="width: 355px">
+    <tr>
+        <td style="padding-right: 0; text-align: left">Requisitos documentales <br>
+            para certificación</td>
+        <td style="width: 50px">C </td>
+        <td style="width: 60px">N/C </td>
+        <td style="width: 65px">N/A</td>
+    </tr>
 
-        
-    </table>
+    <tr>
+        <td>Solicitud del servicio</td>
+        <td>C</td>
+        <td></td>
+        <td></td>
+    </tr>
+</table>
+
 
 </body>
 
