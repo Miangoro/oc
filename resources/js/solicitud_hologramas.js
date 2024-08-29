@@ -272,8 +272,8 @@ $(function () {
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               // Asumiendo que este es el código que ya tienes configurado
-              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#" href="javascript:;" class="dropdown-item edit-"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +
-              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addRecepcion" href="javascript:;" class="dropdown-item edit-recepcion"><i class="ri-article-fill ri-20px text-secondary"></i> Recepcion hologramas</a>` +
+              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#activarHologramas" href="javascript:;" class="dropdown-item edit-"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +
+              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addRecepcion" href="javascript:;" class="dropdown-item edit-recepcion"><i class="ri-article-fill ri-20px text-secondary"></i> Recepción hologramas</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addEnvio" href="javascript:;" class="dropdown-item edit-envio"><i class="ri-send-plane-fill ri-20px text-success"></i> Enviar</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#asignarHolograma" href="javascript:;" class="dropdown-item edit-signar"><i class="ri-qr-scan-fill ri-20px text-dark"></i> Asignar hologramas</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addPago" href="javascript:;" class="dropdown-item edit-pay"><i class="ri-bank-card-line ri-20px text-warning"></i> Adjuntar comprobante de pago</a>` +
@@ -480,7 +480,7 @@ $(function () {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Detalles de ' + data['categoria'];
+              return 'Detalles de ' + data['folio'];
             }
           }),
           type: 'column',
@@ -1145,5 +1145,53 @@ FormValidation.formValidation(addRecepcionForm, {
         }
     });
 });
+
+
+
+
+
+
+
+
+//Agregar o eliminar tablas +
+$(document).ready(function () {
+  $('.add-row').click(function () {
+      // Añade una nueva fila
+      var newRow = `
+          <tr>
+              <th>
+                  <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+              </th>
+              <td>
+                  <select class="id_lote_granel form-control select2-nuevo" name="id_lote_granel[]">
+                      <!-- Opciones -->
+                  </select>
+              </td>
+              <td>
+                  <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
+              </td>
+          </tr>`;
+      $('#contenidoRango').append(newRow);
+
+      // Re-inicializar select2 en la nueva fila
+      $('#contenidoRango').find('.select2-nuevo').select2({
+          dropdownParent: $('#activarHologramas'), // Asegúrate de que #myModal sea el id de tu modal
+          width: '100%',
+          dropdownCssClass: 'select2-dropdown'
+      });
+
+      $('.select2-dropdown').css('z-index', 9999);
+
+      // Copiar opciones del primer select al nuevo select
+      var options = $('#contenidoRango tr:first-child .id_lote_granel').html();
+      $('#contenidoRango tr:last-child .id_lote_granel').html(options);
+  });
+
+  // Función para eliminar una fila
+  $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+  });
+});
+
 
 });
