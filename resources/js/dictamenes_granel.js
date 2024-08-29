@@ -35,7 +35,8 @@ $(function () {
 
         $('.datepicker').datepicker({
             format: 'yyyy-mm-dd',
-            autoclose: true
+            autoclose: true,
+            todayHighlight: true
         });
 
     });
@@ -86,13 +87,15 @@ $(function () {
                 },
                 {
                     // Abre el pdf del dictamen
+                    // Abre el pdf del dictamen
                     targets: 9,
                     className: 'text-center',
                     render: function (data, type, full, meta) {
-                      var $id = full['PDF'];
-                      return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+                        var $id = full['id_dictamen'];
+                        return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
                     }
-                  },
+                },
+
                 {
                     // User full name
                     targets: 2,
@@ -475,6 +478,7 @@ $(function () {
         });
     });
 
+
     /* agregar un nuevo dictamen */
     $(function () {
         // Configuración CSRF para Laravel
@@ -522,33 +526,51 @@ $(function () {
                 'fecha_emision': {
                     validators: {
                         notEmpty: {
-                            message: 'La fecha de emisión es obligatoria.'
+                            message: 'La fecha de emisión es obligatoria.',
+                            enable: function (field) {
+                                return !$(field).val();
+                            }
                         },
                         date: {
                             format: 'YYYY-MM-DD',
-                            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                            message: 'Ingresa una fecha válida (yyyy-mm-dd).',
+                            enable: function (field) {
+                                return !$(field).val();
+                            }
                         }
                     }
                 },
                 'fecha_vigencia': {
                     validators: {
                         notEmpty: {
-                            message: 'La fecha de vigencia es obligatoria.'
+                            message: 'La fecha de vigencia es obligatoria.',
+                            enable: function (field) {
+                                return !$(field).val();
+                            }
                         },
                         date: {
                             format: 'YYYY-MM-DD',
-                            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                            message: 'Ingresa una fecha válida (yyyy-mm-dd).',
+                            enable: function (field) {
+                                return !$(field).val();
+                            }
                         }
                     }
                 },
                 'fecha_servicio': {
                     validators: {
                         notEmpty: {
-                            message: 'La fecha de servicio es obligatoria.'
+                            message: 'La fecha de servicio es obligatoria.',
+                            enable: function (field) {
+                                return !$(field).val();
+                            }
                         },
                         date: {
                             format: 'YYYY-MM-DD',
-                            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                            message: 'Ingresa una fecha válida (yyyy-mm-dd).',
+                            enable: function (field) {
+                                return !$(field).val();
+                            }
                         }
                     }
                 }
@@ -608,11 +630,44 @@ $(function () {
             });
         });
 
+        // Función para actualizar la validación al cambiar la fecha en el datepicker
+        function updateDatepickerValidation() {
+            $('#fecha_vigencia').on('change', function () {
+                fv.revalidateField('fecha_vigencia');
+            });
+
+            $('#fecha_emision').on('change', function () {
+                fv.revalidateField('fecha_emision');
+            });
+
+            $('#fecha_servicio').on('change', function () {
+                fv.revalidateField('fecha_servicio');
+            });
+        }
+
+        // Función para actualizar la validación al cambiar el valor en los select2
+        function updateSelect2Validation() {
+            $('#id_empresa').on('change', function () {
+                fv.revalidateField('id_empresa');
+            });
+
+            $('#id_inspeccion').on('change', function () {
+                fv.revalidateField('id_inspeccion');
+            });
+
+            $('#id_lote_granel').on('change', function () {
+                fv.revalidateField('id_lote_granel');
+            });
+        }
+        // Llamar a las funciones para actualizar la validación
+        updateDatepickerValidation();
+        updateSelect2Validation();
 
     });
 
 
-    
+
+
 
 
     $(function () {
@@ -622,6 +677,7 @@ $(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
         // Inicializar FormValidation para el formulario de creación y edición
         const form = document.getElementById('addNEditDictamenGranelForm');
         const fv = FormValidation.formValidation(form, {
@@ -705,7 +761,7 @@ $(function () {
             // Validar y enviar el formulario cuando pase la validación
             var formData = new FormData(form);
             var dictamenid = $('#edit_id_dictamen').val();
-    
+
             $.ajax({
                 url: '/dictamenes/productos/' + dictamenid + '/update',
                 type: 'POST',
@@ -730,7 +786,7 @@ $(function () {
                         var errorMessages = Object.keys(errors).map(function (key) {
                             return errors[key].join('<br>');
                         }).join('<br>');
-    
+
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
@@ -752,19 +808,19 @@ $(function () {
                 }
             });
         });
-    
+
         // Función del botón de editar para cargar los datos del dictamen
         $(document).on('click', '.edit-record', function () {
             var id_dictamen = $(this).data('id');
             $('#edit_id_dictamen').val(id_dictamen);
-    
+
             $.ajax({
                 url: '/dictamenes/productos/' + id_dictamen + '/edit',
                 method: 'GET',
                 success: function (data) {
                     if (data.success) {
                         var dictamen = data.dictamen;
-    
+
                         // Asignar valores a los campos del formulario
                         $('#edit_num_dictamen').val(dictamen.num_dictamen);
                         $('#edit_id_empresa').val(dictamen.id_empresa).trigger('change');
@@ -773,7 +829,7 @@ $(function () {
                         $('#edit_fecha_emision').val(dictamen.fecha_emision);
                         $('#edit_fecha_vigencia').val(dictamen.fecha_vigencia);
                         $('#edit_fecha_servicio').val(dictamen.fecha_servicio);
-    
+
                         // Mostrar el modal
                         $('#modalEditDictamenGranel').modal('show');
                     } else {
@@ -800,7 +856,39 @@ $(function () {
                 }
             });
         });
+
+        // Función para actualizar la validación al cambiar la fecha en el datepicker
+        function updateDatepickerValidation() {
+            $('#edit_fecha_emision').on('change', function () {
+                fv.revalidateField('fecha_emision');
+            });
+
+            $('#edit_fecha_vigencia').on('change', function () {
+                fv.revalidateField('fecha_vigencia');
+            });
+
+            $('#edit_fecha_servicio').on('change', function () {
+                fv.revalidateField('fecha_servicio');
+            });
+        }
+
+        // Llamar a la función para actualizar la validación
+        updateDatepickerValidation();
+
     });
-    
+
+
+    // Reciben los datos del PDF
+    $(document).on('click', '.pdf', function () {
+        var id = $(this).data('id'); // Obtén el ID desde el atributo data-id
+        var iframe = $('#pdfViewer');
+
+        // Cargar el PDF con el ID
+        iframe.attr('src', '/dictamen_cumplimiento_mezcal_granel/' + id); // Usa URL absoluta
+
+        $("#titulo_modal").text("Dictamen de Cumplimiento NOM Mezcal a Granel");
+        $("#subtitulo_modal").text("PDF de Dictamen");
+    });
+
 
 });

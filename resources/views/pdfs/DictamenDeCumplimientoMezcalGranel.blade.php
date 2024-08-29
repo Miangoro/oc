@@ -11,7 +11,7 @@
             display: flex;
             /* Alinea los elementos al inicio */
             position: fixed;
-            top: -40px;
+            top: -35px;
             width: 100%;
             height: 100px;
             padding: 0 15px;
@@ -196,7 +196,7 @@
             padding: 0;
             position: absolute;
             right: 50px;
-            top: 770px;
+            top: 800px;
             font-family: 'Arial Negrita' !important;
         }
 
@@ -210,11 +210,12 @@
 
         .pie {
             font-family: 'Lucida Sans Unicode';
-            margin-top: 20px;
+            margin-top: 0;
             text-align: right;
             font-size: 9px;
             line-height: 1;
         }
+        
     </style>
 </head>
 
@@ -248,7 +249,7 @@
         <table class="datos_empresa">
             <tr>
                 <td style="color: #17365D; font-weight: bold;  width: 25%;">Nombre de la empresa</td>
-                <td colspan="3"></td>
+                <td colspan="3">{{ $data->empresa->razon_social }}</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;" rowspan="2">Dirección</td>
@@ -265,21 +266,21 @@
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">No. de servicio</td>
-                <td></td>
+                <td>{{ $data->inspeccion->num_servicio }}</td>
                 <td style="color: #17365D; font-weight: bold;">Número de dictamen</td>
-                <td></td>
+                <td>{{ $data->num_dictamen }}</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">Nombre del Inspector</td>
                 <td></td>
                 <td style="color: #17365D; font-weight: bold;">Fecha de servicio</td>
-                <td></td>
+                <td>{{ $fecha_servicio }}</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">Fecha de emisión</td>
-                <td></td>
+                <td>{{ $fecha_emision }}</td>
                 <td style="color: #17365D; font-weight: bold;">Vigencia hasta</td>
-                <td></td>
+                <td>{{ $fecha_vigencia }}</td>
             </tr>
         </table>
         <strong>II.&nbsp;&nbsp;&nbsp;&nbsp; Descripción del producto</strong>
