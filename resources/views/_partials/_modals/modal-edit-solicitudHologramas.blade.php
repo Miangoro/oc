@@ -45,7 +45,7 @@
 
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" id="edit_cantidad_hologramas" name="edit_cantidad_hologramas" placeholder="Número de hologramas solicitados" required />
+                                <input class="form-control" type="number" id="edit_cantidad_hologramas" name="edit_cantidad_hologramas" placeholder="Número de hologramas solicitados" readonly />
                                 <label for="edit_cantidad_hologramas">Número de hologramas solicitados</label>
                             </div>
                         </div>
@@ -116,7 +116,7 @@
                 var contenido = "";
                 for (let index = 0; index < response.direcciones.length; index++) {
                     contenido += '<option value="' + response.direcciones[index].id_direccion + '">' +
-                        'Nombre de detinatario: ' + response.direcciones[index].destinatario +
+                        'Nombre de detinatario: ' + response.direcciones[index].nombre_recibe +
                         ' - Dirección: ' + response.direcciones[index].direccion +
                         ' - Correo: ' + response.direcciones[index].correo_recibe +
                         ' - Celular: ' + response.direcciones[index].celular_recibe +

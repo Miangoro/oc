@@ -118,6 +118,9 @@ class solicitudHolograma extends Controller
                     'costo_envio' => $user->costo_envio,
                     'no_guia' => $user->no_guia,
                     'estatus' => $user->estatus,
+                    'folio_inicial' => $user->folio_inicial,
+                    'folio_final' => $user->folio_final,
+
 
 
 
@@ -343,7 +346,7 @@ public function update(Request $request)
             $holograma = ModelsSolicitudHolograma::findOrFail($request->input('id_solicitud'));
             $holograma->folio_inicial = $request->input('folio_inicial');
             $holograma->folio_final = $request->input('folio_final');
-            $holograma->estatus = 'Completado';
+            $holograma->estatus = 'Asignado';
 
         
             $holograma->save();
@@ -357,6 +360,45 @@ public function update(Request $request)
         }
     }
 
+
+
+    public function updateRecepcion(Request $request)
+    {
+        try {
+            // Encuentra la solicitud de hologramas por su ID
+            $holograma = ModelsSolicitudHolograma::findOrFail($request->input('id_solicitud'));
+
+            $holograma->estatus = 'Completado';
+
+        
+            $holograma->save();
+            //metodo para guardar pdf
+            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        
+            foreach ($request->id_documento as $index => $id_documento) {
+                // Agregar nuevo documento si no existe
+                if ($request->hasFile('url') && isset($request->file('url')[$index])) {
+                    $file = $request->file('url')[$index];
+                    $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+        
+                    $documentacion_url = new Documentacion_url();
+                    $documentacion_url->id_relacion = $holograma->id_solicitud;
+                    $documentacion_url->id_documento = $id_documento;
+                    $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+                    $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+                    $documentacion_url->id_empresa = $request->empresa;
+                    $documentacion_url->save();
+                }
+            }
+            // Retorna una respuesta exitosa
+            return response()->json(['success' => 'Solicitud de envio actualizada correctamente']);
+        } catch (\Exception $e) {
+            // Maneja cualquier error que ocurra durante el proceso
+            return response()->json(['error' => 'Error al actualizar la solicitud de envio'], 500);
+        }
+    }
 
     public function ModelsSolicitudHolograma($id)
     {
