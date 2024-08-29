@@ -110,43 +110,81 @@ document.addEventListener('DOMContentLoaded', function () {
              return `<span>${full.fake_id}</span>`;
            }
          },
+         {
+          targets: 2,
+          responsivePriority: 4,
+          render: function (data, type, full, meta) {
+            var $tipoDictamen = full['tipo_dictamen'];
+            var $colorDictamen;
+            var $nombreDictamen;
+        
+            switch ($tipoDictamen) {
+              case 1:
+                $nombreDictamen = 'Productor';
+                $colorDictamen = 'primary'; // Azul
+                break;
+              case 2:
+                $nombreDictamen = 'Envasador';
+                $colorDictamen = 'success'; // Verde
+                break;
+              case 3:
+                $nombreDictamen = 'Comercializador';
+                $colorDictamen = 'info'; // Celeste
+                break;
+              case 4:
+                $nombreDictamen = 'Almacén y bodega';
+                $colorDictamen = 'danger'; // Rojo
+                break;
+              case 5:
+                $nombreDictamen = 'Área de maduración';
+                $colorDictamen = 'warning'; // Amarillo
+                break;
+              default:
+                $nombreDictamen = 'Desconocido';
+                $colorDictamen = 'secondary'; // Gris, color por defecto
+            }
+        
+            // Retorna el badge con el texto y color apropiado
+            return `<span class="badge rounded-pill bg-label-${$colorDictamen}">${$nombreDictamen}</span>`;
+          }     
+        },
           {
-           targets: 2,
+           targets: 3,
            render: function (data, type, full, meta) {
              var $num_dictamen = full['num_dictamen'];
              return '<span class="fw-bold">' + $num_dictamen + '</span>';
            }
          }, 
          {
-            targets: 3,
+            targets: 4,
             render: function (data, type, full, meta) {
               var $num_servicio = full['num_certificado'];
               return '<span class="user-email">' + $num_servicio + '</span>';
             }
           }, 
           {
-            targets: 4,
+            targets: 5,
             render: function (data, type, full, meta) {
               var $maestro_mezcalero = full['maestro_mezcalero'] ?? 'N/A';
               return '<span class="user-email">' + $maestro_mezcalero + '</span>';
             }
           },
           {
-            targets: 5,
+            targets: 6,
             render: function (data, type, full, meta) {
               var $num_autorizacion = full['num_autorizacion'];
               return '<span class="user-email">' + $num_autorizacion + '</span>';
             }
           },
           {
-            targets: 6,
+            targets: 7,
             render: function (data, type, full, meta) {
               var $fecha_vigencia = full['fecha_vigencia'];
               return '<span class="user-email">' + $fecha_vigencia + '</span>';
             }
           },
           {
-            targets: 7,
+            targets: 8,
             render: function (data, type, full, meta) {
               var $fecha_vencimiento = full['fecha_vencimiento'];
               return '<span class="user-email">' + $fecha_vencimiento + '</span>';
@@ -154,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
           },
           {
             // Abre el pdf del certificado
-            targets: 8,
+            targets: 9,
             className: 'text-center',
             render: function (data, type, full, meta) {
              
@@ -163,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function () {
           },
          {
            // Actions
-           targets: 9,
+           targets: 10,
            title: 'Acciones',
            searchable: false,
            orderable: false,
@@ -181,7 +219,6 @@ document.addEventListener('DOMContentLoaded', function () {
            }
          }
        ],
- 
        order: [[2, 'desc']],
        dom:
          '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +

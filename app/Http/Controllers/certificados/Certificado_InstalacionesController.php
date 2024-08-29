@@ -26,7 +26,7 @@ class Certificado_InstalacionesController extends Controller
             4 => 'num_autorizacion', // Cambio aquí
             5 => 'fecha_vigencia',
             6 => 'fecha_vencimiento',
-            7 => 'tipo_dictamen'
+      /*       7 => 'tipo_dictamen' */
         ];
     
         $search = $request->input('search.value');

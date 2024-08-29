@@ -48,6 +48,7 @@
                 <tr>
                   <th></th>
                     <th>ID</th>
+                    <th>Tipo de Certificado</th>
                     <th>No. Dictamen</th>
                     <th>No. Certificado</th>
                     <th>Maestro Mezcalero</th>
