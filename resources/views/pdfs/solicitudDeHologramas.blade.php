@@ -213,7 +213,7 @@
 </tr>
 <tr>
     <td class="rightLetter negrita" style="width: 120px">Nombre Completo: </td>
-    <td colspan="3" class="letra-up">{{ $datos->direcciones->destinatario }}</td>
+    <td colspan="3" class="letra-up">{{ $datos->direcciones->nombre_recibe }}</td>
 </tr>
 <tr>
     <td class="rightLetter negrita">Email./Cel./Tel.: </td>

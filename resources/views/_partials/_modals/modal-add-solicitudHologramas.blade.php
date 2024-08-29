@@ -114,7 +114,7 @@
             var contenido = "";
             for (let index = 0; index < direccionesFiltradas.length; index++) {
                 contenido += '<option value="' + direccionesFiltradas[index].id_direccion + '">' +
-                    'Nombre de destinatario: ' + direccionesFiltradas[index].destinatario +
+                    'Nombre de destinatario: ' + direccionesFiltradas[index].nombre_recibe +
                     ' - Dirección: ' + direccionesFiltradas[index].direccion +
                     ' - Correo: ' + direccionesFiltradas[index].correo_recibe +
                     ' - Celular: ' + direccionesFiltradas[index].celular_recibe +

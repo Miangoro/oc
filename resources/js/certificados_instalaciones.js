@@ -1,24 +1,49 @@
 'use strict';
 
 document.addEventListener('DOMContentLoaded', function () {
-  const dictamenSelect = document.getElementById('id_dictamen');
-  const maestroMezcaleroContainer = document.getElementById('maestroMezcaleroContainer');
+  // Función para actualizar la visibilidad del campo maestro_mezcalero
+  function updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer) {
+      const selectedOption = dictamenSelect.options[dictamenSelect.selectedIndex];
+      const tipoDictamen = selectedOption ? selectedOption.getAttribute('data-tipo-dictamen') : '';
 
-  function updateMaestroMezcaleroVisibility() {
-    const selectedOption = dictamenSelect.options[dictamenSelect.selectedIndex];
-    const tipoDictamen = selectedOption ? selectedOption.getAttribute('data-tipo-dictamen') : '';
-
-    if (tipoDictamen == '1') {
-      maestroMezcaleroContainer.style.display = 'block';
-    } else {
-      maestroMezcaleroContainer.style.display = 'none';
-    }
+      if (tipoDictamen === '1') {
+          maestroMezcaleroContainer.style.display = 'block';
+      } else {
+          maestroMezcaleroContainer.style.display = 'none';
+      }
   }
 
-  dictamenSelect.addEventListener('change', updateMaestroMezcaleroVisibility);
+  // Función para inicializar el comportamiento en el formulario de agregar
+  function initializeAgregar() {
+      const dictamenSelect = document.getElementById('id_dictamen');
+      const maestroMezcaleroContainer = document.getElementById('maestroMezcaleroContainer');
 
-  updateMaestroMezcaleroVisibility();
+      if (dictamenSelect && maestroMezcaleroContainer) {
+          updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer);
+          dictamenSelect.addEventListener('change', function () {
+              updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer);
+          });
+      }
+  }
+
+  // Función para inicializar el comportamiento en el formulario de edición
+  function initializeEdicion() {
+      const dictamenSelect = document.getElementById('edit_id_dictamen');
+      const maestroMezcaleroContainer = document.getElementById('edit_maestroMezcaleroContainer');
+
+      if (dictamenSelect && maestroMezcaleroContainer) {
+          updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer);
+          dictamenSelect.addEventListener('change', function () {
+              updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer);
+          });
+      }
+  }
+
+  // Inicializar el comportamiento según el formulario visible
+  initializeAgregar();
+  initializeEdicion();
 });
+
 
  $(function () {
  
@@ -65,6 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
          { data: 'num_dictamen' }, 
          { data: 'num_certificado' },
          { data: 'maestro_mezcalero' },
+         { data: 'num_autorizacion' },
          { data: 'fecha_vigencia' },
          { data: 'fecha_vencimiento' },
          { data: 'Certificado' },
@@ -106,36 +132,43 @@ document.addEventListener('DOMContentLoaded', function () {
           {
             targets: 4,
             render: function (data, type, full, meta) {
-              var $fecha = full['maestro_mezcalero'];
-              return '<span class="user-email">' + $fecha + '</span>';
+              var $maestro_mezcalero = full['maestro_mezcalero'] ?? 'N/A';
+              return '<span class="user-email">' + $maestro_mezcalero + '</span>';
             }
           },
           {
             targets: 5,
             render: function (data, type, full, meta) {
-              var $fecha = full['fecha_vigencia'];
-              return '<span class="user-email">' + $fecha + '</span>';
+              var $num_autorizacion = full['num_autorizacion'];
+              return '<span class="user-email">' + $num_autorizacion + '</span>';
             }
           },
           {
             targets: 6,
             render: function (data, type, full, meta) {
-              var $fecha = full['fecha_vencimiento'];
-              return '<span class="user-email">' + $fecha + '</span>';
+              var $fecha_vigencia = full['fecha_vigencia'];
+              return '<span class="user-email">' + $fecha_vigencia + '</span>';
+            }
+          },
+          {
+            targets: 7,
+            render: function (data, type, full, meta) {
+              var $fecha_vencimiento = full['fecha_vencimiento'];
+              return '<span class="user-email">' + $fecha_vencimiento + '</span>';
             }
           },
           {
             // Abre el pdf del dictamen
-            targets: 7,
+            targets: 8,
             className: 'text-center',
             render: function (data, type, full, meta) {
-              var $id = full['Certificado'];
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+              var $id = full['id_guia'];
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
             }
           },
          {
            // Actions
-           targets: 8,
+           targets: 9,
            title: 'Acciones',
            searchable: false,
            orderable: false,
@@ -187,11 +220,11 @@ document.addEventListener('DOMContentLoaded', function () {
            buttons: [
              {
                extend: 'print',
-               title: 'Categorías de Agave',
+               title: 'Certificados Instalaciones',
                text: '<i class="ri-printer-line me-1" ></i>Print',
                className: 'dropdown-item',
                exportOptions: {
-                 columns: [1, 2, 3],
+                 columns: [1, 2, 3, 4, 5, 6, 7],
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -223,11 +256,11 @@ document.addEventListener('DOMContentLoaded', function () {
              },
              {
                extend: 'csv',
-               title: 'Users',
+               title: 'Certificados Instalaciones',
                text: '<i class="ri-file-text-line me-1" ></i>Csv',
                className: 'dropdown-item',
                exportOptions: {
-                 columns: [1, 2, 3],
+                 columns: [1, 2, 3, 4, 5 ,6, 7],
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -247,11 +280,11 @@ document.addEventListener('DOMContentLoaded', function () {
              },
              {
                extend: 'excel',
-               title: 'Categorías de Agave',
+               title: 'Certificados Instalaciones',
                text: '<i class="ri-file-excel-line me-1"></i>Excel',
                className: 'dropdown-item',
                exportOptions: {
-                 columns: [1, 2, 3],
+                columns: [1, 2, 3, 4, 5 ,6, 7],
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -271,11 +304,11 @@ document.addEventListener('DOMContentLoaded', function () {
              },
              {
                extend: 'pdf',
-               title: 'Categorías de Agave',
+               title: 'Certificados Instalaciones',
                text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
                className: 'dropdown-item',
                exportOptions: {
-                 columns: [1, 2, 3],
+                columns: [1, 2, 3, 4, 5 ,6, 7],
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -295,11 +328,11 @@ document.addEventListener('DOMContentLoaded', function () {
              },
              {
                extend: 'copy',
-               title: 'Categorías de Agave',
+               title: 'Certificados Instalaciones',
                text: '<i class="ri-file-copy-line me-1"></i>Copy',
                className: 'dropdown-item',
                exportOptions: {
-                 columns: [1, 2, 3],
+                columns: [1, 2, 3, 4, 5 ,6, 7],
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -415,30 +448,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });  
 
-  // Agregar Registro
   $(function () {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-
+  
     const formAddCertificado = document.getElementById('addCertificadoForm');
     const dictamenSelect = document.getElementById('id_dictamen');
     const maestroMezcaleroContainer = document.getElementById('maestroMezcaleroContainer');
-
-    $('#fecha_vigencia').on('change', function () {
-        var fechaInicial = new Date($(this).val());
-
-        fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-
-        var year = fechaInicial.getFullYear();
-        var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2); 
-        var day = ('0' + fechaInicial.getDate()).slice(-2);
-
-        $('#fecha_vencimiento').val(year + '-' + month + '-' + day);
-    });
-
+  
+    // Inicializa la validación del formulario
     const validator = FormValidation.formValidation(formAddCertificado, {
         fields: {
             'id_dictamen': {
@@ -469,11 +490,17 @@ document.addEventListener('DOMContentLoaded', function () {
             'fecha_vencimiento': {
                 validators: {
                     notEmpty: {
-                        message: 'La fecha de vencimiento es obligatoria.'
+                        message: 'La fecha de vencimiento es obligatoria.',
+                        enable: function (field) {
+                            return !$(field).val(); // Solo habilita la validación si el campo está vacío
+                        }
                     },
                     date: {
                         format: 'YYYY-MM-DD',
-                        message: 'La fecha no es válida.'
+                        message: 'La fecha no es válida.',
+                        enable: function (field) {
+                            return !$(field).val(); // Solo habilita la validación si el campo está vacío
+                        }
                     }
                 }
             },
@@ -504,11 +531,11 @@ document.addEventListener('DOMContentLoaded', function () {
             autoFocus: new FormValidation.plugins.AutoFocus()
         }
     });
-
+  
     function updateMaestroMezcaleroValidation() {
         const selectedOption = dictamenSelect.options[dictamenSelect.selectedIndex];
         const tipoDictamen = selectedOption ? selectedOption.getAttribute('data-tipo-dictamen') : '';
-
+  
         if (tipoDictamen === '1') {
             maestroMezcaleroContainer.style.display = 'block';
             validator.addField('maestro_mezcalero', {
@@ -523,10 +550,42 @@ document.addEventListener('DOMContentLoaded', function () {
             validator.removeField('maestro_mezcalero');
         }
     }
-
+  
+    // Función para actualizar la fecha y forzar la validación
+    function updateDatepickerValidation() {
+        $('#fecha_vigencia').on('change', function() {
+            var fechaVigencia = $(this).val();
+            if (fechaVigencia) {
+                // Calcular la fecha de vencimiento sumando un año a la fecha de vigencia
+                var fecha = moment(fechaVigencia, 'YYYY-MM-DD');
+                var fechaVencimiento = fecha.add(1, 'years').format('YYYY-MM-DD');
+                $('#fecha_vencimiento').val(fechaVencimiento);
+                
+                // Forzar la validación de los campos
+                validator.revalidateField('fecha_vigencia');
+                validator.revalidateField('fecha_vencimiento');
+            }
+        });
+  
+        $('#fecha_vencimiento').on('change', function() {
+            validator.revalidateField('fecha_vencimiento');
+        });
+    }
+  
     validator.on('core.form.valid', function () {
+        var fechaVigencia = $('#fecha_vigencia').val();
+        var fechaVencimiento = $('#fecha_vencimiento').val();
+  
+        // Usa moment.js para asegurarse del formato
+        if (fechaVigencia) {
+            $('#fecha_vigencia').val(moment(fechaVigencia).format('YYYY-MM-DD'));
+        }
+        if (fechaVencimiento) {
+            $('#fecha_vencimiento').val(moment(fechaVencimiento).format('YYYY-MM-DD'));
+        }
+  
         var formData = $(formAddCertificado).serialize();
-
+  
         $.ajax({
             url: '/certificados-list',
             type: 'POST',
@@ -536,7 +595,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 $('#addCertificadoModal').modal('hide');
                 $('#addCertificadoForm')[0].reset();
                 dt_user.ajax.reload();
-
+  
                 Swal.fire({
                     icon: 'success',
                     title: '¡Éxito!',
@@ -547,7 +606,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             },
             error: function (xhr) {
-                console.log('Error:', xhr.responseText);
+                console.log('Error:', xhr.responseText); 
                 Swal.fire({
                     icon: 'error',
                     title: '¡Error!',
@@ -559,17 +618,16 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
-
+  
     dictamenSelect.addEventListener('change', updateMaestroMezcaleroValidation);
     updateMaestroMezcaleroValidation();
-});
-
+    updateDatepickerValidation(); // Inicializa la validación del datepicker
+  });
+  
 $(document).ready(function() {
-  // Al hacer clic en el botón de editar
   $('.datatables-users').on('click', '.edit-record', function() {
       var id_certificado = $(this).data('id');
 
-      // Realizar una solicitud AJAX para obtener los datos del certificado
       $.get(`/certificados-list/${id_certificado}/edit`)
           .done(function(data) {
               if (data.error) {
@@ -584,15 +642,13 @@ $(document).ready(function() {
                   return;
               }
 
-              // Rellenar el formulario con los datos obtenidos
               $('#edit_id_certificado').val(data.id_certificado);
-              $('#edit_id_dictamen').val(data.id_dictamen).trigger('change'); // Establecer y actualizar el select2
+              $('#edit_id_dictamen').val(data.id_dictamen).trigger('change'); 
               $('#edit_numero_certificado').val(data.num_certificado);
               $('#edit_no_autorizacion').val(data.num_autorizacion);
               $('#edit_fecha_vigencia').val(data.fecha_vigencia);
               $('#edit_fecha_vencimiento').val(data.fecha_vencimiento);
 
-              // Mostrar u ocultar el campo Maestro Mezcalero según el dictamen
               if (data.id_dictamen == 1) {
                   $('#edit_maestroMezcaleroContainer').show();
                   $('#edit_maestro_mezcalero').val(data.maestro_mezcalero || '');
@@ -600,7 +656,6 @@ $(document).ready(function() {
                   $('#edit_maestroMezcaleroContainer').hide();
               }
 
-              // Mostrar el modal de edición
               $('#editCertificadoModal').modal('show');
           })
           .fail(function(jqXHR, textStatus, errorThrown) {
@@ -615,7 +670,6 @@ $(document).ready(function() {
           });
   });
 
-  // Manejar el cambio en el campo dictamen para mostrar u ocultar el campo maestro_mezcalero
   $('#edit_id_dictamen').on('change', function() {
       var selectedDictamen = $(this).val();
 
@@ -629,6 +683,112 @@ $(document).ready(function() {
 
 
 
+$(document).ready(function() {
+
+  $('.datatables-users').on('click', '.edit-record', function() {
+      var id_certificado = $(this).data('id'); // Obtener el ID del certificado del botón
+
+      $.get(`/certificados-list/${id_certificado}/edit`)
+          .done(function(data) {
+
+              if (data.error) {
+                  Swal.fire({
+                      icon: 'error',
+                      title: '¡Error!',
+                      text: data.error,
+                      customClass: {
+                          confirmButton: 'btn btn-danger'
+                      }
+                  });
+                  return;
+              }
+
+              $('#edit_id_certificado').val(data.id_certificado);
+              $('#edit_id_dictamen').val(data.id_dictamen).trigger('change');
+              $('#edit_numero_certificado').val(data.num_certificado);
+              $('#edit_no_autorizacion').val(data.num_autorizacion);
+              $('#edit_fecha_vigencia').val(data.fecha_vigencia);
+              $('#edit_fecha_vencimiento').val(data.fecha_vencimiento);
+
+              updateMaestroMezcaleroVisibility(data.id_dictamen, data.maestro_mezcalero);
+
+              $('#editCertificadoModal').modal('show');
+          })
+          .fail(function() {
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'No se pudieron cargar los datos del certificado.',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          });
+  });
+
+  $('#editCertificadoForm').on('submit', function(event) {
+      event.preventDefault(); //
+      var id_certificado = $('#edit_id_certificado').val();
+      var formData = $(this).serialize(); 
+
+      $.ajax({
+          url: `/certificados-list/${id_certificado}`,
+          type: 'PUT',
+          data: formData,
+          success: function(response) {
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.message,
+                  customClass: {
+                      confirmButton: 'btn btn-success'
+                  }
+              });
+              $('#editCertificadoModal').modal('hide');
+              // Actualizar la tabla de certificados
+              $('.datatables-users').DataTable().ajax.reload();
+          },
+          error: function(xhr) {
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'No se pudieron actualizar los datos del certificado.',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+      });
+  });
+
+  function updateMaestroMezcaleroVisibility(dictamenId, maestroMezcalero) {
+      const dictamenSelect = $('#edit_id_dictamen');
+      const maestroMezcaleroContainer = $('#edit_maestroMezcaleroContainer');
+      const tipoDictamen = dictamenSelect.find(`option[value="${dictamenId}"]`).data('tipo-dictamen');
+
+      if (tipoDictamen == '1') {
+          maestroMezcaleroContainer.show();
+          $('#edit_maestro_mezcalero').val(maestroMezcalero === null ? '' : maestroMezcalero); 
+      } else {
+          maestroMezcaleroContainer.hide();
+          $('#edit_maestro_mezcalero').val(''); 
+      }
+  }
+
+  $('#edit_id_dictamen').on('change', function() {
+      const dictamenId = $(this).val();
+      const maestroMezcalero = $('#edit_maestro_mezcalero').val(); 
+
+      updateMaestroMezcaleroVisibility(dictamenId, maestroMezcalero);
+  });
+
+  $('#editCertificadoModal').on('shown.bs.modal', function() {
+      const dictamenId = $('#edit_id_dictamen').val();
+      const maestroMezcalero = $('#edit_maestro_mezcalero').val(); 
+
+      updateMaestroMezcaleroVisibility(dictamenId, maestroMezcalero);
+  });
+});
 
 
   //end

@@ -645,6 +645,7 @@ Route::get('certificados/instalaciones', [Certificado_InstalacionesController::c
 Route::resource('certificados-list',Certificado_InstalacionesController::class);
 Route::post('certificados-list', [Certificado_InstalacionesController::class, 'store'])->name('certificados.store');
 Route::get('certificados-list/{id}/edit', [Certificado_InstalacionesController::class, 'edit']);
+Route::put('certificados-list/{id}', [Certificado_InstalacionesController::class, 'update']);
 
 Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
@@ -654,6 +655,8 @@ Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSo
 Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2']);
 Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
 Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
+Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
+
 
 
 
