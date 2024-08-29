@@ -253,15 +253,19 @@
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;" rowspan="2">Dirección</td>
-                <td rowspan="2"></td>
+                <td rowspan="2">
+                    Domicilio fiscal: {{ $data->empresa->domicilio_fiscal }}<br>
+                    Domicilio de instalaciones: {{ $data->inspeccion->solicitud->instalacion->direccion_completa }}
+
+                </td>
                 <td style="color: #17365D; font-weight: bold;">RFC</td>
-                <td></td>
+                <td>{{ $data->empresa->rfc }}</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">
-                    representante legal
+                    Representante legal
                 </td>
-                <td>
+                <td>{{ $data->empresa->representante }}
                 </td>
             </tr>
             <tr>
@@ -272,7 +276,7 @@
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">Nombre del Inspector</td>
-                <td></td>
+                <td>{{ $data->inspeccion->inspector->name }}</td>
                 <td style="color: #17365D; font-weight: bold;">Fecha de servicio</td>
                 <td>{{ $fecha_servicio }}</td>
             </tr>
@@ -288,15 +292,15 @@
         <table class="table_description">
             <tr>
                 <td colspan="6" style="font-weight: bold; font-size: 13px;">
-                    <p>RODUCTO MEZCAL _________</p>
-                    <p>ORIGEN _________</p>
+                    <p>PRODUCTO {{ $data->lote_granel->categoria->categoria }}</p>
+                    <p>ORIGEN {{ $data->inspeccion->solicitud->instalacion->estados->nombre }}</p>
                 </td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold; width: 16%;">Categoría y clase</td>
-                <td>{{ $data->lote_granel->id_clase }}</td>
+                <td>{{ $data->lote_granel->categoria->categoria }} {{ $data->lote_granel->clase->clase }}</td>
                 <td style="color: #17365D; font-weight: bold; width: 19%">No. de lote a granel</td>
-                <td></td>
+                <td>{{ $data->lote_granel->nombre_lote }}</td>
                 <td style="color: #17365D; font-weight: bold; width: 14%;">No. de análisis</td>
                 <td>{{ $data->lote_granel->folio_fq }}</td>
             </tr>
@@ -304,15 +308,15 @@
                 <td style="color: #17365D; font-weight: bold;">Ingredientes</td>
                 <td>{{ $data->lote_granel->ingredientes }}</td>
                 <td style="color: #17365D; font-weight: bold;">Volumen de lote</td>
-                <td></td>
+                <td>{{ $data->lote_granel->volumen }}</td>
                 <td style="color: #17365D; font-weight: bold;">Contenido alcohólico</td>
-                <td>{{ $data->lote_granel->cont_alc }}</td>
+                <td>{{ $data->lote_granel->cont_alc }} % Alc. Vol.</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">Edad</td>
                 <td>{{ $data->lote_granel->edad }}</td>
                 <td style="color: #17365D; font-weight: bold;">Tipo de maguey</td>
-                <td colspan="3">{{ $data->lote_granel->id_tipo }}</td>
+                <td colspan="3">{{ $data->lote_granel->tipo->nombre }} <i>{{ $data->lote_granel->tipo->cientifico }}</></td>
             </tr>
         </table>
 
