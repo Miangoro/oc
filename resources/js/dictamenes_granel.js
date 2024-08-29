@@ -886,7 +886,7 @@ $(function () {
         // Cargar el PDF con el ID
         iframe.attr('src', '/dictamen_cumplimiento_mezcal_granel/' + id); // Usa URL absoluta
 
-        $("#titulo_modal").text("Solicitud de entrega de hologramas");
+        $("#titulo_modal").text("Dictamen de Cumplimiento NOM Mezcal a Granel");
         $("#subtitulo_modal").text("PDF de Dictamen");
     });
 

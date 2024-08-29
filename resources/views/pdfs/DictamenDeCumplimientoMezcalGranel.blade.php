@@ -196,7 +196,7 @@
             padding: 0;
             position: absolute;
             right: 50px;
-            top: 810px;
+            top: 800px;
             font-family: 'Arial Negrita' !important;
         }
 
@@ -215,6 +215,7 @@
             font-size: 9px;
             line-height: 1;
         }
+        
     </style>
 </head>
 
