@@ -268,7 +268,7 @@ $(function () {
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               // Asumiendo que este es el código que ya tienes configurado
-              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#asignarHolograma" href="javascript:;" class="dropdown-item edit-"><i class="ri-qr-scan-fill ri-20px text-dark"></i> Asignar hologramas</a>` +
+              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#asignarHolograma" href="javascript:;" class="dropdown-item edit-signar"><i class="ri-qr-scan-fill ri-20px text-dark"></i> Asignar hologramas</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addEnvio" href="javascript:;" class="dropdown-item edit-envio"><i class="ri-send-plane-fill ri-20px text-success"></i> Enviar</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addPago" href="javascript:;" class="dropdown-item edit-pay"><i class="ri-bank-card-line ri-20px text-warning"></i> Adjuntar comprobante de pago</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#editHologramas" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar solicitud</a>` +
@@ -977,8 +977,74 @@ $(function () {
 
 
 
+  $(document).on('click', '.edit-signar', function () {
+    var id_solicitud = $(this).data('id');
+
+    $.get('/solicitud_holograma/edit/' + id_solicitud, function (data) {
 
 
+      // Rellenar el formulario con los datos obtenidos
+      $('#id_solicitudAsignar').val(data.id_solicitud);
+
+      $('#folio_inicial').val(data.folio_inicial);
+      $('#folio_final').val(data.folio_final);
+      $('#empresaAsignar').val(data.id_empresa);
+      // Mostrar el modal de edición
+      $('#asignarHolograma').modal('show');
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error: ' + textStatus + ' - ' + errorThrown);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos de la solicitud de holograma',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    });
+  });
+
+
+  $('#asignarHologramaForm').submit(function (e) {
+    e.preventDefault();
+
+    var formData = new FormData(this);
+    console.log()
+
+    $.ajax({
+      url: '/solicitud_holograma/updateAsignar',
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        Swal.fire({
+          title: 'Éxito',
+          text: response.success,
+          icon: 'success',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+        $('#asignarHolograma').modal('hide');
+        $('.datatables-users').DataTable().ajax.reload();
+      },
+      error: function (response) {
+        console.log(response);
+
+        Swal.fire({
+          title: 'Error',
+          text: 'Ocurrió un error al actualizar la guía.',
+          icon: 'error',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      }
+    });
+  }); 
 
 
 });

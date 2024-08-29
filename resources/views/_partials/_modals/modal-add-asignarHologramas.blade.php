@@ -6,11 +6,11 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Visualiza el rango de hologramas</h4>
-                    <p class="address-subtitle"><b style="color: red">Nota: </b> El personal imprime los hologramas y registra el rango de hologramas que esta imprimiendo</p>
+                    <p class="address-subtitle"><b style="color: red">Nota: </b> El personal imprime los hologramas y registra el rango de hologramas que esta imprimiendo</p>
                 </div>
                 <form id="asignarHologramaForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
-                    <input type="hidden" id="edit_id_solicitud" name="id_solicitud">                   
-                    <input type="hidden" id="empresa" name="empresa">
+                    <input type="hidden" id="id_solicitudAsignar" name="id_solicitud">                   
+                    <input type="hidden" id="empresaAsignar" name="empresa">
            
                     @csrf
                     <div class="col-md-12">
