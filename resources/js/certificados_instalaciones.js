@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const dictamenSelect = document.getElementById('id_dictamen');
   const maestroMezcaleroContainer = document.getElementById('maestroMezcaleroContainer');
 
-  // Función para actualizar la visibilidad del campo "Maestro Mezcalero"
   function updateMaestroMezcaleroVisibility() {
     const selectedOption = dictamenSelect.options[dictamenSelect.selectedIndex];
     const tipoDictamen = selectedOption ? selectedOption.getAttribute('data-tipo-dictamen') : '';
@@ -16,24 +15,21 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  // Manejar el cambio en el select de dictamenes
   dictamenSelect.addEventListener('change', updateMaestroMezcaleroVisibility);
 
-  // Configurar visibilidad inicial al cargar la página
   updateMaestroMezcaleroVisibility();
 });
 
  $(function () {
  
-   // Variable declaration for table
    var dt_user_table = $('.datatables-users'),
      select2 = $('.select2'),
      userView = baseUrl + 'app/user/view/account',
      offCanvasForm = $('#offcanvasAddUser');
  
      var select2Elements = $('.select2');
-  // Función para inicializar Select2 en elementos específicos
-  function initializeSelect2($elements) {
+
+     function initializeSelect2($elements) {
     $elements.each(function () {
       var $this = $(this);
       select2Focus($this);
@@ -42,25 +38,13 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   }
-  
 
-  initializeSelect2(select2Elements);
-
-  $('#fecha_emision').on('change', function() {
-    var fechaInicial = new Date($(this).val());
-    
-    // Sumar 1 año a la fecha inicial
-    fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-    
-    // Formatear la fecha en YYYY-MM-DD
-    var year = fechaInicial.getFullYear();
-    var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2); // Los meses empiezan desde 0
-    var day = ('0' + fechaInicial.getDate()).slice(-2);
-    
-    // Asignar la fecha final al input correspondiente
-    $('#fecha_vigencia').val(year + '-' + month + '-' + day);
+  $('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true
 });
- 
+
  
    // AJAX setup
    $.ajaxSetup({
@@ -69,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
  
-   //FUNCIONALIDAD DE LA VISTA datatable
    if (dt_user_table.length) {
      var dt_user = dt_user_table.DataTable({
        processing: true,
@@ -78,14 +61,14 @@ document.addEventListener('DOMContentLoaded', function () {
          url: baseUrl + 'certificados-list',
        },
        columns: [
-         // columns according to JSON
-         { data: '' },
+         { data: null, defaultContent: '' },
          { data: 'num_dictamen' }, 
          { data: 'num_certificado' },
          { data: 'maestro_mezcalero' },
          { data: 'fecha_vigencia' },
          { data: 'fecha_vencimiento' },
-         { data: 'action' }
+         { data: 'Certificado' },
+         { data: 'actions', orderable: false, searchable: false }
        ],
        columnDefs: [
          {
@@ -98,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
              return '';
            }
          },
-         {//Tabla 1
+         {
            searchable: false,
            orderable: false,
            targets: 1,
@@ -107,7 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
            }
          },
           {
-           // Tabla 3
            targets: 2,
            render: function (data, type, full, meta) {
              var $num_dictamen = full['num_dictamen'];
@@ -115,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function () {
            }
          }, 
          {
-            // Tabla 4
             targets: 3,
             render: function (data, type, full, meta) {
               var $num_servicio = full['num_certificado'];
@@ -123,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           }, 
           {
-            // Tabla 5
             targets: 4,
             render: function (data, type, full, meta) {
               var $fecha = full['maestro_mezcalero'];
@@ -131,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           },
           {
-            // Tabla 5
             targets: 5,
             render: function (data, type, full, meta) {
               var $fecha = full['fecha_vigencia'];
@@ -139,25 +118,32 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           },
           {
-            // Tabla 5
             targets: 6,
             render: function (data, type, full, meta) {
               var $fecha = full['fecha_vencimiento'];
               return '<span class="user-email">' + $fecha + '</span>';
             }
           },
+          {
+            // Abre el pdf del dictamen
+            targets: 7,
+            className: 'text-center',
+            render: function (data, type, full, meta) {
+              var $id = full['Certificado'];
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+            }
+          },
          {
            // Actions
-           targets: 7,
+           targets: 8,
            title: 'Acciones',
            searchable: false,
            orderable: false,
            render: function (data, type, full, meta) {
              return (
                '<div class="d-flex align-items-center gap-50">' +
-                   `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_certficado']} data-bs-toggle="modal" data-bs-dismiss="modal" data-bs-target="#editDictamen"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
+                   `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#editCertificadoModal"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
                    `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_certificado']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-                   //'<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
                  '<div class="dropdown-menu dropdown-menu-end m-0">' +
                  '<a href="' + userView + '" class="dropdown-item">View</a>' +
                  '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
@@ -178,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
          '<"col-sm-12 col-md-6"i>' +
          '<"col-sm-12 col-md-6"p>' +
          '>',
-       lengthMenu: [10, 20, 50, 70, 100], //for length of menu
+       lengthMenu: [10, 20, 50, 70, 100], 
        language: {
          sLengthMenu: '_MENU_',
          search: '',
@@ -206,7 +192,6 @@ document.addEventListener('DOMContentLoaded', function () {
                className: 'dropdown-item',
                exportOptions: {
                  columns: [1, 2, 3],
-                 // prevent avatar to be print
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -224,7 +209,6 @@ document.addEventListener('DOMContentLoaded', function () {
                  }
                },
                customize: function (win) {
-                 //customize print view for dark
                  $(win.document.body)
                    .css('color', config.colors.headingColor)
                    .css('border-color', config.colors.borderColor)
@@ -244,7 +228,6 @@ document.addEventListener('DOMContentLoaded', function () {
                className: 'dropdown-item',
                exportOptions: {
                  columns: [1, 2, 3],
-                 // prevent avatar to be print
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -269,7 +252,6 @@ document.addEventListener('DOMContentLoaded', function () {
                className: 'dropdown-item',
                exportOptions: {
                  columns: [1, 2, 3],
-                 // prevent avatar to be display
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -294,7 +276,6 @@ document.addEventListener('DOMContentLoaded', function () {
                className: 'dropdown-item',
                exportOptions: {
                  columns: [1, 2, 3],
-                 // prevent avatar to be display
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -319,7 +300,6 @@ document.addEventListener('DOMContentLoaded', function () {
                className: 'dropdown-item',
                exportOptions: {
                  columns: [1, 2, 3],
-                 // prevent avatar to be copy
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -344,13 +324,11 @@ document.addEventListener('DOMContentLoaded', function () {
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'modal',
-            'data-bs-target': '#addCertificadoForm'
+            'data-bs-target': '#addCertificadoModal'
           }
         }
        ],
- 
- ///PAGINA RESPONSIVA
-       responsive: {
+        responsive: {
          details: {
            display: $.fn.dataTable.Responsive.display.modal({
              header: function (row) {
@@ -361,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function () {
            type: 'column',
            renderer: function (api, rowIdx, columns) {
              var data = $.map(columns, function (col, i) {
-               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
+               return col.title !== '' 
                  ? '<tr data-dt-row="' +
                      col.rowIndex +
                      '" data-dt-column="' +
@@ -381,9 +359,7 @@ document.addEventListener('DOMContentLoaded', function () {
              return data ? $('<table class="table"/><tbody />').append(data) : false;
            }
          }
-       }
- 
-       
+       } 
      });
    } 
    
@@ -392,13 +368,9 @@ document.addEventListener('DOMContentLoaded', function () {
   $(document).on('click', '.delete-record', function () {
     var id_certificado = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
-
-    // hide responsive modal in small screen
     if (dtrModal.length) {
       dtrModal.modal('hide');
     }
-
-    // sweetalert for confirmation of delete
     Swal.fire({
       title: '¿Está seguro?',
       text: "No podrá revertir este evento",
@@ -412,7 +384,6 @@ document.addEventListener('DOMContentLoaded', function () {
       buttonsStyling: false
     }).then(function (result) {
       if (result.value) {
-        // delete the data
         $.ajax({
           type: 'DELETE',
           url: `${baseUrl}certificados-list/${id_certificado}`,
@@ -423,8 +394,6 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(error);
           }
         });
-
-        // success sweetalert
         Swal.fire({
           icon: 'success',
           title: '¡Eliminado!',
@@ -445,6 +414,220 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   });  
+
+  // Agregar Registro
+  $(function () {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    const formAddCertificado = document.getElementById('addCertificadoForm');
+    const dictamenSelect = document.getElementById('id_dictamen');
+    const maestroMezcaleroContainer = document.getElementById('maestroMezcaleroContainer');
+
+    $('#fecha_vigencia').on('change', function () {
+        var fechaInicial = new Date($(this).val());
+
+        fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+
+        var year = fechaInicial.getFullYear();
+        var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2); 
+        var day = ('0' + fechaInicial.getDate()).slice(-2);
+
+        $('#fecha_vencimiento').val(year + '-' + month + '-' + day);
+    });
+
+    const validator = FormValidation.formValidation(formAddCertificado, {
+        fields: {
+            'id_dictamen': {
+                validators: {
+                    notEmpty: {
+                        message: 'El número de dictamen es obligatorio.'
+                    }
+                }
+            },
+            'num_certificado': {
+                validators: {
+                    notEmpty: {
+                        message: 'El número de certificado es obligatorio.'
+                    }
+                }
+            },
+            'fecha_vigencia': {
+                validators: {
+                    notEmpty: {
+                        message: 'La fecha de vigencia es obligatoria.'
+                    },
+                    date: {
+                        format: 'YYYY-MM-DD',
+                        message: 'La fecha no es válida.'
+                    }
+                }
+            },
+            'fecha_vencimiento': {
+                validators: {
+                    notEmpty: {
+                        message: 'La fecha de vencimiento es obligatoria.'
+                    },
+                    date: {
+                        format: 'YYYY-MM-DD',
+                        message: 'La fecha no es válida.'
+                    }
+                }
+            },
+            'maestro_mezcalero': {
+                validators: {
+                    stringLength: {
+                        max: 60,
+                        message: 'El nombre del maestro mezcalero debe tener máximo 60 caracteres.'
+                    }
+                }
+            },
+            'num_autorizacion': {
+                validators: {
+                    notEmpty: {
+                        message: 'El número de autorización es obligatorio.'
+                    }
+                }
+            }
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: '.form-floating'
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+    });
+
+    function updateMaestroMezcaleroValidation() {
+        const selectedOption = dictamenSelect.options[dictamenSelect.selectedIndex];
+        const tipoDictamen = selectedOption ? selectedOption.getAttribute('data-tipo-dictamen') : '';
+
+        if (tipoDictamen === '1') {
+            maestroMezcaleroContainer.style.display = 'block';
+            validator.addField('maestro_mezcalero', {
+                validators: {
+                    notEmpty: {
+                        message: 'El nombre del maestro mezcalero es obligatorio'
+                    }
+                }
+            });
+        } else {
+            maestroMezcaleroContainer.style.display = 'none';
+            validator.removeField('maestro_mezcalero');
+        }
+    }
+
+    validator.on('core.form.valid', function () {
+        var formData = $(formAddCertificado).serialize();
+
+        $.ajax({
+            url: '/certificados-list',
+            type: 'POST',
+            data: formData,
+            success: function (response) {
+                console.log('Éxito:', response);
+                $('#addCertificadoModal').modal('hide');
+                $('#addCertificadoForm')[0].reset();
+                dt_user.ajax.reload();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.message,
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                });
+            },
+            error: function (xhr) {
+                console.log('Error:', xhr.responseText);
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Error al registrar el certificado',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
+        });
+    });
+
+    dictamenSelect.addEventListener('change', updateMaestroMezcaleroValidation);
+    updateMaestroMezcaleroValidation();
+});
+
+$(document).ready(function() {
+  // Al hacer clic en el botón de editar
+  $('.datatables-users').on('click', '.edit-record', function() {
+      var id_certificado = $(this).data('id');
+
+      // Realizar una solicitud AJAX para obtener los datos del certificado
+      $.get(`/certificados-list/${id_certificado}/edit`)
+          .done(function(data) {
+              if (data.error) {
+                  Swal.fire({
+                      icon: 'error',
+                      title: '¡Error!',
+                      text: data.error,
+                      customClass: {
+                          confirmButton: 'btn btn-danger'
+                      }
+                  });
+                  return;
+              }
+
+              // Rellenar el formulario con los datos obtenidos
+              $('#edit_id_certificado').val(data.id_certificado);
+              $('#edit_id_dictamen').val(data.id_dictamen).trigger('change'); // Establecer y actualizar el select2
+              $('#edit_numero_certificado').val(data.num_certificado);
+              $('#edit_no_autorizacion').val(data.num_autorizacion);
+              $('#edit_fecha_vigencia').val(data.fecha_vigencia);
+              $('#edit_fecha_vencimiento').val(data.fecha_vencimiento);
+
+              // Mostrar u ocultar el campo Maestro Mezcalero según el dictamen
+              if (data.id_dictamen == 1) {
+                  $('#edit_maestroMezcaleroContainer').show();
+                  $('#edit_maestro_mezcalero').val(data.maestro_mezcalero || '');
+              } else {
+                  $('#edit_maestroMezcaleroContainer').hide();
+              }
+
+              // Mostrar el modal de edición
+              $('#editCertificadoModal').modal('show');
+          })
+          .fail(function(jqXHR, textStatus, errorThrown) {
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Error al obtener los datos del certificado',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          });
+  });
+
+  // Manejar el cambio en el campo dictamen para mostrar u ocultar el campo maestro_mezcalero
+  $('#edit_id_dictamen').on('change', function() {
+      var selectedDictamen = $(this).val();
+
+      if (selectedDictamen == 1) {
+          $('#edit_maestroMezcaleroContainer').show();
+      } else {
+          $('#edit_maestroMezcaleroContainer').hide();
+      }
+  });
+});
+
+
 
 
 
