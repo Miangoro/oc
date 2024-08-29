@@ -607,7 +607,8 @@ Route::get('/dictamenes/productos', [DictamenGranelController::class, 'UserManag
 Route::resource('/dictamen-granel-list', DictamenGranelController::class);
 Route::delete('dictamen/granel/{id_dictamen}', [DictamenGranelController::class, 'destroy'])->name('dictamen.delete');
 Route::post('dictamenes-granel',[DictamenGranelController::class, 'store'])->name('dictamen.store');
-
+route::get('/dictamenes/productos/{id_dictamen}/edit', [DictamenGranelController::class, 'edit'])->name('dictamenes.edit');
+Route::post('/dictamenes/productos/{id_dictamen}/update', [DictamenGranelController::class, 'update'])->name('dictamen.update');
 
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
@@ -642,8 +643,8 @@ Route::resource('/hologramas-list', solicitudHolograma::class);
 //Certificados Instalaciones
 Route::get('certificados/instalaciones', [Certificado_InstalacionesController::class, 'UserManagement'])->name('certificados-instalaciones');
 Route::resource('certificados-list',Certificado_InstalacionesController::class);
-Route::post('certificados-list', [Certificado_InstalacionesController::class, 'store'])->name('certificados-list.store');
-
+Route::post('certificados-list', [Certificado_InstalacionesController::class, 'store'])->name('certificados.store');
+Route::get('certificados-list/{id}/edit', [Certificado_InstalacionesController::class, 'edit']);
 
 Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
@@ -652,5 +653,7 @@ Route::post('/solicitud_holograma/update/', [solicitudHolograma::class, 'update'
 Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSolicitudHolograma'])->name('solicitudDeHologramas');
 Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2']);
 Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
+Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
+
 
 

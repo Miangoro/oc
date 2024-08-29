@@ -152,6 +152,7 @@ $(function () {
                     "sPrevious": "Anterior"
                 }
             },
+            
             // Buttons with Dropdown
             buttons: [
                 {
@@ -658,149 +659,272 @@ $(function () {
 
 
 
-$(document).ready(function () {
-        function hideAndClearFields(selector) {
-            $(selector).hide().find('input, textarea').val('');
-        }
+
+
+
+
+    $(document).on('click', '.edit-record', function () {
+        var idDireccion = $(this).data('id');
     
-        // Manejo de cambio en el tipo de dirección
-        $(document).on('change', '#edit_tipo_direccion', function () {
-            var tipoDireccion = $(this).val();
-    
-            hideAndClearFields('#exportacionFieldsEdit');
-            hideAndClearFields('#hologramasFieldsEdit');
-    
-            if (tipoDireccion == '1') { // Exportación
-                $('#exportacionFieldsEdit').show();
-            } else if (tipoDireccion == '3') { // Envío de Hologramas
-                $('#hologramasFieldsEdit').show();
-            }
-        });
-    
-        $(document).on('click', '.edit-record', function () {
-            var idDireccion = $(this).data('id');
-    
-            $.ajax({
-                url: '/destinos-list/' + idDireccion + '/edit',
-                method: 'GET',
-                success: function (data) {
-                    if (data.error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: data.error,
-                            customClass: {
-                                confirmButton: 'btn btn-danger'
-                            }
-                        });
-                        return;
-                    }
-    
-                    $('#edit_tipo_direccion').val(data.tipo_direccion).trigger('change');
-                    $('#edit_id_empresa').val(data.id_empresa).trigger('change');
-                    $('#edit_direccion').val(data.direccion);
-    
-                    if (data.tipo_direccion == '1') { // Exportación
-                        $('#exportacionFieldsEdit').show();
-                        $('#hologramasFieldsEdit').hide();
-                        $('#edit_destinatario').val(data.destinatario);
-                        $('#edit_aduana').val(data.aduana);
-                        $('#edit_pais_destino').val(data.pais_destino);
-                    } else if (data.tipo_direccion == '3') { // Envío de Hologramas
-                        $('#hologramasFieldsEdit').show();
-                        $('#exportacionFieldsEdit').hide();
-                        $('#edit_correo_recibe').val(data.correo_recibe);
-                        $('#edit_nombre_recibe').val(data.nombre_recibe);
-                        $('#edit_celular_recibe').val(data.celular_recibe);
-                    } else {
-                        $('#exportacionFieldsEdit').hide();
-                        $('#hologramasFieldsEdit').hide();
-                    }
-    
-                    $('#modalEditDestino').modal('show');
-                },
-                error: function () {
+        $.ajax({
+            url: '/destinos-list/' + idDireccion + '/edit',
+            method: 'GET',
+            success: function (data) {
+                if (data.error) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'No se pudo cargar los datos del destino.',
+                        text: data.error,
                         customClass: {
                             confirmButton: 'btn btn-danger'
                         }
                     });
+                    return;
                 }
-            });
-        });
     
-        $('#modalEditDestino').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var id = button.data('id');
+                $('#edit_tipo_direccion').val(data.tipo_direccion).trigger('change');
+                $('#edit_id_empresa').val(data.id_empresa).trigger('change');
+                $('#edit_direccion').val(data.direccion);
     
-            var modal = $(this);
-            modal.find('#edit_destinos_id').val(id);
-        });
+                if (data.tipo_direccion == '1') { // Exportación
+                    $('#exportacionFieldsEdit').show();
+                    $('#hologramasFieldsEdit').hide();
+                    $('#edit_destinatario').val(data.destinatario);
+                    $('#edit_aduana').val(data.aduana);
+                    $('#edit_pais_destino').val(data.pais_destino);
+                } else if (data.tipo_direccion == '3') { // Envío de Hologramas
+                    $('#hologramasFieldsEdit').show();
+                    $('#exportacionFieldsEdit').hide();
+                    $('#edit_correo_recibe').val(data.correo_recibe);
+                    $('#edit_nombre_recibe').val(data.nombre_recibe);
+                    $('#edit_celular_recibe').val(data.celular_recibe);
+                } else {
+                    $('#exportacionFieldsEdit').hide();
+                    $('#hologramasFieldsEdit').hide();
+                }
     
-        $('#EditDestinoForm').on('submit', function (e) {
-            e.preventDefault();
-    
-            var formData = new FormData(this);
-    
-            for (var pair of formData.entries()) {
-                console.log(pair[0] + ', ' + pair[1]);
-            }
-    
-            var id_direccion = $('#edit_destinos_id').val();
-    
-            $.ajax({
-                url: '/destinos-update/' + id_direccion,
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (response) {
-                    $('.datatables-users').DataTable().ajax.reload();
-                    $('#modalEditDestino').modal('hide');
-                    Swal.fire({
-                        icon: 'success',
-                        title: '¡Éxito!',
-                        text: response.message,
-                        customClass: {
-                            confirmButton: 'btn btn-success'
-                        }
-                    });
-                },
-                error: function (xhr) {
-                    if (xhr.status === 422) {
-                        var errors = xhr.responseJSON.errors;
-                        var errorMessages = Object.keys(errors).map(function (key) {
-                            return errors[key].join('<br>');
-                        }).join('<br>');
-    
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            html: errorMessages,
-                            customClass: {
-                                confirmButton: 'btn btn-danger'
-                            }
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Ha ocurrido un error al actualizar el domicilio de destino.',
-                            customClass: {
-                                confirmButton: 'btn btn-danger'
-                            }
-                        });
+                $('#modalEditDestino').modal('show');
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No se pudo cargar los datos del destino.',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
                     }
-                }
-            });
+                });
+            }
         });
     });
+
+    $('#modalEditDestino').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+    
+        var modal = $(this);
+        modal.find('#edit_destinos_id').val(id);
+    });
+    
+    $(document).ready(function () {
+        const editDestinoForm = document.getElementById('EditDestinoForm');
+    
+        if (editDestinoForm) {
+            const formValidationInstance = FormValidation.formValidation(editDestinoForm, {
+                fields: {
+                    'tipo_direccion': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Selecciona el tipo de dirección.'
+                            }
+                        }
+                    },
+                    'id_empresa': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Selecciona una empresa cliente.'
+                            }
+                        }
+                    },
+                    'direccion': {
+                        validators: {
+                            notEmpty: {
+                                message: 'Ingresa la dirección.'
+                            }
+                        }
+                    },
+                    'destinatario': {
+                        validators: {
+                            notEmpty: {
+                                message: 'El destinatario es obligatorio.',
+                                enabled: function () {
+                                    return $('#edit_tipo_direccion').val() == '1'; // Exportación
+                                }
+                            }
+                        }
+                    },
+                    'aduana': {
+                        validators: {
+                            notEmpty: {
+                                message: 'La aduana es obligatoria.',
+                                enabled: function () {
+                                    return $('#edit_tipo_direccion').val() == '1'; // Exportación
+                                }
+                            }
+                        }
+                    },
+                    'pais_destino': {
+                        validators: {
+                            notEmpty: {
+                                message: 'El país de destino es obligatorio.',
+                                enabled: function () {
+                                    return $('#edit_tipo_direccion').val() == '1'; // Exportación
+                                }
+                            }
+                        }
+                    },
+                    'correo_recibe': {
+                        validators: {
+                            notEmpty: {
+                                message: 'El correo del receptor es obligatorio.',
+                                enabled: function () {
+                                    return $('#edit_tipo_direccion').val() == '3'; // Hologramas
+                                }
+                            },
+                            emailAddress: {
+                                message: 'Ingrese una dirección de correo electrónico válida.',
+                                enabled: function () {
+                                    return $('#edit_tipo_direccion').val() == '3'; // Hologramas
+                                }
+                            }
+                        }
+                    },
+                    'nombre_recibe': {
+                        validators: {
+                            notEmpty: {
+                                message: 'El nombre del receptor es obligatorio.',
+                                enabled: function () {
+                                    return $('#edit_tipo_direccion').val() == '3'; // Hologramas
+                                }
+                            }
+                        }
+                    },
+                    'celular_recibe': {
+                        validators: {
+                            notEmpty: {
+                                message: 'El número de celular del receptor es obligatorio.',
+                                enabled: function () {
+                                    return $('#edit_tipo_direccion').val() == '3'; // Hologramas
+                                }
+                            },
+                            phone: {
+                                country: 'US',
+                                message: 'Ingrese un número de teléfono válido.',
+                                enabled: function () {
+                                    return $('#edit_tipo_direccion').val() == '3'; // Hologramas
+                                }
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    bootstrap5: new FormValidation.plugins.Bootstrap5({
+                        eleValidClass: '',
+                        eleInvalidClass: 'is-invalid',
+                        rowSelector: '.form-floating'
+                    }),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    autoFocus: new FormValidation.plugins.AutoFocus()
+                }
+            }).on('core.form.valid', function () {
+                var formData = new FormData(editDestinoForm);
+                var idDestino = $('#edit_destinos_id').val();
+    
+                $.ajax({
+                    url: '/destinos-update/' + idDestino,
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        $('.datatables-users').DataTable().ajax.reload();
+                        $('#modalEditDestino').modal('hide');
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: response.message,
+                            customClass: {
+                                confirmButton: 'btn btn-success'
+                            }
+                        });
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 422) {
+                            var errors = xhr.responseJSON.errors;
+                            var errorMessages = Object.keys(errors).map(function (key) {
+                                return errors[key].join('<br>');
+                            }).join('<br>');
+    
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                html: errorMessages,
+                                customClass: {
+                                    confirmButton: 'btn btn-danger'
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Ha ocurrido un error al actualizar la dirección.',
+                                customClass: {
+                                    confirmButton: 'btn btn-danger'
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+    
+            // Manejo de cambio en el tipo de dirección
+            $('#edit_tipo_direccion').change(function () {
+                var tipoDireccion = $(this).val();
+                formValidationInstance.disableValidator('destinatario');
+                formValidationInstance.disableValidator('aduana');
+                formValidationInstance.disableValidator('pais_destino');
+                formValidationInstance.disableValidator('correo_recibe');
+                formValidationInstance.disableValidator('nombre_recibe');
+                formValidationInstance.disableValidator('celular_recibe');
+    
+                hideAndClearFields('#exportacionFieldsEdit');
+                hideAndClearFields('#hologramasFieldsEdit');
+    
+                if (tipoDireccion == '1') { // Exportación
+                    $('#exportacionFieldsEdit').show();
+                    formValidationInstance.enableValidator('destinatario');
+                    formValidationInstance.enableValidator('aduana');
+                    formValidationInstance.enableValidator('pais_destino');
+                } else if (tipoDireccion == '3') { // Envío de Hologramas
+                    $('#hologramasFieldsEdit').show();
+                    formValidationInstance.enableValidator('correo_recibe');
+                    formValidationInstance.enableValidator('nombre_recibe');
+                    formValidationInstance.enableValidator('celular_recibe');
+                } else { // Nacional u otro
+                    $('#exportacionFieldsEdit').hide();
+                    $('#hologramasFieldsEdit').hide();
+                }
+            });
+        }
+    
+        function hideAndClearFields(selector) {
+            $(selector).hide().find('input, textarea').val('');
+        }
+    });
+    
+    
+
     
 
 
