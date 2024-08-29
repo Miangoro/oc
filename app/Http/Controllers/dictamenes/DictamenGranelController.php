@@ -10,6 +10,8 @@ use App\Models\solicitudesModel;
 use App\Models\LotesGranel;
 use App\Models\Dictamen_Granel;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class DictamenGranelController extends Controller
 {
@@ -198,6 +200,34 @@ class DictamenGranelController extends Controller
             ]);
         }
     }
+
+
+    public function dictamenDeCumplimientoGranel($id_dictamen)
+    {
+        // Obtener los datos del dictamen específico
+
+        $data = Dictamen_Granel::find($id_dictamen);
+        
+        $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
+        $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
+        $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
+        if (!$data) {
+            return abort(404, 'Dictamen no encontrado');
+        }
+        
+        // Pasar los datos a la vista del PDF
+        $pdf = Pdf::loadView('pdfs.DictamenDeCumplimientoMezcalGranel', [
+            'data' => $data, 
+            'fecha_servicio' => $fecha_servicio,
+            'fecha_emision' => $fecha_emision,
+            'fecha_vigencia' => $fecha_vigencia,
+        ]);
+
+        
+        return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
+    }
+     
     
+
 
 }

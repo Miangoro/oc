@@ -178,4 +178,8 @@ class Certificado_InstalacionesController extends Controller
     }
 }
 
+    public function certificado_productor($id_certificado)
+    {   
+
+    }
 }
