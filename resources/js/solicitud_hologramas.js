@@ -1163,28 +1163,13 @@ $(document).ready(function () {
                   <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
               </th>
               <td>
-                  <select class="id_lote_granel form-control select2-nuevo" name="id_lote_granel[]">
-                      <!-- Opciones -->
-                  </select>
+                  <input type="number" class="form-control form-control-sm rango_inicial" name="rango_inicial[]" />
               </td>
               <td>
-                  <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
+                  <input type="text" class="form-control form-control-sm" name="rango_final[]">
               </td>
           </tr>`;
       $('#contenidoRango').append(newRow);
-
-      // Re-inicializar select2 en la nueva fila
-      $('#contenidoRango').find('.select2-nuevo').select2({
-          dropdownParent: $('#activarHologramas'), // Asegúrate de que #myModal sea el id de tu modal
-          width: '100%',
-          dropdownCssClass: 'select2-dropdown'
-      });
-
-      $('.select2-dropdown').css('z-index', 9999);
-
-      // Copiar opciones del primer select al nuevo select
-      var options = $('#contenidoRango tr:first-child .id_lote_granel').html();
-      $('#contenidoRango tr:last-child .id_lote_granel').html(options);
   });
 
   // Función para eliminar una fila
@@ -1192,6 +1177,7 @@ $(document).ready(function () {
       $(this).closest('tr').remove();
   });
 });
+
 
 
 });
