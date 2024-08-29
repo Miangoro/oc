@@ -294,27 +294,25 @@
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold; width: 16%;">Categoría y clase</td>
-                <td></td>
+                <td>{{ $data->lote_granel->id_clase }}</td>
                 <td style="color: #17365D; font-weight: bold; width: 19%">No. de lote a granel</td>
                 <td></td>
-                <td style="color: #17365D; font-weight: bold; width: 14%;">No. de análisis
-
-                </td>
-                <td></td>
+                <td style="color: #17365D; font-weight: bold; width: 14%;">No. de análisis</td>
+                <td>{{ $data->lote_granel->folio_fq }}</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">Ingredientes</td>
-                <td></td>
+                <td>{{ $data->lote_granel->ingredientes }}</td>
                 <td style="color: #17365D; font-weight: bold;">Volumen de lote</td>
                 <td></td>
                 <td style="color: #17365D; font-weight: bold;">Contenido alcohólico</td>
-                <td></td>
+                <td>{{ $data->lote_granel->cont_alc }}</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">Edad</td>
-                <td></td>
+                <td>{{ $data->lote_granel->edad }}</td>
                 <td style="color: #17365D; font-weight: bold;">Tipo de maguey</td>
-                <td colspan="3"></td>
+                <td colspan="3">{{ $data->lote_granel->id_tipo }}</td>
             </tr>
         </table>
 
