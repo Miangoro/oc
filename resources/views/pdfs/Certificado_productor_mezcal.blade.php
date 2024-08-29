@@ -207,8 +207,8 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
 <table>
     <tbody>
         <tr>
-            <td class="cell1"><strong>Domieilio Fiscal:</strong></td>
-            <td colspan="3" class="cent" style="text-align: center; vertical-align: middle;">Av, Periférico 5ur, No. Ext. 3915 No. Int. Escorpion 801, Pedregal De Carrasco, Coyoacán, Ciudad De México. C.P.04700.</td>
+            <td class="cell1"><strong>Domicilio Fiscal:</strong></td>
+            <td colspan="3" class="cent" style="text-align: center; vertical-align: middle;">{{ $datos->dictamen->instalaciones->direccion_completa }}</td>
         </tr>
         <tr>
             <td class="cell"><strong>RFC:</strong></td>

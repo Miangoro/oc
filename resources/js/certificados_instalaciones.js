@@ -153,12 +153,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
           },
           {
-            // Abre el pdf del dictamen
+            // Abre el pdf del certificado
             targets: 8,
             className: 'text-center',
             render: function (data, type, full, meta) {
-              var $id = full[''];
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+             
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['razon_social']} "></i>`;
             }
           },
          {
@@ -777,6 +777,39 @@ $(document).ready(function() {
 
       updateMaestroMezcaleroVisibility(dictamenId, maestroMezcalero);
   });
+});
+
+//Reciben los datos del pdf del dictamen
+$(document).on('click', '.pdf', function () {
+  var id = $(this).data('id');
+  
+  var registro = $(this).data('registro');
+      var iframe = $('#pdfViewer');
+
+      var tipo = $(this).data('tipo');
+      
+
+      if(tipo == 1 || tipo == 5){ // Productor
+        var tipo_dictamen = '../certificado_productor_mezcal/'+id;
+        var titulo = "Certificado de productor";
+      }
+
+      if(tipo == 2){ // Envasador
+        var tipo_dictamen = '../certificado_envasador_mezcal/'+id;
+        var titulo = "Certificado de envasador";
+      }
+
+      if(tipo == 3 || tipo  == 4){ // Comercializador
+        var tipo_dictamen = '../certificado_comercializador/'+id;
+        var titulo = "Certificado de comercializador";
+      }
+
+
+
+      iframe.attr('src', tipo_dictamen);
+
+      $("#titulo_modal").text(titulo);
+      $("#subtitulo_modal").text(registro);  
 });
 
 
