@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Tabla de Información del Cliente</title>
+    <title>Bitácora de revisión de certificados de Instalaciones NOM-070-SCFI-2016 F7.1-01-40 </title>
     <style>
         body {
             font-weight: 12px;

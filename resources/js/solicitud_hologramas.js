@@ -1166,7 +1166,7 @@ $(document).ready(function () {
                   <input type="number" class="form-control form-control-sm rango_inicial" name="rango_inicial[]" />
               </td>
               <td>
-                  <input type="text" class="form-control form-control-sm" name="rango_final[]">
+                  <input type="number" class="form-control form-control-sm" name="rango_final[]">
               </td>
           </tr>`;
       $('#contenidoRango').append(newRow);
