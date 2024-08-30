@@ -13,7 +13,7 @@
             margin-left: 70px;
             margin-right: 70px;
             margin-top: 40px;
-            margin-bottom: 40px;
+            margin-bottom: 10px;
 
         }
 
@@ -155,27 +155,33 @@
 
 
         }
-
-
-        .diagonal-line{
-            width: 70px;
-            height: 2px;
-            background-color: black;
-            transform: rotate(-20deg);
-            margin: 0;
-            padding: 0;
+                /* Estilo para el texto de fondo */
+                .background-text {
+            position: absolute;
+            top: 450px;
+            left: 380px;
+            z-index: -1;
+            color: #000000;
+            font-size: 14px;
+            line-height: 1.4;
+            white-space: nowrap;
+            text-align: left;
         }
+
     </style>
 
 
     <div class="header">
         <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
         <div> Bitácora de revisión de certificados de Instalaciones NOM-070-SCFI-2016<br> F7.1-01-40 <br>Ed 6 Entrada en
-            vigor 27/05/2024<br>__________________________________________________________</div>
+            vigor 27/05/2024<br>_______________________________________________________________________________________</div>
     </div>
 </head>
 
 <body>
+    <div class="background-text">
+        Nota: Para el llenado de la bitácora colocar <br> C= Cumple, NC= No Cumple, NA= No Aplica o <br> bien una X en el recuadro correspondiente en <br>cada uno de los requisitos y datos que estipula <br> la bitácora. 
+    </div>
     <table >
         <tr>
             <td class="letra-fondo" style="text-align: left" colspan="4">Razón social del cliente:</td>
@@ -193,54 +199,124 @@
             <td class="td-no-border"></td>
             <td class="td-no-border"></td>
         </tr>
-{{-- <tr><td class="td-no-border"></td></tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr> --}}
+
     </table>
 <br>
 
 <table style="width: 355px">
     <tr>
-        <td style="padding-right: 0; text-align: left">Requisitos documentales <br>
+        <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 180px;">Requisitos documentales <br>
             para certificación</td>
-        <td style="width: 50px">C </td>
-        <td style="width: 60px">N/C </td>
-        <td style="width: 65px">N/A</td>
+        <td class="letra-fondo" >C </td>
+        <td class="letra-fondo">N/C </td>
+        <td class="letra-fondo">N/A</td>
     </tr>
 
     <tr>
-        <td>Solicitud del servicio</td>
+        <td style="text-align: left">Solicitud del servicio</td>
         <td>C</td>
-        <td class="no-padding" style="height: 50px"><div class="diagonal-line"></div></td>
-        <td class="no-padding"><div class="diagonal-line"></div></td>
+        <td >- -</td>
+        <td>- -</td>
     </tr>
     <tr>
-        <td>Contrato de prestación de
+        <td  style="text-align: left">Contrato de prestación de
             servicios</td>
         <td>C</td>
-        <td class="no-padding" style="height: 50px"><div class="diagonal-line"></div></td>
-        <td class="no-padding" style="height: 50px"><div class="diagonal-line"></div></td>
+        <td >- -</td>
+        <td >- -</td>
     </tr>
     <tr>
-        <td>Dictamen de la unidad de
+        <td  style="text-align: left">Dictamen de la unidad de
             inspección (fecha de emisión,</td>
         <td>C</td>
-        <td class="no-padding" style="height: 50px"><div class="diagonal-line"></div></td>
-        <td class="no-padding" style="height: 50px"><div class="diagonal-line"></div></td>
+        <td >- -</td>
+        <td >- -</td>
     </tr>
     <tr>
-        <td>Acta de la Unidad de
+        <td  style="text-align: left">Acta de la Unidad de
             Inspección (fecha de inicio y</td>
         <td>C</td>
-        <td class="no-padding"><div class="diagonal-line"></div></td>
-        <td class="no-padding"><div class="diagonal-line"></div></td>
+        <td>- -</td>
+        <td>- -</td>
+    </tr>
+    <tr>
+        <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 180px;">Datos del certificado</td>
+        <td class="letra-fondo" >C </td>
+        <td class="letra-fondo">N/C </td>
+        <td class="letra-fondo">N/A</td>
+    </tr>
+    <tr>
+        <td style="text-align: left">Nombre de la empresa o
+            persona física </td>
+        <td></td>
+        <td >NC</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td style="text-align: left">Domicilio fiscal y de las
+            instalaciones.</td>
+        <td>C</td>
+        <td >- -</td>
+        <td>- -</td>
+    </tr>
+    <tr>
+        <td style="text-align: left">Fecha de vigencia y
+            vencimiento</td>
+        <td>C</td>
+        <td >- -</td>
+        <td>- -</td>
+    </tr>
+    <tr>
+        <td style="text-align: left">Alcance de la certificación</td>
+        <td>C</td>
+        <td >- -</td>
+        <td>- -</td>
+    </tr>
+    <tr>
+        <td style="text-align: left">Nombre y puesto del
+            responsable de la emisión</td>
+        <td>C</td>
+        <td >- -</td>
+        <td>- -</td>
+    </tr>
+    <tr>
+        <td style="text-align: left">Número de dictamen
+            emitido por la UVEM</td>
+        <td>C</td>
+        <td >- -</td>
+        <td>- -</td>
+    </tr>
+    <tr>
+        <td style="text-align: left">Nombre y dirección del
+            organismo certificador</td>
+        <td>C</td>
+        <td >- -</td>
+        <td>- -</td>
+    </tr>
+    <tr>
+        <td style="text-align: left">No. De Certificado</td>
+        <td>C</td>
+        <td >- -</td>
+        <td>- -</td>
     </tr>
 </table>
-
+<br>
+<table>
+<tr>
+    <td>
+        Derivado de la revisión minuciosa y con la documentación completa entregada de manera digital por personal del
+        OC CIDAM se revisa que el certificado cumple con cada uno de los requisitos mencionados en este documento, por
+        consiguiente, se toma la decisión para otorgar la certificación de instalaciones como envasador.
+        <div style="padding: 30px"></div>
+        Miguel Ángel Gómez Romero <br>
+Miembro del Consejo para la decisión de la certificación (Vocal):
+    </td>
+</tr>
+</table>
+<div style="margin-bottom: 15px">
+    <p style="font-size: 12px; margin-top: 5px; text-align: center">Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser <br>
+        distribuido externamente sin la autorización escrita del Director Ejecutivo.</p>
+</div>
 
 </body>
 
