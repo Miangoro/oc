@@ -43,11 +43,11 @@
                     <!-- Campos para Fechas -->
                     <div class="d-flex justify-content-between mb-3">
                         <div class="form-floating form-floating-outline flex-fill me-2">
-                            <input type="text" class="form-control datepicker" id="edit_fecha_vigencia" placeholder="yyyy-mm-dd" name="fecha_vigencia" aria-label="Fecha de Vigencia" required>
+                            <input type="text" class="form-control datepicker" id="edit_fecha_vigencia" readonly placeholder="yyyy-mm-dd" name="fecha_vigencia" aria-label="Fecha de Vigencia" required>
                             <label for="edit_fecha_vigencia">Fecha de Inicio Vigencia</label>
                         </div>
                         <div class="form-floating form-floating-outline flex-fill ms-2">
-                            <input type="text" class="form-control datepicker" id="edit_fecha_vencimiento" placeholder="yyyy-mm-dd" name="fecha_vencimiento" aria-label="Fecha de Vencimiento" required>
+                            <input type="text" class="form-control datepicker" id="edit_fecha_vencimiento" readonly placeholder="yyyy-mm-dd" name="fecha_vencimiento" aria-label="Fecha de Vencimiento" required>
                             <label for="edit_fecha_vencimiento">Fecha de Vencimiento</label>
                         </div>
                     </div>
