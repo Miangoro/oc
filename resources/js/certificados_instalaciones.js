@@ -491,7 +491,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const dictamenSelect = document.getElementById('id_dictamen');
     const maestroMezcaleroContainer = document.getElementById('maestroMezcaleroContainer');
   
-    // Inicializa la validación del formulario
     const validator = FormValidation.formValidation(formAddCertificado, {
         fields: {
             'id_dictamen': {
@@ -651,109 +650,201 @@ document.addEventListener('DOMContentLoaded', function () {
     updateDatepickerValidation();
   });
 
+
   $(document).ready(function() {
-    // Escucha el clic en los botones de editar, ya sea en la tabla principal o en el modal responsivo de DataTables
-    $(document).on('click', '.edit-record', function() {
-      var id_certificado = $(this).data('id');
-  
-      // Cierra el modal responsivo de DataTables si está abierto
-      var dtrModal = $('.dtr-bs-modal.show');
-      if (dtrModal.length) {
-        dtrModal.modal('hide');
-      }
-  
-      // Solicita los datos del certificado para editar
-      $.get(`/certificados-list/${id_certificado}/edit`)
-        .done(function(data) {
-          if (data.error) {
-            Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: data.error,
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-            return;
-          }
-  
-          // Asigna los datos recibidos a los campos del formulario de edición
-          $('#edit_id_certificado').val(data.id_certificado);
-          $('#edit_id_dictamen').val(data.id_dictamen).trigger('change');
-          $('#edit_numero_certificado').val(data.num_certificado);
-          $('#edit_no_autorizacion').val(data.num_autorizacion);
-          $('#edit_fecha_vigencia').val(data.fecha_vigencia);
-          $('#edit_fecha_vencimiento').val(data.fecha_vencimiento);
-  
-          // Actualiza la visibilidad del campo "Maestro Mezcalero"
-          updateMaestroMezcaleroVisibility(data.id_dictamen, data.maestro_mezcalero);
-  
-          // Muestra el modal de edición
-          $('#editCertificadoModal').modal('show');
-        })
-        .fail(function() {
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'No se pudieron cargar los datos del certificado.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
+    const formEditCertificado = document.getElementById('editCertificadoForm');
+    const validatorEdit = FormValidation.formValidation(formEditCertificado, {
+        fields: {
+            'id_dictamen': {
+                validators: {
+                    notEmpty: {
+                        message: 'El número de dictamen es obligatorio.'
+                    }
+                }
+            },
+            'num_certificado': {
+                validators: {
+                    notEmpty: {
+                        message: 'El número de certificado es obligatorio.'
+                    }
+                }
+            },
+            'fecha_vigencia': {
+                validators: {
+                    notEmpty: {
+                        message: 'La fecha de vigencia es obligatoria.'
+                    },
+                    date: {
+                        format: 'YYYY-MM-DD',
+                        message: 'La fecha no es válida.'
+                    }
+                }
+            },
+            'fecha_vencimiento': {
+                validators: {
+                    notEmpty: {
+                        message: 'La fecha de vencimiento es obligatoria.'
+                    },
+                    date: {
+                        format: 'YYYY-MM-DD',
+                        message: 'La fecha no es válida.'
+                    }
+                }
+            },
+            'maestro_mezcalero': {
+                validators: {
+                    stringLength: {
+                        max: 60,
+                        message: 'El nombre del maestro mezcalero debe tener máximo 60 caracteres.'
+                    }
+                }
+            },
+            'num_autorizacion': {
+                validators: {
+                    notEmpty: {
+                        message: 'El número de autorización es obligatorio.'
+                    }
+                }
             }
-          });
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: '.form-floating'
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+    }).on('core.form.valid', function() {
+        var id_certificado = $('#edit_id_certificado').val();
+        var formData = $(formEditCertificado).serialize();
+
+        $.ajax({
+            url: `/certificados-list/${id_certificado}`,
+            type: 'PUT',
+            data: formData,
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.message,
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                });
+                $('#editCertificadoModal').modal('hide');
+                $('.datatables-users').DataTable().ajax.reload();
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'No se pudieron actualizar los datos del certificado.',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
         });
     });
-  
-    // Función para actualizar la validación del datepicker y la fecha de vencimiento
-    function updateDatepickerValidation() {
-      $('#edit_fecha_vigencia').on('change', function() {
+
+let isMaestroMezcaleroValidated = false;
+
+function updateMaestroMezcaleroVisibility(dictamenId, maestroMezcalero) {
+    const dictamenSelect = $('#edit_id_dictamen');
+    const maestroMezcaleroContainer = $('#edit_maestroMezcaleroContainer');
+    const tipoDictamen = dictamenSelect.find(`option[value="${dictamenId}"]`).data('tipo-dictamen');
+
+    if (tipoDictamen == '1') {
+        maestroMezcaleroContainer.show();
+        $('#edit_maestro_mezcalero').val(maestroMezcalero === null ? '' : maestroMezcalero);
+
+        if (!isMaestroMezcaleroValidated) {
+            validatorEdit.addField('maestro_mezcalero', {
+                validators: {
+                    notEmpty: {
+                        message: 'El nombre del maestro mezcalero es obligatorio cuando el tipo de dictamen es 1.'
+                    }
+                }
+            });
+            isMaestroMezcaleroValidated = true;
+        }
+    } else {
+        maestroMezcaleroContainer.hide();
+        $('#edit_maestro_mezcalero').val('');
+
+        if (isMaestroMezcaleroValidated) {
+            validatorEdit.removeField('maestro_mezcalero');
+            isMaestroMezcaleroValidated = false;
+        }
+    }
+}
+
+    $(document).on('click', '.edit-record', function() {
+        var id_certificado = $(this).data('id');
+
+        var dtrModal = $('.dtr-bs-modal.show');
+        if (dtrModal.length) {
+            dtrModal.modal('hide');
+        }
+
+        $.get(`/certificados-list/${id_certificado}/edit`)
+            .done(function(data) {
+                if (data.error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: data.error,
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                    return;
+                }
+
+                $('#edit_id_certificado').val(data.id_certificado);
+                $('#edit_id_dictamen').val(data.id_dictamen).trigger('change');
+                $('#edit_numero_certificado').val(data.num_certificado);
+                $('#edit_no_autorizacion').val(data.num_autorizacion);
+                $('#edit_fecha_vigencia').val(data.fecha_vigencia);
+                $('#edit_fecha_vencimiento').val(data.fecha_vencimiento);
+
+                updateMaestroMezcaleroVisibility(data.id_dictamen, data.maestro_mezcalero);
+
+                $('#editCertificadoModal').modal('show');
+            })
+            .fail(function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'No se pudieron cargar los datos del certificado.',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            });
+    });
+
+    $('#edit_fecha_vigencia').on('change', function() {
         var fechaVigencia = $(this).val();
         if (fechaVigencia) {
-          var fecha = moment(fechaVigencia, 'YYYY-MM-DD');
-          var fechaVencimiento = fecha.add(1, 'years').format('YYYY-MM-DD');
-          $('#edit_fecha_vencimiento').val(fechaVencimiento);
+            var fecha = moment(fechaVigencia, 'YYYY-MM-DD');
+            var fechaVencimiento = fecha.add(1, 'years').format('YYYY-MM-DD');
+            $('#edit_fecha_vencimiento').val(fechaVencimiento);
+
+            validatorEdit.revalidateField('fecha_vencimiento');
         }
-      });
-    }
-  
-    // Llama a la función para habilitar la actualización de fecha
-    updateDatepickerValidation();
-  });
-  
-
-  $('#editCertificadoForm').on('submit', function(event) {
-      event.preventDefault(); //
-      var id_certificado = $('#edit_id_certificado').val();
-      var formData = $(this).serialize(); 
-
-      $.ajax({
-          url: `/certificados-list/${id_certificado}`,
-          type: 'PUT',
-          data: formData,
-          success: function(response) {
-              Swal.fire({
-                  icon: 'success',
-                  title: '¡Éxito!',
-                  text: response.message,
-                  customClass: {
-                      confirmButton: 'btn btn-success'
-                  }
-              });
-              $('#editCertificadoModal').modal('hide');
-              $('.datatables-users').DataTable().ajax.reload();
-          },
-          error: function(xhr) {
-              Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: 'No se pudieron actualizar los datos del certificado.',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
-          }
-      });
     });
-    
+
+    $('#edit_id_dictamen').on('change', function() {
+        const dictamenId = $(this).val();
+        const maestroMezcalero = $('#edit_maestro_mezcalero').val();
+        updateMaestroMezcaleroVisibility(dictamenId, maestroMezcalero);
+    });
+});
+
   function updateMaestroMezcaleroVisibility(dictamenId, maestroMezcalero) {
       const dictamenSelect = $('#edit_id_dictamen');
       const maestroMezcaleroContainer = $('#edit_maestroMezcaleroContainer');
@@ -806,8 +897,6 @@ $(document).on('click', '.pdf', function () {
         var tipo_dictamen = '../certificado_comercializador/'+id;
         var titulo = "Certificado de comercializador";
       }
-
-
 
       iframe.attr('src', tipo_dictamen);
 
