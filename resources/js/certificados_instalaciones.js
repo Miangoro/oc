@@ -650,108 +650,75 @@ document.addEventListener('DOMContentLoaded', function () {
     updateMaestroMezcaleroValidation();
     updateDatepickerValidation();
   });
+
+  $(document).ready(function() {
+    // Escucha el clic en los botones de editar, ya sea en la tabla principal o en el modal responsivo de DataTables
+    $(document).on('click', '.edit-record', function() {
+      var id_certificado = $(this).data('id');
   
-$(document).ready(function() {
-  $('.datatables-users').on('click', '.edit-record', function() {
-      var id_certificado = $(this).data('id');
-
-      $.get(`/certificados-list/${id_certificado}/edit`)
-          .done(function(data) {
-              if (data.error) {
-                  Swal.fire({
-                      icon: 'error',
-                      title: '¡Error!',
-                      text: data.error,
-                      customClass: {
-                          confirmButton: 'btn btn-danger'
-                      }
-                  });
-                  return;
-              }
-
-              $('#edit_id_certificado').val(data.id_certificado);
-              $('#edit_id_dictamen').val(data.id_dictamen).trigger('change'); 
-              $('#edit_numero_certificado').val(data.num_certificado);
-              $('#edit_no_autorizacion').val(data.num_autorizacion);
-              $('#edit_fecha_vigencia').val(data.fecha_vigencia);
-              $('#edit_fecha_vencimiento').val(data.fecha_vencimiento);
-
-              if (data.id_dictamen == 1) {
-                  $('#edit_maestroMezcaleroContainer').show();
-                  $('#edit_maestro_mezcalero').val(data.maestro_mezcalero || '');
-              } else {
-                  $('#edit_maestroMezcaleroContainer').hide();
-              }
-
-              $('#editCertificadoModal').modal('show');
-          })
-          .fail(function(jqXHR, textStatus, errorThrown) {
-              Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: 'Error al obtener los datos del certificado',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
-          });
-  });
-
-  $('#edit_id_dictamen').on('change', function() {
-      var selectedDictamen = $(this).val();
-
-      if (selectedDictamen == 1) {
-          $('#edit_maestroMezcaleroContainer').show();
-      } else {
-          $('#edit_maestroMezcaleroContainer').hide();
+      // Cierra el modal responsivo de DataTables si está abierto
+      var dtrModal = $('.dtr-bs-modal.show');
+      if (dtrModal.length) {
+        dtrModal.modal('hide');
       }
-  });
-});
-
-
-
-$(document).ready(function() {
-
-  $('.datatables-users').on('click', '.edit-record', function() {
-      var id_certificado = $(this).data('id');
-
+  
+      // Solicita los datos del certificado para editar
       $.get(`/certificados-list/${id_certificado}/edit`)
-          .done(function(data) {
-
-              if (data.error) {
-                  Swal.fire({
-                      icon: 'error',
-                      title: '¡Error!',
-                      text: data.error,
-                      customClass: {
-                          confirmButton: 'btn btn-danger'
-                      }
-                  });
-                  return;
+        .done(function(data) {
+          if (data.error) {
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: data.error,
+              customClass: {
+                confirmButton: 'btn btn-danger'
               }
-
-              $('#edit_id_certificado').val(data.id_certificado);
-              $('#edit_id_dictamen').val(data.id_dictamen).trigger('change');
-              $('#edit_numero_certificado').val(data.num_certificado);
-              $('#edit_no_autorizacion').val(data.num_autorizacion);
-              $('#edit_fecha_vigencia').val(data.fecha_vigencia);
-              $('#edit_fecha_vencimiento').val(data.fecha_vencimiento);
-
-              updateMaestroMezcaleroVisibility(data.id_dictamen, data.maestro_mezcalero);
-
-              $('#editCertificadoModal').modal('show');
-          })
-          .fail(function() {
-              Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: 'No se pudieron cargar los datos del certificado.',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
+            });
+            return;
+          }
+  
+          // Asigna los datos recibidos a los campos del formulario de edición
+          $('#edit_id_certificado').val(data.id_certificado);
+          $('#edit_id_dictamen').val(data.id_dictamen).trigger('change');
+          $('#edit_numero_certificado').val(data.num_certificado);
+          $('#edit_no_autorizacion').val(data.num_autorizacion);
+          $('#edit_fecha_vigencia').val(data.fecha_vigencia);
+          $('#edit_fecha_vencimiento').val(data.fecha_vencimiento);
+  
+          // Actualiza la visibilidad del campo "Maestro Mezcalero"
+          updateMaestroMezcaleroVisibility(data.id_dictamen, data.maestro_mezcalero);
+  
+          // Muestra el modal de edición
+          $('#editCertificadoModal').modal('show');
+        })
+        .fail(function() {
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'No se pudieron cargar los datos del certificado.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
           });
+        });
+    });
+  
+    // Función para actualizar la validación del datepicker y la fecha de vencimiento
+    function updateDatepickerValidation() {
+      $('#edit_fecha_vigencia').on('change', function() {
+        var fechaVigencia = $(this).val();
+        if (fechaVigencia) {
+          var fecha = moment(fechaVigencia, 'YYYY-MM-DD');
+          var fechaVencimiento = fecha.add(1, 'years').format('YYYY-MM-DD');
+          $('#edit_fecha_vencimiento').val(fechaVencimiento);
+        }
+      });
+    }
+  
+    // Llama a la función para habilitar la actualización de fecha
+    updateDatepickerValidation();
   });
+  
 
   $('#editCertificadoForm').on('submit', function(event) {
       event.preventDefault(); //
@@ -785,8 +752,8 @@ $(document).ready(function() {
               });
           }
       });
-  });
-
+    });
+    
   function updateMaestroMezcaleroVisibility(dictamenId, maestroMezcalero) {
       const dictamenSelect = $('#edit_id_dictamen');
       const maestroMezcaleroContainer = $('#edit_maestroMezcaleroContainer');
@@ -814,7 +781,6 @@ $(document).ready(function() {
 
       updateMaestroMezcaleroVisibility(dictamenId, maestroMezcalero);
   });
-});
 
 //Reciben los datos del pdf del dictamen
 $(document).on('click', '.pdf', function () {
