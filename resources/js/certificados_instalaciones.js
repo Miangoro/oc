@@ -563,25 +563,34 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
   
-    function updateMaestroMezcaleroValidation() {
-        const selectedOption = dictamenSelect.options[dictamenSelect.selectedIndex];
-        const tipoDictamen = selectedOption ? selectedOption.getAttribute('data-tipo-dictamen') : '';
-  
-        if (tipoDictamen === '1') {
-            maestroMezcaleroContainer.style.display = 'block';
-            validator.addField('maestro_mezcalero', {
-                validators: {
-                    notEmpty: {
-                        message: 'El nombre del maestro mezcalero es obligatorio'
+const fieldsAdded = new Set();
+
+function updateMaestroMezcaleroValidation() {
+    const selectedOption = dictamenSelect.options[dictamenSelect.selectedIndex];
+    const tipoDictamen = selectedOption ? selectedOption.getAttribute('data-tipo-dictamen') : '';
+
+    if (tipoDictamen === '1') {
+        maestroMezcaleroContainer.style.display = 'block';
+
+        if (!fieldsAdded.has('maestro_mezcalero')) {
+            try {
+                validator.addField('maestro_mezcalero', {
+                    validators: {
+                        notEmpty: {
+                            message: 'El nombre del maestro mezcalero es obligatorio'
+                        }
                     }
-                }
-            });
-        } else {
-            maestroMezcaleroContainer.style.display = 'none';
-            validator.removeField('maestro_mezcalero');
+                });
+                fieldsAdded.add('maestro_mezcalero'); 
+            } catch (error) {
+                console.error('Error al añadir la validación del campo maestro_mezcalero:', error);
+            }
         }
+    } else {
+        maestroMezcaleroContainer.style.display = 'none';
+
     }
-  
+}
     function updateDatepickerValidation() {
         $('#fecha_vigencia').on('change', function() {
             var fechaVigencia = $(this).val();
