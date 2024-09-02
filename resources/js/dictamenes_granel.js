@@ -52,18 +52,38 @@ $(function () {
                 type: 'GET'
             },
             columns: [
-                { data: '' },
+                { data: null, defaultContent: '' },
                 { data: 'id_dictamen' },
                 { data: 'num_dictamen' },
                 { data: 'id_empresa' },
                 { data: 'id_inspeccion' },
                 { data: 'id_lote_granel' },
+                {
+                    data: 'folio_fq',
+                    render: function (data, type, row) {
+                        // Construimos el enlace con data-id, data-bs-toggle y data-bs-target para abrir el modal
+                        return '<a href="#" data-id="' + row.id_dictamen + '" data-bs-toggle="modal" data-bs-target="#modalVerDocumento" class="text-primary ver-folio-fq">' + data + '</a>';
+                    }
+                },
                 { data: 'fecha_emision' },
                 { data: 'fecha_vigencia' },
                 { data: 'fecha_servicio' },
-                { data: '' },
-                { data: 'action' },
+                { data: null, defaultContent: '' },
+                {
+                    data: 'estatus',
+                    render: function (data, type, row) {
+                        var estatusClass = '';
+                        if (data === 'Emitido') {
+                            estatusClass = 'badge rounded-pill bg-success';
+                        } else if (data === 'Cancelado') {
+                            estatusClass = 'badge rounded-pill bg-danger';
+                        }
+                        return '<span class="' + estatusClass + '">' + data + '</span>';
+                    }
+                },
+                { data: 'action', orderable: false, searchable: false }
             ],
+            
 
             columnDefs: [
                 {
@@ -86,13 +106,13 @@ $(function () {
                     }
                 },
                 {
+
                     // Abre el pdf del dictamen
-                    // Abre el pdf del dictamen
-                    targets: 9,
+                    targets: 10,
                     className: 'text-center',
                     render: function (data, type, full, meta) {
                         var $id = full['id_dictamen'];
-                        return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+                        return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
                     }
                 },
 
@@ -135,8 +155,9 @@ $(function () {
                             '<div class="d-flex align-items-center gap-50">' +
                             '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                            `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalEditDictamenGranel" href="javascrip:;" class="dropdown-item edit-record text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-                            `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
+                            `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalEditDictamenGranel" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+                            `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalReexpredirDictamenGranel" class="dropdown-item reexpedir-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Reexpedir dictamen</a>` +
+                            `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
                             '</div>' +
@@ -178,7 +199,7 @@ $(function () {
                     buttons: [
                         {
                             extend: 'print',
-                            title: 'Predios',
+                            title: 'Dictamenes a granel',
                             text: '<i class="ri-printer-line me-1" ></i>Print',
                             className: 'dropdown-item',
                             exportOptions: {
@@ -222,7 +243,7 @@ $(function () {
                         },
                         {
                             extend: 'csv',
-                            title: 'Users',
+                            title: 'Dictamenes a granel',
                             text: '<i class="ri-file-text-line me-1" ></i>Csv',
                             className: 'dropdown-item',
                             exportOptions: {
@@ -253,7 +274,7 @@ $(function () {
                         },
                         {
                             extend: 'excel',
-                            title: 'Predios',
+                            title: 'Dictamenes a granel',
                             text: '<i class="ri-file-excel-line me-1"></i>Excel',
                             className: 'dropdown-item',
                             exportOptions: {
@@ -282,7 +303,7 @@ $(function () {
                         },
                         {
                             extend: 'pdf',
-                            title: 'Predios',
+                            title: 'Dictamenes a granel',
                             text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
                             className: 'dropdown-item',
                             exportOptions: {
@@ -311,7 +332,7 @@ $(function () {
                         },
                         {
                             extend: 'copy',
-                            title: 'Predios',
+                            title: 'Dictamenes a granel',
                             text: '<i class="ri-file-copy-line me-1"></i>Copy',
                             className: 'dropdown-item',
                             exportOptions: {
@@ -403,6 +424,77 @@ $(function () {
     }
 
     initializeSelect2(select2Elements);
+
+
+    $(document).on('click', '.ver-folio-fq', function (e) {
+        e.preventDefault();
+    
+        var idDictamen = $(this).data('id');
+        
+        console.log('ID del Dictamen:', idDictamen);
+    
+        $.ajax({
+            url: '/dictamenes/productos/' + idDictamen + '/foliofq',
+            method: 'GET',
+            success: function (response) {
+                console.log('Respuesta del servidor:', response);
+    
+                if (response.success) {
+                    var documentos = response.documentos;
+    
+                    // Limpiar contenido previo
+                    $('#documentoOtroOrganismo').html('');
+                    $('#documentoCertificadoCompleto').html('');
+                    $('#documentoCertificadoAjuste').html('');
+    
+                    // Documento de otro organismo
+                    if (response.archivo_url_otro_organismo) {
+                        var fileNameOtroOrganismo = response.archivo_url_otro_organismo.split('/').pop();
+                        $('#documentoOtroOrganismo').html('Documento de otro organismo: <a href="' + response.archivo_url_otro_organismo + '" target="_blank" class="text-primary">' + fileNameOtroOrganismo + '</a>');
+                    } else {
+                        $('#documentoOtroOrganismo').html('No hay documento de otro organismo disponible.');
+                    }
+    
+                    // Documentos certificados por OC CIDAM
+                    var documentoCompletoAsignado = false;
+                    var documentoAjusteAsignado = false;
+    
+                    documentos.forEach(function (documento) {
+                        if (documento.tipo.includes('Análisis completo') && !documentoCompletoAsignado) {
+                            var fileNameCompleto = documento.url.split('/').pop();
+                            $('#documentoCertificadoCompleto').html('Certificado (Análisis Completo): <a href="../files/' + response.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameCompleto + '</a>');
+                            documentoCompletoAsignado = true;
+                        }
+                        if (documento.tipo.includes('Ajuste de grado') && !documentoAjusteAsignado) {
+                            var fileNameAjuste = documento.url.split('/').pop();
+                            $('#documentoCertificadoAjuste').html('Certificado (Ajuste de Grado): <a href="../files/' + response.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameAjuste + '</a>');
+                            documentoAjusteAsignado = true;
+                        }
+                    });
+    
+                    if (!documentoCompletoAsignado) {
+                        $('#documentoCertificadoCompleto').html('No hay certificado de análisis completo disponible.');
+                    }
+                    if (!documentoAjusteAsignado) {
+                        $('#documentoCertificadoAjuste').html('No hay certificado de ajuste de grado disponible.');
+                    }
+    
+                    // Mostrar el modal
+                    $('#modalVerDocumento').modal('show');
+    
+                } else {
+                    $('#documentoContent').html('<p>No se pudo cargar el documento.</p>');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log('Error AJAX:', error);
+                $('#documentoContent').html('<p>Ocurrió un error al intentar cargar el documento.</p>');
+            }
+        });
+    });
+    
+    
+    
 
     // Delete Record eliminar un dictamen
     $(document).on('click', '.delete-record', function () {
@@ -497,9 +589,6 @@ $(function () {
                         notEmpty: {
                             message: 'El número de dictamen es obligatorio.'
                         },
-                        integer: {
-                            message: 'Debe ingresar un número válido.'
-                        }
                     }
                 },
                 'id_empresa': {
@@ -667,9 +756,7 @@ $(function () {
 
 
 
-
-
-
+/* editar el dictamen a granel */
     $(function () {
         // Configuración CSRF para Laravel
         $.ajaxSetup({
@@ -687,9 +774,6 @@ $(function () {
                         notEmpty: {
                             message: 'El número de dictamen es obligatorio.'
                         },
-                        integer: {
-                            message: 'Debe ingresar un número válido.'
-                        }
                     }
                 },
                 'id_empresa': {
@@ -881,13 +965,235 @@ $(function () {
     // Reciben los datos del PDF
     $(document).on('click', '.pdf', function () {
         var id = $(this).data('id'); // Obtén el ID desde el atributo data-id
-        var iframe = $('#pdfViewer');
+        var iframe = $('#pdfViewerDictamen');
+        var spinner = $('#loading-spinner');
+        // Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+        spinner.show();
+        iframe.hide();
 
         // Cargar el PDF con el ID
         iframe.attr('src', '/dictamen_cumplimiento_mezcal_granel/' + id); // Usa URL absoluta
 
-        $("#titulo_modal").text("Dictamen de Cumplimiento NOM Mezcal a Granel");
-        $("#subtitulo_modal").text("PDF de Dictamen");
+        $("#titulo_modal_Dictamen").text("Dictamen de Cumplimiento NOM Mezcal a Granel");
+        $("#subtitulo_modal_Dictamen").text("PDF de Dictamen");
+
+        // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+        iframe.on('load', function () {
+            spinner.hide();
+            iframe.show();
+        });
+
+    });
+
+
+/* reexpedir dictamen a granel */
+    $(function () {
+        // Configuración CSRF para Laravel
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        // Inicializar FormValidation para el formulario de creación y edición
+        const form = document.getElementById('addReexpedirDictamenGranelForm');
+        const fv = FormValidation.formValidation(form, {
+            fields: {
+                num_dictamen: {
+                    validators: {
+                        notEmpty: {
+                            message: 'El número de dictamen es obligatorio.'
+                        },
+                    }
+                },
+                id_empresa: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Selecciona una empresa cliente.'
+                        }
+                    }
+                },
+                id_inspeccion: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Selecciona el número de servicio.'
+                        }
+                    }
+                },
+               id_lote_granel: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Selecciona el lote.'
+                        }
+                    }
+                },
+                fecha_emision: {
+                    validators: {
+                        notEmpty: {
+                            message: 'La fecha de emisión es obligatoria.'
+                        },
+                        date: {
+                            format: 'YYYY-MM-DD',
+                            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                        }
+                    }
+                },
+                fecha_vigencia: {
+                    validators: {
+                        notEmpty: {
+                            message: 'La fecha de vigencia es obligatoria.'
+                        },
+                        date: {
+                            format: 'YYYY-MM-DD',
+                            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                        }
+                    }
+                },
+                fecha_servicio: {
+                    validators: {
+                        notEmpty: {
+                            message: 'La fecha de servicio es obligatoria.'
+                        },
+                        date: {
+                            format: 'YYYY-MM-DD',
+                            message: 'Ingresa una fecha válida (yyyy-mm-dd).'
+                        }
+                    }
+                },
+                observaciones: {
+                    validators: {
+                        notEmpty: {
+                            message: 'El motivo de la cancelación es obligatoria.'
+                        },
+                    }
+                }
+            },
+            plugins: {
+                trigger: new FormValidation.plugins.Trigger(),
+                bootstrap5: new FormValidation.plugins.Bootstrap5({
+                    eleValidClass: '',
+                    eleInvalidClass: 'is-invalid',
+                    rowSelector: '.form-floating'
+                }),
+                submitButton: new FormValidation.plugins.SubmitButton(),
+                autoFocus: new FormValidation.plugins.AutoFocus()
+            }
+        }).on('core.form.valid', function () {
+            // Validar y enviar el formulario cuando pase la validación
+            var formData = new FormData(form);
+            var dictamenid = $('#reexpedir_id_dictamen').val();
+
+            $.ajax({
+                url: '/dictamenes/productos/' + dictamenid + '/update',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    dt_user.ajax.reload();
+                    $('#modalReexpredirDictamenGranel').modal('hide');
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: response.message,
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    });
+                },
+                error: function (xhr) {
+                    if (xhr.status === 422) {
+                        var errors = xhr.responseJSON.errors;
+                        var errorMessages = Object.keys(errors).map(function (key) {
+                            return errors[key].join('<br>');
+                        }).join('<br>');
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            html: errorMessages,
+                            customClass: {
+                                confirmButton: 'btn btn-danger'
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Ha ocurrido un error al actualizar el dictamen.',
+                            customClass: {
+                                confirmButton: 'btn btn-danger'
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        // Función del botón de editar para cargar los datos del dictamen
+        $(document).on('click', '.reexpedir-record', function () {
+            var id_dictamen = $(this).data('id');
+            $('#reexpedir_id_dictamen').val(id_dictamen);
+
+            $.ajax({
+                url: '/dictamenes/productos/' + id_dictamen + '/edit',
+                method: 'GET',
+                success: function (data) {
+                    if (data.success) {
+                        var dictamen = data.dictamen;
+                        // Asignar valores a los campos del formulario
+                        $('#reexpedir_num_dictamen').val(dictamen.num_dictamen);
+                        $('#reexpedir_id_empresa').val(dictamen.id_empresa).trigger('change');
+                        $('#reexpedir_id_inspeccion').val(dictamen.id_inspeccion).trigger('change');
+                        $('#reexpedir_id_lote_granel').data('selectedLote', dictamen.id_lote_granel); // Guardar el lote seleccionado
+                        $('#reexpedir_fecha_emision').val(dictamen.fecha_emision);
+                        $('#reexpedir_fecha_vigencia').val(dictamen.fecha_vigencia);
+                        $('#reexpedir_fecha_servicio').val(dictamen.fecha_servicio);
+
+                        // Mostrar el modal
+                        $('#modalReexpedirDictamenGranel').modal('show');
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'No se pudo cargar los datos del dictamen a granel.',
+                            customClass: {
+                                confirmButton: 'btn btn-danger'
+                            }
+                        });
+                    }
+                },
+                error: function (error) {
+                    console.error('Error al cargar los datos del dictamen a granel:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo cargar los datos del dictamen a granel.',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+            });
+        });
+
+        // Función para actualizar la validación al cambiar la fecha en el datepicker
+        function updateDatepickerValidation() {
+            $('#reexpedir_fecha_emision').on('change', function () {
+                fv.revalidateField('fecha_emision');
+            });
+
+            $('#reexpedir_fecha_vigencia').on('change', function () {
+                fv.revalidateField('fecha_vigencia');
+            });
+
+            $('#reexpedir_fecha_servicio').on('change', function () {
+                fv.revalidateField('fecha_servicio');
+            });
+        }
+
+        // Llamar a la función para actualizar la validación
+        updateDatepickerValidation();
+
     });
 
 

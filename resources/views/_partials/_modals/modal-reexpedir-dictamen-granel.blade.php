@@ -1,22 +1,22 @@
 <!-- Modal para agregar nuevo dictamen de granel -->
-<div class="modal fade" id="modalEditDictamenGranel" tabindex="-1" aria-labelledby="modalAddDictamenGranelLabel"
+<div class="modal fade" id="modalReexpredirDictamenGranel" tabindex="-1" aria-labelledby="modalReexpedirDictamenGranelLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 id="modalAddDictamenGranelLabel" class="modal-title">Editar Dictamen a Granel</h5>
+                <h5 id="modalReexpedirDictamenGranelLabel" class="modal-title">Cancelar/Reexpedir Dictamen a Granel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addNEditDictamenGranelForm" method="POST">
+                <form id="addReexpedirDictamenGranelForm" method="POST">
                     @csrf
                     <!-- Fila 1 -->
                     <div class="row mb-4">
                         <!-- Número de Dictamen -->
-                        <input type="hidden" id="edit_id_dictamen" name="id_dictamen">
+                        <input type="hidden" id="reexpedir_id_dictamen" name="id_dictamen">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" id="edit_num_dictamen" name="num_dictamen"
+                                <input type="text" class="form-control" id="reexpedir_num_dictamen" name="num_dictamen"
                                     placeholder="Número de dictamen">
                                 <label for="num_dictamen">Número de Dictamen</label>
                             </div>
@@ -25,7 +25,7 @@
                         <!-- Select de Empresa Cliente -->
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <select onchange="obtenerLotes()" id="edit_id_empresa" name="id_empresa"
+                                <select onchange="obtenerLotess()" id="reexpedir_id_empresa" name="id_empresa"
                                     class="select2 form-select">
                                     <option value="" disabled selected>Selecciona la empresa cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -42,7 +42,7 @@
                         <!-- Select de Inspección -->
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <select id="edit_id_inspeccion" name="id_inspeccion" class="select2 form-select">
+                                <select id="reexpedir_id_inspeccion" name="id_inspeccion" class="select2 form-select">
                                     <option value="" disabled selected>Selecciona el número de servicio</option>
                                     @foreach ($inspecciones as $inspeccion)
                                         <option value="{{ $inspeccion->id_inspeccion }}">{{ $inspeccion->num_servicio }}
@@ -57,7 +57,7 @@
                         <!-- Select de Lote Granel -->
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <select id="edit_id_lote_granel" name="id_lote_granel" class="select2 form-select">
+                                <select id="reexpedir_id_lote_granel" name="id_lote_granel" class="select2 form-select">
                                     <option value="" disabled selected>Selecciona el lote a granel</option>
                                     <!-- Opciones serán cargadas dinámicamente -->
                                 </select>
@@ -72,7 +72,7 @@
                         <!-- Fecha de Emisión -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline">
-                                <input class="form-control datepicker" id="edit_fecha_emision" name="fecha_emision"
+                                <input class="form-control datepicker" id="reexpedir_fecha_emision" name="fecha_emision"
                                     placeholder="yyyy-mm-dd">
                                 <label for="fecha_emision">Fecha de Emisión</label>
                             </div>
@@ -81,7 +81,7 @@
                         <!-- Fecha de Vigencia -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline">
-                                <input class="form-control datepicker" id="edit_fecha_vigencia" name="fecha_vigencia"
+                                <input class="form-control datepicker" id="reexpedir_fecha_vigencia" name="fecha_vigencia"
                                     placeholder="yyyy-mm-dd">
                                 <label for="fecha_vigencia">Fecha de Vigencia</label>
                             </div>
@@ -90,11 +90,22 @@
                         <!-- Fecha de Servicio -->
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline">
-                                <input class="form-control datepicker" id="edit_fecha_servicio" name="fecha_servicio"
+                                <input class="form-control datepicker" id="reexpedir_fecha_servicio" name="fecha_servicio"
                                     placeholder="yyyy-mm-dd">
                                 <label for="fecha_servicio">Fecha de Servicio</label>
                             </div>
                         </div>
+                    </div>
+                    <hr>
+                    <h5>Motivo de la cancelación</h5>
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline">
+                                <textarea class="form-control h-px-100" id="observaciones" name="observaciones" placeholder="Motivo de cancelación"></textarea>
+                                <label for="observaciones">Motivo de cancelación</label>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="d-flex justify-content-end mt-3">
@@ -108,9 +119,40 @@
     </div>
 </div>
 
+
+<!-- Modal para ver el documento -->
+<!-- Modal para ver el documento -->
+<!-- Modal para ver el documento -->
+<div class="modal fade" id="modalVerDocumento" tabindex="-1" aria-labelledby="modalVerDocumentoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content text-center">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalVerDocumentoLabel">Ver Documento FQ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="documentoContent">
+                    <hr>
+                    <!-- Contenido dinámico -->
+                    <div id="documentoOtroOrganismo" class="mb-3"></div>
+                    <hr>
+                    <div id="documentoCertificadoCompleto" class="mb-3"></div>
+                    <hr>
+                    <div id="documentoCertificadoAjuste" class="mb-3"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <script>
-function obtenerLotes() {
-    var empresa = $("#edit_id_empresa").val();
+function obtenerLotess() {
+    var empresa = $("#reexpedir_id_empresa").val();
     if (!empresa) {
         return;
     }
@@ -123,6 +165,7 @@ function obtenerLotes() {
                 console.error(response.error);
                 return;
             }
+
             var contenido = "<option value='' disabled selected>Selecciona el lote</option>";
             for (let index = 0; index < response.lotes_granel.length; index++) {
                 contenido += '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
@@ -131,11 +174,12 @@ function obtenerLotes() {
             if (response.lotes_granel.length == 0) {
                 contenido = '<option value="" disabled selected>Sin lotes a granel registrados</option>';
             }
-            $('#edit_id_lote_granel').html(contenido);
+            $('#reexpedir_id_lote_granel').html(contenido);
+
             // Asegúrate de seleccionar el lote correcto si ya estaba seleccionado
-            var selectedLote = $('#edit_id_lote_granel').data('selectedLote');
+            var selectedLote = $('#reexpedir_id_lote_granel').data('selectedLote');
             if (selectedLote) {
-                $('#edit_id_lote_granel').val(selectedLote).trigger('change');
+                $('#reexpedir_id_lote_granel').val(selectedLote).trigger('change');
             }
         },
         error: function(xhr, status, error) {

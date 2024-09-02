@@ -57,10 +57,10 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
                                 <select id="id_lote_granel" name="id_lote_granel" class="select2 form-select">
-                                    <option value="" disabled selected>Selecciona el lote</option>
+                                    <option value="" disabled selected>Selecciona el lote a granel</option>
                                     <!-- Opciones serán cargadas dinámicamente -->
                                 </select>
-                                <label for="id_lote_granel">Lote</label>
+                                <label for="id_lote_granel">Lote a granel</label>
                             </div>
                         </div>
 
@@ -130,7 +130,7 @@ function obtenerLote() {
                     response.lotes_granel[index].nombre_lote + '</option>' + contenido;
             }
             if (response.lotes_granel.length == 0) {
-                contenido = '<option value="" disabled selected>Sin lotes registrados</option>';
+                contenido = '<option value="" disabled selected>Sin lotes a granel registrados</option>';
             }
             $('#id_lote_granel').html(contenido);
         },
