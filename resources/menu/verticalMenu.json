@@ -199,17 +199,17 @@
     {
       "name": "Revisión de certificados",
       "icon": "menu-icon ri-qr-code-fill",
-      "slug": "hologramas",
+      "slug": "certificados",
       "submenu": [
         {
-          "url": "/hologramas/solicitud",
+          "url": "/hologramas/",
           "name": "Personal",
-          "slug": "hologramas-solicitud"
+          "slug": "hologramas-"
         },
         {
-          "url": "/hologramas/solicitud",
+          "url": "/hologramas/",
           "name": "Consejo",
-          "slug": "hologramas-solicitud"
+          "slug": "hologramas-"
         }
       ]
     }

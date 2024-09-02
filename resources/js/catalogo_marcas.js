@@ -632,6 +632,7 @@ $(function () {
 
 
     /*// Seleccionar el formulario de edición de marca VALIDACION MARCAS CORREGIR
+    // Seleccionar el formulario de edición de marca VALIDACION MARCAS CORREGIR
 const editMarcaForm = document.getElementById('editMarcaForm');
 
 const fv3 = FormValidation.formValidation(editMarcaForm, {
@@ -684,7 +685,7 @@ const fv3 = FormValidation.formValidation(editMarcaForm, {
     submitButton: new FormValidation.plugins.SubmitButton(),
     autoFocus: new FormValidation.plugins.AutoFocus()
   }
-}).on('core.form.valid', function () {
+}).on('core.form.valid', function (e) {
   // Prevenir el comportamiento predeterminado
   var formData = new FormData(editMarcaForm);
 
@@ -695,10 +696,6 @@ const fv3 = FormValidation.formValidation(editMarcaForm, {
     processData: false,
     contentType: false,
     success: function (response) {
-      // Ocultar el modal al éxito
-      $('#editMarca').modal('hide');
-      $('.datatables-users').DataTable().ajax.reload();
-
       // Mostrar alerta de éxito
       Swal.fire({
         icon: 'success',
@@ -708,6 +705,10 @@ const fv3 = FormValidation.formValidation(editMarcaForm, {
           confirmButton: 'btn btn-success'
         }
       });
+            // Ocultar el modal al éxito
+            $('#editMarca').modal('hide');
+            $('.datatables-users').DataTable().ajax.reload();
+      
     },
     error: function (xhr) {
       // Mostrar alerta de error
