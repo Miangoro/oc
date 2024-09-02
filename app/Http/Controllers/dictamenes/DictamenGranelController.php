@@ -14,6 +14,7 @@ use App\Models\LotesGranel;
 use App\Models\Dictamen_Granel;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\DB;
 
 
 class DictamenGranelController extends Controller
@@ -241,7 +242,7 @@ public function dictamenDeCumplimientoGranel($id_dictamen)
     return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
 }
 
-     
+     /* mostrar los folios fq de lote a granel del dictamen */
     public function foliofq($id_dictamen)
     {
         try {
@@ -299,6 +300,50 @@ public function dictamenDeCumplimientoGranel($id_dictamen)
         }
     }
     
+
+    /* reexpedir un dictamen */
+    public function reexpedirDictamen(Request $request, $id_dictamen)
+{
+    DB::beginTransaction();
+    try {
+        // Validar los datos
+        $validatedData = $request->validate([
+            'num_dictamen' => 'required',
+            'id_empresa' => 'required',
+            'id_inspeccion' => 'required',
+            'id_lote_granel' => 'required',
+            'fecha_emision' => 'required|date',
+            'fecha_vigencia' => 'required|date',
+            'fecha_servicio' => 'required|date',
+            'observaciones' => 'required'
+        ]);
+
+        // Actualizar el dictamen original
+        $dictamenOriginal = Dictamen_Granel::findOrFail($id_dictamen);
+        $dictamenOriginal->update([
+            'estatus' => 'Cancelado',
+            'observaciones' => $request->input('observaciones')
+        ]);
+
+        // Crear un nuevo dictamen
+        $nuevoDictamen = $dictamenOriginal->replicate();
+        $nuevoDictamen->num_dictamen = $request->input('num_dictamen');
+        $nuevoDictamen->id_empresa = $request->input('id_empresa');
+        $nuevoDictamen->id_inspeccion = $request->input('id_inspeccion');
+        $nuevoDictamen->id_lote_granel = $request->input('id_lote_granel');
+        $nuevoDictamen->fecha_emision = $request->input('fecha_emision');
+        $nuevoDictamen->fecha_vigencia = $request->input('fecha_vigencia');
+        $nuevoDictamen->fecha_servicio = $request->input('fecha_servicio');
+        $nuevoDictamen->estatus = 'Emitido'; // o cualquier otro estado inicial
+        $nuevoDictamen->save();
+
+        DB::commit();
+        return response()->json(['message' => 'Dictamen reexpedido con éxito.']);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json(['message' => 'Error al reexpedir el dictamen.', 'error' => $e->getMessage()], 500);
+    }
+}
 
 
 

@@ -119,37 +119,6 @@
     </div>
 </div>
 
-
-<!-- Modal para ver el documento -->
-<!-- Modal para ver el documento -->
-<!-- Modal para ver el documento -->
-<div class="modal fade" id="modalVerDocumento" tabindex="-1" aria-labelledby="modalVerDocumentoLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content text-center">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalVerDocumentoLabel">Ver Documento FQ</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div id="documentoContent">
-                    <hr>
-                    <!-- Contenido dinámico -->
-                    <div id="documentoOtroOrganismo" class="mb-3"></div>
-                    <hr>
-                    <div id="documentoCertificadoCompleto" class="mb-3"></div>
-                    <hr>
-                    <div id="documentoCertificadoAjuste" class="mb-3"></div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
 <script>
 function obtenerLotess() {
     var empresa = $("#reexpedir_id_empresa").val();

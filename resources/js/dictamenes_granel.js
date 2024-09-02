@@ -71,6 +71,7 @@ $(function () {
                 { data: null, defaultContent: '' },
                 {
                     data: 'estatus',
+                    searchable: false, orderable: false,
                     render: function (data, type, row) {
                         var estatusClass = '';
                         if (data === 'Emitido') {
@@ -105,16 +106,6 @@ $(function () {
                         return `<span>${full.fake_id}</span>`;
                     }
                 },
-                {
-
-                    // Abre el pdf del dictamen
-                    targets: 10,
-                    className: 'text-center',
-                    render: function (data, type, full, meta) {
-                        var $id = full['id_dictamen'];
-                        return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
-                    }
-                },
 
                 {
                     // User full name
@@ -141,6 +132,17 @@ $(function () {
                             '</div>' +
                             '</div>';
                         return $row_output;
+                    }
+                },
+                                {
+
+                    // Abre el pdf del dictamen
+                    targets: 10,
+                    className: 'text-center',
+                    searchable: false, orderable: false,
+                    render: function (data, type, full, meta) {
+                        var $id = full['id_dictamen'];
+                        return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
                     }
                 },
 
@@ -425,34 +427,26 @@ $(function () {
 
     initializeSelect2(select2Elements);
 
-
     $(document).on('click', '.ver-folio-fq', function (e) {
         e.preventDefault();
-    
+        
         var idDictamen = $(this).data('id');
         
-        console.log('ID del Dictamen:', idDictamen);
-    
         $.ajax({
             url: '/dictamenes/productos/' + idDictamen + '/foliofq',
             method: 'GET',
             success: function (response) {
-                console.log('Respuesta del servidor:', response);
-    
                 if (response.success) {
                     var documentos = response.documentos;
-    
-                    // Limpiar contenido previo
-                    $('#documentoOtroOrganismo').html('');
-                    $('#documentoCertificadoCompleto').html('');
-                    $('#documentoCertificadoAjuste').html('');
+                    var $tableBody = $('#documentosTableBody');
+                    $tableBody.empty(); // Limpiar contenido previo
     
                     // Documento de otro organismo
                     if (response.archivo_url_otro_organismo) {
                         var fileNameOtroOrganismo = response.archivo_url_otro_organismo.split('/').pop();
-                        $('#documentoOtroOrganismo').html('Documento de otro organismo: <a href="' + response.archivo_url_otro_organismo + '" target="_blank" class="text-primary">' + fileNameOtroOrganismo + '</a>');
+                        $tableBody.append('<tr><td>Documento de otro organismo</td><td><a href="#" data-url="' + response.archivo_url_otro_organismo + '" class="btn btn-primary btn-sm ver-pdf" data-title="Documento de otro organismo">Ver Documento</a></td></tr>');
                     } else {
-                        $('#documentoOtroOrganismo').html('No hay documento de otro organismo disponible.');
+                        $tableBody.append('<tr><td>Documento de otro organismo</td><td>No hay documento disponible.</td></tr>');
                     }
     
                     // Documentos certificados por OC CIDAM
@@ -460,38 +454,76 @@ $(function () {
                     var documentoAjusteAsignado = false;
     
                     documentos.forEach(function (documento) {
+                        var fileName = documento.url.split('/').pop();
+                        var documentoHtml = '<a href="#" data-url="../files/' + response.numeroCliente + '/' + documento.url + '" class="btn btn-primary btn-sm ver-pdf" data-title="' + documento.tipo + '">Ver Documento</a>';
+    
                         if (documento.tipo.includes('Análisis completo') && !documentoCompletoAsignado) {
-                            var fileNameCompleto = documento.url.split('/').pop();
-                            $('#documentoCertificadoCompleto').html('Certificado (Análisis Completo): <a href="../files/' + response.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameCompleto + '</a>');
+                            $tableBody.append('<tr><td>Certificado (Análisis Completo)</td><td>' + documentoHtml + '</td></tr>');
                             documentoCompletoAsignado = true;
                         }
                         if (documento.tipo.includes('Ajuste de grado') && !documentoAjusteAsignado) {
-                            var fileNameAjuste = documento.url.split('/').pop();
-                            $('#documentoCertificadoAjuste').html('Certificado (Ajuste de Grado): <a href="../files/' + response.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameAjuste + '</a>');
+                            $tableBody.append('<tr><td>Certificado (Ajuste de Grado)</td><td>' + documentoHtml + '</td></tr>');
                             documentoAjusteAsignado = true;
                         }
                     });
     
                     if (!documentoCompletoAsignado) {
-                        $('#documentoCertificadoCompleto').html('No hay certificado de análisis completo disponible.');
+                        $tableBody.append('<tr><td>Certificado (Análisis Completo)</td><td>No hay certificado de análisis completo disponible.</td></tr>');
                     }
                     if (!documentoAjusteAsignado) {
-                        $('#documentoCertificadoAjuste').html('No hay certificado de ajuste de grado disponible.');
+                        $tableBody.append('<tr><td>Certificado (Ajuste de Grado)</td><td>No hay certificado de ajuste de grado disponible.</td></tr>');
                     }
     
-                    // Mostrar el modal
+                    // Mostrar el modal de ver documentos
                     $('#modalVerDocumento').modal('show');
-    
                 } else {
-                    $('#documentoContent').html('<p>No se pudo cargar el documento.</p>');
+                    $('#documentosTableBody').html('<tr><td colspan="2">No se pudo cargar el documento.</td></tr>');
                 }
             },
             error: function (xhr, status, error) {
                 console.log('Error AJAX:', error);
-                $('#documentoContent').html('<p>Ocurrió un error al intentar cargar el documento.</p>');
+                $('#documentosTableBody').html('<tr><td colspan="2">Ocurrió un error al intentar cargar el documento.</td></tr>');
             }
         });
     });
+    
+    $(document).on('click', '.ver-pdf', function (e) {
+        e.preventDefault();
+        
+        var url = $(this).data('url'); // Obtén la URL del PDF desde el atributo data-url
+        var title = $(this).data('title'); // Obtén el título del PDF desde el atributo data-title
+        var iframe = $('#pdfViewerDictamen');
+        var spinner = $('#loading-spinner');
+        
+        // Ocultar el modal de ver documentos
+        $('#modalVerDocumento').modal('hide');
+        
+        // Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+        spinner.show();
+        iframe.hide();
+        
+        // Cargar el PDF en el iframe
+        iframe.attr('src', url);
+        
+        // Actualizar el título y subtítulo del modal
+        $("#titulo_modal_Dictamen").text(title);
+        // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+        iframe.on('load', function () {
+            spinner.hide();
+            iframe.show();
+        });
+        
+        // Mostrar el modal para el PDF
+        $('#mostrarPdfDictamen').modal('show');
+    });
+    
+    // Reabrir el modal de ver documentos cuando se cierre el modal del PDF
+    $('#mostrarPdfDictamen').on('hidden.bs.modal', function () {
+        $('#modalVerDocumento').modal('show');
+    });
+    
+    
+    
     
     
     
@@ -1083,7 +1115,7 @@ $(function () {
             var dictamenid = $('#reexpedir_id_dictamen').val();
 
             $.ajax({
-                url: '/dictamenes/productos/' + dictamenid + '/update',
+                url: '/dictamenes/productos/' + dictamenid + '/reexpedir',
                 type: 'POST',
                 data: formData,
                 contentType: false,
