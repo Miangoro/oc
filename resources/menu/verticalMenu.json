@@ -93,6 +93,11 @@
           "url": "laravel/user-management",
           "name": "Historial",
           "slug": "laravel-example-user-management"
+        },
+        {
+          "url": "laravel/user-management",
+          "name": "Tipo",
+          "slug": "laravel-example-user-management"
         }
       ]
     },

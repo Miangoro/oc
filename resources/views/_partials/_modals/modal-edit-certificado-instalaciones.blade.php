@@ -13,14 +13,17 @@
                     
                     <!-- Campo para Dictamen -->
                     <div class="form-floating form-floating-outline mb-3">
-                        <select class="form-select select2" id="edit_id_dictamen" name="id_dictamen" aria-label="No. Dictamen" required>
-                            <option value="" disabled selected>Seleccione un dictamen</option>
-                            @foreach($dictamenes as $dictamen)
-                                <option value="{{ $dictamen->id_dictamen }}" data-tipo-dictamen="{{ $dictamen->tipo_dictamen }}">{{ $dictamen->num_dictamen }}</option>
-                            @endforeach
-                        </select>
-                        <label for="edit_id_dictamen">No. Dictamen</label>
-                    </div>
+    <select class="select form-select" id="edit_id_dictamen" name="id_dictamen" aria-label="No. Dictamen" required>
+        <option value="" disabled selected>Seleccione un dictamen</option>
+        @foreach($dictamenes as $dictamen)
+            <option value="{{ $dictamen->id_dictamen }}" data-tipo-dictamen="{{ $dictamen->tipo_dictamen }}">
+                {{ $dictamen->num_dictamen }}
+            </option>
+        @endforeach
+    </select>
+    <label for="edit_id_dictamen">No. Dictamen</label>
+</div>
+
 
                     <!-- Campo para Número de Certificado -->
                     <div class="form-floating form-floating-outline mb-3">
