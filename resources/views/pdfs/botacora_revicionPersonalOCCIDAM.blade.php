@@ -381,7 +381,7 @@
                 PERSONAL DEL OC CIDAM</td>
         </tr>
         <tr>
-            <td colspan="2" style="font-size: 8px">Derivado de la revisión minuciosa y con la documentación completa entregada de manera
+            <td colspan="2" style="font-size: 8px; padding: 0">Derivado de la revisión minuciosa y con la documentación completa entregada de manera
                 digital y/o fisica por el cliente, el personal del OC CIDAM determina que:</td>
         </tr>
         <tr>
@@ -413,7 +413,7 @@
             <td class="leftLetter" style="font-size: 8px;padding-top: 0">Karen Yunuen Pérez Pérez <br>
                 Revisión realizada el 08 de Agosto del <br>
                 2024 el Certificado Revisión por el <br>
-                personal OC Positiva
+                personal OC Positiva <div style="padding-top: 25px"></div>
                 </td>
         </tr>
         <tr>
@@ -422,7 +422,7 @@
             <td class="leftLetter" style="font-size: 8px;padding-top: 0">Mayra Gutierrez Romero <br>
                 Gerente Técnico del Organismo <br>
                 Certificador de CIDAM <br>
-                 08 de Agosto del 2024
+                 08 de Agosto del 2024 <div style="padding-top: 20px"></div>
                 </td>
         </tr>
     </table>
