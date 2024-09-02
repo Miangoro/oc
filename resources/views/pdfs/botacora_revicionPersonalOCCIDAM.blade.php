@@ -385,8 +385,8 @@
                 digital y/o fisica por el cliente, el personal del OC CIDAM determina que:</td>
         </tr>
         <tr>
-            <td style="background-color: #b6d7a7">SI</td>
-            <td >NO</td>
+            <td style="background-color: #b6d7a7; font-size: 10px;padding-top: 0; vertical-align: top">SI</td>
+            <td style="font-size: 10px; padding-top: 0;vertical-align: top">NO</td>
         </tr>
         <tr>
             <td class="leftLetter" style="background-color: #b6d7a7; font-size: 7px; padding-top: 0; padding-bottom: 0">Cumple con cada uno de los requisitos
