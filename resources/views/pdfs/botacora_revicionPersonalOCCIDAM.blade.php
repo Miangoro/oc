@@ -407,7 +407,7 @@
                 DECISIÓN</td>
         </tr>
         <tr>
-            <td class="letra-fondo negrita" style="font-size: 7px; padding-top: 0; vertical-align: top">NOMBRE, FIRMA , FECHA Y CARGO <br>
+            <td class="letra-fondo negrita" style="font-size: 10px; padding-top: 0; vertical-align: top;padding-left: 0; width: 175px">NOMBRE, FIRMA , FECHA Y CARGO <br>
                 DE QUIEN HACE LA REVISIÓN
                 </td>
             <td class="leftLetter" style="font-size: 8px;padding-top: 0">Karen Yunuen Pérez Pérez <br>
@@ -417,7 +417,7 @@
                 </td>
         </tr>
         <tr>
-            <td class="letra-fondo negrita" style="font-size: 7px; padding-top: 0; vertical-align: top">NOMBRE, FIRMA , FECHA Y CARGO <br>
+            <td class="letra-fondo negrita" style="font-size:10px; padding-top: 0; vertical-align: top; padding-left: 0">NOMBRE, FIRMA , FECHA Y CARGO <br>
                 DE QUIEN TOMA LA APROBACIÓN</td>
             <td class="leftLetter" style="font-size: 8px;padding-top: 0">Mayra Gutierrez Romero <br>
                 Gerente Técnico del Organismo <br>
