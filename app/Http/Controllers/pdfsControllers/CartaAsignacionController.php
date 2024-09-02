@@ -198,9 +198,9 @@ class CartaAsignacionController extends Controller
 
 
     //pdf Bitácora de revisión de certificados NOM de Instalaciones
-    public function NOM_070_SCFI2016()
+    public function bitacora_revision_SCFI2016()
     {
-        $pdf = Pdf::loadView('pdfs.NOM_070_SCFI2016');
+        $pdf = Pdf::loadView('pdfs.bitacora_revision_SCFI2016');
         return $pdf->stream('NOM-070-SCFI-2016 Ed. 5.pdf');
     }
 
