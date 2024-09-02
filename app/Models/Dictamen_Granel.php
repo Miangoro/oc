@@ -18,7 +18,8 @@ class Dictamen_Granel extends Model
         'id_lote_granel',
         'fecha_emision',
         'fecha_vigencia',
-        'fecha_servicio'
+        'fecha_servicio',
+        'estatus'
     ];
 
     public function inspeccion()

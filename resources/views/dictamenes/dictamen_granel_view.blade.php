@@ -4,7 +4,7 @@
 
 <!-- Vendor Styles -->
 @section('vendor-style')
-    @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.scss', 'resources/assets/vendor/libs/select2/select2.scss', 'resources/assets/vendor/libs/@form-validation/form-validation.scss', 'resources/assets/vendor/libs/animate-css/animate.scss', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss', 'resources\assets\vendor\libs\bootstrap-datepicker\bootstrap-datepicker.scss'])
+    @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.scss', 'resources/assets/vendor/libs/select2/select2.scss', 'resources/assets/vendor/libs/@form-validation/form-validation.scss', 'resources/assets/vendor/libs/animate-css/animate.scss', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss', 'resources\assets\vendor\libs\bootstrap-datepicker\bootstrap-datepicker.scss','resources\assets\vendor\libs\spinkit\spinkit.scss'])
 @endsection
 
 <!-- Vendor Scripts -->
@@ -36,11 +36,13 @@
                         <th>No. dictamen</th>
                         <th>Cliente</th>
                         <th>No. Servicio</th>
-                        <th>Lote</th>
+                        <th>Lote a granel</th>
+                        <th>Folio FQ</th>
                         <th>Fecha de emisión</th>
                         <th>Fecha de vigencia</th>
                         <th>Fecha de servicio</th>
                         <th>Dictamen</th>
+                        <th>Estatus</th>
                         <th>ACCIONES</th>
                     </tr>
                 </thead>
@@ -51,6 +53,7 @@
     @include('_partials/_modals/modal-pdfs-frames')
     @include('_partials/_modals/modal-add-dictamen-granel')
     @include('_partials/_modals/modal-edit-dictamen-granel')
+    @include('_partials/_modals/modal-reexpedir-dictamen-granel')
     <!-- /Modal -->
 
 @endsection

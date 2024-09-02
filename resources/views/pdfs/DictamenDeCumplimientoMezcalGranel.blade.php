@@ -118,8 +118,8 @@
         .container {
             font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
             font-size: 14px;
-            padding: 15px;
-            margin: 20px;
+            padding: 5px;
+            margin: 15px;
             margin-top: 60px;
         }
 
@@ -146,7 +146,7 @@
         table.datos_empresa td {
             border: 2px solid #003300;
             /* Ajusta el color y grosor del borde */
-            padding: 6px;
+            padding: 3px;
             /* Opcional: agrega espacio dentro de las celdas */
         }
 
@@ -165,15 +165,36 @@
         {
         border: 2px solid #003300;
         /* Ajusta el color y grosor del borde */
-        padding: 6px;
+        padding: 3px;
         /* Opcional: agrega espacio dentro de las celdas */
         }
 
         .images-container {
-            position: relative;
+            position: fixed;
             display: flex;
-            margin-top: -10px;
+            margin-top: -20px;
             width: 100%;
+        }
+
+        .textx1 {
+            bottom: 90px;
+            position: fixed;
+            line-height: 1.2;
+            font-family: Arial, Helvetica, Verdana;
+        }
+
+        .textx2 {
+            bottom: 78px;
+            position: fixed;
+            line-height: 1.2;
+            font-family: Arial, Helvetica, Verdana;
+        }
+
+        .textx3 {
+            bottom: 65px;
+            position: fixed;
+            line-height: 1.2;
+            font-family: Arial, Helvetica, Verdana;
         }
 
         .textx,
@@ -183,8 +204,10 @@
         }
 
         .textsello {
+            position: fixed;
             text-align: left;
             font-size: 8px;
+            bottom: 35px;
             margin: 0;
             padding: 0;
         }
@@ -194,32 +217,56 @@
             font-size: 11px;
             margin: 0;
             padding: 0;
-            position: absolute;
-            right: 50px;
-            top: 800px;
+            position: fixed;
+            right: 30px;
+            top: 838px;
             font-family: 'Arial Negrita' !important;
         }
 
         .image-right {
             height: auto;
-            position: absolute;
-            right: 10px;
-            top: -20px;
-            width: 240px;
+            position: fixed;
+            right: 0;
+            width: 230px;
+            top: -12px;
         }
 
         .pie {
+            position: fixed;
             font-family: 'Lucida Sans Unicode';
-            margin-top: 0;
+            bottom: 10.5px;
+            left: 550px;
             text-align: right;
             font-size: 9px;
             line-height: 1;
         }
-        
+
+        .watermark {
+            color: red;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
+            opacity: 0.5;
+            /* Opacidad predeterminada */
+            letter-spacing: 3px;
+            font-size: 150px;
+            white-space: nowrap;
+            z-index: -1;
+        }
     </style>
 </head>
 
 <body>
+
+    @if ($watermarkText)
+        <div class="watermark">
+            Cancelado
+        </div>
+    @endif
+
+
+
     {{-- cabecera --}}
     <div class="header">
         <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo CIDAM">
@@ -238,7 +285,8 @@
     <div class="container">
         <div class="title">Dictamen de Cumplimiento NOM Mezcal a Granel</div>
         <br>
-        <p style="text-align: justify;">La Unidad de Inspección de Mezcal de CIDAM A.C., con domicilio en Kilómetro 8 Antigua Carretera a
+        <p style="text-align: justify;">La Unidad de Inspección de Mezcal de CIDAM A.C., con domicilio en Kilómetro 8
+            Antigua Carretera a
             Pátzcuaro, S/N Colonia Otra no Especificada en el Catálogo, C.P. 58341, Morelia, Michoacán. acreditada
             como Unidad de Inspección tipo A con acreditación No. UVNOM-129, por la entidad mexicana de
             acreditación, A.C.
@@ -248,7 +296,7 @@
         <br>
         <table class="datos_empresa">
             <tr>
-                <td style="color: #17365D; font-weight: bold;  width: 25%;">Nombre de la empresa</td>
+                <td style="color: #17365D; font-weight: bold;  width: 15%;">Nombre de la empresa</td>
                 <td colspan="3">{{ $data->empresa->razon_social }}</td>
             </tr>
             <tr>
@@ -258,7 +306,7 @@
                     Domicilio de instalaciones: {{ $data->inspeccion->solicitud->instalacion->direccion_completa }}
 
                 </td>
-                <td style="color: #17365D; font-weight: bold;">RFC</td>
+                <td style="color: #17365D; font-weight: bold; width: 18%;">RFC</td>
                 <td>{{ $data->empresa->rfc }}</td>
             </tr>
             <tr>
@@ -306,7 +354,7 @@
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">Ingredientes</td>
-                <td>{{ $data->lote_granel->ingredientes }}</td>
+                <td>{{ $data->lote_granel->ingredientes ?? 'N/A' }}</td>
                 <td style="color: #17365D; font-weight: bold;">Volumen de lote</td>
                 <td>{{ $data->lote_granel->volumen }}</td>
                 <td style="color: #17365D; font-weight: bold;">Contenido alcohólico</td>
@@ -314,9 +362,11 @@
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">Edad</td>
-                <td>{{ $data->lote_granel->edad }}</td>
+                <td>{{ $data->lote_granel->edad ?? 'N/A' }}</td>
                 <td style="color: #17365D; font-weight: bold;">Tipo de maguey</td>
-                <td colspan="3">{{ $data->lote_granel->tipo->nombre }} <i>{{ $data->lote_granel->tipo->cientifico }}</></td>
+                <td colspan="3">{{ $data->lote_granel->tipo->nombre }}
+                    <i>{{ $data->lote_granel->tipo->cientifico }}</>
+                </td>
             </tr>
         </table>
 
@@ -327,23 +377,23 @@
     <div class="contentt">
         <p class="sello">Sello de Unidad de Inspección</p>
         <div class="images-container">
-            <img src="{{ public_path('img_pdf/qr_umc-074.png') }}" alt="Logo UVEM" width="90px">
+            <img src="{{ public_path('img_pdf/qr_umc-074.png') }}" alt="Logo UVEM" width="88px">
             <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
         </div>
-        <p class="textx" style="font-size: 10px; margin: 1;">
+        <p class="textx1" style="font-size: 10px; margin: 1;">
             <strong>AUTORIZÓ</strong>
             <span style="margin-left: 50px;">
                 <strong>Gerente Técnico Sustituto de la Unidad de Inspección | BTG. Erik Antonio Mejía Vaca</strong>
             </span>
         </p>
 
-        <p class="textx" style="font-size: 10px; margin: 1;">
+        <p class="textx2" style="font-size: 10px; margin: 1;">
             <strong>Cadena Origina</strong>
             <span style="margin-left: 29px;">
                 <strong>UMG-159/2024|2024-06-26|UMS-1094/2024</strong>
             </span>
         </p>
-        <p class="textx" style="font-size: 10px; margin: 1;">
+        <p class="textx3" style="font-size: 10px; margin: 1;">
             <strong>Sello Digital</strong>
         </p>
 

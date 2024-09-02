@@ -162,7 +162,7 @@ $(function () {
                     buttons: [
                         {
                             extend: 'print',
-                            title: 'Predios',
+                            title: 'Direcciones de destinos',
                             text: '<i class="ri-printer-line me-1" ></i>Print',
                             className: 'dropdown-item',
                             exportOptions: {
@@ -206,7 +206,7 @@ $(function () {
                         },
                         {
                             extend: 'csv',
-                            title: 'Users',
+                            title: 'Direcciones de destinos',
                             text: '<i class="ri-file-text-line me-1" ></i>Csv',
                             className: 'dropdown-item',
                             exportOptions: {
@@ -237,7 +237,7 @@ $(function () {
                         },
                         {
                             extend: 'excel',
-                            title: 'Predios',
+                            title: 'Direcciones de destinos',
                             text: '<i class="ri-file-excel-line me-1"></i>Excel',
                             className: 'dropdown-item',
                             exportOptions: {
@@ -266,7 +266,7 @@ $(function () {
                         },
                         {
                             extend: 'pdf',
-                            title: 'Predios',
+                            title: 'Direcciones de destinos',
                             text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
                             className: 'dropdown-item',
                             exportOptions: {
@@ -295,7 +295,7 @@ $(function () {
                         },
                         {
                             extend: 'copy',
-                            title: 'Predios',
+                            title: 'Direcciones de destinos',
                             text: '<i class="ri-file-copy-line me-1"></i>Copy',
                             className: 'dropdown-item',
                             exportOptions: {

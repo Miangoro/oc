@@ -609,6 +609,7 @@ Route::delete('dictamen/granel/{id_dictamen}', [DictamenGranelController::class,
 Route::post('dictamenes-granel',[DictamenGranelController::class, 'store'])->name('dictamen.store');
 route::get('/dictamenes/productos/{id_dictamen}/edit', [DictamenGranelController::class, 'edit'])->name('dictamenes.edit');
 Route::post('/dictamenes/productos/{id_dictamen}/update', [DictamenGranelController::class, 'update'])->name('dictamen.update');
+Route::get('/dictamenes/productos/{id_dictamen}/foliofq', [DictamenGranelController::class, 'foliofq'])->name('dictamenes.foliofq');
 /*------------------- PDFS de Dictamenes a granel -------------------*/
 // Ruta para el PDF con ID
 route::get('/dictamen_cumplimiento_mezcal_granel/{id_dictamen}', [DictamenGranelController::class, 'dictamenDeCumplimientoGranel'])->name('dictamen-cumplimiento-granel');

@@ -4,8 +4,11 @@ namespace App\Http\Controllers\dictamenes;
 
 use App\Http\Controllers\Controller;
 use App\Helpers\Helpers;
+use Illuminate\Support\Facades\Log;
 use App\Models\inspecciones; 
 use App\Models\empresa; 
+use App\Models\Documentacion;
+use App\Models\Documentacion_url;
 use App\Models\solicitudesModel;
 use App\Models\LotesGranel;
 use App\Models\Dictamen_Granel;
@@ -38,45 +41,49 @@ class DictamenGranelController extends Controller
             6 => 'fecha_emision',
             7 => 'fecha_vigencia',
             8 => 'fecha_servicio',
+            9 => 'estatus',
         ];
-
-        $search = [];
-
+    
+        $search = $request->input('search.value');
         $totalData = Dictamen_Granel::count();
         $totalFiltered = $totalData;
-
+    
         $limit = $request->input('length');
         $start = $request->input('start');
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
-
-        if (empty($request->input('search.value'))) {
-            $dictamenes = Dictamen_Granel::with('inspeccion', 'empresa', 'lote_granel')
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-        } else {
-            $search = $request->input('search.value');
-
-            $dictamenes = Dictamen_Granel::with('inspeccion', 'empresa', 'lote_granel')
-                ->where('id_dictamen', 'LIKE', "%{$search}%")
-                ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-
-            $totalFiltered = Dictamen_Granel::where('id_dictamen', 'LIKE', "%{$search}%")
-                ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-                ->count();
+    
+        $query = Dictamen_Granel::with(['inspeccion', 'empresa', 'lote_granel']);
+    
+        if (!empty($search)) {
+            $query = $query->where(function ($q) use ($search) {
+                $q->where('id_dictamen', 'LIKE', "%{$search}%")
+                    ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
+                    ->orWhereHas('empresa', function ($q) use ($search) {
+                        $q->where('razon_social', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('inspeccion', function ($q) use ($search) {
+                        $q->where('num_servicio', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('lote_granel', function ($q) use ($search) {
+                        $q->where('nombre_lote', 'LIKE', "%{$search}%");
+                        $q->orWhere('folio_fq', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('estatus', 'LIKE', "%{$search}%");
+            });
+    
+            $totalFiltered = $query->count();
         }
-
+    
+        $dictamenes = $query->offset($start)
+            ->limit($limit)
+            ->orderBy($order, $dir)
+            ->get();
+    
         $data = [];
-
         if (!empty($dictamenes)) {
             $ids = $start;
-
+    
             foreach ($dictamenes as $dictamen) {
                 $nestedData['id_dictamen'] = $dictamen->id_dictamen;
                 $nestedData['fake_id'] = ++$ids;
@@ -84,14 +91,16 @@ class DictamenGranelController extends Controller
                 $nestedData['id_empresa'] = $dictamen->empresa->razon_social ?? 'N/A';
                 $nestedData['id_inspeccion'] = $dictamen->inspeccion->num_servicio ?? 'N/A';
                 $nestedData['id_lote_granel'] = $dictamen->lote_granel->nombre_lote ?? 'N/A';
+                $nestedData['folio_fq'] = $dictamen->lote_granel->folio_fq ?? 'N/A';
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($dictamen->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($dictamen->fecha_vigencia);
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha($dictamen->fecha_servicio);
-           
+                $nestedData['estatus'] = $dictamen->estatus;
+    
                 $data[] = $nestedData;
             }
         }
-
+    
         return response()->json([
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
@@ -100,6 +109,7 @@ class DictamenGranelController extends Controller
             'data' => $data,
         ]);
     }
+    
 /* funcion para eliminar */
     public function destroy($id_dictamen)
     {
@@ -202,32 +212,94 @@ class DictamenGranelController extends Controller
     }
 
 
-    public function dictamenDeCumplimientoGranel($id_dictamen)
-    {
-        // Obtener los datos del dictamen específico
+public function dictamenDeCumplimientoGranel($id_dictamen)
+{
+    // Obtener los datos del dictamen específico
+    $data = Dictamen_Granel::find($id_dictamen);
 
-        $data = Dictamen_Granel::find($id_dictamen);
-        
-        $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
-        $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
-        $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
-        if (!$data) {
-            return abort(404, 'Dictamen no encontrado');
-        }
-        
-        // Pasar los datos a la vista del PDF
-        $pdf = Pdf::loadView('pdfs.DictamenDeCumplimientoMezcalGranel', [
-            'data' => $data, 
-            'fecha_servicio' => $fecha_servicio,
-            'fecha_emision' => $fecha_emision,
-            'fecha_vigencia' => $fecha_vigencia,
-        ]);
-
-        
-        return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
+    if (!$data) {
+        return abort(404, 'Dictamen no encontrado');
     }
+
+    // Verifica qué valor tiene esta variable
+
+    $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
+    $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
+    $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
+
+    // Determinar si la marca de agua debe ser visible
+    $watermarkText = $data->estatus === 'Cancelado';
+
+    $pdf = Pdf::loadView('pdfs.DictamenDeCumplimientoMezcalGranel', [
+        'data' => $data,
+        'fecha_servicio' => $fecha_servicio,
+        'fecha_emision' => $fecha_emision,
+        'fecha_vigencia' => $fecha_vigencia,
+        'watermarkText' => $watermarkText,
+    ]);
+   
+    return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
+}
+
      
+    public function foliofq($id_dictamen)
+    {
+        try {
+            Log::info('ID del Dictamen: ' . $id_dictamen);
     
+            // Buscar el lote a granel asociado con el dictamen
+            $dictamen = Dictamen_Granel::find($id_dictamen);
+    
+            if (!$dictamen) {
+                Log::error('Dictamen no encontrado para el ID: ' . $id_dictamen);
+                return response()->json(['success' => false, 'message' => 'Dictamen no encontrado'], 404);
+            }
+    
+            $lote = LotesGranel::find($dictamen->id_lote_granel);
+    
+            if (!$lote) {
+                Log::error('Lote a granel no encontrado para el ID: ' . $dictamen->id_lote_granel);
+                return response()->json(['success' => false, 'message' => 'Lote a granel no encontrado'], 404);
+            }
+    
+            // Obtener los documentos asociados al lote a granel
+            $documentos = Documentacion_url::where('id_relacion', $lote->id_lote_granel)->get();
+    
+            Log::info('Documentos obtenidos: ', $documentos->toArray());
+    
+            $documentosConUrl = $documentos->map(function ($documento) {
+                return [
+                    'id_documento' => $documento->id_documento,
+                    'nombre' => $documento->nombre_documento,
+                    'url' => $documento->url,
+                    'tipo' => $documento->nombre_documento
+                ];
+            });
+    
+            $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
+            if (!$empresa) {
+                Log::error('Empresa no encontrada para el ID: ' . $lote->id_empresa);
+                return response()->json(['success' => false, 'message' => 'Empresa no encontrada'], 404);
+            }
+    
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+    
+            $archivoUrlOtroOrganismo = $lote->tipo_lote == '2' ? $lote->url_certificado : '';
+    
+            return response()->json([
+                'success' => true,
+                'lote' => $lote,
+                'documentos' => $documentosConUrl,
+                'numeroCliente' => $numeroCliente,
+                'archivo_url_otro_organismo' => $archivoUrlOtroOrganismo
+            ]);
+        } catch (ModelNotFoundException $e) {
+            Log::error('Error: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error en la solicitud'], 500);
+        }
+    }
+    
+
 
 
 }
