@@ -54,14 +54,14 @@
 
         .text {
             font-size: 13.5px;
-            line-height: 1.5;
+            line-height: 1;
             text-align: justify;
             margin: 10 20px;
         }
 
         .text1 {
             font-size: 13.5px;
-            line-height: 1.5;
+            line-height: 1;
             text-align: justify;
             margin: -5 20px;
         }
@@ -194,7 +194,7 @@
 
 <div class="description1">ORGANISMO CERTIFICADOR</div>
 <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C</div>
-<div class="description3">No. CERTIFICADO: CIDAM C-INS-084/2024</div>
+<div class="description3">No. CERTIFICADO: {{ $num_certificado }}</div>
 
 <p class="text1">
 Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditado como organismo de certificación de producto con número de acreditación 144/18 ante la Entidad Mexicana de Acreditación, A.C. otorga el siguiente:
@@ -208,23 +208,23 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
     <tbody>
         <tr>
             <td class="cell1"><strong>Domicilio Fiscal:</strong></td>
-            <td colspan="3" class="cent" style="text-align: center; vertical-align: middle;">{{ $datos->dictamen->instalaciones->direccion_completa }}</td>
+            <td colspan="3" class="cent" style="text-align: center; vertical-align: middle;">{{ $domicilio_fiscal }}</td>
         </tr>
         <tr>
             <td class="cell"><strong>RFC:</strong></td>
-            <td>FAMA860914190</td>
+            <td>{{ $rfc }}</td>
             <td class="cell"><strong>Tel:</strong></td>
-            <td>5537449304</td>
+            <td>{{ $telefono }}</td>
         </tr>
         <tr>
             <td class="cell"><strong>Correo electrónico:</strong></td>
-            <td colspan="3">albertofranci1313@gmail.com</td>
+            <td colspan="3">{{ $correo }}</td>
         </tr>
         <tr>
             <td class="cell1"><strong>Fecha de inicio vigencia:</strong></td>
-            <td>22/julio/2024</td>
+            <td>{{ $fecha_vigencia }}</td>
             <td class="cell1"><strong>Fecha de Vencimiento:</strong></td>
-            <td>23/Julio/2025</td>
+            <td>{{ $fecha_vencimiento }}</td>
         </tr>
     </tbody>
 </table>
@@ -237,11 +237,11 @@ clase (s): <strong>Mézcal Artesanal, Blanco o Joven, Reposado, Añejo</strong><
 <p class="text">Este certificado ampara exclusivamente la producción del productb Mezcal que se realice en las instalaciones
 indicadas a continuacion:</p>
 
-<p class="text"><strong>Maestro Mezcalero:------------------------------</strong><br>
-<strong>Domicilio de la Unidad de Produccíón:</strong>  Janamóro , S/N, Libramiento Norte Km 6+800, C.P. 61040, Hidalgo, Michoacán de Ocampo <br>
-<strong>No. DeAutorización para el Uso de la Denominación de Origen Mezcal:</strong> 1117 <br>
-<strong>No. De Dictamen de cumplimiento con la NOM:</strong>  UMC-078/2024 <br>
-<strong>No. De Cliente ante el Organismo Certificador CIDAM A.C:</strong>  NOM-070-085C
+<p class="text"><strong>Maestro Mezcalero: </strong>{{ $maestro_mezcalero }}<br>
+<strong>Domicilio de la Unidad de Produccíón: </strong>{{  $direccion_completa }}<br>
+<strong>No. DeAutorización para el Uso de la Denominación de Origen Mezcal: </strong>{{ $num_autorizacion }}<br>
+<strong>No. De Dictamen de cumplimiento con la NOM:</strong>  {{ $num_dictamen}} <br>
+<strong>No. De Cliente ante el Organismo Certificador CIDAM A.C:</strong>  {{ $numero_cliente}}
 </p>
 
 <p class="text">Dichas instalaciones cuentan con el equipo requerido para la producción del producto Mezcal y se encuentran

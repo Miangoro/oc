@@ -26,7 +26,7 @@ class Certificado_InstalacionesController extends Controller
             4 => 'num_autorizacion', // Cambio aquí
             5 => 'fecha_vigencia',
             6 => 'fecha_vencimiento',
-      /*       7 => 'tipo_dictamen' */
+           /*  7 => 'tipo_dictamen' */
         ];
     
         $search = $request->input('search.value');
@@ -80,8 +80,7 @@ class Certificado_InstalacionesController extends Controller
             $nestedData['fecha_vencimiento'] = Helpers::formatearFecha($certificado->fecha_vencimiento);
             $nestedData['maestro_mezcalero'] = $certificado->maestro_mezcalero;
             $nestedData['num_dictamen'] = $certificado->dictamen->num_dictamen ?? 'N/A';
-            $nestedData['tipo_dictamen'] = $certificado->dictamen->tipo_dictamen;
-    
+            $nestedData['tipo_dictamen'] = $certificado->dictamen->tipo_dictamen;    
             $data[] = $nestedData;
         }
     
@@ -180,33 +179,92 @@ class Certificado_InstalacionesController extends Controller
     }
 }
     
-    //Certificados de instalaciones 
-    public function pdf_certificado_productor($id_certificado)
-    {   
-        $datos = Certificados::with(['dictamen.inspeccione.solicitud.empresa.empresaNumClientes', 'dictamen.instalaciones', 'dictamen.inspeccione.inspector'])->find($id_certificado);
+public function pdf_certificado_productor($id_certificado)
+{   
+    $datos = Certificados::with(['dictamen.inspeccione.solicitud.empresa',  'dictamen.instalaciones', 'dictamen.inspeccione.inspector'])->findOrFail($id_certificado);
 
-        $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
-        $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
-        
-        $pdf = Pdf::loadView('pdfs.Certificado_productor_mezcal',['datos'=>$datos, 'fecha_emision'=>$fecha_emision,'fecha_vigencia'=>$fecha_vigencia]);
-        return $pdf->stream('Certificado de productor de mezcal.pdf');
-    }
-    
-    
-    public function pdf_certificado_envasador()
-    {
-        $pdf = Pdf::loadView('pdfs.Certificado_envasador_mezcal');
-        return $pdf->stream('Certificado de envasador de mezcal.pdf');
-    }
+    // Obtener los datos de la empresa
+    $empresa = $datos->dictamen->inspeccione->solicitud->empresa;
+    $domicilio_fiscal = $empresa->domicilio_fiscal;
+    $rfc = $empresa->rfc;
+    $telefono = $empresa->telefono;
+    $correo = $empresa->correo;
+    $numero_cliente = $empresa->empresaNumClientes->where('empresa_id', $empresa->id)->first()->numero_cliente;
+    $maestro_mezcalero = $datos->maestro_mezcalero ?? '------------------------------';
+    $direccion_completa = $datos->dictamen->instalaciones->direccion_completa;
+    $num_autorizacion = $datos->num_autorizacion;
+    $num_dictamen = $datos->dictamen->num_dictamen;
+
+    $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
+    $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+    $fecha_vencimiento = Helpers::formatearFecha($datos->fecha_vencimiento);
+
+    $pdf = Pdf::loadView('pdfs.Certificado_productor_mezcal', [ 'datos' => $datos,'num_certificado' => $datos->num_certificado, 'num_autorizacion' => $num_autorizacion, 'num_dictamen' => $num_dictamen, 'fecha_emision' => $fecha_emision,'fecha_vigencia' => $fecha_vigencia,'fecha_vencimiento' => $fecha_vencimiento,'domicilio_fiscal' => $domicilio_fiscal, 
+        'rfc' => $rfc, 'telefono' => $telefono, 'correo' => $correo, 'direccion_completa' => $direccion_completa,'maestro_mezcalero' => $maestro_mezcalero,'numero_cliente' => $numero_cliente
+    ]);
+
+    return $pdf->stream('Certificado de productor de mezcal.pdf');
+}
+
+public function pdf_certificado_envasador($id_certificado)
+{
+    $datos = Certificados::with(['dictamen.inspeccione.solicitud.empresa.empresaNumClientes','dictamen.instalaciones','dictamen.inspeccione.inspector'])->findOrFail($id_certificado);
+
+    $empresa = $datos->dictamen->inspeccione->solicitud->empresa;
+    $domicilio_fiscal = $empresa->domicilio_fiscal;
+    $rfc = $empresa->rfc;
+    $telefono = $empresa->telefono;
+    $correo = $empresa->correo;
+    $numero_cliente = $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente;
+    $maestro_mezcalero = $datos->maestro_mezcalero ?? '------------------------------';
+    $direccion_completa = $datos->dictamen->instalaciones->direccion_completa;
+    $num_autorizacion = $datos->num_autorizacion;
+    $num_dictamen = $datos->dictamen->num_dictamen; 
+    $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
+    $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+    $fecha_vencimiento = Helpers::formatearFecha($datos->fecha_vencimiento);
+
+    $pdf = Pdf::loadView('pdfs.Certificado_envasador_mezcal', [
+        'datos' => $datos,'num_certificado' => $datos->num_certificado,'num_autorizacion' => $num_autorizacion,'num_dictamen' => $num_dictamen,'fecha_emision' => $fecha_emision,'fecha_vigencia' => $fecha_vigencia,'fecha_vencimiento' => $fecha_vencimiento,
+        'domicilio_fiscal' => $domicilio_fiscal,'rfc' => $rfc,'telefono' => $telefono, 'correo' => $correo,'direccion_completa' => $direccion_completa, 'maestro_mezcalero' => $maestro_mezcalero,'numero_cliente' => $numero_cliente
+    ]);
+
+    return $pdf->stream('Certificado de envasador de mezcal.pdf');
+}
 
 
    
-    public function pdf_certificado_comercializador()
-    {
-        $pdf = Pdf::loadView('pdfs.Certificado_comercializador');
-        return $pdf->stream('Certificado de comercializador.pdf');
-    }
-    
-    
+public function pdf_certificado_comercializador($id_certificado)
+{
+    // Obtener el certificado con las relaciones necesarias
+    $datos = Certificados::with([
+        'dictamen.inspeccione.solicitud.empresa.empresaNumClientes',
+        'dictamen.instalaciones',
+        'dictamen.inspeccione.inspector'
+    ])->findOrFail($id_certificado);
+
+    // Obtener los datos de la empresa
+    $empresa = $datos->dictamen->inspeccione->solicitud->empresa;
+    $domicilio_fiscal = $empresa->domicilio_fiscal;
+    $rfc = $empresa->rfc;
+    $telefono = $empresa->telefono;
+    $correo = $empresa->correo;
+    $numero_cliente = $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente ?? 'No disponible';
+    $maestro_mezcalero = $datos->maestro_mezcalero ?? '------------------------------';
+    $direccion_completa = $datos->dictamen->instalaciones->direccion_completa ?? 'No disponible';
+    $num_autorizacion = $datos->num_autorizacion;
+    $num_dictamen = $datos->dictamen->num_dictamen ?? 'No disponible';
+    $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
+    $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
+    $fecha_vencimiento = Helpers::formatearFecha($datos->fecha_vencimiento);
+
+    // Generar el PDF con los datos necesarios
+    $pdf = Pdf::loadView('pdfs.Certificado_comercializador', [
+        'datos' => $datos,'num_certificado' => $datos->num_certificado,'num_autorizacion' => $num_autorizacion,'num_dictamen' => $num_dictamen,'fecha_emision' => $fecha_emision,'fecha_vigencia' => $fecha_vigencia,'fecha_vencimiento' => $fecha_vencimiento,'domicilio_fiscal' => $domicilio_fiscal,
+        'rfc' => $rfc,'telefono' => $telefono,'correo' => $correo,'direccion_completa' => $direccion_completa,'maestro_mezcalero' => $maestro_mezcalero,'numero_cliente' => $numero_cliente
+    ]);
+    return $pdf->stream('Certificado de comercializador.pdf');
+}
+
     
 }
