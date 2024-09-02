@@ -435,6 +435,8 @@ Route::get('/solicitud_Info_ClienteNOM-199', [CartaAsignacionController::class, 
 Route::get('/inspeccion_geo_referenciacion', [CartaAsignacionController::class, 'InspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion');
 Route::get('/dictamen_cumplimiento_mezcal_granel', [CartaAsignacionController::class, 'dictamenDeCumplimientoGranel'])->name('dictamen-cumplimiento-granel');
 Route::get('/bitacora_revision_SCFI2016', [CartaAsignacionController::class, 'bitacora_revision_SCFI2016'])->name('bitacora_revision_SCFI2016');
+Route::get('/bitacora_revision_OCCIDAM', [CartaAsignacionController::class, 'botacora_revicionPersonalOCCIDAM'])->name('botacora_revicionPersonalOCCIDAM');
+
 
 
 
