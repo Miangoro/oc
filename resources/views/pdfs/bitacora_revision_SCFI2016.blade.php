@@ -64,7 +64,7 @@
         td {
             border: 1.5px solid black;
             padding: 4px;
-            font-size: 11.5px;
+            font-size: 11px;
             text-align: center;
             font-family: 'Century Gothic';
 
@@ -207,7 +207,7 @@
     <tr>
         <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 180px;">Requisitos documentales <br>
             para certificación</td>
-        <td class="letra-fondo" >C </td>
+        <td class="letra-fondo" style="width: 45px">C </td>
         <td class="letra-fondo">N/C </td>
         <td class="letra-fondo">N/A</td>
     </tr>
@@ -314,7 +314,7 @@ Miembro del Consejo para la decisión de la certificación (Vocal):
 </tr>
 </table>
 <div style="margin-bottom: 15px">
-    <p style="font-size: 12px; margin-top: 5px; text-align: center">Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser <br>
+    <p style="font-size: 12px; margin-top: 25px; text-align: center">Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser <br>
         distribuido externamente sin la autorización escrita del Director Ejecutivo.</p>
 </div>
 

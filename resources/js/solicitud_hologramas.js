@@ -214,14 +214,14 @@ $(function () {
             return $row_output;
           }
         },
-        /* {
+/*          {
           // User email
-          targets: 3,
+          targets: 6,
           render: function (data, type, full, meta) {
-            var $email = full['categoria'];
+            var $email = full['cantidad_hologramas'];
             return '<span class="user-email">' + $email + '</span>';
           }
-        }, */
+        },  */
         {
           // email verify
           targets: 10,
