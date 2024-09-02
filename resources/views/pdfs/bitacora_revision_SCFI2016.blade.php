@@ -207,7 +207,7 @@
     <tr>
         <td class="letra-fondo" style="padding-right: 0; text-align: left; width: 180px;">Requisitos documentales <br>
             para certificación</td>
-        <td class="letra-fondo" >C </td>
+        <td class="letra-fondo" style="width: 45px">C </td>
         <td class="letra-fondo">N/C </td>
         <td class="letra-fondo">N/A</td>
     </tr>

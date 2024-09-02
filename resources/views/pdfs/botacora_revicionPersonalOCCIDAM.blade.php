@@ -185,6 +185,19 @@
 </head>
 <div style="height: 30px;"></div>
 <body>
+    <div class="background-text">
+        <table>
+            <tr>
+                <td colspan="4">REVISIÓN CERTIFICADO INSTALACIONES</td>
+            </tr>
+            <tr>
+                <td>DOCUMENTO</td>
+                <td>C</td>
+                <td>N/C</td>
+                <td>N/A</td>
+            </tr>
+        </table>
+    </div>
 
     <table>
         <tr>
@@ -277,7 +290,7 @@
     <br>
     <table style="width: 375px">
         <tr>
-            <td class="negrita" colspan="2">TOMA DE DECISIÓN PARA LA CERTIFICACIÓN POR PARTE DEL
+            <td class="letra-fondo negrita" colspan="2">TOMA DE DECISIÓN PARA LA CERTIFICACIÓN POR PARTE DEL
                 PERSONAL DEL OC CIDAM</td>
         </tr>
         <tr>
@@ -297,7 +310,7 @@
                 (producto Y/O instalaciones, según
                 corresponda) y así emir el certificado
                 correspondiente.</td>
-            <td>- -</td>
+            <td style="color: red">- -</td>
         </tr>
     </table>
 

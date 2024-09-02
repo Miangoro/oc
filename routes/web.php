@@ -658,6 +658,8 @@ Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_Instal
 Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
 
 Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
+
+//solicitud hologrammas
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
 Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
 Route::post('/solicitud_holograma/update/', [solicitudHolograma::class, 'update']);
