@@ -62,7 +62,7 @@
 
         th,
         td {
-            border: 1.5px solid black;
+            border: 1px solid black;
             padding: 4px;
             font-size: 11px;
             text-align: center;
@@ -155,7 +155,7 @@
             float: left;
             max-width: 165px;
             padding: 0;
-            margin-top: -30px;
+            margin-top: -20px;
             margin-left: -30px;
 
 
@@ -164,8 +164,8 @@
         /* Estilo para el texto de fondo */
         .background-text {
             position: absolute;
-            top: 300px;
-            left: 380px;
+            top: 248px;
+            left: 365px;
             z-index: -1;
             color: #000000;
             font-size: 14px;
@@ -178,7 +178,7 @@
 
     <div class="header">
         <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
-        <div> Bitácora de revisión documental y aprobación por el personal del OC CIDAM <br>NOM-070-SCFI-2016
+        <div style="font-size: 14px; margin-right: 25px"> Bitácora de revisión documental y aprobación por el personal del OC CIDAM <br>NOM-070-SCFI-2016
             <br>F7.1-01-49 Ed. 6 <br>Entrada en vigor 27/06/2024</div>
 
     </div>
@@ -186,111 +186,198 @@
 <div style="height: 30px;"></div>
 <body>
     <div class="background-text">
-        <table class="letra-fondo" style="width: 295px">
+        <table class="letra-fondo" style="width: 310px">
             <tr>
-                <td colspan="4">REVISIÓN CERTIFICADO INSTALACIONES</td>
+                <td class="negrita" style="font-size: 9px; padding: 15px" colspan="4" >REVISIÓN CERTIFICADO INSTALACIONES</td>
             </tr>
             <tr>
-                <td>DOCUMENTO</td>
-                <td>C</td>
-                <td>N/C</td>
-                <td>N/A</td>
+                <td class="negrita" style="font-size: 8px; width: 120px;">DOCUMENTO</td>
+                <td class="negrita" style="font-size: 8px">C</td>
+                <td class="negrita" style="font-size: 8px">N/C</td>
+                <td class="negrita" style="font-size: 8px">N/A</td>
+            </tr>
+        </table>
+        <br>
+        <table style="width: 310px; ;" >
+            <tr>
+                <td class="leftLetter" style="font-size: 6.5px; width: 120px; ">SOLICITUD DEL SERVICIO DE <br>
+                    DICTAMINACION DE INSTALACIONES</td>
+                <td style="font-size: 6.5px; ">C</td>
+                <td style="font-size: 6.5px; ">- -</td>
+                <td style="font-size: 6.5px; ">- -</td>
+            </tr>
+            <tr>
+                <td class="leftLetter" style="font-size: 6.5px; "> NÚMERO DE CERTIFICADO DE <br>
+                    INSTALACIONES</td>
+                    <td style="font-size: 6.5px; ">C</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+            </tr>
+            <tr>
+                <td class="leftLetter" style="font-size: 6.5px; ">NOMBRE DE LA EMPRESA O <br>
+                    PERSONA FÍSICA</td>
+                    <td style="font-size: 6.5px; ">C</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+            </tr>
+            <tr>
+                <td class="leftLetter" style="font-size: 6.5px; ">DOMICILIO FISCAL DE LAS <br>
+                    INSTALACIONES </td>
+                    <td style="font-size: 6.5px; ">C</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+            </tr>
+            <tr>
+                <td class="leftLetter" style="font-size: 6.5px; ">CORREO ELECTRONICO Y NUMERO <br>
+                    TELEFONICO </td>
+                    <td style="font-size: 6.5px; ">C</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+            </tr>
+            <tr>
+                <td class="leftLetter" style="font-size: 6.5px; ">FECHA DE VIGENCIA Y <br>
+                    VENCIMIENTO DEL CERTIFICADO </td>
+                    <td style="font-size: 6.5px; ">C</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+            </tr>
+            <tr>
+                <td class="leftLetter" style="font-size: 6.5px; ">ALCANCE DE LA CERTIFICACIÓN </td>
+                <td style="font-size: 6.5px; ">C</td>
+                <td style="font-size: 6.5px; ">- -</td>
+                <td style="font-size: 6.5px; ">- -</td>
+            </tr>
+            <tr>
+                <td class="leftLetter" style="font-size: 6.5px; ">NO. DE CLIENTE</td>
+                <td style="font-size: 6.5px; ">C</td>
+                <td style="font-size: 6.5px; ">- -</td>
+                <td style="font-size: 6.5px; ">- -</td>
+            </tr>
+            <tr>
+                <td class="leftLetter" style="font-size: 6.5px; ">NÚMERO DE DICTAMEN EMITIDO <br>
+                    POR LA UVEM </td>
+                    <td style="font-size: 6.5px; ">C</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+            </tr>
+            <tr>
+                <td class="leftLetter" style="font-size: 6.5px; ">ACTA DE LA UNIDAD DE INSPECCIÓN <br>
+                    (FECHA DE INICIO, TÉRMINO Y <br>
+                    FIRMAS)
+                    </td>
+                    <td style="font-size: 6.5px; ">C</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+            </tr>
+            <tr>
+                <td class="leftLetter" style="font-size: 6.5px; ">NOMBRE Y PUESTO DEL <br>
+                    RESPONSABLE DE LA EMISIÓN DEL <br>
+                    CERTIFICADO
+                    </td>
+                    <td style="font-size: 6.5px; ">C</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+            </tr>
+            <tr>
+                <td class="leftLetter" style="font-size: 6.5px;">NOMBRE Y DIRECCIÓN DEL <br>
+                    ORGANISMO CERTIFICADOR CIDAM</td>
+                    <td style="font-size: 6.5px; ">C</td>
+                    <td style="font-size: 6.5px; ">- -</td>
+                    <td style="font-size: 6.5px; ">- -</td>
             </tr>
         </table>
     </div>
 
     <table>
         <tr>
-            <td class="letra-fondo negrita" style="text-align: right">RAZON SOCIAL O NOMBRE DEL CLIENTE:</td>
-            <td class="negrita">ZEUS RODRIGUEZ MIRANDA</td>
+            <td class="letra-fondo negrita " style="text-align: right; padding-top: 0; padding-bottom: 0">RAZON SOCIAL O NOMBRE DEL CLIENTE:</td>
+            <td class="negrita" style="padding-top: 0; padding-bottom: 0">ZEUS RODRIGUEZ MIRANDA</td>
         </tr>
         <tr>
-            <td class="letra-fondo negrita" style="text-align: right">NO. CLIENTE:</td>
-            <td class="negrita">NOM-070-044C</td>
+            <td class="letra-fondo negrita " style="text-align: right; padding-top: 0; padding-bottom: 0">NO. CLIENTE:</td>
+            <td class="negrita" style="padding-top: 0; padding-bottom: 0">NOM-070-044C</td>
         </tr>
         <tr>
-            <td class="letra-fondo negrita" style="text-align: right">NO. DE CERTIFICADO:</td>
-            <td class="negrita">CIDAM C-INS-092/2024</td>
+            <td class="letra-fondo negrita" style="text-align: right; padding-top: 0; padding-bottom: 0">NO. DE CERTIFICADO:</td>
+            <td class="negrita" style="padding-top: 0; padding-bottom: 0">CIDAM C-INS-092/2024</td>
         </tr>
         <tr>
-            <td class="letra-fondo negrita" style="text-align: right">TIPO DE CERTIFICADO:</td>
-            <td class="negrita">Emisión certificado comercializador</td>
-        </tr>
-       
-
-    </table>
-<div style="height: 30px;"></div>
-    <table>
-        <tr>
-            <td class="td-no-border" style="width: 320px;">&nbsp;</td>
-            <td class="leftLetter">C= Cumple, NC= No Cumple, NA= No Aplica</td>
-            <td class="td-no-border" style="width: 30px">&nbsp;</td>
+            <td class="letra-fondo negrita " style="text-align: right; padding-top: 0; padding-bottom: 0">TIPO DE CERTIFICADO:</td>
+            <td class="negrita" style="padding-top: 0; padding-bottom: 0">Emisión certificado comercializador</td>
         </tr>
     </table>
     <br>
-    <table style="width: 355px">
+    <table>
         <tr>
-            <td class="letra-fondo negrita" colspan="4">REVISIÓN DOCUMENTAL PARA LA TOMA DE DECISIÓN PARA LA
-                CERTIFICACIÓN DE CERTIFICADOS DE GRANEL, EXPORTACIÓN,
+            <td class="td-no-border" style="width: 340px;padding-top: 0; padding-bottom: 0">&nbsp;</td>
+            <td class="leftLetter" style="padding-top: 0; padding-bottom: 0; font-size: 9px">C= Cumple, NC= No Cumple, NA= No Aplica</td>
+            <td class="td-no-border" style="width: 25px;padding-top: 0; padding-bottom: 0">&nbsp;</td>
+        </tr>
+    </table>
+    <div style="height: 10px"></div>
+    <table style="width: 325px">
+        <tr>
+            <td class="letra-fondo negrita" colspan="4" style="font-size: 9px">REVISIÓN DOCUMENTAL PARA LA TOMA DE DECISIÓN PARA LA <br>
+                CERTIFICACIÓN DE CERTIFICADOS DE GRANEL, EXPORTACIÓN, <br>
                 NACIONAL Y/O INSTALACIONES.<br>
         </tr>
     
         <tr>
-            <td class="letra-fondoOPcional">DOCUMENTO</td>
-            <td class="letra-fondoOPcional">C</td>
-            <td class="letra-fondoOPcional">N/A</td>
-            <td class="letra-fondoOPcional">N/A</td>
+            <td class="letra-fondoOPcional" style="font-size: 7.5px;">DOCUMENTO</td>
+            <td class="letra-fondoOPcional" style="font-size: 7.5px;">C</td>
+            <td class="letra-fondoOPcional" style="font-size: 7.5px;">N/A</td>
+            <td class="letra-fondoOPcional" style="font-size: 7.5px;">N/A</td>
         </tr>
         <tr>
-            <td  style="text-align: left">CONTRATO DE
-                PRESTACIÓN DE
+            <td style="padding-top: 0; padding-bottom: 0; font-size: 7.5px;text-align: left">CONTRATO DE <br>
+                PRESTACIÓN DE <br>
                 SERVICIOS</td>
-            <td>C</td>
-            <td >- -</td>
-            <td >- -</td>
+            <td style="font-size: 7.5px">C</td>
+            <td style="font-size: 7.5px">- -</td>
+            <td style="font-size: 7.5px">- -</td>
         </tr>
         <tr>
-            <td>CONSTANCIA SITUACIÓN
+            <td style="padding-top: 0; padding-bottom: 0; font-size: 7.5px;text-align: left">CONSTANCIA SITUACIÓN <br>
                 FISCAL Y RFC</td>
-            <td>C</td>
-            <td >- -</td>
-            <td >- -</td>
+            <td style="font-size: 7.5px">C</td>
+            <td style="font-size: 7.5px">- -</td>
+            <td style="font-size: 7.5px">- -</td>
         </tr>
         <tr>
-            <td >CARTA NO. CLIENTE</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
+            <td style=" font-size: 7.5px;text-align: left">CARTA NO. CLIENTE</td>
+            <td style="font-size: 7.5px">C</td>
+            <td style="font-size: 7.5px">- -</td>
+            <td style="font-size: 7.5px">- -</td>
         </tr>
         <tr>
-            <td >NOMBRE DE LA EMPRESA
+            <td style="padding-top: 0; padding-bottom: 0; font-size: 7.5px;text-align: left">NOMBRE DE LA EMPRESA <br>
                 O PERSONA FÍSICA</td>
-            <td>C</td>
-            <td>- -</td>
-            <td>- -</td>
+            <td style="font-size: 7.5px">C</td>
+            <td style="font-size: 7.5px">- -</td>
+            <td style="font-size: 7.5px">- -</td>
         </tr>
         <tr>
-            <td >DIRECCIÓN FISCAL</td>
-            <td>C</td>
-            <td >- -</td>
-            <td>- -</td>
+            <td style="padding-top: 0; padding-bottom: 0; font-size: 7.5px;text-align: left">DIRECCIÓN FISCAL</td>
+            <td style="font-size: 7.5px">C</td>
+            <td style="font-size: 7.5px">- -</td>
+            <td style="font-size: 7.5px">- -</td>
         </tr>
        
     </table>
     <br>
-    <table style="width: 355px">
+    <table style="width: 325px">
         <tr>
-            <td style="background-color: #FFE598; text-align: left"><div> <span class="negrita"> NOTA:</span>Resaltar el recuadro correspondiente para la toma de la
-                decisión para la certificación. Si la decisión es negativa explicar el
-                motivo por el cuál no es apto pasar al Consejo para la Decisión de
-                la Certificación para poder emitir el certificado.
+            <td style="background-color: #FFE598; text-align: left; font-size: 9px;padding-top: 0; padding-bottom: 0;"><div> <span class="negrita"> NOTA:</span>Resaltar el recuadro correspondiente para la toma de la <br>
+                decisión para la certificación. Si la decisión es negativa explicar el <br>
+                motivo por el cuál no es apto pasar al Consejo para la Decisión de <br>
+                la Certificación para poder emitir el certificado. <br>
                 <span class="negrita">*Cancelar los recuadros que no sean utilizados*.</span></div></td>
         </tr>
     </table>
     <br>
-    <table style="width: 375px">
+    <table style="width: 340px">
         <tr>
-            <td class="letra-fondo negrita" colspan="2">TOMA DE DECISIÓN PARA LA CERTIFICACIÓN POR PARTE DEL
+            <td class="letra-fondo negrita" style="font-size: 10.5px; padding-top: 0" colspan="2">TOMA DE DECISIÓN PARA LA CERTIFICACIÓN POR PARTE DEL
                 PERSONAL DEL OC CIDAM</td>
         </tr>
         <tr>
@@ -302,7 +389,7 @@
             <td >NO</td>
         </tr>
         <tr>
-            <td class="leftLetter" style="background-color: #b6d7a7; font-size: 8px">Cumple con cada uno de los requisitos
+            <td class="leftLetter" style="background-color: #b6d7a7; font-size: 7px; padding-top: 0; padding-bottom: 0">Cumple con cada uno de los requisitos
                 mencionados en este documento para poder
                 turnarse a uno de los miembros del Consejo
                 para la decisión de la Certificación y decidan
@@ -310,7 +397,33 @@
                 (producto Y/O instalaciones, según
                 corresponda) y así emir el certificado
                 correspondiente.</td>
-            <td style="color: red">- -</td>
+            <td style="color: red; width: 150px">- -</td>
+        </tr>
+    </table>
+    <br>
+    <table style="width: 340px">
+        <tr>
+            <td class="letra-fondo negrita" colspan="2" style="font-size: 10.5px; padding-top: 0; vertical-align: top"> FIRMAS DE LAS PERSONAS RESPONSABLES DE LA TOMA DE
+                DECISIÓN</td>
+        </tr>
+        <tr>
+            <td class="letra-fondo negrita" style="font-size: 7px; padding-top: 0; vertical-align: top">NOMBRE, FIRMA , FECHA Y CARGO <br>
+                DE QUIEN HACE LA REVISIÓN
+                </td>
+            <td class="leftLetter" style="font-size: 8px;padding-top: 0">Karen Yunuen Pérez Pérez <br>
+                Revisión realizada el 08 de Agosto del <br>
+                2024 el Certificado Revisión por el <br>
+                personal OC Positiva
+                </td>
+        </tr>
+        <tr>
+            <td class="letra-fondo negrita" style="font-size: 7px; padding-top: 0; vertical-align: top">NOMBRE, FIRMA , FECHA Y CARGO <br>
+                DE QUIEN TOMA LA APROBACIÓN</td>
+            <td class="leftLetter" style="font-size: 8px;padding-top: 0">Mayra Gutierrez Romero <br>
+                Gerente Técnico del Organismo <br>
+                Certificador de CIDAM <br>
+                 08 de Agosto del 2024
+                </td>
         </tr>
     </table>
 
