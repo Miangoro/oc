@@ -242,32 +242,33 @@ public function dictamenDeCumplimientoGranel($id_dictamen)
     return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
 }
 
-     /* mostrar los folios fq de lote a granel del dictamen */
+
     public function foliofq($id_dictamen)
     {
         try {
             Log::info('ID del Dictamen: ' . $id_dictamen);
-    
-            // Buscar el lote a granel asociado con el dictamen
+
+            // Buscar el dictamen
             $dictamen = Dictamen_Granel::find($id_dictamen);
-    
             if (!$dictamen) {
                 Log::error('Dictamen no encontrado para el ID: ' . $id_dictamen);
                 return response()->json(['success' => false, 'message' => 'Dictamen no encontrado'], 404);
             }
-    
+
+            // Buscar el lote a granel asociado con el dictamen
             $lote = LotesGranel::find($dictamen->id_lote_granel);
-    
             if (!$lote) {
                 Log::error('Lote a granel no encontrado para el ID: ' . $dictamen->id_lote_granel);
                 return response()->json(['success' => false, 'message' => 'Lote a granel no encontrado'], 404);
             }
-    
+
+            Log::info('Lote encontrado: ' . $lote->nombre_lote);
+
             // Obtener los documentos asociados al lote a granel
             $documentos = Documentacion_url::where('id_relacion', $lote->id_lote_granel)->get();
-    
             Log::info('Documentos obtenidos: ', $documentos->toArray());
-    
+
+            // Mapear documentos con URL
             $documentosConUrl = $documentos->map(function ($documento) {
                 return [
                     'id_documento' => $documento->id_documento,
@@ -276,17 +277,25 @@ public function dictamenDeCumplimientoGranel($id_dictamen)
                     'tipo' => $documento->nombre_documento
                 ];
             });
-    
+
+            // Obtener la empresa asociada
             $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
             if (!$empresa) {
                 Log::error('Empresa no encontrada para el ID: ' . $lote->id_empresa);
                 return response()->json(['success' => false, 'message' => 'Empresa no encontrada'], 404);
             }
-    
+
+            Log::info('Empresa encontrada: ' . $empresa->nombre_empresa);
+
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-    
-            $archivoUrlOtroOrganismo = $lote->tipo_lote == '2' ? $lote->url_certificado : '';
-    
+
+            // Obtener la URL del archivo para "otro organismo"
+            // Corregido
+            $documentoOtroOrganismo = $documentos->firstWhere('tipo', 'Certificado de lote a granel:  - ');
+            $archivoUrlOtroOrganismo = $lote->tipo_lote == '2' && $documentoOtroOrganismo ? $documentoOtroOrganismo['url'] : '';
+
+            Log::info('Archivo URL Otro Organismo: ' . $archivoUrlOtroOrganismo);
+
             return response()->json([
                 'success' => true,
                 'lote' => $lote,
@@ -297,8 +306,14 @@ public function dictamenDeCumplimientoGranel($id_dictamen)
         } catch (ModelNotFoundException $e) {
             Log::error('Error: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Error en la solicitud'], 500);
+        } catch (\Exception $e) {
+            Log::error('Error inesperado: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error inesperado'], 500);
         }
     }
+
+
+
     
 
     /* reexpedir un dictamen */

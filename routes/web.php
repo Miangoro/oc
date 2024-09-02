@@ -576,6 +576,9 @@ Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->
 Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('traslado-guias');
 Route::resource('/guias-list', GuiasController::class);
 Route::post('/guias/store', [GuiasController::class, 'store']);
+Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado');
+Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
+Route::post('/update', [GuiasController::class, 'update'])->name('guias.update');
 //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
 
 /*-------------------Dictamenes de instalaciones-------------------*/
@@ -624,9 +627,7 @@ Route::get('/documentos/{id}/edit', [DocumentosController::class, 'edit']);
 // Ruta para actualizar el documento
 Route::put('/documentos/{id}', [DocumentosController::class, 'update']);
 
-Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado');
-Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
-Route::post('/update', [GuiasController::class, 'update'])->name('guias.update');
+
 
 //Inspecciones
 Route::get('/inspecciones', [inspeccionesController::class, 'UserManagement'])->name('inspecciones');

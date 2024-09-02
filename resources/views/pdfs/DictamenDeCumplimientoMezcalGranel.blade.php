@@ -340,32 +340,32 @@
         <table class="table_description">
             <tr>
                 <td colspan="6" style="font-weight: bold; font-size: 13px;">
-                    <p>PRODUCTO {{ $data->lote_granel->categoria->categoria }}</p>
+                    <p>PRODUCTO {{ $data->lote_granel->categoria->categoria ?? 'N/A' }}</p>
                     <p>ORIGEN {{ $data->inspeccion->solicitud->instalacion->estados->nombre }}</p>
                 </td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold; width: 16%;">Categoría y clase</td>
-                <td>{{ $data->lote_granel->categoria->categoria }} {{ $data->lote_granel->clase->clase }}</td>
+                <td>{{ $data->lote_granel->categoria->categoria ?? 'N/A' }} {{ $data->lote_granel->clase->clase ?? 'N/A' }}</td>
                 <td style="color: #17365D; font-weight: bold; width: 19%">No. de lote a granel</td>
-                <td>{{ $data->lote_granel->nombre_lote }}</td>
+                <td>{{ $data->lote_granel->nombre_lote ?? 'N/A' }}</td>
                 <td style="color: #17365D; font-weight: bold; width: 14%;">No. de análisis</td>
-                <td>{{ $data->lote_granel->folio_fq }}</td>
+                <td>{{ $data->lote_granel->folio_fq ?? 'N/A'}}</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">Ingredientes</td>
                 <td>{{ $data->lote_granel->ingredientes ?? 'N/A' }}</td>
                 <td style="color: #17365D; font-weight: bold;">Volumen de lote</td>
-                <td>{{ $data->lote_granel->volumen }}</td>
+                <td>{{ $data->lote_granel->volumen ?? 'N/A' }}</td>
                 <td style="color: #17365D; font-weight: bold;">Contenido alcohólico</td>
-                <td>{{ $data->lote_granel->cont_alc }} % Alc. Vol.</td>
+                <td>{{ $data->lote_granel->cont_alc ?? 'N/A' }} % Alc. Vol.</td>
             </tr>
             <tr>
                 <td style="color: #17365D; font-weight: bold;">Edad</td>
                 <td>{{ $data->lote_granel->edad ?? 'N/A' }}</td>
                 <td style="color: #17365D; font-weight: bold;">Tipo de maguey</td>
-                <td colspan="3">{{ $data->lote_granel->tipo->nombre }}
-                    <i>{{ $data->lote_granel->tipo->cientifico }}</>
+                <td colspan="3">{{ $data->lote_granel->tipo->nombre ?? 'N/A' }}
+                    <i>{{ $data->lote_granel->tipo->cientifico ?? 'N/A' }}</>
                 </td>
             </tr>
         </table>

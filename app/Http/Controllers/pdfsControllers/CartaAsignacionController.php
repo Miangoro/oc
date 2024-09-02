@@ -152,11 +152,11 @@ class CartaAsignacionController extends Controller
     }
 
     //PDF de solicitud de hologramas
-    public function solicitudHologramas()
+/*     public function solicitudHologramas()
     {
         $pdf = Pdf::loadView('pdfs.solicitudDeHologramas');
         return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
-    }
+    } */
 
     public function InspeccionGeoReferenciacion()
     {
