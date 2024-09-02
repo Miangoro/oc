@@ -54,6 +54,7 @@
     @include('_partials/_modals/modal-add-dictamen-granel')
     @include('_partials/_modals/modal-edit-dictamen-granel')
     @include('_partials/_modals/modal-reexpedir-dictamen-granel')
+    @include('_partials/_modals/modal-pdfs-foliofqs')
     <!-- /Modal -->
 
 @endsection
