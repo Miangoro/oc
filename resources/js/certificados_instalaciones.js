@@ -480,17 +480,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });  
 
+  // Agregar
   $(function () {
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-  
+
     const formAddCertificado = document.getElementById('addCertificadoForm');
     const dictamenSelect = document.getElementById('id_dictamen');
     const maestroMezcaleroContainer = document.getElementById('maestroMezcaleroContainer');
-  
+
     const validator = FormValidation.formValidation(formAddCertificado, {
         fields: {
             'id_dictamen': {
@@ -562,35 +563,44 @@ document.addEventListener('DOMContentLoaded', function () {
             autoFocus: new FormValidation.plugins.AutoFocus()
         }
     });
-  
-const fieldsAdded = new Set();
 
-function updateMaestroMezcaleroValidation() {
-    const selectedOption = dictamenSelect.options[dictamenSelect.selectedIndex];
-    const tipoDictamen = selectedOption ? selectedOption.getAttribute('data-tipo-dictamen') : '';
+    const fieldsAdded = new Set();
 
-    if (tipoDictamen === '1') {
-        maestroMezcaleroContainer.style.display = 'block';
+    function updateMaestroMezcaleroValidation() {
+        const selectedOption = dictamenSelect.options[dictamenSelect.selectedIndex];
+        const tipoDictamen = selectedOption ? selectedOption.getAttribute('data-tipo-dictamen') : '';
 
-        if (!fieldsAdded.has('maestro_mezcalero')) {
-            try {
-                validator.addField('maestro_mezcalero', {
-                    validators: {
-                        notEmpty: {
-                            message: 'El nombre del maestro mezcalero es obligatorio'
+        if (tipoDictamen === '1') {
+            maestroMezcaleroContainer.style.display = 'block';
+
+            if (!fieldsAdded.has('maestro_mezcalero')) {
+                try {
+                    validator.addField('maestro_mezcalero', {
+                        validators: {
+                            notEmpty: {
+                                message: 'El nombre del maestro mezcalero es obligatorio'
+                            }
                         }
-                    }
-                });
-                fieldsAdded.add('maestro_mezcalero'); 
-            } catch (error) {
-                console.error('Error al añadir la validación del campo maestro_mezcalero:', error);
+                    });
+                    fieldsAdded.add('maestro_mezcalero'); 
+                } catch (error) {
+                    console.error('Error al añadir la validación del campo maestro_mezcalero:', error);
+                }
+            }
+        } else {
+            maestroMezcaleroContainer.style.display = 'none';
+
+            if (fieldsAdded.has('maestro_mezcalero')) {
+                try {
+                    validator.removeField('maestro_mezcalero');
+                    fieldsAdded.delete('maestro_mezcalero'); 
+                } catch (error) {
+                    console.error('Error al eliminar la validación del campo maestro_mezcalero:', error);
+                }
             }
         }
-    } else {
-        maestroMezcaleroContainer.style.display = 'none';
-
     }
-}
+
     function updateDatepickerValidation() {
         $('#fecha_vigencia').on('change', function() {
             var fechaVigencia = $(this).val();
@@ -603,12 +613,12 @@ function updateMaestroMezcaleroValidation() {
                 validator.revalidateField('fecha_vencimiento');
             }
         });
-  
+
         $('#fecha_vencimiento').on('change', function() {
             validator.revalidateField('fecha_vencimiento');
         });
     }
-  
+
     validator.on('core.form.valid', function () {
         var fechaVigencia = $('#fecha_vigencia').val();
         var fechaVencimiento = $('#fecha_vencimiento').val();
@@ -618,9 +628,9 @@ function updateMaestroMezcaleroValidation() {
         if (fechaVencimiento) {
             $('#fecha_vencimiento').val(moment(fechaVencimiento).format('YYYY-MM-DD'));
         }
-  
+
         var formData = $(formAddCertificado).serialize();
-  
+
         $.ajax({
             url: '/certificados-list',
             type: 'POST',
@@ -630,7 +640,7 @@ function updateMaestroMezcaleroValidation() {
                 $('#addCertificadoModal').modal('hide');
                 $('#addCertificadoForm')[0].reset();
                 dt_user.ajax.reload();
-  
+
                 Swal.fire({
                     icon: 'success',
                     title: '¡Éxito!',
@@ -653,13 +663,14 @@ function updateMaestroMezcaleroValidation() {
             }
         });
     });
-  
+
     dictamenSelect.addEventListener('change', updateMaestroMezcaleroValidation);
     updateMaestroMezcaleroValidation();
     updateDatepickerValidation();
-  });
+});
 
 
+  // Editar
   $(document).ready(function() {
     const formEditCertificado = document.getElementById('editCertificadoForm');
     const validatorEdit = FormValidation.formValidation(formEditCertificado, {
@@ -704,7 +715,7 @@ function updateMaestroMezcaleroValidation() {
                 validators: {
                     stringLength: {
                         max: 60,
-                        message: 'El nombre del maestro mezcalero debe tener máximo 60 caracteres.'
+                        message: 'El nombre del maestro mezcalero es obligatorio.'
                     }
                 }
             },
@@ -774,7 +785,7 @@ function updateMaestroMezcaleroVisibility(dictamenId, maestroMezcalero) {
             validatorEdit.addField('maestro_mezcalero', {
                 validators: {
                     notEmpty: {
-                        message: 'El nombre del maestro mezcalero es obligatorio cuando el tipo de dictamen es 1.'
+                        message: 'El nombre del maestro mezcalero es obligatorio.'
                     }
                 }
             });
