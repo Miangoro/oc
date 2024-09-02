@@ -19,10 +19,6 @@
             transform: translate(-50%, -50%);
             opacity: 0.3;
             z-index: -1; 
-<<<<<<< HEAD
-            
-=======
->>>>>>> 6992792300159390f24051b20ea1af744c22949b
         }
 
         .header img {
@@ -58,14 +54,14 @@
 
         .text {
             font-size: 13.5px;
-            line-height: 1.5;
+            line-height: 1;
             text-align: justify;
             margin: 10 20px;
         }
 
         .text1 {
             font-size: 13.5px;
-            line-height: 1.5;
+            line-height: 1;
             text-align: justify;
             margin: -5 20px;
         }
@@ -198,7 +194,7 @@
 
 <div class="description1">ORGANISMO CERTIFICADOR</div>
 <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C</div>
-<div class="description3">No. CERTIFICADO: CIDAM C-INS-089/2024</div>
+<div class="description3">No. CERTIFICADO: {{$num_certificado}}</div>
 
 <p class="text1">
 Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditado como organismo de certificación de producto con número de acreditación 144/18 ante la Entidad Mexicana de Acreditación, A.C. otorga el siguiente:
@@ -212,23 +208,23 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
     <tbody>
         <tr>
             <td class="cell"><strong>Domicilio:</strong></td>
-            <td colspan="3" class="cent" style="text-align: center; vertical-align: middle;">Av, Periférico 5ur, No. Ext. 3915 No. Int. Escorpion 801, Pedregal De Carrasco, Coyoacán, Ciudad De México. C.P.04700.</td>
+            <td colspan="3" class="cent" style="text-align: center; vertical-align: middle;">{{$domicilio_fiscal}}</td>
         </tr>
         <tr>
             <td class="cell"><strong>RFC:</strong></td>
-            <td>FAMA860914190</td>
+            <td>{{$rfc}}</td>
             <td class="cell"><strong>Tel:</strong></td>
-            <td>5537449304</td>
+            <td>{{$telefono}}</td>
         </tr>
         <tr>
             <td class="cell"><strong>Correo electrónico:</strong></td>
-            <td colspan="3">albertofranci1313@gmail.com</td>
+            <td colspan="3">{{$correo}}</td>
         </tr>
         <tr>
             <td class="cell1"><strong>Fecha de inicio vigencia:</strong></td>
-            <td>22/julio/2024</td>
+            <td>{{$fecha_vigencia}}</td>
             <td class="cell1"><strong>Fecha de Vencimiento:</strong></td>
-            <td>23/Julio/2025</td>
+            <td>{{$fecha_vencimiento}}</td>
         </tr>
     </tbody>
 </table>
@@ -246,10 +242,9 @@ establecido en la NOM-070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificacione
 Ancestral, <strong>Clase:</strong> Joven, Madurado en Vidrio, Reposado, Añejo, Abocado con, Destilado con, que se realice en las
 instalaciones indicadas a continuación.</p>
 
-<p class="text"><strong>Domicilio de la unidad de Comercialización:</strong>Francisco l. Madero, 12 A, Col. 20 De Noviembre, Chilpancingo de los Bravo, Guerrero, C.P. 39096.
-Michoacán.</p>
+<p class="text"><strong>Domicilio de la unidad de Comercialización:</strong> {{$direccion_completa}}</p>
 
-<p class="text"><strong>No. De Dictamen de cumplimiento con la NOM:</strong> UMC-077/2024</p>
+<p class="text"><strong>No. De Dictamen de cumplimiento con la NOM:</strong> {{$num_dictamen}}</p>
 
 <div class="signature">
     <div class="signature-line"></div>
