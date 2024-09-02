@@ -185,7 +185,6 @@ class Certificado_InstalacionesController extends Controller
     {   
         $datos = Certificados::with(['dictamen.inspeccione.solicitud.empresa.empresaNumClientes', 'dictamen.instalaciones', 'dictamen.inspeccione.inspector'])->find($id_certificado);
 
-       // $fecha_inspeccion = Helpers::formatearFecha($datos->dictamen->inspeccione->fecha_servicio);
         $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
         
