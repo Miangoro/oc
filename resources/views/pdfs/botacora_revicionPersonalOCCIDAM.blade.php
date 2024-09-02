@@ -164,7 +164,7 @@
         /* Estilo para el texto de fondo */
         .background-text {
             position: absolute;
-            top: 450px;
+            top: 300px;
             left: 380px;
             z-index: -1;
             color: #000000;
@@ -186,7 +186,7 @@
 <div style="height: 30px;"></div>
 <body>
     <div class="background-text">
-        <table>
+        <table class="letra-fondo" style="width: 295px">
             <tr>
                 <td colspan="4">REVISIÓN CERTIFICADO INSTALACIONES</td>
             </tr>
