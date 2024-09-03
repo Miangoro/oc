@@ -49,6 +49,9 @@
   </div>
 </div>
 
+
+
+<!-- Modal para dictamenes guias -->
 <div class="modal fade" id="mostrarPdfGUias" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-simple">
     <div class="modal-content">
@@ -58,7 +61,8 @@
           <h4 id="titulo_modal_GUIAS" class="address-title mb-2"></h4>
           <p id="subtitulo_modal_GUIAS" class="address-subtitle"></p>
         </div>
-        <a href="#" id="descargarZipBtn" class="btn btn-primary position-absolute" style="top: 0; right: 0; margin: 15px;">Descargar ZIP</a>
+        <!-- Botón para descargar el PDF -->
+        <a href="#" id="descargarPdfBtn" class="btn btn-primary position-absolute waves-effect" style="top: 0; right: 0; margin: 15px;">Descargar PDF</a>
         <div class="row">
           <iframe src="" id="pdfViewerGuias" width="100%" height="800px" style="border: none;"></iframe>
         </div>
