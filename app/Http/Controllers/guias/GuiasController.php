@@ -104,6 +104,7 @@ class GuiasController  extends Controller
                     'id_plantacion' => $user->id_plantacion,
                     'fake_id' => ++$ids,
                     'folio' => $user->folio,
+                    'run_folio' => $user->run_folio,
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
                     'id_empresa' => $numero_cliente, // Asignar numero_cliente a id_empresa
                     'id_predio' => $user->predios ? $user->predios->nombre_predio : '',

@@ -138,6 +138,7 @@ $(function () {
         { data: 'id_empresa' },
         { data: 'razon_social' },
         { data: 'folio' },
+        { data: 'run_folio' },
         { data: 'id_predio' },
         { data: 'numero_plantas' },
         { data: 'num_anterior' },
@@ -228,7 +229,7 @@ $(function () {
         },*/
         {
            // email verify
-           targets: 10,
+           targets: 11,
            className: 'text-center',
            render: function (data, type, full, meta) {
              var $id = full['id_guia'];
