@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', function () {
            display: $.fn.dataTable.Responsive.display.modal({
              header: function (row) {
                var data = row.data();
-               return 'Detalles de ' + data['id_inspeccion'];
+               return 'Detalles de Cerificados de Instalaciones';
              }
            }),
            type: 'column',
