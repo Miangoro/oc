@@ -182,6 +182,7 @@ use App\Http\Controllers\usuarios\UsuariosPersonalController;
 use App\Http\Controllers\usuarios\UsuariosConsejoController;
 use App\Http\Controllers\catalogo\LotesGranelController;
 use App\Http\Controllers\documentacion\DocumentosController;
+use App\Http\Controllers\solicitudes\TipoController;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\InstalacionesController;
@@ -445,13 +446,7 @@ Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'
 Route::get('/Etiqueta-Muestra', [CartaAsignacionController::class, 'Etiqueta_muestra'])->name('Etiqueta-Muestra');
 Route::get('/Etiqueta-Barrica', [CartaAsignacionController::class, 'Etiqueta_Barrica'])->name('Etiqueta-Barrica');
 
-//Dictamen de instalaciones
-
-
 Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion');/*  */
-
-// Dictamen de cumplimiento de Instalaciones almacen
-
 
 //Certificados de instalaciones
 Route::get('/certificado_comercializador', [CartaAsignacionController::class, 'certificadocom'])->name('certificado_comercializador');
@@ -635,15 +630,12 @@ Route::put('/documentos/{id}', [DocumentosController::class, 'update']);
 
 
 
-
-
 //Inspecciones
 Route::get('/inspecciones', [inspeccionesController::class, 'UserManagement'])->name('inspecciones');
 Route::resource('inspecciones-list', inspeccionesController::class);
 Route::post('/asignar-inspector', [inspeccionesController::class, 'asignarInspector']);
 Route::get('/oficio_de_comision/{id_inspeccion}', [inspeccionesController::class, 'pdf_oficio_comision'])->name('oficioDeComision');
 Route::get('/orden_de_servicio/{id_inspeccion}', [inspeccionesController::class, 'pdf_orden_servicio'])->name('ordenDeServicio');
-
 
 //Hologramas - solicitud hologramas
 Route::get('/hologramas/solicitud', [solicitudHolograma::class, 'UserManagement'])->name('hologramas-solicitud');
@@ -673,6 +665,5 @@ Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3
 Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
 Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
 
-
-
-
+//Tipo
+Route::get('/tipo', [TipoController::class, 'UserManagement'])->name('tipo');

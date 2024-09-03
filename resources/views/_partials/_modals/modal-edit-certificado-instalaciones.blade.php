@@ -2,24 +2,25 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editCertificadoModalLabel">Editar Certificado</h5>
+                <h5 class="modal-title" id="editCertificadoModalLabel">Editar Certificado de Instalaciones</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+
                 <form id="editCertificadoForm">
                     @csrf
                     @method('PUT')
                     <input type="hidden" id="edit_id_certificado" name="id_certificado">
                     
-                    <!-- Campo para Dictamen -->
                     <div class="form-floating form-floating-outline mb-3">
-                        <select class="form-select select2" id="edit_id_dictamen" name="id_dictamen" aria-label="No. Dictamen" required>
+                        <select class="select2 form-select" id="edit_id_dictamen" name="id_dictamen" aria-label="No. Dictamen" required>
                             <option value="" disabled selected>Seleccione un dictamen</option>
-                            @foreach($dictamenes as $dictamen)
-                                <option value="{{ $dictamen->id_dictamen }}" data-tipo-dictamen="{{ $dictamen->tipo_dictamen }}">{{ $dictamen->num_dictamen }}</option>
-                            @endforeach
+                                @foreach($dictamenes as $dictamen)
+                                <option value="{{ $dictamen->id_dictamen }}" data-tipo-dictamen="{{ $dictamen->tipo_dictamen }}">
+                                {{ $dictamen->num_dictamen }}
+                            </option>
+                                @endforeach
                         </select>
-                        <label for="edit_id_dictamen">No. Dictamen</label>
                     </div>
 
                     <!-- Campo para Número de Certificado -->
@@ -35,9 +36,9 @@
                     </div>
 
                     <!-- Campo para Número de Autorización -->
-                    <div class="form-floating form-floating-outline mb-3">
-                         <input type="text" class="form-control" id="edit_no_autorizacion" placeholder="No. de Autorización" name="num_autorizacion" aria-label="No. de Autorización" required>
-                         <label for="edit_no_autorizacion">No. de Autorización</label>
+                    <div id="edit_autorizacionContainer" class="form-floating form-floating-outline mb-3" style="display: none;">
+                        <input type="text" class="form-control" id="edit_no_autorizacion" placeholder="No. de Autorización" name="num_autorizacion" aria-label="No. de Autorización">
+                        <label for="edit_no_autorizacion">No. de Autorización</label>
                     </div>
 
                     <!-- Campos para Fechas -->

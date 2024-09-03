@@ -12,6 +12,7 @@
     'resources/assets/vendor/libs/animate-css/animate.scss',
     'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
     'resources\assets\vendor\libs\bootstrap-datepicker\bootstrap-datepicker.scss'
+    
 ])
 @endsection
 
@@ -36,6 +37,7 @@
 
 
 @section('content')
+<link rel="stylesheet" href="assets/vendor/libs/spinkit/spinkit.css" />
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- Users List Table -->
 <div class="card">
@@ -65,7 +67,7 @@
 </div>
 
 <!-- Modal -->
-@include('_partials/_modals/modal-pdfs-frames')
+@include('_partials/_modals/modal-pdfs-certificados')
 @include('_partials/_modals/modal-add-certificado-instalaciones')
 @include('_partials/_modals/modal-edit-certificado-instalaciones')
 <!-- /Modal -->

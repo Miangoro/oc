@@ -102,34 +102,34 @@ class Certificado_InstalacionesController extends Controller
 
         return response()->json(['success' => 'Certificado eliminado correctamente']);
     }
-
+    
     public function store(Request $request)
     {
+        // Validación de datos del formulario
         $validatedData = $request->validate([
-        'id_dictamen' => 'required|integer',
-        'num_certificado' => 'required|string|max:25',
-        'fecha_vigencia' => 'required|date',
-        'fecha_vencimiento' => 'required|date',
-        'maestro_mezcalero' => 'nullable|string|max:60',
-        'num_autorizacion' => 'required|integer',
-    ]);
-
-    $certificado = Certificados::create([
-        'id_dictamen' => $validatedData['id_dictamen'],
-        'num_certificado' => $validatedData['num_certificado'],
-        'fecha_vigencia' => $validatedData['fecha_vigencia'],
-        'fecha_vencimiento' => $validatedData['fecha_vencimiento'],
-        'maestro_mezcalero' => $validatedData['maestro_mezcalero'] ?: null,
-        'num_autorizacion' => $validatedData['num_autorizacion']
-    ]);
-
-    return response()->json([
-        'message' => 'Certificado registrado exitosamente',
-        'certificado' => $certificado
-    ]);
+            'id_dictamen' => 'required|integer',
+            'num_certificado' => 'required|string|max:25',
+            'fecha_vigencia' => 'required|date',
+            'fecha_vencimiento' => 'required|date',
+            'maestro_mezcalero' => 'nullable|string|max:60',
+            'num_autorizacion' => 'nullable|integer',
+        ]);
     
+        $certificado = Certificados::create([
+            'id_dictamen' => $validatedData['id_dictamen'],
+            'num_certificado' => $validatedData['num_certificado'],
+            'fecha_vigencia' => $validatedData['fecha_vigencia'],
+            'fecha_vencimiento' => $validatedData['fecha_vencimiento'],
+            'maestro_mezcalero' => $validatedData['maestro_mezcalero'] ?: null, 
+            'num_autorizacion' => $validatedData['num_autorizacion'] ?: null 
+        ]);
+    
+        return response()->json([
+            'message' => 'Certificado registrado exitosamente',
+            'certificado' => $certificado
+        ]);
     }
-
+    
     // Funcion para cargar
     public function edit($id)
     {
@@ -152,7 +152,7 @@ class Certificado_InstalacionesController extends Controller
         'fecha_vigencia' => 'required|date_format:Y-m-d',
         'fecha_vencimiento' => 'nullable|date_format:Y-m-d',
         'maestro_mezcalero' => 'nullable|string|max:60',
-        'num_autorizacion' => 'required|string|max:25',
+        'num_autorizacion' => 'nullable|string|max:25',
     ]);
 
     try {
@@ -163,7 +163,7 @@ class Certificado_InstalacionesController extends Controller
         $certificado->fecha_vigencia = $validatedData['fecha_vigencia'];
         $certificado->fecha_vencimiento = $validatedData['fecha_vencimiento'];
         $certificado->maestro_mezcalero = $validatedData['maestro_mezcalero'] ?: null;
-        $certificado->num_autorizacion = $validatedData['num_autorizacion'];
+        $certificado->num_autorizacion = $validatedData['num_autorizacion'] ?: null; 
 
         $certificado->save();
 
@@ -194,7 +194,6 @@ public function pdf_certificado_productor($id_certificado)
     $direccion_completa = $datos->dictamen->instalaciones->direccion_completa;
     $num_autorizacion = $datos->num_autorizacion;
     $num_dictamen = $datos->dictamen->num_dictamen;
-
     $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
     $fecha_vencimiento = Helpers::formatearFecha($datos->fecha_vencimiento);
