@@ -47,3 +47,26 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="mostrarPdfGUias" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-simple">
+    <div class="modal-content">
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-body p-0 position-relative">
+        <div class="text-center mb-6">
+          <h4 id="titulo_modal_GUIAS" class="address-title mb-2"></h4>
+          <p id="subtitulo_modal_GUIAS" class="address-subtitle"></p>
+        </div>
+        <a href="#" id="descargarZipBtn" class="btn btn-primary position-absolute" style="top: 0; right: 0; margin: 15px;">Descargar ZIP</a>
+        <div class="row">
+          <iframe src="" id="pdfViewerGuias" width="100%" height="800px" style="border: none;"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+

@@ -14,6 +14,7 @@ class Guias extends Model
     protected $fillable = [
         'id_guia',
         'id_plantacion',
+        'run_folio',
         'folio', // Asegúrate de que el nombre del campo sea correcto en la tabla
         'id_empresa',
         'id_predio',
@@ -43,7 +44,7 @@ class Guias extends Model
 
     public function predio()
     {
-        return $this->belongsTo(predio_plantacion::class, 'id_predio');
+        return $this->belongsTo(predio_plantacion::class, 'num_plantas', 'numero_plantas');
     }
 
     public function predios()

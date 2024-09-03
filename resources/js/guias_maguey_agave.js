@@ -232,7 +232,7 @@ $(function () {
            className: 'text-center',
            render: function (data, type, full, meta) {
              var $id = full['id_guia'];
-             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_guia']}" data-registro="${full['razon_social']} "></i>`;
+             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdfGUias" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_guia']}" data-registro="${full['razon_social']} "></i>`;
            }
          },
         {
@@ -539,11 +539,11 @@ $(function () {
   $(document).on('click', '.pdf', function () {
         var id = $(this).data('id');
         var registro = $(this).data('registro');
-            var iframe = $('#pdfViewer');
+            var iframe = $('#pdfViewerGuias');
             iframe.attr('src', '../guia_de_translado/'+id);
 
-            $("#titulo_modal").text("Guia de traslado");
-            $("#subtitulo_modal").text(registro);
+            $("#titulo_modal_GUIAS").text("Guia de traslado");
+            $("#subtitulo_modal_GUIAS").text(registro);
             
           
   });

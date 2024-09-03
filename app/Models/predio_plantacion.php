@@ -33,4 +33,11 @@ class predio_plantacion extends Model
     {
         return $this->belongsTo(Predios::class, 'id_predio');
     }
+
+
+    public function guias()
+    {
+        return $this->hasMany(solicitudHolograma::class, 'num_plantas', 'numero_plantas');
+    }
+
 }

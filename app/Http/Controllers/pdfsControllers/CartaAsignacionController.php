@@ -99,11 +99,11 @@ class CartaAsignacionController extends Controller
     }
 
     //Guias de translado
-    public function guiasTranslado()
+/*     public function guiasTranslado()
     {
         $pdf = Pdf::loadView('pdfs.GuiaDeTranslado');
         return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
-    }
+    } */
 
     public function Etiqueta()
     {

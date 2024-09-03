@@ -146,39 +146,75 @@ class GuiasController  extends Controller
         return response()->json(['success' => 'Clase eliminada correctamente']);
     }
 
-    //Metodo para registrar
     public function store(Request $request)
     {
-
+        // Validación de los datos recibidos
         $request->validate([
             'empresa' => 'required|exists:empresa,id_empresa',
             'numero_guias' => 'required|numeric',
             'predios' => 'required',
             'plantacion' => 'required',
-            'anterior' => 'required|numeric',
-            'comercializadas' => 'required|numeric',
-            'mermas' => 'required|numeric',
-            'plantas' => 'required|numeric',
+            'anterior' => 'nullable|numeric',
+            'comercializadas' => 'nullable|numeric',
+            'mermas' => 'nullable|numeric',
+            'plantas' => 'nullable|numeric',
         ]);
-
+    
+        // Obtener el valor de plantas actuales y num_anterior
+        $plantasActuales = $request->input('plantas');
+        $numAnterior = $request->input('anterior');
+    
+        // Verificar si plantasActuales no es null
+        if ($plantasActuales !== null) {
+            // Calcular el valor a actualizar en predio_plantacion
+            $plantasNuevas = $plantasActuales - $numAnterior;
+        } else {
+            // Si plantas es null, no modificamos predio_plantacion
+            $plantasNuevas = null;
+        }
+    
+        // Obtener el último folio registrado y calcular el siguiente
+        $lastFolio = guias::orderBy('created_at', 'desc')->first();
+        $nextFolioNumber = $lastFolio ? intval(substr($lastFolio->folio, 12, 6)) + 1 : 1;
+        $runFolio = sprintf('SOL-GUIA-%06d/24', $nextFolioNumber);
+    
+        // Procesar la creación de las guías
         for ($i = 0; $i < $request->input('numero_guias'); $i++) {
-
             // Crear una nueva instancia del modelo Guia
             $guia = new guias();
             $guia->id_empresa = $request->input('empresa');
             $guia->numero_guias = $request->input('numero_guias');
             $guia->id_predio = $request->input('predios');
             $guia->id_plantacion = $request->input('plantacion');
-            $guia->folio = Helpers::generarFolioGuia($request->predios);
-            $guia->num_anterior = $request->input('anterior', 0);
-            $guia->num_comercializadas = $request->input('comercializadas', 0);
-            $guia->mermas_plantas = $request->input('mermas', 0);
-            $guia->numero_plantas = $request->input('plantas', 0);
+            $guia->folio = $runFolio; // Usar el mismo run_folio para todas las guías
+            $guia->num_anterior = $numAnterior;
+            $guia->num_comercializadas = $request->input('comercializadas');
+            $guia->mermas_plantas = $request->input('mermas');
+            $guia->numero_plantas = $plantasActuales;
             $guia->save();
         }
+    
+        // Actualizar la cantidad de plantas en la tabla predio_plantacion si es necesario
+        if ($plantasNuevas !== null) {
+            $predioPlantacion = \App\Models\predio_plantacion::where('id_predio', $request->input('predios'))
+                ->where('id_plantacion', $request->input('plantacion'))
+                ->first();
+    
+            if ($predioPlantacion) {
+                $predioPlantacion->num_plantas = $predioPlantacion->num_plantas + $plantasNuevas;
+                $predioPlantacion->save();
+            }
+        }
+    
         // Responder con éxito
         return response()->json(['success' => 'Guía registrada correctamente']);
     }
+    
+    
+    
+    
+    
+    
 
 
 

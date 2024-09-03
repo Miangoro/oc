@@ -28,11 +28,12 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" placeholder="Número de guías solicitadas"
-                                    id="edit_numero_guias" name="numero_guias" required />
+                                <input class="form-control bg-light text-muted" type="number" placeholder="Número de guías solicitadas"
+                                    id="edit_numero_guias" name="numero_guias" readonly style="pointer-events: none;" />
                                 <label for="edit_numero_guias">Número de guías solicitadas</label>
                             </div>
                         </div>
+                        
                     </div>
                     <div class="form-floating form-floating-outline mb-6">
                         <select class="select2 form-select" id="edit_nombre_predio" name="predios" aria-label="Predio"
