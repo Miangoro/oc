@@ -230,59 +230,86 @@ class GuiasController  extends Controller
         }
     }
 
-    // Método para actualizar una guía existente
     public function update(Request $request)
-    {
+{
+    try {
+        $guia = guias::findOrFail($request->id_guia);
 
+        // Guardar los datos anteriores para comparar
+        $anteriorPlantas = $guia->numero_plantas;
+        $anteriorNumAnterior = $guia->num_anterior;
 
-        try {
-            $guia = guias::findOrFail($request->id_guia);
-            $guia->id_empresa = $request->input('empresa');
-            $guia->numero_guias = $request->input('numero_guias');
-            $guia->id_predio = $request->input('predios');
-            $guia->id_plantacion = $request->input('plantacion');
-            $guia->num_anterior = $request->input('anterior');
-            $guia->num_comercializadas = $request->input('comercializadas');
-            $guia->mermas_plantas = $request->input('mermas');
-            $guia->numero_plantas = $request->input('plantas');
-            $guia->edad = $request->input('edad');
-            $guia->art = $request->input('art');
-            $guia->kg_maguey = $request->input('kg_maguey');
-            $guia->no_lote_pedido = $request->input('no_lote_pedido');
-            $guia->fecha_corte = $request->input('fecha_corte');
-            $guia->observaciones = $request->input('observaciones');
-            $guia->nombre_cliente = $request->input('nombre_cliente');
-            $guia->no_cliente = $request->input('no_cliente');
-            $guia->fecha_ingreso = $request->input('fecha_ingreso');
-            $guia->domicilio = $request->input('domicilio');
+        // Actualizar la guía con los nuevos datos
+        $guia->id_empresa = $request->input('empresa');
+        $guia->numero_guias = $request->input('numero_guias');
+        $guia->id_predio = $request->input('predios');
+        $guia->id_plantacion = $request->input('plantacion');
+        $guia->num_anterior = $request->input('anterior');
+        $guia->num_comercializadas = $request->input('comercializadas');
+        $guia->mermas_plantas = $request->input('mermas');
+        $guia->numero_plantas = $request->input('plantas');
+        $guia->edad = $request->input('edad');
+        $guia->art = $request->input('art');
+        $guia->kg_maguey = $request->input('kg_maguey');
+        $guia->no_lote_pedido = $request->input('no_lote_pedido');
+        $guia->fecha_corte = $request->input('fecha_corte');
+        $guia->observaciones = $request->input('observaciones');
+        $guia->nombre_cliente = $request->input('nombre_cliente');
+        $guia->no_cliente = $request->input('no_cliente');
+        $guia->fecha_ingreso = $request->input('fecha_ingreso');
+        $guia->domicilio = $request->input('domicilio');
+        $guia->save();
 
-            $guia->save();
-
-            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-
-            foreach ($request->id_documento as $index => $id_documento) {
-                // Agregar nuevo documento si no existe
-                if ($request->hasFile('url') && isset($request->file('url')[$index])) {
-                    $file = $request->file('url')[$index];
-                    $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
-
-                    $documentacion_url = new Documentacion_url();
-                    $documentacion_url->id_relacion = $guia->id_guia;
-                    $documentacion_url->id_documento = $id_documento;
-                    $documentacion_url->nombre_documento = $request->nombre_documento[$index];
-                    $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
-                    $documentacion_url->id_empresa = $request->empresa;
-                    $documentacion_url->save();
-                }
-            }
-
-            return response()->json(['success' => 'Guía actualizada correctamente']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al actualizar la guía'], 500);
+        // Calcular la diferencia en plantas
+        $plantasActuales = $request->input('plantas');
+        $numAnterior = $request->input('anterior');
+        
+        // Verificar si plantasActuales no es null
+        if ($plantasActuales !== null) {
+            $diferenciaPlantas = $plantasActuales - $numAnterior;
+        } else {
+            $diferenciaPlantas = 0;
         }
+
+        // Actualizar la cantidad de plantas en la tabla predio_plantacion si es necesario
+        if ($diferenciaPlantas !== 0) {
+            $predioPlantacion = \App\Models\predio_plantacion::where('id_predio', $request->input('predios'))
+                ->where('id_plantacion', $request->input('plantacion'))
+                ->first();
+
+            if ($predioPlantacion) {
+                $predioPlantacion->num_plantas = $predioPlantacion->num_plantas + $diferenciaPlantas;
+                $predioPlantacion->save();
+            }
+        }
+
+        // Manejar los documentos
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->input('empresa'))->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+
+        foreach ($request->id_documento as $index => $id_documento) {
+            // Agregar nuevo documento si no existe
+            if ($request->hasFile('url') && isset($request->file('url')[$index])) {
+                $file = $request->file('url')[$index];
+                $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+
+                $documentacion_url = new Documentacion_url();
+                $documentacion_url->id_relacion = $guia->id_guia;
+                $documentacion_url->id_documento = $id_documento;
+                $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+                $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+                $documentacion_url->id_empresa = $request->input('empresa');
+                $documentacion_url->save();
+            }
+        }
+
+        return response()->json(['success' => 'Guía actualizada correctamente']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al actualizar la guía'], 500);
     }
+}
+
 
 
 
