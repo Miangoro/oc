@@ -75,7 +75,7 @@ class Certificado_InstalacionesController extends Controller
             $nestedData['id_certificado'] = $certificado->id_certificado;
             $nestedData['fake_id'] = ++$start;
             $nestedData['num_certificado'] = $certificado->num_certificado;
-            $nestedData['num_autorizacion'] = $certificado->num_autorizacion; // Añadido aquí
+            $nestedData['num_autorizacion'] = $certificado->num_autorizacion ?? 'N/A';
             $nestedData['fecha_vigencia'] = Helpers::formatearFecha($certificado->fecha_vigencia);
             $nestedData['fecha_vencimiento'] = Helpers::formatearFecha($certificado->fecha_vencimiento);
             $nestedData['maestro_mezcalero'] = $certificado->maestro_mezcalero;
@@ -152,7 +152,7 @@ class Certificado_InstalacionesController extends Controller
         'fecha_vigencia' => 'required|date_format:Y-m-d',
         'fecha_vencimiento' => 'nullable|date_format:Y-m-d',
         'maestro_mezcalero' => 'nullable|string|max:60',
-        'num_autorizacion' => 'nullable|string|max:25',
+        'num_autorizacion' => 'nullable|integer',
     ]);
 
     try {

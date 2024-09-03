@@ -52,8 +52,8 @@
 
                     <!-- Número de Autorización -->
                     <div id="edit_autorizacionContainer" class="form-floating form-floating-outline mb-3" style="display: none;">
-                        <input type="text" class="form-control" id="edit_no_autorizacion" placeholder="No. de Autorización" name="num_autorizacion" aria-label="No. de Autorización">
-                        <label for="edit_no_autorizacion">No. de Autorización</label>
+                        <input type="text" class="form-control" id="edit_num_autorizacion" placeholder="No. de Autorización" name="num_autorizacion" aria-label="No. de Autorización">
+                        <label for="edit_num_autorizacion">No. de Autorización</label>
                     </div>
 
                     <!-- Fechas -->
