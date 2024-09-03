@@ -1,50 +1,5 @@
 'use strict';
 
-document.addEventListener('DOMContentLoaded', function () {
-  function updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer, noAutorizacionContainer) {
-      const selectedOption = dictamenSelect.options[dictamenSelect.selectedIndex];
-      const tipoDictamen = selectedOption ? selectedOption.getAttribute('data-tipo-dictamen') : '';
-
-      if (tipoDictamen === '1') {
-          maestroMezcaleroContainer.style.display = 'block';
-          noAutorizacionContainer.style.display = 'block';
-      } else {
-          maestroMezcaleroContainer.style.display = 'none';
-          noAutorizacionContainer.style.display = 'none';
-      }
-  }
-
-  function initializeAgregar() {
-      const dictamenSelect = document.getElementById('id_dictamen');
-      const maestroMezcaleroContainer = document.getElementById('maestroMezcaleroContainer');
-      const noAutorizacionContainer = document.getElementById('noAutorizacionContainer'); // Asegúrate de tener este ID en tu HTML
-
-      if (dictamenSelect && maestroMezcaleroContainer && noAutorizacionContainer) {
-          updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer, noAutorizacionContainer);
-          dictamenSelect.addEventListener('change', function () {
-              updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer, noAutorizacionContainer);
-          });
-      }
-  }
-
-  function initializeEdicion() {
-      const dictamenSelect = document.getElementById('edit_id_dictamen');
-      const maestroMezcaleroContainer = document.getElementById('edit_maestroMezcaleroContainer');
-      const noAutorizacionContainer = document.getElementById('edit_noAutorizacionContainer'); // Asegúrate de tener este ID en tu HTML
-
-      if (dictamenSelect && maestroMezcaleroContainer && noAutorizacionContainer) {
-          updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer, noAutorizacionContainer);
-          dictamenSelect.addEventListener('change', function () {
-              updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer, noAutorizacionContainer);
-          });
-      }
-  }
-
-  initializeAgregar();
-  initializeEdicion();
-});
-
-
  $(function () {
  
    var dt_user_table = $('.datatables-users'),
@@ -200,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
             targets: 9,
             className: 'text-center',
             render: function (data, type, full, meta) {
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['razon_social']} "></i>`;
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['razon_social']} "></i>`;
             }
           },
          {
@@ -488,7 +443,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   $(document).ready(function () {
-    // Inicialización de select2
+
     var dt_user_table = $('.datatables-users'),
         select2Elements = $('.select2'),
         userView = baseUrl + 'app/user/view/account';
@@ -507,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const formAddCertificado = document.getElementById('addCertificadoForm');
     const dictamenSelect = $('#id_dictamen');
     const maestroMezcaleroContainer = document.getElementById('maestroMezcaleroContainer');
-    const noAutorizacionContainer = document.getElementById('noAutorizacionContainer'); // Asegúrate de tener este contenedor en tu HTML
+    const noAutorizacionContainer = document.getElementById('noAutorizacionContainer');
 
     const validator = FormValidation.formValidation(formAddCertificado, {
         fields: {
@@ -572,7 +527,6 @@ document.addEventListener('DOMContentLoaded', function () {
       const selectedData = dictamenSelect.select2('data')[0];
       const tipoDictamen = selectedData ? selectedData.element.dataset.tipoDictamen : '';
   
-      // Actualizar la visibilidad y validación del campo maestro_mezcalero
       if (tipoDictamen === '1') {
           maestroMezcaleroContainer.style.display = 'block';
   
@@ -591,7 +545,6 @@ document.addEventListener('DOMContentLoaded', function () {
               }
           }
   
-          // Actualizar la visibilidad y validación del campo num_autorizacion
           noAutorizacionContainer.style.display = 'block';
   
           if (!fieldsAdded.has('num_autorizacion')) {
@@ -924,7 +877,6 @@ $(document).ready(function() {
 });
 });
 
-// Reciben los datos del pdf del dictamen
 $(document).on('click', '.pdf', function () {
   var id = $(this).data('id');
   var registro = $(this).data('registro');
@@ -933,7 +885,6 @@ $(document).on('click', '.pdf', function () {
   var tipo_dictamen = '';
   var titulo = '';
 
-  // Determinar la URL del PDF y el título basado en el tipo de dictamen
   if (tipo == 1 || tipo == 5) { // Productor
     tipo_dictamen = '../certificado_productor_mezcal/' + id;
     titulo = "Certificado de productor";
@@ -945,32 +896,24 @@ $(document).on('click', '.pdf', function () {
     titulo = "Certificado de comercializador";
   }
 
-  // Mostrar el spinner mientras el PDF se está cargando
   $('#loading-spinner').show();
   $('#pdfViewerDictamen').hide();
 
-  // Configurar el iframe y el título del modal
-  $('#pdfViewerDictamen').attr('src', tipo_dictamen);
   $('#titulo_modal_Dictamen').text(titulo);
   $('#subtitulo_modal_Dictamen').text(registro);
 
-  // Configurar el botón para abrir el PDF en una nueva pestaña
   var openPdfBtn = $('#openPdfBtnDictamen');
   openPdfBtn.attr('href', tipo_dictamen);
-  openPdfBtn.show(); // Mostrar el botón
+  openPdfBtn.show();
 
-  // Mostrar el modal
-  $('#mostrarPdfDictamen').modal('show');
+  $('#PdfDictamenIntalaciones').modal('show');
+  $('#pdfViewerDictamen').attr('src', tipo_dictamen);
 });
 
-// Maneja el evento de carga del iframe para ocultar el spinner
 $('#pdfViewerDictamen').on('load', function () {
-  // Ocultar el spinner cuando el PDF esté cargado
   $('#loading-spinner').hide();
   $('#pdfViewerDictamen').show();
 });
-
-
 
   //end
  });
