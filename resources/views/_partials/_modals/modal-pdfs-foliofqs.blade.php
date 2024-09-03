@@ -11,8 +11,9 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th><h6><b>Tipo de Certificado</b></h6></th>
-                            <th><h6><b>Certificado</b></h6></th>
+                            <th><b>Tipo de Certificado</b></th>
+                            <th><b>Nombre</b></th>
+                            <th><b>Certificado</b></th>
                         </tr>
                     </thead>
                     <tbody id="documentosTableBody">

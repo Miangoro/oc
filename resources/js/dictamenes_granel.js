@@ -445,10 +445,12 @@ $(function () {
     
                     // Mostrar ícono al archivo PDF si está disponible
                     var documentoOtroOrganismo = documentos.find(doc => doc.tipo.includes('Certificado de lote a granel'));
+                    var nombre = documentoOtroOrganismo && documentoOtroOrganismo.nombre ? documentoOtroOrganismo.nombre : 'Sin nombre disponible';
+                    
                     if (documentoOtroOrganismo) {
-                        $tableBody.append('<tr><td>Certificado de lote a granel:</td><td><a href="#" class="ver-pdf" data-url="../files/' + response.numeroCliente + '/' + documentoOtroOrganismo.url + '" data-title="' + documentoOtroOrganismo.nombre + '"><i class="ri-file-pdf-2-fill text-danger fs-1"></i></a></td></tr>');
+                        $tableBody.append('<tr><td>Certificado de lote a granel:</td><td>' + nombre + '</td><td><a href="#" class="ver-pdf" data-url="../files/' + response.numeroCliente + '/' + documentoOtroOrganismo.url + '" data-title="' + nombre + '"><i class="ri-file-pdf-2-fill text-danger fs-1"></i></a></td></tr>');
                     } else {
-                        $tableBody.append('<tr><td>Certificado de lote a granel:</td><td>No hay certificado disponible.</td></tr>');
+                        $tableBody.append('<tr><td>Certificado de lote a granel:</td><td>Sin nombre disponible</td><td>No hay certificado disponible.</td></tr>');
                     }
     
                     // Documentos certificados por OC CIDAM
@@ -456,35 +458,36 @@ $(function () {
                     var documentoAjusteAsignado = false;
     
                     documentos.forEach(function (documento) {
-                        var documentoHtml = '<a href="#" class="ver-pdf" data-url="../files/' + response.numeroCliente + '/' + documento.url + '" data-title="' + documento.nombre + '"><i class="ri-file-pdf-2-fill text-danger fs-1"></i></a>';
+                        var nombreDocumento = documento.nombre || 'Sin nombre disponible';
+                        var documentoHtml = '<a href="#" class="ver-pdf" data-url="../files/' + response.numeroCliente + '/' + documento.url + '" data-title="' + nombreDocumento + '"><i class="ri-file-pdf-2-fill text-danger fs-1"></i></a>';
     
                         if (documento.tipo.includes('Análisis completo') && !documentoCompletoAsignado) {
-                            $tableBody.append('<tr><td>Certificado (Análisis Completo):</td><td>' + documentoHtml + '</td></tr>');
+                            $tableBody.append('<tr><td>Certificado (Análisis Completo):</td><td>' + nombreDocumento + '</td><td>' + documentoHtml + '</td></tr>');
                             documentoCompletoAsignado = true;
                         }
                         if (documento.tipo.includes('Ajuste de grado') && !documentoAjusteAsignado) {
-                            $tableBody.append('<tr><td>Certificado (Ajuste de Grado):</td><td>' + documentoHtml + '</td></tr>');
+                            $tableBody.append('<tr><td>Certificado (Ajuste de Grado):</td><td>' + nombreDocumento + '</td><td>' + documentoHtml + '</td></tr>');
                             documentoAjusteAsignado = true;
                         }
                     });
     
                     if (!documentoCompletoAsignado) {
-                        $tableBody.append('<tr><td>Certificado (Análisis Completo):</td><td>No hay certificado disponible.</td></tr>');
+                        $tableBody.append('<tr><td>Certificado (Análisis Completo):</td><td>Sin nombre disponible</td><td>No hay certificado disponible.</td></tr>');
                     }
                     if (!documentoAjusteAsignado) {
-                        $tableBody.append('<tr><td>Certificado (Ajuste de Grado):</td><td>No hay certificado disponible.</td></tr>');
+                        $tableBody.append('<tr><td>Certificado (Ajuste de Grado):</td><td>Sin nombre disponible</td><td>No hay certificado disponible.</td></tr>');
                     }
     
                     // Mostrar el modal de ver documentos
                     $('#modalVerDocumento').modal('show');
                 } else {
                     console.log('No success in response'); // Mensaje si el success es falso
-                    $('#documentosTableBody').html('<tr><td colspan="2">No se pudo cargar el documento.</td></tr>');
+                    $('#documentosTableBody').html('<tr><td colspan="3">No se pudo cargar el documento.</td></tr>');
                 }
             },
             error: function (xhr, status, error) {
                 console.log('Error AJAX:', error);
-                $('#documentosTableBody').html('<tr><td colspan="2">Ocurrió un error al intentar cargar el documento.</td></tr>');
+                $('#documentosTableBody').html('<tr><td colspan="3">Ocurrió un error al intentar cargar el documento.</td></tr>');
             }
         });
     });
