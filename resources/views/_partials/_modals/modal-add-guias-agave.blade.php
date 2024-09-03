@@ -55,7 +55,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number" placeholder="Número de plantas anterior"
-                                    id="num_anterior" name="anterior" oninput="calcularPlantasActualmente()" />
+                                    id="num_anterior" name="anterior" oninput="calcularPlantasActualmente()" readonly />
                                 <label for="num_anterior">Número de plantas anterior</label>
                             </div>
                         </div>

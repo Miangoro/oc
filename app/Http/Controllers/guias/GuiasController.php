@@ -104,6 +104,7 @@ class GuiasController  extends Controller
                     'id_plantacion' => $user->id_plantacion,
                     'fake_id' => ++$ids,
                     'folio' => $user->folio,
+                    'run_folio' => $user->run_folio,
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
                     'id_empresa' => $numero_cliente, // Asignar numero_cliente a id_empresa
                     'id_predio' => $user->predios ? $user->predios->nombre_predio : '',
@@ -146,39 +147,85 @@ class GuiasController  extends Controller
         return response()->json(['success' => 'Clase eliminada correctamente']);
     }
 
-    //Metodo para registrar
     public function store(Request $request)
     {
-
+        // Validación de los datos recibidos
         $request->validate([
             'empresa' => 'required|exists:empresa,id_empresa',
             'numero_guias' => 'required|numeric',
             'predios' => 'required',
             'plantacion' => 'required',
-            'anterior' => 'required|numeric',
-            'comercializadas' => 'required|numeric',
-            'mermas' => 'required|numeric',
-            'plantas' => 'required|numeric',
+            'anterior' => 'nullable|numeric',
+            'comercializadas' => 'nullable|numeric',
+            'mermas' => 'nullable|numeric',
+            'plantas' => 'nullable|numeric',
         ]);
-
+    
+        // Obtener el valor de plantas actuales y num_anterior
+        $plantasActuales = $request->input('plantas');
+        $numAnterior = $request->input('anterior');
+    
+        // Verificar si plantasActuales no es null
+        if ($plantasActuales !== null) {
+            // Calcular el valor a actualizar en predio_plantacion
+            $plantasNuevas = $plantasActuales - $numAnterior;
+        } else {
+            // Si plantas es null, no modificamos predio_plantacion
+            $plantasNuevas = null;
+        }
+    
+        // Obtener el último run_folio creado
+        $ultimoFolio = \App\Models\Guias::latest('run_folio')->first();
+        
+        // Extraer el número del último run_folio y calcular el siguiente número
+        if ($ultimoFolio) {
+            $ultimoNumero = intval(substr($ultimoFolio->run_folio, 9, 6)); // Extrae 000001 de SOL-GUIA-000001/24
+            $nuevoNumero = $ultimoNumero + 1;
+        } else {
+            $nuevoNumero = 1;
+        }
+    
+        // Formatear el nuevo run_folio
+        $nuevoFolio = sprintf('SOL-GUIA-%06d/24', $nuevoNumero);
+    
+        // Procesar la creación de las guías
         for ($i = 0; $i < $request->input('numero_guias'); $i++) {
-
             // Crear una nueva instancia del modelo Guia
             $guia = new guias();
             $guia->id_empresa = $request->input('empresa');
             $guia->numero_guias = $request->input('numero_guias');
+            $guia->run_folio = $nuevoFolio;
             $guia->id_predio = $request->input('predios');
             $guia->id_plantacion = $request->input('plantacion');
             $guia->folio = Helpers::generarFolioGuia($request->predios);
-            $guia->num_anterior = $request->input('anterior', 0);
-            $guia->num_comercializadas = $request->input('comercializadas', 0);
-            $guia->mermas_plantas = $request->input('mermas', 0);
-            $guia->numero_plantas = $request->input('plantas', 0);
+            $guia->num_anterior = $numAnterior;
+            $guia->num_comercializadas = $request->input('comercializadas');
+            $guia->mermas_plantas = $request->input('mermas');
+            $guia->numero_plantas = $plantasActuales;
             $guia->save();
         }
+    
+        // Actualizar la cantidad de plantas en la tabla predio_plantacion si es necesario
+        if ($plantasNuevas !== null) {
+            $predioPlantacion = \App\Models\predio_plantacion::where('id_predio', $request->input('predios'))
+                ->where('id_plantacion', $request->input('plantacion'))
+                ->first();
+    
+            if ($predioPlantacion) {
+                $predioPlantacion->num_plantas = $predioPlantacion->num_plantas + $plantasNuevas;
+                $predioPlantacion->save();
+            }
+        }
+    
         // Responder con éxito
         return response()->json(['success' => 'Guía registrada correctamente']);
     }
+    
+    
+    
+    
+    
+    
 
 
 

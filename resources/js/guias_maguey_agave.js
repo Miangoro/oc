@@ -138,6 +138,7 @@ $(function () {
         { data: 'id_empresa' },
         { data: 'razon_social' },
         { data: 'folio' },
+        { data: 'run_folio' },
         { data: 'id_predio' },
         { data: 'numero_plantas' },
         { data: 'num_anterior' },
@@ -228,11 +229,11 @@ $(function () {
         },*/
         {
            // email verify
-           targets: 10,
+           targets: 11,
            className: 'text-center',
            render: function (data, type, full, meta) {
              var $id = full['id_guia'];
-             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_guia']}" data-registro="${full['razon_social']} "></i>`;
+             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdfGUias" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_guia']}" data-registro="${full['razon_social']} "></i>`;
            }
          },
         {
@@ -535,18 +536,72 @@ $(function () {
     });
   });
   
-//Reciben los datos del pdf
-  $(document).on('click', '.pdf', function () {
-        var id = $(this).data('id');
-        var registro = $(this).data('registro');
-            var iframe = $('#pdfViewer');
-            iframe.attr('src', '../guia_de_translado/'+id);
+// Reciben los datos del pdf
+$(document).on('click', '.pdf', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+    var pdfUrl = '../guia_de_translado/' + id; // Ruta del PDF
 
-            $("#titulo_modal").text("Guia de traslado");
-            $("#subtitulo_modal").text(registro);
-            
-          
-  });
+    // Actualizar el iframe con el PDF
+    var iframe = $('#pdfViewerGuias');
+    iframe.attr('src', pdfUrl);
+
+    // Actualizar el título y subtítulo del modal
+    $("#titulo_modal_GUIAS").text("Guia de traslado");
+    $("#subtitulo_modal_GUIAS").text(registro);
+
+    // Actualizar el enlace de descarga
+    var descargarBtn = $('#descargarPdfBtn');
+    descargarBtn.off('click').on('click', function (e) {
+        e.preventDefault();
+        downloadPdfAsZip(pdfUrl, 'Guia_de_traslado_' + registro + '.pdf');
+    });
+});
+
+// Función para descargar el PDF dentro de un ZIP
+function downloadPdfAsZip(pdfUrl, fileName) {
+    // Crear una nueva instancia de JSZip
+    var zip = new JSZip();
+
+    // Descargar el archivo PDF
+    fetch(pdfUrl)
+        .then(response => response.blob())
+        .then(blob => {
+            // Añadir el archivo al ZIP
+            zip.file(fileName, blob);
+
+            // Generar el archivo ZIP
+            zip.generateAsync({ type: "blob" })
+                .then(function (zipBlob) {
+                    // Guardar el archivo ZIP usando FileSaver.js
+                    saveAs(zipBlob, fileName.replace('.pdf', '.zip'));
+                });
+        })
+        .catch(error => console.error('Error al descargar el PDF:', error));
+}
+
+/*// Reciben los datos del pdf
+$(document).on('click', '.pdf', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+    var pdfUrl = '../guia_de_translado/' + id; // Ruta del PDF
+
+    // Actualizar el iframe con el PDF
+    var iframe = $('#pdfViewerGuias');
+    iframe.attr('src', pdfUrl);
+
+    // Actualizar el título y subtítulo del modal
+    $("#titulo_modal_GUIAS").text("Guia de traslado");
+    $("#subtitulo_modal_GUIAS").text(registro);
+
+    // Actualizar el enlace de descarga
+    var descargarBtn = $('#descargarPdfBtn');
+    descargarBtn.attr('href', pdfUrl);
+    descargarBtn.attr('download', 'Guia_de_traslado_' + registro + '.pdf'); // Nombre del archivo a descargar
+});
+*/
+
+
 
   $(document).on('click', '.edit-record', function () {
     var id_guia = $(this).data('id');

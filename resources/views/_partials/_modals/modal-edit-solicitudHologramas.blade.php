@@ -45,7 +45,7 @@
 
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control" type="number" id="edit_cantidad_hologramas" name="edit_cantidad_hologramas" placeholder="Número de hologramas solicitados" readonly />
+                                <input class="form-control bg-light text-muted" type="number" id="edit_cantidad_hologramas" name="edit_cantidad_hologramas" placeholder="Número de hologramas solicitados" readonly style="pointer-events: none;" />
                                 <label for="edit_cantidad_hologramas">Número de hologramas solicitados</label>
                             </div>
                         </div>

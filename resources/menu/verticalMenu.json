@@ -95,9 +95,9 @@
           "slug": "laravel-example-user-management"
         },
         {
-          "url": "laravel/user-management",
+          "url": "/tipo",
           "name": "Tipo",
-          "slug": "laravel-example-user-management"
+          "slug": "tipo"
         }
       ]
     },

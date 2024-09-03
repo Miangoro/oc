@@ -200,8 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
             targets: 9,
             className: 'text-center',
             render: function (data, type, full, meta) {
-             
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['razon_social']} "></i>`;
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['razon_social']} "></i>`;
             }
           },
          {
@@ -213,12 +212,13 @@ document.addEventListener('DOMContentLoaded', function () {
            render: function (data, type, full, meta) {
              return (
                '<div class="d-flex align-items-center gap-50">' +
-                   `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#editCertificadoModal"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-                   `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_certificado']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-                 '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                 '<a href="' + userView + '" class="dropdown-item">View</a>' +
-                 '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-                 '</div>' +
+               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
+               '<div class="dropdown-menu dropdown-menu-end m-0">' +
+               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#editCertificadoModal" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+               `<a data-id="${full['id_certificado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
+               '<div class="dropdown-menu dropdown-menu-end m-0">' +
+               '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+               '</div>' +
                '</div>'
              );
            }
@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', function () {
            display: $.fn.dataTable.Responsive.display.modal({
              header: function (row) {
                var data = row.data();
-               return 'Detalles de ' + data['id_inspeccion'];
+               return 'Detalles de Cerificados de Instalaciones';
              }
            }),
            type: 'column',
@@ -569,69 +569,73 @@ document.addEventListener('DOMContentLoaded', function () {
     const fieldsAdded = new Set();
 
     function updateMaestroMezcaleroValidation() {
-        const selectedData = dictamenSelect.select2('data')[0];
-        const tipoDictamen = selectedData ? selectedData.element.dataset.tipoDictamen : '';
-
-        // Actualizar la visibilidad y validación del campo maestro_mezcalero
-        if (tipoDictamen === '1') {
-            maestroMezcaleroContainer.style.display = 'block';
-
-            if (!fieldsAdded.has('maestro_mezcalero')) {
-                try {
-                    validator.addField('maestro_mezcalero', {
-                        validators: {
-                            notEmpty: {
-                                message: 'El nombre del maestro mezcalero es obligatorio'
-                            }
-                        }
-                    });
-                    fieldsAdded.add('maestro_mezcalero'); 
-                } catch (error) {
-                    console.error('Error al añadir la validación del campo maestro_mezcalero:', error);
-                }
-            }
-
-            // Actualizar la visibilidad y validación del campo num_autorizacion
-            noAutorizacionContainer.style.display = 'block';
-
-            if (!fieldsAdded.has('num_autorizacion')) {
-                try {
-                    validator.addField('num_autorizacion', {
-                        validators: {
-                            notEmpty: {
-                                message: 'El número de autorización es obligatorio.'
-                            }
-                        }
-                    });
-                    fieldsAdded.add('num_autorizacion');
-                } catch (error) {
-                    console.error('Error al añadir la validación del campo num_autorizacion:', error);
-                }
-            }
-        } else {
-            maestroMezcaleroContainer.style.display = 'none';
-
-            if (fieldsAdded.has('maestro_mezcalero')) {
-                try {
-                    validator.removeField('maestro_mezcalero');
-                    fieldsAdded.delete('maestro_mezcalero'); 
-                } catch (error) {
-                    console.error('Error al eliminar la validación del campo maestro_mezcalero:', error);
-                }
-            }
-
-            noAutorizacionContainer.style.display = 'none';
-
-            if (fieldsAdded.has('num_autorizacion')) {
-                try {
-                    validator.removeField('num_autorizacion');
-                    fieldsAdded.delete('num_autorizacion');
-                } catch (error) {
-                    console.error('Error al eliminar la validación del campo num_autorizacion:', error);
-                }
-            }
-        }
-    }
+      const selectedData = dictamenSelect.select2('data')[0];
+      const tipoDictamen = selectedData ? selectedData.element.dataset.tipoDictamen : '';
+  
+      // Actualizar la visibilidad y validación del campo maestro_mezcalero
+      if (tipoDictamen === '1') {
+          maestroMezcaleroContainer.style.display = 'block';
+  
+          if (!fieldsAdded.has('maestro_mezcalero')) {
+              try {
+                  validator.addField('maestro_mezcalero', {
+                      validators: {
+                          notEmpty: {
+                              message: 'El nombre del maestro mezcalero es obligatorio'
+                          }
+                      }
+                  });
+                  fieldsAdded.add('maestro_mezcalero'); 
+              } catch (error) {
+                  console.error('Error al añadir la validación del campo maestro_mezcalero:', error);
+              }
+          }
+  
+          // Actualizar la visibilidad y validación del campo num_autorizacion
+          noAutorizacionContainer.style.display = 'block';
+  
+          if (!fieldsAdded.has('num_autorizacion')) {
+              try {
+                  validator.addField('num_autorizacion', {
+                      validators: {
+                          notEmpty: {
+                              message: 'El número de autorización es obligatorio.'
+                          },
+                          numeric: {
+                              message: 'El número de autorización debe ser numérico.'
+                          }
+                      }
+                  });
+                  fieldsAdded.add('num_autorizacion');
+              } catch (error) {
+                  console.error('Error al añadir la validación del campo num_autorizacion:', error);
+              }
+          }
+      } else {
+          maestroMezcaleroContainer.style.display = 'none';
+  
+          if (fieldsAdded.has('maestro_mezcalero')) {
+              try {
+                  validator.removeField('maestro_mezcalero');
+                  fieldsAdded.delete('maestro_mezcalero'); 
+              } catch (error) {
+                  console.error('Error al eliminar la validación del campo maestro_mezcalero:', error);
+              }
+          }
+  
+          noAutorizacionContainer.style.display = 'none';
+  
+          if (fieldsAdded.has('num_autorizacion')) {
+              try {
+                  validator.removeField('num_autorizacion');
+                  fieldsAdded.delete('num_autorizacion');
+              } catch (error) {
+                  console.error('Error al eliminar la validación del campo num_autorizacion:', error);
+              }
+          }
+      }
+  }
+  
 
     function updateDatepickerValidation() {
         $('#fecha_vigencia').on('change', function() {
@@ -702,7 +706,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-  // Editar
 // Editar
 $(document).ready(function() {
   const formEditCertificado = document.getElementById('editCertificadoForm');
@@ -744,22 +747,6 @@ $(document).ready(function() {
                   }
               }
           },
-          'maestro_mezcalero': {
-              validators: {
-                  stringLength: {
-                      max: 60,
-                      message: 'El nombre del maestro mezcalero es obligatorio.'
-                  }
-              }
-          },
-          'num_autorizacion': {
-              validators: {
-                  stringLength: {
-                      max: 60,
-                      message: 'El número de autorización es obligatorio.'
-                  }
-              }
-          }
       },
       plugins: {
           trigger: new FormValidation.plugins.Trigger(),
@@ -808,61 +795,63 @@ $(document).ready(function() {
   let isAutorizacionValidated = false;
 
   function updateVisibility(dictamenId, maestroMezcalero, numAutorizacion) {
-      const dictamenSelect = $('#edit_id_dictamen');
-      const maestroMezcaleroContainer = $('#edit_maestroMezcaleroContainer');
-      const autorizacionContainer = $('#edit_autorizacionContainer');
-      const tipoDictamen = dictamenSelect.find(`option[value="${dictamenId}"]`).data('tipo-dictamen');
+    const dictamenSelect = $('#edit_id_dictamen');
+    const maestroMezcaleroContainer = $('#edit_maestroMezcaleroContainer');
+    const autorizacionContainer = $('#edit_autorizacionContainer');
+    const tipoDictamen = dictamenSelect.find(`option[value="${dictamenId}"]`).data('tipo-dictamen');
 
-      // Update Maestro Mezcalero visibility and validation
-      if (tipoDictamen == '1') {
-          maestroMezcaleroContainer.show();
-          $('#edit_maestro_mezcalero').val(maestroMezcalero === null ? '' : maestroMezcalero);
+    if (tipoDictamen == '1') {
+        maestroMezcaleroContainer.show();
+        $('#edit_maestro_mezcalero').val(maestroMezcalero ? maestroMezcalero : '');
 
-          if (!isMaestroMezcaleroValidated) {
-              validatorEdit.addField('maestro_mezcalero', {
-                  validators: {
-                      notEmpty: {
-                          message: 'El nombre del maestro mezcalero es obligatorio.'
-                      }
-                  }
-              });
-              isMaestroMezcaleroValidated = true;
-          }
-      } else {
-          maestroMezcaleroContainer.hide();
-          $('#edit_maestro_mezcalero').val('');
+        if (!isMaestroMezcaleroValidated) {
+            validatorEdit.addField('maestro_mezcalero', {
+                validators: {
+                    notEmpty: {
+                        message: 'El nombre del maestro mezcalero es obligatorio.'
+                    }
+                }
+            });
+            isMaestroMezcaleroValidated = true;
+        }
+    } else {
+        maestroMezcaleroContainer.hide();
+        $('#edit_maestro_mezcalero').val('');
 
-          if (isMaestroMezcaleroValidated) {
-              validatorEdit.removeField('maestro_mezcalero');
-              isMaestroMezcaleroValidated = false;
-          }
-      }
+        if (isMaestroMezcaleroValidated) {
+            validatorEdit.removeField('maestro_mezcalero');
+            isMaestroMezcaleroValidated = false;
+        }
+    }
 
-      // Update Autorizacion visibility and validation
-      if (tipoDictamen == '2') { // Assuming tipoDictamen '2' requires the 'num_autorizacion'
-          autorizacionContainer.show();
-          $('#edit_num_autorizacion').val(numAutorizacion === null ? '' : numAutorizacion);
+    if (tipoDictamen == '1') { 
+        autorizacionContainer.show();
+        $('#edit_num_autorizacion').val(numAutorizacion ? numAutorizacion : '');
 
-          if (!isAutorizacionValidated) {
-              validatorEdit.addField('num_autorizacion', {
-                  validators: {
-                      notEmpty: {
-                          message: 'El número de autorización es obligatorio.'
-                      }
-                  }
-              });
-              isAutorizacionValidated = true;
-          }
-      } else {
-          autorizacionContainer.hide();
-          $('#edit_num_autorizacion').val('');
+        if (!isAutorizacionValidated) {
+            validatorEdit.addField('num_autorizacion', {
+                validators: {
+                    notEmpty: {
+                        message: 'El número de autorización es obligatorio.'
+                    },
+                    numeric: {
+                        message: 'El número de autorización debe ser numérico.'
+                    }
+                }
+            });
+            isAutorizacionValidated = true;
+        }
+    } else {
+        autorizacionContainer.hide();
+        $('#edit_num_autorizacion').val('');
 
-          if (isAutorizacionValidated) {
-              validatorEdit.removeField('num_autorizacion');
-              isAutorizacionValidated = false;
-          }
-      }
-  }
+        if (isAutorizacionValidated) {
+            validatorEdit.removeField('num_autorizacion');
+            isAutorizacionValidated = false;
+        }
+    }
+}
+
 
   $(document).on('click', '.edit-record', function() {
       var id_certificado = $(this).data('id');
@@ -928,43 +917,59 @@ $(document).ready(function() {
   });
 
   $('#editCertificadoModal').on('shown.bs.modal', function() {
-      const dictamenId = $('#edit_id_dictamen').val();
-      const maestroMezcalero = $('#edit_maestro_mezcalero').val();
-      const numAutorizacion = $('#edit_num_autorizacion').val();
-      updateVisibility(dictamenId, maestroMezcalero, numAutorizacion);
-  });
+    const dictamenId = $('#edit_id_dictamen').val();
+    const maestroMezcalero = $('#edit_maestro_mezcalero').val();
+    const numAutorizacion = $('#edit_num_autorizacion').val();
+    updateVisibility(dictamenId, maestroMezcalero, numAutorizacion);
+});
 });
 
-//Reciben los datos del pdf del dictamen
+// Reciben los datos del pdf del dictamen
 $(document).on('click', '.pdf', function () {
   var id = $(this).data('id');
-  
   var registro = $(this).data('registro');
-      var iframe = $('#pdfViewer');
+  var tipo = $(this).data('tipo');
 
-      var tipo = $(this).data('tipo');
-      
+  var tipo_dictamen = '';
+  var titulo = '';
 
-      if(tipo == 1 || tipo == 5){ // Productor
-        var tipo_dictamen = '../certificado_productor_mezcal/'+id;
-        var titulo = "Certificado de productor";
-      }
+  // Determinar la URL del PDF y el título basado en el tipo de dictamen
+  if (tipo == 1 || tipo == 5) { // Productor
+    tipo_dictamen = '../certificado_productor_mezcal/' + id;
+    titulo = "Certificado de productor";
+  } else if (tipo == 2) { // Envasador
+    tipo_dictamen = '../certificado_envasador_mezcal/' + id;
+    titulo = "Certificado de envasador";
+  } else if (tipo == 3 || tipo == 4) { // Comercializador
+    tipo_dictamen = '../certificado_comercializador/' + id;
+    titulo = "Certificado de comercializador";
+  }
 
-      if(tipo == 2){ // Envasador
-        var tipo_dictamen = '../certificado_envasador_mezcal/'+id;
-        var titulo = "Certificado de envasador";
-      }
+  // Mostrar el spinner mientras el PDF se está cargando
+  $('#loading-spinner').show();
+  $('#pdfViewerDictamen').hide();
 
-      if(tipo == 3 || tipo  == 4){ // Comercializador
-        var tipo_dictamen = '../certificado_comercializador/'+id;
-        var titulo = "Certificado de comercializador";
-      }
+  // Configurar el iframe y el título del modal
+  $('#pdfViewerDictamen').attr('src', tipo_dictamen);
+  $('#titulo_modal_Dictamen').text(titulo);
+  $('#subtitulo_modal_Dictamen').text(registro);
 
-      iframe.attr('src', tipo_dictamen);
+  // Configurar el botón para abrir el PDF en una nueva pestaña
+  var openPdfBtn = $('#openPdfBtnDictamen');
+  openPdfBtn.attr('href', tipo_dictamen);
+  openPdfBtn.show(); // Mostrar el botón
 
-      $("#titulo_modal").text(titulo);
-      $("#subtitulo_modal").text(registro);  
+  // Mostrar el modal
+  $('#mostrarPdfDictamen').modal('show');
 });
+
+// Maneja el evento de carga del iframe para ocultar el spinner
+$('#pdfViewerDictamen').on('load', function () {
+  // Ocultar el spinner cuando el PDF esté cargado
+  $('#loading-spinner').hide();
+  $('#pdfViewerDictamen').show();
+});
+
 
 
   //end

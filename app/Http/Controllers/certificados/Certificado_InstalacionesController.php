@@ -194,7 +194,6 @@ public function pdf_certificado_productor($id_certificado)
     $direccion_completa = $datos->dictamen->instalaciones->direccion_completa;
     $num_autorizacion = $datos->num_autorizacion;
     $num_dictamen = $datos->dictamen->num_dictamen;
-
     $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
     $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
     $fecha_vencimiento = Helpers::formatearFecha($datos->fecha_vencimiento);
