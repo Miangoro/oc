@@ -16,7 +16,7 @@
                         <input type="hidden" id="edit_id_dictamen" name="id_dictamen">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" id="edit_num_dictamen" name="num_dictamen"
+                                <input type="text" class="form-control" id="edit_num_dictamen" name="num_dictamen" autocomplete="off"
                                     placeholder="Número de dictamen">
                                 <label for="num_dictamen">Número de Dictamen</label>
                             </div>
@@ -70,33 +70,44 @@
                     <!-- Fila 3 -->
                     <div class="row mb-4">
                         <!-- Fecha de Emisión -->
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <input class="form-control datepicker" id="edit_fecha_emision" name="fecha_emision"
+                                <input class="form-control datepicker" id="edit_fecha_emision" name="fecha_emision" autocomplete="off"
                                     placeholder="yyyy-mm-dd">
                                 <label for="fecha_emision">Fecha de Emisión</label>
                             </div>
                         </div>
 
                         <!-- Fecha de Vigencia -->
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <input class="form-control datepicker" id="edit_fecha_vigencia" name="fecha_vigencia"
+                                <input class="form-control datepicker" id="edit_fecha_vigencia" name="fecha_vigencia" autocomplete="off"
                                     placeholder="yyyy-mm-dd">
                                 <label for="fecha_vigencia">Fecha de Vigencia</label>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="row mb-4">
                         <!-- Fecha de Servicio -->
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
-                                <input class="form-control datepicker" id="edit_fecha_servicio" name="fecha_servicio"
+                                <input class="form-control datepicker" id="edit_fecha_servicio" name="fecha_servicio" autocomplete="off"
                                     placeholder="yyyy-mm-dd">
                                 <label for="fecha_servicio">Fecha de Servicio</label>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline">
+                                <select  id="edit_id_firmante" name="id_firmante" class="select2 form-select">
+                                <option value="" disabled selected>Selecciona el nombre del firmante</option>
+                                @foreach ($inspectores as $inspector)
+                                    <option value="{{ $inspector->id }}">{{ $inspector->name }}</option>
+                                @endforeach
+                             </select>
+                                <label for="id_firmante">Nombre del inspector</label>
+                            </div>
+                        </div>
                     </div>
-
                     <div class="d-flex justify-content-end mt-3">
                         <button type="submit" class="btn btn-primary me-2">Registrar</button>
                         <button type="reset" class="btn btn-outline-secondary"

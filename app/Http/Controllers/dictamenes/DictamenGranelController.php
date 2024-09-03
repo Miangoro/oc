@@ -12,6 +12,7 @@ use App\Models\Documentacion_url;
 use App\Models\solicitudesModel;
 use App\Models\LotesGranel;
 use App\Models\Dictamen_Granel;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -24,10 +25,11 @@ class DictamenGranelController extends Controller
         // Obtener los datos necesarios
         $inspecciones = inspecciones::all();
         $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+        $inspectores = User::where('tipo', 2)->get(); // Obtener solo los usuarios con tipo '2' (inspectores)
         $lotesGranel = LotesGranel::all();
     
         // Pasar los datos a la vista
-        return view('dictamenes.dictamen_granel_view', compact('inspecciones', 'empresas', 'lotesGranel'));
+        return view('dictamenes.dictamen_granel_view', compact('inspecciones', 'empresas', 'lotesGranel', 'inspectores'));
     }
     
 
@@ -129,13 +131,14 @@ class DictamenGranelController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'num_dictamen' => 'required|string|max:70',
+            'num_dictamen' => 'required|string|max:100',
             'id_empresa' => 'required|exists:empresa,id_empresa',
             'id_inspeccion' => 'required|exists:inspecciones,id_inspeccion',
             'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
             'fecha_emision' => 'required|date',
             'fecha_vigencia' => 'required|date',
-            'fecha_servicio' => 'required|date'
+            'fecha_servicio' => 'required|date',
+            'id_firmante' => 'required|exists:users,id',
         ]);
         
         // Crear una nueva instancia del modelo Dictamen_Granel
@@ -147,6 +150,7 @@ class DictamenGranelController extends Controller
         $dictamen->fecha_emision = $validatedData['fecha_emision'];
         $dictamen->fecha_vigencia = $validatedData['fecha_vigencia'];
         $dictamen->fecha_servicio = $validatedData['fecha_servicio'];
+        $dictamen->id_firmante = $validatedData['id_firmante'];
         $dictamen->save();
         
         return response()->json([
@@ -184,7 +188,8 @@ class DictamenGranelController extends Controller
                 'id_lote_granel' => 'required|integer|exists:lotes_granel,id_lote_granel',
                 'fecha_emision' => 'required|date',
                 'fecha_vigencia' => 'required|date',
-                'fecha_servicio' => 'required|date'
+                'fecha_servicio' => 'required|date',
+                'id_firmante' => 'required|exists:users,id',
             ]);
     
             $dictamen = Dictamen_Granel::findOrFail($id_dictamen);
@@ -198,7 +203,9 @@ class DictamenGranelController extends Controller
                 'fecha_emision' => $validated['fecha_emision'],
                 'fecha_vigencia' => $validated['fecha_vigencia'],
                 'fecha_servicio' => $validated['fecha_servicio'],
+                'id_firmante' => $validated['id_firmante'],
             ]);
+            
     
             return response()->json([
                 'success' => true,
@@ -213,34 +220,34 @@ class DictamenGranelController extends Controller
     }
 
 
-public function dictamenDeCumplimientoGranel($id_dictamen)
-{
-    // Obtener los datos del dictamen específico
-    $data = Dictamen_Granel::find($id_dictamen);
+    public function dictamenDeCumplimientoGranel($id_dictamen)
+    {
+        // Obtener los datos del dictamen específico
+        $data = Dictamen_Granel::find($id_dictamen);
 
-    if (!$data) {
-        return abort(404, 'Dictamen no encontrado');
+        if (!$data) {
+            return abort(404, 'Dictamen no encontrado');
+        }
+
+        // Verifica qué valor tiene esta variable
+
+        $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
+        $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
+        $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
+
+        // Determinar si la marca de agua debe ser visible
+        $watermarkText = $data->estatus === 'Cancelado';
+
+        $pdf = Pdf::loadView('pdfs.DictamenDeCumplimientoMezcalGranel', [
+            'data' => $data,
+            'fecha_servicio' => $fecha_servicio,
+            'fecha_emision' => $fecha_emision,
+            'fecha_vigencia' => $fecha_vigencia,
+            'watermarkText' => $watermarkText,
+        ]);
+    
+        return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
     }
-
-    // Verifica qué valor tiene esta variable
-
-    $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
-    $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
-    $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
-
-    // Determinar si la marca de agua debe ser visible
-    $watermarkText = $data->estatus === 'Cancelado';
-
-    $pdf = Pdf::loadView('pdfs.DictamenDeCumplimientoMezcalGranel', [
-        'data' => $data,
-        'fecha_servicio' => $fecha_servicio,
-        'fecha_emision' => $fecha_emision,
-        'fecha_vigencia' => $fecha_vigencia,
-        'watermarkText' => $watermarkText,
-    ]);
-   
-    return $pdf->stream('F-UV-04-16 Ver 7 Dictamen de Cumplimiento NOM Mezcal a Granel.pdf');
-}
 
 
     public function foliofq($id_dictamen)
@@ -318,47 +325,55 @@ public function dictamenDeCumplimientoGranel($id_dictamen)
 
     /* reexpedir un dictamen */
     public function reexpedirDictamen(Request $request, $id_dictamen)
-{
-    DB::beginTransaction();
-    try {
-        // Validar los datos
-        $validatedData = $request->validate([
-            'num_dictamen' => 'required',
-            'id_empresa' => 'required',
-            'id_inspeccion' => 'required',
-            'id_lote_granel' => 'required',
-            'fecha_emision' => 'required|date',
-            'fecha_vigencia' => 'required|date',
-            'fecha_servicio' => 'required|date',
-            'observaciones' => 'required'
-        ]);
-
-        // Actualizar el dictamen original
-        $dictamenOriginal = Dictamen_Granel::findOrFail($id_dictamen);
-        $dictamenOriginal->update([
-            'estatus' => 'Cancelado',
-            'observaciones' => $request->input('observaciones')
-        ]);
-
-        // Crear un nuevo dictamen
-        $nuevoDictamen = $dictamenOriginal->replicate();
-        $nuevoDictamen->num_dictamen = $request->input('num_dictamen');
-        $nuevoDictamen->id_empresa = $request->input('id_empresa');
-        $nuevoDictamen->id_inspeccion = $request->input('id_inspeccion');
-        $nuevoDictamen->id_lote_granel = $request->input('id_lote_granel');
-        $nuevoDictamen->fecha_emision = $request->input('fecha_emision');
-        $nuevoDictamen->fecha_vigencia = $request->input('fecha_vigencia');
-        $nuevoDictamen->fecha_servicio = $request->input('fecha_servicio');
-        $nuevoDictamen->estatus = 'Emitido'; // o cualquier otro estado inicial
-        $nuevoDictamen->save();
-
-        DB::commit();
-        return response()->json(['message' => 'Dictamen reexpedido con éxito.']);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json(['message' => 'Error al reexpedir el dictamen.', 'error' => $e->getMessage()], 500);
+    {
+        DB::beginTransaction();
+        try {
+            // Validar los datos
+            $validatedData = $request->validate([
+                'num_dictamen' => 'required',
+                'id_empresa' => 'required',
+                'id_inspeccion' => 'required',
+                'id_lote_granel' => 'required',
+                'fecha_emision' => 'required|date',
+                'fecha_vigencia' => 'required|date',
+                'fecha_servicio' => 'required|date',
+                'id_firmante' => 'required',
+                'observaciones' => 'required',
+                'cancelar_reexpedir' => 'required'
+            ]);
+    
+            // Obtener el dictamen original
+            $dictamenOriginal = Dictamen_Granel::findOrFail($id_dictamen);
+    
+            // Actualizar el dictamen original con observaciones y estatus
+            $dictamenOriginal->update([
+                'estatus' => 'Cancelado',
+                'observaciones' => $request->input('observaciones')
+            ]);
+    
+            // Verificar la opción seleccionada
+            if ($request->input('cancelar_reexpedir') == '2') {  // Opción 2: Cancelar y reexpedir
+                // Crear un nuevo dictamen
+                $nuevoDictamen = $dictamenOriginal->replicate();
+                $nuevoDictamen->num_dictamen = $request->input('num_dictamen');
+                $nuevoDictamen->id_empresa = $request->input('id_empresa');
+                $nuevoDictamen->id_inspeccion = $request->input('id_inspeccion');
+                $nuevoDictamen->id_lote_granel = $request->input('id_lote_granel');
+                $nuevoDictamen->fecha_emision = $request->input('fecha_emision');
+                $nuevoDictamen->fecha_vigencia = $request->input('fecha_vigencia');
+                $nuevoDictamen->fecha_servicio = $request->input('fecha_servicio');
+                $nuevoDictamen->estatus = 'Emitido';
+                $nuevoDictamen->save();
+            }
+    
+            DB::commit();
+            return response()->json(['message' => 'Operación realizada con éxito.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Error al procesar la operación.', 'error' => $e->getMessage()], 500);
+        }
     }
-}
+    
 
 
 

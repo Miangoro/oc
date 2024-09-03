@@ -429,38 +429,38 @@ $(function () {
 
     $(document).on('click', '.ver-folio-fq', function (e) {
         e.preventDefault();
-    
+
         var idDictamen = $(this).data('id');
-    
+
         $.ajax({
             url: '/dictamenes/productos/' + idDictamen + '/foliofq',
             method: 'GET',
             success: function (response) {
                 console.log('Response:', response); // Verifica todo el objeto de respuesta
-    
+
                 if (response.success) {
                     var documentos = response.documentos;
                     var $tableBody = $('#documentosTableBody');
                     $tableBody.empty(); // Limpiar contenido previo
-    
+
                     // Mostrar ícono al archivo PDF si está disponible
                     var documentoOtroOrganismo = documentos.find(doc => doc.tipo.includes('Certificado de lote a granel'));
                     var nombre = documentoOtroOrganismo && documentoOtroOrganismo.nombre ? documentoOtroOrganismo.nombre : 'Sin nombre disponible';
-                    
+
                     if (documentoOtroOrganismo) {
                         $tableBody.append('<tr><td>Certificado de lote a granel:</td><td>' + nombre + '</td><td><a href="#" class="ver-pdf" data-url="../files/' + response.numeroCliente + '/' + documentoOtroOrganismo.url + '" data-title="' + nombre + '"><i class="ri-file-pdf-2-fill text-danger fs-1"></i></a></td></tr>');
                     } else {
                         $tableBody.append('<tr><td>Certificado de lote a granel:</td><td>Sin nombre disponible</td><td>No hay certificado disponible.</td></tr>');
                     }
-    
+
                     // Documentos certificados por OC CIDAM
                     var documentoCompletoAsignado = false;
                     var documentoAjusteAsignado = false;
-    
+
                     documentos.forEach(function (documento) {
                         var nombreDocumento = documento.nombre || 'Sin nombre disponible';
                         var documentoHtml = '<a href="#" class="ver-pdf" data-url="../files/' + response.numeroCliente + '/' + documento.url + '" data-title="' + nombreDocumento + '"><i class="ri-file-pdf-2-fill text-danger fs-1"></i></a>';
-    
+
                         if (documento.tipo.includes('Análisis completo') && !documentoCompletoAsignado) {
                             $tableBody.append('<tr><td>Certificado (Análisis Completo):</td><td>' + nombreDocumento + '</td><td>' + documentoHtml + '</td></tr>');
                             documentoCompletoAsignado = true;
@@ -470,14 +470,14 @@ $(function () {
                             documentoAjusteAsignado = true;
                         }
                     });
-    
+
                     if (!documentoCompletoAsignado) {
                         $tableBody.append('<tr><td>Certificado (Análisis Completo):</td><td>Sin nombre disponible</td><td>No hay certificado disponible.</td></tr>');
                     }
                     if (!documentoAjusteAsignado) {
                         $tableBody.append('<tr><td>Certificado (Ajuste de Grado):</td><td>Sin nombre disponible</td><td>No hay certificado disponible.</td></tr>');
                     }
-    
+
                     // Mostrar el modal de ver documentos
                     $('#modalVerDocumento').modal('show');
                 } else {
@@ -491,13 +491,11 @@ $(function () {
             }
         });
     });
-    
 
-    
+
+
     $(document).on('click', '.ver-pdf', function (e) {
         e.preventDefault();
-        console.log('Clicked ver-pdf');
-    
         var url = $(this).data('url'); // Obtén la URL del PDF desde el atributo data-url
         var title = $(this).data('title'); // Obtén el título del PDF desde el atributo data-title
         var iframe = $('#pdfViewerFolio');
@@ -507,34 +505,33 @@ $(function () {
         spinner.show();
         iframe.hide();
     
-        // Cargar el PDF en el iframe
-        iframe.attr('src', url);
-    
         // Actualizar el título del modal
         $("#titulo_modal_Folio").text(title);
     
         // Ocultar el modal de ver documentos antes de mostrar el modal del PDF
         $('#modalVerDocumento').modal('hide');
-        console.log('Hiding modalVerDocumento');
     
         // Mostrar el modal para el PDF
         $('#mostrarPdfFolio').modal('show');
-        console.log('Showing mostrarPdfFolio');
     
-        // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-        iframe.on('load', function () {
+        // Cargar el PDF en el iframe
+        iframe.attr('src', url);
+    
+        // Asegurarse de que el evento `load` del iframe está manejado correctamente
+        iframe.off('load').on('load', function () {
             spinner.hide();
             iframe.show();
-            console.log('PDF loaded');
         });
     
         // Reabrir el modal de ver documentos cuando se cierre el modal del PDF
         $('#mostrarPdfFolio').on('hidden.bs.modal', function () {
-            console.log('Hiding mostrarPdfFolio');
             $('#modalVerDocumento').modal('show');
         });
     });
     
+
+
+
 
 
 
@@ -708,6 +705,16 @@ $(function () {
                             }
                         }
                     }
+                },
+                'id_firmante': {
+                    validators: {
+                        notEmpty: {
+                            message: 'El nombre del firmante es obligatorio.',
+                            enable: function (field) {
+                                return !$(field).val();
+                            }
+                        }
+                    }
                 }
             },
             plugins: {
@@ -875,6 +882,16 @@ $(function () {
                             message: 'Ingresa una fecha válida (yyyy-mm-dd).'
                         }
                     }
+                },
+                'id_firmante': {
+                    validators: {
+                        notEmpty: {
+                            message: 'El nombre del firmante es obligatorio.',
+                            enable: function (field) {
+                                return !$(field).val();
+                            }
+                        }
+                    }
                 }
             },
             plugins: {
@@ -950,7 +967,6 @@ $(function () {
                 success: function (data) {
                     if (data.success) {
                         var dictamen = data.dictamen;
-
                         // Asignar valores a los campos del formulario
                         $('#edit_num_dictamen').val(dictamen.num_dictamen);
                         $('#edit_id_empresa').val(dictamen.id_empresa).trigger('change');
@@ -959,7 +975,7 @@ $(function () {
                         $('#edit_fecha_emision').val(dictamen.fecha_emision);
                         $('#edit_fecha_vigencia').val(dictamen.fecha_vigencia);
                         $('#edit_fecha_servicio').val(dictamen.fecha_servicio);
-
+                        $('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');
                         // Mostrar el modal
                         $('#modalEditDictamenGranel').modal('show');
                     } else {
@@ -1105,11 +1121,28 @@ $(function () {
                         }
                     }
                 },
+                id_firmante: {
+                    validators: {
+                        notEmpty: {
+                            message: 'El nombre del firmante es obligatorio.',
+                            enable: function (field) {
+                                return !$(field).val();
+                            }
+                        }
+                    }
+                },
                 observaciones: {
                     validators: {
                         notEmpty: {
                             message: 'El motivo de la cancelación es obligatoria.'
                         },
+                    }
+                },
+                cancelar_reexpedir: {
+                    validators: {
+                        notEmpty: {
+                            message: 'selecciona una opcion'
+                        }
                     }
                 }
             },
@@ -1175,7 +1208,7 @@ $(function () {
             });
         });
 
-        // Función del botón de editar para cargar los datos del dictamen
+        // Función del botón de reexpedir para cargar los datos del dictamen
         $(document).on('click', '.reexpedir-record', function () {
             var id_dictamen = $(this).data('id');
             $('#reexpedir_id_dictamen').val(id_dictamen);
@@ -1194,6 +1227,7 @@ $(function () {
                         $('#reexpedir_fecha_emision').val(dictamen.fecha_emision);
                         $('#reexpedir_fecha_vigencia').val(dictamen.fecha_vigencia);
                         $('#reexpedir_fecha_servicio').val(dictamen.fecha_servicio);
+                        $('#reexpedir_id_firmante').val(dictamen.id_firmante).trigger('change');
 
                         // Mostrar el modal
                         $('#modalReexpedirDictamenGranel').modal('show');

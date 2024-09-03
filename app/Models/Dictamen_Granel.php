@@ -19,7 +19,9 @@ class Dictamen_Granel extends Model
         'fecha_emision',
         'fecha_vigencia',
         'fecha_servicio',
-        'estatus'
+        'estatus',
+        'observaciones',
+        'id_firmante'
     ];
 
     public function inspeccion()
@@ -35,6 +37,10 @@ class Dictamen_Granel extends Model
     public function lote_granel()
     {
         return $this->belongsTo(LotesGranel::class, 'id_lote_granel');
+    }
+    public function inspectores()
+    {
+        return $this->belongsTo(User::class, 'id_firmante', 'id');
     }
   
 }

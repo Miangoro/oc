@@ -120,13 +120,14 @@
             font-size: 14px;
             padding: 5px;
             margin: 15px;
-            margin-top: 60px;
+            margin-top: 47px;
         }
 
         .contentt {
+            position: relative;
             padding: 0 20px;
             /* 0 para padding superior e inferior, 15px para padding izquierdo y derecho */
-            margin-top: 20px
+            margin-top: 35px
         }
 
         p {
@@ -146,7 +147,7 @@
         table.datos_empresa td {
             border: 2px solid #003300;
             /* Ajusta el color y grosor del borde */
-            padding: 3px;
+            padding: 2px;
             /* Opcional: agrega espacio dentro de las celdas */
         }
 
@@ -165,33 +166,32 @@
         {
         border: 2px solid #003300;
         /* Ajusta el color y grosor del borde */
-        padding: 3px;
+        padding: 2px;
         /* Opcional: agrega espacio dentro de las celdas */
         }
 
         .images-container {
             position: fixed;
-            display: flex;
             margin-top: -20px;
             width: 100%;
         }
 
         .textx1 {
-            bottom: 90px;
+            bottom: 82px;
             position: fixed;
             line-height: 1.2;
             font-family: Arial, Helvetica, Verdana;
         }
 
         .textx2 {
-            bottom: 78px;
+            bottom: 71px;
             position: fixed;
             line-height: 1.2;
             font-family: Arial, Helvetica, Verdana;
         }
 
         .textx3 {
-            bottom: 65px;
+            bottom: 60px;
             position: fixed;
             line-height: 1.2;
             font-family: Arial, Helvetica, Verdana;
@@ -207,7 +207,7 @@
             position: fixed;
             text-align: left;
             font-size: 8px;
-            bottom: 35px;
+            bottom: 30px;
             margin: 0;
             padding: 0;
         }
@@ -219,7 +219,7 @@
             padding: 0;
             position: fixed;
             right: 30px;
-            top: 838px;
+            top: 840px;
             font-family: 'Arial Negrita' !important;
         }
 
@@ -227,8 +227,8 @@
             height: auto;
             position: fixed;
             right: 0;
-            width: 230px;
-            top: -12px;
+            width: 225px;
+            top: -20px;
         }
 
         .pie {
@@ -302,8 +302,9 @@
             <tr>
                 <td style="color: #17365D; font-weight: bold;" rowspan="2">Dirección</td>
                 <td rowspan="2">
-                    Domicilio fiscal: {{ $data->empresa->domicilio_fiscal }}<br>
-                    Domicilio de instalaciones: {{ $data->inspeccion->solicitud->instalacion->direccion_completa }}
+                   <b>Domicilio fiscal:</b>  {{ $data->empresa->domicilio_fiscal }}<br>
+                   
+                    <b>Domicilio de instalaciones:</b> {{ $data->inspeccion->solicitud->instalacion->direccion_completa }}
 
                 </td>
                 <td style="color: #17365D; font-weight: bold; width: 18%;">RFC</td>
@@ -383,7 +384,7 @@
         <p class="textx1" style="font-size: 10px; margin: 1;">
             <strong>AUTORIZÓ</strong>
             <span style="margin-left: 50px;">
-                <strong>Gerente Técnico Sustituto de la Unidad de Inspección | BTG. Erik Antonio Mejía Vaca</strong>
+                <strong>Gerente Técnico Sustituto de la Unidad de Inspección | {{$data->inspectores->name ?? 'N/A'}}</strong>
             </span>
         </p>
 
