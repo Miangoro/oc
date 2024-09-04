@@ -23,7 +23,7 @@
                                     @if((string) $dictamen->tipo_dictamen === '1')
                                                 Productor
                                     @elseif((string) $dictamen->tipo_dictamen === '2')
-                                                Envasado
+                                                Envasador
                                     @elseif((string) $dictamen->tipo_dictamen === '3')
                                                 Comercializador
                                     @elseif((string) $dictamen->tipo_dictamen === '4')
