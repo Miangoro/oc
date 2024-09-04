@@ -403,7 +403,7 @@
                     autorizada que acepta o rechaza <br>
                     el plan
                 </td>
-                <td>PRISCILIANO <br>
+                <td style="width: 140px">PRISCILIANO <br>
                     MARTÍNEZ</td>
             </tr>
             <tr>
