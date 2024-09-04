@@ -13,6 +13,7 @@ class Certificados extends Model
 
     protected $fillable = [
         'id_dictamen',
+        'id_firmante',
         'id_empresa',
         'num_certificado',
         'fecha_vigencia',
@@ -26,4 +27,15 @@ class Certificados extends Model
         return $this->belongsTo(Dictamen_instalaciones::class, 'id_dictamen', 'id_dictamen');
     }
     
+    // Relación con el modelo User
+    public function firmante()
+    {
+        return $this->belongsTo(User::class, 'id_firmante', 'id');
+    }
+
+    // Relación con Empresa
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class, 'id_empresa', 'id');
+    }
 }

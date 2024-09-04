@@ -1,50 +1,5 @@
 'use strict';
 
-document.addEventListener('DOMContentLoaded', function () {
-  function updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer, noAutorizacionContainer) {
-      const selectedOption = dictamenSelect.options[dictamenSelect.selectedIndex];
-      const tipoDictamen = selectedOption ? selectedOption.getAttribute('data-tipo-dictamen') : '';
-
-      if (tipoDictamen === '1') {
-          maestroMezcaleroContainer.style.display = 'block';
-          noAutorizacionContainer.style.display = 'block';
-      } else {
-          maestroMezcaleroContainer.style.display = 'none';
-          noAutorizacionContainer.style.display = 'none';
-      }
-  }
-
-  function initializeAgregar() {
-      const dictamenSelect = document.getElementById('id_dictamen');
-      const maestroMezcaleroContainer = document.getElementById('maestroMezcaleroContainer');
-      const noAutorizacionContainer = document.getElementById('noAutorizacionContainer'); // Asegúrate de tener este ID en tu HTML
-
-      if (dictamenSelect && maestroMezcaleroContainer && noAutorizacionContainer) {
-          updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer, noAutorizacionContainer);
-          dictamenSelect.addEventListener('change', function () {
-              updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer, noAutorizacionContainer);
-          });
-      }
-  }
-
-  function initializeEdicion() {
-      const dictamenSelect = document.getElementById('edit_id_dictamen');
-      const maestroMezcaleroContainer = document.getElementById('edit_maestroMezcaleroContainer');
-      const noAutorizacionContainer = document.getElementById('edit_noAutorizacionContainer'); // Asegúrate de tener este ID en tu HTML
-
-      if (dictamenSelect && maestroMezcaleroContainer && noAutorizacionContainer) {
-          updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer, noAutorizacionContainer);
-          dictamenSelect.addEventListener('change', function () {
-              updateMaestroMezcaleroVisibility(dictamenSelect, maestroMezcaleroContainer, noAutorizacionContainer);
-          });
-      }
-  }
-
-  initializeAgregar();
-  initializeEdicion();
-});
-
-
  $(function () {
  
    var dt_user_table = $('.datatables-users'),
@@ -166,30 +121,37 @@ document.addEventListener('DOMContentLoaded', function () {
               var $num_servicio = full['num_certificado'];
               return '<span class="user-email">' + $num_servicio + '</span>';
             }
-          }, 
+          },
           {
             targets: 5,
+            render: function (data, type, full, meta) {
+              var $id_firmante = full['id_firmante'];
+              return '<span class="user-email">' + $id_firmante + '</span>';
+            }
+          }, 
+          {
+            targets: 6,
             render: function (data, type, full, meta) {
               var $maestro_mezcalero = full['maestro_mezcalero'] ?? 'N/A';
               return '<span class="user-email">' + $maestro_mezcalero + '</span>';
             }
           },
           {
-            targets: 6,
+            targets: 7,
             render: function (data, type, full, meta) {
               var $num_autorizacion = full['num_autorizacion'] ?? 'N/A';
               return '<span class="user-email">' + $num_autorizacion + '</span>';
             }
           },
           {
-            targets: 7,
+            targets: 8,
             render: function (data, type, full, meta) {
               var $fecha_vigencia = full['fecha_vigencia'];
               return '<span class="user-email">' + $fecha_vigencia + '</span>';
             }
           },
           {
-            targets: 8,
+            targets: 9,
             render: function (data, type, full, meta) {
               var $fecha_vencimiento = full['fecha_vencimiento'];
               return '<span class="user-email">' + $fecha_vencimiento + '</span>';
@@ -197,15 +159,15 @@ document.addEventListener('DOMContentLoaded', function () {
           },
           {
             // Abre el pdf del certificado
-            targets: 9,
+            targets: 10,
             className: 'text-center',
             render: function (data, type, full, meta) {
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['razon_social']} "></i>`;
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
             }
           },
          {
            // Actions
-           targets: 10,
+           targets: 11,
            title: 'Acciones',
            searchable: false,
            orderable: false,
@@ -425,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
                      '</tr>'
                  : '';
              }).join('');
- 
+             
              return data ? $('<table class="table"/><tbody />').append(data) : false;
            }
          }
@@ -488,7 +450,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   $(document).ready(function () {
-    // Inicialización de select2
+
     var dt_user_table = $('.datatables-users'),
         select2Elements = $('.select2'),
         userView = baseUrl + 'app/user/view/account';
@@ -507,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const formAddCertificado = document.getElementById('addCertificadoForm');
     const dictamenSelect = $('#id_dictamen');
     const maestroMezcaleroContainer = document.getElementById('maestroMezcaleroContainer');
-    const noAutorizacionContainer = document.getElementById('noAutorizacionContainer'); // Asegúrate de tener este contenedor en tu HTML
+    const noAutorizacionContainer = document.getElementById('noAutorizacionContainer');
 
     const validator = FormValidation.formValidation(formAddCertificado, {
         fields: {
@@ -518,6 +480,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             },
+            'id_firmante': {
+              validators: {
+                  notEmpty: {
+                      message: 'El nombre del firmante es obligatorio.'
+                  }
+              }
+          },
             'num_certificado': {
                 validators: {
                     notEmpty: {
@@ -572,7 +541,6 @@ document.addEventListener('DOMContentLoaded', function () {
       const selectedData = dictamenSelect.select2('data')[0];
       const tipoDictamen = selectedData ? selectedData.element.dataset.tipoDictamen : '';
   
-      // Actualizar la visibilidad y validación del campo maestro_mezcalero
       if (tipoDictamen === '1') {
           maestroMezcaleroContainer.style.display = 'block';
   
@@ -591,7 +559,6 @@ document.addEventListener('DOMContentLoaded', function () {
               }
           }
   
-          // Actualizar la visibilidad y validación del campo num_autorizacion
           noAutorizacionContainer.style.display = 'block';
   
           if (!fieldsAdded.has('num_autorizacion')) {
@@ -700,6 +667,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    //Validar select2
+    $('#id_dictamen, #id_firmante, #num_certificado').on('change', function() { 
+      validator.revalidateField($(this).attr('name'));
+  });
+  
+    $('#id_firmante, #num_certificado').on('change', function() {
+      validator.revalidateField($(this).attr('name'));
+  });
+
     dictamenSelect.on('change', updateMaestroMezcaleroValidation);
     updateMaestroMezcaleroValidation();
     updateDatepickerValidation();
@@ -718,6 +694,13 @@ $(document).ready(function() {
                   }
               }
           },
+          'id_firmante': {
+            validators: {
+                notEmpty: {
+                    message: 'El número de certificado es obligatorio.'
+                }
+            }
+        },
           'num_certificado': {
               validators: {
                   notEmpty: {
@@ -881,6 +864,7 @@ $(document).ready(function() {
               $('#edit_no_autorizacion').val(data.num_autorizacion);
               $('#edit_fecha_vigencia').val(data.fecha_vigencia);
               $('#edit_fecha_vencimiento').val(data.fecha_vencimiento);
+              $('#edit_id_firmante').val(data.id_firmante).trigger('change');
 
               updateVisibility(data.id_dictamen, data.maestro_mezcalero, data.num_autorizacion);
 
@@ -924,7 +908,6 @@ $(document).ready(function() {
 });
 });
 
-// Reciben los datos del pdf del dictamen
 $(document).on('click', '.pdf', function () {
   var id = $(this).data('id');
   var registro = $(this).data('registro');
@@ -933,7 +916,6 @@ $(document).on('click', '.pdf', function () {
   var tipo_dictamen = '';
   var titulo = '';
 
-  // Determinar la URL del PDF y el título basado en el tipo de dictamen
   if (tipo == 1 || tipo == 5) { // Productor
     tipo_dictamen = '../certificado_productor_mezcal/' + id;
     titulo = "Certificado de productor";
@@ -945,32 +927,24 @@ $(document).on('click', '.pdf', function () {
     titulo = "Certificado de comercializador";
   }
 
-  // Mostrar el spinner mientras el PDF se está cargando
   $('#loading-spinner').show();
   $('#pdfViewerDictamen').hide();
 
-  // Configurar el iframe y el título del modal
-  $('#pdfViewerDictamen').attr('src', tipo_dictamen);
   $('#titulo_modal_Dictamen').text(titulo);
   $('#subtitulo_modal_Dictamen').text(registro);
 
-  // Configurar el botón para abrir el PDF en una nueva pestaña
   var openPdfBtn = $('#openPdfBtnDictamen');
   openPdfBtn.attr('href', tipo_dictamen);
-  openPdfBtn.show(); // Mostrar el botón
+  openPdfBtn.show();
 
-  // Mostrar el modal
-  $('#mostrarPdfDictamen').modal('show');
+  $('#PdfDictamenIntalaciones').modal('show');
+  $('#pdfViewerDictamen').attr('src', tipo_dictamen);
 });
 
-// Maneja el evento de carga del iframe para ocultar el spinner
 $('#pdfViewerDictamen').on('load', function () {
-  // Ocultar el spinner cuando el PDF esté cargado
   $('#loading-spinner').hide();
   $('#pdfViewerDictamen').show();
 });
-
-
 
   //end
  });

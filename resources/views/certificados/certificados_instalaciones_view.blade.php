@@ -11,7 +11,8 @@
     'resources/assets/vendor/libs/@form-validation/form-validation.scss',
     'resources/assets/vendor/libs/animate-css/animate.scss',
     'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
-    'resources\assets\vendor\libs\bootstrap-datepicker\bootstrap-datepicker.scss'
+    'resources\assets\vendor\libs\bootstrap-datepicker\bootstrap-datepicker.scss',
+    'resources\assets\vendor\libs\spinkit\spinkit.scss'
     
 ])
 @endsection
@@ -34,10 +35,7 @@
 @section('page-script')
 @vite(['resources/js/certificados_instalaciones.js'])
 @endsection
-
-
 @section('content')
-<link rel="stylesheet" href="assets/vendor/libs/spinkit/spinkit.css" />
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- Users List Table -->
 <div class="card">
@@ -53,6 +51,7 @@
                     <th>Tipo de Certificado</th>
                     <th>No. Dictamen</th>
                     <th>No. Certificado</th>
+                    <th>Firmante</th>
                     <th>Maestro Mezcalero</th>
                     <th>No. Autorizacion</th>
                     <th>Fecha de Vigencia</th>
