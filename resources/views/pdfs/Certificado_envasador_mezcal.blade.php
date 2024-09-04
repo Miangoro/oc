@@ -253,7 +253,7 @@ de Noviembre de l994. así como sus subsecuentes modificaciones.</p>
 
 <div class="signature">
     <div class="signature-line"></div>
-    <div class="signature-name">M.S.LG. Eia Viviana Soto Barrlentos</div>
+    <div class="signature-name">{{ $nombre_firmante }}</div>
     <div class="signature-name">Gerente del Organismo Certificador CIDAM</div>
 </div>
 

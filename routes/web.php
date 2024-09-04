@@ -101,8 +101,6 @@ use App\Http\Controllers\cards\CardStatistics;
 use App\Http\Controllers\cards\CardAnalytics;
 use App\Http\Controllers\cards\CardGamifications;
 use App\Http\Controllers\cards\CardActions;
-use App\Http\Controllers\catalogo_marcas\catalogoMarcas;
-use App\Http\Controllers\catalogo_marcas\catalogoMarcasController;
 use App\Http\Controllers\user_interface\Accordion;
 use App\Http\Controllers\user_interface\Alerts;
 use App\Http\Controllers\user_interface\Badges;
@@ -438,6 +436,8 @@ Route::get('/inspeccion_geo_referenciacion', [CartaAsignacionController::class, 
 Route::get('/dictamen_cumplimiento_mezcal_granel', [CartaAsignacionController::class, 'dictamenDeCumplimientoGranel'])->name('dictamen-cumplimiento-granel');
 Route::get('/bitacora_revision_SCFI2016', [CartaAsignacionController::class, 'bitacora_revision_SCFI2016'])->name('bitacora_revision_SCFI2016');
 Route::get('/bitacora_revision_OCCIDAM', [CartaAsignacionController::class, 'botacora_revicionPersonalOCCIDAM'])->name('botacora_revicionPersonalOCCIDAM');
+Route::get('/plan_de_auditoria', [CartaAsignacionController::class, 'PlanDeAuditoria'])->name('PlanDeAuditoria');
+
 
 
 

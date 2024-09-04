@@ -85,19 +85,14 @@
       "slug": "laravel-example",
       "submenu": [
         {
-          "url": "laravel/user-management",
-          "name": "Nueva solicitud",
-          "slug": "laravel-example-user-management"
+          "url": "/tipo",
+          "name": "Nueva Solicitud",
+          "slug": "tipo"
         },
         {
           "url": "laravel/user-management",
           "name": "Historial",
           "slug": "laravel-example-user-management"
-        },
-        {
-          "url": "/tipo",
-          "name": "Tipo",
-          "slug": "tipo"
         }
       ]
     },

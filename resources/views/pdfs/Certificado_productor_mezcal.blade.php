@@ -239,7 +239,7 @@ indicadas a continuacion:</p>
 
 <p class="text"><strong>Maestro Mezcalero: </strong>{{ $maestro_mezcalero }}<br>
 <strong>Domicilio de la Unidad de Produccíón: </strong>{{  $direccion_completa }}<br>
-<strong>No. DeAutorización para el Uso de la Denominación de Origen Mezcal: </strong>{{ $num_autorizacion }}<br>
+<strong>No. De Autorización para el Uso de la Denominación de Origen Mezcal: </strong>{{ $num_autorizacion }}<br>
 <strong>No. De Dictamen de cumplimiento con la NOM:</strong>  {{ $num_dictamen}} <br>
 <strong>No. De Cliente ante el Organismo Certificador CIDAM A.C:</strong>  {{ $numero_cliente}}
 </p>
@@ -251,7 +251,7 @@ de Noviembre de L994, así como sus subsecuentes modificaciones.</p>
 
 <div class="signature">
     <div class="signature-line"></div>
-    <div class="signature-name">Q.F.B. Mayra Gutiérrez Romero</div>
+    <div class="signature-name">{{$nombre_firmante}}</div>
     <div class="signature-name">Gerente Técnico del Organismo Certificador ClDAM</div>
 </div>
 
