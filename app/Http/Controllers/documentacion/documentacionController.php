@@ -311,11 +311,11 @@ class documentacionController extends Controller
             foreach ($marcas as $indexII => $marca) {
               $contenidoMarcas =  $contenidoMarcas . '
            
-            <div class="table-responsive text-nowrap col-md-6 mb-5 ">
+            <div class="table-responsive text-nowrap col-md-12 mb-5 ">
                   <table class="table table-sm table-bordered">
                     <thead class="bg-secondary text-white">
                       <tr>
-                        <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3">Marca: <b>' . $marca->marca . '</b></th>
+                        <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-4"><span class="fs-6">Marca:</span><br> <b class="badge bg-info">' . $marca->marca . '</b></th>
                       </tr>
                       <tr>
                         <th class="bg-transparent border-bottom">#</th>
@@ -339,7 +339,7 @@ class documentacionController extends Controller
       foreach ($instalaciones as $indexI => $instalacion) {
         $contenidoInstalaciones = $contenidoInstalaciones . '
      
-      <div class="table-responsive text-nowrap col-md-6 mb-5 ">
+      <div class="table-responsive text-nowrap col-md-12 mb-5 ">
             <table class="table table-sm table-bordered">
               <thead class="bg-secondary text-white">
                 <tr>

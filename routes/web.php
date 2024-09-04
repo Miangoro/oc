@@ -190,6 +190,7 @@ use App\Http\Controllers\dictamenes\DictamenGranelController;;
 use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\inspecciones\inspeccionesController;
+use App\Http\Controllers\solicitudes\solicitudesController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -667,3 +668,6 @@ Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 
 
 //Tipo
 Route::get('/tipo', [TipoController::class, 'UserManagement'])->name('tipo');
+
+//Módulo de solicitudes
+Route::get('/solicitudes', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
