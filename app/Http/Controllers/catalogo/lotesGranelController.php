@@ -233,14 +233,20 @@ class LotesGranelController extends Controller
         $lote->fecha_emision = $validatedData['fecha_emision'] ?? null;
         $lote->fecha_vigencia = $validatedData['fecha_vigencia'] ?? null;
     
-        $folio_fq_Completo = $validatedData['folio_fq_completo'] ?? '----';
-        $folio_fq_ajuste = $validatedData['folio_fq_ajuste'] ?? '----';
-    
-        if (!empty($folio_fq_ajuste)) {
-            $folio_fq_Completo .= ' y ' . $folio_fq_ajuste;
+        $folio_fq_Completo = $validatedData['folio_fq_completo'] ?? ' ';
+        $folio_fq_ajuste = $validatedData['folio_fq_ajuste'] ?? ' ';
+        
+        // Verificar si ambos campos son espacios o vacíos
+        if (trim($folio_fq_Completo) === '' && trim($folio_fq_ajuste) === '') {
+            $lote->folio_fq = 'Sin FQ'; // Asignar 'Sin FQ' si ambos están vacíos
+        } else {
+            // Concatenar los valores si alguno tiene contenido
+            if (!empty($folio_fq_ajuste)) {
+                $folio_fq_Completo .= ' ' . $folio_fq_ajuste;
+            }
+            $lote->folio_fq = $folio_fq_Completo;
         }
-        $lote->folio_fq = $folio_fq_Completo;
-    
+        
         // Guardar el nuevo lote en la base de datos
         $lote->save();
     
@@ -264,7 +270,6 @@ class LotesGranelController extends Controller
                 $folio_fq = $index == 0 && $request->id_documento[$index] == 58 
                     ? $request->folio_fq_completo 
                     : $request->folio_fq_ajuste;
-        
                 $tipo_analisis = $request->tipo_analisis[$index] ?? '';
                 
                 // Generar un nombre único para el archivo
@@ -282,15 +287,11 @@ class LotesGranelController extends Controller
                 $documentacion_url->save();
             }
         }
-        
-    
         // Retornar una respuesta
         return response()->json([
             'success' => true,
             'message' => 'Lote registrado exitosamente',
         ]);
-
-        
     }
     
     
