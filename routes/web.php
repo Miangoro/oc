@@ -101,8 +101,6 @@ use App\Http\Controllers\cards\CardStatistics;
 use App\Http\Controllers\cards\CardAnalytics;
 use App\Http\Controllers\cards\CardGamifications;
 use App\Http\Controllers\cards\CardActions;
-use App\Http\Controllers\catalogo_marcas\catalogoMarcas;
-use App\Http\Controllers\catalogo_marcas\catalogoMarcasController;
 use App\Http\Controllers\user_interface\Accordion;
 use App\Http\Controllers\user_interface\Alerts;
 use App\Http\Controllers\user_interface\Badges;
