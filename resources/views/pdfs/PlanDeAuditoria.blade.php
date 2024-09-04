@@ -310,8 +310,8 @@
                 <td class="leftLetter">Revisión documental in situ e inspección de instalaciones.</td>
             </tr>
             <tr>
-                <td class="letra-fondo">Criterios de evaluación:</td>
-                <td class="leftLetter">NORMA OFICIAL MEXICANA NOM-070-SCFI-2016 <br>
+                <td class="letra-fondo no-padding-up-down">Criterios de evaluación:</td>
+                <td class="leftLetter no-padding-up-down">NORMA OFICIAL MEXICANA NOM-070-SCFI-2016 <br>
                     NORMA OFICIAL MEXICANA NOM-251-SSA1-2009</td>
             </tr>
             <tr>
@@ -320,7 +320,7 @@
             </tr>
         </table>
         <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" class="background-img" >
-        <footer style="text-align: center; font-size: 7px; margin-top: 165px; color: #71777c; margin-right: 50px">
+        <footer style="text-align: center; font-size: 7px; margin-top: 175px; color: #71777c; margin-right: 50px">
             Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
             puede <br>            
             ser distribuido externamente sin la autorización escrita del Director Ejecutivo
