@@ -316,12 +316,12 @@
             </tr>
             <tr>
                 <td class="letra-fondo">Otros (indique):</td>
-                <td>- -</td>
+                <td>&nbsp;</td>
             </tr>
         </table>
         <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" class="background-img" style="position: absolute">
 
-        <footer style="text-align: center; font-size: 7px; margin-top: 125px; color: #71777c; margin-right: 50px">
+        <footer style="text-align: center; font-size: 7px; margin-top: 169px; color: #71777c; margin-right: 50px">
             Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
             puede <br>            
             ser distribuido externamente sin la autorización escrita del Director Ejecutivo
