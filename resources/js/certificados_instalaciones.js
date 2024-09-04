@@ -667,6 +667,15 @@
         });
     });
 
+    //Validar select2
+    $('#id_dictamen, #id_firmante, #num_certificado').on('change', function() { 
+      validator.revalidateField($(this).attr('name'));
+  });
+  
+    $('#id_firmante, #num_certificado').on('change', function() {
+      validator.revalidateField($(this).attr('name'));
+  });
+
     dictamenSelect.on('change', updateMaestroMezcaleroValidation);
     updateMaestroMezcaleroValidation();
     updateDatepickerValidation();
