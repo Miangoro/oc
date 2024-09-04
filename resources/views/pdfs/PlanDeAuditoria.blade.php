@@ -316,31 +316,27 @@
             </tr>
             <tr>
                 <td class="letra-fondo">Otros (indique):</td>
-                <td>&nbsp;</td>
+                <td>- -</td>
             </tr>
         </table>
-        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" class="background-img" style="position: absolute">
-
-        <footer style="text-align: center; font-size: 7px; margin-top: 169px; color: #71777c; margin-right: 50px">
+        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" class="background-img" >
+        <footer style="text-align: center; font-size: 7px; margin-top: 165px; color: #71777c; margin-right: 50px">
             Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
             puede <br>            
             ser distribuido externamente sin la autorización escrita del Director Ejecutivo
 
         </footer>
-
-
-
         <div class="page-break"></div>
         <div class="img-background"></div>
 
         <div class="header">
             <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
-            <div style="padding-right: 20px; position: absolute">Plan de auditoría de esquema de certificación NOM-070-SCFI-2016
+            <div style="padding-right: 20px">Plan de auditoría de esquema de certificación NOM-070-SCFI-2016
                 F7.1-01-13<br>Edición 2 Entrada en Vigor: 08/03/2023
                 <br>_______________________________________________________________________________________
             </div>
         </div>
-        <div style="margin-top: 50px"></div>
+        <div style="height: 30px"></div>
         <table>
             <tr>
                 <td class="letra-fondo" style="font-size: 14px" colspan="3">5. DATOS DEL GRUPO EVALUADOR
@@ -425,7 +421,7 @@
             </tr>
         </table>
         <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" class="background-img" style="position: absolute">
-        <footer style="text-align: center; font-size: 7px; margin-top: 355px; color: #71777c; margin-right: 50px">
+        <footer style="text-align: center; font-size: 7px; margin-top: 315px; color: #71777c; margin-right: 50px">
             Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
             puede <br>            
             ser distribuido externamente sin la autorización escrita del Director Ejecutivo
