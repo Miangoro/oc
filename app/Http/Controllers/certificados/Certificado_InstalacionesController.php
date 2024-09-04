@@ -75,10 +75,10 @@ class Certificado_InstalacionesController extends Controller
                 'num_autorizacion' => $certificado->num_autorizacion ?? 'N/A',
                 'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
                 'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
-                'maestro_mezcalero' => $certificado->maestro_mezcalero,
-                'num_dictamen' => $certificado->dictamen->num_dictamen ?? 'N/A',
+                'maestro_mezcalero' => $certificado->maestro_mezcalero ?? 'N/A',
+                'num_dictamen' => $certificado->dictamen->num_dictamen,
                 'tipo_dictamen' => $certificado->dictamen->tipo_dictamen,
-                'id_firmante' => $certificado->firmante->name ?? 'N/A', // Cambiado a nombre del firmante
+                'id_firmante' => $certificado->firmante->name, 
             ];
         });
     
