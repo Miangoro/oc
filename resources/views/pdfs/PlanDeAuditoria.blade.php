@@ -272,7 +272,7 @@
             </tr>
             <tr>
                 <td class="letra-fondo" style="width: 150px">Información adicional:</td>
-                <td  style="width: 220px">- -</td>
+                <td  style="width: 220px; color: red">- -</td>
                 <td class="letra-fondo">Fecha de la <br>
                     auditoría:</td>
                 <td class="leftLetter">02 de Septiembre del <br>
@@ -290,7 +290,7 @@
             </tr>
             <tr>
                 <td class="letra-fondo">País destino del producto:</td>
-                <td>- -</td>
+                <td style="color: red">- -</td>
             </tr>
 
         </table>
@@ -316,7 +316,7 @@
             </tr>
             <tr>
                 <td class="letra-fondo">Otros (indique):</td>
-                <td>- -</td>
+                <td style="color: red">&nbsp;</td>
             </tr>
         </table>
         <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" class="background-img" >
