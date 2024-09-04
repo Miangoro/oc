@@ -85,9 +85,9 @@
       "slug": "laravel-example",
       "submenu": [
         {
-          "url": "laravel/user-management",
-          "name": "Nueva solicitud",
-          "slug": "laravel-example-user-management"
+          "url": "dictamenes/instalaciones",
+          "name": "Nueva Solicitud",
+          "slug": "dictamenes-instalaciones"
         },
         {
           "url": "laravel/user-management",
