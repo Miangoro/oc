@@ -181,7 +181,7 @@
         .img-background {
             position: absolute;
             top: 400px;
-            left: -390px;
+            left: -385px;
             width: 780px;
             height: 650px;
             z-index: -1;
@@ -189,7 +189,7 @@
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
-            opacity: 0.3;
+            opacity: 0.2;
         }
 
         .page-break {
@@ -336,7 +336,7 @@
                 <br>_______________________________________________________________________________________
             </div>
         </div>
-        <div style="height: 30px"></div>
+        <div style="height: 40px"></div>
         <table>
             <tr>
                 <td class="letra-fondo" style="font-size: 14px" colspan="3">5. DATOS DEL GRUPO EVALUADOR
