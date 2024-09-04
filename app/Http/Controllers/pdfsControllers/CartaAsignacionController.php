@@ -99,7 +99,7 @@ class CartaAsignacionController extends Controller
     }
 
     //Guias de translado
-/*     public function guiasTranslado()
+    /*     public function guiasTranslado()
     {
         $pdf = Pdf::loadView('pdfs.GuiaDeTranslado');
         return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
@@ -117,7 +117,7 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.Certificado_comercializador');
         return $pdf->stream('Certificado de comercializador.pdf');
     }
-    
+
     public function Certificadoenv()
     {
         $pdf = Pdf::loadView('pdfs.Certificado_envasador_mezcal');
@@ -152,7 +152,7 @@ class CartaAsignacionController extends Controller
     }
 
     //PDF de solicitud de hologramas
-/*     public function solicitudHologramas()
+    /*     public function solicitudHologramas()
     {
         $pdf = Pdf::loadView('pdfs.solicitudDeHologramas');
         return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
@@ -160,15 +160,15 @@ class CartaAsignacionController extends Controller
 
     public function InspeccionGeoReferenciacion()
     {
-    $pdf = Pdf::loadView('pdfs.inspeccion_geo_referenciacion');
-/*     $pdf->setPaper('A4', 'portrait');
+        $pdf = Pdf::loadView('pdfs.inspeccion_geo_referenciacion');
+        /*     $pdf->setPaper('A4', 'portrait');
     $pdf->render();
 
     // Añadir script de página después de renderizar
     $pdf->getDomPDF()->getCanvas()->page_script(function ($pageNumber, $pageCount, $canvas, $fontMetrics) {
         $canvas->text(520, 820, "Página $pageNumber de $pageCount", $fontMetrics->get_font("Arial", "normal"), 12);
     }); */
-    return $pdf->stream('F-UV-21-02 Inspección para la geo-referenciación de los predios de maguey o agave Ed. 6 Vigente.pdf');
+        return $pdf->stream('F-UV-21-02 Inspección para la geo-referenciación de los predios de maguey o agave Ed. 6 Vigente.pdf');
     }
 
     public function dictamenDeCumplimientoGranel()
@@ -210,4 +210,12 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('NOM-070-SCFI-2016 Ed. 5.pdf');
     }
 
+
+
+    //Plan de auditoria
+    public function PlanDeAuditoria()
+    {
+        $pdf = Pdf::loadView('pdfs.PlanDeAuditoria');
+        return $pdf->stream('Plan de auditoría de esquema de certificación F7.1-01-13.pdf');
+    }
 }
