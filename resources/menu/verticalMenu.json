@@ -85,19 +85,14 @@
       "slug": "laravel-example",
       "submenu": [
         {
-          "url": "dictamenes/instalaciones",
+          "url": "/tipo",
           "name": "Nueva Solicitud",
-          "slug": "dictamenes-instalaciones"
+          "slug": "tipo"
         },
         {
           "url": "laravel/user-management",
           "name": "Historial",
           "slug": "laravel-example-user-management"
-        },
-        {
-          "url": "/tipo",
-          "name": "Tipo",
-          "slug": "tipo"
         }
       ]
     },
