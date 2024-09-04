@@ -18,19 +18,29 @@
                                 <option value="{{ $dictamen->id_dictamen }}" data-tipo-dictamen="{{ $dictamen->tipo_dictamen }}">
                                     {{ $dictamen->num_dictamen }} - 
                                     @if((string) $dictamen->tipo_dictamen === '1')
-                                        <strong>Productor</strong>
+                                                Productor
                                     @elseif((string) $dictamen->tipo_dictamen === '2')
-                                        <strong>Envasador</strong>
+                                                Envasador
                                     @elseif((string) $dictamen->tipo_dictamen === '3')
-                                        <strong>Comercializador</strong>
+                                                Comercializador
                                     @elseif((string) $dictamen->tipo_dictamen === '4')
-                                        <strong>Almacén y bodega</strong>
+                                                Almacén y bodega
                                     @elseif((string) $dictamen->tipo_dictamen === '5')
-                                        <strong>Área de maduración</strong>
+                                                Área de maduración
                                     @else
                                         {{ $dictamen->tipo_dictamen }}
                                     @endif
                                 </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Firmante -->
+                    <div class="form-floating form-floating-outline mb-3">
+                        <select class="select2 form-select" id="id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
+                            <option value="" disabled selected>Seleccione un firmante</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
                     </div>
