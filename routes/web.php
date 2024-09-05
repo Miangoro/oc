@@ -187,6 +187,7 @@ use App\Http\Controllers\dictamenes\InstalacionesController;
 use App\Http\Controllers\dictamenes\DictamenGranelController;;
 use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
+use App\Http\Controllers\catalogo\catalagoEquiposController;
 use App\Http\Controllers\inspecciones\inspeccionesController;
 
 // Main Page Route
@@ -640,6 +641,14 @@ Route::get('/orden_de_servicio/{id_inspeccion}', [inspeccionesController::class,
 //Hologramas - solicitud hologramas
 Route::get('/hologramas/solicitud', [solicitudHolograma::class, 'UserManagement'])->name('hologramas-solicitud');
 Route::resource('/hologramas-list', solicitudHolograma::class);
+Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
+Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
+Route::post('/solicitud_holograma/update/', [solicitudHolograma::class, 'update']);
+Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSolicitudHolograma'])->name('solicitudDeHologramas');
+Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2']);
+Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
+Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
+Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
 
 //Certificados Instalaciones
 Route::get('certificados/instalaciones', [Certificado_InstalacionesController::class, 'UserManagement'])->name('certificados-instalaciones');
@@ -655,15 +664,11 @@ Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_Instal
 
 Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 
-//solicitud hologrammas
-Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
-Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
-Route::post('/solicitud_holograma/update/', [solicitudHolograma::class, 'update']);
-Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSolicitudHolograma'])->name('solicitudDeHologramas');
-Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2']);
-Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
-Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
-Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
+//catalago equipos
+Route::get('/catalogo/equipos', [catalagoEquiposController::class, 'UserManagement'])->name('catalago-equipos');
+Route::resource('/equipos-list', catalagoEquiposController::class);
+Route::post('/equipos/store', [catalagoEquiposController::class, 'store'])->name('categorias.store');
+
 
 //Tipo
 Route::get('/tipo', [TipoController::class, 'UserManagement'])->name('tipo');

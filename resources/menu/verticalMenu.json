@@ -175,6 +175,11 @@
           "url": "/documentos",
           "name": "Documentacion",
           "slug": "catalogo-documentos"
+        },
+        {
+          "url": "/catalogo/equipos",
+          "name": "Equipos",
+          "slug": "catalago-equipos"
         }
       ]
     },
