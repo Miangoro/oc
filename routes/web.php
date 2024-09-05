@@ -447,6 +447,8 @@ Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'
 Route::get('/Etiqueta-Muestra', [CartaAsignacionController::class, 'Etiqueta_muestra'])->name('Etiqueta-Muestra');
 Route::get('/Etiqueta-Barrica', [CartaAsignacionController::class, 'Etiqueta_Barrica'])->name('Etiqueta-Barrica');
 
+Route::get('/Pre-certificado', [CartaAsignacionController::class, 'PreCertificado'])->name('Pre-certificado');
+
 Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion');/*  */
 
 //Certificados de instalaciones
@@ -673,5 +675,4 @@ Route::post('/equipos-list/update', [catalagoEquiposController::class, 'update']
 
 //Tipo
 Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');
-// En web.php o api.php, dependiendo de cómo estés organizando las rutas
 Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
