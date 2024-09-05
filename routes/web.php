@@ -189,6 +189,8 @@ use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\catalogo\catalagoEquiposController;
 use App\Http\Controllers\inspecciones\inspeccionesController;
+use App\Http\Controllers\pdf_llenado\PdfController;
+
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -437,7 +439,7 @@ Route::get('/dictamen_cumplimiento_mezcal_granel', [CartaAsignacionController::c
 Route::get('/bitacora_revision_SCFI2016', [CartaAsignacionController::class, 'bitacora_revision_SCFI2016'])->name('bitacora_revision_SCFI2016');
 Route::get('/bitacora_revision_OCCIDAM', [CartaAsignacionController::class, 'botacora_revicionPersonalOCCIDAM'])->name('botacora_revicionPersonalOCCIDAM');
 Route::get('/plan_de_auditoria', [CartaAsignacionController::class, 'PlanDeAuditoria'])->name('PlanDeAuditoria');
-
+Route::get('/generate-pdf', [PdfController::class, 'generatePdf']);
 
 
 
