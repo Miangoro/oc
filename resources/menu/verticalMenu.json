@@ -85,9 +85,9 @@
       "slug": "laravel-example",
       "submenu": [
         {
-          "url": "/tipo",
+          "url": "/solicitudes",
           "name": "Nueva Solicitud",
-          "slug": "tipo"
+          "slug": "solicitudes-tipo"
         },
         {
           "url": "laravel/user-management",
@@ -175,6 +175,11 @@
           "url": "/documentos",
           "name": "Documentacion",
           "slug": "catalogo-documentos"
+        },
+        {
+          "url": "/catalogo/equipos",
+          "name": "Equipos",
+          "slug": "catalago-equipos"
         }
       ]
     },
