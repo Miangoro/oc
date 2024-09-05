@@ -411,6 +411,65 @@ public function update(Request $request)
         // Generar y devolver el PDF
         return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
     }
+<<<<<<< HEAD
+=======
+
+    public function verificarFolios(Request $request)
+{
+    $folio_inicial = $request->input('folio_inicial');
+    $folio_final = $request->input('folio_final');
+    $id_solicitud = $request->input('id_solicitud');
+
+    // Obtener el rango de folios de la solicitud
+    $solicitud = ModelsSolicitudHolograma::where('id_solicitud', $id_solicitud)->first();
+
+    if (!$solicitud) {
+        return response()->json(['error' => 'La solicitud no existe.'], 400);
+    }
+
+    // Validar que el rango esté dentro del rango de la solicitud
+    if ($folio_inicial < $solicitud->folio_inicial || $folio_final > $solicitud->folio_final) {
+        return response()->json(['error' => 'El rango de folios está fuera del rango permitido por la solicitud.'], 400);
+    }
+        // ** Segunda Consulta: Verificar que el rango de folios no se solape con rangos existentes **
+        $rangoExistente = activarHologramasModelo::where(function($query) use ($folio_inicial, $folio_final) {
+            // Verificar si el nuevo rango se solapa con algún rango existente
+            $query->where('folio_inicial', '<=', $folio_final)
+                  ->where('folio_final', '>=', $folio_inicial);
+        })->where('id_solicitud', $id_solicitud)->exists();
+
+    
+    // ** Tercera Consulta: Verificar que el nuevo rango no envuelva a los rangos existentes **
+    $rangoEnvolvente = activarHologramasModelo::where(function($query) use ($folio_inicial, $folio_final) {
+        // Verificar si el nuevo rango envuelve algún rango existente
+        $query->where('folio_inicial', '>=', $folio_inicial)
+              ->where('folio_final', '<=', $folio_final);
+    })->where('id_solicitud', $id_solicitud)->exists();
+    
+
+    
+    /*$sql = $query->toSql();
+    $bindings = $query->getBindings();
+    $rangoExistente = $query->exists();
+
+    Log::info('Consulta SQL: ' . $sql);
+    Log::info('Parámetros: ', $bindings);*/
+
+    if ($rangoEnvolvente) {
+        return response()->json(['error' => 'El rango de folios no puede envolver a otro rango ya activado.'], 400);
+    }
+
+    if ($rangoExistente) {
+        return response()->json(['error' => 'Este rango de folios ya está activado.'],400);
+    }
+
+    return response()->json(['success' => 'El rango de folios está disponible.']);
+}
+
+
+
+
+>>>>>>> 3259878acd68dcb124d4d5aede440bcd1e22e0b6
 }
 
 

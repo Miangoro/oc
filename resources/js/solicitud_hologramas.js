@@ -1011,6 +1011,45 @@ $(function () {
   });
 
 
+  $(document).ready(function() {
+    $('#folio_inicial, #folio_final').on('input', function() {
+        var folioInicial = $('#folio_inicial').val();
+        var folioFinal = $('#folio_final').val();
+     
+        var id_solicitud = $('#id_solicitudActivacion').val();
+       
+       
+        // Solo ejecutar si ambos campos tienen valor
+        if (folioInicial && folioFinal) {
+            $.ajax({
+                url: '/verificar-folios',
+                type: 'POST',
+                data: {
+                
+                    folio_inicial: folioInicial,
+                    folio_final: folioFinal,
+                    id_solicitud: id_solicitud
+                   
+                },
+                success: function(response) {
+                  $("#mensaje").text(response.success || 'Rango de folios disponible.');
+                  $("#mensaje").attr('class', 'alert alert-solid-success'); 
+                  $("#mensaje").show();
+                  console.log(response);
+                  
+                },
+                error: function(xhr) {
+                  $("#mensaje").text(xhr.responseJSON.error || 'Ocurrió un error.');  
+                  $("#mensaje").attr('class', 'alert alert-solid-danger'); 
+                  $("#mensaje").show();
+                  console.log(xhr.responseText); 
+
+                }
+            });
+        }
+    });
+});
+
   $('#asignarHologramaForm').submit(function (e) {
     e.preventDefault();
 

@@ -679,9 +679,13 @@ Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 
 Route::post('/verificar-folios', [solicitudHolograma::class, 'verificarFolios']);
 
 //Tipo
-Route::get('/tipo', [TipoController::class, 'UserManagement'])->name('tipo');
+Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');
+Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
 
 //Módulo de solicitudes
+
+Route::get('/solicitudes_historial', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
+
 Route::get('/solicitudes', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
 
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
@@ -696,3 +700,4 @@ Route::post('/equipos-list/update', [catalagoEquiposController::class, 'update']
 //Tipo
 Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');
 Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
+
