@@ -20,78 +20,27 @@ $(function () {
         }
     });
 
-
-    const tieneCoordenadasSelect = document.getElementById('tiene_coordenadas');
-    const coordenadasDiv = document.getElementById('coordenadas');
-    const latitudInputs = document.querySelectorAll('input[name="latitud[]"]');
-    const longitudInputs = document.querySelectorAll('input[name="longitud[]"]');
-
-    const fv = FormValidation.formValidation(document.getElementById('addNewPredioForm'), {
-        fields: {
-            // Otras validaciones...
-        },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: '.form-floating',
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus(),
+    $(document).ready(function () {
+        const tieneCoordenadasSelect = document.getElementById('tiene_coordenadas');
+        const coordenadasDiv = document.getElementById('coordenadas');
+        const latitudInputs = document.querySelectorAll('input[name="latitud[]"]');
+        const longitudInputs = document.querySelectorAll('input[name="longitud[]"]');
+    
+        if (tieneCoordenadasSelect && coordenadasDiv) {
+            tieneCoordenadasSelect.addEventListener('change', function () {
+                if (tieneCoordenadasSelect.value === 'Si') {
+                    coordenadasDiv.classList.remove('d-none');
+                } else {
+                    coordenadasDiv.classList.add('d-none');
+                    // Limpiar los valores de los inputs de latitud y longitud
+                    latitudInputs.forEach(input => input.value = '');
+                    longitudInputs.forEach(input => input.value = '');
+                }
+            });
         }
     });
-
-    if (tieneCoordenadasSelect && coordenadasDiv) {
-        tieneCoordenadasSelect.addEventListener('change', function () {
-            if (tieneCoordenadasSelect.value === 'Si') {
-                coordenadasDiv.classList.remove('d-none');
-
-                // Agregar validaciones para los campos de latitud y longitud
-                latitudInputs.forEach((input, index) => {
-                    fv.addField(`latitud[]`, {
-                        validators: {
-                            notEmpty: {
-                                message: 'Por favor ingresa la latitud'
-                            },
-                            numeric: {
-                                message: 'Por favor ingresa un valor numérico válido'
-                            }
-                        }
-                    });
-                });
-
-                longitudInputs.forEach((input, index) => {
-                    fv.addField(`longitud[]`, {
-                        validators: {
-                            notEmpty: {
-                                message: 'Por favor ingresa la longitud'
-                            },
-                            numeric: {
-                                message: 'Por favor ingresa un valor numérico válido'
-                            }
-                        }
-                    });
-                });
-
-            } else {
-                coordenadasDiv.classList.add('d-none');
-
-                // Eliminar validaciones cuando se ocultan los campos
-                latitudInputs.forEach((input, index) => {
-                    fv.removeField(`latitud[]`);
-                });
-
-                longitudInputs.forEach((input, index) => {
-                    fv.removeField(`longitud[]`);
-                });
-
-                // Limpiar los valores de los inputs de latitud y longitud
-                latitudInputs.forEach(input => input.value = '');
-                longitudInputs.forEach(input => input.value = '');
-            }
-        });
-    }
+    
+    
 
 
     // Variable declaration for table
@@ -590,7 +539,7 @@ $(function () {
                             <option value="" disabled selected>Tipo de agave</option>
                             ${options}
                         </select>
-                        <label for="especie_agave">Nombre y Especie de Agave/Maguey</label>
+                        <label for="especie_agave"></label>
                     </div>
                 </td>
             </tr>
@@ -1037,7 +986,7 @@ $(function () {
                                             <option disabled>Tipo de agave</option>
                                             ${tipoOptions}
                                         </select>
-                                        <label for="especie_agave">Nombre y Especie de Agave/Maguey</label>
+                                        <label for="especie_agave"></label>
                                     </div>
                                 </td>
                             </tr>
@@ -1085,7 +1034,7 @@ $(function () {
                                         <option value="" disabled>Tipo de agave</option>
                                         ${tipoOptions}
                                     </select>
-                                    <label for="especie_agave">Nombre y Especie de Agave/Maguey</label>
+                                    <label for="especie_agave"></label>
                                 </div>
                             </td>
                         </tr>
