@@ -40,13 +40,14 @@
 <style>
 .card-hover {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 100%; /* Asegura que el card tome el 100% del espacio disponible en el contenedor */
+    height: 100%;
 }
 
 .card-hover:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    border: 2px solid #2EAC6B !important; 
+    border: 2px solid #2EAC6B !important;
+    cursor: pointer; 
 }
 
 .card-title {
@@ -55,17 +56,17 @@
 }
 
 .card {
-    min-height: 200px; /* Establece una altura mínima uniforme para todos los cards */
+    min-height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin-bottom: 20px; /* Agrega espacio entre los cards */
+    margin-bottom: 20px; 
 }
 
 .tab-pane {
-    display: flex; /* Utiliza Flexbox para la alineación */
-    flex-wrap: wrap; /* Permite que los elementos se envuelvan en una nueva fila */
-    gap: 20px; /* Espacio entre cards */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .card-body {
@@ -73,13 +74,13 @@
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
-} 
+}
 
-card-title  {
-    font-size: 10px;
-
+.card-title {
+    font-size: 20px;
 }
 </style>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <div class="container mt-5">
@@ -102,18 +103,16 @@ card-title  {
           <h5 class="card-title">Mezcal</h5>
           <p class="card-text">Información sobre mezcal y opciones relacionadas.</p>
           <div class="row g-6 mb-6" id="tab-mezcal-content">
-            <div class="col-md-4">
-              <div class="card text-center">
-                <div class="card-body">
-                  <i class="fas fa-wine-glass-alt fa-3x mb-3"></i> <!-- Ícono -->
-                  <p class="card-text">Descripción del Mezcal</p>
-                </div>
+            <!-- Mensaje de carga -->
+            <div class="col-md-12 text-center" id="loading-message">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
               </div>
+              <p class="mt-3">Cargando...</p>
             </div>
-            <!-- Agrega más cards aquí según sea necesario -->
           </div>
         </div>
-
+        
         <!-- Pestaña Otras Bebidas de Mezcal -->
         <div class="tab-pane fade" id="tab-alcoholicas" role="tabpanel">
           <h5 class="card-title">Otras bebidas de mezcal</h5>
@@ -130,7 +129,7 @@ card-title  {
             <!-- Agrega más cards aquí según sea necesario -->
           </div>
         </div>
-
+        
         <!-- Pestaña Otras Bebidas Alcohólicas -->
         <div class="tab-pane fade" id="tab-no-alcoholicas" role="tabpanel">
           <h5 class="card-title">Otras bebidas alcohólicas</h5>
@@ -144,7 +143,7 @@ card-title  {
                 </div>
               </div>
             </div>
-            <!-- Agrega más cards aquí según sea necesario -->
+            <!-- End Card -->
           </div>
         </div>
       </div>
