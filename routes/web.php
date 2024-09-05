@@ -189,6 +189,7 @@ use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\catalogo\catalagoEquiposController;
 use App\Http\Controllers\inspecciones\inspeccionesController;
+use App\Http\Controllers\solicitudes\solicitudesController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -664,6 +665,26 @@ Route::get('/certificado_comercializador/{id_certificado}', [Certificado_Instala
 Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
 Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
 
+<<<<<<< HEAD
+Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
+
+//solicitud hologrammas
+Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
+Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
+Route::post('/solicitud_holograma/update/', [solicitudHolograma::class, 'update']);
+Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSolicitudHolograma'])->name('solicitudDeHologramas');
+Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2']);
+Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
+Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
+Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
+Route::post('/verificar-folios', [solicitudHolograma::class, 'verificarFolios']);
+
+//Tipo
+Route::get('/tipo', [TipoController::class, 'UserManagement'])->name('tipo');
+
+//Módulo de solicitudes
+Route::get('/solicitudes', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
+=======
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
  */
 //catalago equipos
@@ -676,3 +697,4 @@ Route::post('/equipos-list/update', [catalagoEquiposController::class, 'update']
 //Tipo
 Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');
 Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
+>>>>>>> b668cdf19ff7f6d959ba4eb5cde3445e63a08efb

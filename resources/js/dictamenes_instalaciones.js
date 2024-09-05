@@ -3,11 +3,21 @@
  */
  'use strict';
 
-
+ 
 //const { formatDate } = require("@fullcalendar/core/index.js");
 
  // Datatable (jquery)
  $(function () {
+
+    // Variable declaration for table
+    var statusObj = {
+      1: { title: 'Productor', class: 'bg-label-warning' },
+      2: { title: 'Envasador', class: 'bg-label-success' },
+      3: { title: 'Comercializador', class: 'bg-label-danger' },
+      4: { title: 'Almacén y bodega', class: 'bg-label-info' }
+    };
+ 
+ 
  
    // Variable declaration for table
    var dt_user_table = $('.datatables-users'),
@@ -65,7 +75,7 @@
        columns: [
          // columns according to JSON
          { data: '' },
-         { data: '' },
+         { data: 'id_dictamen' },
          { data: 'tipo_dictamen' },
          { data: 'num_dictamen' },
          { data: 'num_servicio' },
@@ -99,26 +109,20 @@
            targets: 2,
            responsivePriority: 4,
            render: function (data, type, full, meta) {
-             var $name = full['tipo_dictamen'];
-             if ($name == 1){
-                return '<span class="text-primary">Productor</span>';
-             }
-             else if($name == 2){ 
-                    return '<span class="text-success">Envasador</span>';
-             }
-             else if($name == 3){ 
-                return '<span class="text-info">Comercializador</span>';
-            }
-            else if($name == 4){ 
-                return '<span class="text-danger">Almacén y bodega</span>';
-            }
-            else if($name == 5){ 
-              return '<span class="text-warning">Área de maduración</span>';
+             var $status = full['tipo_dictamen'];
+             if (statusObj[$status]) {
+              return (
+                '<span class="badge rounded-pill ' +
+                statusObj[$status].class +
+                '" text-capitalized>' +
+                statusObj[$status].title +
+                '</span>'
+              );
             }
 
              
             
-             //return $name;
+           
            }
          },
           {
@@ -393,6 +397,38 @@
              return data ? $('<table class="table"/><tbody />').append(data) : false;
            }
          }
+       },
+       initComplete: function () {
+         // Adding status filter once table initialized
+         this.api()
+           .columns(2)
+           .every(function () {
+             var column = this;
+             var select = $(
+               '<select id="ProductStatus" class="form-select text-capitalize"><option value="">Tipo de dictamen</option></select>'
+             )
+               .appendTo('.product_status')
+               .on('change', function () { 
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                column.search(val, true, false).draw();
+                 console.log(val); 
+               });
+ 
+             column
+               .data()
+               .unique()
+               .sort()
+               .each(function (d, j) {
+                
+                
+                if (statusObj[d]) {
+                  console.log(statusObj[d].title);
+                  select.append('<option value="' + statusObj[d].title + '">' + statusObj[d].title + '</option>');
+                }
+               });
+           });
+        
+         
        }
  
        

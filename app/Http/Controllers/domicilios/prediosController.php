@@ -273,26 +273,27 @@ class PrediosController extends Controller
 
         
         
-        
         public function edit($id_predio)
         {
             try {
                 $predio = Predios::with(['coordenadas', 'predio_plantaciones', 'documentos'])->findOrFail($id_predio);
                 $tipos = Tipos::all();
-        
+            
                 // Obtener el número del cliente
                 $numeroCliente = DB::table('empresa_num_cliente')
                     ->where('id_empresa', $predio->id_empresa)
                     ->value('numero_cliente');
-        
-                // Mapear documentos sin construir la URL
-                $documentos = $predio->documentos->map(function ($documento) {
+            
+                // Filtrar documentos para obtener solo el documento con id_documento igual a 34
+                $documentos = $predio->documentos->filter(function ($documento) {
+                    return $documento->id_documento == 34;
+                })->map(function ($documento) {
                     return [
                         'nombre' => $documento->nombre_documento,
                         'url' => $documento->url // Solo nombre del archivo
                     ];
                 });
-        
+            
                 return response()->json([
                     'success' => true,
                     'predio' => $predio,
@@ -306,6 +307,8 @@ class PrediosController extends Controller
                 return response()->json(['success' => false], 404);
             }
         }
+        
+        
         
 
 

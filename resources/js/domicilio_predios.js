@@ -930,17 +930,17 @@ $(function () {
 
                     if (Array.isArray(data.documentos)) {
                         $('#archivo_url_contrato').empty(); // Limpia el contenido existente
-
+                    
                         data.documentos.forEach(function (documento) {
                             var nombre = documento.nombre; // Nombre del documento
                             var url = documento.url; // URL del documento
-
+                    
                             // Codificar la URL del archivo
                             var urlCodificada = encodeURIComponent(url);
-
+                    
                             // Construir la URL completa utilizando el numeroCliente
                             var urlCompleta = '../files/' + data.numeroCliente + '/' + urlCodificada;
-
+                    
                             // Agregar el enlace al documento en el div
                             $('#archivo_url_contrato').append(`
                                 <a href="${urlCompleta}" target="_blank">${nombre}</a>
@@ -950,6 +950,9 @@ $(function () {
                     } else {
                         console.error('data.documentos no es un array:', data.documentos);
                     }
+                    
+                    
+                    
 
 
 
@@ -1215,7 +1218,20 @@ $(function () {
                             message: 'Por favor selecciona si el predio cuenta con coordenadas'
                         }
                     }
-                }
+                },
+                url: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor adjunta el documento requerido'
+                        },
+                        file: {
+                            extension: 'pdf', // Solo permite archivos PDF
+                            type: 'application/pdf', // Tipo MIME para archivos PDF
+                            maxSize: 2097152, // Tamaño máximo de 2MB (2 * 1024 * 1024 bytes)
+                            message: 'El archivo debe ser un PDF y no debe superar los 2MB'
+                        }
+                    }
+                },
             },
             plugins: {
                 trigger: new FormValidation.plugins.Trigger(),
