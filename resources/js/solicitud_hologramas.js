@@ -272,7 +272,7 @@ $(function () {
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               // Asumiendo que este es el código que ya tienes configurado
-              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#activarHologramas" href="javascript:;" class="dropdown-item edit-"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +
+              `<a id="activar_holograma" data-id="${full['id_solicitud']}" href="javascript:;" class="dropdown-item activar_holograma"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addRecepcion" href="javascript:;" class="dropdown-item edit-recepcion"><i class="ri-article-fill ri-20px text-secondary"></i> Recepción hologramas</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addEnvio" href="javascript:;" class="dropdown-item edit-envio"><i class="ri-send-plane-fill ri-20px text-success"></i> Enviar</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#asignarHolograma" href="javascript:;" class="dropdown-item edit-signar"><i class="ri-qr-scan-fill ri-20px text-dark"></i> Asignar hologramas</a>` +
@@ -1010,6 +1010,45 @@ $(function () {
     });
   });
 
+  $(document).ready(function() {
+    $('#folio_inicial, #folio_final').on('input', function() {
+        var folioInicial = $('#folio_inicial').val();
+        var folioFinal = $('#folio_final').val();
+     
+        var id_solicitud = $('#id_solicitudActivacion').val();
+       
+       
+        // Solo ejecutar si ambos campos tienen valor
+        if (folioInicial && folioFinal) {
+            $.ajax({
+                url: '/verificar-folios',
+                type: 'POST',
+                data: {
+                
+                    folio_inicial: folioInicial,
+                    folio_final: folioFinal,
+                    id_solicitud: id_solicitud
+                   
+                },
+                success: function(response) {
+                  $("#mensaje").text(response.success || 'Rango de folios disponible.');
+                  $("#mensaje").attr('class', 'alert alert-solid-success'); 
+                  $("#mensaje").show();
+                  console.log(response);
+                  
+                },
+                error: function(xhr) {
+                  $("#mensaje").text(xhr.responseJSON.error || 'Ocurrió un error.');  
+                  $("#mensaje").attr('class', 'alert alert-solid-danger'); 
+                  $("#mensaje").show();
+                  console.log(xhr.responseText); 
+
+                }
+            });
+        }
+    });
+});
+
 
   $('#asignarHologramaForm').submit(function (e) {
     e.preventDefault();
@@ -1076,6 +1115,18 @@ $(document).on('click', '.edit-recepcion', function () {
       }
     });
   });
+});
+
+
+//Activar hologramas
+$(document).on('click', '.activar_holograma', function () {
+  var id_solicitud = $(this).data('id');
+
+  $('#id_solicitudActivacion').val(id_solicitud);
+   
+    // Mostrar el modal de edición
+    $('#activarHologramas').modal('show');
+  
 });
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Vite;
 
@@ -19,7 +20,10 @@ class AppServiceProvider extends ServiceProvider
    * Bootstrap any application services.
    */
   public function boot(): void
-  {
+  { 
+
+    Carbon::setLocale(config('app.locale'));
+
     Vite::useStyleTagAttributes(function (?string $src, string $url, ?array $chunk, ?array $manifest) {
       if ($src !== null) {
         return [
