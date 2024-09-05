@@ -665,6 +665,7 @@ Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2
 Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
 Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
 Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
+Route::post('/verificar-folios', [solicitudHolograma::class, 'verificarFolios']);
 
 //Tipo
 Route::get('/tipo', [TipoController::class, 'UserManagement'])->name('tipo');

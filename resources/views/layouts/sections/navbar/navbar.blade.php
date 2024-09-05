@@ -193,7 +193,7 @@ $navbarDetached = ($navbarDetached ?? '');
               <li class="dropdown-notifications-list scrollable-container">
                 <ul class="list-group list-group-flush">
 
-                  @if (auth()->check()) {
+                  @if (auth()->check()) 
                     @if(Auth::user()->unreadNotifications->count() > 0)
                       @foreach (Auth::user()->unreadNotifications as $notification)
                         <li class="list-group-item list-group-item-action dropdown-notifications-item">
