@@ -474,6 +474,7 @@ $(function () {
               .on('change', function () {
                 var val = $.fn.dataTable.util.escapeRegex($(this).val());
                 column.search(val ? '^' + val + '$' : '', true, false).draw();
+                console.log(val);
               });
 
             column
@@ -481,6 +482,7 @@ $(function () {
               .unique()
               .sort()
               .each(function (d, j) {
+                console.log(statusObj[d].title);
                 select.append('<option value="' + statusObj[d].title + '">' + statusObj[d].title + '</option>');
               });
           });

@@ -1,6 +1,20 @@
 $(function () {
   // Definir la URL base
   var baseUrl = window.location.origin + '/';
+  $('.select2').select2(); 
+  select2Elements = $('.select2')
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+
+  initializeSelect2(select2Elements);
 
   // Inicializar DataTable
   var dt_instalaciones_table = $('.datatables-users').DataTable({
@@ -389,6 +403,8 @@ $(function () {
   });
 
 
+
+
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -487,6 +503,12 @@ $(function () {
           });
         }
       });
+    });
+
+      // Inicializar select2
+      $('#id_empresa, #estado').on('change', function() {
+        // Revalidar el campo cuando se cambia el valor del select2
+        fv.revalidateField($(this).attr('name'));
     });
 
     // Mostrar u ocultar campos adicionales según el tipo de certificación
