@@ -101,8 +101,6 @@ use App\Http\Controllers\cards\CardStatistics;
 use App\Http\Controllers\cards\CardAnalytics;
 use App\Http\Controllers\cards\CardGamifications;
 use App\Http\Controllers\cards\CardActions;
-use App\Http\Controllers\catalogo_marcas\catalogoMarcas;
-use App\Http\Controllers\catalogo_marcas\catalogoMarcasController;
 use App\Http\Controllers\user_interface\Accordion;
 use App\Http\Controllers\user_interface\Alerts;
 use App\Http\Controllers\user_interface\Badges;
@@ -189,6 +187,7 @@ use App\Http\Controllers\dictamenes\InstalacionesController;
 use App\Http\Controllers\dictamenes\DictamenGranelController;;
 use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
+use App\Http\Controllers\catalogo\catalagoEquiposController;
 use App\Http\Controllers\inspecciones\inspeccionesController;
 
 // Main Page Route
@@ -536,8 +535,8 @@ Route::get('/domicilios/destinos', [DestinosController::class, 'UserManagement']
 Route::resource('/destinos-list', DestinosController::class);
 Route::delete('/destinos-list/{id_direccion}', [DestinosController::class, 'destroy'])->name('destinos-list.destroy');
 Route::post('/destinos-register/{id_direccion}', [DestinosController::class, 'store'])->name('destinos-register.store');
-route::get('/destinos-list/{id_direccion}/edit', [DestinoController::class, 'edit'])->name('destinos.edit');
-route::post('/destinos-update/{id_direccion}', [DestinosController::class, 'update'])->name('destinos.update');
+/* route::get('/destinos-list/{id_direccion}/edit', [DestinoController::class, 'edit'])->name('destinos.edit');
+ */route::post('/destinos-update/{id_direccion}', [DestinosController::class, 'update'])->name('destinos.update');
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
@@ -642,6 +641,14 @@ Route::get('/orden_de_servicio/{id_inspeccion}', [inspeccionesController::class,
 //Hologramas - solicitud hologramas
 Route::get('/hologramas/solicitud', [solicitudHolograma::class, 'UserManagement'])->name('hologramas-solicitud');
 Route::resource('/hologramas-list', solicitudHolograma::class);
+Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
+Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
+Route::post('/solicitud_holograma/update/', [solicitudHolograma::class, 'update']);
+Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSolicitudHolograma'])->name('solicitudDeHologramas');
+Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2']);
+Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
+Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
+Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
 
 //Certificados Instalaciones
 Route::get('certificados/instalaciones', [Certificado_InstalacionesController::class, 'UserManagement'])->name('certificados-instalaciones');
@@ -655,17 +662,14 @@ Route::get('/certificado_comercializador/{id_certificado}', [Certificado_Instala
 Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
 Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
 
-Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
-
-//solicitud hologrammas
-Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
-Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
-Route::post('/solicitud_holograma/update/', [solicitudHolograma::class, 'update']);
-Route::get('/solicitud_de_holograma/{id}', [solicitudHolograma::class, 'ModelsSolicitudHolograma'])->name('solicitudDeHologramas');
-Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2']);
-Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
-Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
-Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
+/* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
+ */
+//catalago equipos
+Route::get('/catalogo/equipos', [catalagoEquiposController::class, 'UserManagement'])->name('catalago-equipos');
+Route::resource('/equipos-list', catalagoEquiposController::class);
+Route::post('/equipos/store', [catalagoEquiposController::class, 'store'])->name('equipos.store');
+Route::get('/equipos-list/{id_equipo}/edit', [catalagoEquiposController::class, 'edit'])->name('equipos.edit');
+Route::post('/equipos-list/update', [catalagoEquiposController::class, 'update'])->name('equipos.update');
 
 //Tipo
 Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');

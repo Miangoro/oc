@@ -181,7 +181,7 @@
         .img-background {
             position: absolute;
             top: 400px;
-            left: -390px;
+            left: -385px;
             width: 780px;
             height: 650px;
             z-index: -1;
@@ -189,7 +189,7 @@
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
-            opacity: 0.3;
+            opacity: 0.2;
         }
 
         .page-break {
@@ -272,7 +272,7 @@
             </tr>
             <tr>
                 <td class="letra-fondo" style="width: 150px">Información adicional:</td>
-                <td  style="width: 220px">- -</td>
+                <td  style="width: 220px; color: red">- -</td>
                 <td class="letra-fondo">Fecha de la <br>
                     auditoría:</td>
                 <td class="leftLetter">02 de Septiembre del <br>
@@ -290,7 +290,7 @@
             </tr>
             <tr>
                 <td class="letra-fondo">País destino del producto:</td>
-                <td>- -</td>
+                <td style="color: red">- -</td>
             </tr>
 
         </table>
@@ -310,37 +310,33 @@
                 <td class="leftLetter">Revisión documental in situ e inspección de instalaciones.</td>
             </tr>
             <tr>
-                <td class="letra-fondo">Criterios de evaluación:</td>
-                <td class="leftLetter">NORMA OFICIAL MEXICANA NOM-070-SCFI-2016 <br>
+                <td class="letra-fondo no-padding-up-down">Criterios de evaluación:</td>
+                <td class="leftLetter no-padding-up-down">NORMA OFICIAL MEXICANA NOM-070-SCFI-2016 <br>
                     NORMA OFICIAL MEXICANA NOM-251-SSA1-2009</td>
             </tr>
             <tr>
                 <td class="letra-fondo">Otros (indique):</td>
-                <td>- -</td>
+                <td style="color: red">&nbsp;</td>
             </tr>
         </table>
-        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" class="background-img" style="position: absolute">
-
-        <footer style="text-align: center; font-size: 7px; margin-top: 125px; color: #71777c; margin-right: 50px">
+        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" class="background-img" >
+        <footer style="text-align: center; font-size: 7px; margin-top: 175px; color: #71777c; margin-right: 50px">
             Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
             puede <br>            
             ser distribuido externamente sin la autorización escrita del Director Ejecutivo
 
         </footer>
-
-
-
         <div class="page-break"></div>
         <div class="img-background"></div>
 
         <div class="header">
             <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
-            <div style="padding-right: 20px; position: absolute">Plan de auditoría de esquema de certificación NOM-070-SCFI-2016
+            <div style="padding-right: 20px">Plan de auditoría de esquema de certificación NOM-070-SCFI-2016
                 F7.1-01-13<br>Edición 2 Entrada en Vigor: 08/03/2023
                 <br>_______________________________________________________________________________________
             </div>
         </div>
-        <div style="margin-top: 50px"></div>
+        <div style="height: 40px"></div>
         <table>
             <tr>
                 <td class="letra-fondo" style="font-size: 14px" colspan="3">5. DATOS DEL GRUPO EVALUADOR
@@ -407,7 +403,7 @@
                     autorizada que acepta o rechaza <br>
                     el plan
                 </td>
-                <td>PRISCILIANO <br>
+                <td style="width: 140px">PRISCILIANO <br>
                     MARTÍNEZ</td>
             </tr>
             <tr>
@@ -425,7 +421,7 @@
             </tr>
         </table>
         <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" class="background-img" style="position: absolute">
-        <footer style="text-align: center; font-size: 7px; margin-top: 355px; color: #71777c; margin-right: 50px">
+        <footer style="text-align: center; font-size: 7px; margin-top: 315px; color: #71777c; margin-right: 50px">
             Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
             puede <br>            
             ser distribuido externamente sin la autorización escrita del Director Ejecutivo

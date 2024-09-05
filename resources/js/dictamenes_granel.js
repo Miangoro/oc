@@ -205,7 +205,7 @@ $(function () {
                             text: '<i class="ri-printer-line me-1" ></i>Print',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                                 // prevent avatar to be print
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -249,7 +249,7 @@ $(function () {
                             text: '<i class="ri-file-text-line me-1" ></i>Csv',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                                 // prevent avatar to be print
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -280,7 +280,7 @@ $(function () {
                             text: '<i class="ri-file-excel-line me-1"></i>Excel',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                                 // prevent avatar to be display
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -309,7 +309,7 @@ $(function () {
                             text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                                 // prevent avatar to be display
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -338,7 +338,7 @@ $(function () {
                             text: '<i class="ri-file-copy-line me-1"></i>Copy',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
                                 // prevent avatar to be copy
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -579,7 +579,7 @@ $(function () {
                         Swal.fire({
                             icon: 'success',
                             title: '¡Eliminado!',
-                            text: '¡El dictamen ha sido eliminada correctamente!',
+                            text: '¡El dictamen ha sido eliminado correctamente!',
                             customClass: {
                                 confirmButton: 'btn btn-success'
                             }
@@ -603,7 +603,7 @@ $(function () {
                 // Acción cancelada, mostrar mensaje informativo
                 Swal.fire({
                     title: 'Cancelado',
-                    text: 'La eliminación del lote ha sido cancelada',
+                    text: 'La eliminación del dictamen ha sido cancelada',
                     icon: 'info',
                     customClass: {
                         confirmButton: 'btn btn-primary'

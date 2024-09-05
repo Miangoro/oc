@@ -9,18 +9,18 @@ $(function () {
     // Selecciona los elementos para el formulario de edición
 
 
-$(document).on('change', '#edit_tiene_coordenadas', function() {
-    var tieneCoordenadasSelectEdit = $(this);
-    var coordenadasDivEdit = $('#edit_coordenadas');
+    $(document).on('change', '#edit_tiene_coordenadas', function () {
+        var tieneCoordenadasSelectEdit = $(this);
+        var coordenadasDivEdit = $('#edit_coordenadas');
 
-    if (tieneCoordenadasSelectEdit.val() === 'Si') {
-        coordenadasDivEdit.removeClass('d-none');
-    } else {
-        coordenadasDivEdit.addClass('d-none');
-    }
-});
+        if (tieneCoordenadasSelectEdit.val() === 'Si') {
+            coordenadasDivEdit.removeClass('d-none');
+        } else {
+            coordenadasDivEdit.addClass('d-none');
+        }
+    });
 
-    
+
     const tieneCoordenadasSelect = document.getElementById('tiene_coordenadas');
     const coordenadasDiv = document.getElementById('coordenadas');
     const latitudInputs = document.querySelectorAll('input[name="latitud[]"]');
@@ -141,6 +141,13 @@ $(document).on('change', '#edit_tiene_coordenadas', function() {
                 { data: 'puntos_referencia' },
                 { data: 'cuenta_con_coordenadas' },
                 { data: 'superficie' },
+                {
+                    data: 'estatus',
+                    searchable: false, orderable: false,
+                    render: function (data, type, row) {
+                        return '<span class="badge rounded-pill bg-success">' + data + '</span>';
+                    }
+                },
                 { data: '' },
                 { data: 'action' },
             ],
@@ -167,13 +174,14 @@ $(document).on('change', '#edit_tiene_coordenadas', function() {
                 },
                 {
                     // Pdf de pre-registro
-                    targets: 10,
+                    targets: 11,
                     className: 'text-center',
+                    searchable: false, orderable: false,
                     render: function (data, type, full, meta) {
-                      var $id = full['id_guia'];
-                      return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_predio']}" data-registro="${full['id_empresa']} "></i>`;
+                        var $id = full['id_guia'];
+                        return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_predio']}" data-registro="${full['id_empresa']} "></i>`;
                     }
-                  },
+                },
                 {
                     // User full name
                     targets: 2,
@@ -566,7 +574,7 @@ $(document).on('change', '#edit_tiene_coordenadas', function() {
         function generateOptions(tipos) {
             return tipos.map(tipo => `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`).join('');
         }
-    
+
         // Función para agregar una nueva sección de plantación
         function addRow(container) {
             var options = generateOptions(tiposAgave);
@@ -613,16 +621,16 @@ $(document).on('change', '#edit_tiene_coordenadas', function() {
                     </div>
                 </td>
             </tr>`;
-    
+
             // Agregar la nueva sección al contenedor correspondiente
             $(container).append(newSection);
-    
+
             // Habilitar el botón de eliminación para las nuevas filas, pero no para la primera
             if ($(container).find('.plantacion-row').length > 1) {
                 $(container).find('.remove-row-plantacion').not(':first').prop('disabled', false);
             }
         }
-    
+
         // Evento para agregar filas de plantación
         $('.add-row-plantacion').on('click', function () {
             if ($('.edit_InformacionAgave').is(':visible')) {
@@ -631,32 +639,32 @@ $(document).on('change', '#edit_tiene_coordenadas', function() {
                 addRow('.contenidoPlantacion');
             }
         });
-    
+
         // Evento para eliminar filas de plantación
         $(document).on('click', '.remove-row-plantacion', function () {
             var $currentRow = $(this).closest('tr');
-    
+
             // Asegurarse de que la primera fila no pueda ser eliminada
             if ($currentRow.index() === 0) return;
-    
+
             // Eliminar la fila actual y las siguientes filas hasta el próximo elemento que no sea '.plantacion-row'
             $currentRow.nextUntil('tr:not(.plantacion-row)').addBack().remove();
-    
+
             // Deshabilitar el botón de eliminación si queda solo una fila
             var $container = $currentRow.closest('table').find('tbody');
             if ($container.find('.plantacion-row').length <= 1) {
                 $container.find('.remove-row-plantacion').prop('disabled', true);
             }
         });
-    
+
         // Deshabilitar el botón de eliminación en la primera fila de agregar
         $('.contenidoPlantacion').find('.remove-row-plantacion').first().prop('disabled', true);
-    
+
         // Deshabilitar el botón de eliminación en la primera fila de editar
         $('.edit_ContenidoPlantacion').find('.remove-row-plantacion').first().prop('disabled', true);
     });
-    
-    
+
+
 
     /* funcion para creacion de seccion de coordenadas y sus respectivas validaciones */
     $(document).ready(function () {
@@ -680,32 +688,32 @@ $(document).on('change', '#edit_tiene_coordenadas', function() {
                     </div>
                 </td>
             </tr>`;
-    
+
             // Determinar a qué tabla añadir la fila
             if ($('#edit_coordenadas').is(':visible')) {
                 $('#edit_coordenadas tbody').append(newRow);
             } else {
                 $('#coordenadas tbody').append(newRow);
             }
-    
+
             // Habilitar el botón de eliminar si hay más de una fila en la tabla correspondiente
             updateRemoveButtonState();
         });
-    
+
         // Eliminar fila de coordenadas
         $(document).on('click', '.remove-row-cordenadas', function () {
             var $tableBody = $(this).closest('tbody');
             var $table = $(this).closest('table');
-    
+
             // Solo permitir eliminar si no es la primera fila
             if ($tableBody.children('tr').length > 1) {
                 $(this).closest('tr').remove();
             }
-    
+
             // Actualizar el estado del botón de eliminar
             updateRemoveButtonState();
         });
-    
+
         // Función para actualizar el estado del botón de eliminar
         function updateRemoveButtonState() {
             $('#coordenadas tbody tr').each(function () {
@@ -715,11 +723,11 @@ $(document).on('change', '#edit_tiene_coordenadas', function() {
                 $(this).find('.remove-row-cordenadas').prop('disabled', $(this).siblings('tr').length === 0);
             });
         }
-    
+
         // Inicializar el estado del botón de eliminar en ambas tablas al cargar la página
         updateRemoveButtonState();
     });
-    
+
 
 
     /* registrar un nuevo predio */
@@ -791,6 +799,19 @@ $(document).on('change', '#edit_tiene_coordenadas', function() {
                     validators: {
                         notEmpty: {
                             message: 'Por favor selecciona si el predio cuenta con coordenadas'
+                        }
+                    }
+                },
+                url: {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor adjunta el documento requerido'
+                        },
+                        file: {
+                            extension: 'pdf', // Solo permite archivos PDF
+                            type: 'application/pdf', // Tipo MIME para archivos PDF
+                            maxSize: 2097152, // Tamaño máximo de 2MB (2 * 1024 * 1024 bytes)
+                            message: 'El archivo debe ser un PDF y no debe superar los 2MB'
                         }
                     }
                 },
@@ -904,6 +925,36 @@ $(document).on('change', '#edit_tiene_coordenadas', function() {
                     $('#edit_puntos_referencia').val(predio.puntos_referencia);
                     $('#edit_tiene_coordenadas').val(predio.cuenta_con_coordenadas).trigger('change');
                     $('#edit_superficie').val(predio.superficie);
+
+                    console.log(data.documentos); // Verifica el contenido
+
+                    if (Array.isArray(data.documentos)) {
+                        $('#archivo_url_contrato').empty(); // Limpia el contenido existente
+
+                        data.documentos.forEach(function (documento) {
+                            var nombre = documento.nombre; // Nombre del documento
+                            var url = documento.url; // URL del documento
+
+                            // Codificar la URL del archivo
+                            var urlCodificada = encodeURIComponent(url);
+
+                            // Construir la URL completa utilizando el numeroCliente
+                            var urlCompleta = '../files/' + data.numeroCliente + '/' + urlCodificada;
+
+                            // Agregar el enlace al documento en el div
+                            $('#archivo_url_contrato').append(`
+                                <a href="${urlCompleta}" target="_blank">${nombre}</a>
+                                <br>
+                            `);
+                        });
+                    } else {
+                        console.error('data.documentos no es un array:', data.documentos);
+                    }
+
+
+
+
+
 
                     // Limpiar las filas de coordenadas anteriores
                     $('#edit_coordenadas tbody').empty();
@@ -1232,15 +1283,15 @@ $(document).on('change', '#edit_tiene_coordenadas', function() {
     });
 
     //Reciben los datos del pdf
-$(document).on('click', '.pdf', function () {
-    var id = $(this).data('id');
-    var registro = $(this).data('registro');
+    $(document).on('click', '.pdf', function () {
+        var id = $(this).data('id');
+        var registro = $(this).data('registro');
         var iframe = $('#pdfViewer');
-        iframe.attr('src', '../pre-registro_predios/'+id);
-  
+        iframe.attr('src', '../pre-registro_predios/' + id);
+
         $("#titulo_modal").text("Pre-registro de predios de maguey o agave");
-        $("#subtitulo_modal").text(registro);  
-  });
+        $("#subtitulo_modal").text(registro);
+    });
 
 
 });
