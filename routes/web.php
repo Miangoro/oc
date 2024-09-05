@@ -535,8 +535,8 @@ Route::get('/domicilios/destinos', [DestinosController::class, 'UserManagement']
 Route::resource('/destinos-list', DestinosController::class);
 Route::delete('/destinos-list/{id_direccion}', [DestinosController::class, 'destroy'])->name('destinos-list.destroy');
 Route::post('/destinos-register/{id_direccion}', [DestinosController::class, 'store'])->name('destinos-register.store');
-route::get('/destinos-list/{id_direccion}/edit', [DestinoController::class, 'edit'])->name('destinos.edit');
-route::post('/destinos-update/{id_direccion}', [DestinosController::class, 'update'])->name('destinos.update');
+/* route::get('/destinos-list/{id_direccion}/edit', [DestinoController::class, 'edit'])->name('destinos.edit');
+ */route::post('/destinos-update/{id_direccion}', [DestinosController::class, 'update'])->name('destinos.update');
 
 //Usuarios
 Route::get('/usuarios/clientes', [UsuariosController::class, 'UserManagement'])->name('usuarios-clientes');
@@ -662,8 +662,8 @@ Route::get('/certificado_comercializador/{id_certificado}', [Certificado_Instala
 Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
 Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
 
-Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
-
+/* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
+ */
 //catalago equipos
 Route::get('/catalogo/equipos', [catalagoEquiposController::class, 'UserManagement'])->name('catalago-equipos');
 Route::resource('/equipos-list', catalagoEquiposController::class);
