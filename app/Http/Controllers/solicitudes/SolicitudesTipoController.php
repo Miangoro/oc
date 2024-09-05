@@ -11,7 +11,7 @@ class SolicitudesTipoController extends Controller
     public function UserManagement()
     {
         $solicitudesTipos = SolicitudTipo::all();
-        return view('solicitudes.solicitudes_view', compact('solicitudesTipos'));
+        return view('solicitudes.solicitudes-tipo_view', compact('solicitudesTipos'));
     }
 
     public function getSolicitudesTipos()
