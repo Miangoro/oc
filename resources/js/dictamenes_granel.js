@@ -500,35 +500,35 @@ $(function () {
         var title = $(this).data('title'); // Obtén el título del PDF desde el atributo data-title
         var iframe = $('#pdfViewerFolio');
         var spinner = $('#loading-spinner');
-    
+
         // Mostrar el spinner y ocultar el iframe antes de cargar el PDF
         spinner.show();
         iframe.hide();
-    
+
         // Actualizar el título del modal
         $("#titulo_modal_Folio").text(title);
-    
+
         // Ocultar el modal de ver documentos antes de mostrar el modal del PDF
         $('#modalVerDocumento').modal('hide');
-    
+
         // Mostrar el modal para el PDF
         $('#mostrarPdfFolio').modal('show');
-    
+
         // Cargar el PDF en el iframe
         iframe.attr('src', url);
-    
+
         // Asegurarse de que el evento `load` del iframe está manejado correctamente
         iframe.off('load').on('load', function () {
             spinner.hide();
             iframe.show();
         });
-    
+
         // Reabrir el modal de ver documentos cuando se cierre el modal del PDF
         $('#mostrarPdfFolio').on('hidden.bs.modal', function () {
             $('#modalVerDocumento').modal('show');
         });
     });
-    
+
 
 
 
@@ -1056,6 +1056,10 @@ $(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        // Variables para almacenar los valores originales
+        var originalValues = {};
+
         // Inicializar FormValidation para el formulario de creación y edición
         const form = document.getElementById('addReexpedirDictamenGranelForm');
         const fv = FormValidation.formValidation(form, {
@@ -1124,24 +1128,21 @@ $(function () {
                 id_firmante: {
                     validators: {
                         notEmpty: {
-                            message: 'El nombre del firmante es obligatorio.',
-                            enable: function (field) {
-                                return !$(field).val();
-                            }
+                            message: 'El nombre del firmante es obligatorio.'
                         }
                     }
                 },
                 observaciones: {
                     validators: {
                         notEmpty: {
-                            message: 'El motivo de la cancelación es obligatoria.'
+                            message: 'El motivo de la cancelación es obligatorio.'
                         },
                     }
                 },
                 cancelar_reexpedir: {
                     validators: {
                         notEmpty: {
-                            message: 'selecciona una opcion'
+                            message: 'Selecciona una opción.'
                         }
                     }
                 }
@@ -1157,7 +1158,7 @@ $(function () {
                 autoFocus: new FormValidation.plugins.AutoFocus()
             }
         }).on('core.form.valid', function () {
-            // Validar y enviar el formulario cuando pase la validación
+            // Enviar el formulario cuando la validación es exitosa
             var formData = new FormData(form);
             var dictamenid = $('#reexpedir_id_dictamen').val();
 
@@ -1168,8 +1169,8 @@ $(function () {
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    dt_user.ajax.reload();
-                    $('#modalReexpredirDictamenGranel').modal('hide');
+                    dt_user.ajax.reload(); // Recargar la tabla de datos
+                    $('#modalReexpredirDictamenGranel').modal('hide'); // Cerrar el modal
                     Swal.fire({
                         icon: 'success',
                         title: '¡Éxito!',
@@ -1208,7 +1209,7 @@ $(function () {
             });
         });
 
-        // Función del botón de reexpedir para cargar los datos del dictamen
+        // Guardar los valores originales cuando se edita un dictamen
         $(document).on('click', '.reexpedir-record', function () {
             var id_dictamen = $(this).data('id');
             $('#reexpedir_id_dictamen').val(id_dictamen);
@@ -1219,15 +1220,28 @@ $(function () {
                 success: function (data) {
                     if (data.success) {
                         var dictamen = data.dictamen;
+
                         // Asignar valores a los campos del formulario
                         $('#reexpedir_num_dictamen').val(dictamen.num_dictamen);
                         $('#reexpedir_id_empresa').val(dictamen.id_empresa).trigger('change');
                         $('#reexpedir_id_inspeccion').val(dictamen.id_inspeccion).trigger('change');
-                        $('#reexpedir_id_lote_granel').data('selectedLote', dictamen.id_lote_granel); // Guardar el lote seleccionado
+                        $('#reexpedir_id_lote_granel').data('selectedLote', dictamen.id_lote_granel);
                         $('#reexpedir_fecha_emision').val(dictamen.fecha_emision);
                         $('#reexpedir_fecha_vigencia').val(dictamen.fecha_vigencia);
                         $('#reexpedir_fecha_servicio').val(dictamen.fecha_servicio);
                         $('#reexpedir_id_firmante').val(dictamen.id_firmante).trigger('change');
+
+                        // Guardar los valores originales en un objeto
+                        originalValues = {
+                            num_dictamen: dictamen.num_dictamen,
+                            id_empresa: dictamen.id_empresa,
+                            id_inspeccion: dictamen.id_inspeccion,
+                            id_lote_granel: dictamen.id_lote_granel,
+                            fecha_emision: dictamen.fecha_emision,
+                            fecha_vigencia: dictamen.fecha_vigencia,
+                            fecha_servicio: dictamen.fecha_servicio,
+                            id_firmante: dictamen.id_firmante
+                        };
 
                         // Mostrar el modal
                         $('#modalReexpedirDictamenGranel').modal('show');
@@ -1256,24 +1270,56 @@ $(function () {
             });
         });
 
-        // Función para actualizar la validación al cambiar la fecha en el datepicker
+        // Restablecer los valores originales cuando se cambia la opción a "Cancelar"
+        $('#cancelar_reexpedir').change(function () {
+            if ($(this).val() == '2') {
+                $('.reexpedirFields').show();
+                enableReexpedirFields();
+            } else {
+                $('.reexpedirFields').hide();
+                disableReexpedirFields();
+
+                // Restablecer los valores originales
+                $('#reexpedir_num_dictamen').val(originalValues.num_dictamen);
+                $('#reexpedir_id_empresa').val(originalValues.id_empresa).trigger('change');
+                $('#reexpedir_id_inspeccion').val(originalValues.id_inspeccion).trigger('change');
+                $('#reexpedir_id_lote_granel').data('selectedLote', originalValues.id_lote_granel);
+                $('#reexpedir_fecha_emision').val(originalValues.fecha_emision);
+                $('#reexpedir_fecha_vigencia').val(originalValues.fecha_vigencia);
+                $('#reexpedir_fecha_servicio').val(originalValues.fecha_servicio);
+                $('#reexpedir_id_firmante').val(originalValues.id_firmante).trigger('change');
+            }
+        });
+
+        // Funciones para habilitar y deshabilitar validación de los campos
+        function enableReexpedirFields() {
+            fv.enableValidator('fecha_emision')
+                .enableValidator('fecha_vigencia')
+                .enableValidator('fecha_servicio')
+                .enableValidator('id_firmante');
+        }
+
+        function disableReexpedirFields() {
+            fv.disableValidator('fecha_emision')
+                .disableValidator('fecha_vigencia')
+                .disableValidator('fecha_servicio')
+                .disableValidator('id_firmante');
+        }
+
+        // Validar fecha al cambiarla en el datepicker
         function updateDatepickerValidation() {
             $('#reexpedir_fecha_emision').on('change', function () {
                 fv.revalidateField('fecha_emision');
             });
-
             $('#reexpedir_fecha_vigencia').on('change', function () {
                 fv.revalidateField('fecha_vigencia');
             });
-
             $('#reexpedir_fecha_servicio').on('change', function () {
                 fv.revalidateField('fecha_servicio');
             });
         }
 
-        // Llamar a la función para actualizar la validación
         updateDatepickerValidation();
-
     });
 
 

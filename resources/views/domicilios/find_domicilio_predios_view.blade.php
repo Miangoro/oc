@@ -72,7 +72,7 @@
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="nombre_productor"
+                                        <input type="text" class="form-control" id="nombre_productor" autocomplete="off"
                                             name="nombre_productor" placeholder="Nombre del productor">
                                         <label for="nombre_productor">Nombre del Productor</label>
                                     </div>
@@ -81,8 +81,8 @@
                                 <!-- Nombre del Predio -->
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="nombre_predio" name="nombre_predio"
-                                            placeholder="Nombre del predio">
+                                        <input type="text" class="form-control" id="nombre_predio" name="nombre_predio" autocomplete="off"
+                                            placeholder="Nombre del predio"> 
                                         <label for="nombre_predio">Nombre del Predio</label>
                                     </div>
                                 </div>
@@ -90,8 +90,8 @@
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-3">
-                                        <input type="text" class="form-control" id="ubicacion_predio"
-                                            name="ubicacion_predio" placeholder="Ubicación del predio"></input>
+                                        <input type="text" class="form-control" id="ubicacion_predio" autocomplete="off"
+                                            name="ubicacion_predio" placeholder="Ubicación del predio" ></input>
                                         <label for="ubicacion_predio">Ubicación del Predio</label>
                                     </div>
                                 </div>
@@ -115,7 +115,7 @@
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="puntos_referencia"
+                                        <input type="text" class="form-control" id="puntos_referencia" autocomplete="off"
                                             name="puntos_referencia" placeholder="Puntos de referencia"></input>
                                         <label for="puntos_referencia">Puntos de Referencia</label>
                                     </div>
@@ -123,7 +123,7 @@
                                 <!-- Superficie del Predio -->
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="number" class="form-control" id="superficie" name="superficie"
+                                        <input type="number" class="form-control" id="superficie" name="superficie" autocomplete="off"
                                             placeholder="Superficie del predio (Ha)" step="0.01">
                                         <label for="superficie">Superficie del Predio (Ha)</label>
                                     </div>
@@ -174,14 +174,14 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-floating form-floating-outline">
-                                                        <input type="text" class="form-control" id="latitud"
+                                                        <input type="text" class="form-control" id="latitud" autocomplete="off"
                                                             name="latitud[]" placeholder="Latitud">
                                                         <label for="latitud">Latitud</label>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="form-floating form-floating-outline">
-                                                        <input type="text" class="form-control" id="longitud"
+                                                        <input type="text" class="form-control" id="longitud" autocomplete="off"
                                                             name="longitud[]" placeholder="Longitud">
                                                         <label for="longitud">Longitud</label>
                                                     </div>
@@ -239,7 +239,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="form-floating form-floating-outline">
-                                                            <input type="number" class="form-control"
+                                                            <input type="number" class="form-control" autocomplete="off"
                                                                 name="numero_plantas[]" placeholder="Número de plantas"
                                                                 step="1">
                                                             <label for="numero_plantas">Número de Plantas</label>
@@ -253,7 +253,7 @@
                                                     <td>
                                                         <div class="form-floating form-floating-outline">
                                                             <input type="number" class="form-control"
-                                                                name="edad_plantacion[]"
+                                                                name="edad_plantacion[]" autocomplete="off"
                                                                 placeholder="Edad de la plantación (años)" step="1">
                                                             <label for="edad_plantacion">Edad de la Plantación</label>
                                                         </div>
@@ -265,7 +265,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="form-floating form-floating-outline">
-                                                            <input type="text" class="form-control"
+                                                            <input type="text" class="form-control" autocomplete="off"
                                                                 name="tipo_plantacion[]" placeholder="Tipo de plantación">
                                                             <label for="tipo_plantacion">Tipo de Plantación</label>
                                                         </div>
@@ -318,8 +318,8 @@
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="edit_nombre_productor"
-                                            name="nombre_productor" placeholder="Nombre del productor">
+                                        <input type="text" class="form-control" id="edit_nombre_productor" autocomplete="off"
+                                            name="nombre_productor" placeholder="Nombre del productor"> 
                                         <label for="nombre_productor">Nombre del Productor</label>
                                     </div>
                                 </div>
@@ -327,7 +327,7 @@
                                 <!-- Nombre del Predio -->
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="edit_nombre_predio"
+                                        <input type="text" class="form-control" id="edit_nombre_predio" autocomplete="off"
                                             name="nombre_predio" placeholder="Nombre del predio">
                                         <label for="nombre_predio">Nombre del Predio</label>
                                     </div>
@@ -337,7 +337,7 @@
                                 <!-- Ubicación del Predio -->
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline mb-3">
-                                        <input type="text" class="form-control" id="edit_ubicacion_predio"
+                                        <input type="text" class="form-control" id="edit_ubicacion_predio" autocomplete="off"
                                             name="ubicacion_predio" placeholder="Ubicación del predio"></input>
                                         <label for="ubicacion_predio">Ubicación del Predio</label>
                                     </div>
@@ -360,7 +360,7 @@
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="edit_puntos_referencia"
+                                        <input type="text" class="form-control" id="edit_puntos_referencia" autocomplete="off"
                                             name="puntos_referencia" placeholder="Puntos de referencia"></input>
                                         <label for="puntos_referencia">Puntos de Referencia</label>
                                     </div>
@@ -368,7 +368,7 @@
                                 <!-- Superficie del Predio -->
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="number" class="form-control" id="edit_superficie"
+                                        <input type="number" class="form-control" id="edit_superficie" autocomplete="off"
                                             name="superficie" placeholder="Superficie del predio (Ha)" step="0.01">
                                         <label for="superficie">Superficie del Predio (Ha)</label>
                                     </div>
@@ -418,14 +418,14 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-floating form-floating-outline">
-                                                        <input type="text" class="form-control" id="edit_latitud"
+                                                        <input type="text" class="form-control" id="edit_latitud" autocomplete="off"
                                                             name="latitud[]" placeholder="Latitud">
                                                         <label for="latitud">Latitud</label>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <div class="form-floating form-floating-outline">
-                                                        <input type="text" class="form-control" id="edit_longitud"
+                                                        <input type="text" class="form-control" id="edit_longitud" autocomplete="off"
                                                             name="longitud[]" placeholder="Longitud">
                                                         <label for="longitud">Longitud</label>
                                                     </div>
@@ -483,7 +483,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="form-floating form-floating-outline">
-                                                            <input type="number" class="form-control"
+                                                            <input type="number" class="form-control" autocomplete="off"
                                                                 id="edit_numero_plantas" name="numero_plantas[]"
                                                                 placeholder="Número de plantas" step="1">
                                                             <label for="numero_plantas">Número de Plantas</label>
@@ -496,7 +496,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="form-floating form-floating-outline">
-                                                            <input type="number" class="form-control"
+                                                            <input type="number" class="form-control" autocomplete="off"
                                                                 id="edit_edad_plantacion" name="edad_plantacion[]"
                                                                 placeholder="Edad de la plantación (años)" step="1">
                                                             <label for="edad_plantacion">Edad de la Plantación</label>
@@ -509,7 +509,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="form-floating form-floating-outline">
-                                                            <input type="text" class="form-control"
+                                                            <input type="text" class="form-control" autocomplete="off"
                                                                 id="edit_tipo_plantacion" name="tipo_plantacion[]"
                                                                 placeholder="Tipo de plantación">
                                                             <label for="tipo_plantacion">Tipo de Plantación</label>

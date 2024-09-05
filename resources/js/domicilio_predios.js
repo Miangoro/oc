@@ -598,7 +598,7 @@ $(function () {
                 <td><b>Número de Plantas</b></td>
                 <td>
                     <div class="form-floating form-floating-outline">
-                        <input type="number" class="form-control" name="numero_plantas[]" placeholder="Número de plantas" step="1">
+                        <input type="number" class="form-control" name="numero_plantas[]" placeholder="Número de plantas" step="1" autocomplete="off">
                         <label for="numero_plantas">Número de Plantas</label>
                     </div>
                 </td>
@@ -607,7 +607,7 @@ $(function () {
                 <td><b>Edad de la Plantación</b></td>
                 <td>
                     <div class="form-floating form-floating-outline">
-                        <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Edad de la plantación (años)" step="1">
+                        <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Edad de la plantación (años)" step="1" autocomplete="off">
                         <label for="edad_plantacion">Edad de la Plantación</label>
                     </div>
                 </td>
@@ -616,7 +616,7 @@ $(function () {
                 <td><b>Tipo de Plantación</b></td>
                 <td>
                     <div class="form-floating form-floating-outline">
-                        <input type="text" class="form-control" name="tipo_plantacion[]" placeholder="Tipo de plantación">
+                        <input type="text" class="form-control" name="tipo_plantacion[]" placeholder="Tipo de plantación" autocomplete="off">
                         <label for="tipo_plantacion">Tipo de Plantación</label>
                     </div>
                 </td>
@@ -677,13 +677,13 @@ $(function () {
                 </td>
                 <td>
                     <div class="form-floating form-floating-outline">
-                        <input type="text" class="form-control" name="latitud[]" placeholder="Latitud">
+                        <input type="text" class="form-control" name="latitud[]" placeholder="Latitud" autocomplete="off">
                         <label>Latitud</label>
                     </div>
                 </td>
                 <td>
                     <div class="form-floating form-floating-outline">
-                        <input type="text" class="form-control" name="longitud[]" placeholder="Longitud">
+                        <input type="text" class="form-control" name="longitud[]" placeholder="Longitud" autocomplete="off">
                         <label>Longitud</label>
                     </div>
                 </td>
@@ -928,9 +928,12 @@ $(function () {
 
                     console.log(data.documentos); // Verifica el contenido
 
-                    if (Array.isArray(data.documentos)) {
-                        $('#archivo_url_contrato').empty(); // Limpia el contenido existente
+                    // Limpia el contenido existente
+                    $('#archivo_url_contrato').empty();
                     
+                    // Verifica si data.documentos es un array
+                    if (Array.isArray(data.documentos) && data.documentos.length > 0) {
+                        // Procesar documentos si es un array y contiene elementos
                         data.documentos.forEach(function (documento) {
                             var nombre = documento.nombre; // Nombre del documento
                             var url = documento.url; // URL del documento
@@ -947,18 +950,32 @@ $(function () {
                                 <br>
                             `);
                         });
+                    } else if (typeof data.documentos === 'object' && Object.keys(data.documentos).length > 0) {
+                        // Procesar documentos si es un objeto y contiene claves
+                        Object.keys(data.documentos).forEach(function (key) {
+                            var documento = data.documentos[key];
+                            var nombre = documento.nombre; // Nombre del documento
+                            var url = documento.url; // URL del documento
+                    
+                            // Codificar la URL del archivo
+                            var urlCodificada = encodeURIComponent(url);
+                    
+                            // Construir la URL completa utilizando el numeroCliente
+                            var urlCompleta = '../files/' + data.numeroCliente + '/' + urlCodificada;
+                    
+                            // Agregar el enlace al documento en el div
+                            $('#archivo_url_contrato').append(`
+                                <a href="${urlCompleta}" target="_blank">${nombre}</a>
+                                <br>
+                            `);
+                        });
                     } else {
-                        console.error('data.documentos no es un array:', data.documentos);
-                    }
+                        // Si no hay documentos, mostrar un mensaje indicando que no hay archivos disponibles
+                        $('#archivo_url_contrato').append(`
+                            <p>No hay archivos disponibles.</p>
+                        `);
+                    }                    
                     
-                    
-                    
-
-
-
-
-
-
                     // Limpiar las filas de coordenadas anteriores
                     $('#edit_coordenadas tbody').empty();
 
@@ -972,13 +989,13 @@ $(function () {
                         </td>
                         <td>
                             <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" name="latitud[]" value="${coordenada.latitud}" placeholder="Latitud">
+                                <input type="text" class="form-control" name="latitud[]" value="${coordenada.latitud}" placeholder="Latitud" autocomplete="off">
                                 <label for="latitud">Latitud</label>
                             </div>
                         </td>
                         <td>
                             <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" name="longitud[]" value="${coordenada.longitud}" placeholder="Longitud">
+                                <input type="text" class="form-control" name="longitud[]" value="${coordenada.longitud}" placeholder="Longitud" autocomplete="off">
                                 <label for="longitud">Longitud</label>
                             </div>
                         </td>
@@ -1045,7 +1062,7 @@ $(function () {
                                 <td><b>Número de Plantas</b></td>
                                 <td>
                                     <div class="form-floating form-floating-outline">
-                                        <input type="number" class="form-control" name="numero_plantas[]" value="${plantacion.num_plantas}" placeholder="Número de plantas" step="1">
+                                        <input type="number" class="form-control" name="numero_plantas[]" value="${plantacion.num_plantas}" placeholder="Número de plantas" step="1" autocomplete="off">
                                         <label for="numero_plantas">Número de Plantas</label>
                                     </div>
                                 </td>
@@ -1054,7 +1071,7 @@ $(function () {
                                 <td><b>Edad de la Plantación</b></td>
                                 <td>
                                     <div class="form-floating form-floating-outline">
-                                        <input type="number" class="form-control" name="edad_plantacion[]" value="${plantacion.anio_plantacion}" placeholder="Edad de la plantación (años)" step="1">
+                                        <input type="number" class="form-control" name="edad_plantacion[]" value="${plantacion.anio_plantacion}" placeholder="Edad de la plantación (años)" step="1" autocomplete="off">
                                         <label for="edad_plantacion">Edad de la Plantación</label>
                                     </div>
                                 </td>
@@ -1063,7 +1080,7 @@ $(function () {
                                 <td><b>Tipo de Plantación</b></td>
                                 <td>
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" name="tipo_plantacion[]" value="${plantacion.tipo_plantacion}" placeholder="Tipo de plantación">
+                                        <input type="text" class="form-control" name="tipo_plantacion[]" value="${plantacion.tipo_plantacion}" placeholder="Tipo de plantación" autocomplete="off">
                                         <label for="tipo_plantacion">Tipo de Plantación</label>
                                     </div>
                                 </td>
@@ -1229,6 +1246,20 @@ $(function () {
                             type: 'application/pdf', // Tipo MIME para archivos PDF
                             maxSize: 2097152, // Tamaño máximo de 2MB (2 * 1024 * 1024 bytes)
                             message: 'El archivo debe ser un PDF y no debe superar los 2MB'
+                        }
+                    }
+                },
+                'latitud[]':{
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa la latitud'
+                        }
+                    }
+                },
+                'longitud[]': {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingresa la longitud'
                         }
                     }
                 },

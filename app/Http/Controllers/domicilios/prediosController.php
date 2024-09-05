@@ -283,16 +283,16 @@ class PrediosController extends Controller
                 $numeroCliente = DB::table('empresa_num_cliente')
                     ->where('id_empresa', $predio->id_empresa)
                     ->value('numero_cliente');
-            
-                // Filtrar documentos para obtener solo el documento con id_documento igual a 34
-                $documentos = $predio->documentos->filter(function ($documento) {
-                    return $documento->id_documento == 34;
-                })->map(function ($documento) {
-                    return [
-                        'nombre' => $documento->nombre_documento,
-                        'url' => $documento->url // Solo nombre del archivo
-                    ];
-                });
+                    // Filtrar documentos para obtener solo el documento con id_documento igual a 34
+                    $documentos = $predio->documentos->filter(function ($documento) {
+                        return $documento->id_documento == 34;
+                    })->map(function ($documento) {
+                        return [
+                            'nombre' => $documento->nombre_documento,
+                            'url' => $documento->url // Solo nombre del archivo
+                        ];
+                    })->values(); // Esto convertirá el resultado en un array
+
             
                 return response()->json([
                     'success' => true,
