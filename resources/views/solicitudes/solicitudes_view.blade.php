@@ -46,7 +46,7 @@
 .card-hover:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    border: 2px solid #007bff !important; 
+    border: 2px solid #2EAC6B !important; 
 }
 
 .card-title {
@@ -121,7 +121,7 @@ card-title  {
           <div class="row g-6 mb-6" id="tab-alcoholicas-content">
             <div class="col-md-4">
               <div class="card text-center">
-                <div class="card-body card-hover">
+                <div class="card-body">
                   <i class="fas fa-cocktail fa-3x mb-3"></i> <!-- Ícono -->
                   <p class="card-text">Descripción de otras bebidas de mezcal</p>
                 </div>
