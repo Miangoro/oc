@@ -4,7 +4,6 @@ namespace App\Http\Controllers\hologramas;
 
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
-use App\Models\activarHologramasModelo;
 use App\Models\empresa;
 use App\Models\solicitudHolograma as ModelsSolicitudHolograma;
 use App\Models\direcciones;
@@ -14,7 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 
 class solicitudHolograma extends Controller
@@ -413,50 +411,6 @@ public function update(Request $request)
         // Generar y devolver el PDF
         return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
     }
-
-    public function verificarFolios(Request $request)
-{
-    $folio_inicial = $request->input('folio_inicial');
-    $folio_final = $request->input('folio_final');
-    $id_solicitud = $request->input('id_solicitud');
-
-    // Obtener el rango de folios de la solicitud
-    $solicitud = ModelsSolicitudHolograma::where('id_solicitud', $id_solicitud)->first();
-
-    if (!$solicitud) {
-        return response()->json(['error' => 'La solicitud no existe.'], 400);
-    }
-
-    // Validar que el rango esté dentro del rango de la solicitud
-    if ($folio_inicial < $solicitud->folio_inicial || $folio_final > $solicitud->folio_final) {
-        return response()->json(['error' => 'El rango de folios está fuera del rango permitido por la solicitud.'], 400);
-    }
-        // ** Segunda Consulta: Verificar que el rango de folios no se solape con rangos existentes **
-        $rangoExistente = activarHologramasModelo::where(function($query) use ($folio_inicial, $folio_final) {
-            // Verificar si el nuevo rango se solapa con algún rango existente
-            $query->where('folio_inicial', '<=', $folio_final)
-                  ->where('folio_final', '>=', $folio_inicial);
-        })->where('id_solicitud', $id_solicitud)->exists();
-    
-
-    
-    /*$sql = $query->toSql();
-    $bindings = $query->getBindings();
-    $rangoExistente = $query->exists();
-
-    Log::info('Consulta SQL: ' . $sql);
-    Log::info('Parámetros: ', $bindings);*/
-
-    if ($rangoExistente) {
-        return response()->json(['error' => 'Este rango de folios ya está activado.'], 400);
-    }
-
-    return response()->json(['success' => 'El rango de folios está disponible.']);
-}
-
-
-
-
 }
 
 

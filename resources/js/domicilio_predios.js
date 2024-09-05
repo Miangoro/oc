@@ -928,41 +928,19 @@ $(function () {
 
                     console.log(data.documentos); // Verifica el contenido
 
-                    // Limpia el contenido existente
-                    $('#archivo_url_contrato').empty();
+                    if (Array.isArray(data.documentos)) {
+                        $('#archivo_url_contrato').empty(); // Limpia el contenido existente
                     
-                    // Verifica si data.documentos es un array
-                    if (Array.isArray(data.documentos) && data.documentos.length > 0) {
-                        // Procesar documentos si es un array y contiene elementos
                         data.documentos.forEach(function (documento) {
                             var nombre = documento.nombre; // Nombre del documento
                             var url = documento.url; // URL del documento
-                    
+
                             // Codificar la URL del archivo
                             var urlCodificada = encodeURIComponent(url);
-                    
+
                             // Construir la URL completa utilizando el numeroCliente
                             var urlCompleta = '../files/' + data.numeroCliente + '/' + urlCodificada;
-                    
-                            // Agregar el enlace al documento en el div
-                            $('#archivo_url_contrato').append(`
-                                <a href="${urlCompleta}" target="_blank">${nombre}</a>
-                                <br>
-                            `);
-                        });
-                    } else if (typeof data.documentos === 'object' && Object.keys(data.documentos).length > 0) {
-                        // Procesar documentos si es un objeto y contiene claves
-                        Object.keys(data.documentos).forEach(function (key) {
-                            var documento = data.documentos[key];
-                            var nombre = documento.nombre; // Nombre del documento
-                            var url = documento.url; // URL del documento
-                    
-                            // Codificar la URL del archivo
-                            var urlCodificada = encodeURIComponent(url);
-                    
-                            // Construir la URL completa utilizando el numeroCliente
-                            var urlCompleta = '../files/' + data.numeroCliente + '/' + urlCodificada;
-                    
+
                             // Agregar el enlace al documento en el div
                             $('#archivo_url_contrato').append(`
                                 <a href="${urlCompleta}" target="_blank">${nombre}</a>
@@ -970,12 +948,17 @@ $(function () {
                             `);
                         });
                     } else {
-                        // Si no hay documentos, mostrar un mensaje indicando que no hay archivos disponibles
-                        $('#archivo_url_contrato').append(`
-                            <p>No hay archivos disponibles.</p>
-                        `);
-                    }                    
+                        console.error('data.documentos no es un array:', data.documentos);
+                    }
                     
+                    
+                    
+
+
+
+
+
+
                     // Limpiar las filas de coordenadas anteriores
                     $('#edit_coordenadas tbody').empty();
 
@@ -1246,20 +1229,6 @@ $(function () {
                             type: 'application/pdf', // Tipo MIME para archivos PDF
                             maxSize: 2097152, // Tamaño máximo de 2MB (2 * 1024 * 1024 bytes)
                             message: 'El archivo debe ser un PDF y no debe superar los 2MB'
-                        }
-                    }
-                },
-                'latitud[]':{
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor ingresa la latitud'
-                        }
-                    }
-                },
-                'longitud[]': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor ingresa la longitud'
                         }
                     }
                 },

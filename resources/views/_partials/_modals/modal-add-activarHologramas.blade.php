@@ -9,7 +9,7 @@
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="activarHologramasForm">
-                    <input type="text" id="id_solicitudActivacion" name="id_solicitud">       
+
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
@@ -146,11 +146,11 @@
                                 </th>
                                 <td>
                                     <input type="number" class="form-control form-control-sm" name="rango_inicial[]"
-                                        id="folio_inicial">
+                                        id="rango_inicial">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control form-control-sm" name="rango_final[]"
-                                        id="folio_final">
+                                        id="rango_final">
                                 </td>
                             </tr>
                         </tbody>
@@ -170,3 +170,5 @@
     </div>
 </div>
 
+
+<script></script>
