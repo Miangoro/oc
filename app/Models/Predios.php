@@ -27,6 +27,7 @@ class Predios extends Model
         'puntos_referencia',
         'cuenta_con_coordenadas',
         'superficie',
+        'estatus'
 
     ];
 
@@ -59,5 +60,11 @@ class Predios extends Model
     {
         return $this->hasMany(predio_plantacion::class, 'id_predio');
     }
+
+        // Relación con el modelo Documentacion_url
+        public function documentos()
+        {
+            return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_predio');
+        }
 
 }

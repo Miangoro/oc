@@ -340,9 +340,9 @@
         <br><br>
         <table class="table_description">
             <tr>
-                <td colspan="6" style="font-weight: bold; font-size: 13px;">
-                    <p>PRODUCTO {{ $data->lote_granel->categoria->categoria ?? 'N/A' }}</p>
-                    <p>ORIGEN {{ $data->inspeccion->solicitud->instalacion->estados->nombre }}</p>
+                <td colspan="6" style="font-weight: bold; font-size: 13px; text-transform: uppercase;">
+                    <p>producto {{ $data->lote_granel->categoria->categoria ?? 'N/A' }}</p>
+                    <p>origen {{ $data->inspeccion->solicitud->instalacion->estados->nombre }}</p>
                 </td>
             </tr>
             <tr>
