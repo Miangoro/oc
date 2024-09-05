@@ -4,7 +4,7 @@ namespace App\Http\Controllers\pdfscontrollers;
 
 use App\Http\Controllers\Controller;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use App\Services\PdfModifier;
 use Illuminate\Http\Request;
 
 class CartaAsignacionController extends Controller
@@ -195,8 +195,6 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Etiqueta_ingreso_a_barrica.pdf');
     }
 
-
-
     //pdf Bitácora de revisión de certificados NOM de Instalaciones
     public function bitacora_revision_SCFI2016()
     {
@@ -210,12 +208,16 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('NOM-070-SCFI-2016 Ed. 5.pdf');
     }
 
-
-
     //Plan de auditoria
     public function PlanDeAuditoria()
     {
         $pdf = Pdf::loadView('pdfs.PlanDeAuditoria');
         return $pdf->stream('Plan de auditoría de esquema de certificación F7.1-01-13.pdf');
+    }
+
+    public function PreCertificado()
+    {
+        $pdf = Pdf::loadView('pdfs.pre-certificado');
+        return $pdf->stream('Pre-certificado CIDAM C-GRA-210 2024.pdf');
     }
 }

@@ -32,7 +32,7 @@
 
 <!-- Page Scripts -->
 @section('page-script')
-@vite(['resources/js/solicitudes.js'])
+@vite(['resources/js/solicitudes-tipo.js'])
 @endsection
 
 @section('content')
