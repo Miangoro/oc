@@ -1031,10 +1031,16 @@ $(function () {
                    
                 },
                 success: function(response) {
-                    console.log(response);
+                  $("#mensaje").text(response.success || 'Rango de folios disponible.');
+                  $("#mensaje").attr('class', 'alert alert-solid-success'); 
+                  $("#mensaje").show();
+                  console.log(response);
                   
                 },
                 error: function(xhr) {
+                  $("#mensaje").text(xhr.responseJSON.error || 'Ocurrió un error.');  
+                  $("#mensaje").attr('class', 'alert alert-solid-danger'); 
+                  $("#mensaje").show();
                   console.log(xhr.responseText); 
 
                 }

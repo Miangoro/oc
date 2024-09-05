@@ -663,7 +663,6 @@ Route::get('/certificado_comercializador/{id_certificado}', [Certificado_Instala
 Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
 Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
 
-<<<<<<< HEAD
 Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 
 //solicitud hologrammas
@@ -678,22 +677,8 @@ Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 
 Route::post('/verificar-folios', [solicitudHolograma::class, 'verificarFolios']);
 
 //Tipo
-Route::get('/tipo', [TipoController::class, 'UserManagement'])->name('tipo');
+Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');
+Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
 
 //Módulo de solicitudes
-Route::get('/solicitudes', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
-=======
-/* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
- */
-//catalago equipos
-Route::get('/catalogo/equipos', [catalagoEquiposController::class, 'UserManagement'])->name('catalago-equipos');
-Route::resource('/equipos-list', catalagoEquiposController::class);
-Route::post('/equipos/store', [catalagoEquiposController::class, 'store'])->name('equipos.store');
-Route::get('/equipos-list/{id_equipo}/edit', [catalagoEquiposController::class, 'edit'])->name('equipos.edit');
-Route::post('/equipos-list/update', [catalagoEquiposController::class, 'update'])->name('equipos.update');
-
-//Tipo
-Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');
-// En web.php o api.php, dependiendo de cómo estés organizando las rutas
-Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
->>>>>>> b668cdf19ff7f6d959ba4eb5cde3445e63a08efb
+Route::get('/solicitudes_historial', [solicitudesController::class, 'UserManagement'])->name('solicitudes');

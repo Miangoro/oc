@@ -437,6 +437,14 @@ public function update(Request $request)
             $query->where('folio_inicial', '<=', $folio_final)
                   ->where('folio_final', '>=', $folio_inicial);
         })->where('id_solicitud', $id_solicitud)->exists();
+
+    
+    // ** Tercera Consulta: Verificar que el nuevo rango no envuelva a los rangos existentes **
+    $rangoEnvolvente = activarHologramasModelo::where(function($query) use ($folio_inicial, $folio_final) {
+        // Verificar si el nuevo rango envuelve algún rango existente
+        $query->where('folio_inicial', '>=', $folio_inicial)
+              ->where('folio_final', '<=', $folio_final);
+    })->where('id_solicitud', $id_solicitud)->exists();
     
 
     
@@ -447,8 +455,12 @@ public function update(Request $request)
     Log::info('Consulta SQL: ' . $sql);
     Log::info('Parámetros: ', $bindings);*/
 
+    if ($rangoEnvolvente) {
+        return response()->json(['error' => 'El rango de folios no puede envolver a otro rango ya activado.'], 400);
+    }
+
     if ($rangoExistente) {
-        return response()->json(['error' => 'Este rango de folios ya está activado.'], 400);
+        return response()->json(['error' => 'Este rango de folios ya está activado.'],400);
     }
 
     return response()->json(['success' => 'El rango de folios está disponible.']);

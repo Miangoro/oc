@@ -128,6 +128,8 @@
                         </div>
                     </div>
 
+                    <div style="display: none;" id="mensaje" role="alert"></div>
+
 
                     <table class="table table-bordered">
                         <thead>
