@@ -182,7 +182,7 @@ use App\Http\Controllers\usuarios\UsuariosPersonalController;
 use App\Http\Controllers\usuarios\UsuariosConsejoController;
 use App\Http\Controllers\catalogo\LotesGranelController;
 use App\Http\Controllers\documentacion\DocumentosController;
-use App\Http\Controllers\solicitudes\TipoController;
+use App\Http\Controllers\solicitudes\SolicitudesTipoController;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\InstalacionesController;
@@ -668,4 +668,6 @@ Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'u
 Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
 
 //Tipo
-Route::get('/tipo', [TipoController::class, 'UserManagement'])->name('tipo');
+Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');
+// En web.php o api.php, dependiendo de cómo estés organizando las rutas
+Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
