@@ -273,12 +273,13 @@ class PrediosController extends Controller
 
         
         
+        
         public function edit($id_predio)
         {
             try {
                 $predio = Predios::with(['coordenadas', 'predio_plantaciones', 'documentos'])->findOrFail($id_predio);
                 $tipos = Tipos::all();
-            
+        
                 // Obtener el número del cliente
                 $numeroCliente = DB::table('empresa_num_cliente')
                     ->where('id_empresa', $predio->id_empresa)
@@ -307,8 +308,6 @@ class PrediosController extends Controller
                 return response()->json(['success' => false], 404);
             }
         }
-        
-        
         
 
 

@@ -41,14 +41,9 @@
  --}}
 <!-- Users List Table -->
 <div class="card">
-    <div class="card-header">
-        <h3 class="card-title mb-4">Dictámenes de instalaciones</h3>
-        <div class="d-flex justify-content-between align-items-center row gap-5 gx-6 gap-md-0">
-          <div class="col-md-4 product_status"></div>
-          <div class="col-md-4 product_category"></div>
-          <div class="col-md-4 product_stock"></div>
-        </div>
-      </div>
+    <div class="card-header pb-0">
+        <h3 class="card-title mb-0">Dictámenes de Instalaciones</h3>
+    </div>
 
     <div class="card-datatable table-responsive">
         <table class="datatables-users table">
@@ -67,6 +62,30 @@
             </thead>
         </table>
     </div>
+
+
+    <!-- Offcanvas Agregar nuevo tipo 
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
+        <div class="offcanvas-header border-bottom">
+            <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Nuevo Dictamen</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body mx-0 flex-grow-0 h-100">
+            <form class="add-new-user pt-0" id="addNewCategoryForm">
+                @csrf
+                <div class="form-floating form-floating-outline mb-5">
+                    <input type="text" class="form-control" id="nombre" placeholder="Tipo de maguey o agave" name="nombre" aria-label="Nombre" required>
+                    <label for="nombre">Nombre del Tipo</label>
+                </div>
+                <div class="form-floating form-floating-outline mb-5">
+                    <input type="text" class="form-control" id="ciencitico" placeholder="cientifico" name="cientifico" aria-label="Nombre" required>
+                    <label for="cientifico">Nombre 100</label>
+                </div>
+                <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
+                <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
+            </form>
+        </div>
+    </div>-->
 
 
 

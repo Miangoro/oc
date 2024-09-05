@@ -11,8 +11,6 @@ use App\Models\inspecciones;
 
 use App\Models\empresa; 
 use App\Models\solicitudesModel;
-use App\Models\User;
-use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Faker\Extension\Helper;
 
@@ -38,7 +36,6 @@ class InstalacionesController extends Controller
             3 => 'num_dictamen',
             4 => 'num_servicio',
             5 => 'fecha_emision',
-            6 => 'razon_social',
         ];
 
         $search = [];
@@ -52,9 +49,7 @@ class InstalacionesController extends Controller
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
 
-       
-
-        if ( empty($request->input('search.value'))) {
+        if (empty($request->input('search.value'))) {
             $users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
                 ->offset($start)
                 ->limit($limit)
@@ -62,24 +57,17 @@ class InstalacionesController extends Controller
                 ->get();
         } else {
             $search = $request->input('search.value');
-            dd($search);
+
             $users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
                 ->where('id_dictamen', 'LIKE', "%{$search}%")
                 ->orWhere('tipo_dictamen', 'LIKE', "%{$search}%")
-                ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-             
-                ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
 
-            $totalFiltered = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
-                ->where('id_dictamen', 'LIKE', "%{$search}%")
+            $totalFiltered = Dictamen_instalaciones::where('id_dictamen', 'LIKE', "%{$search}%")
                 ->orWhere('tipo_dictamen', 'LIKE', "%{$search}%")
-                ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-      
-                ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
                 ->count();
         }
 
@@ -89,9 +77,8 @@ class InstalacionesController extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-                
-                $nestedData['fake_id'] = ++$ids;
                 $nestedData['id_dictamen'] = $user->id_dictamen;
+                $nestedData['fake_id'] = ++$ids;
                 $nestedData['tipo_dictamen'] = $user->tipo_dictamen;
                 $nestedData['razon_social'] = $user->inspeccione->solicitud->empresa->razon_social;
                 $nestedData['num_dictamen'] = $user->num_dictamen;
@@ -148,18 +135,6 @@ class InstalacionesController extends Controller
 
     
                 $var->save();//guardar en BD
-
-                $user = User::find(18); // Encuentra al usuario que recibirá la notificación
-                $tipo_dictamen = ["Productor","Envasador","Comercializador", "Almacén y bodega", "Área de maduración"];
-
-                // Notificación 1
-                $data1 = [
-                    'title' => 'Nuevo registro de dictamen',
-                    'message' => 'Dictamen de instalaciones de '.$tipo_dictamen[$request->tipo_dictamen],
-                    'url' => '/dictamenes/instalaciones',
-                ];
-
-                $user->notify(new GeneralNotification ($data1));
     
                 return response()->json(['success' => 'Registro agregada correctamente']);
             } catch (\Exception $e) {

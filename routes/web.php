@@ -189,7 +189,6 @@ use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\catalogo\catalagoEquiposController;
 use App\Http\Controllers\inspecciones\inspeccionesController;
-use App\Http\Controllers\solicitudes\solicitudesController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -663,6 +662,7 @@ Route::get('/certificado_comercializador/{id_certificado}', [Certificado_Instala
 Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
 Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
 
+
 Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 
 //solicitud hologrammas
@@ -681,4 +681,25 @@ Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])
 Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
 
 //Módulo de solicitudes
+<<<<<<< HEAD
 Route::get('/solicitudes-historial', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
+=======
+
+Route::get('/solicitudes_historial', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
+
+Route::get('/solicitudes', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
+
+/* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
+ */
+//catalago equipos
+Route::get('/catalogo/equipos', [catalagoEquiposController::class, 'UserManagement'])->name('catalago-equipos');
+Route::resource('/equipos-list', catalagoEquiposController::class);
+Route::post('/equipos/store', [catalagoEquiposController::class, 'store'])->name('equipos.store');
+Route::get('/equipos-list/{id_equipo}/edit', [catalagoEquiposController::class, 'edit'])->name('equipos.edit');
+Route::post('/equipos-list/update', [catalagoEquiposController::class, 'update'])->name('equipos.update');
+
+//Tipo
+Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');
+Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
+
+>>>>>>> f2933fd8d0858c2a578db6df82a646c68848cb18

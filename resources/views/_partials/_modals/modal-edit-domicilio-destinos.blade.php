@@ -46,7 +46,7 @@
                             </div>
                             <!-- Domicilio Completo -->
                             <div class="form-floating form-floating-outline mb-4">
-                                <textarea class="form-control" id="edit_direccion" name="direccion" placeholder="Domicilio completo"></textarea>
+                                <textarea class="form-control" id="edit_direccion" name="direccion" placeholder="Domicilio completo"  autocomplete="off"></textarea>
                                 <label for="direccion">Domicilio Completo</label>
                             </div>
                             <!-- Campos adicionales para exportación -->
@@ -56,7 +56,7 @@
                                     <div class="col-md-12">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="edit_destinatario"
-                                                name="destinatario" placeholder="Nombre del destinatario">
+                                                name="destinatario" placeholder="Nombre del destinatario"  autocomplete="off">
                                             <label for="destinatario">Nombre del Destinatario</label>
                                         </div>
                                     </div>
@@ -66,7 +66,7 @@
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="edit_aduana" name="aduana"
-                                                placeholder="Aduana de despacho">
+                                                placeholder="Aduana de despacho"  autocomplete="off">
                                             <label for="aduana">Aduana de Despacho</label>
                                         </div>
                                     </div>
@@ -74,7 +74,7 @@
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="edit_pais_destino"
-                                                name="pais_destino" placeholder="País de destino">
+                                                name="pais_destino" placeholder="País de destino"  autocomplete="off">
                                             <label for="pais_destino">País de Destino</label>
                                         </div>
                                     </div>
@@ -89,7 +89,7 @@
                                     <div class="col-md-12">
                                         <div class="form-floating form-floating-outline">
                                             <input type="email" class="form-control" id="edit_correo_recibe"
-                                                name="correo_recibe" placeholder="Correo electrónico">
+                                                name="correo_recibe" placeholder="Correo electrónico"  autocomplete="off">
                                             <label for="correo_recibe">Correo Electrónico</label>
                                         </div>
                                     </div>
@@ -99,7 +99,7 @@
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="edit_nombre_recibe"
-                                                name="nombre_recibe"
+                                                name="nombre_recibe"  autocomplete="off"
                                                 placeholder="Nombre completo del receptor de hologramas">
                                             <label for="nombre_recibe">Nombre Completo del Recibe Hologramas</label>
                                         </div>
@@ -107,7 +107,7 @@
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="edit_celular_recibe"
-                                                name="celular_recibe" placeholder="Número de teléfono">
+                                                name="celular_recibe" placeholder="Número de teléfono"  autocomplete="off">
                                             <label for="celular_recibe">Celular</label>
                                         </div>
                                     </div>
