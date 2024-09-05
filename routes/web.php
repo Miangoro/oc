@@ -448,8 +448,6 @@ Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'
 Route::get('/Etiqueta-Muestra', [CartaAsignacionController::class, 'Etiqueta_muestra'])->name('Etiqueta-Muestra');
 Route::get('/Etiqueta-Barrica', [CartaAsignacionController::class, 'Etiqueta_Barrica'])->name('Etiqueta-Barrica');
 
-Route::get('/Pre-certificado', [CartaAsignacionController::class, 'PreCertificado'])->name('Pre-certificado');
-
 Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion');/*  */
 
 //Certificados de instalaciones
@@ -683,20 +681,4 @@ Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])
 Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
 
 //Módulo de solicitudes
-<<<<<<< HEAD
-Route::get('/solicitudes_historial', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
-=======
-Route::get('/solicitudes', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
-/* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
- */
-//catalago equipos
-Route::get('/catalogo/equipos', [catalagoEquiposController::class, 'UserManagement'])->name('catalago-equipos');
-Route::resource('/equipos-list', catalagoEquiposController::class);
-Route::post('/equipos/store', [catalagoEquiposController::class, 'store'])->name('equipos.store');
-Route::get('/equipos-list/{id_equipo}/edit', [catalagoEquiposController::class, 'edit'])->name('equipos.edit');
-Route::post('/equipos-list/update', [catalagoEquiposController::class, 'update'])->name('equipos.update');
-
-//Tipo
-Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');
-Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
->>>>>>> f4061a21520996bdff8df4fc0f8bdf5a6d8b595e
+Route::get('/solicitudes-historial', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
