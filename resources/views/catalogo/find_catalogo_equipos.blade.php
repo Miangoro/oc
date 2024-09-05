@@ -67,14 +67,14 @@
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0 h-100">
-                <form class="edit-class-form pt-0" id="editEquipoForm">
+                <form class="edit-class-form pt-0" id="editEquipoForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     @csrf
                     @method('PUT')
-                    <input type="hidden" name="id_categoria" id="edit_id_categoria" value="">
+                    <input type="hidden" name="id_equipo" id="edit_id_equipo" value="">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="edit_categoria" placeholder="Nombre de la Categoría"
-                            name="categoria" aria-label="Categoría" required>
-                        <label for="edit_categoria">Nombre del equipo</label>
+                        <input type="text" class="form-control" id="edit_equipo" placeholder="Nombre de la Categoría"
+                            name="equipo" aria-label="Categoría" required>
+                        <label for="edit_equipo">Nombre del equipo</label>
                     </div>
                     <button type="submit" class="btn btn-primary me-sm-3 me-1">Guardar Cambios</button>
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>

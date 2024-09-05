@@ -667,8 +667,9 @@ Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_Instal
 //catalago equipos
 Route::get('/catalogo/equipos', [catalagoEquiposController::class, 'UserManagement'])->name('catalago-equipos');
 Route::resource('/equipos-list', catalagoEquiposController::class);
-Route::post('/equipos/store', [catalagoEquiposController::class, 'store'])->name('categorias.store');
-
+Route::post('/equipos/store', [catalagoEquiposController::class, 'store'])->name('equipos.store');
+Route::get('/equipos-list/{id_equipo}/edit', [catalagoEquiposController::class, 'edit'])->name('equipos.edit');
+Route::post('/equipos-list/update', [catalagoEquiposController::class, 'update'])->name('equipos.update');
 
 //Tipo
 Route::get('/tipo', [TipoController::class, 'UserManagement'])->name('tipo');

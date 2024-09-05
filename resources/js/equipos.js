@@ -81,7 +81,7 @@ $(function () {
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center user-name">' +
               '<div class="avatar-wrapper">' +
-/*               '<div class="avatar avatar-sm me-3">' + */
+              /*               '<div class="avatar avatar-sm me-3">' + */
 
               '</d iv>' +
               '</div>' +
@@ -104,33 +104,33 @@ $(function () {
             return '<span class="user-email">' + $email + '</span>';
           }
         }, */
-/*         {
-          // email verify
-          targets: 4,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $verified = full['regimen'];
-            if($verified=='Persona física'){
-              var $colorRegimen = 'info';
-            }else{
-              var $colorRegimen = 'warning';
-            }
-            return `${
-              $verified
-                ? '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-                : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-            }`;
-          }
-        },
-        /* {
-          // email verify
-          targets: 5,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $id = full['id_empresa'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_empresa']}" data-registro="${full['razon_social']} "></i>`;
-          }
-        },*/
+        /*         {
+                  // email verify
+                  targets: 4,
+                  className: 'text-center',
+                  render: function (data, type, full, meta) {
+                    var $verified = full['regimen'];
+                    if($verified=='Persona física'){
+                      var $colorRegimen = 'info';
+                    }else{
+                      var $colorRegimen = 'warning';
+                    }
+                    return `${
+                      $verified
+                        ? '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
+                        : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
+                    }`;
+                  }
+                },
+                /* {
+                  // email verify
+                  targets: 5,
+                  className: 'text-center',
+                  render: function (data, type, full, meta) {
+                    var $id = full['id_empresa'];
+                    return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_empresa']}" data-registro="${full['razon_social']} "></i>`;
+                  }
+                },*/
         {
           // Actions
           targets: -1,
@@ -172,11 +172,11 @@ $(function () {
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
         paginate: {
-                "sFirst":    "Primero",
-                "sLast":     "Último",
-                "sNext":     "Siguiente",
-                "sPrevious": "Anterior"
-              }
+          "sFirst": "Primero",
+          "sLast": "Último",
+          "sNext": "Siguiente",
+          "sPrevious": "Anterior"
+        }
       },
 
 
@@ -351,18 +351,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -431,19 +431,46 @@ $(function () {
     });
   });
 
-  // Agregar nueva categoría
-  $('#addNewCategoryForm').on('submit', function (e) {
-    e.preventDefault();
-    var formData = $(this).serialize();
+  const addNewCategoryForm = document.getElementById('addNewCategoryForm');
+
+  // Validación del formulario con FormValidation
+  const fv = FormValidation.formValidation(addNewCategoryForm, {
+    fields: {
+      equipo: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor introduzca el nombre del equipo'
+          }
+        }
+      }
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        rowSelector: function (field, ele) {
+          return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+        }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+    // Cuando el formulario es válido
+    var formData = new FormData(addNewCategoryForm);
 
     $.ajax({
-      url: '/equipos/store',
+      url: '/equipos/store', // Actualiza con la URL correcta
       type: 'POST',
       data: formData,
+      processData: false,
+      contentType: false,
       success: function (response) {
         $('#offcanvasAddUser').offcanvas('hide');
-        $('#addNewCategoryForm')[0].reset();
-        dt_user.ajax.reload();
+        addNewCategoryForm.reset();
+        $('.datatables-users').DataTable().ajax.reload(); // Actualiza la tabla
+
+        // Mostrar alerta de éxito
         Swal.fire({
           icon: 'success',
           title: '¡Éxito!',
@@ -454,12 +481,11 @@ $(function () {
         });
       },
       error: function (xhr) {
-        console.log('Error:', xhr.responseText);
-
+        // Mostrar alerta de error
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: 'Error al agregar la categoría',
+          text: 'Error al agregar el equipo',
           customClass: {
             confirmButton: 'btn btn-danger'
           }
@@ -468,74 +494,98 @@ $(function () {
     });
   });
 
-// Editar registro
-$(document).ready(function() {
-  // Abrir el modal y cargar datos para editar
-  $('.datatables-users').on('click', '.edit-record', function() {
+
+  // Editar registro
+  $(document).ready(function () {
+    // Abrir el modal y cargar datos para editar
+    $('.datatables-users').on('click', '.edit-record', function () {
       var id_equipo = $(this).data('id');
 
       // Realizar la solicitud AJAX para obtener los datos de la clase
-      $.get('/categorias-list/' + id_equipo + '/edit', function(data) {
-          // Rellenar el formulario con los datos obtenidos
-          $('#id_equipo').val(data.id_equipo);
-          $('#edit_categoria').val(data.categoria);
+      $.get('/equipos-list/' + id_equipo + '/edit', function (data) {
+        // Rellenar el formulario con los datos obtenidos
+        $('#edit_id_equipo').val(data.id_equipo);
+        $('#edit_equipo').val(data.equipo);
 
-          // Mostrar el modal de edición
-          $('#editCategoria').offcanvas('show');
-      }).fail(function() {
-          Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al obtener los datos de la clase',
-              customClass: {
-                  confirmButton: 'btn btn-danger'
-              }
-          });
-      });
-  });
-
-  // Manejar el envío del formulario de edición
-  $('#editCategoriaForm').on('submit', function(e) {
-      e.preventDefault();
-
-      var formData = $(this).serialize();
-      var id_equipo = $('#edit_id_equipo').val(); // Obtener el ID de la clase desde el campo oculto
-
-      $.ajax({
-          url: '/categorias-list/' + id_equipo,
-          type: 'PUT',
-          data: formData,
-          success: function(response) {
-              $('#editCategoria').offcanvas('hide'); // Ocultar el modal de edición
-              $('#editCategoriaForm')[0].reset(); // Limpiar el formulario
-
-              // Mostrar alerta de éxito
-              Swal.fire({
-                  icon: 'success',
-                  title: '¡Éxito!',
-                  text: response.success,
-                  customClass: {
-                      confirmButton: 'btn btn-success'
-                  }
-              });
-
-              // Recargar los datos en la tabla sin reinicializar DataTables
-              $('.datatables-users').DataTable().ajax.reload();
-          },
-          error: function(xhr) {
-              // Mostrar alerta de error
-              Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: 'Error al actualizar la clase',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
+        // Mostrar el modal de edición
+        $('#editEquipo').offcanvas('show');
+      }).fail(function () {
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al obtener los datos del equipo',
+          customClass: {
+            confirmButton: 'btn btn-danger'
           }
+        });
       });
-  });
-});
+    });
 
-//end
+    const editEquipoForm = document.getElementById('editEquipoForm');
+
+    // Validación del formulario
+    const fv2 = FormValidation.formValidation(editEquipoForm, {
+      fields: {
+        equipo: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor introduzca el nombre del equipo'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-4, .mb-5'; // Ajusta según las clases de tus elementos
+          }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      var formData = $(editEquipoForm).serialize(); // Serializa los datos del formulario
+      var id_equipo = $('#edit_id_equipo').val(); // Obtiene el ID del equipo
+    
+      $.ajax({
+        url: '/equipos-list/update',
+        method: 'POST',
+        data: formData,
+        success: function (response) {
+          // Ocultar el modal de edición
+          $('#editEquipo').offcanvas('hide'); 
+          $('#editEquipoForm')[0].reset(); // Limpiar el formulario
+    
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Equipo actualizado correctamente',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+    
+          // Recargar los datos en la tabla sin reinicializar DataTables
+          $('.datatables-users').DataTable().ajax.reload();
+        },
+        error: function (xhr) {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar el equipo',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+    
+  });
+
+  //end
 });

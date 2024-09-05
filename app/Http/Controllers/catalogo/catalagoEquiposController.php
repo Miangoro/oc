@@ -98,10 +98,10 @@ class catalagoEquiposController extends Controller
 //eliminar registro
 public function destroy($id_equipo)
 {
-    $clase = equipos::findOrFail($id_equipo);
-    $clase->delete();
+    $equipo = equipos::findOrFail($id_equipo);
+    $equipo->delete();
 
-    return response()->json(['success' => 'Clase eliminada correctamente']);
+    return response()->json(['success' => 'Equipo eliminada correctamente']);
 }
 
 
@@ -117,8 +117,40 @@ public function store(Request $request)
     $equipo->equipo = $request->equipo;
     $equipo->save();
 
-    return response()->json(['success' => 'Categoría agregada correctamente']);
+    return response()->json(['success' => 'Equipo agregada correctamente']);
 }
+
+
+public function edit($id_equipo)
+{
+    try {
+        $equipo = equipos::findOrFail($id_equipo);
+        return response()->json($equipo);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al obtener el equipo'], 500);
+    }
+}
+
+ // Función para actualizar la categoría existente
+ public function update(Request $request)
+ {
+     $request->validate([
+         'equipo' => 'required|string|max:255',
+     ]);
+
+     try {
+         $equipo = equipos::findOrFail($request->input('id_equipo'));
+         $equipo->equipo = $request->equipo;
+         $equipo->save();
+
+         return response()->json(['success' => 'Equipo actualizada correctamente']);
+     } catch (\Exception $e) {
+         return response()->json(['error' => 'Error al actualizar el equipo'], 500);
+     }
+ }
+
+
+
 
 
 }
