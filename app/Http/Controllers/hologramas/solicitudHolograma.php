@@ -4,7 +4,6 @@ namespace App\Http\Controllers\hologramas;
 
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
-use App\Models\activarHologramasModelo;
 use App\Models\empresa;
 use App\Models\solicitudHolograma as ModelsSolicitudHolograma;
 use App\Models\direcciones;
@@ -14,7 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 
 class solicitudHolograma extends Controller
@@ -413,6 +411,8 @@ public function update(Request $request)
         // Generar y devolver el PDF
         return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
     }
+<<<<<<< HEAD
+=======
 
     public function verificarFolios(Request $request)
 {
@@ -469,6 +469,7 @@ public function update(Request $request)
 
 
 
+>>>>>>> 3259878acd68dcb124d4d5aede440bcd1e22e0b6
 }
 
 

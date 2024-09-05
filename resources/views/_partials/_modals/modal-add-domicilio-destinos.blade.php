@@ -45,7 +45,7 @@
                             </div>
                             <!-- Domicilio Completo -->
                             <div class="form-floating form-floating-outline mb-4">
-                                <textarea class="form-control" id="direccion" name="direccion" placeholder="Domicilio completo"></textarea>
+                                <textarea class="form-control" id="direccion" name="direccion" placeholder="Domicilio completo"  autocomplete="off"></textarea>
                                 <label for="direccion">Domicilio Completo</label>
                             </div>
                             <!-- Campos adicionales para exportación -->
@@ -54,7 +54,7 @@
                                     <!-- Nombre del Destinatario -->
                                     <div class="col-md-12">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="destinatario"
+                                            <input type="text" class="form-control" id="destinatario"  autocomplete="off"
                                                 name="destinatario" placeholder="Nombre del destinatario">
                                             <label for="destinatario">Nombre del Destinatario</label>
                                         </div>
@@ -64,7 +64,7 @@
                                     <!-- Aduana de Despacho -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="aduana" name="aduana"
+                                            <input type="text" class="form-control" id="aduana" name="aduana"  autocomplete="off"
                                                 placeholder="Aduana de despacho">
                                             <label for="aduana">Aduana de Despacho</label>
                                         </div>
@@ -72,7 +72,7 @@
                                     <!-- País de Destino -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="pais_destino"
+                                            <input type="text" class="form-control" id="pais_destino"  autocomplete="off"
                                                 name="pais_destino" placeholder="País de destino">
                                             <label for="pais_destino">País de Destino</label>
                                         </div>
@@ -88,7 +88,7 @@
                                     <!-- Correo -->
                                     <div class="col-md-12">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="email" class="form-control" id="correo_recibe"
+                                            <input type="email" class="form-control" id="correo_recibe"  autocomplete="off"
                                                 name="correo_recibe" placeholder="Correo electrónico">
                                             <label for="correo_recibe">Correo Electrónico</label>
                                         </div>
@@ -99,14 +99,14 @@
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="nombre_recibe"
-                                                name="nombre_recibe"
+                                                name="nombre_recibe"  autocomplete="off"
                                                 placeholder="Nombre completo del receptor de hologramas">
                                             <label for="nombre_recibe">Nombre Completo del Recibe Hologramas</label>
                                         </div>
                                     </div><!-- Celular -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" id="celular_recibe"
+                                            <input type="text" class="form-control" id="celular_recibe"  autocomplete="off"
                                                 name="celular_recibe" placeholder="Número de teléfono ">
                                             <label for="celular_recibe">Celular</label>
                                         </div>

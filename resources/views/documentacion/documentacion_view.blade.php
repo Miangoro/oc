@@ -7,8 +7,7 @@
   'resources/assets/vendor/libs/apex-charts/apex-charts.scss',
   'resources/assets/vendor/libs/@form-validation/form-validation.scss',
     'resources/assets/vendor/libs/animate-css/animate.scss',
-  'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
-  'resources/assets/vendor/libs/select2/select2.scss',
+  'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss'
 ])
 @endsection
 
@@ -20,8 +19,7 @@
   'resources/assets/vendor/libs/@form-validation/popular.js',
   'resources/assets/vendor/libs/@form-validation/bootstrap5.js',
   'resources/assets/vendor/libs/@form-validation/auto-focus.js',
-  'resources/assets/vendor/libs/sweetalert2/sweetalert2.js',
-  'resources/assets/vendor/libs/select2/select2.js',
+    'resources/assets/vendor/libs/sweetalert2/sweetalert2.js'
 ])
 @endsection
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

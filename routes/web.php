@@ -189,8 +189,8 @@ use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\catalogo\catalagoEquiposController;
 use App\Http\Controllers\inspecciones\inspeccionesController;
+use App\Http\Controllers\solicitudes\solicitudesController;
 use App\Http\Controllers\pdf_llenado\PdfController;
-
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -449,8 +449,6 @@ Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'
 Route::get('/Etiqueta-Muestra', [CartaAsignacionController::class, 'Etiqueta_muestra'])->name('Etiqueta-Muestra');
 Route::get('/Etiqueta-Barrica', [CartaAsignacionController::class, 'Etiqueta_Barrica'])->name('Etiqueta-Barrica');
 
-Route::get('/Pre-certificado', [CartaAsignacionController::class, 'PreCertificado'])->name('Pre-certificado');
-
 Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion');/*  */
 
 //Certificados de instalaciones
@@ -666,6 +664,7 @@ Route::get('/certificado_comercializador/{id_certificado}', [Certificado_Instala
 Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
 Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
 
+
 Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 
 //solicitud hologrammas
@@ -684,8 +683,8 @@ Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])
 Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
 
 //Módulo de solicitudes
-Route::get('/solicitudes_historial', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
 Route::get('/solicitudes', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
+
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
  */
 //catalago equipos

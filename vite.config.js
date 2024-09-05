@@ -72,7 +72,11 @@ export default defineConfig({
     html(),
     libsWindowAssignment()
   ],
+<<<<<<< HEAD
+/*      server: {
+=======
 /*       server: {
+>>>>>>> f4061a21520996bdff8df4fc0f8bdf5a6d8b595e
     host: '0.0.0.0', // Esto hace que Vite escuche en todas las interfaces de red
     port: 5173,       // Asegúrate de que este puerto esté disponible
     strictPort: true, // Utiliza estrictamente este puerto
@@ -80,5 +84,9 @@ export default defineConfig({
       host: '10.1.30.224', // IP de la máquina del servidor
       port: 5173,
     },
+<<<<<<< HEAD
+  },    */
+=======
   },     */
+>>>>>>> f4061a21520996bdff8df4fc0f8bdf5a6d8b595e
 });
