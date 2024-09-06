@@ -2,21 +2,30 @@
 
 namespace App\Models;
 
+use App\Traits\TranslatableActivityLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class solicitudesModel extends Model
 {
-    use HasFactory;
+    use LogsActivity, TranslatableActivityLog, HasFactory;
 
     protected $table = 'solicitudes';
-
     protected $primaryKey = 'id_solicitud';
-
     protected $fillable = [
         'id_empresa',
-
+        'id_tipo',
+        'folio',
+        'fecha_visita',
+        'id_instalacion'
     ];
+
+    // Método para obtener el nombre del registro que sirve para la trazabilidad
+    public function getLogName2(): string
+    {
+        return 'solicitud'; // Devuelve el nombre que desees
+    }
 
     public function empresa()
     {

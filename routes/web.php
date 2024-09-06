@@ -189,6 +189,8 @@ use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\catalogo\catalagoEquiposController;
 use App\Http\Controllers\inspecciones\inspeccionesController;
+use App\Http\Controllers\NotificacionController;
+use App\Http\Controllers\solicitudes\solicitudesController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -676,18 +678,10 @@ Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'u
 Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
 Route::post('/verificar-folios', [solicitudHolograma::class, 'verificarFolios']);
 
-//Tipo
-Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');
-Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
 
 //Módulo de solicitudes
-<<<<<<< HEAD
 Route::get('/solicitudes-historial', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
-=======
-
-Route::get('/solicitudes_historial', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
-
-Route::get('/solicitudes', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
+Route::resource('/solicitudes-list', solicitudesController::class);
 
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
  */
@@ -702,4 +696,8 @@ Route::post('/equipos-list/update', [catalagoEquiposController::class, 'update']
 Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');
 Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
 
->>>>>>> f2933fd8d0858c2a578db6df82a646c68848cb18
+//Notificaciones
+Route::post('/notificacion-leida', [NotificacionController::class, 'marcarNotificacionLeida'])->name('notificacion.leida');
+
+
+

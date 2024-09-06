@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use App\Models\marcas;
 use App\Models\Predios;
+use App\Models\solicitudesModel;
 use Carbon\Carbon;
 
 class Helpers
@@ -27,6 +28,21 @@ class Helpers
       // Generar el folio concatenando el número del predio con la letra 'G' y el contador relleno
       return $numPredio . 'G' . $countPadded; 
   }
+
+  public static function generarFolioSolicitud()
+    {
+        // Obtener el año actual
+        $year = date('Y');
+        
+        // Contar cuántos registros hay en el modelo solicitudesModel
+        $count = solicitudesModel::count() + 1; // Sumar 1 al número actual para el siguiente consecutivo
+
+        // Formatear el consecutivo con ceros a la izquierda (5 dígitos)
+        $consecutivo = str_pad($count, 5, '0', STR_PAD_LEFT);
+
+        // Retornar el folio en el formato SOL-año-consecutivo
+        return "SOL-$year-$consecutivo";
+    }
 
   public static function formatearFecha($fecha)
     { 

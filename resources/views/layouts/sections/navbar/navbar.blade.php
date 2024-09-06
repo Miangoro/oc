@@ -185,181 +185,58 @@ $navbarDetached = ($navbarDetached ?? '');
                 <div class="dropdown-header d-flex align-items-center py-2">
                   <h6 class="mb-0 me-auto">Notificaciones</h6>
                   <div class="d-flex align-items-center">
-                    <span class="badge rounded-pill bg-label-primary fs-xsmall me-2">8 New</span>
+                    <span class="badge rounded-pill bg-label-primary fs-xsmall me-2">
+                      @if (auth()->check())
+                          {{ auth()->user()->unreadNotifications->count() }} 
+                          {{ auth()->user()->unreadNotifications->count() == 1 ? 'Nueva' : 'Nuevas' }} 
+                          notificación{{ auth()->user()->unreadNotifications->count() > 1 ? 'es' : '' }}
+                      @endif
+
+                    </span>
                     <a href="javascript:void(0)" class="btn btn-text-secondary rounded-pill btn-icon dropdown-notifications-all" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark all as read"><i class="ri-mail-open-line text-heading ri-20px"></i></a>
                   </div>
                 </div>
               </li>
               <li class="dropdown-notifications-list scrollable-container">
                 <ul class="list-group list-group-flush">
-                  <li class="list-group-item list-group-item-action dropdown-notifications-item">
-                    <div class="d-flex">
-                      <div class="flex-shrink-0 me-3">
-                        <div class="avatar">
-                          <img src="{{asset('assets/img/avatars/1.png')}}" alt class="rounded-circle">
-                        </div>
-                      </div>
-                      <div class="flex-grow-1">
-                        <h6 class="small mb-1">Congratulation Lettie 🎉</h6>
-                        <small class="mb-1 d-block text-body">Won the monthly best seller gold badge</small>
-                        <small class="text-muted">1h ago</small>
-                      </div>
-                      <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ri-close-line ri-20px"></span></a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item list-group-item-action dropdown-notifications-item">
-                    <div class="d-flex">
-                      <div class="flex-shrink-0 me-3">
-                        <div class="avatar">
-                          <span class="avatar-initial rounded-circle bg-label-danger">CF</span>
-                        </div>
-                      </div>
-                      <div class="flex-grow-1">
-                        <h6 class="mb-1 small">Charles Franklin</h6>
-                        <small class="mb-1 d-block text-body">Accepted your connection</small>
-                        <small class="text-muted">12hr ago</small>
-                      </div>
-                      <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ri-close-line ri-20px"></span></a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-                    <div class="d-flex">
-                      <div class="flex-shrink-0 me-3">
-                        <div class="avatar">
-                          <img src="{{asset('assets/img/avatars/2.png')}}" alt class="rounded-circle">
-                        </div>
-                      </div>
-                      <div class="flex-grow-1">
-                        <h6 class="mb-1 small">New Message ✉️</h6>
-                        <small class="mb-1 d-block text-body">You have new message from Natalie</small>
-                        <small class="text-muted">1h ago</small>
-                      </div>
-                      <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ri-close-line ri-20px"></span></a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item list-group-item-action dropdown-notifications-item">
-                    <div class="d-flex">
-                      <div class="flex-shrink-0 me-3">
-                        <div class="avatar">
-                          <span class="avatar-initial rounded-circle bg-label-success"><i class="ri-shopping-cart-2-line"></i></span>
-                        </div>
-                      </div>
-                      <div class="flex-grow-1">
-                        <h6 class="mb-1 small">Whoo! You have new order 🛒 </h6>
-                        <small class="mb-1 d-block text-body">ACME Inc. made new order $1,154</small>
-                        <small class="text-muted">1 day ago</small>
-                      </div>
-                      <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ri-close-line ri-20px"></span></a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-                    <div class="d-flex">
-                      <div class="flex-shrink-0 me-3">
-                        <div class="avatar">
-                          <img src="{{asset('assets/img/avatars/9.png')}}" alt class="rounded-circle">
-                        </div>
-                      </div>
-                      <div class="flex-grow-1">
-                        <h6 class="mb-1 small">Application has been approved 🚀 </h6>
-                        <small class="mb-1 d-block text-body">Your ABC project application has been approved.</small>
-                        <small class="text-muted">2 days ago</small>
-                      </div>
-                      <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ri-close-line ri-20px"></span></a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-                    <div class="d-flex">
-                      <div class="flex-shrink-0 me-3">
-                        <div class="avatar">
-                          <span class="avatar-initial rounded-circle bg-label-success"><i class="ri-pie-chart-2-line"></i></span>
-                        </div>
-                      </div>
-                      <div class="flex-grow-1">
-                        <h6 class="mb-1 small">Monthly report is generated</h6>
-                        <small class="mb-1 d-block text-body">July monthly financial report is generated </small>
-                        <small class="text-muted">3 days ago</small>
-                      </div>
-                      <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ri-close-line ri-20px"></span></a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-                    <div class="d-flex">
-                      <div class="flex-shrink-0 me-3">
-                        <div class="avatar">
-                          <img src="{{asset('assets/img/avatars/5.png')}}" alt class="rounded-circle">
-                        </div>
-                      </div>
-                      <div class="flex-grow-1">
-                        <h6 class="mb-1 small">Send connection request</h6>
-                        <small class="mb-1 d-block text-body">Peter sent you connection request</small>
-                        <small class="text-muted">4 days ago</small>
-                      </div>
-                      <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ri-close-line ri-20px"></span></a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item list-group-item-action dropdown-notifications-item">
-                    <div class="d-flex">
-                      <div class="flex-shrink-0 me-3">
-                        <div class="avatar">
-                          <img src="{{asset('assets/img/avatars/6.png')}}" alt class="rounded-circle">
-                        </div>
-                      </div>
-                      <div class="flex-grow-1">
-                        <h6 class="mb-1 small">New message from Jane</h6>
-                        <small class="mb-1 d-block text-body">Your have new message from Jane</small>
-                        <small class="text-muted">5 days ago</small>
-                      </div>
-                      <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ri-close-line ri-20px"></span></a>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
-                    <div class="d-flex">
-                      <div class="flex-shrink-0 me-3">
-                        <div class="avatar">
-                          <span class="avatar-initial rounded-circle bg-label-warning"><i class="ri-error-warning-line"></i></span>
-                        </div>
-                      </div>
-                      <div class="flex-grow-1">
-                        <h6 class="mb-1 small">CPU is running high</h6>
-                        <small class="mb-1 d-block text-body">CPU Utilization Percent is currently at 88.63%,</small>
-                        <small class="text-muted">5 days ago</small>
-                      </div>
-                      <div class="flex-shrink-0 dropdown-notifications-actions">
-                        <a href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
-                        <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ri-close-line ri-20px"></span></a>
-                      </div>
-                    </div>
-                  </li>
+
+                  @if (auth()->check()) 
+                    @if(Auth::user()->unreadNotifications->count() > 0)
+                      @foreach (Auth::user()->unreadNotifications as $notification)
+                        <li class="list-group-item list-group-item-action dropdown-notifications-item">
+                          <div class="d-flex">
+                            <div class="flex-shrink-0 me-3">
+                              <div class="avatar">
+                                <img src="{{asset('assets/img/avatars/1.png')}}" alt class="rounded-circle">
+                              </div>
+                            </div>
+                            <div class="flex-grow-1">
+                              <h6 class="small mb-1">{{ $notification->data['title'] }}</h6>
+                              <small class="mb-1 d-block text-body">{{ $notification->data['message'] }}</small>
+                              <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
+                            </div>
+                            <div class="flex-shrink-0 dropdown-notifications-actions">
+                              <a onclick="marcarComoLeida('{{ $notification->id }}')" href="javascript:void(0)" class="dropdown-notifications-read"><span class="badge badge-dot"></span></a>
+                              <a href="javascript:void(0)" class="dropdown-notifications-archive"><span class="ri-close-line ri-20px"></span></a>
+                            </div>
+                          </div>
+                        </li>
+                      @endforeach  
+                    
+                    @else 
+
+
+                    @endif
+                  @endif
+
+
+          
                 </ul>
               </li>
               <li class="border-top">
                 <div class="d-grid p-4">
                   <a class="btn btn-primary btn-sm d-flex" href="javascript:void(0);">
-                    <small class="align-middle">View all notifications</small>
+                    <small class="align-middle">Ver todas las notificaciones</small>
                   </a>
                 </div>
               </li>
@@ -507,3 +384,35 @@ $navbarDetached = ($navbarDetached ?? '');
     @endif
   </nav>
   <!-- / Navbar -->
+
+
+  <script>
+
+function marcarComoLeida(notificationId) {
+ 
+    fetch('/notificacion-leida', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            id: notificationId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Ocultar la notificación marcada como leída
+           // document.getElementById('notification-' + notificationId).style.display = 'none';
+        } else {
+            //alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+
+
+  </script>

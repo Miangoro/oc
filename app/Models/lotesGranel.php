@@ -22,11 +22,11 @@ class LotesGranel extends Model
         'fecha_emision', 'fecha_vigencia'
     ];
 
-// Método para obtener el nombre del registro
-public function getLogName2(): string
-{
-    return 'lotes a granel'; // Devuelve el nombre que desees
-}
+    // Método para obtener el nombre del registro que sirve para la trazabilidad
+    public function getLogName2(): string
+    {
+        return 'lotes a granel'; // Devuelve el nombre que desees
+    }
 
 
     public function empresa()
