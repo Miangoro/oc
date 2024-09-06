@@ -189,13 +189,8 @@ use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\catalogo\catalagoEquiposController;
 use App\Http\Controllers\inspecciones\inspeccionesController;
-<<<<<<< HEAD
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\solicitudes\solicitudesController;
-=======
-use App\Http\Controllers\solicitudes\solicitudesController;
-use App\Http\Controllers\pdf_llenado\PdfController;
->>>>>>> ab0fe6d676c291b38c068387d285192082fa9963
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
