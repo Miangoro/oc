@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\equipos;
 
 
-class catalagoEquiposController extends Controller
+class catalogoEquiposController extends Controller
 {
     public function UserManagement()
     {

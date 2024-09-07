@@ -187,7 +187,7 @@ use App\Http\Controllers\dictamenes\InstalacionesController;
 use App\Http\Controllers\dictamenes\DictamenGranelController;;
 use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
-use App\Http\Controllers\catalogo\catalagoEquiposController;
+use App\Http\Controllers\catalogo\catalogoEquiposController;
 use App\Http\Controllers\inspecciones\inspeccionesController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\solicitudes\solicitudesController;
@@ -689,11 +689,11 @@ Route::resource('/solicitudes-list', solicitudesController::class);
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
  */
 //catalago equipos
-Route::get('/catalogo/equipos', [catalagoEquiposController::class, 'UserManagement'])->name('catalago-equipos');
-Route::resource('/equipos-list', catalagoEquiposController::class);
-Route::post('/equipos/store', [catalagoEquiposController::class, 'store'])->name('equipos.store');
-Route::get('/equipos-list/{id_equipo}/edit', [catalagoEquiposController::class, 'edit'])->name('equipos.edit');
-Route::post('/equipos-list/update', [catalagoEquiposController::class, 'update'])->name('equipos.update');
+Route::get('/catalogo/equipos', [catalogoEquiposController::class, 'UserManagement'])->name('catalogo-equipos');
+Route::resource('/equipos-list', catalogoEquiposController::class);
+Route::post('/equipos/store', [catalogoEquiposController::class, 'store'])->name('equipos.store');
+Route::get('/equipos-list/{id_equipo}/edit', [catalogoEquiposController::class, 'edit'])->name('equipos.edit');
+Route::post('/equipos-list/update', [catalogoEquiposController::class, 'update'])->name('equipos.update');
 
 //Tipo
 Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])->name('solicitudes-tipo');
