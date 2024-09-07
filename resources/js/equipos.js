@@ -417,7 +417,7 @@ $(function () {
         Swal.fire({
           icon: 'success',
           title: '¡Eliminado!',
-          text: '¡La solicitud ha sido eliminada correctamente!',
+          text: '¡El equipo ha sido eliminado correctamente!',
           customClass: {
             confirmButton: 'btn btn-success'
           }
@@ -425,7 +425,7 @@ $(function () {
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: 'Cancelado',
-          text: 'La solicitud no ha sido eliminada',
+          text: 'El equipo no ha sido eliminado',
           icon: 'error',
           customClass: {
             confirmButton: 'btn btn-success'
