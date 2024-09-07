@@ -192,6 +192,8 @@ use App\Http\Controllers\inspecciones\inspeccionesController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\solicitudes\solicitudesController;
 use App\Http\Controllers\TrazabilidadController;
+use App\Http\Controllers\pdf_llenado\PdfController;
+
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');

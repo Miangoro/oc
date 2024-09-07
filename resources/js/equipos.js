@@ -144,8 +144,8 @@ $(function () {
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
 /*               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_equipo']}" data-bs-toggle="offcanvas" data-bs-target="#editEquipo"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
               `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_equipo']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` + */
-              `<a data-id="${full['id_equipo']}" data-bs-toggle="offcanvas" data-bs-target="#editEquipo" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar solicitud</a>` +
-              `<a data-id="${full['id_equipo']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar solicitud</a>` +
+              `<a data-id="${full['id_equipo']}" data-bs-toggle="offcanvas" data-bs-target="#editEquipo" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar equipo</a>` +
+              `<a data-id="${full['id_equipo']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar equipo</a>` +
 /*               '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
  */              '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
@@ -333,7 +333,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Categoría</span>',
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Equipo</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'offcanvas',

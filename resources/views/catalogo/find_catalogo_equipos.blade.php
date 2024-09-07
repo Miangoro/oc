@@ -24,7 +24,7 @@
     <!-- Users List Table -->
     <div class="card">
         <div class="card-header pb-0">
-            <h3 class="card-title mb-0">Solicitud de equipos</h3>
+            <h3 class="card-title mb-0">Equipos</h3>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-users table">
@@ -49,7 +49,7 @@
                 <form class="add-new-user pt-0" id="addNewCategoryForm">
                     @csrf
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="equipo" placeholder="Categoría" name="equipo"
+                        <input type="text" class="form-control" id="equipo" placeholder="Nombre del Equipo" name="equipo"
                             aria-label="Categoría" required>
                         <label for="equipo">Nombre del equipo</label>
                     </div>
@@ -63,7 +63,7 @@
         <div class="offcanvas offcanvas-end" tabindex="-1" id="editEquipo"
             aria-labelledby="offcanvaseditEquipoLabel">
             <div class="offcanvas-header border-bottom">
-                <h5 id="offcanvaseditEquipoLabel" class="offcanvas-title">Editar Categoría</h5>
+                <h5 id="offcanvaseditEquipoLabel" class="offcanvas-title">Editar Equipo</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0 h-100">
@@ -72,7 +72,7 @@
                     @method('PUT')
                     <input type="hidden" name="id_equipo" id="edit_id_equipo" value="">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="edit_equipo" placeholder="Nombre de la Categoría"
+                        <input type="text" class="form-control" id="edit_equipo" placeholder="Nombre del Equipo"
                             name="equipo" aria-label="Categoría" required>
                         <label for="edit_equipo">Nombre del equipo</label>
                     </div>
