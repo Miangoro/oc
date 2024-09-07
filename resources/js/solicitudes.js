@@ -8,7 +8,7 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'inspecciones-list',
+        url: baseUrl + 'solicitudes-list',
         type: 'GET',
         dataSrc: function (json) {
           console.log(json); // Ver los datos en la consola
@@ -35,6 +35,8 @@ $(function () {
         { data: 'fecha_visita' },
         { data: 'inspector' },
         { data: 'fecha_servicio' },
+        { data: '' },
+        { data: 'estatus' },
         { data: 'action' }
    
         
@@ -61,19 +63,17 @@ $(function () {
             return `<span>${full.fake_id}</span>`;
           }
         },
-       /* {
+        {
       
-          targets: 10,
+          targets: 11,
           className: 'text-center',
           render: function (data, type, full, meta) {
   
-            if (full['url'] && full['url'].trim() !== '') {
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${full['url']}" data-registro="${full['url']}"></i>`;
-          } else {
-              return '---';
+         
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${full['id_solicitud']}" data-registro="${full['id_solicitud']}"></i>`;
+          
           }
-          }
-        },¨*/
+        },
         {
             // Acciones
             targets: -1,
@@ -89,7 +89,7 @@ $(function () {
                 '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
                 '<div class="dropdown-menu dropdown-menu-end m-0">' +
   
-                `<a data-id="${full['id']}" onclick="abrirModalAsignarInspector(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
+                `<a data-id="${full['id']}" onclick="abrirModalAsignarInspector(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Trazabilidad</a>` +
                 `<a data-id="${full['id']}"  onclick="abrirModalSubirResultados(${full['id_solicitud']})" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
                 `<a data-id="${full['id']}"  onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
                 
@@ -881,9 +881,9 @@ $(function () {
     var url = $(this).data('url');
     var registro = $(this).data('registro');
         var iframe = $('#pdfViewer');
-        iframe.attr('src', '../files/'+url);
+        iframe.attr('src', 'solicitud_de_servicio');
   
-        $("#titulo_modal").text("Certificado de instalaciones");
+        $("#titulo_modal").text("Solicitud de servicio");
         $("#subtitulo_modal").text(registro);
   });
   

@@ -191,6 +191,7 @@ use App\Http\Controllers\catalogo\catalagoEquiposController;
 use App\Http\Controllers\inspecciones\inspeccionesController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\solicitudes\solicitudesController;
+use App\Http\Controllers\TrazabilidadController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -680,7 +681,7 @@ Route::post('/verificar-folios', [solicitudHolograma::class, 'verificarFolios'])
 
 
 //Módulo de solicitudes
-Route::get('/solicitudes-historial', [solicitudesController::class, 'UserManagement'])->name('solicitudes');
+Route::get('/solicitudes-historial', [solicitudesController::class, 'UserManagement'])->name('solicitudes-historial');
 Route::resource('/solicitudes-list', solicitudesController::class);
 
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
@@ -697,7 +698,12 @@ Route::get('/solicitudes', [SolicitudesTipoController::class, 'UserManagement'])
 Route::get('solicitudes/tipos', [SolicitudesTipoController::class, 'getSolicitudesTipos'])->name('obtener.solicitudes.tipos');
 
 //Notificaciones
-Route::post('/notificacion-leida', [NotificacionController::class, 'marcarNotificacionLeida'])->name('notificacion.leida');
+Route::post('/notificacion-leida/{id}', [NotificacionController::class, 'marcarNotificacionLeida'])->name('notificacion.leida');
+
+//Trazabilidad
+Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])->name('mostrarLogs');
+
+
 
 
 

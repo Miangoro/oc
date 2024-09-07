@@ -82,17 +82,17 @@
     {
       "name": "Solicitudes",
       "icon": "menu-icon ri-file-edit-fill",
-      "slug": "laravel-example",
+      "slug": "solicitudes",
       "submenu": [
         {
           "url": "/solicitudes",
-          "name": "Nueva Solicitud",
+          "name": "Nueva solicitud",
           "slug": "solicitudes-tipo"
         },
         {
-          "url": "laravel/user-management",
+          "url": "solicitudes-historial",
           "name": "Historial",
-          "slug": "laravel-example-user-management"
+          "slug": "solicitudes-historial"
         }
       ]
     },

@@ -14,10 +14,10 @@ class NotificacionController extends Controller
 
             if ($notification) {
                 $notification->markAsRead();
-                return response()->json(['success' => true], 200, ['Content-Type' => 'application/json']);
+                return response()->json(['success' => true]);
             }
 
-            return response()->json(['success' => true], 200, ['Content-Type' => 'application/json']);
+            return response()->json(['success' => false, 'message' => 'Notificación no encontrada.'], 404);
 
         }
 

@@ -37,7 +37,8 @@ class solicitudesController extends Controller
             8 => 'inspector',
             9 => 'fecha_servicio',
             10 => 'fecha_visita',
-            11 => 'name',
+      
+            11 => 'estatus'
         ];
 
         $search = [];
@@ -65,8 +66,7 @@ class solicitudesController extends Controller
         } else {
             $search = $request->input('search.value');
 
-            $query = solicitudesModel::with('empresa');
-            dd($query->toSql());
+          
             
 
             $solicitudes = solicitudesModel::with('tipo_solicitud','empresa','inspeccion','inspector', 'instalacion')
@@ -104,6 +104,8 @@ class solicitudesController extends Controller
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</apan>';
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</apan>'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</apan>';
+                
+                $nestedData['estatus'] = $solicitud->estatus ?? 'Vacío';
 
 
 

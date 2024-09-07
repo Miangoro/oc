@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\TranslatableActivityLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class inspecciones extends Model
 {
-    use HasFactory;
+    use LogsActivity, TranslatableActivityLog, HasFactory;
+
     protected $table = 'inspecciones';
     protected $primaryKey = 'id_inspeccion';
     protected $fillable = [
@@ -19,6 +22,12 @@ class inspecciones extends Model
         'observaciones',
         'estatus_inspeccion',
     ];
+
+    // Método para obtener el nombre del registro que sirve para la trazabilidad
+    public function getLogName2(): string
+    {
+        return 'inspecciones'; // Devuelve el nombre que desees
+    }
 
     public function solicitud()
     {

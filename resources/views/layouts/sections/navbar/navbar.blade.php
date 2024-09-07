@@ -188,12 +188,12 @@ $navbarDetached = ($navbarDetached ?? '');
                     <span class="badge rounded-pill bg-label-primary fs-xsmall me-2">
                       @if (auth()->check())
                           {{ auth()->user()->unreadNotifications->count() }} 
-                          {{ auth()->user()->unreadNotifications->count() == 1 ? 'Nueva' : 'Nuevas' }} 
+                        
                           notificación{{ auth()->user()->unreadNotifications->count() > 1 ? 'es' : '' }}
                       @endif
 
                     </span>
-                    <a href="javascript:void(0)" class="btn btn-text-secondary rounded-pill btn-icon dropdown-notifications-all" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark all as read"><i class="ri-mail-open-line text-heading ri-20px"></i></a>
+                    <a href="javascript:void(0)" class="btn btn-text-secondary rounded-pill btn-icon dropdown-notifications-all" data-bs-toggle="tooltip" data-bs-placement="top" title="Marcar todas como leidas"><i class="ri-mail-open-line text-heading ri-20px"></i></a>
                   </div>
                 </div>
               </li>
@@ -203,11 +203,13 @@ $navbarDetached = ($navbarDetached ?? '');
                   @if (auth()->check()) 
                     @if(Auth::user()->unreadNotifications->count() > 0)
                       @foreach (Auth::user()->unreadNotifications as $notification)
+
                         <li class="list-group-item list-group-item-action dropdown-notifications-item">
                           <div class="d-flex">
                             <div class="flex-shrink-0 me-3">
                               <div class="avatar">
-                                <img src="{{asset('assets/img/avatars/1.png')}}" alt class="rounded-circle">
+                                <img src="{{ \App\Models\User::find($notification->notifiable_id)?->profile_photo_url ?? asset('assets/img/avatars/1.png') }}" alt class="rounded-circle">
+
                               </div>
                             </div>
                             <div class="flex-grow-1">
@@ -224,7 +226,7 @@ $navbarDetached = ($navbarDetached ?? '');
                       @endforeach  
                     
                     @else 
-
+                    <li class="list-group-item">No hay notificaciones nuevas.</li>
 
                     @endif
                   @endif
@@ -388,29 +390,26 @@ $navbarDetached = ($navbarDetached ?? '');
 
   <script>
 
+
+
 function marcarComoLeida(notificationId) {
- 
-    fetch('/notificacion-leida', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+    $.ajax({
+        url: '/notificacion-leida/' + notificationId, // Ruta al controlador que marcará la notificación como leída
+        type: 'POST',
+        data: {
+            '_token': '{{ csrf_token() }}' // Agrega el token CSRF para proteger tu solicitud
         },
-        body: JSON.stringify({
-            id: notificationId
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Ocultar la notificación marcada como leída
-           // document.getElementById('notification-' + notificationId).style.display = 'none';
-        } else {
-            //alert('Error: ' + data.message);
+        success: function(response) {
+            $('#notification_' + response.id).remove();
+        
+           
+        },
+        error: function(xhr, status, error) {
+            console.error(error); // Maneja cualquier error que ocurra durante la solicitud AJAX
         }
-    })
-    .catch(error => console.error('Error:', error));
+    });
 }
+
 
 
 
