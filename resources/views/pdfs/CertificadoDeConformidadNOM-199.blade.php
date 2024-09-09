@@ -30,6 +30,18 @@
             src: url('fonts/GOTHICB.TTF') format('truetype');
         }
 
+        @font-face {
+            font-family: 'Cambria';
+            src: url('fonts/Cambria.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Cambria Negrita';
+            src: url('fonts/cambria-bold.ttf') format('truetype');
+        }
+
+
+
 
         body {
             font-family: 'Century Gothic', sans-serif;
@@ -216,7 +228,7 @@
         .letra3 {
             color: #cb8f2b;
             font-size: 32px;
-            font-family: 'Century Gothic Negrita';
+            font-family: 'Cambria Negrita';
 
         }
     </style>

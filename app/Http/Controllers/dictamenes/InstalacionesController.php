@@ -150,16 +150,20 @@ class InstalacionesController extends Controller
                 $var->save();//guardar en BD
 
                 $user = User::find(18); // Encuentra al usuario que recibirá la notificación
+                $user2 = User::find(26); // Encuentra al usuario que recibirá la notificación
                 $tipo_dictamen = ["Productor","Envasador","Comercializador", "Almacén y bodega", "Área de maduración"];
 
                 // Notificación 1
                 $data1 = [
                     'title' => 'Nuevo registro de dictamen',
                     'message' => 'Dictamen de instalaciones de '.$tipo_dictamen[$request->tipo_dictamen],
-                    'url' => '/dictamenes/instalaciones',
+                    'url' => '/dictamenes/instalaciones'
                 ];
 
                 $user->notify(new GeneralNotification ($data1));
+                $user2->notify(new GeneralNotification ($data1));
+
+
     
                 return response()->json(['success' => 'Registro agregada correctamente']);
             } catch (\Exception $e) {
