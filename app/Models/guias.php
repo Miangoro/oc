@@ -39,7 +39,7 @@ class Guias extends Model
 
     public function empresa()
     {
-        return $this->belongsTo(Empresa::class, 'id_empresa');
+        return $this->belongsTo(empresa::class, 'id_empresa');
     }
 
     public function predio()

@@ -6,9 +6,9 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Documentacion_url;
 use App\Models\Instalaciones;
-use App\Models\Empresa;
-use App\Models\Estados;
-use App\Models\Organismos;
+use App\Models\empresa;
+use App\Models\estados;
+use App\Models\organismos;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
@@ -21,7 +21,7 @@ class DomiciliosController extends Controller
         $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = estados::all(); // Obtener todos los estados
-        $organismos = Organismos::all(); // Obtener todos los organismos
+        $organismos = organismos::all(); // Obtener todos los organismos
         return view('domicilios.find_domicilio_instalaciones_view', compact('instalaciones', 'empresas', 'estados', 'organismos'));
     }
 
