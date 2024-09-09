@@ -209,7 +209,7 @@
 
         .letra2 {
             color: #cb8f2b;
-            font-size: 10px;
+            font-size: 10.5px;
 
         }
 
@@ -231,10 +231,10 @@
             style="float: right; width: 180px; margin-right: -40px; margin-top: -60px">
 
         <!-- Texto centrado -->
-        <div style="text-align: center;">
+        <div style="text-align: center">
             <div>
                 <span class="letra1">Centro de Innovación y Desarrollo Agroalimentario de Michoacán,</span><br>
-                <span class="letra2">Acreditado como Organismo de Certificación de producto con número de acreditación
+                <span class="letra2" style="line-height: 0.9">Acreditado como Organismo de Certificación de producto con número de acreditación
                     144/18 <br>
                     ante la Entidad Mexicana de Acreditación, A.C.</span>
             </div>
