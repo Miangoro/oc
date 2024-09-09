@@ -44,7 +44,7 @@ class solicitudesModel extends Model
 
     public function instalacion()
     {
-        return $this->hasOne(instalaciones::class, 'id_instalacion', 'id_instalacion');
+        return $this->hasOne(Instalaciones::class, 'id_instalacion', 'id_instalacion');
     }
 
     public function tipo_solicitud()
