@@ -6,7 +6,7 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dictamen_instalaciones;
-use App\Models\Clases; 
+use App\Models\clases; 
 use App\Models\inspecciones; 
 
 use App\Models\empresa; 
