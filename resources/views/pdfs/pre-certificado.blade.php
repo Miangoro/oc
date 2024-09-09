@@ -259,7 +259,7 @@
 	</tbody>
 </table>
 
-<p class="subtitulo2">DATOS DE LA EMPRESA</p>
+<p class="subtitulo2">DESCRIPCIÓN DEL PRODUCTO</p>
 
 <table>
 	<tbody>
