@@ -234,4 +234,30 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('F7.1-03-17 Certificado de conformidad NOM-199-SCFI-2017.pdf');
     }
 
+<<<<<<< HEAD
+=======
+
+    public function CertificadoConformidad199()
+    {
+        $pdf = Pdf::loadView('pdfs.CertificadoDeConformidadNOM-199');
+        return $pdf->stream('F7.1-03-17 Certificado de conformidad NOM-199-SCFI-2017 Ed. 9 vigente.pdf');
+    }
+
+    //certificado de instalaciones 052
+    public function CertificadoComoProductor()
+    {
+        $pdf = Pdf::loadView('pdfs.CertificadoComoProductor');
+        return $pdf->stream('F7.1-04-08 Certificado como Productor NMX-V-052-NORMEX-2016 Ed. 1 Vigente.pdf');
+    }
+    public function CertificadoComoComercializador ()
+    {
+        $pdf = Pdf::loadView('pdfs.CertificadoComoComercializador');
+        return $pdf->stream('F7.1-04-10 Certificado como Comercializador NMX-V-052-NORMEX-2016 Ed. 1 Vig.pdf');
+    }
+    public function CertificadoComoEnvasador ()
+    {
+        $pdf = Pdf::loadView('pdfs.CertificadoComoEnvasador');
+        return $pdf->stream('F7.1-04-09 Certificado como Envasador NMX-V-052-NORMEX-2016 Ed. 1 Vigente.pdf');
+    }
+>>>>>>> 60cfc47b65e237e14f7e13b6405fa88409d037ba
 }

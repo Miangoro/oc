@@ -61,8 +61,8 @@ $(function () {
                 {
                     data: 'folio_fq',
                     render: function (data, type, row) {
-                        // Construimos el enlace con data-id, data-bs-toggle y data-bs-target para abrir el modal
-                        return '<a href="#" data-id="' + row.id_dictamen + '" data-bs-toggle="modal" data-bs-target="#modalVerDocumento" class="text-primary ver-folio-fq">' + data + '</a>';
+                        // Construimos el enlace con data-id y data-bs-toggle para el tooltip y modal
+                        return '<a href="#" data-id="' + row.id_dictamen + '" data-bs-placement="bottom" data-bs-custom-class="tooltip-seccondary" title="Folios de Análisis fisicoquímicos Y Certificados de lote a granel" data-bs-toggle="tooltip" data-bs-target="#modalVerDocumento" class="ver-folio-fq">' + data + '</a>';
                     }
                 },
                 { data: 'fecha_emision' },
@@ -408,8 +408,18 @@ $(function () {
                 }
             }
 
+
         });
+        // Inicializar tooltips después de renderizar la tabla
+        dt_user.on('draw', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+
     }
+
 
     var dt_user_table = $('.datatables-users'),
         select2Elements = $('.select2'),
@@ -493,7 +503,6 @@ $(function () {
     });
 
 
-
     $(document).on('click', '.ver-pdf', function (e) {
         e.preventDefault();
         var url = $(this).data('url'); // Obtén la URL del PDF desde el atributo data-url
@@ -528,16 +537,6 @@ $(function () {
             $('#modalVerDocumento').modal('show');
         });
     });
-
-
-
-
-
-
-
-
-
-
 
     // Delete Record eliminar un dictamen
     $(document).on('click', '.delete-record', function () {

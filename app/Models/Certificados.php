@@ -44,6 +44,6 @@ class Certificados extends Model
     // Relación con Empresa
     public function empresa()
     {
-        return $this->belongsTo(Empresa::class, 'id_empresa', 'id');
+        return $this->belongsTo(empresa::class, 'id_empresa', 'id');
     }
 }

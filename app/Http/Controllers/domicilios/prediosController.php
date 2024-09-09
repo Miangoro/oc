@@ -5,8 +5,8 @@ namespace App\Http\Controllers\domicilios;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Predios;
-use App\Models\Empresa;
-use App\Models\Tipos;
+use App\Models\empresa;
+use App\Models\tipos;
 use App\Models\PredioCoordenadas;
 use App\Models\predio_plantacion;
 use App\Models\Documentacion;
@@ -22,8 +22,8 @@ class PrediosController extends Controller
     public function UserManagement()
     {
         $predios = Predios::with('empresa')->get(); // Obtener todos los registros con la relación cargada
-        $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
-        $tipos = Tipos::all(); // Obtén todos los tipos de agave
+        $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+        $tipos = tipos::all(); // Obtén todos los tipos de agave
        /*  $documentos = Documentacion::where('id_documento', '=', '34')->get(); */
         return view('domicilios.find_domicilio_predios_view', [
             'predios' => $predios, // Pasar los datos a la vista
@@ -278,7 +278,7 @@ class PrediosController extends Controller
         {
             try {
                 $predio = Predios::with(['coordenadas', 'predio_plantaciones', 'documentos'])->findOrFail($id_predio);
-                $tipos = Tipos::all();
+                $tipos = tipos::all();
         
                 // Obtener el número del cliente
                 $numeroCliente = DB::table('empresa_num_cliente')
