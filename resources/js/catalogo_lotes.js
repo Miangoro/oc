@@ -65,7 +65,7 @@ $(document).ready(function () {
             { data: 'folio_certificado' },
             { data: 'id_organismo' },
             { data: 'fecha_emision' },
-            { data: 'fecha_vigencia' },
+            { data: 'fecha_vigencia', orderable: false, searchable: false  },
             { data: 'actions', orderable: false, searchable: false }
         ],
         columnDefs: [
