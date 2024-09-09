@@ -320,7 +320,7 @@
         <div style="text-align: center; font-size: 10.5px; color: #0c1344; font-family: Arial, sans-serif;">*Este certificado no puede ser reproducido de
             manera parcial.
         </div>
-        <footer style="color: white;padding-top: 120px; font-size: 8.5px; line-height: 0.9">
+        <footer style="color: white;padding-top: 130px; font-size: 8.5px; line-height: 0.9">
             <div style="float: left;">
                 <span style="color: black">Pag.1-2</span>
                 <br>&nbsp;
