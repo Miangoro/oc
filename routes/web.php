@@ -444,6 +444,10 @@ Route::get('/bitacora_revision_OCCIDAM', [CartaAsignacionController::class, 'bot
 Route::get('/plan_de_auditoria', [CartaAsignacionController::class, 'PlanDeAuditoria'])->name('PlanDeAuditoria');
 Route::get('/generate-pdf', [PdfController::class, 'generatePdf']);
 Route::get('/certificado_de_conformidad', [CartaAsignacionController::class, 'CertificadoConformidad199'])->name('CertificadoConformidad199');
+Route::get('/certificado_como_productor', [CartaAsignacionController::class, 'CertificadoComoProductor'])->name('CertificadoComoProductor');
+Route::get('/certificado_como_comercializador', [CartaAsignacionController::class, 'CertificadoComoComercializador'])->name('CertificadoComoComercializador');
+Route::get('/certificado_como_envasador', [CartaAsignacionController::class, 'CertificadoComoEnvasador'])->name('CertificadoComoEnvasador');
+
 
 
 
@@ -709,7 +713,7 @@ Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])
 
 //
 Route::get('/Pre-certificado', [CartaAsignacionController::class, 'PreCertificado'])->name('Pre-certificado');
-
+Route::get('/Dictamen-MezcalEnvasado', [CartaAsignacionController::class, 'DictamenMezcalEnvasado'])->name('Dictamen-MezcalEnvasado');
 
 
 

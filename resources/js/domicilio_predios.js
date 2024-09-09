@@ -25,7 +25,7 @@ $(function () {
         const coordenadasDiv = document.getElementById('coordenadas');
         const latitudInputs = document.querySelectorAll('input[name="latitud[]"]');
         const longitudInputs = document.querySelectorAll('input[name="longitud[]"]');
-    
+
         if (tieneCoordenadasSelect && coordenadasDiv) {
             tieneCoordenadasSelect.addEventListener('change', function () {
                 if (tieneCoordenadasSelect.value === 'Si') {
@@ -39,8 +39,8 @@ $(function () {
             });
         }
     });
-    
-    
+
+
 
 
     // Variable declaration for table
@@ -517,13 +517,16 @@ $(function () {
     });
 
 
-    /* creacion de seccion de plantacion y sus validaciones */
     $(document).ready(function () {
+        // Definir contenedores
+        const containerAdd = '.contenidoPlantacion';
+        const containerEdit = '.edit_ContenidoPlantacion';
+    
         // Función para generar las opciones de tipos de agave
         function generateOptions(tipos) {
             return tipos.map(tipo => `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`).join('');
         }
-
+    
         // Función para agregar una nueva sección de plantación
         function addRow(container) {
             var options = generateOptions(tiposAgave);
@@ -570,116 +573,204 @@ $(function () {
                     </div>
                 </td>
             </tr>`;
-
+    
             // Agregar la nueva sección al contenedor correspondiente
             $(container).append(newSection);
-
+    
+            // Inicializar Select2 en los nuevos campos
+            $(container).find('.select2').select2();
+    
+            // Añadir validación a los nuevos campos
+            fv.addField('id_tipo[]', {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor selecciona el tipo de agave/maguey'
+                    }
+                }
+            });
+            fv.addField('numero_plantas[]', {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa el número de plantas'
+                    },
+                    numeric: {
+                        message: 'Por favor ingresa un valor numérico válido'
+                    }
+                }
+            });
+            fv.addField('edad_plantacion[]', {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa la edad de la plantación'
+                    },
+                    numeric: {
+                        message: 'Por favor ingresa un valor numérico válido'
+                    }
+                }
+            });
+            fv.addField('tipo_plantacion[]', {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa el tipo de plantación'
+                    }
+                }
+            });
+    
+            // Función para inicializar Select2 en elementos específicos
+            function initializeSelect2($elements) {
+                $elements.each(function () {
+                    var $this = $(this);
+                    select2Focus($this);
+                    $this.wrap('<div class="position-relative"></div>').select2({
+                        dropdownParent: $this.parent()
+                    });
+                });
+            }
+    
+            initializeSelect2($('.select2'));
+    
             // Habilitar el botón de eliminación para las nuevas filas, pero no para la primera
             if ($(container).find('.plantacion-row').length > 1) {
                 $(container).find('.remove-row-plantacion').not(':first').prop('disabled', false);
             }
+    
+            // Revalidar el formulario completo para asegurar que todos los campos sean validados
+            fv.validate();
         }
-
+    
         // Evento para agregar filas de plantación
         $('.add-row-plantacion').on('click', function () {
             if ($('.edit_InformacionAgave').is(':visible')) {
-                addRow('.edit_ContenidoPlantacion');
+                addRow(containerEdit);
             } else {
-                addRow('.contenidoPlantacion');
+                addRow(containerAdd);
             }
         });
-
+    
         // Evento para eliminar filas de plantación
         $(document).on('click', '.remove-row-plantacion', function () {
             var $currentRow = $(this).closest('tr');
-
-            // Asegurarse de que la primera fila no pueda ser eliminada
+            var container = $currentRow.closest('table').find('tbody');
+    
             if ($currentRow.index() === 0) return;
-
-            // Eliminar la fila actual y las siguientes filas hasta el próximo elemento que no sea '.plantacion-row'
+    
             $currentRow.nextUntil('tr:not(.plantacion-row)').addBack().remove();
-
-            // Deshabilitar el botón de eliminación si queda solo una fila
-            var $container = $currentRow.closest('table').find('tbody');
-            if ($container.find('.plantacion-row').length <= 1) {
-                $container.find('.remove-row-plantacion').prop('disabled', true);
+    
+            if (container.find('.plantacion-row').length <= 1) {
+                container.find('.remove-row-plantacion').prop('disabled', true);
             }
+    
+            // Revalidar el formulario después de eliminar
+            fv.validate();
         });
-
+    
         // Deshabilitar el botón de eliminación en la primera fila de agregar
-        $('.contenidoPlantacion').find('.remove-row-plantacion').first().prop('disabled', true);
-
+        $(containerAdd).find('.remove-row-plantacion').first().prop('disabled', true);
+    
         // Deshabilitar el botón de eliminación en la primera fila de editar
-        $('.edit_ContenidoPlantacion').find('.remove-row-plantacion').first().prop('disabled', true);
+        $(containerEdit).find('.remove-row-plantacion').first().prop('disabled', true);
     });
+    
 
+    // Definir fv en un alcance global
+    let fv;
 
-
-    /* funcion para creacion de seccion de coordenadas y sus respectivas validaciones */
     $(document).ready(function () {
-        // Añadir nueva fila de coordenadas
-        $(document).on('click', '.add-row-cordenadas', function () {
-            var newRow = `
-            <tr>
-                <td>
-                    <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
-                </td>
-                <td>
-                    <div class="form-floating form-floating-outline">
-                        <input type="text" class="form-control" name="latitud[]" placeholder="Latitud" autocomplete="off">
-                        <label>Latitud</label>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-floating form-floating-outline">
-                        <input type="text" class="form-control" name="longitud[]" placeholder="Longitud" autocomplete="off">
-                        <label>Longitud</label>
-                    </div>
-                </td>
-            </tr>`;
+        const tieneCoordenadasSelect = document.getElementById('tiene_coordenadas');
+        const coordenadasDiv = document.getElementById('coordenadas');
+        const coordenadasBody = document.getElementById('coordenadas-body');
 
-            // Determinar a qué tabla añadir la fila
-            if ($('#edit_coordenadas').is(':visible')) {
-                $('#edit_coordenadas tbody').append(newRow);
-            } else {
-                $('#coordenadas tbody').append(newRow);
-            }
+        // Función para agregar una nueva fila de coordenadas
+        function addCoordinateRow() {
+            const newRow = `
+        <tr>
+            <td>
+                <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
+            </td>
+            <td>
+                <div class="form-floating form-floating-outline">
+                    <input type="text" class="form-control" name="latitud[]" placeholder="Latitud" autocomplete="off">
+                    <label>Latitud</label>
+                </div>
+            </td>
+            <td>
+                <div class="form-floating form-floating-outline">
+                    <input type="text" class="form-control" name="longitud[]" placeholder="Longitud" autocomplete="off">
+                    <label>Longitud</label>
+                </div>
+            </td>
+        </tr>`;
+            coordenadasBody.insertAdjacentHTML('beforeend', newRow);
 
-            // Habilitar el botón de eliminar si hay más de una fila en la tabla correspondiente
+            // Añadir validación a los nuevos campos
+            fv.addField('latitud[]', {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa la latitud'
+                    },
+                    numeric: {
+                        message: 'Por favor ingresa un valor numérico válido para la latitud'
+                    }
+                }
+            });
+            fv.addField('longitud[]', {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingresa la longitud'
+                    },
+                    numeric: {
+                        message: 'Por favor ingresa un valor numérico válido para la longitud'
+                    }
+                }
+            });
+
             updateRemoveButtonState();
-        });
+        }
 
-        // Eliminar fila de coordenadas
-        $(document).on('click', '.remove-row-cordenadas', function () {
-            var $tableBody = $(this).closest('tbody');
-            var $table = $(this).closest('table');
-
-            // Solo permitir eliminar si no es la primera fila
+        // Función para eliminar una fila de coordenadas
+        function removeCoordinateRow(button) {
+            const $tableBody = $(button).closest('tbody');
             if ($tableBody.children('tr').length > 1) {
-                $(this).closest('tr').remove();
+                $(button).closest('tr').remove();
             }
-
-            // Actualizar el estado del botón de eliminar
             updateRemoveButtonState();
-        });
+        }
 
         // Función para actualizar el estado del botón de eliminar
         function updateRemoveButtonState() {
             $('#coordenadas tbody tr').each(function () {
                 $(this).find('.remove-row-cordenadas').prop('disabled', $(this).siblings('tr').length === 0);
             });
-            $('#edit_coordenadas tbody tr').each(function () {
-                $(this).find('.remove-row-cordenadas').prop('disabled', $(this).siblings('tr').length === 0);
-            });
         }
 
         // Inicializar el estado del botón de eliminar en ambas tablas al cargar la página
         updateRemoveButtonState();
+
+        // Evento para cambiar la visibilidad de las coordenadas basado en la selección
+        if (tieneCoordenadasSelect && coordenadasDiv) {
+            tieneCoordenadasSelect.addEventListener('change', function () {
+                if (tieneCoordenadasSelect.value === 'Si') {
+                    coordenadasDiv.classList.remove('d-none');
+                    if (coordenadasBody.children.length === 0) {
+                        addCoordinateRow();
+                    }
+                } else {
+                    coordenadasDiv.classList.add('d-none');
+                    coordenadasBody.innerHTML = ''; // Limpiar todos los campos
+                }
+            });
+        }
+
+        // Manejo de eventos para añadir y eliminar filas de coordenadas
+        $(document).on('click', '.add-row-cordenadas', function () {
+            addCoordinateRow();
+        });
+
+        $(document).on('click', '.remove-row-cordenadas', function () {
+            removeCoordinateRow(this);
+        });
     });
 
-
-
-    /* registrar un nuevo predio */
     $(function () {
         // Configuración CSRF para Laravel
         $.ajaxSetup({
@@ -690,7 +781,7 @@ $(function () {
 
         // Inicializar FormValidation
         const addNewPredio = document.getElementById('addNewPredioForm');
-        const fv = FormValidation.formValidation(addNewPredio, {
+        fv = FormValidation.formValidation(addNewPredio, { // Usa la variable fv global
             fields: {
                 id_empresa: {
                     validators: {
@@ -764,40 +855,40 @@ $(function () {
                         }
                     }
                 },
-                'id_tipo[]': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor selecciona el tipo de agave/maguey'
-                        }
-                    }
-                },
-                'numero_plantas[]': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor ingresa el número de plantas'
-                        },
-                        numeric: {
-                            message: 'Por favor ingresa un valor numérico válido'
-                        }
-                    }
-                },
-                'edad_plantacion[]': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor ingresa la edad de la plantación'
-                        },
-                        numeric: {
-                            message: 'Por favor ingresa un valor numérico válido'
-                        }
-                    }
-                },
-                'tipo_plantacion[]': {
-                    validators: {
-                        notEmpty: {
-                            message: 'Por favor ingresa el tipo de plantación'
-                        }
-                    }
-                }
+                  'id_tipo[]': {
+                     validators: {
+                         notEmpty: {
+                             message: 'Por favor selecciona el tipo de agave/maguey'
+                         }
+                     }
+                 },
+                 'numero_plantas[]': {
+                     validators: {
+                         notEmpty: {
+                             message: 'Por favor ingresa el número de plantas'
+                         },
+                         numeric: {
+                             message: 'Por favor ingresa un valor numérico válido'
+                         }
+                     }
+                 },
+                 'edad_plantacion[]': {
+                     validators: {
+                         notEmpty: {
+                             message: 'Por favor ingresa la edad de la plantación'
+                         },
+                         numeric: {
+                             message: 'Por favor ingresa un valor numérico válido'
+                         }
+                     }
+                 },
+                 'tipo_plantacion[]': {
+                     validators: {
+                         notEmpty: {
+                             message: 'Por favor ingresa el tipo de plantación'
+                         }
+                     }
+                 }
             },
             plugins: {
                 trigger: new FormValidation.plugins.Trigger(),
@@ -811,9 +902,11 @@ $(function () {
                 submitButton: new FormValidation.plugins.SubmitButton(),
                 autoFocus: new FormValidation.plugins.AutoFocus()
             }
-        }).on('core.form.valid', function (e) {
-            var formData = new FormData(addNewPredio);
+        });
 
+        // Manejo del envío del formulario
+        fv.on('core.form.valid', function (e) {
+            var formData = new FormData(addNewPredio);
             $.ajax({
                 url: '/predios-list',
                 type: 'POST',
@@ -846,9 +939,12 @@ $(function () {
                 }
             });
         });
+
+    // Inicializar select2 y revalidar el campo cuando cambie
+    $('#id_empresa, .tipo_agave').on('change', function() {
+        fv.revalidateField($(this).attr('name'));
     });
-
-
+    });
 
 
 
@@ -879,7 +975,7 @@ $(function () {
 
                     if (Array.isArray(data.documentos)) {
                         $('#archivo_url_contrato').empty(); // Limpia el contenido existente
-                    
+
                         data.documentos.forEach(function (documento) {
                             var nombre = documento.nombre; // Nombre del documento
                             var url = documento.url; // URL del documento
@@ -899,9 +995,9 @@ $(function () {
                     } else {
                         console.error('data.documentos no es un array:', data.documentos);
                     }
-                    
-                    
-                    
+
+
+
 
 
 
