@@ -24,12 +24,12 @@
             src: url('fonts/CenturyGothic.ttf') format('truetype');
 
         }
-
+*/
         @font-face {
             font-family: 'Century Gothic Negrita';
             src: url('fonts/GOTHICB.TTF') format('truetype');
         }
- */
+
         @font-face {
             font-family: 'Cambria';
             src: url('fonts/Cambria.ttf') format('truetype');
@@ -221,7 +221,7 @@
 
         .letra2 {
             color: #cb8f2b;
-            font-size: 10.5px;
+            font-size: 11.5px;
             font-family: 'Cambria';
 
 
@@ -229,7 +229,7 @@
 
         .letra3 {
             color: #cb8f2b;
-            font-size: 32px;
+            font-size: 38px;
             font-family: 'Cambria Negrita';
 
         }
@@ -242,19 +242,19 @@
     <div class="header">
         <center> <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" style="padding-right: 70px"></center>
         <img src="{{ public_path('img_pdf/sello_dorado.png') }}" alt="Logo Derecho"
-            style="float: right; width: 180px; margin-right: -40px; margin-top: -60px">
+            style="float: right; width: 195px; margin-right: -40px; margin-top: -80px">
 
         <!-- Texto centrado -->
         <div style="text-align: center">
             <div>
-                <span class="letra1">Centro de Innovación y Desarrollo Agroalimentario de Michoacán,</span><br>
-                <span class="letra2" style="line-height: 0.9">Acreditado como Organismo de Certificación de producto con número de acreditación
+                <span style="font-family: Century Gothic Negrita; font-size: 14px">Centro de Innovación y Desarrollo Agroalimentario de Michoacán,</span><br>
+                <span class="letra2" style="line-height: 0.5; font-family: 'Cambria'">Acreditado como Organismo de Certificación de producto con número de acreditación
                     144/18 <br>
                     ante la Entidad Mexicana de Acreditación, A.C.</span>
             </div>
-            <br>
+            <div style="height: 5px"></div>
             <div style="color:  #0c1344; font-size: 13px;">
-                <span style="font-family: 'Cambria'">Otorga el siguiente:</span><br>
+                <span style="font-family: 'Cambria'; font-size: 15px">Otorga el siguiente:</span><br>
                 <span style="font-size: 24px;font-family: 'Cambria'">CERTIFICADO DE CONFORMIDAD A:</span><br>
                 <span class="letra3">XXXXXXXXX</span>
             </div>
@@ -264,7 +264,7 @@
             </div>
         </div>
     </div>
-<br>
+    <div style="height: 10px"></div>
     <body>
         <div style="color: #0c1344; text-align: left; font-size: 15.5px; line-height: 0.9;font-family: 'Cambria'">
             Por haber demostrado que cuenta con la infraestructura, equipamiento y la competencia necesaria <br>
@@ -350,7 +350,7 @@
                         144/18 <br>
                         ante la Entidad Mexicana de Acreditación, A.C.</span>
                 </div>
-                <br>
+                <div style="height: 10px"></div>
                 <div style="color:  #0c1344; font-size: 13px;">
                     <span style="font-size: 24px; font-family: 'Cambria';">ANEXO</span><br>
                     <span style="font-family: 'Cambria';">Productor, envasador y comercializador</span><br>
@@ -358,7 +358,7 @@
                 </div>
             </div>
         </div>
-        <div style="height: 20px"></div>
+        <div style="height: 10px"></div>
         <div style="color: #0c1344; text-align: left; font-size: 14.5px; line-height: 0.9; font-family: 'Cambria'">
             La presente certificación se realiza de acuerdo a la Norma Oficial Mexicana NOM-199- SCFI-2017,
             mediante el esquema de certificación de producto. De conformidad a lo dispuesto en los artículos 53,
