@@ -344,7 +344,7 @@
             <!-- Texto centrado -->
             <div style="text-align: center;">
                 <div>
-                    <span class="letra1" style=" font-family: 'Cambria'">Centro de Innovación y Desarrollo Agroalimentario de Michoacán,</span><br>
+                    <span style="font-family: Century Gothic Negrita; font-size: 14px">Centro de Innovación y Desarrollo Agroalimentario de Michoacán,</span><br>
                     <span class="letra2" style=" font-family: 'Cambria'">Acreditado como Organismo de Certificación de producto con número de
                         acreditación
                         144/18 <br>
