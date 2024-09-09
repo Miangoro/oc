@@ -290,32 +290,34 @@
                 <td></td>
             </tr>
         </table>
-        <div style="color: #0c1344; font-size: 13.5px; text-align: justify; line-height: 0.9">
-            Este certificado de conformidad de Bebidas Alcohólicas se expide de acuerdo a la Norma Oficial <br>
-            Mexicana NOM-199-SCFI-2017, Bebidas Alcohólicas-Denominación, Especificaciones <br>
+        <div style="height: 10px"></div>
+        <div style="color: #0c1344; font-size: 14.5px; text-align: justify; line-height: 1.1; font-family: Arial, sans-serif;">
+            Este certificado de conformidad de Bebidas Alcohólicas se expide de acuerdo a la Norma Oficial 
+            Mexicana NOM-199-SCFI-2017, Bebidas Alcohólicas-Denominación, Especificaciones 
             Fisicoquímicas, Información Comercial y Métodos de Prueba.
         </div>
+        
 
         <div
             style="text-align: center; font-size: 10px; color: #0c1344; margin-right: 50px; float: right; margin-right: 80px;position: absolute">
-            <span style="font-size: 13.5px">Atentamente</span> <br> <br>
-            <u class="letra1" style="font-size: 10px"> Gerente Técnico del Organismo Certificador</u> <br>
-            <span class="letra1" style="font-size: 10px">del CIDAM A.C</span> 
+            <span style="font-size: 14px; font-family: Arial, sans-serif;">Atentamente</span> <br> <br>
+            <u class="letra1" style="font-size: 11px; font-family: Arial, sans-serif;"> <b>Gerente Técnico del Organismo Certificador</b></u> <br>
+            <span class="letra1" style="font-size: 11px; font-family: Arial, sans-serif;"><b>del CIDAM A.C</b></span> 
         </div>
         <div style="margin: 27px"></div>
-        <div style="text-align: left; color: #0c1344; font-size: 10px; ">
+        <div style="text-align: left; color: #0c1344; font-size: 11px;font-family: Arial, sans-serif; ">
             Número de Reporte Técnico: <br>
             Número del Certificado: <br>
             Vigencia del Certificado: <br>
             Fecha de Actualización: <br>
         </div>
-        <br>
-        <div style="color: #0c1344; font-size: 13px; text-align: justify; line-height: 0.9">
+        <div style="height: 20px"></div>
+        <div style="color: #0c1344; font-size: 14.5px; text-align: justify; line-height: 0.9;  font-family: Arial, sans-serif;">
             Este certificado está sujeto a vigilancias y mantendrá validez en tanto se conserven las mismas
             condiciones bajo las que fue otorgado y ampara únicamente el domicilio de producción, envasado
             y comercialización que se indica en el anexo. <br>
         </div>
-        <div style="text-align: center; font-size: 10.5px; color: #0c1344">*Este certificado no puede ser reproducido de
+        <div style="text-align: center; font-size: 10.5px; color: #0c1344; font-family: Arial, sans-serif;">*Este certificado no puede ser reproducido de
             manera parcial.
         </div>
         <footer style="color: white;padding-top: 120px; font-size: 8.5px; line-height: 0.9">
@@ -345,14 +347,14 @@
             <div style="text-align: center;">
                 <div>
                     <span style="font-family: Century Gothic Negrita; font-size: 14px">Centro de Innovación y Desarrollo Agroalimentario de Michoacán,</span><br>
-                    <span class="letra2" style=" font-family: 'Cambria'">Acreditado como Organismo de Certificación de producto con número de
+                    <span class="letra2" style=" font-family: 'Cambria'; line-height: 0.9;">Acreditado como Organismo de Certificación de producto con número de
                         acreditación
                         144/18 <br>
                         ante la Entidad Mexicana de Acreditación, A.C.</span>
                 </div>
                 <div style="height: 10px"></div>
                 <div style="color:  #0c1344; font-size: 13px;">
-                    <span style="font-size: 24px; font-family: 'Cambria';">ANEXO</span><br>
+                    <span style="font-size: 24px; font-family: 'Cambria';">ANEXO</span><div style="height: 1px"></div>
                     <span style="font-family: 'Cambria';">Productor, envasador y comercializador</span><br>
                     <span class="letra3">XXXXXXXXX</span>
                 </div>
@@ -387,24 +389,24 @@
             Vigencia:
         </div>
         <br>
-        <div style="color: #0c1344; font-size: 14px; font-family: 'Cambria';">
+        <div style="color: #0c1344; font-size: 14px; font-family: 'Cambria';line-height: 1;">
             Dado lo anterior, el Certificado de Conformidad ampara el proceso de producción realizado durante el
             periodo de vigencia, siempre y cuando se conserven las mismas condiciones bajo las que fue otorgado.
         </div>
         <br>
-        <div style="color: #0c1344; font-size: 14px; font-family: 'Cambria';">
+        <div style="color: #0c1344; font-size: 14px; font-family: 'Cambria';line-height: 1;">
             De conformidad con lo establecido en los apartados 6, 7 y 8 de la NOM-199-SCFI-2017, Bebidas
             Alcohólicas-Denominación, Especificaciones fisicoquímicas, información comercial y métodos de
             prueba.
         </div>
         <div style="height: 30px"></div>
-        <div class="letra1" style="text-align: center; font-size: 10px; color: #0c1344">
-            <span style="font-size: 13.5px">Atentamente</span> <br> <br>
+        <div class="letra1" style="text-align: center; font-size: 10px; color: #0c1344; font-family: Arial, sans-serif;">
+           <b> <span style="font-size: 14.5px">Atentamente</span> <br> <br>
             ___________________________________________ <br>
             Gerente Técnico del Organismo Certificador<br>
-            del CIDAM A.C
+            del CIDAM A.C</b>
         </div>
-        <footer style="color: white;padding-top: 40px; font-size: 8.5px; line-height: 0.9">
+        <footer style="color: white;padding-top: 80px; font-size: 8.5px; line-height: 0.9">
             <div style="float: left; color: black">
                 <div style="height: 40px"></div>
                 Pag.2-2
