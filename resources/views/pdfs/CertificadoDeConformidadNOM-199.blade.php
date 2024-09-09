@@ -285,8 +285,8 @@
         <div
             style="text-align: center; font-size: 10px; color: #0c1344; margin-right: 50px; float: right; margin-right: 80px;position: absolute">
             <span style="font-size: 13.5px">Atentamente</span> <br> <br>
-            <u> Gerente Técnico del Organismo Certificador</u> <br>
-            del CIDAM A.C
+            <u class="letra1" style="font-size: 10px"> Gerente Técnico del Organismo Certificador</u> <br>
+            <span class="letra1" style="font-size: 10px">del CIDAM A.C</span> 
         </div>
         <div style="margin: 27px"></div>
         <div style="text-align: left; color: #0c1344; font-size: 10px; ">
@@ -383,17 +383,16 @@
             prueba.
         </div>
         <div style="height: 30px"></div>
-        <div style="text-align: center; font-size: 10px; color: #0c1344">
+        <div class="letra1" style="text-align: center; font-size: 10px; color: #0c1344">
             <span style="font-size: 13.5px">Atentamente</span> <br> <br>
-            <u> Gerente Técnico del Organismo Certificador</u> <br>
+            ___________________________________________ <br>
+            Gerente Técnico del Organismo Certificador<br>
             del CIDAM A.C
         </div>
-        <footer style="color: white;padding-top: 70px; font-size: 8.5px; line-height: 0.9">
+        <footer style="color: white;padding-top: 50px; font-size: 8.5px; line-height: 0.9">
             <div style="float: left; color: black">
                 <div style="height: 40px"></div>
-
                 Pag.2-2
-
             </div>
             <div style="float: right;">
                 <span style="float: right; text-align: right;">Cancela y sustituye al Certificado con clave:</span>
