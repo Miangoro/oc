@@ -149,8 +149,10 @@ class solicitudesController extends Controller
         $solicitud->info_adicional = $request->info_adicional;
         // Guardar el nuevo registro en la base de datos
         $solicitud->save();
+        
+        // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
+        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
 
-        $user = User::find(18); // Encuentra al usuario que recibirá la notificación
         // Notificación 1
         $data1 = [
             'title' => 'Nuevo registro de solicitud',
@@ -158,7 +160,10 @@ class solicitudesController extends Controller
             'url' => 'solicitudes-historial',
         ];
 
-        $user->notify(new GeneralNotification ($data1));
+        // Iterar sobre cada usuario y enviar la notificación
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
 
     
         // Retornar una respuesta JSON indicando éxito

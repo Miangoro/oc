@@ -179,6 +179,7 @@
     @include('_partials._modals.modal-pdfs-frames')
     @include('_partials._modals.modal-expediente-servicio')
     @include('_partials._modals.modal-add-asignar-inspector')
+    @include('_partials._modals.modal-trazabilidad')
     <!-- /Modal -->
 
 </div>
@@ -224,6 +225,54 @@
     $("#id_solicitud").val(id_solicitud);
     $('#subirResultados').modal('show');
     }
+
+
+    function abrirModalTrazabilidad(id_solicitud, tipo, nombre_empresa) {
+    // Asignar valores en el modal
+    $("#id_solicitud").val(id_solicitud);
+    $('.solicitud').text(tipo);
+
+    // Construir la URL para la solicitud AJAX
+    var url = baseUrl + 'trazabilidad/' + id_solicitud;
+
+    // Hacer la solicitud AJAX para obtener los logs
+    $.get(url, function (data) {
+        if (data.success) {
+            // Recibir los logs y mostrarlos en el modal
+            var logs = data.logs;
+            var logsContainer = $('#logsContainer');
+            logsContainer.empty(); // Limpiar el contenedor de logs
+
+            // Iterar sobre los logs y agregarlos al contenedor
+            logs.forEach(function(log) {
+                logsContainer.append(`
+                    
+<li class="timeline-item timeline-item-transparent">
+                    <span class="timeline-point timeline-point-primary"></span>
+                    <div class="timeline-event">
+                        <div class="timeline-header mb-3">
+                        <h6 class="mb-0">${log.description}</h6>
+                        <small class="text-muted">${log.created_at}</small>
+                        </div>
+                        <p class="mb-2">${log.description}</p>
+                        <div class="d-flex align-items-center mb-1">
+                        <div class="badge bg-lighter rounded-3 mb-1_5">
+                            <img src="https://demos.pixinvent.com/materialize-html-laravel-admin-template/demo/assets/img/icons/misc/pdf.png" alt="img" width="15" class="me-2">
+                            <span class="h6 mb-0 text-body">invoices.pdf</span>
+                        </div>
+                        </div>
+                    </div>
+                    </li>
+                `);
+            });
+
+            // Mostrar el modal
+            $('#trazabilidad').modal('show');
+        }
+    }).fail(function(xhr) {
+        console.error(xhr.responseText);
+    });
+}
 
   
 </script>

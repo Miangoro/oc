@@ -1,5 +1,5 @@
 <!-- Add New Address Modal -->
-<div class="modal fade" id="asignarInspector" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="trazabilidad" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
       <div class="modal-content">
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

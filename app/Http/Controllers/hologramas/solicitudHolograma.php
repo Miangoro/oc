@@ -94,7 +94,7 @@ class solicitudHolograma extends Controller
 
             foreach ($users as $user) {
                 //$numero_cliente = \App\Models\Empresa::where('id_empresa', $user->id_empresa)->value('razon_social');
-                $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
+                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
 
                 $marca = \App\Models\marcas::where('id_marca', $user->id_marca)->value('marca');
                 $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');

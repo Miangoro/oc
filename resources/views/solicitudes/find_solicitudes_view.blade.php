@@ -229,7 +229,7 @@
 
   }
 
-  function abrirModalAsignarInspector(id_solicitud, tipo, nombre_empresa) {
+  function abrirModalTrazabilidad(id_solicitud, tipo, nombre_empresa) {
     // Asignar valores en el modal
     $("#id_solicitud").val(id_solicitud);
     $('.solicitud').text(tipo);
@@ -269,7 +269,7 @@
             });
 
             // Mostrar el modal
-            $('#asignarInspector').modal('show');
+            $('#trazabilidad').modal('show');
         }
     }).fail(function(xhr) {
         console.error(xhr.responseText);

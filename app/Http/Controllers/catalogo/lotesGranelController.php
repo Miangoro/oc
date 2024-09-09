@@ -24,11 +24,11 @@ class LotesGranelController extends Controller
 {
     public function UserManagement(Request $request)
     {// Encuentra el lote a granel por ID
-        $empresas = Empresa::where('tipo', 2)->get();
-        $categorias = Categorias::all();
-        $clases = Clases::all();
-        $tipos = Tipos::all(); // Obtén todos los tipos de agave
-        $organismos = Organismos::all(); // Obtén todos los organismos, aquí usa 'organismos' en minúscula
+        $empresas = empresa::where('tipo', 2)->get();
+        $categorias = categorias::all();
+        $clases = clases::all();
+        $tipos = tipos::all(); // Obtén todos los tipos de agave
+        $organismos = organismos::all(); // Obtén todos los organismos, aquí usa 'organismos' en minúscula
         $guias = Guias::all(); // Obtén todas las guías
         $lotes = LotesGranel::with('empresa', 'categoria', 'clase', 'tipo', 'organismo', 'guias')->get();
         $documentos = Documentacion::where('id_documento', '=', '58')->get();
