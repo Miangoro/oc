@@ -220,4 +220,13 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.pre-certificado');
         return $pdf->stream('Pre-certificado CIDAM C-GRA-210 2024.pdf');
     }
+
+
+
+        //Plan de auditoria
+        public function CertificadoConformidad199()
+        {
+            $pdf = Pdf::loadView('pdfs.CertificadoDeConformidadNOM-199');
+            return $pdf->stream('F7.1-03-17 Certificado de conformidad NOM-199-SCFI-2017.pdf');
+        }
 }

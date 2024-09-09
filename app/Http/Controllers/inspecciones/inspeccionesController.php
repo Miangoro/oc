@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Documentacion_url;
 use App\Models\Instalaciones;
-use App\Models\Empresa;
-use App\Models\Estados;
+use App\Models\empresa;
+use App\Models\estados;
 use App\Models\Organismos;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
@@ -24,8 +24,8 @@ class inspeccionesController extends Controller
     public function UserManagement()
     {
         $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
-        $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
-        $estados = Estados::all(); // Obtener todos los estados
+        $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+        $estados = estados::all(); // Obtener todos los estados
      
         $inspectores = User::where('tipo','=','2')->get(); // Obtener todos los organismos
         return view('inspecciones.find_inspecciones_view', compact('instalaciones', 'empresas', 'estados', 'inspectores'));

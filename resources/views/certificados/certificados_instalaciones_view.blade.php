@@ -11,8 +11,8 @@
     'resources/assets/vendor/libs/@form-validation/form-validation.scss',
     'resources/assets/vendor/libs/animate-css/animate.scss',
     'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
-    'resources\assets\vendor\libs\bootstrap-datepicker\bootstrap-datepicker.scss',
-    'resources\assets\vendor\libs\spinkit\spinkit.scss'
+    'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss',
+    'resources/assets/vendor/libs/spinkit/spinkit.scss'
     
 ])
 @endsection

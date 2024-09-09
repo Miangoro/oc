@@ -47,7 +47,7 @@ class GeneralNotification extends Notification
         return [
             'title' => $this->data['title'],
             'message' => $this->data['message'],
-            'url' => $this->data['url'],
+            'url' => $this->data['url']
         ];
     }
 

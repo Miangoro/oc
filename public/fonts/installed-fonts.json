@@ -22,5 +22,11 @@
     },
     "century": {
         "normal": "century_normal_701952a5e60038be5565a072d04a6565"
+    },
+    "cambria": {
+        "normal": "cambria_normal_5e25d3a82271ed81e2db20dffd80ee5e"
+    },
+    "cambria negrita": {
+        "normal": "cambria_negrita_normal_dc1123cb824e69ad3dbb42f166513d4e"
     }
 }

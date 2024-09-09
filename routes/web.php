@@ -443,6 +443,8 @@ Route::get('/bitacora_revision_SCFI2016', [CartaAsignacionController::class, 'bi
 Route::get('/bitacora_revision_OCCIDAM', [CartaAsignacionController::class, 'botacora_revicionPersonalOCCIDAM'])->name('botacora_revicionPersonalOCCIDAM');
 Route::get('/plan_de_auditoria', [CartaAsignacionController::class, 'PlanDeAuditoria'])->name('PlanDeAuditoria');
 Route::get('/generate-pdf', [PdfController::class, 'generatePdf']);
+Route::get('/certificado_de_conformidad', [CartaAsignacionController::class, 'CertificadoConformidad199'])->name('CertificadoConformidad199');
+
 
 
 
