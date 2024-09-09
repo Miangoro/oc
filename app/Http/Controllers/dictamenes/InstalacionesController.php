@@ -22,7 +22,7 @@ class InstalacionesController extends Controller
   public function UserManagement()
     {
         $dictamenes = Dictamen_instalaciones::all(); // Obtener todos los datos
-        $clases = Clases::all();
+        $clases = clases::all();
         $inspeccion = inspecciones::all();
         $empresa = empresa::all();
         $soli = solicitudesModel::all();
