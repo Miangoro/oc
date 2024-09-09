@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\guias;
 
 use App\Helpers\Helpers;
-use App\Models\guias;
+use App\Models\Guias;
 use App\Models\empresa;
 use App\Models\Predios;
 use App\Http\Controllers\Controller;
@@ -17,8 +17,8 @@ class GuiasController  extends Controller
     public function UserManagement()
     {
 
-        $guias = guias::all();
-        $empresa = Empresa::where('tipo', 2)->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $guias = Guias::all();
+        $empresa = empresa::where('tipo', 2)->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
         $predios = Predios::all();
         $userCount = $guias->count();
         $verified = 5;
@@ -96,7 +96,7 @@ class GuiasController  extends Controller
 
             foreach ($users as $user) {
                 //$numero_cliente = \App\Models\Empresa::where('id_empresa', $user->id_empresa)->value('razon_social');
-                $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
+                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
 
 
                 $nestedData = [
@@ -298,6 +298,23 @@ class GuiasController  extends Controller
 
 
 
+    //Metodo para llenar el pdf
+    public function guiasTranslado($id_guia)
+    {
+        $res = DB::select('SELECT f.numero_cliente, p.nombre_productor, a.razon_social, p.nombre_predio, p.num_predio, a.razon_social, t.nombre, t.cientifico, s.num_plantas, s.anio_plantacion, e.id_guia, e.folio, e.id_empresa, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas,
+            e.art,e.kg_maguey,e.no_lote_pedido,e.fecha_corte, e.edad, e.nombre_cliente,e.no_cliente,e.fecha_ingreso,e.domicilio
+            FROM guias e 
+            JOIN predios p ON (e.id_predio = p.id_predio) 
+            JOIN predio_plantacion s ON (e.id_plantacion = s.id_plantacion) 
+            JOIN catalogo_tipo_agave t ON (t.id_tipo = s.id_tipo) 
+            JOIN empresa a ON (a.id_empresa = e.id_empresa) 
+            JOIN empresa_num_cliente f ON (f.id_empresa = e.id_empresa) 
+            WHERE e.id_guia=' . $id_guia);
+        $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', ['datos' => $res]);
+        return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
+    }
+
+    
     //Metodo para llenar el pdf
     public function guiasTranslado($id_guia)
     {
