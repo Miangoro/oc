@@ -56,13 +56,6 @@
             font-size: 17px;
         }
 
-        .footer {
-            position: absolute;
-            transform: translate(0px, 180px);
-            /* Mueve el elemento 50px en X y 50px en Y */
-            text-align: center;
-            font-size: 11px;
-        }
 
         /*Tablas*/
         table {
@@ -180,7 +173,7 @@
         .img-background {
             position: absolute;
             top: 567px;
-            left: -70px;
+            left: -80px;
             width: 820px;
             height: 450px;
             z-index: -1;
@@ -216,7 +209,7 @@
 
         .letra2 {
             color: #cb8f2b;
-            font-size: 11px;
+            font-size: 10px;
 
         }
 
@@ -234,28 +227,36 @@
 
     <div class="header">
         <center> <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM"></center>
-        <div> <span class="letra1">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, </span><br>
-            <span class="letra2"> Acreditado como Organismo de Certificación de producto con número de acreditación
-                144/18 <br>
-                ante la Entidad Mexicana de Acreditación, A.C.</span>
-        </div>
-        <br>
-        <div style="color:  #0c1344; font-size: 13px"><span>Otorga el siguiente:</span> <br>
-            <span style="font-size: 24px">CERTIFICADO DE CONFORMIDAD A:</span><br>
-            <span class="letra3">XXXXXXXXX</span>
-        </div>
-        <div>
-            <span class="letra1"> RFC: </span><br>
-            <span style="color: #0c1344; font-size: 14px"> Domicilio</span>
+        <img src="{{ public_path('img_pdf/sello_dorado.png') }}" alt="Logo Derecho"
+            style="float: right; width: 180px; margin-right: -40px; margin-top: -60px">
+
+        <!-- Texto centrado -->
+        <div style="text-align: center;">
+            <div>
+                <span class="letra1">Centro de Innovación y Desarrollo Agroalimentario de Michoacán,</span><br>
+                <span class="letra2">Acreditado como Organismo de Certificación de producto con número de acreditación
+                    144/18 <br>
+                    ante la Entidad Mexicana de Acreditación, A.C.</span>
+            </div>
+            <br>
+            <div style="color:  #0c1344; font-size: 13px;">
+                <span>Otorga el siguiente:</span><br>
+                <span style="font-size: 24px;">CERTIFICADO DE CONFORMIDAD A:</span><br>
+                <span class="letra3">XXXXXXXXX</span>
+            </div>
+            <div>
+                <span class="letra1">RFC:</span><br>
+                <span style="color: #0c1344; font-size: 14px;">Domicilio</span>
+            </div>
         </div>
     </div>
 
     <body>
-        <div style="color: #0c1344; text-align: left; font-size: 13px">
+        <div style="color: #0c1344; text-align: left; font-size: 13px; line-height: 0.9">
             Por haber demostrado que cuenta con la infraestructura, equipamiento y la competencia necesaria <br>
             para realizar el proceso de producción de las bebidas:
-
         </div>
+
         <br>
         <table>
             <tr>
@@ -275,119 +276,133 @@
                 <td></td>
             </tr>
         </table>
-<div>
-    Este certificado de conformidad de Bebidas Alcohólicas se expide de acuerdo a la Norma Oficial <br>
-Mexicana NOM-199-SCFI-2017, Bebidas Alcohólicas-Denominación, Especificaciones <br>
-Fisicoquímicas, Información Comercial y Métodos de Prueba. 
-</div>
-        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" class="background-img">
-        <footer style="text-align: center; font-size: 7px; margin-top: 175px; color: #71777c; margin-right: 50px">
-            Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-            puede <br>
-            ser distribuido externamente sin la autorización escrita del Director Ejecutivo
+        <div style="color: #0c1344; font-size: 13.5px; text-align: justify; line-height: 0.9">
+            Este certificado de conformidad de Bebidas Alcohólicas se expide de acuerdo a la Norma Oficial <br>
+            Mexicana NOM-199-SCFI-2017, Bebidas Alcohólicas-Denominación, Especificaciones <br>
+            Fisicoquímicas, Información Comercial y Métodos de Prueba.
+        </div>
 
+        <div
+            style="text-align: center; font-size: 10px; color: #0c1344; margin-right: 50px; float: right; margin-right: 80px;position: absolute">
+            <span style="font-size: 13.5px">Atentamente</span> <br> <br>
+            <u> Gerente Técnico del Organismo Certificador</u> <br>
+            del CIDAM A.C
+        </div>
+        <div style="margin: 27px"></div>
+        <div style="text-align: left; color: #0c1344; font-size: 10px; ">
+            Número de Reporte Técnico: <br>
+            Número del Certificado: <br>
+            Vigencia del Certificado: <br>
+            Fecha de Actualización: <br>
+        </div>
+        <br>
+        <div style="color: #0c1344; font-size: 13px; text-align: justify; line-height: 0.9">
+            Este certificado está sujeto a vigilancias y mantendrá validez en tanto se conserven las mismas
+            condiciones bajo las que fue otorgado y ampara únicamente el domicilio de producción, envasado
+            y comercialización que se indica en el anexo. <br>
+        </div>
+        <div style="text-align: center; font-size: 10.5px; color: #0c1344">*Este certificado no puede ser reproducido de
+            manera parcial.
+        </div>
+        <footer style="color: white;padding-top: 120px; font-size: 8.5px; line-height: 0.9">
+            <div style="float: left;">
+                <span style="color: black">Pag.1-2</span>
+                <br>&nbsp;
+                <br>&nbsp;
+                <br>&nbsp;
+                Cancela y sustituye al Certificado con clave:
+            </div>
+            <div style="float: right;">
+                Kilometro 8. Antigua carretera a Pátzcuaro, S/N. Col. Otra no especificada <br>
+                en el catálogo. C.P. 58341. Morelia, Michoacán. <br>
+                F7.1-03-17. Certificado de conformidad NOM-199-SCFI-2017. Ed. 9. Entra en <br>
+                vigor:01/08/2024.
+            </div>
         </footer>
+
+
+
+        {{-- Segunda hoja --}}
         <div class="page-break"></div>
         <div class="img-background"></div>
-
         <div class="header">
-            <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM">
-            <div style="padding-right: 20px">Plan de auditoría de esquema de certificación NOM-070-SCFI-2016
-                F7.1-01-13<br>Edición 2 Entrada en Vigor: 08/03/2023
-                <br>_______________________________________________________________________________________
+            <center> <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM"></center>
+            <!-- Texto centrado -->
+            <div style="text-align: center;">
+                <div>
+                    <span class="letra1">Centro de Innovación y Desarrollo Agroalimentario de Michoacán,</span><br>
+                    <span class="letra2">Acreditado como Organismo de Certificación de producto con número de
+                        acreditación
+                        144/18 <br>
+                        ante la Entidad Mexicana de Acreditación, A.C.</span>
+                </div>
+                <br>
+                <div style="color:  #0c1344; font-size: 13px;">
+                    <span>Otorga el siguiente:</span><br>
+                    <span style="font-size: 24px;">CERTIFICADO DE CONFORMIDAD A:</span><br>
+                    <span class="letra3">XXXXXXXXX</span>
+                </div>
             </div>
         </div>
-        <div style="height: 40px"></div>
-        <table>
-            <tr>
-                <td class="letra-fondo" style="font-size: 14px" colspan="3">5. DATOS DEL GRUPO EVALUADOR
-                </td>
-            </tr>
-            <tr>
-                <td class="letra-fondo">Designación:</td>
-                <td class="letra-fondo">Nombre: </td>
-                <td class="letra-fondo">Teléfono y correo electrónico:</td>
-            </tr>
-            <tr>
-                <td>Inspector</td>
-                <td>Erik Antonio Mejía Vaca</td>
-                <td>4521971634, emejia@erpcidam.com</td>
-            </tr>
-            <tr>
-                <td>Auditor</td>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
+        <div style="height: 20px"></div>
+        <div style="color: #0c1344; text-align: left; font-size: 13px; line-height: 0.9">
+            La presente certificación se realiza de acuerdo a la Norma Oficial Mexicana NOM-199- SCFI-2017,
+            mediante el esquema de certificación de producto. De conformidad a lo dispuesto en los artículos 53,
+            60 y 62 – de la Ley de Infraestructura de la Calidad, 50 del Reglamento de la LFMN, 6 Fracc. II del
+            anexo 2.4.1 “Fracciones arancelarias de la tarifa de la Ley de los impuestos generales de importación
+            y de exportación en las que se clasifican las mercancías sujetas al cumplimiento de las NOMs en su
+            punto de entrada al país, y en el de su salida (anexo de NOMs)”.
+        </div>
         <br>
         <table>
             <tr>
-                <td class="letra-fondo" style="font-size: 14px" colspan="5">6. DESCRIPCIÓN DE ACTIVIDADES DE
-                    AUDITORÍA
+                <td class="negrita">Domicilio de planta de producción, envasado y
+                    comercialización
                 </td>
+                <td class="negrita">Identificación del
+                    lote muestreado</td>
             </tr>
             <tr>
-                <td class="letra-fondo no-padding">Fecha:</td>
-                <td class="letra-fondo no-padding">Inspector/ <br>
-                    Auditor:</td>
-                <td class="letra-fondo" style="width: 370px">Actividad:</td>
-                <td class="letra-fondo no-padding">Horario:</td>
-                <td class="letra-fondo no-padding">Aplica <br>
-                    (Auditados)</td>
-            </tr>
-            <tr>
-                <td class="no-padding">2024-09-02</td>
-                <td class="no-padding">Erik Antonio <br>
-                    Mejía Vaca</td>
-                <td class="no-padding">Reunión de apertura</td>
-                <td class="no-padding"></td>
-                <td class="no-padding">Aplica</td>
+                <td style="height: 100px"></td>
+                <td></td>
             </tr>
         </table>
+        <div style="color: #0c1344; text-align: left; font-size: 13px">Certificación de Sistema de Gestión con la que
+            cuenta: <br>
+            Vigencia:
+        </div>
         <br>
-        <table>
-            <tr>
-                <td class="letra-fondo" style="font-size: 14px" colspan="4">6. DESCRIPCIÓN DE ACTIVIDADES DE
-                    AUDITORÍA
-                </td>
-            </tr>
-            <tr>
-                <td class="letra-fondo no-padding-up-down">Nombre del Inspector:</td>
-                <td class="no-padding-up-down" colspan="3">Erik Antonio Mejía Vaca
-                </td>
-            </tr>
-            <tr>
-                <td class="letra-fondo no-padding-r-l">Acepta o rechaza el plan de <br>
-                    auditoría:</td>
-                <td style="width: 140px">Aprobado</td>
-                <td class="letra-fondo no-padding-r-l">Nombre del cliente o persona <br>
-                    autorizada que acepta o rechaza <br>
-                    el plan
-                </td>
-                <td style="width: 140px">PRISCILIANO <br>
-                    MARTÍNEZ</td>
-            </tr>
-            <tr>
-                <td class="letra-fondo">Políticas:</td>
-                <td class="leftLetter" style="font-size: 8px" colspan="3">1. Aceptar o rechazar el presente plan
-                    de auditoria antes de 48 horas, de lo contrario se considera <br>
-                    aceptado.<br>
-                    2. Comunicarse previamente, mínimo 3 días previos a la auditoria, con el auditor asignado por el<br>
-                    Organismo<br>
-                    Certificador con la finalidad de coordinar la actividad en sitio.<br>
-                    3. En caso de conflicto de interés, se debe notificar al Organismo de Certificación previamente.<br>
-                    4. Para realizarel servicio de certificación se contratará una Unidad de Verificación y Laboratorios
-                    de<br>
-                    pruebas.</td>
-            </tr>
-        </table>
-        <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" class="background-img"
-            style="position: absolute">
-        <footer style="text-align: center; font-size: 7px; margin-top: 315px; color: #71777c; margin-right: 50px">
-            Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
-            puede <br>
-            ser distribuido externamente sin la autorización escrita del Director Ejecutivo
+        <div style="color: #0c1344; font-size: 12px">
+            Dado lo anterior, el Certificado de Conformidad ampara el proceso de producción realizado durante el
+            periodo de vigencia, siempre y cuando se conserven las mismas condiciones bajo las que fue otorgado.
+        </div>
+        <br>
+        <div style="color: #0c1344; font-size: 12px">
+            De conformidad con lo establecido en los apartados 6, 7 y 8 de la NOM-199-SCFI-2017, Bebidas
+            Alcohólicas-Denominación, Especificaciones fisicoquímicas, información comercial y métodos de
+            prueba.
+        </div>
+        <div style="height: 30px"></div>
+        <div style="text-align: center; font-size: 10px; color: #0c1344">
+            <span style="font-size: 13.5px">Atentamente</span> <br> <br>
+            <u> Gerente Técnico del Organismo Certificador</u> <br>
+            del CIDAM A.C
+        </div>
+        <footer style="color: white;padding-top: 90px; font-size: 8.5px; line-height: 0.9">
+            <div style="float: left; color: black">
+                <br>&nbsp;
 
+                Pag.2-2
+
+            </div>
+            <div style="float: right;">
+                <span style="float: right; text-align: right;">Cancela y sustituye al Certificado con clave:</span>
+                <div style="height: 20px"></div>
+                Kilometro 8. Antigua carretera a Pátzcuaro, S/N. Col. Otra no especificada <br>
+                en el catálogo. C.P. 58341. Morelia, Michoacán. <br>
+                F7.1-03-17. Certificado de conformidad NOM-199-SCFI-2017. Ed. 9. Entra en <br>
+                vigor:01/08/2024.
+            </div>
         </footer>
     </body>
 
