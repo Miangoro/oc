@@ -23,7 +23,7 @@ class Documentacion_url extends Model
 
       public function marca()
       {
-          return $this->belongsTo(Marcas::class, 'id_relacion', 'id_marca');
+          return $this->belongsTo(marcas::class, 'id_relacion', 'id_marca');
       }
 
       public function documentacion()
