@@ -388,16 +388,16 @@
             <u> Gerente Técnico del Organismo Certificador</u> <br>
             del CIDAM A.C
         </div>
-        <footer style="color: white;padding-top: 90px; font-size: 8.5px; line-height: 0.9">
+        <footer style="color: white;padding-top: 70px; font-size: 8.5px; line-height: 0.9">
             <div style="float: left; color: black">
-                <br>&nbsp;
+                <div style="height: 40px"></div>
 
                 Pag.2-2
 
             </div>
             <div style="float: right;">
                 <span style="float: right; text-align: right;">Cancela y sustituye al Certificado con clave:</span>
-                <div style="height: 20px"></div>
+                <div style="height: 50px"></div>
                 Kilometro 8. Antigua carretera a Pátzcuaro, S/N. Col. Otra no especificada <br>
                 en el catálogo. C.P. 58341. Morelia, Michoacán. <br>
                 F7.1-03-17. Certificado de conformidad NOM-199-SCFI-2017. Ed. 9. Entra en <br>
