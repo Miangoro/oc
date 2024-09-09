@@ -242,7 +242,7 @@
     <div class="header">
         <center> <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" alt="Logo CIDAM" style="padding-right: 70px"></center>
         <img src="{{ public_path('img_pdf/sello_dorado.png') }}" alt="Logo Derecho"
-            style="float: right; width: 195px; margin-right: -40px; margin-top: -80px">
+            style="float: right; width: 195px; margin-right: -40px; margin-top: -78px">
 
         <!-- Texto centrado -->
         <div style="text-align: center">
