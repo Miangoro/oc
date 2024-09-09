@@ -19,7 +19,7 @@
 
         }
 
-        @font-face {
+/*         @font-face {
             font-family: 'Century Gothic';
             src: url('fonts/CenturyGothic.ttf') format('truetype');
 
@@ -29,7 +29,7 @@
             font-family: 'Century Gothic Negrita';
             src: url('fonts/GOTHICB.TTF') format('truetype');
         }
-
+ */
         @font-face {
             font-family: 'Cambria';
             src: url('fonts/Cambria.ttf') format('truetype');
@@ -81,7 +81,7 @@
             padding: 4px;
             font-size: 11px;
             text-align: center;
-            font-family: 'Century Gothic';
+            font-family: 'Cambria';
 
 
 
@@ -215,13 +215,15 @@
         .letra1 {
             color: #0c1344;
             font-size: 15px;
-            font-family: 'Century Gothic Negrita';
+            font-family: 'Cambria Negrita';
 
         }
 
         .letra2 {
             color: #cb8f2b;
             font-size: 10.5px;
+            font-family: 'Cambria';
+
 
         }
 
@@ -252,19 +254,19 @@
             </div>
             <br>
             <div style="color:  #0c1344; font-size: 13px;">
-                <span>Otorga el siguiente:</span><br>
-                <span style="font-size: 24px;">CERTIFICADO DE CONFORMIDAD A:</span><br>
+                <span style="font-family: 'Cambria'">Otorga el siguiente:</span><br>
+                <span style="font-size: 24px;font-family: 'Cambria'">CERTIFICADO DE CONFORMIDAD A:</span><br>
                 <span class="letra3">XXXXXXXXX</span>
             </div>
             <div>
                 <span class="letra1">RFC:</span><br>
-                <span style="color: #0c1344; font-size: 14px;">Domicilio</span>
+                <span style="color: #0c1344; font-size: 14px;font-family: 'Cambria';">Domicilio</span>
             </div>
         </div>
     </div>
-
+<br>
     <body>
-        <div style="color: #0c1344; text-align: left; font-size: 13px; line-height: 0.9">
+        <div style="color: #0c1344; text-align: left; font-size: 15.5px; line-height: 0.9;font-family: 'Cambria'">
             Por haber demostrado que cuenta con la infraestructura, equipamiento y la competencia necesaria <br>
             para realizar el proceso de producción de las bebidas:
         </div>
@@ -342,22 +344,22 @@
             <!-- Texto centrado -->
             <div style="text-align: center;">
                 <div>
-                    <span class="letra1">Centro de Innovación y Desarrollo Agroalimentario de Michoacán,</span><br>
-                    <span class="letra2">Acreditado como Organismo de Certificación de producto con número de
+                    <span class="letra1" style=" font-family: 'Cambria'">Centro de Innovación y Desarrollo Agroalimentario de Michoacán,</span><br>
+                    <span class="letra2" style=" font-family: 'Cambria'">Acreditado como Organismo de Certificación de producto con número de
                         acreditación
                         144/18 <br>
                         ante la Entidad Mexicana de Acreditación, A.C.</span>
                 </div>
                 <br>
                 <div style="color:  #0c1344; font-size: 13px;">
-                    <span>Otorga el siguiente:</span><br>
-                    <span style="font-size: 24px;">CERTIFICADO DE CONFORMIDAD A:</span><br>
+                    <span style="font-size: 24px; font-family: 'Cambria';">ANEXO</span><br>
+                    <span style="font-family: 'Cambria';">Productor, envasador y comercializador</span><br>
                     <span class="letra3">XXXXXXXXX</span>
                 </div>
             </div>
         </div>
         <div style="height: 20px"></div>
-        <div style="color: #0c1344; text-align: left; font-size: 13px; line-height: 0.9">
+        <div style="color: #0c1344; text-align: left; font-size: 14.5px; line-height: 0.9; font-family: 'Cambria'">
             La presente certificación se realiza de acuerdo a la Norma Oficial Mexicana NOM-199- SCFI-2017,
             mediante el esquema de certificación de producto. De conformidad a lo dispuesto en los artículos 53,
             60 y 62 – de la Ley de Infraestructura de la Calidad, 50 del Reglamento de la LFMN, 6 Fracc. II del
@@ -365,6 +367,7 @@
             y de exportación en las que se clasifican las mercancías sujetas al cumplimiento de las NOMs en su
             punto de entrada al país, y en el de su salida (anexo de NOMs)”.
         </div>
+        
         <br>
         <table>
             <tr>
@@ -379,17 +382,17 @@
                 <td></td>
             </tr>
         </table>
-        <div style="color: #0c1344; text-align: left; font-size: 13px">Certificación de Sistema de Gestión con la que
+        <div style="color: #0c1344; text-align: left; font-size: 14.5px; font-family: 'Cambria';">Certificación de Sistema de Gestión con la que
             cuenta: <br>
             Vigencia:
         </div>
         <br>
-        <div style="color: #0c1344; font-size: 12px">
+        <div style="color: #0c1344; font-size: 14px; font-family: 'Cambria';">
             Dado lo anterior, el Certificado de Conformidad ampara el proceso de producción realizado durante el
             periodo de vigencia, siempre y cuando se conserven las mismas condiciones bajo las que fue otorgado.
         </div>
         <br>
-        <div style="color: #0c1344; font-size: 12px">
+        <div style="color: #0c1344; font-size: 14px; font-family: 'Cambria';">
             De conformidad con lo establecido en los apartados 6, 7 y 8 de la NOM-199-SCFI-2017, Bebidas
             Alcohólicas-Denominación, Especificaciones fisicoquímicas, información comercial y métodos de
             prueba.
@@ -401,7 +404,7 @@
             Gerente Técnico del Organismo Certificador<br>
             del CIDAM A.C
         </div>
-        <footer style="color: white;padding-top: 50px; font-size: 8.5px; line-height: 0.9">
+        <footer style="color: white;padding-top: 40px; font-size: 8.5px; line-height: 0.9">
             <div style="float: left; color: black">
                 <div style="height: 40px"></div>
                 Pag.2-2
