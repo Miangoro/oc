@@ -29,7 +29,7 @@ class solicitudesModel extends Model
 
     public function empresa()
     {
-        return $this->belongsTo(Empresa::class, 'id_empresa');
+        return $this->belongsTo(empresa::class, 'id_empresa');
     }
 
     public function inspeccion()
@@ -44,7 +44,7 @@ class solicitudesModel extends Model
 
     public function instalacion()
     {
-        return $this->hasOne(instalaciones::class, 'id_instalacion', 'id_instalacion');
+        return $this->hasOne(Instalaciones::class, 'id_instalacion', 'id_instalacion');
     }
 
     public function tipo_solicitud()

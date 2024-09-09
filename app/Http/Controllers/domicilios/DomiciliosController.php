@@ -19,8 +19,8 @@ class DomiciliosController extends Controller
     public function UserManagement()
     {
         $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
-        $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
-        $estados = Estados::all(); // Obtener todos los estados
+        $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+        $estados = estados::all(); // Obtener todos los estados
         $organismos = Organismos::all(); // Obtener todos los organismos
         return view('domicilios.find_domicilio_instalaciones_view', compact('instalaciones', 'empresas', 'estados', 'organismos'));
     }

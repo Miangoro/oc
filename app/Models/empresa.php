@@ -19,7 +19,7 @@ class empresa extends Model
 
       public function empresaNumClientes()
     {
-        return $this->hasMany(EmpresaNumCliente::class, 'id_empresa','id_empresa');
+        return $this->hasMany(empresaNumCliente::class, 'id_empresa','id_empresa');
     }
 
     public function users()
@@ -35,7 +35,7 @@ class empresa extends Model
     
     public function guiasEmpresa()
     {
-        return $this->hasMany(guias::class, 'id_empresa');
+        return $this->hasMany(Guias::class, 'id_empresa');
     }
 
     public function obtenerInstalaciones(){
@@ -51,7 +51,7 @@ class empresa extends Model
     }
 
     public function guias(){
-        return guias::where('id_empresa', $this->id_empresa)->get();
+        return Guias::where('id_empresa', $this->id_empresa)->get();
     }
 
     public function predios(){
