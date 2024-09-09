@@ -705,6 +705,9 @@ Route::post('/notificacion-leida/{id}', [NotificacionController::class, 'marcarN
 //Trazabilidad
 Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])->name('mostrarLogs');
 
+//
+Route::get('/Pre-certificado', [CartaAsignacionController::class, 'PreCertificado'])->name('Pre-certificado');
+
 
 
 
