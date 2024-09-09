@@ -26,17 +26,17 @@ class Instalaciones extends Model
 
     public function empresa()
     {
-        return $this->belongsTo(Empresa::class, 'id_empresa');
+        return $this->belongsTo(empresa::class, 'id_empresa');
     }
 
     public function organismos()
     {
-        return $this->belongsTo(Organismos::class, 'id_organismo');
+        return $this->belongsTo(organismos::class, 'id_organismo');
     }
 
     public function estados()
     {
-        return $this->belongsTo(Estados::class, 'estado');
+        return $this->belongsTo(estados::class, 'estado');
     }
 
     public function getFechaEmisionAttribute($value)

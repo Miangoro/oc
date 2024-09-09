@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\TranslatableActivityLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Certificados extends Model
 {
-    use HasFactory;
+    use LogsActivity, TranslatableActivityLog, HasFactory;
     protected $table = 'certificados';
     protected $primaryKey = 'id_certificado';
 
@@ -21,6 +23,12 @@ class Certificados extends Model
         'maestro_mezcalero',
         'num_autorizacion',
     ];
+
+      // Método para obtener el nombre del registro que sirve para la trazabilidad
+      public function getLogName2(): string
+      {
+          return 'certificados'; // Devuelve el nombre que desees
+      }
 
     public function dictamen()
     {
@@ -36,6 +44,6 @@ class Certificados extends Model
     // Relación con Empresa
     public function empresa()
     {
-        return $this->belongsTo(Empresa::class, 'id_empresa', 'id');
+        return $this->belongsTo(empresa::class, 'id_empresa', 'id');
     }
 }

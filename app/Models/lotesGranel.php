@@ -31,7 +31,7 @@ class LotesGranel extends Model
 
     public function empresa()
     {
-        return $this->belongsTo(Empresa::class, 'id_empresa');
+        return $this->belongsTo(empresa::class, 'id_empresa');
     }
 
     public function categoria()
@@ -46,7 +46,7 @@ class LotesGranel extends Model
 
     public function tipo()
     {
-        return $this->belongsTo(Tipos::class, 'id_tipo');
+        return $this->belongsTo(tipos::class, 'id_tipo');
     }
 
     public function organismo()
@@ -56,7 +56,7 @@ class LotesGranel extends Model
 
     public function guias()
     {
-        return $this->belongsTo(guias::class, 'id_guia');
+        return $this->belongsTo(Guias::class, 'id_guia');
     }
 
     public function lotesGuias()

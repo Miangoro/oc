@@ -133,7 +133,7 @@ class documentacionController extends Controller
           ->with('documentacionUrls') // Eager loading de la relación
           ->get();
 
-          $empresa = Empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
+          $empresa = empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
           $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
           $razonSocial = $empresa->razon_social;
           
@@ -178,7 +178,7 @@ class documentacionController extends Controller
           ->with('documentacionUrls') // Eager loading de la relación
           ->get();
 
-          $empresa = Empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
+          $empresa = empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
           $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
           $razonSocial = $empresa->razon_social;
           

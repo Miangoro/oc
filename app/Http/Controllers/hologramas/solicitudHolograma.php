@@ -20,7 +20,7 @@ class solicitudHolograma extends Controller
 {
     public function UserManagement()
     {
-        $Empresa = Empresa::where('tipo', '=', '2')->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $Empresa = empresa::where('tipo', '=', '2')->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
         $ModelsSolicitudHolograma = ModelsSolicitudHolograma::all();
         $userCount = $ModelsSolicitudHolograma->count();
         $verified = 5;
@@ -96,7 +96,7 @@ class solicitudHolograma extends Controller
                 //$numero_cliente = \App\Models\Empresa::where('id_empresa', $user->id_empresa)->value('razon_social');
                 $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
 
-                $marca = \App\Models\Marcas::where('id_marca', $user->id_marca)->value('marca');
+                $marca = \App\Models\marcas::where('id_marca', $user->id_marca)->value('marca');
                 $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');
                 
                 //el segundo es el nombre de la variable del usuario
