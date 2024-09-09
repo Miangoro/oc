@@ -42,7 +42,7 @@ class Predios extends Model
     }
     public function tipo()
     {
-        return $this->belongsTo(Tipos::class, 'id_tipo');
+        return $this->belongsTo(tipos::class, 'id_tipo');
     }
       
     public function plantaciones()
