@@ -12,10 +12,10 @@
         }
 
         @page {
-            margin-left: 70px;
-            margin-right: 70px;
+            margin-left: 60px;
+            margin-right: 60px;
             margin-top: 40px;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
 
         }
 
@@ -71,7 +71,7 @@
 
         th,
         td {
-            border: 1px solid black;
+            border: 2px dotted black;
             padding: 4px;
             font-size: 11px;
             text-align: center;
@@ -120,6 +120,11 @@
 
         }
 
+        .centerLetter {
+            text-align: center;
+
+        }
+
         .rightLetter {
             text-align: right;
             vertical-align: top;
@@ -133,6 +138,12 @@
 
         .no-padding {
             padding: 0;
+        }
+
+        .no-padding-top {
+            padding-top: none;
+            padding-bottom: 6px;
+            vertical-align: top;
         }
 
         .no-padding-up-down {
@@ -166,6 +177,7 @@
         .header {
             padding: 10px;
             text-align: right;
+            margin-right: 0px;
         }
 
         .header img {
@@ -196,20 +208,23 @@
 
 
     <div class="header">
-        <div style="text-align: right; font-size: 12px; padding-bottom: 10px">
-            <span class="negrita">ORGANISMO CERTIFICADOR
+        <div style="text-align: right; font-size: 12px; padding-bottom: 10px; font-family: 'Tahoma', Geneva, Verdana, sans-serif">
+            <span style="font-size: 23.5px; padding-right: 50px"><b> ORGANISMO CERTIFICADOR</b>
             </span><br>
-            Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. <br>
-            <span class="negrita">No. de Certificado:</span>
+            <span style="font-size: 15px">Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C.</span> <br>
+            <div style="height: 10px"></div>
+            <span class="negrita" style="font-size: 14px">No. de Certificado:</span>
         </div>
     </div>
 
     <body>
-        Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditado como organismo de
-        certificación de producto con número de acreditación 144/18 ante la Entidad Mexicana de Acreditación,
-        A.C. otorga la siguiente:
+        <div style="font-family: 'Tahoma', Geneva, Verdana, sans-serif; font-size: 15px; text-align: justify"> Centro de Innovación y Desarrollo Agroalimentario de Michoacán,
+            A.C. Acreditado como organismo de
+            certificación de producto con número de acreditación 144/18 ante la Entidad Mexicana de Acreditación,
+            A.C. otorga la siguiente:
+        </div>
         <br>
-        <div>
+        <div class="negrita centerLetter" style="font-size: 28px; line-height: 0.9">
             <center>CERTIFICADO <br>
                 COMO PRODUCTOR DE BEBIDAS ALCOHÓLICAS <br>
                 QUE CONTIENEN MEZCAL A <br>
@@ -218,47 +233,52 @@
         </div>
         <table>
             <tr>
-                <td colspan="4">Domicilio Fiscal:
+                <td class="negrita leftLetter no-padding-top" style="font-size: 13px; line-height: 0.9" colspan="4">Domicilio Fiscal:
                 </td>
             </tr>
             <tr>
-                <td colspan="2">RFC: </td>
-                <td colspan="2">Tel:</td>
+                <td class="negrita leftLetter no-padding-top" style="font-size: 13px; line-height: 0.9" colspan="2">RFC: </td>
+                <td class="negrita leftLetter no-padding-top" style="width: 150px; font-size: 13px; line-height: 0.9" colspan="2">Tel:</td>
             </tr>
             <tr>
-                <td colspan="4">Correo electrónico:
+                <td class="negrita leftLetter no-padding-top" style="font-size: 13px" colspan="4">Correo electrónico:
                 </td>
             </tr>
             <tr>
-                <td>Fecha de inicio de
+                <td class="negrita no-padding-top" style="font-size: 13px;text-align: justify; width: 150px; line-height: 0.9">Fecha de inicio de
                     vigencia: </td>
-                <td>/2022</td>
-                <td>Fecha de
+                <td style="width: 140px">/2022</td>
+                <td class="negrita leftLetter no-padding-top" style="font-size: 13px;line-height: 0.9">Fecha de <br>
                     vencimiento: </td>
                 <td>/2023</td>
             </tr>
         </table>
-        <div>
+        <div style="height: 10px"></div>
+        <div style="font-size: 15.5px; font-family:Arial, sans-serif; line-height: 1; text-align: justify">
             El presente certificado se realiza de acuerdo a la Norma Mexicana NMX-V-052-NORMEX-2016,
             Bebidas Alcohólicas que contienen Mezcal-Denominación, Etiquetado y Especificaciones y la
             NOM-070-SCFI-2016 Bebidas Alcohólicas-Mezcal-Especificaciones en vigor, mediante el esquema de
             certificación para productos con Denominación de Origen.
 
         </div>
-        <div>
-            Este certificado ampara exclusivamente la producción del producto Bebida Alcohólica Preparada,
-            Cóctel, Licor o crema con al Mezcal, que se realice en las instalaciones indicadas a continuación,
+        <div style="height: 10px"></div>
+        <div style="font-size: 15px; font-family:Arial, sans-serif; line-height: 1; text-align: justify">
+            Este certificado ampara exclusivamente la producción del producto <span class="negrita"
+                style="background-color: yellow"> Bebida Alcohólica Preparada,
+                Cóctel, Licor o crema con al Mezcal,</span> que se realice en las instalaciones indicadas a
+            continuación,
             ya que ha demostrado que cumple con los procesos necesarios para su producción.
-
         </div>
-        <div>
-            Domicilio de la unidad de Producción: <br> &nbsp;
+        <div style="height: 10px"></div>
+        <div class="negrita" style="font-size: 15px">
+            Domicilio de la unidad de Producción: <br>
             No. De Autorización para el uso de la Denominación de Origen Mezcal o No. de Convenio
-            de corresponsabilidad para el uso de la DOM: <br>&nbsp;
-            No. De Dictamen de cumplimiento con la NOM: <br>&nbsp;
+            de corresponsabilidad para el uso de la DOM: <br>
+            No. De Dictamen de cumplimiento con la NOM: <br>
 
         </div>
-        <div>
+        <div style="height: 20px"></div>
+        <div style="font-size: 15px;font-family:Arial, sans-serif;line-height: 1; text-align: justify">
             Dichas instalaciones cuentan con la infraestructura y equipamiento requerido para la producción de
             Bebidas alcohólicas que contienen mezcal, requisitos establecidos en la NMX-V-052-NORMEX-2016
             Bebidas Alcohólicas que contienen Mezcal en vigor y se encuentran dentro de los estados y
@@ -266,6 +286,21 @@
             Denominación de Origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre,
             publicada el 28 de Noviembre de 1994, así como sus subsecuentes modificaciones.
         </div>
+        <div style="height: 5px"></div>
+        <div class="negrita" style="text-align: center; font-size: 14px; line-height: 1">
+            _________________________________________<br>
+            QFB. Mayra Gutierrez Romero <br>
+            Gerente Técnico del Organismo Certificador CIDAM A.C.
+        </div>
+        <div style="height: 20px"></div>
+        <footer
+            style="position: absolute; bottom: 30px; width: 100%; font-size: 8.5px; line-height: 0.9; text-align: right">
+            <div style="font-size: 11px"> Certificado como productor NMX-V-052-NORMEX-2016 F7.1-04-08 <br>
+                Edición 1 Entrada en vigor: 28/11/2022</div>
+            <div style="height: 10px"></div>
+            <div class="negrita" style="font-size: 13px;  margin-left: -40px;">Antigua Carretera a Pátzcuaro, km 8.
+                Morelia, Michoacán, México. C.P. 58341. Tels. 443 299 0181 443 299 0264</div>
+        </footer>
     </body>
 
 
