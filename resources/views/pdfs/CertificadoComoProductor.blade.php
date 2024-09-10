@@ -71,7 +71,7 @@
 
         th,
         td {
-            border: 2px dotted black;
+            border: 1px dotted black;
             padding: 4px;
             font-size: 11px;
             text-align: center;
