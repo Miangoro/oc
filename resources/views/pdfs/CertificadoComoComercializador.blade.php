@@ -208,85 +208,93 @@
 
 
     <div class="header">
-        <div style="text-align: right; font-size: 12px; padding-bottom: 10px; font-family: 'Tahoma', Geneva, Verdana, sans-serif">
+        <div
+            style="text-align: right; font-size: 12px; padding-bottom: 10px; font-family: 'Tahoma', Geneva, Verdana, sans-serif">
             <span style="font-size: 23.5px; padding-right: 50px"><b> ORGANISMO CERTIFICADOR</b>
             </span><br>
-            <span style="font-size: 15px">Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C.</span> <br>
+            <span style="font-size: 14.5px">Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C.</span> <br>
             <div style="height: 10px"></div>
-            <span class="negrita" style="font-size: 14px">No. de Certificado:</span>
+            <span class="negrita" style="font-size: 14px">No. DE CERTIFICADO:</span>
         </div>
     </div>
-
     <body>
-        <div style="font-family: 'Tahoma', Geneva, Verdana, sans-serif; font-size: 15px; text-align: justify"> Centro de Innovación y Desarrollo Agroalimentario de Michoacán,
+        <div style="font-family: 'Tahoma', Geneva, Verdana, sans-serif; font-size: 15px; text-align: justify"> Centro de
+            Innovación y Desarrollo Agroalimentario de Michoacán,
             A.C. Acreditado como organismo de
             certificación de producto con número de acreditación 144/18 ante la Entidad Mexicana de Acreditación,
             A.C. otorga la siguiente:
         </div>
         <br>
         <div class="negrita centerLetter" style="font-size: 28px; line-height: 0.9">
-            <center>CERTIFICADO <br>
-                COMO PRODUCTOR DE BEBIDAS ALCOHÓLICAS <br>
-                QUE CONTIENEN MEZCAL A <br>
+            <center>C E R T I F I C A D O COMO COMERCIALIZADOR DE
+                BEBIDAS ALCOHÓLICAS QUE CONTIENEN MEZCAL A
                 “”
             </center>
         </div>
         <table>
             <tr>
-                <td class="negrita leftLetter no-padding-top" style="font-size: 13px; line-height: 0.9" colspan="4">Domicilio Fiscal:
+                <td class="negrita leftLetter no-padding-top" style="font-size: 13px; line-height: 0.9" colspan="4">
+                    Domicilio Fiscal:
                 </td>
             </tr>
             <tr>
-                <td class="negrita leftLetter no-padding-top" style="font-size: 13px; line-height: 0.9" colspan="2">RFC: </td>
-                <td class="negrita leftLetter no-padding-top" style="width: 150px; font-size: 13px; line-height: 0.9" colspan="2">Tel:</td>
+                <td class="negrita leftLetter no-padding-top" style="font-size: 13px; line-height: 0.9" colspan="2">
+                    RFC: </td>
+                <td class="negrita leftLetter no-padding-top" style="width: 150px; font-size: 13px; line-height: 0.9"
+                    colspan="2">Tel:</td>
             </tr>
             <tr>
                 <td class="negrita leftLetter no-padding-top" style="font-size: 13px" colspan="4">Correo electrónico:
                 </td>
             </tr>
             <tr>
-                <td class="negrita no-padding-top" style="font-size: 13px;text-align: justify; width: 160px; line-height: 0.9">Fecha de inicio de
+                <td class="negrita" style="font-size: 13px;text-align: justify;line-height: 0.9">Fecha de inicio de
                     vigencia: </td>
-                <td style="width: 170px; font-size: 12px">/2022</td>
-                <td class="negrita leftLetter no-padding-top" style="font-size: 13px;line-height: 0.9">Fecha de <br>
+                <td style="width: 110px">/2022</td>
+                <td class="negrita leftLetter" style="font-size: 13px;line-height: 0.9">Fecha de <br>
                     vencimiento: </td>
-                <td style="font-size: 12px">/2023</td>
+                <td>/2023</td>
             </tr>
         </table>
-        <div style="height: 10px"></div>
-        <div style="font-size: 15.5px; font-family:Arial, sans-serif; line-height: 1; text-align: justify">
-            El presente certificado se realiza de acuerdo a la Norma Mexicana NMX-V-052-NORMEX-2016,
-            Bebidas Alcohólicas que contienen Mezcal-Denominación, Etiquetado y Especificaciones y la
-            NOM-070-SCFI-2016 Bebidas Alcohólicas-Mezcal-Especificaciones en vigor, mediante el esquema de
-            certificación para productos con Denominación de Origen.
-
-        </div>
-        <div style="height: 10px"></div>
-        <div style="font-size: 15px; font-family:Arial, sans-serif; line-height: 1; text-align: justify">
-            Este certificado ampara exclusivamente la producción del producto <span class="negrita"
-                style="background-color: yellow"> Bebida Alcohólica Preparada,
-                Cóctel, Licor o crema con al Mezcal,</span> que se realice en las instalaciones indicadas a
-            continuación,
-            ya que ha demostrado que cumple con los procesos necesarios para su producción.
-        </div>
-        <div style="height: 10px"></div>
-        <div class="negrita" style="font-size: 15px">
-            Domicilio de la unidad de Producción: <br>
-            No. De Autorización para el uso de la Denominación de Origen Mezcal o No. de Convenio
-            de corresponsabilidad para el uso de la DOM: <br>
-            No. De Dictamen de cumplimiento con la NOM: <br>
-
-        </div>
         <div style="height: 20px"></div>
-        <div style="font-size: 15px;font-family:Arial, sans-serif;line-height: 1; text-align: justify">
-            Dichas instalaciones cuentan con la infraestructura y equipamiento requerido para la producción de
-            Bebidas alcohólicas que contienen mezcal, requisitos establecidos en la NMX-V-052-NORMEX-2016
-            Bebidas Alcohólicas que contienen Mezcal en vigor y se encuentran dentro de los estados y
-            municipios que contempla la Resolución mediante la cual se otorga la protección prevista a la
-            Denominación de Origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre,
-            publicada el 28 de Noviembre de 1994, así como sus subsecuentes modificaciones.
+        <div style="font-size: 16px; font-family:Arial, sans-serif; text-align: justify; line-height: 1.2">
+            La presente certificación se realiza de acuerdo a la Norma Norma Mexicana
+            NMX-V-052-NORMEX-2016, Bebidas Alcohólicas que contienen Mezcal-Denominación,
+            Etiquetado-Especificaciones en vigor, mediante el esquema de certificación para productos con
+            Denominación de Origen.
+
+
         </div>
-        <div style="height: 5px"></div>
+        <div style="height: 15px"></div>
+        <div style="font-size: 16px; font-family:Arial, sans-serif; text-align: justify; line-height: 1.2">
+            Esta empresa ha demostrado que cuenta con la infraestructura, equipamiento y procesos
+            necesarios para realizar la etapa de comercialización de Bebidas Alcohólicas que contienen
+            Mezcal de conformidad con lo establecido en la NMX-V-052-NORMEX-2016.
+
+        </div>
+        <div style="height: 15px"></div>
+        <div style="font-size: 16px; font-family:Arial, sans-serif; line-height: 1; text-align: justify">
+            Esta certificación ampara exclusivamente la comercialización de <span class="negrita"
+                style="background-color: yellow"> Bebida Alcohólica Preparada
+                de --------, Cóctel de ---- , Licor o crema de ----- con o al Mezcal,</span> que se realice en las
+            instalaciones indicadas a continuación.
+        </div>
+        <div style="height: 10px"></div>
+        <div class="negrita" style="font-size: 15px; line-height: 1">
+            Domicilio de la unidad de Comercialización: <br>
+            No. De Dictamen de cumplimiento con la NOM:
+
+
+        </div>
+        <div style="height: 10px"></div>
+        <div style="font-size: 16px;font-family:Arial, sans-serif;line-height: 1.2; text-align: justify">
+            Dichas instalaciones cuentan con los requisitos para la comercialización de Bebidas alcohólicas
+            con mezcal establecidos en la NMX-V-052-NORMEX-2016 Bebidas Alcohólicas que contienen
+            Mezcal-Denominación, Etiquetado-Especificaciones y la NOM-070-SCFI-2016 Bebidas
+            alcohólicas-Mezcal- Especificaciones, en vigor.
+
+        </div>
+        <div style="height: 15px"></div>
         <div class="negrita" style="text-align: center; font-size: 14px; line-height: 1">
             _________________________________________<br>
             QFB. Mayra Gutierrez Romero <br>
@@ -294,8 +302,8 @@
         </div>
         <div style="height: 20px"></div>
         <footer
-            style="position: absolute; bottom: 30px; width: 100%; font-size: 8.5px; line-height: 0.9; text-align: right">
-            <div style="font-size: 11px"> Certificado como productor NMX-V-052-NORMEX-2016 F7.1-04-08 <br>
+            style="position: absolute; bottom: 20px; width: 100%; font-size: 8.5px; line-height: 0.9; text-align: right">
+            <div style="font-size: 12px; text-align: right"> Certificado como Comercializador NMX-V-052-NORMEX-2016 F7.1-04-10 <br>
                 Edición 1 Entrada en vigor: 28/11/2022</div>
             <div style="height: 10px"></div>
             <div class="negrita" style="font-size: 13px;  margin-left: -40px;">Antigua Carretera a Pátzcuaro, km 8.
