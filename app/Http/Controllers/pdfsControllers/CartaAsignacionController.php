@@ -98,6 +98,12 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
     }
 
+    public function dictamenDeCumplimienoInstalaciones()
+    {
+        $pdf = Pdf::loadView('pdfs.dictamenDeCumplimienoInstalaciones');
+        return $pdf->stream('F-UV-04-18 Ver 2. Dictamen de Cumplimiento para Producto de Exportación.pdf');
+    }
+
     //Guias de translado
     /*     public function guiasTranslado()
     {
