@@ -105,7 +105,7 @@
     <table>
         <tr>
             <td rowspan="2" colspan="3" style="padding: 0; ">
-                <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" style="width: 170px; margin: 0;height: 90px;"
+                <img src="{{ public_path('img_pdf/logo_oc_3d.png') }}" style="width: 170px; margin: 0;height: 75px;"
                     alt="Logo CIDAM">
             </td>
             <td class="con-negra"
@@ -428,7 +428,7 @@
     </table>
 
     <footer
-    style="position: absolute; bottom: 28px; width: 100%; line-height: 0.9; text-align: right">
+    style="position: absolute; bottom: 38px; width: 100%; line-height: 0.9; text-align: right">
     <div style="font-size: 7px; text-align: right"> Solicitud de servicios NMX-V-052-NORMEX-2016 F7.1-04-07 Ed. 1 <br>
         Entrada en vigor. 21/11/2022
 </footer>
