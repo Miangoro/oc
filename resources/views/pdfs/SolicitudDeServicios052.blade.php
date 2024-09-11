@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Solicitud de servicios</title>
     <style>
         @page {
             margin-top: 40px;
@@ -104,15 +104,15 @@
 <body>
     <table>
         <tr>
-            <td rowspan="2" colspan="3" style="padding: 0; height: auto;">
-                <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" style="width: 170px; margin: 0;"
+            <td rowspan="2" colspan="3" style="padding: 0; ">
+                <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" style="width: 170px; margin: 0;height: 90px;"
                     alt="Logo CIDAM">
             </td>
             <td class="con-negra"
                 style="font-size: 14px; padding-left: 16px; padding-right: 16px;padding-top: 7px; padding-bottom: 7px">
                 CENTRO DE INNOVACION Y DESARROLLO <br>
                 AGROALIMENTARIO DE MICHOACAN A.C.</td>
-            <td style="text-align: right; font-size: 8.5px; padding-left: 0; padding-top: 0; width: 160px">ORGANISMO DE
+            <td style="text-align: center; font-size: 8px; padding-left: 0; padding-top: 0; width: 160px">ORGANISMO DE
                 CERTIFICACION No. de
                 acreditación 144/18 ante la ema A.C.
             </td>
@@ -411,22 +411,26 @@
     </table>
     <table>
         <tr>
-            <td class="no-borde-top letra_right" style="width: 100px; font-weight: bold">NA &nbsp;</td>
+            <td class="no-borde-top letra_right" style="width: 100px; font-weight: bold">NA &nbsp;&nbsp;</td>
             <td class="no-borde-top letra_left" style="font-size: 8px">Copia del <span style="font-weight: bold">análisis de laboratorio</span> de la bebida alcoholica con Mezcal en cumplimiento con lo estipulado en la NMX-V-052-NORMEX-2016 y de los lote en <br>
                 cumplimiento con el apartado 4.3 de la NOM-070-SCFI-2016 utilizado. </td>
         </tr>
         <tr>
-            <td class="no-borde-top" colspan="2" style="font-weight: bold; font-size: 8px">La empresa se da por enterada que: la Unidad de Verificación establecerá una vigilancia de cumplimiento con la NOM permanente a sus instalaciones una vez que el Certificado NOM sea emitido. Para validar la información el OC podrá solicitar los documentos originales para su cotejo respectivo.
+            <td class="no-borde-top" colspan="2" style="font-weight: bold; font-size: 9px">La empresa se da por enterada que: la Unidad de Verificación establecerá una vigilancia de cumplimiento con la NOM permanente a sus instalaciones una vez que el Certificado NOM sea emitido. Para validar la información el OC podrá solicitar los documentos originales para su cotejo respectivo.
             </td>
         </tr>
     </table>
     <table>
         <tr>
-            <td class="no-borde-top letra_right" style="width: 430px; padding-top: 0;padding-bottom: 0;">Campo para uso exclusivo del personal <br> del OC-CIDAM</td>
-            <td class="no-borde-top" style="font-weight: bold; background-color: #d8d8d8; width: 110px; padding-top: 0;padding-bottom: 0;">N° DE SOLICITUD:</td>
+            <td class="no-borde-top letra_right" style="width: 430px; padding-top: 0;padding-bottom: 0; font-size: 8px">Campo para uso exclusivo del personal <br> del OC-CIDAM</td>
+            <td class="no-borde-top" style="font-weight: bold; background-color: #d8d8d8; width: 110px; padding-top: 0;padding-bottom: 0; font-size: 8px">N° DE SOLICITUD:</td>
             <td class="no-borde-top">&nbsp;</td>
         </tr>
     </table>
+
+    <footer>
+        
+    </footer>
 
 </body>
 
