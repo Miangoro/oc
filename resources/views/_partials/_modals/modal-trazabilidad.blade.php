@@ -10,7 +10,7 @@
           </div>
 
           <div class="card pl-0">
-            <h5 class="card-header">Basic Timeline</h5>
+            
             <div class="card-body pb-0">
               <ul id="logsContainer" class="timeline mb-0 pb-5">
 

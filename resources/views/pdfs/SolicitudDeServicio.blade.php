@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>{{ $datos->folio }}</title>
     <style>
         @page {
             margin-top: 40px;
@@ -110,7 +110,7 @@
             <td colspan="3">&nbsp;</td>
             <td class="th-color con-negra" colspan="2" style="padding-top: 5px;padding-bottom: 5px;">N° DE SOLICITUD:
             </td>
-            <td colspan="5">&nbsp;</td>
+            <td style="font-size: 16px; color: red" class="con-negra" colspan="5">{{ $datos->folio }}</td>
         </tr>
         <tr>
             <th style="width:60px;">I:</th>
@@ -118,30 +118,31 @@
         </tr>
         <tr>
             <td class="con-negra" rowspan="2" colspan="2">Nombre del cliente/ o<br> Razon social:</td>
-            <td rowspan="2" colspan="4">&nbsp;</td>
+            <td rowspan="2" colspan="4">{{ $datos->empresa->razon_social }}</td>
             <td class="con-negra" colspan="3">N° de cliente:</td>
-            <td colspan="4">&nbsp;</td>
+            <td colspan="4">{{ $datos->empresa->empresaNumClientes[0]->numero_cliente }}</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="3">e-mail:</td>
-            <td colspan="4">&nbsp;</td>
+            <td colspan="4">{{ $datos->empresa->correo }}</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2">Fecha de solicitud:</td>
-            <td colspan="4">&nbsp;</td>
+            <td colspan="4">{{ $datos->fecha_solicitud }}</td>
             <td class="con-negra" colspan="3">Teléfono:</td>
-            <td colspan="4">&nbsp;</td>
+            <td colspan="4">{{ $datos->empresa->telefono }}</td>
         </tr>
         <tr>
             <td class="con-negra" style="padding-top: 0; padding-bottom: 0;" colspan="2">Responsable de las <br>
                 instalaciones</td>
-            <td colspan="4">&nbsp;</td>
+            <td colspan="4">{{ $datos->instalacion ? ($datos->instalacion->responsable ? '-----------------' : '-----------------') : '-----------------' }}</td>
+                
             <td class="con-negra" colspan="3">SKU:</td>
             <td colspan="4">&nbsp;</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="padding-top: 1px; padding-bottom: 1px;">Domicilio Fiscal:</td>
-            <td colspan="4">&nbsp;</td>
+            <td colspan="4">{{ $datos->empresa->domicilio_fiscal}}</td>
             <td class="con-negra" rowspan="2" style="width: 90px; padding: 4px" colspan="3">
                 Dirección de destino: <br><br> Empresa de destino:
             </td>
@@ -149,7 +150,8 @@
         </tr>
         <tr>
             <td class="con-negra" colspan="2">Domicilio de inspección:</td>
-            <td colspan="4">&nbsp;</td>
+            
+            <td colspan="4">{{ $datos->instalacion ? ($datos->instalacion->direccion_completa ? '-----------------' : '----------------') : $datos->predios->ubicacion_predio }}</td>
         </tr>
 
         <tr>
@@ -165,7 +167,7 @@
         <tr>
             <td class="td-margins letra_td" colspan="3" style="font-weight: bold; padding-top: 0;padding-bottom: 0;">
                 Muestreo de agave (ART)</td>
-            <td style="width: 50px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px; padding-top: 0;padding-bottom: 0;">{{ $muestreo_agave }}</td>
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
@@ -178,7 +180,7 @@
             <td class="td-margins letra_td" colspan="3" style="font-weight: bold;padding-top: 0;padding-bottom: 0;">
                 Vigilancia en producción de lote
             </td>
-            <td style="width: 50px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px; padding-top: 0;padding-bottom: 0;">{{ $vigilancia_produccion }}</td>
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Fecha y hora de visita propuesta
             </td>
@@ -191,7 +193,7 @@
         <tr>
             <td class="td-margins letra_td" colspan="3" style="font-weight: bold; padding-top: 0;padding-bottom: 0;">
                 Muestreo de lote a granel</td>
-            <td style="width: 50px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px; padding-top: 0;padding-bottom: 0;">{{ $muestreo_granel }}</td>
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Fecha y hora de visita propuesta
             </td>
@@ -205,7 +207,7 @@
             <td class="td-margins letra_td" colspan="3"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Vigilancia en el traslado del
                 lote</td>
-            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;">{{ $vigilancia_traslado }}</td>
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
@@ -217,7 +219,7 @@
         <tr>
             <td class="td-margins letra_td" colspan="3"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Inspección de envasado</td>
-            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;">{{ $inspeccion_envasado }}</td>
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
@@ -230,7 +232,7 @@
         <tr>
             <td class="td-margins letra_td" colspan="3"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Muestreo de lote envasado</td>
-            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;">{{ $muestreo_envasado }}</td>
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
@@ -244,7 +246,7 @@
             <td class="td-margins letra_td" colspan="3"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Inspeccion ingreso a barrica/
                 contenedor de vidrio</td>
-            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;">{{ $ingreso_barrica }}</td>
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
@@ -256,9 +258,9 @@
         </tr>
         <tr>
             <td class="td-margins letra_td" colspan="3"
-                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Liberación de productoterminado
+                style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Liberación de producto terminado
             </td>
-            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;">{{ $liberacion }}</td>
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
@@ -272,7 +274,7 @@
             <td class="td-margins letra_td" colspan="3"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Inspección de liberación a
                 barrica/contenedor de vidrio</td>
-            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;">{{ $liberacion_barrica }}</td>
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
@@ -285,7 +287,7 @@
         <tr>
             <td class="td-margins letra_td" colspan="3"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Georreferenciación</td>
-            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;">{{ $geo }}</td>
             <td colspan="2" class=" td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
@@ -298,7 +300,7 @@
         <tr>
             <td class="td-margins letra_td" colspan="3"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Pedidos para exportación</td>
-            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;">{{ $exportacion }}</td>
             <td colspan="2" class=" td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
@@ -312,7 +314,7 @@
             <td class="td-margins letra_td" colspan="3"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Emisión de certificado NOM a
                 granel</td>
-            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;">{{ $certificado_granel }}</td>
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha de emisión propuesta:
             </td>
@@ -327,7 +329,7 @@
             <td class="td-margins letra_td" colspan="3"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Emisión de certificado venta
                 nacional</td>
-            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;">{{ $certificado_nacional }}</td>
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha de emisión propuesta:
             </td>
@@ -340,7 +342,7 @@
         <tr>
             <td class="td-margins letra_td" colspan="3" style="font-weight: bold">Dictaminación de instalaciones:
             </td>
-            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;">{{ $dictaminacion }}</td>
             <td class="td-no-margins " style="width: 10px; padding-top: 0;padding-bottom: 0;"></td>
             <td style="width: 50px" style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Productor de <br> Mezcal</td>
             <td style="width: 30px; padding-top: 0;padding-bottom: 0;"></td>
@@ -367,7 +369,7 @@
         <tr>
             <td class="td-margins letra_td" colspan="3" style="font-weight: bold; padding-left: 0;">Renovación de
                 dictaminación de instalaciones:</td>
-            <td style="width: 50px;padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 50px;padding-top: 0;padding-bottom: 0;">{{ $renovacion_dictaminacion }}</td>
             <td class="td-no-margins" style="width: 1px; padding-top: 0;padding-bottom: 0;"></td>
             <td style="width: 70px; padding-top: 0;padding-bottom: 0;font-weight: bold" >Productor de <br> Mezcal</td>
             <td style="width: 20px; padding-top: 0;padding-bottom: 0;"></td>
@@ -449,12 +451,12 @@
         <tr>
             <td colspan="3">&nbsp;</td>
             <td class="th-color con-negra" style="width: 100px">N° DE SOLICITUD:</td>
-            <td colspan="3">&nbsp;</td>
+            <td style="font-size: 16px; color: red" class="con-negra" colspan="3">{{ $datos->folio }}</td>
 
         </tr>
         <tr>
             <td class="con-negra" colspan="3" rowspan="3">INFORMACIÓN ADICIONAL SOBRE LA <br> ACTIVIDAD:</td>
-            <td class="td-margins" colspan="6">&nbsp;</td>
+            <td class="td-margins" colspan="6">{{ $datos->info_adicional }}</td>
         </tr>
         <tr>
             <td class="td-margins" colspan="6">&nbsp;</td>

@@ -17,6 +17,7 @@ use App\Helpers\Helpers;
 use App\Models\inspecciones;
 use App\Models\solicitudesModel;
 use App\Models\User;
+use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class inspeccionesController extends Controller
@@ -108,9 +109,9 @@ class inspeccionesController extends Controller
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
                 $nestedData['tipo'] = $solicitud->tipo_solicitud->tipo  ?? 'N/A';
                 $nestedData['direccion_completa'] = $solicitud->instalacion->direccion_completa  ?? 'N/A';
-                $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</apan>';
-                $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</apan>'; // Maneja el caso donde el organismo sea nulo
-                $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</apan>';
+                $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</span>';
+                $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</span>'; // Maneja el caso donde el organismo sea nulo
+                $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</span>';
 
 
 
@@ -204,6 +205,47 @@ class inspeccionesController extends Controller
         $fecha_servicio = Helpers::formatearFecha($datos->fecha_servicio);
         $pdf = Pdf::loadView('pdfs.ordenDeServicio',['datos'=>$datos, 'fecha_servicio'=>$fecha_servicio]);
         return $pdf->stream('F-UV-02-01 Orden de servicio Ed. 5, Vigente.pdf');
+    }
+
+
+    public function agregarResultados(Request $request){
+
+        $sol = solicitudesModel::find($request->id_solicitud);
+        $numeroCliente = $sol->empresa->empresaNumClientes->pluck('numero_cliente')->first();
+            $mensaje = "";
+            // Almacenar nuevos documentos solo si se envían
+            if ($request->hasFile('url')) {
+                foreach ($request->file('url') as $index => $file) {
+                    $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+    
+                    $documentacion_url = new Documentacion_url();
+                    $documentacion_url->id_relacion = $request->id_solicitud;
+                    $documentacion_url->id_documento = $request->id_documento[$index];
+                    $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+                    $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+                    $documentacion_url->id_empresa = $sol->id_empresa;
+                    $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index] ?? null; // Usa null si no hay fecha
+                    $documentacion_url->save();
+
+                    $mensaje = $request->nombre_documento[$index].", ".$mensaje;
+                }
+            }
+
+            // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
+            $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+            // Notificación 1
+            $data1 = [
+                'title' => 'Adjuntó resultados de inspección',
+                'message' => $mensaje,
+                'url' => 'inspecciones',
+            ];
+
+            // Iterar sobre cada usuario y enviar la notificación
+            foreach ($users as $user) {
+                $user->notify(new GeneralNotification($data1));
+            }
     }
 
     

@@ -2,23 +2,31 @@
 
 namespace App\Models;
 
+use App\Traits\TranslatableActivityLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Documentacion_url extends Model
 {
     protected $table = 'documentacion_url';
-    use HasFactory;
-      protected $fillable = [
-          'id_empresa',
-          'url',
-          'id_relacion',
-          'id_usuario_registro',
-          'nombre_documento',
-          'fecha_vigencia',
-          'id_documento'
+        use LogsActivity, TranslatableActivityLog, HasFactory;
+        protected $fillable = [
+            'id_empresa',
+            'url',
+            'id_relacion',
+            'id_usuario_registro',
+            'nombre_documento',
+            'fecha_vigencia',
+            'id_documento'
 
-      ];
+        ];
+
+      // Método para obtener el nombre del registro que sirve para la trazabilidad
+        public function getLogName2(): string
+        {
+            return 'documentación'; // Devuelve el nombre que desees
+        }
 
 
       public function marca()
