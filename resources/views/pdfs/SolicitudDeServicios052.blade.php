@@ -405,8 +405,7 @@
     </table>
     <table>
         <tr>
-            <td class="no-borde-top con-negra" colspan="13" style="color: red; padding: 0;">Seleccione el servicio
-                solicitado colocando una X en la casilla correspondiente</td>
+            <td class="no-borde-top con-negra" colspan="13" style="color: #C00000; padding: 0;">Adjuntar a la solicitud los documentos que a continuación se enlistan:</td>
         </tr>
     </table>
     <table>
