@@ -114,7 +114,7 @@
                                     <tr>
                                         <th><button type="button" class="btn btn-primary add-row-cordenadas"><i
                                                     class="ri-add-line"></i></button></th>
-                                        <th colspan="2">Coordenadas</th>
+                                        <th colspan="2" style="width: 95%"><h5 class="card-title mb-0 text-center">Coordenadas</h5></th>
                                     </tr>
                                 </thead>
                                 <tbody id="coordenadas-body">
@@ -132,7 +132,7 @@
                                                 <button type="button" class="btn btn-primary add-row-plantacion"><i
                                                         class="ri-add-line"></i></button>
                                             </th>
-                                            <th colspan="2">
+                                            <th colspan="2" style="width: 95%">
                                                 <h5 class="card-title mb-0 text-center">Información del Agave/Maguey y
                                                     Plantación</h5>
                                             </th>

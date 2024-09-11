@@ -334,14 +334,14 @@ class PrediosController extends Controller
                     'longitud' => 'nullable|array',
                     'longitud.*' => 'nullable|numeric',
                     'id_tipo' => 'nullable|array',
-                    'id_tipo.*' => 'nullable|exists:catalogo_tipo_agave,id_tipo',
-                    'numero_plantas' => 'nullable|array',
-                    'numero_plantas.*' => 'nullable|numeric',
-                    'edad_plantacion' => 'nullable|array',
-                    'edad_plantacion.*' => 'nullable|numeric',
-                    'tipo_plantacion' => 'nullable|array',
-                    'tipo_plantacion.*' => 'nullable|string',
-                    'url' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+                    'id_tipo.*' => 'required|exists:catalogo_tipo_agave,id_tipo',
+                    'numero_plantas' => 'required|array',
+                    'numero_plantas.*' => 'required|numeric',
+                    'edad_plantacion' => 'required|array',
+                    'edad_plantacion.*' => 'required|numeric',
+                    'tipo_plantacion' => 'required|array',
+                    'tipo_plantacion.*' => 'required|string',
+                    'url' => 'required|file|mimes:jpg,jpeg,png,pdf',
                     'id_documento' => 'required|integer',
                     'nombre_documento' => 'required|string|max:255'
                 ]);
@@ -409,9 +409,50 @@ class PrediosController extends Controller
                     'superficie' => $validated['superficie'],
                 ]);
         
-                // Manejar coordenadas y plantaciones (igual que antes)
-                // ...
+                // Manejar coordenadas
+                if ($validated['tiene_coordenadas'] == 'Si') {
+                    // Eliminar coordenadas antiguas
+                    $predio->coordenadas()->delete();
         
+                    // Agregar nuevas coordenadas
+                    if (!empty($validated['latitud']) && !empty($validated['longitud'])) {
+                        foreach ($validated['latitud'] as $index => $latitud) {
+                            $predio->coordenadas()->create([
+                                'latitud' => $latitud,
+                                'longitud' => $validated['longitud'][$index],
+                            ]);
+                        }
+                    }
+                } else {
+                    // Si no se tienen coordenadas, elimina las coordenadas existentes
+                    $predio->coordenadas()->delete();
+                }
+    
+                // Manejar plantaciones
+                // Manejar plantaciones
+                if (!empty($validated['id_tipo'])) {
+                    // Eliminar plantaciones antiguas
+                    $predio->predio_plantaciones()->delete();
+
+                    // Agregar nuevas plantaciones
+                    foreach ($validated['id_tipo'] as $index => $tipo) {
+                        // Asegúrate de que todos los datos necesarios estén presentes
+                        $numeroPlantas = isset($validated['numero_plantas'][$index]) ? $validated['numero_plantas'][$index] : null;
+                        $edadPlantacion = isset($validated['edad_plantacion'][$index]) ? $validated['edad_plantacion'][$index] : null;
+                        $tipoPlantacion = isset($validated['tipo_plantacion'][$index]) ? $validated['tipo_plantacion'][$index] : null;
+
+                        // Asegúrate de que el campo 'numero_plantas' sea manejado adecuadamente
+                        $predio->predio_plantaciones()->create([
+                            'id_tipo' => $tipo,
+                            'num_plantas' => $numeroPlantas,
+                            'anio_plantacion' => $edadPlantacion,
+                            'tipo_plantacion' => $tipoPlantacion,
+                        ]);
+                    }
+                } else {
+                    // Si no se tienen plantaciones, elimina las plantaciones existentes
+                    $predio->predio_plantaciones()->delete();
+                }
                 return response()->json([
                     'success' => true,
                     'message' => 'Predio y documento actualizado exitosamente',
