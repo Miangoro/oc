@@ -91,7 +91,7 @@ $(function () {
 
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Trazabilidad</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalAsignarInspector(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
-                `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']})" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
+                `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']},'${escapeHtml(full['num_servicio'])}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
                 
                 '</div>' +
@@ -439,6 +439,81 @@ $(function () {
             });
           }
         });
+      });
+
+      //Subir resultados de inspección
+
+      $(function () {
+        // Configuración CSRF para Laravel
+        $.ajaxSetup({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        });
+    
+        // Inicializar FormValidation
+        const form = document.getElementById('addResultadosInspeccion');
+        const fv = FormValidation.formValidation(form, {
+          fields: {
+            'num_servicio': {
+              validators: {
+                notEmpty: {
+                  message: 'Introduce el número de servicio.'
+                }
+              }
+            },
+          },
+          plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+              eleValidClass: '',
+              eleInvalidClass: 'is-invalid',
+              rowSelector: '.form-floating'
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+          }
+    
+        }).on('core.form.valid', function (e) {
+          // Validar el formulario
+          var formData = new FormData(form);
+    
+          $.ajax({
+            url: '/agregar-resultados',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+              $('#resultadosInspeccion').modal('hide');
+              $('#addResultadosInspeccion')[0].reset();
+              $('.datatables-users').DataTable().ajax.reload();
+              console.log(response);
+    
+              Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.message,
+                customClass: {
+                  confirmButton: 'btn btn-success'
+                }
+              });
+            },
+            error: function (xhr) {
+              console.log('Error:', xhr.responseText);
+    
+              Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al registrar los resultados de la inspección',
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                }
+              });
+            }
+          });
+        }); 
+      
       });
   
       // Mostrar u ocultar campos adicionales según el tipo de certificación
@@ -876,6 +951,71 @@ $(function () {
         $("#titulo_modal").text("Certificado de instalaciones");
         $("#subtitulo_modal").text(registro);
   });
+
+  //Añadir row
+
+  $('.add-row').click(function () {
+      // Verificar si se ha seleccionado un cliente
+      if ($("#id_empresa").val() === "") {
+          // Mostrar la alerta de SweetAlert2
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Por favor, selecciona un cliente primero.',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              },
+              buttonsStyling: false // Asegura que los estilos personalizados se apliquen
+          });
+          return;
+      }
+
+      // Si el cliente está seleccionado, añade una nueva fila
+      var newRow = `
+          <tr>
+              <th>
+                  <button type="button" class="btn btn-danger remove-row"> <i
+                          class="ri-delete-bin-5-fill"></i> </button>
+              </th>
+              <td>
+                  <input class="form-control form-control-sm" type="text" name="nombre_documento[]">
+              </td>
+              <td>
+                  <input class="form-control form-control-sm" type="file" id="file69" data-id="70" name="url[]">
+                  <input value="70" class="form-control" type="hidden" name="id_documento[]">
+                  
+              </td>
+          </tr>`;
+      $('#contenidoGraneles').append(newRow);
+
+      // Re-inicializar select2 en la nueva fila
+      $('#contenidoGraneles').find('.select2-nuevo').select2({
+          dropdownParent: $('#addlostesEnvasado'), // Asegúrate de que #myModal sea el id de tu modal
+          width: '100%',
+          dropdownCssClass: 'select2-dropdown'
+      });
+
+      $('.select2-dropdown').css('z-index', 9999);
+
+      // Copiar opciones del primer select al nuevo select
+      var options = $('#contenidoGraneles tr:first-child .id_lote_granel').html();
+      $('#contenidoGraneles tr:last-child .id_lote_granel').html(options);
+  });
+
+  // Función para eliminar una fila
+  $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+  });
+
+  function escapeHtml(html) {
+    return html
+        .replace(/&/g, '&amp;')  // Escapa el símbolo &
+        .replace(/</g, '&lt;')   // Escapa el símbolo <
+        .replace(/>/g, '&gt;')   // Escapa el símbolo >
+        .replace(/"/g, '&quot;') // Escapa las comillas dobles
+        .replace(/'/g, '&#039;'); // Escapa las comillas simples
+}
+
   
   
   //end

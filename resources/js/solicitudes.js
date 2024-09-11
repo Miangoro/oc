@@ -70,7 +70,7 @@ $(function () {
           render: function (data, type, full, meta) {
   
          
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${full['id_solicitud']}" data-registro="${full['id_solicitud']}"></i>`;
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_solicitud']}" data-registro="${full['id_solicitud']}"></i>`;
           
           }
         },
@@ -253,7 +253,7 @@ $(function () {
               'data-bs-target': '#offcanvasAddUser'*/
              'data-bs-toggle': 'modal',
              'data-bs-dismiss': 'modal',
-             'data-bs-target': '#addSolicitudDictamen'
+             'data-bs-target': '#verSolicitudes'
             }
           }
       ],
@@ -380,7 +380,7 @@ $(function () {
         }
       });
   
-      // Inicializar FormValidation
+      // Inicializar FormValidation para la solicitud de dictaminación de instalaciones
       const form = document.getElementById('addRegistrarSolicitud');
       const fv = FormValidation.formValidation(form, {
         fields: {
@@ -421,7 +421,7 @@ $(function () {
           processData: false,
           contentType: false,
           success: function (response) {
-            $('#asignarInspector').modal('hide');
+            $('#addSolicitudDictamen').modal('hide');
             $('#addRegistrarSolicitud')[0].reset();
             $('.select2').val(null).trigger('change');
             $('.datatables-users').DataTable().ajax.reload();
@@ -451,77 +451,83 @@ $(function () {
         });
       });
   
-      // Mostrar u ocultar campos adicionales según el tipo de certificación
-      $('#certificacion').on('change', function () {
-        if ($(this).val() === 'otro_organismo') {
-          $('#certificado-otros').removeClass('d-none');
-  
-          // Agregar la validación a los campos adicionales
-          fv.addField('url[]', {
-            validators: {
-              notEmpty: {
-                message: 'Debes subir un archivo de certificado.'
-              },
-              file: {
-                extension: 'pdf,jpg,jpeg,png',
-                type: 'application/pdf,image/jpeg,image/png',
-                maxSize: 2097152, // 2 MB en bytes
-                message: 'El archivo debe ser un PDF o una imagen (jpg, png) y no debe superar los 2 MB.'
-              }
-            }
-          });
-  
-          fv.addField('folio', {
-            validators: {
-              notEmpty: {
-                message: 'El folio o número del certificado es obligatorio.'
-              }
-            }
-          });
-  
-          fv.addField('id_organismo', {
-            validators: {
-              notEmpty: {
-                message: 'Selecciona un organismo de certificación.'
-              }
-            }
-          });
-  
-          fv.addField('fecha_emision', {
-            validators: {
-              notEmpty: {
-                message: 'La fecha de emisión es obligatoria.'
-              },
-              date: {
-                format: 'YYYY-MM-DD',
-                message: 'La fecha de emisión no es válida.'
-              }
-            }
-          });
-  
-          fv.addField('fecha_vigencia', {
-            validators: {
-              notEmpty: {
-                message: 'La fecha de vigencia es obligatoria.'
-              },
-              date: {
-                format: 'YYYY-MM-DD',
-                message: 'La fecha de vigencia no es válida.'
-              }
-            }
-          });
-  
-        } else {
-          $('#certificado-otros').addClass('d-none');
-  
-          // Quitar la validación de los campos adicionales
-          fv.removeField('url[]');
-          fv.removeField('folio');
-          fv.removeField('id_organismo');
-          fv.removeField('fecha_emision');
-          fv.removeField('fecha_vigencia');
-        }
-      });
+       // Inicializar FormValidation para la solicitud de georeferenciacion
+       const form2 = document.getElementById('addRegistrarSolicitudGeoreferenciacion');
+       const fv2 = FormValidation.formValidation(form2, {
+         fields: {
+           'id_empresa': {
+             validators: {
+               notEmpty: {
+                 message: 'Selecciona el cliente.'
+               }
+             }
+           },
+           'fecha_visita': {
+             validators: {
+               notEmpty: {
+                 message: 'Selecciona la fecha sugerida para la inspección.'
+               }
+             }
+           },
+           'punto_reunion': {
+             validators: {
+               notEmpty: {
+                 message: 'Introduce la dirección para el punto de reunión.'
+               }
+             }
+           },
+         },
+         plugins: {
+           trigger: new FormValidation.plugins.Trigger(),
+           bootstrap5: new FormValidation.plugins.Bootstrap5({
+             eleValidClass: '',
+             eleInvalidClass: 'is-invalid',
+             rowSelector: '.form-floating'
+           }),
+           submitButton: new FormValidation.plugins.SubmitButton(),
+           autoFocus: new FormValidation.plugins.AutoFocus()
+         }
+   
+       }).on('core.form.valid', function (e) {
+         // Validar el formulario
+         var formData = new FormData(form2);
+   
+         $.ajax({
+           url: '/registrar-solicitud-georeferenciacion',
+           type: 'POST',
+           data: formData,
+           processData: false,
+           contentType: false,
+           success: function (response) {
+             $('#addSolicitudDictamen').modal('hide');
+             $('#addRegistrarSolicitud')[0].reset();
+             $('.select2').val(null).trigger('change');
+             $('.datatables-users').DataTable().ajax.reload();
+             console.log(response);
+   
+             Swal.fire({
+               icon: 'success',
+               title: '¡Éxito!',
+               text: response.message,
+               customClass: {
+                 confirmButton: 'btn btn-success'
+               }
+             });
+           },
+           error: function (xhr) {
+             console.log('Error:', xhr.responseText);
+   
+             Swal.fire({
+               icon: 'error',
+               title: '¡Error!',
+               text: 'Error al registrar la solicitud',
+               customClass: {
+                 confirmButton: 'btn btn-danger'
+               }
+             });
+           }
+         });
+       });
     });
   
   //new new
@@ -879,11 +885,12 @@ $(function () {
   
   $(document).on('click', '.pdf', function () {
     var url = $(this).data('url');
-    var registro = $(this).data('registro');
+        var registro = $(this).data('registro');
+        var id_solicitud = $(this).data('id');
         var iframe = $('#pdfViewer');
-        iframe.attr('src', 'solicitud_de_servicio');
+        iframe.attr('src', 'solicitud_de_servicio/'+id_solicitud);
   
-        $("#titulo_modal").text("Solicitud de servicio");
+        $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
         $("#subtitulo_modal").text(registro);
   });
   
