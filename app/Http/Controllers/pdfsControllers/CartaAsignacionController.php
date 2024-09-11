@@ -257,4 +257,10 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.CertificadoComoEnvasador');
         return $pdf->stream('F7.1-04-09 Certificado como Envasador NMX-V-052-NORMEX-2016 Ed. 1 Vigente.pdf');
     }
+
+    public function PlanAuditoria ()
+    {
+        $pdf = Pdf::loadView('pdfs.Plan_auditoría_esquema');
+        return $pdf->stream('F7.1-04-15 Plan de auditoría de esquema de cert NMX-V-052 Ed 0, VIG.pdf');
+    }
 }

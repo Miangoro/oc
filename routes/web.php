@@ -714,7 +714,7 @@ Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])
 //
 Route::get('/Pre-certificado', [CartaAsignacionController::class, 'PreCertificado'])->name('Pre-certificado');
 Route::get('/Dictamen-MezcalEnvasado', [CartaAsignacionController::class, 'DictamenMezcalEnvasado'])->name('Dictamen-MezcalEnvasado');
-
+Route::get('/Plan-auditoría-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoría-esquema');
 
 
 
