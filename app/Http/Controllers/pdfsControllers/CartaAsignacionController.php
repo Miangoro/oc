@@ -257,4 +257,11 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.CertificadoComoEnvasador');
         return $pdf->stream('F7.1-04-09 Certificado como Envasador NMX-V-052-NORMEX-2016 Ed. 1 Vigente.pdf');
     }
+
+
+    public function SolicitudDeServicios052 ()
+    {
+        $pdf = Pdf::loadView('pdfs.SolicitudDeServicios052');
+        return $pdf->stream('F7.1-04-07 Solicitud de servicios NMX-V-052-NORMEX-2016 Ed. 1, Vigente.pdf');
+    }
 }

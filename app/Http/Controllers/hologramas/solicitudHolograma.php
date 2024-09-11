@@ -345,8 +345,8 @@ public function update(Request $request)
         try {
             // Encuentra la solicitud de hologramas por su ID
             $holograma = ModelsSolicitudHolograma::findOrFail($request->input('id_solicitud'));
-            $holograma->folio_inicial = $request->input('folio_inicial');
-            $holograma->folio_final = $request->input('folio_final');
+            $holograma->folio_inicial = $request->input('asig_folio_inicial');
+            $holograma->folio_final = $request->input('asig_folio_final');
             $holograma->estatus = 'Asignado';
 
         

@@ -993,8 +993,8 @@ $(function () {
       // Rellenar el formulario con los datos obtenidos
       $('#id_solicitudAsignar').val(data.id_solicitud);
 
-      $('#folio_inicial').val(data.folio_inicial);
-      $('#folio_final').val(data.folio_final);
+      $('#asig_folio_inicial').val(data.folio_inicial);
+      $('#asig_folio_final').val(data.folio_final);
       $('#empresaAsignar').val(data.id_empresa);
       // Mostrar el modal de edición
       $('#asignarHolograma').modal('show');
