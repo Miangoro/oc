@@ -15,14 +15,14 @@
                     @csrf
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <input class="form-control" type="number" id="folio_inicial" name="folio_inicial" placeholder="Número de hologramas solicitados" readonly required />
-                            <label for="folio_inicial">Número de hologramas solicitados</label>
+                            <input class="form-control" type="number" id="asig_folio_inicial" name="asig_folio_inicial" placeholder="Número de hologramas solicitados" readonly required />
+                            <label for="asig_folio_inicial">Número de hologramas solicitados</label>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <input class="form-control" type="number" id="folio_final" name="folio_final" placeholder="Número de hologramas solicitados" readonly required />
-                            <label for="folio_final">Número de hologramas solicitados</label>
+                            <input class="form-control" type="number" id="asig_folio_final" name="asig_folio_final" placeholder="Número de hologramas solicitados" readonly required />
+                            <label for="asig_folio_final">Número de hologramas solicitados</label>
                         </div>
                     </div>
 
