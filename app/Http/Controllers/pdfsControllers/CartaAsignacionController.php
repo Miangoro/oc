@@ -269,6 +269,8 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.Plan_auditoría_esquema');
         return $pdf->stream('F7.1-04-15 Plan de auditoría de esquema de cert NMX-V-052 Ed 0, VIG.pdf');
 
+    }
+
     public function SolicitudDeServicios052 ()
     {
         $pdf = Pdf::loadView('pdfs.SolicitudDeServicios052');
