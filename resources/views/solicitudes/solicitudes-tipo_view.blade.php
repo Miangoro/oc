@@ -155,4 +155,6 @@
     var obtenerSolicitudesTiposUrl = "{{ route('obtener.solicitudes.tipos') }}";
 </script>
 
+@include('_partials._modals.modal-add-solicitud-dictamen-instalaciones')
+
 @endsection

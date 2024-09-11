@@ -9,7 +9,7 @@
   // --------------------------------------------------------------------
   const flatpickrDate = document.querySelector('#flatpickr-date'),
     flatpickrTime = document.querySelector('#flatpickr-time'),
-    flatpickrDateTime = document.querySelector('#flatpickr-datetime'),
+    flatpickrDateTime = document.querySelectorAll('.flatpickr-datetime'),
     flatpickrMulti = document.querySelector('#flatpickr-multi'),
     flatpickrRange = document.querySelector('#flatpickr-range'),
     flatpickrInline = document.querySelector('#flatpickr-inline'),
@@ -32,13 +32,16 @@
   }
 
   // Datetime
-  if (flatpickrDateTime) {
-    flatpickrDateTime.flatpickr({
+// Verificar si hay elementos encontrados
+if (flatpickrDateTime.length) {
+  flatpickrDateTime.forEach((element) => {
+    // Inicializar flatpickr para cada input
+    flatpickr(element, {
       enableTime: true,
       dateFormat: 'Y-m-d H:i'
     });
-  }
-
+  });
+}
   // Multi Date Select
   if (flatpickrMulti) {
     flatpickrMulti.flatpickr({

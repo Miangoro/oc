@@ -180,6 +180,7 @@
     @include('_partials._modals.modal-expediente-servicio')
     @include('_partials._modals.modal-add-asignar-inspector')
     @include('_partials._modals.modal-trazabilidad')
+    @include('_partials._modals.modal-add-resultados-inspeccion')
     <!-- /Modal -->
 
 </div>
@@ -220,10 +221,12 @@
     $('#asignarInspector').modal('show');
   } 
 
-  function abrirModalSubirResultados(id_solicitud) {
+  function abrirModalSubirResultados(id_solicitud,num_servicio) {
 
-    $("#id_solicitud").val(id_solicitud);
-    $('#subirResultados').modal('show');
+    $(".id_solicitud").val(id_solicitud);
+    $("#nombre_documento").val('Acta de inspección '+num_servicio);
+    $(".num_servicio").text(num_servicio);
+    $('#resultadosInspeccion').modal('show');
     }
 
 
@@ -247,22 +250,19 @@
             logs.forEach(function(log) {
                 logsContainer.append(`
                     
-<li class="timeline-item timeline-item-transparent">
+                <li class="timeline-item timeline-item-transparent">
                     <span class="timeline-point timeline-point-primary"></span>
                     <div class="timeline-event">
                         <div class="timeline-header mb-3">
                         <h6 class="mb-0">${log.description}</h6>
                         <small class="text-muted">${log.created_at}</small>
                         </div>
-                        <p class="mb-2">${log.description}</p>
+                        <p class="mb-2">  ${log.contenido}</p>
                         <div class="d-flex align-items-center mb-1">
-                        <div class="badge bg-lighter rounded-3 mb-1_5">
-                            <img src="https://demos.pixinvent.com/materialize-html-laravel-admin-template/demo/assets/img/icons/misc/pdf.png" alt="img" width="15" class="me-2">
-                            <span class="h6 mb-0 text-body">invoices.pdf</span>
-                        </div>
+                        
                         </div>
                     </div>
-                    </li>
+                    </li><hr>
                 `);
             });
 

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        body {
+            font-family: 'century gothic';
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        @page {
+            margin: 100px 30px; /* Ajusta los márgenes para el encabezado y pie de página */
+        }
+
+        .header {
+            position: fixed;
+            top: -35px; /* Ajusta la posición del encabezado */
+            left: 30px;
+            width: calc(100% - 60px); /* Ajusta el ancho del encabezado para los márgenes */
+            height: 100px; /* Ajusta la altura del encabezado */
+            overflow: hidden; /* Asegura que el contenido no se desborde */
+        }
+
+        .logo {
+            margin-left: 30px;
+            width: 150px;
+            display: block;
+        }
+
+        .description1,
+        .description2,
+        .description3 {
+            position: fixed;
+            right: 30px;
+            text-align: right;
+        }
+
+        .description1 {
+            margin-right: 30px;
+            top: -30px;
+            font-size: 14px;
+        }
+
+        .description2 {
+            margin-right: 30px;
+            top: -10px;
+            font-size: 14px;
+        }
+
+        .description3 {
+            margin-right: 30px;
+            top: 10px;
+            font-size: 14px;
+            border-bottom: 1px solid black;
+            padding-bottom: 5px;
+            width: 63%;
+            display: inline-block;
+        }
+
+        .footer {
+            position: absolute; /* Sitúa el pie de página de manera absoluta */
+            bottom: 0; /* Alínea el pie de página con la parte inferior del contenedor */
+            left: 0; /* Alinea el pie de página con el borde izquierdo */
+            right: 0; /* Alinea el pie de página con el borde derecho */
+            text-align: center;
+            font-size: 10px;
+            font-family: Arial, sans-serif;
+            padding: 10px 0; /* Añade un poco de relleno */
+            background-color: white; /* Fondo blanco para el pie de página */
+            z-index: 100; /* Asegura que esté por encima de otros elementos si es necesario */
+            margin-left: 80px; /* Ajusta el margen izquierdo del pie de página */
+            margin-right: 80px; /* Ajusta el margen derecho del pie de página */
+        }
+
+        .footer .page-number {
+            position: absolute;
+            right: -10px;
+            font-size: 10px;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        .content {
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top: 80px; /* Ajusta el margen superior para el contenido */
+            margin-bottom: 70px; /* Ajusta el margen inferior para el contenido */
+        }
+
+        .content2 {
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-bottom: 70px; /* Ajusta el margen inferior para el contenido */
+        }
+
+        .title {
+            margin-left: 30px;
+            font-family: 'century gothic negrita';
+            text-align: left;
+            width: 87.5%;
+            margin-top: 35px;
+            padding: 0px 10px 5px;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+        }
+
+        .title2 {
+            margin-top: 80px; /* Ajusta este valor según sea necesario */
+            margin-left: 30px;
+            font-family: 'century gothic negrita';
+            text-align: left;
+            width: 87.5%;
+            padding: 0px 10px 5px;
+            border-top: 1px solid black;
+            border-bottom: 1px solid black;
+        }
+
+
+        .subtitle {
+            margin-left: 30px;
+            font-size: 15px;
+            font-family: 'century gothic negrita';
+            margin-top: 10px; /* Ajusta el espacio encima del subtítulo */
+        }
+
+        .subtitle2 {
+            margin-left: 30px;
+            font-size: 15px;
+            font-family: 'century gothic negrita';
+            margin-top: 20px; /* Ajusta el espacio encima del subtítulo */
+        }
+
+        .subtitle3 {
+            margin-left: 30px;
+            font-size: 15px;
+            font-family: 'century gothic negrita';
+            margin-top: 20px; /* Ajusta el espacio encima del subtítulo */
+        }
+
+        table {
+            width: 90%;
+            border-collapse: collapse;
+            margin-left: 30px;
+            line-height: 1;
+            vertical-align: top;
+            font-family: Arial, Helvetica, Verdana;
+            font-size: 13px;
+            font-family: 'century gothic';
+            margin-top: 10px; /* Ajusta el margen superior de la tabla */
+        }
+
+        td, th {
+            border: 3px solid #4A86E8;
+            padding: 5px;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        td {
+            width: auto; /* Permite que el contenido determine el ancho de las celdas */
+        }
+
+        .column {
+            background-color: #93B0D4;
+            vertical-align: middle; /* Alineación vertical */
+            font-family: 'century gothic negrita';
+        }
+
+        .column-text {
+            text-align: center;
+            vertical-align: middle; /* Alineación vertical */
+            font-family: 'century gothic negrita';
+        }
+
+        /* Estilos específicos para la segunda tabla */
+        .custom-table {
+            width: 100%; /* Ancho completo de la página */
+            margin-top: 10px; /* Espacio superior */
+        }
+
+        .custom-table td {
+            vertical-align: middle; /* Centra el contenido verticalmente */
+            text-align: center; /* Centra el texto horizontalmente */
+        }
+
+        .custom-table .wide-col {
+            width: 140px; /* Ancho de la columna específica */
+        }
+
+        .custom-table .narrow-col {
+            width: 40px; /* Ancho de la columna específica */
+        }
+
+        .custom-table .empty-col {
+            width: 60px; /* Ancho de la columna vacía */
+        }
+
+        .century {
+            font-family: 'century gothic negrita', sans-serif;
+        }
+
+        .column-c {
+            vertical-align: middle; /* Centra el contenido verticalmente */
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo UVEM" class="logo">
+    </div>
+
+    <div class="description1">Plan de auditoría de esquema de certificación</div>
+    <div class="description2">NMX-V-052-NORMEX-2016 F7.1-04-15</div>
+    <div class="description3">Ed. 0 Entrada en vigor: 12/09/2022</div>
+
+    <div class="content">
+        <p class="title">Plan de Auditoría. No:</p>
+        <p class="subtitle">1.- DATOS GENERALES DEL CLIENTE</p>
+        <table>
+            <tbody>
+                <tr>
+                    <td class="column" style="width: 150px;">Nombre / Razón Social del cliente</td>
+                    <td style="width: 150px;">Lorem ipsum dolor sit amet consectetur!</td>
+                    <td class="column" style="width: 100px;">No. De Cliente:</td>
+                    <td>Lorem ipsum dolor sit amet consectetur!</td>
+                </tr>
+                <tr>
+                    <td class="column">Dirección Fiscal:</td>
+                    <td colspan="3">Lorem ipsum dolor sit amet consectetur!</td>
+                </tr>
+                <tr>
+                    <td rowspan="2" class="column">Persona de contacto:</td>
+                    <td>Lorem ipsum dolor sit amet consectetur!</td>
+                    <td class="column">Correo Electrónico:</td>
+                    <td>Lorem ipsum dolor sit amet consectetur!</td>
+                </tr>
+                <tr>
+                    <td>Lorem ipsum dolor sit amet consectetur!</td>
+                    <td class="column">Teléfono:</td>
+                    <td>Lorem ipsum dolor sit amet consectetur!</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="subtitle2">2.- DATOS GENERALES DEL CLIENTE</p>
+        <table>
+            <tbody>
+                <tr>
+                    <td class="column" style="width: 140px;">Fecha de liberación de plan:</td>
+                    <td colspan="2" style="width: 60px;">00/00/0000</td>
+                    <td class="column" colspan="2" style="width: 40px;">Fecha de auditoría:</td>
+                    <td colspan="2" style="width: 50px;">00/00/0000</td>
+                </tr>
+                <tr>
+                    <td rowspan="3" class="column" style="text-align: center;">Tipo de Auditoría:</td>
+                    <td class="column-c">X</td>
+                    <td class="column-text">Certificación</td>
+                    <td class="column-c">X</td>
+                    <td class="column-text">Re-certificación</td>
+                    <td class="column-c">X</td>
+                    <td class="column-text">Vigilancia no programada</td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td class="column-c">X</td>
+                    <td class="column-text">Extraordinaria</td>
+                    <td class="column-c">X</td>
+                    <td class="column-text">Ampliación de alcance</td>
+                    <td class="column-c">X</td>
+                    <td class="column-text">Reducción de alcance</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p class="subtitle3">3.- DETALLES ADICIONALES</p>
+        <table>
+	<tbody>
+		<tr>
+			<td class="column-c" style="width: 140px; background-color: #93B0D4"> <span class="century">Esquema de certificación <br></span> Bebidas alcohólicas que contienen Mezcal NMX-V-052-NORMEX-2016.</td>
+			<td class="column-c" style="width: 40px;">X</td>
+			<td class="column-text" style="width: 100px;">Bebidas alcohólicas preparadas</td>
+			<td class="column-c" style="width: 40px;">X</td>
+			<td class="column-text">Cócteles
+            </td>
+			<td class="column-c" style="width: 40px;">X</td>
+			<td class="column-text" style="width: 100px;">Licores o cremas</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+
+    <div class="footer">
+        <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido
+        externamente sin la autorización escrita del Director Ejecutivo
+        </div>
+        <div class="page-number">1/3</div>
+    </div>
+
+    <div class="page-break"></div>
+    
+    <div class="content2">
+    <p class="title2">Plan de Auditoría. No:</p>
+
+    <p class="subtitle">4.- DATOS DEL PRODUCTO</p>
+    <table>
+	<tbody>
+		<tr>
+			<td class="column" style="width: 150px; text-align: center;">Producto (s):
+            </td>
+			<td>Lorem ipsum dolor sit amet consectetur adipisicing elit.</td>
+		</tr>
+		<tr>
+			<td class="column" style="width: 150px; text-align: center;">Países destino del producto:</td>
+			<td>Lorem ipsum dolor sit amet consectetur adipisicing elit.</td>
+		</tr>
+	</tbody>
+</table>
+
+<p class="subtitle2">5.- CARACTERÍSTICAS DE LA AUDITORÍA</p>
+<table>
+	<tbody>
+		<tr>
+			<td class="column" style="width: 150px; text-align: center;">Objetivo:</td>
+			<td>Lorem ipsum dolor sit amet consectetur adipisicing elit.</td>
+		</tr>
+		<tr>
+			<td class="column" style="width: 150px; text-align: center;">Alcance:</td>
+			<td>Lorem ipsum dolor sit amet consectetur adipisicing elit.</td>
+		</tr>
+		<tr>
+            <td class="column" style="width: 150px; text-align: center; white-space: nowrap;">Criterios de evaluación:</td>
+			<td>Lorem ipsum dolor sit amet consectetur adipisicing elit.</td>
+		</tr>
+		<tr>
+			<td class="column" style="width: 150px; text-align: center;">Otros (indique):</td>
+			<td>Lorem ipsum dolor sit amet consectetur adipisicing elit.</td>
+		</tr>
+	</tbody>
+</table>
+
+<p class="subtitle3">6.-DATOS DEL GRUPO EVALUADOR</p>
+<table>
+	<tbody>
+		<tr>
+			<td class="column" style="text-align: center; width: 100px;">Designación: </td>
+			<td class="column" style="text-align: center; width: 200px;">Nombre:</td>
+			<td class="column" style="text-align: center; width: 170px;">Teléfono y correo electrónico:</td>
+		</tr>
+		<tr>
+			<td style="height: 10px;">Lorem ipsum.</td>
+			<td>Lorem ipsum dolor sit amet</td>
+			<td>Lorem ipsum dolor sit amet</td>
+		</tr>
+		<tr>
+			<td style="height: 10px;">Lorem ipsum </td>
+			<td>Lorem ipsum dolor sit amet</td>
+			<td>Lorem ipsum dolor sit amet</td>
+		</tr>
+		<tr>
+			<td style="height: 10px;">Lorem ipsum </td>
+			<td>Lorem ipsum dolor sit amet</td>
+			<td>Lorem ipsum dolor sit amet</td>
+		</tr>
+	</tbody>
+</table>
+
+        <p class="subtitle3">7. DESCRIPCIÓN DE ACTIVIDADES DE AUDITORÍA</p>
+        <table>
+            <tbody>
+                <tr>
+                    <td class="column" style="text-align: center;">Fecha</td>
+                    <td class="column" style="text-align: center;">Inspector/Auditor</td>
+                    <td class="column" style="text-align: center;">Actividad</td>
+                    <td class="column" style="text-align: center;">Horario</td>
+                    <td class="column" style="text-align: center;">Aplica(auditados)</td>
+                </tr>
+                <tr>
+                    <td style="height: 10px;"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="height: 10px;"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="height: 10px;"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+
+<div class="footer">
+        <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido
+        externamente sin la autorización escrita del Director Ejecutivo
+        </div>
+        <div class="page-number">2/3</div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <div class="content2">
+    <p class="title2">Plan de Auditoría. No:</p>
+    
+    <p class="subtitle3">8. ACUERDOS AUDITORÍA</p>
+    <table>
+        <tbody>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+</body>
+</html>

@@ -8,20 +8,22 @@ use App\Models\empresa;
 use App\Models\estados;
 use App\Models\Instalaciones;
 use App\Models\solicitudesModel;
+use App\Models\solicitudTipo;
 use App\Models\User;
 use App\Notifications\GeneralNotification;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class solicitudesController extends Controller
 {
     public function UserManagement()
-    {
+    {   $solicitudesTipos = solicitudTipo::all();
         $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = estados::all(); // Obtener todos los estados
      
         $inspectores = User::where('tipo','=','2')->get(); // Obtener todos los organismos
-        return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores'));
+        return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores','solicitudesTipos'));
     }
 
     public function index(Request $request)
@@ -100,7 +102,7 @@ class solicitudesController extends Controller
                 $nestedData['razon_social'] = $solicitud->empresa->razon_social  ?? 'N/A';
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
                 $nestedData['tipo'] = $solicitud->tipo_solicitud->tipo  ?? 'N/A';
-                $nestedData['direccion_completa'] = $solicitud->instalacion->direccion_completa  ?? 'N/A';
+                $nestedData['direccion_completa'] = $solicitud->instalacion->direccion_completa ?? $solicitud->predios->ubicacion_predio ?? 'N/A';
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</apan>';
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</apan>'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</apan>';
@@ -149,14 +151,14 @@ class solicitudesController extends Controller
         $solicitud->info_adicional = $request->info_adicional;
         // Guardar el nuevo registro en la base de datos
         $solicitud->save();
-        
+
         // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
         $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
 
         // Notificación 1
         $data1 = [
             'title' => 'Nuevo registro de solicitud',
-            'message' => $solicitud->tipo_solicitud->tipo,
+            'message' => $solicitud->folio." ".$solicitud->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
 
@@ -166,6 +168,131 @@ class solicitudesController extends Controller
         }
 
     
+        // Retornar una respuesta JSON indicando éxito
+        return response()->json(['success' => 'Solicitud registrada correctamente']);
+    }
+
+    public function pdf_solicitud_servicios_070($id_solicitud)
+    {   
+        $datos = solicitudesModel::find($id_solicitud);
+
+         // Inicializa las variables con un valor vacío
+    $muestreo_agave = '------------';
+    $vigilancia_produccion = '------------';
+    $muestreo_granel= '------------';
+    $vigilancia_traslado= '------------';
+    $inspeccion_envasado= '------------';
+    $muestreo_envasado= '------------';
+    $ingreso_barrica= '------------';
+    $liberacion= '------------';
+    $liberacion_barrica= '------------';
+    $geo= '------------';
+    $exportacion= '------------';
+    $certificado_granel= '------------';
+    $certificado_nacional= '------------';
+    $dictaminacion = '------------';
+    $renovacion_dictaminacion = '------------';
+   
+
+    // Verificar el valor de id_tipo y marcar la opción correspondiente
+    if ($datos->id_tipo == 1) {
+        $muestreo_agave = 'X';
+    }
+
+    if ($datos->id_tipo == 2) {
+        $vigilancia_produccion = 'X';
+    }
+
+    if ($datos->id_tipo == 3) {
+        $muestreo_granel= 'X';
+    }
+
+    if ($datos->id_tipo == 4) {
+        $vigilancia_traslado= 'X';
+    }
+
+    if ($datos->id_tipo == 5) {
+        $inspeccion_envasado= 'X';
+    }
+
+    if ($datos->id_tipo == 6) {
+        $muestreo_envasado= 'X';
+    }
+
+    if ($datos->id_tipo == 7) {
+        $ingreso_barrica= 'X';
+    }
+
+    if ($datos->id_tipo == 8) {
+        $liberacion= 'X';
+    }
+
+    if ($datos->id_tipo == 9) {
+        $liberacion_barrica= 'X';
+    }
+
+    if ($datos->id_tipo == 10) {
+        $geo= 'X';
+    }
+
+    if ($datos->id_tipo == 11) {
+        $exportacion= 'X';
+    }
+
+    if ($datos->id_tipo == 12) {
+        $certificado_granel= 'X';
+    }
+
+    if ($datos->id_tipo == 13) {
+        $certificado_nacional= 'X';
+    }
+
+
+    if ($datos->id_tipo == 14) {
+        $dictaminacion = 'X';
+    }
+
+    if ($datos->id_tipo == 15) {
+        $renovacion_dictaminacion = 'X';
+    }
+
+        $pdf = Pdf::loadView('pdfs.SolicitudDeServicio', compact('datos','muestreo_agave','vigilancia_produccion','dictaminacion','muestreo_granel',
+        'vigilancia_traslado','inspeccion_envasado','muestreo_envasado','ingreso_barrica','liberacion','liberacion_barrica','geo','exportacion','certificado_granel','certificado_nacional','dictaminacion','renovacion_dictaminacion'))
+        ->setPaper([0, 0, 640, 830]); ;
+        return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
+    }
+
+
+    
+    public function registrarSolicitudGeoreferenciacion(Request $request)
+    {
+
+        $solicitud = new solicitudesModel();
+        $solicitud->folio = Helpers::generarFolioSolicitud();
+        $solicitud->id_empresa = $request->id_empresa;
+        $solicitud->id_tipo = 10;
+        $solicitud->fecha_visita = $request->fecha_visita;
+        //Auth::user()->id; 
+        $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
+        $solicitud->id_predio = $request->id_predio; 
+        $solicitud->info_adicional = $request->info_adicional;
+        // Guardar el nuevo registro en la base de datos
+        $solicitud->save();
+
+        // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
+        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+        // Notificación 1
+        $data1 = [
+            'title' => 'Nuevo registro de solicitud',
+            'message' => $solicitud->folio." ".$solicitud->tipo_solicitud->tipo,
+            'url' => 'solicitudes-historial',
+        ];
+
+        // Iterar sobre cada usuario y enviar la notificación
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
         // Retornar una respuesta JSON indicando éxito
         return response()->json(['success' => 'Solicitud registrada correctamente']);
     }

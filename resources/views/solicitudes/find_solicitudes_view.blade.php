@@ -42,6 +42,7 @@
 @section('page-script')
 @vite(['resources/js/solicitudes.js'])
 @vite(['resources/assets/js/forms-pickers.js'])
+@vite(['resources/js/solicitudes-tipo.js'])
 <script>
 
 
@@ -194,9 +195,11 @@
 
     <!-- Modal -->
     @include('_partials._modals.modal-pdfs-frames')
+    @include('_partials._modals.modal-solicitudes')
     @include('_partials._modals.modal-expediente-servicio')
     @include('_partials._modals.modal-trazabilidad')
     @include('_partials._modals.modal-add-solicitud-dictamen-instalaciones')
+    @include('_partials._modals.modal-add-solicitud-georeferenciacion')
     <!-- /Modal -->
 
 </div>
@@ -249,22 +252,19 @@
             logs.forEach(function(log) {
                 logsContainer.append(`
                     
-<li class="timeline-item timeline-item-transparent">
+                <li class="timeline-item timeline-item-transparent">
                     <span class="timeline-point timeline-point-primary"></span>
                     <div class="timeline-event">
                         <div class="timeline-header mb-3">
                         <h6 class="mb-0">${log.description}</h6>
                         <small class="text-muted">${log.created_at}</small>
                         </div>
-                        <p class="mb-2">${log.description}</p>
+                        <p class="mb-2">  ${log.contenido}</p>
                         <div class="d-flex align-items-center mb-1">
-                        <div class="badge bg-lighter rounded-3 mb-1_5">
-                            <img src="https://demos.pixinvent.com/materialize-html-laravel-admin-template/demo/assets/img/icons/misc/pdf.png" alt="img" width="15" class="me-2">
-                            <span class="h6 mb-0 text-body">invoices.pdf</span>
-                        </div>
+                        
                         </div>
                     </div>
-                    </li>
+                    </li><hr>
                 `);
             });
 

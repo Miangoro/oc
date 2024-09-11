@@ -420,6 +420,7 @@ Route::middleware([
 Route::get('/solicitud-cliente', [solicitudClienteController::class, 'index'])->name('solicitud-cliente');
 Route::post('/solicitud-cliente-registrar', [solicitudClienteController::class, 'registrar'])->name('solicitud-cliente-registrar');
 
+
 //Vista formulario registro exitoso
 Route::get('/Registro_exitoso', [solicitudClienteController::class, 'RegistroExitoso'])->name('Registro_exitoso');
 
@@ -430,7 +431,7 @@ Route::get('/enviar-correo', [EnviarCorreoController::class, 'enviarCorreo']);
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
 Route::get('/solicitudinfo_cliente/{id}', [clientesProspectoController::class, 'info'])->name('solicitud_cliente');
 Route::get('/asignacion_usuario', [CartaAsignacionController::class, 'access_user'])->name('asignacion_usuario');
-Route::get('/solicitud_de_servicio', [CartaAsignacionController::class, 'solicitudservi'])->name('solicitudservi');
+
 Route::get('/prestacion_servicio_fisica/{id}', [clientesConfirmadosController::class, 'pdfServicioPersonaFisica070'])->name('prestacion_servicio_fisica');
 Route::get('/prestacion_servicio_moral/{id}', [clientesConfirmadosController::class, 'pdfServicioPersonaMoral070'])->name('prestacion_servicio_moral');
 Route::get('/Contrato_NMX-052', [CartaAsignacionController::class, 'CONTRATO_NMX_052'])->name('Contrato_NMX-052');
@@ -447,6 +448,9 @@ Route::get('/certificado_de_conformidad', [CartaAsignacionController::class, 'Ce
 Route::get('/certificado_como_productor', [CartaAsignacionController::class, 'CertificadoComoProductor'])->name('CertificadoComoProductor');
 Route::get('/certificado_como_comercializador', [CartaAsignacionController::class, 'CertificadoComoComercializador'])->name('CertificadoComoComercializador');
 Route::get('/certificado_como_envasador', [CartaAsignacionController::class, 'CertificadoComoEnvasador'])->name('CertificadoComoEnvasador');
+Route::get('/solicitud_de_servicios', [CartaAsignacionController::class, 'SolicitudDeServicios052'])->name('CertificadoComoEnvasador');
+Route::get('/dictamen_cumplimiento_instalaciones', [CartaAsignacionController::class, 'dictamenDeCumplimienoInstalaciones'])->name('dictamenDeCumplimienoInstalaciones');
+
 
 
 
@@ -648,6 +652,7 @@ Route::resource('inspecciones-list', inspeccionesController::class);
 Route::post('/asignar-inspector', [inspeccionesController::class, 'asignarInspector']);
 Route::get('/oficio_de_comision/{id_inspeccion}', [inspeccionesController::class, 'pdf_oficio_comision'])->name('oficioDeComision');
 Route::get('/orden_de_servicio/{id_inspeccion}', [inspeccionesController::class, 'pdf_orden_servicio'])->name('ordenDeServicio');
+Route::post('/agregar-resultados', [inspeccionesController::class, 'agregarResultados']);
 
 //Hologramas - solicitud hologramas
 Route::get('/hologramas/solicitud', [solicitudHolograma::class, 'UserManagement'])->name('hologramas-solicitud');
@@ -691,6 +696,10 @@ Route::post('/verificar-folios', [solicitudHolograma::class, 'verificarFolios'])
 //Módulo de solicitudes
 Route::get('/solicitudes-historial', [solicitudesController::class, 'UserManagement'])->name('solicitudes-historial');
 Route::resource('/solicitudes-list', solicitudesController::class);
+Route::get('/solicitud_de_servicio/{id_solicitud}', [solicitudesController::class, 'pdf_solicitud_servicios_070'])->name('solicitudservi');
+Route::post('/registrar-solicitud-georeferenciacion', [solicitudesController::class, 'registrarSolicitudGeoreferenciacion'])->name('registrarSolicitudGeoreferenciacion');
+
+
 
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
  */
@@ -714,7 +723,7 @@ Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])
 //
 Route::get('/Pre-certificado', [CartaAsignacionController::class, 'PreCertificado'])->name('Pre-certificado');
 Route::get('/Dictamen-MezcalEnvasado', [CartaAsignacionController::class, 'DictamenMezcalEnvasado'])->name('Dictamen-MezcalEnvasado');
-
+Route::get('/Plan-auditoría-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoría-esquema');
 
 
 

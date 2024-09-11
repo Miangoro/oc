@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\TranslatableActivityLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Dictamen_instalaciones extends Model
 {
-    use HasFactory;
+    use LogsActivity, TranslatableActivityLog, HasFactory;
     protected $table = 'dictamenes_instalaciones';
     protected $primaryKey = 'id_dictamen';
     protected $fillable = [
@@ -21,6 +23,12 @@ class Dictamen_instalaciones extends Model
         'categorias',
         'clases',
       ];
+
+      // Método para obtener el nombre del registro que sirve para la trazabilidad
+        public function getLogName2(): string
+        {
+            return 'dictamen de instalaciones'; // Devuelve el nombre que desees
+        }
 
       public function inspeccione()
         {
