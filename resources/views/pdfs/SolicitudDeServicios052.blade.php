@@ -428,9 +428,11 @@
         </tr>
     </table>
 
-    <footer>
-        
-    </footer>
+    <footer
+    style="position: absolute; bottom: 28px; width: 100%; line-height: 0.9; text-align: right">
+    <div style="font-size: 7px; text-align: right"> Solicitud de servicios NMX-V-052-NORMEX-2016 F7.1-04-07 Ed. 1 <br>
+        Entrada en vigor. 21/11/2022
+</footer>
 
 </body>
 
