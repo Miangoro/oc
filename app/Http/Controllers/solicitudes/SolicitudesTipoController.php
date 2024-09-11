@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Solicitudes;
 
 use App\Http\Controllers\Controller;
+use App\Models\empresa;
 use Illuminate\Http\Request;
 use App\Models\solicitudTipo;
 
@@ -11,7 +12,8 @@ class SolicitudesTipoController extends Controller
     public function UserManagement()
     {
         $solicitudesTipos = solicitudTipo::all();
-        return view('solicitudes.solicitudes-tipo_view', compact('solicitudesTipos'));
+        $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+        return view('solicitudes.solicitudes-tipo_view', compact('solicitudesTipos','empresas'));
     }
 
     public function getSolicitudesTipos()
