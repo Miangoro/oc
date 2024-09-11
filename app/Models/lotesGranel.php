@@ -19,7 +19,7 @@ class LotesGranel extends Model
         'id_empresa', 'nombre_lote', 'tipo_lote', 'folio_fq', 'volumen', 
         'cont_alc', 'id_categoria', 'id_clase', 'id_tipo', 'ingredientes', 
         'edad', 'id_guia', 'folio_certificado', 'id_organismo', 
-        'fecha_emision', 'fecha_vigencia'
+        'fecha_emision', 'fecha_vigencia', 'estatus'
     ];
 
     // Método para obtener el nombre del registro que sirve para la trazabilidad

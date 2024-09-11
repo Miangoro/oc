@@ -55,6 +55,7 @@ class LotesGranelController extends Controller
                 13 => 'id_organismo',
                 14 => 'fecha_emision',
                 15 => 'fecha_vigencia',
+                16 => 'estatus',
             ];
 
             $search = $request->input('search.value');
@@ -111,6 +112,7 @@ class LotesGranelController extends Controller
                     $nestedData['id_organismo'] = $lote->organismo->organismo ?? 'N/A';
                     $nestedData['fecha_emision'] = Helpers::formatearFecha($lote->fecha_emision) ?? 'N/A';
                     $nestedData['fecha_vigencia'] = Helpers::formatearFecha($lote->fecha_vigencia) ?? 'N/A';
+                    $nestedData['estatus'] = $lote->estatus;
                     $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $lote->id_lote_granel . '">Eliminar</button>';
         
                     $data[] = $nestedData;
@@ -292,6 +294,7 @@ class LotesGranelController extends Controller
             'success' => true,
             'message' => 'Lote registrado exitosamente',
         ]);
+
     }
     
     
@@ -319,16 +322,21 @@ class LotesGranelController extends Controller
             $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
     
-            // Obtener los IDs de las guías asociadas
-            $guiasIds = $lote->lotesGuias->pluck('id_guia')->toArray();
-    
+      // Obtener las guías asociadas con su ID y folio
+$guias = $lote->lotesGuias->map(function ($loteGuia) {
+    return [
+        'id' => $loteGuia->guia->id_guia,
+        'folio' => $loteGuia->guia->folio,
+    ];
+});
+
             // Obtener la URL del archivo para "otro organismo"
             $archivoUrlOtroOrganismo = $lote->tipo_lote == '2' ? $lote->url_certificado : '';
     
             return response()->json([
                 'success' => true,
                 'lote' => $lote,
-                'guias' => $guiasIds,
+                'guias' => $guias, // Devuelve tanto los IDs como los folios
                 'documentos' => $documentosConUrl,
                 'numeroCliente' => $numeroCliente,
                 'archivo_url_otro_organismo' => $archivoUrlOtroOrganismo
@@ -400,6 +408,7 @@ class LotesGranelController extends Controller
                 }
                 $documentacionUrl->delete();
             }
+    
             // Almacenar nuevos documentos solo si se envían
             if ($request->hasFile('url')) {
                 foreach ($request->file('url') as $index => $file) {
@@ -426,18 +435,25 @@ class LotesGranelController extends Controller
                     $documentacion_url->save();
                 }
             }
-            // Guardar el nuevo lote en la base de datos
-            $folio_fq_Completo = $validated['folio_fq_completo'] ?? '----';
-            $folio_fq_ajuste = $validated['folio_fq_ajuste'] ?? '----';
     
-            if (!empty($folio_fq_ajuste)) {
-                $folio_fq_Completo .= ' y ' . $folio_fq_ajuste;
+            // Actualizar el campo folio_fq
+            $folio_fq_Completo = substr($validated['folio_fq_completo'] ?? '', 0, 50);
+            $folio_fq_ajuste = substr($validated['folio_fq_ajuste'] ?? '', 0, 50);
+    
+            if (trim($folio_fq_Completo) === '' && trim($folio_fq_ajuste) === '') {
+                $lote->folio_fq = 'Sin FQ'; // Asignar 'Sin FQ' si ambos están vacíos
+            } else {
+                // Concatenar los valores si alguno tiene contenido
+                if (!empty($folio_fq_ajuste)) {
+                    $folio_fq_Completo .= ' ' . $folio_fq_ajuste;
+                }
+                $lote->folio_fq = substr($folio_fq_Completo, 0, 50); // Limitar a 50 caracteres
             }
-            $lote->folio_fq = $folio_fq_Completo;
     
             $lote->save();
     
             // Almacenar las guías en la tabla intermedia usando el modelo LotesGranelGuia
+            LotesGranelGuia::where('id_lote_granel', $id_lote_granel)->delete();
             if (isset($validated['id_guia'])) {
                 foreach ($validated['id_guia'] as $idGuia) {
                     LotesGranelGuia::create([
@@ -463,6 +479,7 @@ class LotesGranelController extends Controller
             ], 500);
         }
     }
+    
     
     
 
