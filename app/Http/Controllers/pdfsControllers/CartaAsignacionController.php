@@ -266,7 +266,7 @@ class CartaAsignacionController extends Controller
 
     public function PlanAuditoria ()
     {
-        $pdf = Pdf::loadView('pdfs.Plan_auditoría_esquema');
+        $pdf = Pdf::loadView('pdfs.Plan_auditoria_esquema');
         return $pdf->stream('F7.1-04-15 Plan de auditoría de esquema de cert NMX-V-052 Ed 0, VIG.pdf');
 
     }
@@ -276,4 +276,11 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.SolicitudDeServicios052');
         return $pdf->stream('F7.1-04-07 Solicitud de servicios NMX-V-052-NORMEX-2016 Ed. 1, Vigente.pdf');
     }
+
+    public function ReporteTecnico () 
+    {
+        $pdf = Pdf::loadView('pdfs.Reporte_Tecnico-cumplimiento');
+        return $pdf->stream('F7.1-03-24 Reporte Técnico de cumplimiento NOM-199-SCFI-2017 Ed 9 VIGENTE.pdf');
+    }
+ 
 }
