@@ -93,7 +93,7 @@ $(function () {
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalAsignarInspector(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']},'${escapeHtml(full['num_servicio'])}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
-                `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#ActaUnidades" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i>Crear Acta</a>` +
+                `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#ActaUnidades" href="javascript:;" class="dropdown-item edit-record"><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
 
                 
                 '</div>' +
@@ -1028,7 +1028,7 @@ $(function () {
       var targetTable = $(this).data('target'); // Obtener la tabla objetivo
 
       // Verificar si es la tabla de "testigos" o "unidadProduccion"
-      if (targetTable === '#testigos') {
+      if (targetTable === '#testigoss') {
           var namePrefix = $(this).data('name-prefix'); // Obtener el nombre para rango_inicial
           var nameSuffix = $(this).data('name-suffix'); // Obtener el nombre para rango_final
 

@@ -184,8 +184,7 @@ use App\Http\Controllers\solicitudes\SolicitudesTipoController;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\InstalacionesController;
-use App\Http\Controllers\dictamenes\DictamenGranelController;
-use App\Http\Controllers\dictamenes\DictamenEnvasadoController;
+use App\Http\Controllers\dictamenes\DictamenGranelController;;
 use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\catalogo\catalogoEquiposController;
@@ -517,7 +516,7 @@ Route::resource('/lotes-granel-list', LotesGranelController::class);
 Route::delete('/lotes-granel-list/{id_lote_granel}', [LotesGranelController::class, 'destroy']);
 Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->name('lotes-register.store');
 Route::get('/lotes-a-granel/{id_lote_granel}/edit', [LotesGranelController::class, 'edit'])->name('lotes-a-granel.edit');
-Route::post('/lotes-a-granel/{id_lote_granel}', [LotesGranelController::class, 'update']);
+Route::put('/lotes-a-granel/{id_lote_granel}', [LotesGranelController::class, 'update']);
 
 //Lotes de envasado
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
@@ -633,16 +632,6 @@ Route::post('/dictamenes/productos/{id_dictamen}/reexpedir', [DictamenGranelCont
 // Ruta para el PDF con ID
 route::get('/dictamen_cumplimiento_mezcal_granel/{id_dictamen}', [DictamenGranelController::class, 'dictamenDeCumplimientoGranel'])->name('dictamen-cumplimiento-granel');
 
-/*------------------- Dictamenes de envasado -------------------*/
-Route::get('/dictamenes/envasado', [DictamenEnvasadoController::class, 'UserManagement'])->name('dictamenes-envasado');
-Route::resource('/dictamen-envasado-list', DictamenEnvasadoController::class);
-Route::delete('dictamen/envasado/{id_dictamen_envasado}', [DictamenEnvasadoController::class, 'destroy'])->name('dictamen.delete');
-Route::post('dictamenes-envasado',[DictamenEnvasadoController::class, 'store'])->name('dictamen.store');
-route::get('/dictamenes/envasado/{id_dictamen_envasado}/edit', [DictamenEnvasadoController::class, 'edit'])->name('dictamenes.edit');
-Route::post('/dictamenes/envasado/{id_dictamen_envasado}/update', [DictamenEnvasadoController::class, 'update'])->name('dictamen.update');
-Route::post('/dictamenes/envasado/{id_dictamen_envasado}/reexpedir', [DictamenEnvasadoController::class, 'reexpedirDictamen'])->name('dictamenes.reexpedir');
-
-
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
 Route::resource('/documentos-list', DocumentosController::class);
@@ -734,8 +723,7 @@ Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])
 //
 Route::get('/Pre-certificado', [CartaAsignacionController::class, 'PreCertificado'])->name('Pre-certificado');
 Route::get('/Dictamen-MezcalEnvasado', [CartaAsignacionController::class, 'DictamenMezcalEnvasado'])->name('Dictamen-MezcalEnvasado');
-Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema');
-Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico');
+
 
 
 
