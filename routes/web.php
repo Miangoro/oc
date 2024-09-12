@@ -449,7 +449,7 @@ Route::get('/certificado_como_productor', [CartaAsignacionController::class, 'Ce
 Route::get('/certificado_como_comercializador', [CartaAsignacionController::class, 'CertificadoComoComercializador'])->name('CertificadoComoComercializador');
 Route::get('/certificado_como_envasador', [CartaAsignacionController::class, 'CertificadoComoEnvasador'])->name('CertificadoComoEnvasador');
 Route::get('/solicitud_de_servicios', [CartaAsignacionController::class, 'SolicitudDeServicios052'])->name('CertificadoComoEnvasador');
-Route::get('/dictamen_cumplimiento_instalaciones', [CartaAsignacionController::class, 'dictamenDeCumplimienoInstalaciones'])->name('dictamenDeCumplimienoInstalaciones');
+Route::get('/dictamen_cumplimiento_instalaciones', [CartaAsignacionController::class, 'DictamenDeCumplimienoInstalaciones'])->name('DictamenDeCumplimienoInstalaciones');
 
 
 
@@ -723,7 +723,8 @@ Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])
 //
 Route::get('/Pre-certificado', [CartaAsignacionController::class, 'PreCertificado'])->name('Pre-certificado');
 Route::get('/Dictamen-MezcalEnvasado', [CartaAsignacionController::class, 'DictamenMezcalEnvasado'])->name('Dictamen-MezcalEnvasado');
-Route::get('/Plan-auditoría-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoría-esquema');
+Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema');
+Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico');
 
 
 
