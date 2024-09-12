@@ -22,6 +22,11 @@
             width: 275px; 
         }
 
+        .container {
+            margin-top: 0px;
+            position: relative;
+        }
+
         .description1,
         .description2,
         .description3,
@@ -34,24 +39,25 @@
         .description1 {
             font-size: 18px;
             color: #151442;
+            font-family: 'Arial Negrita' !important;
             top: 5px; 
-
         }
 
         .description2 {
-            color: #0F0E30;
-            font-size: 10px;
+            color: #151442;
+            font-family: 'Arial Negrita' !important;
+            font-size: 9.5px;
             top: 30px; 
         }
 
         .description3 {
-            color: #0F0E30;
             font-size: 10px;
             top: 42px; 
+            margin-right: 60px; 
         }
         
         .title {
-
+            font-family: 'Arial Negrita', Gadget, sans-serif;
             text-align: center;
             font-size: 22px;
             line-height: 20px;
@@ -152,7 +158,7 @@
             padding: 0;
             position: absolute;
             right: 20px;
-            top: 810px;
+            top: 835px;
             font-family: 'Arial Negrita' !important;
         }
 
@@ -229,6 +235,16 @@
             text-align: center;
             font-family: 'lucida sans seminegrita';
         }
+
+        
+        .textimg {
+            font-weight: bold;
+            position: absolute; 
+            top: 100px;
+            left: 10px; 
+            text-align: left;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -240,8 +256,9 @@
     <div class="description1">Unidad de Inspección No. UVNOM-129</div>
     <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
     <div class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C.</div>
+    <div class="textimg font-lucida-sans-seminegrita">No.: UMC-00_/20</div><br>
 
-    <p class="title">Dictamen de Cumplimiento NOM de Mezcal Envasado</p>
+    <div class="title">Dictamen de Cumplimiento NOM de Mezcal Envasado</div><br>
 
     <p class="text">La Unidad de Inspección CIDAM A.C. con domicilio en Kilómetro 8 Antigua Carretera a
     Pátzcuaro, S/N Colonia Otra no Especificada en el Catálogo, C.P. 58341, Morelia,
