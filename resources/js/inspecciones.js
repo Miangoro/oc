@@ -1026,27 +1026,68 @@ $(function () {
   // Cuando se haga clic en el botón .add-row
   $('.add-row').click(function () {
       var targetTable = $(this).data('target'); // Obtener la tabla objetivo
-      var namePrefix = $(this).data('name-prefix'); // Obtener el nombre para rango_inicial
-      var nameSuffix = $(this).data('name-suffix'); // Obtener el nombre para rango_final
 
-      // Crear una nueva fila con los nombres de campos dinámicos
-      var newRow = `
-          <tr>
-              <th>
-                  <button type="button" class="btn btn-danger remove-row"> 
-                      <i class="ri-delete-bin-5-fill"></i> 
-                  </button>
-              </th>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="${namePrefix}" />
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="${nameSuffix}" />
-              </td>
-          </tr>`;
+      // Verificar si es la tabla de "testigos" o "unidadProduccion"
+      if (targetTable === '#testigos') {
+          var namePrefix = $(this).data('name-prefix'); // Obtener el nombre para rango_inicial
+          var nameSuffix = $(this).data('name-suffix'); // Obtener el nombre para rango_final
 
-      // Añadir la nueva fila a la tabla especificada
-      $(targetTable).append(newRow);
+          // Crear una nueva fila para la tabla "testigos"
+          var newRow = `
+              <tr>
+                  <th>
+                      <button type="button" class="btn btn-danger remove-row"> 
+                          <i class="ri-delete-bin-5-fill"></i> 
+                      </button>
+                  </th>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${namePrefix}" />
+                  </td>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${nameSuffix}" />
+                  </td>
+              </tr>`;
+
+          $(targetTable).append(newRow);
+      } else if (targetTable === '#unidadProduccion') {
+          // Obtener nombres para los diferentes campos de la tabla "unidadProduccion"
+          var namePredio = $(this).data('name-prefix');
+          var nameSuperficie = $(this).data('name-superficie');
+          var nameMadurez = $(this).data('name-madurez');
+          var namePlagas = $(this).data('name-plagas');
+          var namePlantas = $(this).data('name-plantas');
+          var nameCoordenadas = $(this).data('name-coordenadas');
+
+          // Crear una nueva fila para la tabla "unidadProduccion"
+          var newRow = `
+              <tr>
+                  <th>
+                      <button type="button" class="btn btn-danger remove-row"> 
+                          <i class="ri-delete-bin-5-fill"></i> 
+                      </button>
+                  </th>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${namePredio}" />
+                  </td>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${nameSuperficie}" />
+                  </td>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${nameMadurez}" />
+                  </td>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${namePlagas}" />
+                  </td>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${namePlantas}" />
+                  </td>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${nameCoordenadas}" />
+                  </td>
+              </tr>`;
+
+          $(targetTable).append(newRow);
+      }
   });
 
   // Función para eliminar una fila
@@ -1054,6 +1095,7 @@ $(function () {
       $(this).closest('tr').remove();
   });
 });
+
 
 
 

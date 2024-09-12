@@ -89,26 +89,22 @@
                 </table>
                 
                 <div style="padding: 20px"></div>
-                <p class="address-subtitle"><b style="color: red">unidad: </b>De produccion</b></p>
-
+                <p class="address-subtitle"><b style="color: red">unidad: </b>De producción</p>
+                
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>
-                                <button type="button" class="btn btn-primary add-row" data-target="#unidadProduccion" data-name-prefix="rango_inicialP[]" data-name-suffix="rango_finalP[]">
+                                <button type="button" class="btn btn-primary add-row" data-target="#unidadProduccion" data-name-prefix="nombre_predio[]" data-name-superficie="superficie[]" data-name-madurez="madurez[]" data-name-plagas="plagas[]" data-name-plantas="cantidad_plantas[]" data-name-coordenadas="coordenadas[]">
                                     <i class="ri-add-line"></i>
                                 </button>
                             </th>
-                            <th>Nombre del
-                                predio</th>
-                            <th>Superficie
-                                (hectáreas)</th>
-                                <th>Madurez del
-                                    agave (años)</th>
-                                    <th>Plagas en el cultivo</th>
-                                    <th>Cantidad de
-                                        Plantas</th>
-                                        <th>Coordenadas</th>
+                            <th>Nombre del predio</th>
+                            <th>Superficie (hectáreas)</th>
+                            <th>Madurez del agave (años)</th>
+                            <th>Plagas en el cultivo</th>
+                            <th>Cantidad de plantas</th>
+                            <th>Coordenadas</th>
                         </tr>
                     </thead>
                     <tbody id="unidadProduccion">
@@ -119,22 +115,22 @@
                                 </button>
                             </th>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="rango_inicialP[]" id="folio_inicial" />
+                                <input type="text" class="form-control form-control-sm" name="nombre_predio[]" />
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="rango_finalP[]" id="folio_final" />
+                                <input type="text" class="form-control form-control-sm" name="superficie[]" />
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="rango_finalP[]" id="folio_final" />
+                                <input type="text" class="form-control form-control-sm" name="madurez[]" />
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="rango_finalP[]" id="folio_final" />
+                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="rango_finalP[]" id="folio_final" />
+                                <input type="text" class="form-control form-control-sm" name="cantidad_plantas[]" />
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="rango_finalP[]" id="folio_final" />
+                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
                             </td>
                         </tr>
                     </tbody>
