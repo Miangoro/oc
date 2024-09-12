@@ -12,8 +12,8 @@
             <form id="ActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                 <input type="hidden" id="id_acta" name="id_acta">
                 <input type="hidden" id="id_inspeccion" name="id_inspeccion">
-{{--                 <input type="hidden" id="id_empresa" name="id_empresa">
- --}}
+                <input type="hidden" id="acta_id_empresa" name="acta_id_empresa">
+
                 @csrf
 
 
