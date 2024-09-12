@@ -184,7 +184,8 @@ use App\Http\Controllers\solicitudes\SolicitudesTipoController;
 //Tipos maguey/agave
 use App\Http\Controllers\catalogo\tiposController;
 use App\Http\Controllers\dictamenes\InstalacionesController;
-use App\Http\Controllers\dictamenes\DictamenGranelController;;
+use App\Http\Controllers\dictamenes\DictamenGranelController;
+use App\Http\Controllers\dictamenes\DictamenEnvasadoController;
 use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\catalogo\catalogoEquiposController;
@@ -631,6 +632,16 @@ Route::post('/dictamenes/productos/{id_dictamen}/reexpedir', [DictamenGranelCont
 /*------------------- PDFS de Dictamenes a granel -------------------*/
 // Ruta para el PDF con ID
 route::get('/dictamen_cumplimiento_mezcal_granel/{id_dictamen}', [DictamenGranelController::class, 'dictamenDeCumplimientoGranel'])->name('dictamen-cumplimiento-granel');
+
+/*------------------- Dictamenes de envasado -------------------*/
+Route::get('/dictamenes/envasado', [DictamenEnvasadoController::class, 'UserManagement'])->name('dictamenes-envasado');
+Route::resource('/dictamen-envasado-list', DictamenEnvasadoController::class);
+Route::delete('dictamen/envasado/{id_dictamen_envasado}', [DictamenEnvasadoController::class, 'destroy'])->name('dictamen.delete');
+Route::post('dictamenes-envasado',[DictamenEnvasadoController::class, 'store'])->name('dictamen.store');
+route::get('/dictamenes/envasado/{id_dictamen_envasado}/edit', [DictamenEnvasadoController::class, 'edit'])->name('dictamenes.edit');
+Route::post('/dictamenes/envasado/{id_dictamen_envasado}/update', [DictamenEnvasadoController::class, 'update'])->name('dictamen.update');
+Route::post('/dictamenes/envasado/{id_dictamen_envasado}/reexpedir', [DictamenEnvasadoController::class, 'reexpedirDictamen'])->name('dictamenes.reexpedir');
+
 
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');

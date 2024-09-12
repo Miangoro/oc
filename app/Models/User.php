@@ -76,7 +76,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(inspecciones::class, 'id_inspector', 'id');
     }
-
+    public function dictamenesEnvasado()
+    {
+        return $this->hasMany(Dictamen_Envasado::class, 'id_firmante');
+    }
 
     public function solicitudesHologramas()
     {
