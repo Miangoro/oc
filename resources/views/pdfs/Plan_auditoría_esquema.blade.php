@@ -173,6 +173,14 @@
             font-family: 'century gothic negrita';
         }
 
+        
+        .column-x {
+            text-align: justify;
+            background-color: #93B0D4;
+            vertical-align: middle; /* Alineación vertical */
+            font-family: 'century gothic negrita';
+        }
+
         .column-text {
             text-align: center;
             vertical-align: middle; /* Alineación vertical */
@@ -239,12 +247,11 @@
                 </tr>
                 <tr>
                     <td rowspan="2" class="column">Persona de contacto:</td>
-                    <td>Lorem ipsum dolor sit amet consectetur!</td>
+                    <td rowspan="2" style="text-align: center; vertical-align: middle;">Lorem ipsum dolor sit amet consectetur!</td>
                     <td class="column">Correo Electrónico:</td>
                     <td>Lorem ipsum dolor sit amet consectetur!</td>
                 </tr>
                 <tr>
-                    <td>Lorem ipsum dolor sit amet consectetur!</td>
                     <td class="column">Teléfono:</td>
                     <td>Lorem ipsum dolor sit amet consectetur!</td>
                 </tr>
@@ -257,7 +264,7 @@
                 <tr>
                     <td class="column" style="width: 140px;">Fecha de liberación de plan:</td>
                     <td colspan="2" style="width: 60px;">00/00/0000</td>
-                    <td class="column" colspan="2" style="width: 40px;">Fecha de auditoría:</td>
+                    <td class="column" colspan="2" style="width: 40px; text-align: center;">Fecha de auditoría:</td>
                     <td colspan="2" style="width: 50px;">00/00/0000</td>
                 </tr>
                 <tr>
@@ -293,8 +300,7 @@
 			<td class="column-c" style="width: 40px;">X</td>
 			<td class="column-text" style="width: 100px;">Bebidas alcohólicas preparadas</td>
 			<td class="column-c" style="width: 40px;">X</td>
-			<td class="column-text">Cócteles
-            </td>
+			<td class="column-text">Cócteles</td>
 			<td class="column-c" style="width: 40px;">X</td>
 			<td class="column-text" style="width: 100px;">Licores o cremas</td>
 		</tr>
@@ -382,7 +388,7 @@
             <tbody>
                 <tr>
                     <td class="column" style="text-align: center;">Fecha</td>
-                    <td class="column" style="text-align: center;">Inspector/Auditor</td>
+                    <td class="column" style="text-align: center;  width: 100px;">Inspector/Auditor</td>
                     <td class="column" style="text-align: center;">Actividad</td>
                     <td class="column" style="text-align: center;">Horario</td>
                     <td class="column" style="text-align: center;">Aplica(auditados)</td>
@@ -428,27 +434,40 @@
     <table>
         <tbody>
             <tr>
+                <td class="column" style="text-align: center; width: 200px;  height: 30px;">Nombre y firma del Auditor:</td>
+                <td colspan="3"></td>
+            </tr>
+            <tr>
+                <td class="column" style="text-align: center; width: 200px;">cepta o rechaza el plan de Auditoría:</td>
+                <td colspan="3"></td>
+            </tr>
+            <tr>
+                <td class="column" style="text-align: center; width: 200px;">Nombre del cliente o persona autorizada que acepta o rechaza el plan:</td>
                 <td></td>
-                <td></td>
+                <td class="column" style="text-align: center; width: 100px;">Firma:</td>
                 <td></td>
             </tr>
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td class="column-x" style="text-align: center; width: 200px;">Políticas:</td>
+                <td colspan="3">1. Aceptar o rechazar el presente plan de auditoría antes de 48
+                horas, de lo contrario se considera aceptado. <br>
+                2. Comunicarse previamente, mínimo 3 días previos a la auditoría,
+                con el auditor asignado por el Organismo Certificador con la
+                finalidad de coordinar la actividad en sitio. <br>
+                3. En caso de conflicto de interés, se debe notificar al Organismo
+                de Certificación previamente. <br>
+                4. Para realizar el servicio de certificación se contratará una Unidad
+                de Verificación y Laboratorio de pruebas.</td>
             </tr>
         </tbody>
     </table>
+    </div>
+
+    <div class="footer">
+        <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido
+        externamente sin la autorización escrita del Director Ejecutivo
+        </div>
+        <div class="page-number">3/3</div>
     </div>
 </body>
 </html>
