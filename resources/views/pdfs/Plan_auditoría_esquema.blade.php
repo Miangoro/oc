@@ -258,7 +258,7 @@
             </tbody>
         </table>
 
-        <p class="subtitle2">2.- DATOS GENERALES DEL CLIENTE</p>
+        <p class="subtitle2">2.- DATOS DE LA AUDITORÍA</p>
         <table>
             <tbody>
                 <tr>
@@ -292,7 +292,7 @@
             </tbody>
         </table>
 
-        <p class="subtitle3">3.- DETALLES ADICIONALES</p>
+        <p class="subtitle3">3.- ESQUEMA DE CERTIFICACIÓN</p>
         <table>
 	<tbody>
 		<tr>
