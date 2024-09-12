@@ -516,7 +516,7 @@ Route::resource('/lotes-granel-list', LotesGranelController::class);
 Route::delete('/lotes-granel-list/{id_lote_granel}', [LotesGranelController::class, 'destroy']);
 Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->name('lotes-register.store');
 Route::get('/lotes-a-granel/{id_lote_granel}/edit', [LotesGranelController::class, 'edit'])->name('lotes-a-granel.edit');
-Route::put('/lotes-a-granel/{id_lote_granel}', [LotesGranelController::class, 'update']);
+Route::post('/lotes-a-granel/{id_lote_granel}', [LotesGranelController::class, 'update']);
 
 //Lotes de envasado
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
@@ -723,7 +723,7 @@ Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])
 //
 Route::get('/Pre-certificado', [CartaAsignacionController::class, 'PreCertificado'])->name('Pre-certificado');
 Route::get('/Dictamen-MezcalEnvasado', [CartaAsignacionController::class, 'DictamenMezcalEnvasado'])->name('Dictamen-MezcalEnvasado');
-
+Route::get('/Plan-auditoría-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoría-esquema');
 
 
 
