@@ -283,31 +283,62 @@
 </div>
 
 <script>
-
 function obtenerGuias1() {
-        var empresa = $("#edit_id_empresa").val();
+    var empresa = $("#edit_id_empresa").val();
+    // Verifica si el valor de empresa es válido
+    if (!empresa) {
+        return; // No hacer la petición si el valor es inválido
+    }
+
+    // Guardar los valores seleccionados previamente
+    var selectedValues = $('#edit_id_guia').val();
+
     // Hacer una petición AJAX para obtener los detalles de la empresa
     $.ajax({
-        url: '/getDatos/' + empresa, 
+        url: '/getDatos/' + empresa,
         method: 'GET',
         success: function(response) {
-            // Cargar los detalles en el modal
-            var contenido = "";
-          for (let index = 0; index < response.guias.length; index++) {
-            contenido = '<option value="'+response.guias[index].id_guia+'">'+response.guias[index].Folio+'</option>' + contenido;
-           // console.log(response.normas[index].norma);
-          }
+            var $select = $('#edit_id_guia');
 
-          if(response.guias.length == 0){
-            contenido = '<option value="" disabled selected>Sin guias registradas</option>';
-          }
-            $('#edit_id_guia').html(contenido);
+            // Limpiar completamente el select antes de agregar las nuevas opciones
+            $select.empty(); 
+
+            if (response.guias.length > 0) {
+                // Añadir nuevas opciones con las guías obtenidas
+                response.guias.forEach(function(guia) {
+                    $select.append(new Option(guia.folio, guia.id_guia, false, selectedValues && selectedValues.includes(guia.id_guia.toString())));
+                });
+
+                // Restaurar los valores seleccionados previamente si siguen siendo válidos
+                if (selectedValues) {
+                    var validSelectedValues = selectedValues.filter(function(value) {
+                        return response.guias.some(function(guia) {
+                            return guia.id_guia == value;
+                        });
+                    });
+
+                    if (validSelectedValues.length > 0) {
+                        $select.val(validSelectedValues).trigger('change');
+                    }
+                }
+            } else {
+                // Mostrar opción "Sin guías registradas" si no hay guías
+                $select.append('<option value="" disabled selected>Sin guías registradas</option>');
+            }
+
+            // Asegurarse de que select2 esté inicializado
+            if (!$select.hasClass('select2-hidden-accessible')) {
+                $select.select2(); // Re-inicializar Select2 si no está inicializado
+            } else {
+                $select.trigger('change'); // Forzar el cambio si ya está inicializado
+            }
         },
-        error: function() {
-            //alert('Error al cargar los lotes a granel.');
+        error: function(xhr, status, error) {
+            console.error('Error al cargar las guías:', error);
+            alert('Error al cargar las guías. Por favor, intenta nuevamente.');
         }
     });
-  }
+}
 
 </script>
 

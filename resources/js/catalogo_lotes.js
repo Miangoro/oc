@@ -531,17 +531,13 @@ $(function () {
           $('#edit_nombre_lote').val(lote.nombre_lote);
           $('#edit_id_empresa').val(lote.id_empresa).trigger('change');
           $('#edit_tipo_lote').val(lote.tipo_lote);
-          // Destruye y reinicializa select2 para asegurarte de que refleje los cambios
-          $('#edit_id_guia').select2('destroy').empty();
-
           // Agrega manualmente las opciones usando los folios como el texto visible
           guias.forEach(function (guia) {
             $('#edit_id_guia').append(new Option(guia.folio, guia.id));
           });
-
           // Asigna los valores seleccionados (solo IDs)
           var guiasIds = guias.map(function (guia) { return guia.id; });
-          $('#edit_id_guia').val(guiasIds).select2().trigger('change');
+          $('#edit_id_guia').val(guiasIds).trigger('change');
 
           $('#edit_volumen').val(lote.volumen);
           $('#edit_cont_alc').val(lote.cont_alc);
