@@ -12,8 +12,8 @@
             <form id="ActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                 <input type="hidden" id="id_acta" name="id_acta">
                 <input type="hidden" id="id_inspeccion" name="id_inspeccion">
-                <input type="hidden" id="id_empresa" name="id_empresa">
-
+{{--                 <input type="hidden" id="id_empresa" name="id_empresa">
+ --}}
                 @csrf
 
 
@@ -268,7 +268,7 @@
                 </table>
 
                 <div style="padding: 20px"></div>
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>De Equipo</p>
+                <p class="address-subtitle"><b style="color: red">Unidad: </b>De Equipo Mezcal</p>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -379,6 +379,50 @@
                         </tr>
                     </tbody>
                 </table>
+                <div style="padding: 20px"></div>
+                <p class="address-subtitle"><b style="color: red">Unidad: </b>De Equipo Envasado</p>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <button type="button" class="btn btn-primary add-row"
+                                    data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
+                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
+                                    data-name-plagas="plagas[]">
+                                    <i class="ri-add-line"></i>
+                                </button>
+                            </th>
+                            <th style="width: 200px">Equipo</th>
+                            <th>Cantidad</th>
+                            <th>Capacidad</th>
+                            <th>Tipo de material</th>
+                        </tr>
+                    </thead>
+                    <tbody id="unidadProduccion">
+                        <tr>
+                            <th>
+                                <button type="button" class="btn btn-danger remove-row" disabled>
+                                    <i class="ri-delete-bin-5-fill"></i>
+                                </button>
+                            </th>
+                            <td>
+                                <select class="rango_inicial form-control select2" name="rango_inicial[]">
+                                    <!-- Opciones -->
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="superficie[]" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="madurez[]" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
+
+                        </tr>
+                    </tbody>
+                </table>
+
 
                 <div style="padding: 20px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De Comercialización</p>
