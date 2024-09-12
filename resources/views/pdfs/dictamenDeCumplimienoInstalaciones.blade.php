@@ -149,6 +149,48 @@
         .page-break {
             page-break-before: always;
         }
+
+
+
+
+        .sello {
+            text-align: right;
+            font-size: 11px;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            right: 50px;
+            top: 825px;
+            font-family: 'Arial Negrita' !important;
+        }
+
+
+
+        .textx, .textsello {
+            line-height: 1.2;
+            font-family: Arial, Helvetica, Verdana;
+        }
+
+        .textsello {
+            text-align: left;
+            font-size: 8px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .images-container {
+            position: relative;
+            display: flex;
+            margin-top: -40px;
+            width: 100%;
+        }
+
+        .image-right {
+            position: absolute; 
+            right: 10px; 
+            top: -20px; 
+            width: 240px;
+        }
     </style>
 </head>
 
@@ -315,7 +357,33 @@
         QFB. Mario Villanueva Flores <br>
         Gerente Técnico Sustituto de la Unidad de Inspección
     </div>
-    <div class="pie" style="transform: translate(520px, 480px);">Entrada en vigor: 15-07-2024 <br>
+
+
+
+
+
+    <div style="height: 30px"></div>
+
+
+    <p class="negrita" style="transform: translate(450px, 80px); font-size: 10px">Sello de Unidad de Inspección</p>
+    <div class="images-container">
+    <img src="{{ public_path('img_pdf/qr_umc-074.png') }}" alt="Logo UVEM" width="70px">
+    <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
+    </div>
+    <p class="textx" style="font-size: 12px; margin: 1;">
+    <span style="margin-left: -30px;">
+        <strong>Cadena Original UMG-159/2024|2024-06-26|UMS- <br><span style="margin-left: -30px;">1094/2024 Sello Digital</span></strong>
+    </span>
+    </p>
+
+<div style="height: 15px"></div>
+    <p class = "textsello" style="margin-left: -30px;">e2N1P+r+E79e0YxKzS/jMssKuASlmYXy2ppP+2PJN8vKUeFRxYTSY99MEWrgiHOnA N3pLUrdUBiD39v25Y648G4TK5qQ0LwZPLofRmjRQ2Ty5rHlDwnPRm37zaOkMjkRD<br>
+    xC0ikyHPD+T3EFhEc9sgAFI6bZUd88yevfS+ZFZ7j9f5EA44Sz76jsN3P4e7lyePHmNz Jxg5ZupHICg5xBZu5ygOniMZNbzG6w0ZDPL58yoMQK1JDi8lwwiGJBaCNHN6krn<br>
+    No5v5rvZPkbUthYT2r5M0sGP5Y+s97oLa8GA5hqyDAgE9P0d1u0uwU7Q8SF0GYfe lavijxvsWaZg5QA5og==
+    </p>
+
+
+    <div class="pie" style="transform: translate(520px, 250px);">Entrada en vigor: 15-07-2024 <br>
         F-UV-04-18 Ver 2s</div>
     <div class="footer-bar" style="line-height: 0.7;">
         <p class="font-lucida-sans-seminegrita" style="font-size: 11px"><b>www.cidam.org .

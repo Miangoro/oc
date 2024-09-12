@@ -93,6 +93,8 @@ $(function () {
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalAsignarInspector(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']},'${escapeHtml(full['num_servicio'])}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
+                `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#ActaUnidades" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i>Crear Acta</a>` +
+
                 
                 '</div>' +
                 '</div>'
@@ -1017,6 +1019,47 @@ $(function () {
 }
 
   
+
+
+ //Agregar o eliminar tablas +
+ $(document).ready(function () {
+  // Cuando se haga clic en el botón .add-row
+  $('.add-row').click(function () {
+      var targetTable = $(this).data('target'); // Obtener la tabla objetivo
+      var namePrefix = $(this).data('name-prefix'); // Obtener el nombre para rango_inicial
+      var nameSuffix = $(this).data('name-suffix'); // Obtener el nombre para rango_final
+
+      // Crear una nueva fila con los nombres de campos dinámicos
+      var newRow = `
+          <tr>
+              <th>
+                  <button type="button" class="btn btn-danger remove-row"> 
+                      <i class="ri-delete-bin-5-fill"></i> 
+                  </button>
+              </th>
+              <td>
+                  <input type="text" class="form-control form-control-sm" name="${namePrefix}" />
+              </td>
+              <td>
+                  <input type="text" class="form-control form-control-sm" name="${nameSuffix}" />
+              </td>
+          </tr>`;
+
+      // Añadir la nueva fila a la tabla especificada
+      $(targetTable).append(newRow);
+  });
+
+  // Función para eliminar una fila
+  $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+  });
+});
+
+
+
+
+
+
   
   //end
   });
