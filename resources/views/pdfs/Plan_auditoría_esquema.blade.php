@@ -14,16 +14,16 @@
         }
 
         @page {
-            margin: 100px 30px; /* Ajusta los márgenes para el encabezado y pie de página */
+            margin: 100px 30px;
         }
 
         .header {
             position: fixed;
-            top: -35px; /* Ajusta la posición del encabezado */
+            top: -35px; 
             left: 30px;
-            width: calc(100% - 60px); /* Ajusta el ancho del encabezado para los márgenes */
-            height: 100px; /* Ajusta la altura del encabezado */
-            overflow: hidden; /* Asegura que el contenido no se desborde */
+            width: calc(100% - 60px);
+            height: 100px; 
+            overflow: hidden; 
         }
 
         .logo {
@@ -63,18 +63,18 @@
         }
 
         .footer {
-            position: absolute; /* Sitúa el pie de página de manera absoluta */
-            bottom: 0; /* Alínea el pie de página con la parte inferior del contenedor */
-            left: 0; /* Alinea el pie de página con el borde izquierdo */
-            right: 0; /* Alinea el pie de página con el borde derecho */
+            position: absolute;
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
             text-align: center;
             font-size: 10px;
             font-family: Arial, sans-serif;
-            padding: 10px 0; /* Añade un poco de relleno */
-            background-color: white; /* Fondo blanco para el pie de página */
-            z-index: 100; /* Asegura que esté por encima de otros elementos si es necesario */
-            margin-left: 80px; /* Ajusta el margen izquierdo del pie de página */
-            margin-right: 80px; /* Ajusta el margen derecho del pie de página */
+            padding: 10px 0; 
+            background-color: white; 
+            z-index: 100; 
+            margin-left: 80px; 
+            margin-right: 80px;
         }
 
         .footer .page-number {
@@ -90,14 +90,14 @@
         .content {
             margin-left: 20px;
             margin-right: 20px;
-            margin-top: 80px; /* Ajusta el margen superior para el contenido */
-            margin-bottom: 70px; /* Ajusta el margen inferior para el contenido */
+            margin-top: 80px; 
+            margin-bottom: 70px; 
         }
 
         .content2 {
             margin-left: 20px;
             margin-right: 20px;
-            margin-bottom: 70px; /* Ajusta el margen inferior para el contenido */
+            margin-bottom: 70px; 
         }
 
         .title {
@@ -112,7 +112,7 @@
         }
 
         .title2 {
-            margin-top: 80px; /* Ajusta este valor según sea necesario */
+            margin-top: 80px; 
             margin-left: 30px;
             font-family: 'century gothic negrita';
             text-align: left;
@@ -127,21 +127,21 @@
             margin-left: 30px;
             font-size: 15px;
             font-family: 'century gothic negrita';
-            margin-top: 10px; /* Ajusta el espacio encima del subtítulo */
+            margin-top: 10px; 
         }
 
         .subtitle2 {
             margin-left: 30px;
             font-size: 15px;
             font-family: 'century gothic negrita';
-            margin-top: 20px; /* Ajusta el espacio encima del subtítulo */
+            margin-top: 20px; 
         }
 
         .subtitle3 {
             margin-left: 30px;
             font-size: 15px;
             font-family: 'century gothic negrita';
-            margin-top: 20px; /* Ajusta el espacio encima del subtítulo */
+            margin-top: 20px; 
         }
 
         table {
@@ -153,7 +153,7 @@
             font-family: Arial, Helvetica, Verdana;
             font-size: 13px;
             font-family: 'century gothic';
-            margin-top: 10px; /* Ajusta el margen superior de la tabla */
+            margin-top: 10px; 
         }
 
         td, th {
@@ -164,12 +164,12 @@
         }
 
         td {
-            width: auto; /* Permite que el contenido determine el ancho de las celdas */
+            width: auto; 
         }
 
         .column {
             background-color: #93B0D4;
-            vertical-align: middle; /* Alineación vertical */
+            vertical-align: middle;
             font-family: 'century gothic negrita';
         }
 
@@ -177,37 +177,36 @@
         .column-x {
             text-align: justify;
             background-color: #93B0D4;
-            vertical-align: middle; /* Alineación vertical */
+            vertical-align: middle; 
             font-family: 'century gothic negrita';
         }
 
         .column-text {
             text-align: center;
-            vertical-align: middle; /* Alineación vertical */
+            vertical-align: middle; 
             font-family: 'century gothic negrita';
         }
 
-        /* Estilos específicos para la segunda tabla */
         .custom-table {
-            width: 100%; /* Ancho completo de la página */
-            margin-top: 10px; /* Espacio superior */
+            width: 100%;
+            margin-top: 10px; 
         }
 
         .custom-table td {
-            vertical-align: middle; /* Centra el contenido verticalmente */
-            text-align: center; /* Centra el texto horizontalmente */
+            vertical-align: middle;
+            text-align: center;
         }
 
         .custom-table .wide-col {
-            width: 140px; /* Ancho de la columna específica */
+            width: 140px; 
         }
 
         .custom-table .narrow-col {
-            width: 40px; /* Ancho de la columna específica */
+            width: 40px; 
         }
 
         .custom-table .empty-col {
-            width: 60px; /* Ancho de la columna vacía */
+            width: 60px;
         }
 
         .century {
@@ -215,7 +214,7 @@
         }
 
         .column-c {
-            vertical-align: middle; /* Centra el contenido verticalmente */
+            vertical-align: middle; 
             text-align: center;
             font-family: Arial, sans-serif;
         }
