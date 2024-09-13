@@ -127,7 +127,12 @@ class DomiciliosController extends Controller
                 $nestedData['tipo'] = $instalacion->tipo  ?? 'N/A';
                 $nestedData['estado'] = $instalacion->estados->nombre  ?? 'N/A';
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa  ?? 'N/A';
-                $nestedData['folio'] = $instalacion->folio ?? 'N/A'; // Corregido 'folion' a 'folio'
+                $nestedData['folio'] = 
+                '<b>Certificadora:</b>' . ($instalacion->organismos->organismo ?? 'OC CIDAM') . '<br>' .
+                '<b>Número de certificado:</b>' . ($instalacion->folio ?? 'N/A') . '<br>'.
+                '<b>Fecha de emisión:</b>' . (Helpers::formatearFecha($instalacion->fecha_emision)) . '<br>'.
+                '<b>Fecha de vigencia:</b>' . (Helpers::formatearFecha($instalacion->fecha_vigencia)) . '<br>';
+
                 $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['url'] = !empty($instalacion->documentos->pluck('url')->toArray()) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first().'/'.implode(',', $instalacion->documentos->pluck('url')->toArray()) : '';
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);
@@ -166,14 +171,13 @@ class DomiciliosController extends Controller
             'id_empresa' => 'required|exists:empresa,id_empresa',
             'tipo' => 'required|string',
             'estado' => 'required|exists:estados,id',
+            'responsable' => 'required|string',
             'direccion_completa' => 'required|string',
             'folio' => 'nullable|string', // Opcional
             'id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo', // Opcional
             'fecha_emision' => 'nullable|date', // Opcional
             'fecha_vigencia' => 'nullable|date', // Opcional
-            'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf', // Validación de archivos
-            'nombre_documento.*' => 'required_with:url.*|string', // Validación de nombres de documentos
-            'id_documento.*' => 'required_with:url.*|integer', // Validación de IDs de documentos
+
 
         ]);
 
@@ -183,6 +187,7 @@ class DomiciliosController extends Controller
                 'id_empresa' => $request->input('id_empresa'),
                 'tipo' => $request->input('tipo'),
                 'estado' => $request->input('estado'),
+                'responsable' => $request->input('responsable'),
                 'direccion_completa' => $request->input('direccion_completa'),
                 'folio' => $request->input('folio', null), // Opcional
                 'id_organismo' => $request->input('id_organismo', null), // Opcional
