@@ -45,6 +45,12 @@ class empresa extends Model
     public function lotes_granel(){
         return LotesGranel::where('id_empresa', $this->id_empresa)->get();
     }
+    public function lotes_envasado()
+    {
+    // Aquí deberías implementar la lógica para obtener los lotes envasados
+    return lotes_envasado::where('id_empresa', $this->id_empresa)->get();
+    }
+
 
     public function marcas(){
         return marcas::where('id_empresa', $this->id_empresa)->get();

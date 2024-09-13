@@ -109,41 +109,20 @@
                        </div>                                
                    </div>
                    <div id="edit_coordenadas" class="d-none mb-4">
-                       <div class="card">
-                           <table class="table table-bordered">
-                               <thead>
-                                   <tr>
-                                       <th><button type="button" class="btn btn-primary add-row-cordenadas"><i
-                                                   class="ri-add-line"></i></button></th>
-                                       <th colspan="2">Coordenadas</th>
-                                   </tr>
-                               </thead>
-                               <tbody>
-                                   <tr>
-                                       <td>
-                                           <button type="button" class="btn btn-danger remove-row-cordenadas"
-                                               disabled><i class="ri-delete-bin-5-fill"></i></button>
-                                       </td>
-                                       <td>
-                                           <div class="form-floating form-floating-outline">
-                                               <input type="text" class="form-control" id="edit_latitud" autocomplete="off"
-                                                   name="latitud[]" placeholder="Latitud">
-                                               <label for="latitud">Latitud</label>
-                                           </div>
-                                       </td>
-                                       <td>
-                                           <div class="form-floating form-floating-outline">
-                                               <input type="text" class="form-control" id="edit_longitud" autocomplete="off"
-                                                   name="longitud[]" placeholder="Longitud">
-                                               <label for="longitud">Longitud</label>
-                                           </div>
-                                       </td>
-                                   </tr>
-                               </tbody>
-                           </table>
-                       </div>
-
-                   </div>
+                    <div class="card">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th><button type="button" class="btn btn-primary add-row-cordenadas-edit"><i class="ri-add-line"></i></button></th>
+                                    <th colspan="2" style="width: 95%"><h5 class="card-title mb-0 text-center">Coordenadas</h5></th>
+                                </tr>
+                            </thead>
+                            <tbody id="coordenadas-body-edit">
+                                <!-- Campos de coordenadas se agregarán aquí dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
                    <div class="edit_InformacionAgave mb-4">
                        <!-- Información sobre el Agave/Maguey y Plantación combinada -->
@@ -153,7 +132,7 @@
                                    <tr>
                                        <th><button type="button" class="btn btn-primary add-row-plantacion"><i
                                                    class="ri-add-line"></i></button></th>
-                                       <th colspan="2">
+                                       <th colspan="2" style="width: 95%">
                                            <h5 class="card-title mb-0 text-center">Información del Agave/Maguey y
                                                Plantación</h5>
                                        </th>

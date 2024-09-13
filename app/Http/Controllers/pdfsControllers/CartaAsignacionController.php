@@ -98,6 +98,12 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
     }
 
+    public function DictamenDeCumplimienoInstalaciones()
+    {
+        $pdf = Pdf::loadView('pdfs.DictamenDeCumplimienoInstalaciones');
+        return $pdf->stream('F-UV-04-18 Ver 2. Dictamen de Cumplimiento para Producto de Exportación.pdf');
+    }
+
     //Guias de translado
     /*     public function guiasTranslado()
     {
@@ -258,10 +264,23 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('F7.1-04-09 Certificado como Envasador NMX-V-052-NORMEX-2016 Ed. 1 Vigente.pdf');
     }
 
+    public function PlanAuditoria ()
+    {
+        $pdf = Pdf::loadView('pdfs.Plan_auditoria_esquema');
+        return $pdf->stream('F7.1-04-15 Plan de auditoría de esquema de cert NMX-V-052 Ed 0, VIG.pdf');
+
+    }
 
     public function SolicitudDeServicios052 ()
     {
         $pdf = Pdf::loadView('pdfs.SolicitudDeServicios052');
         return $pdf->stream('F7.1-04-07 Solicitud de servicios NMX-V-052-NORMEX-2016 Ed. 1, Vigente.pdf');
     }
+
+    public function ReporteTecnico () 
+    {
+        $pdf = Pdf::loadView('pdfs.Reporte_Tecnico-cumplimiento');
+        return $pdf->stream('F7.1-03-24 Reporte Técnico de cumplimiento NOM-199-SCFI-2017 Ed 9 VIGENTE.pdf');
+    }
+ 
 }

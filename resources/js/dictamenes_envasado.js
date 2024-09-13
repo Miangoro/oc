@@ -6,21 +6,20 @@
 
 
 $(function () {
-    // Variable declaration for table
+
     var dt_user_table = $('.datatables-users'),
-
-        select2 = $('.select2'),
-
-        offCanvasForm = $('#modalAddDictamenGranel');
-
-    if (select2.length) {
-        var $this = select2;
-        select2Focus($this);
-        $this.wrap('<div class="position-relative"></div>').select2({
-            placeholder: 'Select Country',
-            dropdownParent: $this.parent()
+        select2Elements = $('.select2')
+    // Función para inicializar Select2 en elementos específicos
+    function initializeSelect2($elements) {
+        $elements.each(function () {
+            var $this = $(this);
+            select2Focus($this);
+            $this.wrap('<div class="position-relative"></div>').select2({
+                dropdownParent: $this.parent()
+            });
         });
     }
+    initializeSelect2(select2Elements);
     /* lo del select de arriba lo puedo quitar "creo" */
     // ajax setup
     $.ajaxSetup({
@@ -48,23 +47,16 @@ $(function () {
             processing: true,
             serverSide: true,
             ajax: {
-                url: baseUrl + 'dictamen-granel-list', // Asegúrate de que esta URL coincida con la ruta en tu archivo de rutas
+                url: baseUrl + 'dictamen-envasado-list', // Asegúrate de que esta URL coincida con la ruta en tu archivo de rutas
                 type: 'GET'
             },
             columns: [
                 { data: null, defaultContent: '' },
-                { data: 'id_dictamen' },
+                { data: 'id_dictamen_envasado' },
                 { data: 'num_dictamen' },
                 { data: 'id_empresa' },
                 { data: 'id_inspeccion' },
-                { data: 'id_lote_granel' },
-                {
-                    data: 'folio_fq',
-                    render: function (data, type, row) {
-                        // Construimos el enlace con data-id y data-bs-toggle para el tooltip y modal
-                        return '<a href="#" data-id="' + row.id_dictamen + '" data-bs-placement="bottom" data-bs-custom-class="tooltip-seccondary" title="Folios de Análisis fisicoquímicos Y Certificados de lote a granel" data-bs-toggle="tooltip" data-bs-target="#modalVerDocumento" class="ver-folio-fq">' + data + '</a>';
-                    }
-                },
+                { data: 'id_lote_envasado' },
                 { data: 'fecha_emision' },
                 { data: 'fecha_vigencia' },
                 { data: 'fecha_servicio' },
@@ -135,13 +127,12 @@ $(function () {
                     }
                 },
                 {
-
                     // Abre el pdf del dictamen
-                    targets: 10,
+                    targets: 9,
                     className: 'text-center',
                     searchable: false, orderable: false,
                     render: function (data, type, full, meta) {
-                        var $id = full['id_dictamen'];
+                        var $id = full['id_dictamen_envasado'];
                         return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
                     }
                 },
@@ -157,9 +148,9 @@ $(function () {
                             '<div class="d-flex align-items-center gap-50">' +
                             '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                            `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalEditDictamenGranel" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-                            `<a data-id="${full['id_dictamen']}" data-bs-toggle="modal" data-bs-target="#modalReexpredirDictamenGranel" class="dropdown-item reexpedir-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Reexpedir dictamen</a>` +
-                            `<a data-id="${full['id_dictamen']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
+                            `<a data-id="${full['id_dictamen_envasado']}" data-bs-toggle="modal" data-bs-target="#modalEditDictamenEnvasado" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
+                            `<a data-id="${full['id_dictamen_envasado']}" data-bs-toggle="modal" data-bs-target="#modalReexpredirDictamenEnvasado" class="dropdown-item reexpedir-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Reexpedir dictamen</a>` +
+                            `<a data-id="${full['id_dictamen_envasado']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
                             '</div>' +
@@ -201,11 +192,11 @@ $(function () {
                     buttons: [
                         {
                             extend: 'print',
-                            title: 'Dictamenes a granel',
+                            title: 'Dictamenes envasado',
                             text: '<i class="ri-printer-line me-1" ></i>Print',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be print
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -245,11 +236,11 @@ $(function () {
                         },
                         {
                             extend: 'csv',
-                            title: 'Dictamenes a granel',
+                            title: 'Dictamenes envasado',
                             text: '<i class="ri-file-text-line me-1" ></i>Csv',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be print
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -276,11 +267,11 @@ $(function () {
                         },
                         {
                             extend: 'excel',
-                            title: 'Dictamenes a granel',
+                            title: 'Dictamenes envasado',
                             text: '<i class="ri-file-excel-line me-1"></i>Excel',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be display
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -305,11 +296,11 @@ $(function () {
                         },
                         {
                             extend: 'pdf',
-                            title: 'Dictamenes a granel',
+                            title: 'Dictamenes envasado',
                             text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be display
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -334,11 +325,11 @@ $(function () {
                         },
                         {
                             extend: 'copy',
-                            title: 'Dictamenes a granel',
+                            title: 'Dictamenes envasado',
                             text: '<i class="ri-file-copy-line me-1"></i>Copy',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                                 // prevent avatar to be copy
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -364,11 +355,11 @@ $(function () {
                     ]
                 },
                 {
-                    text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar dictamen a granel</span>',
+                    text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar dictamen envasado</span>',
                     className: 'add-new btn btn-primary waves-effect waves-light',
                     attr: {
                         'data-bs-toggle': 'modal',
-                        'data-bs-target': '#modalAddDictamenGranel'
+                        'data-bs-target': '#modalAddDictamenEnvasado'
                     }
                 }
             ],
@@ -407,136 +398,8 @@ $(function () {
                     }
                 }
             }
-
-
-        });
-        // Inicializar tooltips después de renderizar la tabla
-        dt_user.on('draw', function () {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-        });
-
-    }
-
-
-    var dt_user_table = $('.datatables-users'),
-        select2Elements = $('.select2'),
-        userView = baseUrl + 'app/user/view/account'
-    // Función para inicializar Select2 en elementos específicos
-    function initializeSelect2($elements) {
-        $elements.each(function () {
-            var $this = $(this);
-            select2Focus($this);
-            $this.wrap('<div class="position-relative"></div>').select2({
-                dropdownParent: $this.parent()
-            });
         });
     }
-
-    initializeSelect2(select2Elements);
-
-    $(document).on('click', '.ver-folio-fq', function (e) {
-        e.preventDefault();
-
-        var idDictamen = $(this).data('id');
-
-        $.ajax({
-            url: '/dictamenes/productos/' + idDictamen + '/foliofq',
-            method: 'GET',
-            success: function (response) {
-                console.log('Response:', response); // Verifica todo el objeto de respuesta
-
-                if (response.success) {
-                    var documentos = response.documentos;
-                    var $tableBody = $('#documentosTableBody');
-                    $tableBody.empty(); // Limpiar contenido previo
-
-                    // Mostrar ícono al archivo PDF si está disponible
-                    var documentoOtroOrganismo = documentos.find(doc => doc.tipo.includes('Certificado de lote a granel'));
-                    var nombre = documentoOtroOrganismo && documentoOtroOrganismo.nombre ? documentoOtroOrganismo.nombre : 'Sin nombre disponible';
-
-                    if (documentoOtroOrganismo) {
-                        $tableBody.append('<tr><td>Certificado de lote a granel:</td><td>' + nombre + '</td><td><a href="#" class="ver-pdf" data-url="../files/' + response.numeroCliente + '/' + documentoOtroOrganismo.url + '" data-title="' + nombre + '"><i class="ri-file-pdf-2-fill text-danger fs-1"></i></a></td></tr>');
-                    } else {
-                        $tableBody.append('<tr><td>Certificado de lote a granel:</td><td>Sin nombre disponible</td><td>No hay certificado disponible.</td></tr>');
-                    }
-
-                    // Documentos certificados por OC CIDAM
-                    var documentoCompletoAsignado = false;
-                    var documentoAjusteAsignado = false;
-
-                    documentos.forEach(function (documento) {
-                        var nombreDocumento = documento.nombre || 'Sin nombre disponible';
-                        var documentoHtml = '<a href="#" class="ver-pdf" data-url="../files/' + response.numeroCliente + '/' + documento.url + '" data-title="' + nombreDocumento + '"><i class="ri-file-pdf-2-fill text-danger fs-1"></i></a>';
-
-                        if (documento.tipo.includes('Análisis completo') && !documentoCompletoAsignado) {
-                            $tableBody.append('<tr><td>Certificado (Análisis Completo):</td><td>' + nombreDocumento + '</td><td>' + documentoHtml + '</td></tr>');
-                            documentoCompletoAsignado = true;
-                        }
-                        if (documento.tipo.includes('Ajuste de grado') && !documentoAjusteAsignado) {
-                            $tableBody.append('<tr><td>Certificado (Ajuste de Grado):</td><td>' + nombreDocumento + '</td><td>' + documentoHtml + '</td></tr>');
-                            documentoAjusteAsignado = true;
-                        }
-                    });
-
-                    if (!documentoCompletoAsignado) {
-                        $tableBody.append('<tr><td>Certificado (Análisis Completo):</td><td>Sin nombre disponible</td><td>No hay certificado disponible.</td></tr>');
-                    }
-                    if (!documentoAjusteAsignado) {
-                        $tableBody.append('<tr><td>Certificado (Ajuste de Grado):</td><td>Sin nombre disponible</td><td>No hay certificado disponible.</td></tr>');
-                    }
-
-                    // Mostrar el modal de ver documentos
-                    $('#modalVerDocumento').modal('show');
-                } else {
-                    console.log('No success in response'); // Mensaje si el success es falso
-                    $('#documentosTableBody').html('<tr><td colspan="3">No se pudo cargar el documento.</td></tr>');
-                }
-            },
-            error: function (xhr, status, error) {
-                console.log('Error AJAX:', error);
-                $('#documentosTableBody').html('<tr><td colspan="3">Ocurrió un error al intentar cargar el documento.</td></tr>');
-            }
-        });
-    });
-
-
-    $(document).on('click', '.ver-pdf', function (e) {
-        e.preventDefault();
-        var url = $(this).data('url'); // Obtén la URL del PDF desde el atributo data-url
-        var title = $(this).data('title'); // Obtén el título del PDF desde el atributo data-title
-        var iframe = $('#pdfViewerFolio');
-        var spinner = $('#loading-spinner');
-
-        // Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-        spinner.show();
-        iframe.hide();
-
-        // Actualizar el título del modal
-        $("#titulo_modal_Folio").text(title);
-
-        // Ocultar el modal de ver documentos antes de mostrar el modal del PDF
-        $('#modalVerDocumento').modal('hide');
-
-        // Mostrar el modal para el PDF
-        $('#mostrarPdfFolio').modal('show');
-
-        // Cargar el PDF en el iframe
-        iframe.attr('src', url);
-
-        // Asegurarse de que el evento `load` del iframe está manejado correctamente
-        iframe.off('load').on('load', function () {
-            spinner.hide();
-            iframe.show();
-        });
-
-        // Reabrir el modal de ver documentos cuando se cierre el modal del PDF
-        $('#mostrarPdfFolio').on('hidden.bs.modal', function () {
-            $('#modalVerDocumento').modal('show');
-        });
-    });
 
     // Delete Record eliminar un dictamen
     $(document).on('click', '.delete-record', function () {
@@ -566,7 +429,7 @@ $(function () {
                 // Enviar solicitud DELETE al servidor
                 $.ajax({
                     type: 'DELETE',
-                    url: `${baseUrl}dictamen/granel/${id_dictamen}`,
+                    url: `${baseUrl}dictamen/envasado/${id_dictamen}`,
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
@@ -611,7 +474,7 @@ $(function () {
             }
         });
     });
-
+    /* funcion para ingresar un nuevo dictamen*/
 
     /* agregar un nuevo dictamen */
     $(function () {
@@ -623,7 +486,7 @@ $(function () {
         });
 
         // Inicializar FormValidation
-        const form = document.getElementById('addNewDictamenGranelForm');
+        const form = document.getElementById('addNewDictamenEnvasadoForm');
         const fv = FormValidation.formValidation(form, {
             fields: {
                 'num_dictamen': {
@@ -647,7 +510,7 @@ $(function () {
                         }
                     }
                 },
-                'id_lote_granel': {
+                'id_lote_envasado': {
                     validators: {
                         notEmpty: {
                             message: 'Selecciona el lote.'
@@ -658,16 +521,10 @@ $(function () {
                     validators: {
                         notEmpty: {
                             message: 'La fecha de emisión es obligatoria.',
-                            enable: function (field) {
-                                return !$(field).val();
-                            }
                         },
                         date: {
                             format: 'YYYY-MM-DD',
                             message: 'Ingresa una fecha válida (yyyy-mm-dd).',
-                            enable: function (field) {
-                                return !$(field).val();
-                            }
                         }
                     }
                 },
@@ -682,9 +539,6 @@ $(function () {
                         date: {
                             format: 'YYYY-MM-DD',
                             message: 'Ingresa una fecha válida (yyyy-mm-dd).',
-                            enable: function (field) {
-                                return !$(field).val();
-                            }
                         }
                     }
                 },
@@ -692,16 +546,10 @@ $(function () {
                     validators: {
                         notEmpty: {
                             message: 'La fecha de servicio es obligatoria.',
-                            enable: function (field) {
-                                return !$(field).val();
-                            }
                         },
                         date: {
                             format: 'YYYY-MM-DD',
                             message: 'Ingresa una fecha válida (yyyy-mm-dd).',
-                            enable: function (field) {
-                                return !$(field).val();
-                            }
                         }
                     }
                 },
@@ -709,9 +557,6 @@ $(function () {
                     validators: {
                         notEmpty: {
                             message: 'El nombre del firmante es obligatorio.',
-                            enable: function (field) {
-                                return !$(field).val();
-                            }
                         }
                     }
                 }
@@ -729,20 +574,16 @@ $(function () {
 
         }).on('core.form.valid', function () {
             var formData = new FormData(form);
-
-            // Imprimir los datos del formulario para verificar
-            console.log('Form Data:', Object.fromEntries(formData.entries()));
-
             $.ajax({
-                url: '/dictamenes-granel',
+                url: '/dictamenes-envasado',
                 type: 'POST',
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function (response) {
                     // Ocultar el modal y resetear el formulario
-                    $('#modalAddDictamenGranel').modal('hide');
-                    $('#addNewDictamenGranelForm')[0].reset();
+                    $('#modalAddDictamenEnvasado').modal('hide');
+                    $('#addNewDictamenEnvasadoForm')[0].reset();
                     $('.select2').val(null).trigger('change');
                     $('.datatables-users').DataTable().ajax.reload();
 
@@ -771,44 +612,15 @@ $(function () {
             });
         });
 
-        // Función para actualizar la validación al cambiar la fecha en el datepicker
-        function updateDatepickerValidation() {
-            $('#fecha_vigencia').on('change', function () {
-                fv.revalidateField('fecha_vigencia');
-            });
-
-            $('#fecha_emision').on('change', function () {
-                fv.revalidateField('fecha_emision');
-            });
-
-            $('#fecha_servicio').on('change', function () {
-                fv.revalidateField('fecha_servicio');
-            });
-        }
-
-        // Función para actualizar la validación al cambiar el valor en los select2
-        function updateSelect2Validation() {
-            $('#id_empresa').on('change', function () {
-                fv.revalidateField('id_empresa');
-            });
-
-            $('#id_inspeccion').on('change', function () {
-                fv.revalidateField('id_inspeccion');
-            });
-
-            $('#id_lote_granel').on('change', function () {
-                fv.revalidateField('id_lote_granel');
-            });
-        }
-        // Llamar a las funciones para actualizar la validación
-        updateDatepickerValidation();
-        updateSelect2Validation();
-
+        // Inicializar select2
+        $('#id_empresa, #id_inspeccion, #id_lote_envasado, #fecha_emision, #fecha_vigencia, #fecha_servicio, #id_firmante').on('change', function () {
+            // Revalidar el campo cuando se cambia el valor del select2
+            fv.revalidateField($(this).attr('name'));
+        });
     });
 
-
-
-    /* editar el dictamen a granel */
+    
+    /* editar el dictamen envasado */
     $(function () {
         // Configuración CSRF para Laravel
         $.ajaxSetup({
@@ -818,7 +630,7 @@ $(function () {
         });
 
         // Inicializar FormValidation para el formulario de creación y edición
-        const form = document.getElementById('addNEditDictamenGranelForm');
+        const form = document.getElementById('addNEditDictamenEnvasadoForm');
         const fv = FormValidation.formValidation(form, {
             fields: {
                 'num_dictamen': {
@@ -842,7 +654,7 @@ $(function () {
                         }
                     }
                 },
-                'id_lote_granel': {
+                'id_lote_envasado': {
                     validators: {
                         notEmpty: {
                             message: 'Selecciona el lote.'
@@ -909,14 +721,14 @@ $(function () {
             var dictamenid = $('#edit_id_dictamen').val();
 
             $.ajax({
-                url: '/dictamenes/productos/' + dictamenid + '/update',
+                url: '/dictamenes/envasado/' + dictamenid + '/update',
                 type: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
                 success: function (response) {
                     dt_user.ajax.reload();
-                    $('#modalEditDictamenGranel').modal('hide');
+                    $('#modalEditDictamenEnvasado').modal('hide');
                     Swal.fire({
                         icon: 'success',
                         title: '¡Éxito!',
@@ -961,7 +773,7 @@ $(function () {
             $('#edit_id_dictamen').val(id_dictamen);
 
             $.ajax({
-                url: '/dictamenes/productos/' + id_dictamen + '/edit',
+                url: '/dictamenes/envasado/' + id_dictamen + '/edit',
                 method: 'GET',
                 success: function (data) {
                     if (data.success) {
@@ -970,18 +782,18 @@ $(function () {
                         $('#edit_num_dictamen').val(dictamen.num_dictamen);
                         $('#edit_id_empresa').val(dictamen.id_empresa).trigger('change');
                         $('#edit_id_inspeccion').val(dictamen.id_inspeccion).trigger('change');
-                        $('#edit_id_lote_granel').data('selectedLote', dictamen.id_lote_granel); // Guardar el lote seleccionado
+                        $('#edit_id_lote_envasado').data('selectedLote', dictamen.id_lote_envasado); // Guardar el lote seleccionado
                         $('#edit_fecha_emision').val(dictamen.fecha_emision);
                         $('#edit_fecha_vigencia').val(dictamen.fecha_vigencia);
                         $('#edit_fecha_servicio').val(dictamen.fecha_servicio);
                         $('#edit_id_firmante').val(dictamen.id_firmante).trigger('change');
                         // Mostrar el modal
-                        $('#modalEditDictamenGranel').modal('show');
+                        $('#modalEditDictamenEnvasado').modal('show');
                     } else {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'No se pudo cargar los datos del dictamen a granel.',
+                            text: 'No se pudo cargar los datos del dictamen envasado.',
                             customClass: {
                                 confirmButton: 'btn btn-danger'
                             }
@@ -989,11 +801,11 @@ $(function () {
                     }
                 },
                 error: function (error) {
-                    console.error('Error al cargar los datos del dictamen a granel:', error);
+                    console.error('Error al cargar los datos del dictamen envasado:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'No se pudo cargar los datos del dictamen a granel.',
+                        text: 'No se pudo cargar los datos del dictamen envasado.',
                         customClass: {
                             confirmButton: 'btn btn-danger'
                         }
@@ -1002,49 +814,12 @@ $(function () {
             });
         });
 
-        // Función para actualizar la validación al cambiar la fecha en el datepicker
-        function updateDatepickerValidation() {
-            $('#edit_fecha_emision').on('change', function () {
-                fv.revalidateField('fecha_emision');
-            });
-
-            $('#edit_fecha_vigencia').on('change', function () {
-                fv.revalidateField('fecha_vigencia');
-            });
-
-            $('#edit_fecha_servicio').on('change', function () {
-                fv.revalidateField('fecha_servicio');
-            });
-        }
-
-        // Llamar a la función para actualizar la validación
-        updateDatepickerValidation();
-
-    });
-
-
-    // Reciben los datos del PDF
-    $(document).on('click', '.pdf', function () {
-        var id = $(this).data('id'); // Obtén el ID desde el atributo data-id
-        var iframe = $('#pdfViewerDictamen');
-        var spinner = $('#loading-spinner');
-        // Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-        spinner.show();
-        iframe.hide();
-
-        // Cargar el PDF con el ID
-        iframe.attr('src', '/dictamen_cumplimiento_mezcal_granel/' + id); // Usa URL absoluta
-
-        $("#titulo_modal_Dictamen").text("Dictamen de Cumplimiento NOM Mezcal a Granel");
-        $("#subtitulo_modal_Dictamen").text("PDF de Dictamen");
-
-        // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-        iframe.on('load', function () {
-            spinner.hide();
-            iframe.show();
+        // Inicializar select2
+        $('#edit_fecha_emision, #edit_fecha_vigencia, #edit_fecha_servicio').on('change', function () {
+            // Revalidar el campo cuando se cambia el valor del select2
+            fv.revalidateField($(this).attr('name'));
         });
     });
-
 
     /* reexpedir dictamen a granel */
     $(function () {
@@ -1059,7 +834,7 @@ $(function () {
         var originalValues = {};
 
         // Inicializar FormValidation para el formulario de creación y edición
-        const form = document.getElementById('addReexpedirDictamenGranelForm');
+        const form = document.getElementById('addReexpedirDictamenEnvasadoForm');
         const fv = FormValidation.formValidation(form, {
             fields: {
                 num_dictamen: {
@@ -1083,7 +858,7 @@ $(function () {
                         }
                     }
                 },
-                id_lote_granel: {
+                id_lote_envasado: {
                     validators: {
                         notEmpty: {
                             message: 'Selecciona el lote.'
@@ -1161,14 +936,14 @@ $(function () {
             var dictamenid = $('#reexpedir_id_dictamen').val();
 
             $.ajax({
-                url: '/dictamenes/productos/' + dictamenid + '/reexpedir',
+                url: '/dictamenes/envasado/' + dictamenid + '/reexpedir',
                 type: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
                 success: function (response) {
                     dt_user.ajax.reload(); // Recargar la tabla de datos
-                    $('#modalReexpredirDictamenGranel').modal('hide'); // Cerrar el modal
+                    $('#modalReexpredirDictamenEnvasado').modal('hide'); // Cerrar el modal
                     Swal.fire({
                         icon: 'success',
                         title: '¡Éxito!',
@@ -1213,7 +988,7 @@ $(function () {
             $('#reexpedir_id_dictamen').val(id_dictamen);
 
             $.ajax({
-                url: '/dictamenes/productos/' + id_dictamen + '/edit',
+                url: '/dictamenes/envasado/' + id_dictamen + '/edit',
                 method: 'GET',
                 success: function (data) {
                     if (data.success) {
@@ -1223,7 +998,7 @@ $(function () {
                         $('#reexpedir_num_dictamen').val(dictamen.num_dictamen);
                         $('#reexpedir_id_empresa').val(dictamen.id_empresa).trigger('change');
                         $('#reexpedir_id_inspeccion').val(dictamen.id_inspeccion).trigger('change');
-                        $('#reexpedir_id_lote_granel').data('selectedLote', dictamen.id_lote_granel);
+                        $('#reexpedir_id_lote_envasado').data('selectedLote', dictamen.id_lote_envasado);
                         $('#reexpedir_fecha_emision').val(dictamen.fecha_emision);
                         $('#reexpedir_fecha_vigencia').val(dictamen.fecha_vigencia);
                         $('#reexpedir_fecha_servicio').val(dictamen.fecha_servicio);
@@ -1234,7 +1009,7 @@ $(function () {
                             num_dictamen: dictamen.num_dictamen,
                             id_empresa: dictamen.id_empresa,
                             id_inspeccion: dictamen.id_inspeccion,
-                            id_lote_granel: dictamen.id_lote_granel,
+                            id_lote_envasado: dictamen.id_lote_envasado,
                             fecha_emision: dictamen.fecha_emision,
                             fecha_vigencia: dictamen.fecha_vigencia,
                             fecha_servicio: dictamen.fecha_servicio,
@@ -1242,12 +1017,12 @@ $(function () {
                         };
 
                         // Mostrar el modal
-                        $('#modalReexpedirDictamenGranel').modal('show');
+                        $('#modalReexpedirDictamenEnvasado').modal('show');
                     } else {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'No se pudo cargar los datos del dictamen a granel.',
+                            text: 'No se pudo cargar los datos del dictamen envasado.',
                             customClass: {
                                 confirmButton: 'btn btn-danger'
                             }
@@ -1255,11 +1030,11 @@ $(function () {
                     }
                 },
                 error: function (error) {
-                    console.error('Error al cargar los datos del dictamen a granel:', error);
+                    console.error('Error al cargar los datos del dictamen envasado:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'No se pudo cargar los datos del dictamen a granel.',
+                        text: 'No se pudo cargar los datos del dictamen envasado.',
                         customClass: {
                             confirmButton: 'btn btn-danger'
                         }
@@ -1281,14 +1056,13 @@ $(function () {
                 $('#reexpedir_num_dictamen').val(originalValues.num_dictamen);
                 $('#reexpedir_id_empresa').val(originalValues.id_empresa).trigger('change');
                 $('#reexpedir_id_inspeccion').val(originalValues.id_inspeccion).trigger('change');
-                $('#reexpedir_id_lote_granel').data('selectedLote', originalValues.id_lote_granel);
+                $('#reexpedir_id_lote_envasado').data('selectedLote', originalValues.id_lote_envasado);
                 $('#reexpedir_fecha_emision').val(originalValues.fecha_emision);
                 $('#reexpedir_fecha_vigencia').val(originalValues.fecha_vigencia);
                 $('#reexpedir_fecha_servicio').val(originalValues.fecha_servicio);
                 $('#reexpedir_id_firmante').val(originalValues.id_firmante).trigger('change');
             }
         });
-
         // Funciones para habilitar y deshabilitar validación de los campos
         function enableReexpedirFields() {
             fv.enableValidator('fecha_emision')
@@ -1304,21 +1078,13 @@ $(function () {
                 .disableValidator('id_firmante');
         }
 
-        // Validar fecha al cambiarla en el datepicker
-        function updateDatepickerValidation() {
-            $('#reexpedir_fecha_emision').on('change', function () {
-                fv.revalidateField('fecha_emision');
-            });
-            $('#reexpedir_fecha_vigencia').on('change', function () {
-                fv.revalidateField('fecha_vigencia');
-            });
-            $('#reexpedir_fecha_servicio').on('change', function () {
-                fv.revalidateField('fecha_servicio');
-            });
-        }
+                // Inicializar select2
+                $('#reexpedir_fecha_emision, #reexpedir_fecha_vigencia, #ereexpedir_fecha_servicio').on('change', function () {
+                    // Revalidar el campo cuando se cambia el valor del select2
+                    fv.revalidateField($(this).attr('name'));
+                });
 
-        updateDatepickerValidation();
     });
-
+    
 
 });
