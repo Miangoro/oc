@@ -485,6 +485,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
         processData: false,
         contentType: false,
         success: function (response) {
+          console.log('Error222:', response);
             $('#addDictamen').modal('hide');//div que encierra al formulario #addDictamen
             $('#NuevoDictamen')[0].reset();
   
@@ -502,7 +503,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
             });
         },
         error: function (xhr) {
-          console.log('Error:', xhr.responseText);
+          console.log('Error:', xhr);
             // Mostrar alerta de error
             Swal.fire({
                 icon: 'error',

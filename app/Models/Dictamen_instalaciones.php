@@ -18,7 +18,7 @@ class Dictamen_instalaciones extends Model
         'tipo_dictamen',
         'id_instalacion',
         'num_dictamen',
-        'fecha_dictamen',
+        'fecha_emision',
         'fecha_vigencia',
         'categorias',
         'clases',

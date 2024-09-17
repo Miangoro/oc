@@ -123,15 +123,7 @@ class InstalacionesController extends Controller
 // Función para agregar registro
      public function store(Request $request)
         {
-            $request->validate([
-                'tipo_dictamen' => 'required|integer',
-                'num_dictamen' => 'required|string|max:255',
-                'fecha_emision' => 'nullable|date',
-                'fecha_vigencia' => 'nullable|date',
-               
-                'id_inspeccion' => 'required|integer',
-            ]);
-    
+            
             try {
                 
                 $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
@@ -145,23 +137,7 @@ class InstalacionesController extends Controller
                 $var->fecha_vigencia = $request->fecha_vigencia;
                 $var->categorias =json_encode($request->categorias);
                 $var->clases =  json_encode($request->clases);
-
-    
                 $var->save();//guardar en BD
-
-                $user = User::find(18); // Encuentra al usuario que recibirá la notificación
-                $user2 = User::find(26); // Encuentra al usuario que recibirá la notificación
-                $tipo_dictamen = ["Productor","Envasador","Comercializador", "Almacén y bodega", "Área de maduración"];
-
-                // Notificación 1
-                $data1 = [
-                    'title' => 'Nuevo registro de dictamen',
-                    'message' => 'Dictamen de instalaciones de '.$tipo_dictamen[$request->tipo_dictamen],
-                    'url' => '/dictamenes/instalaciones'
-                ];
-
-                $user->notify(new GeneralNotification ($data1));
-                $user2->notify(new GeneralNotification ($data1));
 
 
     

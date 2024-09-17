@@ -200,6 +200,13 @@
     @include('_partials._modals.modal-trazabilidad')
     @include('_partials._modals.modal-add-solicitud-dictamen-instalaciones')
     @include('_partials._modals.modal-add-solicitud-georeferenciacion')
+    @include('_partials._modals.modal-add-solicitud-muestreo-agave')
+
+
+
+
+    @include('_partials._modals.modal-add-instalaciones')
+    
     <!-- /Modal -->
 
 </div>

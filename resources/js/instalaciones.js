@@ -63,19 +63,19 @@ $(function () {
         responsivePriority: 4,
         render: function (data, type, full, meta) {
           var $name = full['tipo'];
-          if ($name == 'productora'){
+          if ($name == 'Productora'){
              return '<span class="badge bg-primary">'+full['tipo']+'</span>';
           }
-          else if($name == 'envasadora'){ 
+          else if($name == 'Envasadora'){ 
                  return '<span class="badge bg-success">'+full['tipo']+'</span>';
           }
-          else if($name == 'comercializadora'){ 
+          else if($name == 'Comercializadora'){ 
              return '<span class="badge bg-info">'+full['tipo']+'</span>';
          }
-         else if($name == 4){ 
+         else if($name == 'Almacén y bodega'){ 
              return '<span class="badge bg-danger">Almacén y bodega</span>';
          }
-         else if($name == 5){ 
+         else if($name == 'Área de maduración'){ 
            return '<span class="badge bg-warning">Área de maduración</span>';
          }
 
@@ -105,16 +105,17 @@ $(function () {
         orderable: false,
         render: function (data, type, full, meta) {
           return (
+          
             '<div class="d-flex align-items-center gap-50">' +
-            `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}" data-bs-toggle="modal" data-bs-target="#modalEditInstalacion"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-            `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_instalacion']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
-            '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              '<a href="' +
-              userView +
-              '" class="dropdown-item">View</a>' +
-              '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-            '</div>' +
-            '</div>'
+             
+              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
+              '<div class="dropdown-menu dropdown-menu-end m-0">' +
+
+              `<a data-id="${full['id']}" data-id="${full['id_instalacion']}"  href="javascript:;" data-bs-toggle="modal" data-bs-target="#modalEditInstalacion" class="cursor-pointer dropdown-item "><i class="text-warning ri-edit-fill"></i> Editar</a>` +
+              `<a data-id="${full['id_instalacion']}" data-bs-toggle="offcanvas" class="dropdown-item validar-solicitud delete-record" href="javascript:;"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
+              
+              '</div>' +
+              '</div>'
           );
         }
       }
@@ -150,7 +151,7 @@ $(function () {
           {
             extend: 'print',
             title: 'Instalaciones',
-            text: '<i class="ri-printer-line me-1"></i>Print',
+            text: '<i class="ri-printer-line me-1"></i>Imprimir',
             className: 'dropdown-item',
             exportOptions: {
               columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
@@ -246,7 +247,7 @@ $(function () {
           {
             extend: 'copy',
             title: 'Instalaciones',
-            text: '<i class="ri-file-copy-line me-1"></i>Copy',
+            text: '<i class="ri-file-copy-line me-1"></i>Copiar',
             className: 'dropdown-item',
             exportOptions: {
               columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
@@ -360,7 +361,7 @@ $(function () {
             Swal.fire({
               icon: 'success',
               title: '¡Eliminado!',
-              text: '¡La solicitud ha sido eliminada correctamente!',
+              text: '¡La instalación ha sido eliminada correctamente!',
               customClass: {
                 confirmButton: 'btn btn-success'
               }
@@ -378,7 +379,7 @@ $(function () {
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: 'Cancelado',
-          text: 'La solicitud no ha sido eliminada',
+          text: 'La instalación no ha sido eliminada',
           icon: 'error',
           customClass: {
             confirmButton: 'btn btn-success'
@@ -419,6 +420,13 @@ $(function () {
           validators: {
             notEmpty: {
               message: 'Selecciona un estado.'
+            }
+          }
+        },
+        'responsable': {
+          validators: {
+            notEmpty: {
+              message: 'Ingrese el responsable de la instalación.'
             }
           }
         },
@@ -914,6 +922,21 @@ $(document).ready(function() {
     });
 });
 
+$('#fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  
+  // Sumar 1 año a la fecha inicial
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+  
+  // Formatear la fecha en YYYY-MM-DD
+  var year = fechaInicial.getFullYear();
+  var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2); // Los meses empiezan desde 0
+  var day = ('0' + fechaInicial.getDate()).slice(-2);
+  
+  // Asignar la fecha final al input correspondiente
+  $('#fecha_vigencia').val(year + '-' + month + '-' + day);
+});
+
 
 $(document).on('click', '.pdf', function () {
   var url = $(this).data('url');
@@ -924,6 +947,8 @@ $(document).on('click', '.pdf', function () {
       $("#titulo_modal").text("Certificado de instalaciones");
       $("#subtitulo_modal").text(registro);
 });
+
+
 
 
 //end

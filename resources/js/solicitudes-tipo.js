@@ -59,6 +59,7 @@ function obtenerIcono(id_tipo) {
                 contentContainer.innerHTML = ''; 
 
                 var solicitudesMap = {
+                    1: "#addSolicitudMuestreoAgave",
                     10: "#addSolicitudGeoreferenciacion",
                     14: "#addSolicitudDictamen",    
                     3: "#addSolicitudOtroTipo",         
