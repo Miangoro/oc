@@ -478,15 +478,6 @@ $(function () {
       // e.preventDefault();
       var formData = new FormData(addNewLote);
       // Depurar los datos del formulario
-      var loteOriginalId = $('#lote_original_id').val();
-      console.log('lote_original_id:', loteOriginalId);
-
-      var formData = new FormData(addNewLote);
-
-      // Verificar si el campo está presente en los datos del formulario
-      for (var pair of formData.entries()) {
-          console.log(pair[0] + ': ' + pair[1]);
-      }
       $.ajax({
         url: '/lotes-granel-list',
         type: 'POST',
@@ -539,7 +530,6 @@ $(function () {
       url: '/lotes-a-granel/' + loteId + '/edit',
       method: 'GET',
       success: function (data) {
-        console.log('Respuesta del servidor:', data); // Verifica la respuesta del servidor
 
         if (data.success) {
           var lote = data.lote;
@@ -832,18 +822,51 @@ $(function () {
     });
   });
   
-  
-  $(document).ready(function () {
-    $('#es_creado_a_partir').on('change', function () {
-        var loteOriginalSelect = $('#lote_original_id');
-        if ($(this).val() === 'si') {
-            loteOriginalSelect.prop('disabled', false);
-        } else {
-            loteOriginalSelect.prop('disabled', true).val(''); // Limpiar selección
+
+  $(function () {
+    const addNewLote = document.getElementById('loteForm');
+    const fv = FormValidation.formValidation(addNewLote, {
+        fields: {
+            lote_original_id: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor seleccione un lote original'
+                    }
+                }
+            }
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                rowSelector: '.mb-4'
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
         }
     });
-});
 
+    $('#es_creado_a_partir').on('change', function () {
+        const isEnabled = $(this).val() === 'si';
+        $('#lote_original_id').prop('disabled', !isEnabled).val(isEnabled ? $('#lote_original_id').val() : '');
+        
+        if (isEnabled) {
+            fv.addField('lote_original_id', {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor seleccione un lote original'
+                    }
+                }
+            });
+        } else {
+            fv.removeField('lote_original_id');
+        }
+    });
+
+    $('#lote_original_id').on('change', function () {
+        fv.revalidateField('lote_original_id');
+    });
+});
 
 
 

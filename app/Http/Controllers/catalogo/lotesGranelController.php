@@ -194,8 +194,7 @@ class LotesGranelController extends Controller
 
     public function store(Request $request)
     {
-       /*  dd($request->all());  */
-        // Validar los datos del formulario
+
         $validatedData = $request->validate([
             'id_empresa' => 'required|exists:empresa,id_empresa',
             'nombre_lote' => 'required|string|max:70',

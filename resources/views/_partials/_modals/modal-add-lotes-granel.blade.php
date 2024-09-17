@@ -23,14 +23,13 @@
                                         <option value="no">No</option>
                                         <option value="si">Si</option>
                                     </select>
-                                    <label for="es_creado_a_partir" class="form-label">¿Creado a partir de otro
-                                        lote?</label>
+                                    <label for="es_creado_a_partir" class="form-label">¿Creado a partir de otro lote?</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select id="lote_original_id" name="lote_original_id" class="form-select" disabled>
-                                        <option value="" disabled selected>Seleccionar lote a granel</option>
+                                    <select id="lote_original_id" name="lote_original_id" class="select2 form-select" disabled>
+                                        <option value="" disabled selected>Selecciona lote a granel</option>
                                         @foreach ($lotes as $lote)
                                             <option value="{{ $lote->id_lote_granel }}">{{ $lote->nombre_lote }}</option>
                                         @endforeach
