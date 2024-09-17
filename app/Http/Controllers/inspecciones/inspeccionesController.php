@@ -49,6 +49,7 @@ class inspeccionesController extends Controller
             10 => 'fecha_visita',
             11 => 'name',
             12 => 'id_inspeccion',
+            13 => 'id_empresa',
         ];
 
         $search = [];
@@ -104,6 +105,7 @@ class inspeccionesController extends Controller
 
             foreach ($solicitudes as $solicitud) {
                 $nestedData['id_inspeccion'] = $solicitud->inspeccion->id_inspeccion ?? '0';
+                $nestedData['id_empresa'] = $solicitud->empresa->id_empresa ?? '0';
                 $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids  ?? 'N/A';
                 $nestedData['folio'] = '<b class="text-primary">' . $solicitud->folio . '</b>';
@@ -282,7 +284,7 @@ class inspeccionesController extends Controller
 
             for ($i = 0; $i < count($request->nombre_testigo); $i++) {
                 $testigo = new actas_testigo();
-                $testigo->id_acta = $acta->id;  // Relacionar con la acta creada
+                $testigo->id_acta = $acta->id_acta;  // Relacionar con la acta creada
                 $testigo->nombre_testigo = $request->nombre_testigo[$i];
                 $testigo->domicilio = $request->domicilio[$i];
                 $testigo->save();

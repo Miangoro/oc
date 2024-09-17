@@ -223,13 +223,13 @@
     $('#asignarInspector').modal('show');
   } 
 
-  function abrirModalActaProduccion(id_inspeccion,tipo ,nombre_empresa) {
+  function abrirModalActaProduccion(id_inspeccion,tipo ,nombre_empresa, id_empresa) {
 
-$(".id_inspeccion").val(id_inspeccion);
-
-$('.solicitud').text(tipo);
-$('#ActaUnidades').modal('show');
-} 
+    $(".id_inspeccion").val(id_inspeccion);
+    $(".id_empresa").val(id_empresa);
+    $('.solicitud').text(tipo);
+    $('#ActaUnidades').modal('show');
+  } 
 
   
 
