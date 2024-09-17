@@ -172,17 +172,27 @@
            searchable: false,
            orderable: false,
            render: function (data, type, full, meta) {
-             return (
-               '<div class="d-flex align-items-center gap-50">' +
-               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-               '<div class="dropdown-menu dropdown-menu-end m-0">' +
-               `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#editCertificadoModal" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
-               `<a data-id="${full['id_certificado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
-               '<div class="dropdown-menu dropdown-menu-end m-0">' +
-               '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-               '</div>' +
-               '</div>'
-             );
+            return (
+              '<div class="d-flex align-items-center gap-50">' +
+                '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">' +
+                  '<i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>' +
+                '</button>' +
+                '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                  // Botón para editar
+                  `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#editCertificadoModal" class="dropdown-item edit-record waves-effect text-info">` +
+                    '<i class="ri-edit-box-line ri-20px text-info"></i> Editar' +
+                  '</a>' +
+                  // Botón para eliminar
+                  `<a data-id="${full['id_certificado']}" class="dropdown-item delete-record waves-effect text-danger">` +
+                    '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar' +
+                  '</a>' +
+                  // Botón adicional: Asignar revisor
+                  `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-info">` +
+                    '<i class="text-warning ri-user-search-fill"></i> <span class="text-warning">Asignar revisor</span>' +
+                  '</a>' +
+                '</div>' +
+              '</div>'
+            );                  
            }
          }
        ],

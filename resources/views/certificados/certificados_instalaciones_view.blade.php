@@ -69,6 +69,7 @@
 @include('_partials/_modals/modal-pdfs-certificados')
 @include('_partials/_modals/modal-add-certificado-instalaciones')
 @include('_partials/_modals/modal-edit-certificado-instalaciones')
+@include('_partials/_modals/modal-asignar-revisor')
 <!-- /Modal -->
 
 @endsection
