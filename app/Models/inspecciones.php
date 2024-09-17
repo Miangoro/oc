@@ -44,6 +44,11 @@ class inspecciones extends Model
         return $this->hasOne(Dictamen_instalaciones::class, 'id_inspeccion', 'id_inspeccion');
     }
 
+
+    public function actas_inspeccion()
+    {
+        return $this->hasMany(actas_inspeccion::class, 'id_inspeccion', 'id_inspeccion');
+    }
     
 }
 

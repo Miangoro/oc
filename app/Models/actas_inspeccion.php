@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class actas_inspecciones extends Model
+class actas_inspeccion extends Model
 {
     use HasFactory;
 
@@ -36,6 +36,10 @@ class actas_inspecciones extends Model
     }
 
 
+    public function inspecciones()
+    {
+        return $this->belongsTo(inspecciones::class,'id_inspeccion', 'id_inspeccion');
+    }
 
 
 

@@ -10,9 +10,9 @@
                 </div>
             </div>
             <form id="ActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
-                <input type="hidden" id="id_acta" name="id_acta">
-                <input type="hidden" id="id_inspeccion" name="id_inspeccion">
-                <input type="hidden" id="acta_id_empresa" name="acta_id_empresa">
+                <input type="text" id="id_inspeccion" name="id_inspeccion">
+                <input type="text" id="acta_id_empresa" name="acta_id_empresa">
+                
 
                 @csrf
 
@@ -99,14 +99,14 @@
                         </div>
                     </div>
                 </div>
-                <p class="address-subtitle"><b style="color: red">Designacion: </b>De testigos</b></p>
 
+                <p class="address-subtitle"><b style="color: red">Designacion: </b>De testigos</b></p>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>
                                 <button type="button" class="btn btn-primary add-row" data-target="#testigoss"
-                                    data-name-prefix="rango_inicial[]" data-name-suffix="rango_final[]">
+                                    data-name-prefix="nombre_testigo[]" data-name-suffix="domicilio[]">
                                     <i class="ri-add-line"></i>
                                 </button>
                             </th>
@@ -122,353 +122,17 @@
                                 </button>
                             </th>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="rango_inicial[]"
-                                    id="folio_final" />
+                                <input type="text" class="form-control form-control-sm" name="nombre_testigo[]"
+                                    id="nombre_testigo" />
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="rango_final[]"
-                                    id="folio_final" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div style="padding: 20px"></div>
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
-
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-primary add-row"
-                                    data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
-                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
-                                    data-name-plagas="plagas[]" data-name-plantas="cantidad_plantas[]"
-                                    data-name-coordenadas="coordenadas[]">
-                                    <i class="ri-add-line"></i>
-                                </button>
-                            </th>
-                            <th style="width: 150px">Nombre del predio</th>
-                            <th>Especie de agave</th>
-                            <th>Superficie (hectáreas)</th>
-                            <th>Madurez del agave (años)</th>
-                            <th>Plagas en el cultivo</th>
-                            <th>Cantidad de plantas</th>
-                            <th>Coordenadas</th>
-                        </tr>
-                    </thead>
-                    <tbody id="unidadProduccion">
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled>
-                                    <i class="ri-delete-bin-5-fill"></i>
-                                </button>
-                            </th>
-                            <td>
-                                <select class="rango_inicial form-control select2" name="rango_inicial[]">
-                                    <!-- Opciones -->
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="superficie[]"
-                                    readonly />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="superficie[]"
-                                    readonly />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="madurez[]"
-                                    readonly />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="cantidad_plantas[]"
-                                    readonly />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="coordenadas[]"
-                                    readonly />
+                                <input type="text" class="form-control form-control-sm" name="domicilio[]"
+                                    id="domicilio" />
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
-
-
-                {{-- Modificar --}}
-                <div style="padding: 20px"></div>
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción de Mezcal</p>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-primary add-row"
-                                    data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
-                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
-                                    data-name-plagas="plagas[]" data-name-plantas="cantidad_plantas[]"
-                                    data-name-coordenadas="coordenadas[]">
-                                    <i class="ri-add-line"></i>
-                                </button>
-                            </th>
-                            <th>Recepción
-                                (materia
-                                prima)</th>
-                            <th>Area de pesado</th>
-                            <th>Area de coccion</th>
-                            <th>Área de
-                                maguey
-                                cocido</th>
-                            <th>Área de
-                                molienda</th>
-                            <th>Área de
-                                fermentación</th>
-                            <th>Área de
-                                destilación</th>
-                            <th>Almacén a
-                                graneles</th>
-                        </tr>
-                    </thead>
-                    <tbody id="unidadProduccion">
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled>
-                                    <i class="ri-delete-bin-5-fill"></i>
-                                </button>
-                            </th>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="nombre_predio[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="superficie[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="madurez[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm"
-                                    name="cantidad_plantas[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div style="padding: 20px"></div>
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>De Equipo Mezcal</p>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-primary add-row"
-                                    data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
-                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
-                                    data-name-plagas="plagas[]">
-                                    <i class="ri-add-line"></i>
-                                </button>
-                            </th>
-                            <th style="width: 200px">Equipo</th>
-                            <th>Cantidad</th>
-                            <th>Capacidad</th>
-                            <th>Tipo de material</th>
-                        </tr>
-                    </thead>
-                    <tbody id="unidadProduccion">
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled>
-                                    <i class="ri-delete-bin-5-fill"></i>
-                                </button>
-                            </th>
-                            <td>
-                                <select class="rango_inicial form-control select2" name="rango_inicial[]">
-                                    <!-- Opciones -->
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="superficie[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="madurez[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
-
-                        </tr>
-                    </tbody>
-                </table>
-
-                <div style="padding: 20px"></div>
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>De Envasado</p>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-primary add-row"
-                                    data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
-                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
-                                    data-name-plagas="plagas[]" data-name-plantas="cantidad_plantas[]">
-                                    <i class="ri-add-line"></i>
-                                </button>
-                            </th>
-                            <th>Almacén de
-                                insumos</th>
-                            <th>Almacén a
-                                gráneles
-                            </th>
-                            <th>Sistema
-                                de
-                                filtrado</th>
-                            <th>Área de
-                                envasado</th>
-                            <th>Área de
-                                tiquetado</th>
-                            <th>Coordenadas</th>
-                            <th>Almacén de
-                                producto
-                                terminado</th>
-                            <th>Área de
-                                aseo personal</th>
-                        </tr>
-                    </thead>
-                    <tbody id="unidadProduccion">
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled>
-                                    <i class="ri-delete-bin-5-fill"></i>
-                                </button>
-                            </th>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="nombre_predio[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="superficie[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="madurez[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm"
-                                    name="cantidad_plantas[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div style="padding: 20px"></div>
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>De Equipo Envasado</p>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-primary add-row"
-                                    data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
-                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
-                                    data-name-plagas="plagas[]">
-                                    <i class="ri-add-line"></i>
-                                </button>
-                            </th>
-                            <th style="width: 200px">Equipo</th>
-                            <th>Cantidad</th>
-                            <th>Capacidad</th>
-                            <th>Tipo de material</th>
-                        </tr>
-                    </thead>
-                    <tbody id="unidadProduccion">
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled>
-                                    <i class="ri-delete-bin-5-fill"></i>
-                                </button>
-                            </th>
-                            <td>
-                                <select class="rango_inicial form-control select2" name="rango_inicial[]">
-                                    <!-- Opciones -->
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="superficie[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="madurez[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
-
-                        </tr>
-                    </tbody>
-                </table>
-
-
-                <div style="padding: 20px"></div>
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>De Comercialización</p>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-primary add-row"
-                                    data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
-                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
-                                    data-name-plagas="plagas[]">
-                                    <i class="ri-add-line"></i>
-                                </button>
-                            </th>
-                            <th>Bodega o almacén</th>
-                            <th>Tarimas</th>
-                            <th>Bitácoras</th>
-                            <th>Otro:</th>
-                            <th>Otro</th>
-                        </tr>
-                    </thead>
-                    <tbody id="unidadProduccion">
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled>
-                                    <i class="ri-delete-bin-5-fill"></i>
-                                </button>
-                            </th>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="nombre_predio[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="superficie[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="madurez[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
                 <div style="text-align: center; color: black; font-size: 20px; padding: 20px"><b style="color: red">Anote: </b>No conformidades identificadas en la inspección</div>
                 <div class="form-floating form-floating-outline mb-5">
                     <textarea name="no_conf_infraestructura" class="form-control h-px-100" id="no_conf_infraestructura"
@@ -477,9 +141,10 @@
                 </div>
 
                 <div class="form-floating form-floating-outline mb-5">
-                    <textarea name="no_conf_equipo	" class="form-control h-px-100" id="no_conf_equipo	" placeholder="Observaciones..."></textarea>
-                    <label for="no_conf_equipo	">Equipo</label>
+                    <textarea name="no_conf_equipo" class="form-control h-px-100" id="no_conf_equipo" placeholder="Observaciones..."></textarea>
+                    <label for="no_conf_equipo">Equipo</label>
                 </div>
+                
                 <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                     <button type="submit" class="btn btn-primary">Registrar</button>
                     <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
@@ -491,3 +156,6 @@
     </div>
 </div>
 </div>
+
+                
+

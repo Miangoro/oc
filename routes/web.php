@@ -653,6 +653,9 @@ Route::post('/asignar-inspector', [inspeccionesController::class, 'asignarInspec
 Route::get('/oficio_de_comision/{id_inspeccion}', [inspeccionesController::class, 'pdf_oficio_comision'])->name('oficioDeComision');
 Route::get('/orden_de_servicio/{id_inspeccion}', [inspeccionesController::class, 'pdf_orden_servicio'])->name('ordenDeServicio');
 Route::post('/agregar-resultados', [inspeccionesController::class, 'agregarResultados']);
+//pdf rutas
+Route::post('/acta-unidades', [inspeccionesController::class, 'store'])->name('acta.unidades.store');
+
 
 //Hologramas - solicitud hologramas
 Route::get('/hologramas/solicitud', [solicitudHolograma::class, 'UserManagement'])->name('hologramas-solicitud');
