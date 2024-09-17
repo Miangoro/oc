@@ -10,8 +10,8 @@
                 </div>
             </div>
             <form id="ActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
-                <input type="text" id="id_inspeccion" name="id_inspeccion">
-                <input type="text" id="acta_id_empresa" name="acta_id_empresa">
+                <input type="text" class="id_inspeccion" name="id_inspeccion">
+                <input type="text" class="acta_id_empresa" name="acta_id_empresa">
                 
 
                 @csrf

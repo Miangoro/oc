@@ -43,6 +43,7 @@
 @vite(['resources/js/solicitudes.js'])
 @vite(['resources/assets/js/forms-pickers.js'])
 @vite(['resources/js/solicitudes-tipo.js'])
+@vite(['resources/js/instalaciones.js'])
 <script>
 
 
@@ -167,7 +168,7 @@
         <h3 class="card-title mb-0">Solicitudes</h3>
     </div>
     <div class="card-datatable table-responsive">
-        <table class="datatables-users table">
+        <table class="datatables-solicitudes table">
             <thead class="table-dark">
                 <tr>
                     <th></th>

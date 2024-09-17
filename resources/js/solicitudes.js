@@ -3,7 +3,7 @@ $(function () {
     var baseUrl = window.location.origin + '/';
   
     // Inicializar DataTable
-    var dt_instalaciones_table = $('.datatables-users').DataTable({
+    var dt_instalaciones_table = $('.datatables-solicitudes').DataTable({
   
       processing: true,
       serverSide: true,
@@ -292,9 +292,9 @@ $(function () {
             }
     });
   
-    var dt_user_table = $('.datatables-users'),
-    select2Elements = $('.select2'),
-    userView = baseUrl + 'app/user/view/account'
+    var dt_user_table = $('.datatables-solicitudes'),
+    select2Elements = $('.select2')
+
     // Función para inicializar Select2 en elementos específicos
     function initializeSelect2($elements) {
       $elements.each(function () {
@@ -432,7 +432,7 @@ $(function () {
              $('#addSolicitudMuestreoAgave').modal('hide');
              $('#addRegistrarSolicitudMuestreoAgave')[0].reset();
              $('.select2').val(null).trigger('change');
-             $('.datatables-users').DataTable().ajax.reload();
+             $('.datatables-solicitudes').DataTable().ajax.reload();
              console.log(response);
    
              Swal.fire({
@@ -504,7 +504,7 @@ $(function () {
             $('#addSolicitudDictamen').modal('hide');
             $('#addRegistrarSolicitud')[0].reset();
             $('.select2').val(null).trigger('change');
-            $('.datatables-users').DataTable().ajax.reload();
+            $('.datatables-solicitudes').DataTable().ajax.reload();
             console.log(response);
   
             Swal.fire({
@@ -582,7 +582,7 @@ $(function () {
              $('#addSolicitudGeoreferenciacion').modal('hide');
              $('#addRegistrarSolicitudGeoreferenciacion')[0].reset();
              $('.select2').val(null).trigger('change');
-             $('.datatables-users').DataTable().ajax.reload();
+             $('.datatables-solicitudes').DataTable().ajax.reload();
              console.log(response);
    
              Swal.fire({
@@ -973,6 +973,8 @@ $(function () {
         $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
         $("#subtitulo_modal").text(registro);
   });
+
+  
   
   
   //end

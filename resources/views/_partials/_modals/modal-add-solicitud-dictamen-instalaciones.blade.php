@@ -12,8 +12,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerInstalacion();" id="id_empresa"
-                                    name="id_empresa" class="select2 form-select" required>
+                                <select onchange="obtenerInstalacion();" 
+                                    name="id_empresa" class="id_empresa select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
@@ -34,16 +34,19 @@
                     
 
                     <div class="row">
-                        <div class="form-group mb-5">
-                            <label for="id_instalacion">Domicilio para la inspección</label>
-                            <div class="input-group">
-                                <select class="select2 form-select" id="id_instalacion" name="id_instalacion" aria-label="id_instalacion" required>
+                        <div class="col-md-12">
+                        
+                           
+                            <div class="input-group form-floating form-floating-outline mb-6">
+                                <select class=" form-select" id="id_instalacion" name="id_instalacion" aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
+                                <label for="id_instalacion">Domicilio para la inspección</label>
                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAddInstalacion"><i class="ri-add-line"></i> Agregar nueva instalación</button>
                             </div>
-                        </div>
+                       
+                    </div>
                     </div>
                     
                     <div class="row">
@@ -67,7 +70,7 @@
 
 <script>
     function obtenerInstalacion() {
-        var empresa = $("#id_empresa").val();
+        var empresa = $(".id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,

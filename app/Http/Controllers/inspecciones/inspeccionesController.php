@@ -48,6 +48,7 @@ class inspeccionesController extends Controller
             9 => 'fecha_servicio',
             10 => 'fecha_visita',
             11 => 'name',
+            12 => 'id_inspeccion',
         ];
 
         $search = [];
@@ -102,6 +103,7 @@ class inspeccionesController extends Controller
             $ids = $start;
 
             foreach ($solicitudes as $solicitud) {
+                $nestedData['id_inspeccion'] = $solicitud->inspeccion->id_inspeccion ?? '0';
                 $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids  ?? 'N/A';
                 $nestedData['folio'] = '<b class="text-primary">' . $solicitud->folio . '</b>';
