@@ -68,6 +68,11 @@ class empresa extends Model
         return solicitudHolograma::where('id_empresa', $this->id_empresa)->get();
     }
 
+    public function actas_inspeccion()
+    {
+        return $this->hasMany(actas_inspeccion::class, 'id_empresa');
+    }
+
     public function direcciones(){
         return direcciones::where('id_empresa', $this->id_empresa)->get();
     }
