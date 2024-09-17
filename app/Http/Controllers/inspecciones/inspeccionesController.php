@@ -289,6 +289,9 @@ class inspeccionesController extends Controller
                 $testigo->domicilio = $request->domicilio[$i];
                 $testigo->save();
             }
+
+            
+
             return response()->json(['success' => 'Lote registrado exitosamente.']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
