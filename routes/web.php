@@ -188,7 +188,6 @@ use App\Http\Controllers\dictamenes\DictamenGranelController;;
 use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\catalogo\catalogoEquiposController;
-use App\Http\Controllers\DocuSignController;
 use App\Http\Controllers\inspecciones\inspeccionesController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\solicitudes\solicitudesController;
@@ -517,7 +516,7 @@ Route::resource('/lotes-granel-list', LotesGranelController::class);
 Route::delete('/lotes-granel-list/{id_lote_granel}', [LotesGranelController::class, 'destroy']);
 Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->name('lotes-register.store');
 Route::get('/lotes-a-granel/{id_lote_granel}/edit', [LotesGranelController::class, 'edit'])->name('lotes-a-granel.edit');
-Route::put('/lotes-a-granel/{id_lote_granel}', [LotesGranelController::class, 'update']);
+Route::post('/lotes-a-granel/{id_lote_granel}', [LotesGranelController::class, 'update']);
 
 //Lotes de envasado
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
@@ -721,19 +720,14 @@ Route::post('/notificacion-leida/{id}', [NotificacionController::class, 'marcarN
 //Trazabilidad
 Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])->name('mostrarLogs');
 
+Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema');
+Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico');
+
 //
 Route::get('/Pre-certificado', [CartaAsignacionController::class, 'PreCertificado'])->name('Pre-certificado');
 Route::get('/Dictamen-MezcalEnvasado', [CartaAsignacionController::class, 'DictamenMezcalEnvasado'])->name('Dictamen-MezcalEnvasado');
-
-
-
-//Docusign
-Route::get('/docusign/authenticate', [DocuSignController::class, 'authenticate'])->name('docusign.authenticate');
-Route::get('/docusign/callback', [DocuSignController::class, 'callback'])->name('docusign.callback');
-Route::get('/docusign/send', [DocuSignController::class, 'sendDocument'])->name('docusign.send');
-Route::get('/test-docusign', [DocuSignController::class, 'obtenerTokenDocuSign']);
-
-
+Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema');
+Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico');
 
 
 
