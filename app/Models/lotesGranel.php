@@ -19,7 +19,7 @@ class LotesGranel extends Model
         'id_empresa', 'nombre_lote', 'tipo_lote', 'folio_fq', 'volumen', 
         'cont_alc', 'id_categoria', 'id_clase', 'id_tipo', 'ingredientes', 
         'edad', 'id_guia', 'folio_certificado', 'id_organismo', 
-        'fecha_emision', 'fecha_vigencia', 'estatus'
+        'fecha_emision', 'fecha_vigencia', 'estatus', 'lote_original_id'
     ];
 
     // Método para obtener el nombre del registro que sirve para la trazabilidad
@@ -62,5 +62,20 @@ class LotesGranel extends Model
     public function lotesGuias()
     {
         return $this->hasMany(LotesGranelGuia::class, 'id_lote_granel');
+    }
+    /* lotes derivados de otro lote */
+     /**
+     * Obtiene el lote original del que se creó este lote.
+     */
+    public function loteOriginal()
+    {
+        return $this->belongsTo(LotesGranel::class, 'lote_original_id');
+    }
+    /**
+     * Obtiene los lotes que se crearon a partir de este lote.
+     */
+    public function lotesDerivados()
+    {
+        return $this->hasMany(LotesGranel::class, 'lote_original_id');
     }
 }

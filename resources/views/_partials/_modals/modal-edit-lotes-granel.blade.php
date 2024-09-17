@@ -17,7 +17,7 @@
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="text" id="edit_nombre_lote" name="nombre_lote" class="form-control"
-                                        placeholder="Nombre del lote" />
+                                        placeholder="Nombre del lote" autocomplete="off" />
                                     <label for="edit_nombre_lote">Nombre del Lote</label>
                                 </div>
                             </div>
@@ -67,7 +67,8 @@
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="edit_volumen" name="volumen"
-                                        class="form-control" placeholder="Volumen de Lote Inicial (litros)" />
+                                        class="form-control" placeholder="Volumen de Lote Inicial (litros)"
+                                        autocomplete="off" />
                                     <label for="volumen">Volumen de Lote Inicial (litros)</label>
                                 </div>
                             </div>
@@ -76,7 +77,7 @@
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="edit_cont_alc" name="cont_alc"
-                                        class="form-control" placeholder="Contenido Alcohólico" />
+                                        class="form-control" placeholder="Contenido Alcohólico" autocomplete="off" />
                                     <label for="cont_alc">Contenido Alcohólico</label>
                                 </div>
                             </div>
@@ -127,14 +128,14 @@
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="text" id="edit_ingredientes" name="ingredientes"
-                                        class="form-control" placeholder="Ingredientes" />
+                                        class="form-control" placeholder="Ingredientes" autocomplete="off" />
                                     <label for="ngredientes">Ingredientes</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="text" id="edit_edad" name="edad" class="form-control"
-                                        placeholder="Edad" />
+                                        placeholder="Edad" autocomplete="off" />
                                     <label for="edad">Edad</label>
                                 </div>
                             </div>
@@ -234,7 +235,8 @@
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="text" id="edit_folio_certificado" name="folio_certificado"
-                                        class="form-control" placeholder="Folio/Número de Certificado" />
+                                        class="form-control" placeholder="Folio/Número de Certificado"
+                                        autocomplete="off" />
                                     <label for="folio_certificado">Folio/Número de Certificado</label>
                                 </div>
                             </div>
@@ -256,15 +258,15 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <input type="date" id="edit_fecha_emision" name="fecha_emision"
-                                        class="form-control" />
+                                    <input type="text" id="edit_fecha_emision" name="fecha_emision"
+                                        class="form-control datepicker" autocomplete="off" />
                                     <label for="echa_emision">Fecha de Emisión</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <input type="date" id="edit_fecha_vigencia" name="fecha_vigencia"
-                                        class="form-control" />
+                                    <input type="text" id="edit_fecha_vigencia" name="fecha_vigencia"
+                                        class="form-control datepicker" autocomplete="off" />
                                     <label for="fecha_vigencia">Fecha de Vigencia</label>
                                 </div>
                             </div>
@@ -283,62 +285,61 @@
 </div>
 
 <script>
-function obtenerGuias1() {
-    var empresa = $("#edit_id_empresa").val();
-    // Verifica si el valor de empresa es válido
-    if (!empresa) {
-        return; // No hacer la petición si el valor es inválido
-    }
+    function obtenerGuias1() {
+        var empresa = $("#edit_id_empresa").val();
+        // Verifica si el valor de empresa es válido
+        if (!empresa) {
+            return; // No hacer la petición si el valor es inválido
+        }
 
-    // Guardar los valores seleccionados previamente
-    var selectedValues = $('#edit_id_guia').val();
+        // Guardar los valores seleccionados previamente
+        var selectedValues = $('#edit_id_guia').val();
 
-    // Hacer una petición AJAX para obtener los detalles de la empresa
-    $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function(response) {
-            var $select = $('#edit_id_guia');
+        // Hacer una petición AJAX para obtener los detalles de la empresa
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var $select = $('#edit_id_guia');
 
-            // Limpiar completamente el select antes de agregar las nuevas opciones
-            $select.empty(); 
+                // Limpiar completamente el select antes de agregar las nuevas opciones
+                $select.empty();
 
-            if (response.guias.length > 0) {
-                // Añadir nuevas opciones con las guías obtenidas
-                response.guias.forEach(function(guia) {
-                    $select.append(new Option(guia.folio, guia.id_guia, false, selectedValues && selectedValues.includes(guia.id_guia.toString())));
-                });
-
-                // Restaurar los valores seleccionados previamente si siguen siendo válidos
-                if (selectedValues) {
-                    var validSelectedValues = selectedValues.filter(function(value) {
-                        return response.guias.some(function(guia) {
-                            return guia.id_guia == value;
-                        });
+                if (response.guias.length > 0) {
+                    // Añadir nuevas opciones con las guías obtenidas
+                    response.guias.forEach(function(guia) {
+                        $select.append(new Option(guia.folio, guia.id_guia, false, selectedValues &&
+                            selectedValues.includes(guia.id_guia.toString())));
                     });
 
-                    if (validSelectedValues.length > 0) {
-                        $select.val(validSelectedValues).trigger('change');
+                    // Restaurar los valores seleccionados previamente si siguen siendo válidos
+                    if (selectedValues) {
+                        var validSelectedValues = selectedValues.filter(function(value) {
+                            return response.guias.some(function(guia) {
+                                return guia.id_guia == value;
+                            });
+                        });
+
+                        if (validSelectedValues.length > 0) {
+                            $select.val(validSelectedValues).trigger('change');
+                        }
                     }
+                } else {
+                    // Mostrar opción "Sin guías registradas" si no hay guías
+                    $select.append('<option value="" disabled selected>Sin guías registradas</option>');
                 }
-            } else {
-                // Mostrar opción "Sin guías registradas" si no hay guías
-                $select.append('<option value="" disabled selected>Sin guías registradas</option>');
-            }
 
-            // Asegurarse de que select2 esté inicializado
-            if (!$select.hasClass('select2-hidden-accessible')) {
-                $select.select2(); // Re-inicializar Select2 si no está inicializado
-            } else {
-                $select.trigger('change'); // Forzar el cambio si ya está inicializado
+                // Asegurarse de que select2 esté inicializado
+                if (!$select.hasClass('select2-hidden-accessible')) {
+                    $select.select2(); // Re-inicializar Select2 si no está inicializado
+                } else {
+                    $select.trigger('change'); // Forzar el cambio si ya está inicializado
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error al cargar las guías:', error);
+                alert('Error al cargar las guías. Por favor, intenta nuevamente.');
             }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error al cargar las guías:', error);
-            alert('Error al cargar las guías. Por favor, intenta nuevamente.');
-        }
-    });
-}
-
+        });
+    }
 </script>
-
