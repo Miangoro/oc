@@ -67,4 +67,13 @@ class Predios extends Model
             return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_predio');
         }
 
+
+        
+        // Relación con el modelo Documentacion_url
+        public function actas_produccion()
+        {
+            return $this->hasMany(actas_produccion::class, 'id_predio', 'nom_predio');
+        }
+
+
 }
