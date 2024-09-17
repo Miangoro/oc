@@ -143,9 +143,9 @@
                             <th>
                                 <button type="button" class="btn btn-primary add-row"
                                     data-target="#unidadProduccion" data-name-prefix="nom_predio[]"
-                                    data-name-espacio="espacio_agave[]"  data-name-superficie="superficie[]" data-name-madurez="madurez_agave[]"
-                                    data-name-plagas="plagas[]" data-name-plantas="cantidad_plantas[]"
-                                    data-name-coordenadas="coordenadas[]">
+                                    data-name-espacio="espacio_agave[]"  data-name-superficie="superficie[]" 
+                                    data-name-madurez="madurez_agave[]" data-name-plagas="plagas[]" 
+                                    data-name-plantas="cantidad_plantas[]" data-name-coordenadas="coordenadas[]">
                                     <i class="ri-add-line"></i>
                                 </button>
                             </th>
@@ -166,39 +166,24 @@
                                 </button>
                             </th>
                             <td>
-                                <select class="rango_inicial form-control select2" name="nom_predio[]">
+                                <select class="form-control select2" name="nom_predio[]">
                                     <!-- Opciones -->
                                     @foreach ($Predios as $Predio)
-                                    <option value="{{ $Predio->nom_predio }}">{{ $Predio->nombre_predio }}</option>
-                                @endforeach
+                                        <option value="{{ $Predio->nom_predio }}">{{ $Predio->nombre_predio }}</option>
+                                    @endforeach
                                 </select>
                             </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="espacio_agave[]"
-                                    readonly />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="superficie[]"
-                                    readonly />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="madurez_agave[]"
-                                    readonly />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="cantidad_plantas[]"
-                                    readonly />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="coordenadas[]"
-                                    readonly />
-                            </td>
+                            <td><input type="text" class="form-control form-control-sm" name="espacio_agave[]" readonly /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="superficie[]" readonly /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="madurez_agave[]" readonly /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="plagas[]" /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="cantidad_plantas[]" readonly /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="coordenadas[]" readonly /></td>
                         </tr>
                     </tbody>
                 </table>
+                
+                
 
 
 
