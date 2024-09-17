@@ -395,6 +395,13 @@ $(function () {
             }
           }
         },
+        es_creado_a_partir: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la opción'
+            }
+          }
+        },
         id_empresa: {
           validators: {
             notEmpty: {
@@ -419,35 +426,35 @@ $(function () {
         volumen: {
           validators: {
             notEmpty: {
-              message: 'Por favor seleccione un folio de guía'
+              message: 'Por favor seleccione el volumen'
             }
           }
         },
         cont_alc: {
           validators: {
             notEmpty: {
-              message: 'Por favor seleccione un folio de guía'
+              message: 'Por favor seleccione el contenido alcoholico'
             }
           }
         },
         id_categoria: {
           validators: {
             notEmpty: {
-              message: 'Por favor seleccione un folio de guía'
+              message: 'Por favor seleccione la categoría'
             }
           }
         },
         id_clase: {
           validators: {
             notEmpty: {
-              message: 'Por favor seleccione un folio de guía'
+              message: 'Por favor seleccione la clase'
             }
           }
         },
         id_tipo: {
           validators: {
             notEmpty: {
-              message: 'Por favor seleccione un folio de guía'
+              message: 'Por favor seleccione un tipo de agave'
             }
           }
         },
@@ -470,7 +477,16 @@ $(function () {
     }).on('core.form.valid', function (e) {
       // e.preventDefault();
       var formData = new FormData(addNewLote);
+      // Depurar los datos del formulario
+      var loteOriginalId = $('#lote_original_id').val();
+      console.log('lote_original_id:', loteOriginalId);
 
+      var formData = new FormData(addNewLote);
+
+      // Verificar si el campo está presente en los datos del formulario
+      for (var pair of formData.entries()) {
+          console.log(pair[0] + ': ' + pair[1]);
+      }
       $.ajax({
         url: '/lotes-granel-list',
         type: 'POST',
@@ -513,6 +529,7 @@ $(function () {
     });
 
   });
+
 
   $(document).on('click', '.edit-record', function () {
     var loteId = $(this).data('id');
@@ -676,63 +693,156 @@ $(function () {
 
 
 
-  $('#loteFormEdit').on('submit', function (e) {
-    e.preventDefault();
-
-    var formData = new FormData(this);
-    console.log([...formData.entries()]); // Mostrar el contenido del FormData
-
-    var loteId = $('#edit_lote_id').val();
-
-    $.ajax({
-      url: '/lotes-a-granel/' + loteId,
-      type: 'POST', // Cambiar a POST, el método PUT se define en el formData
-      data: formData,
-      contentType: false,
-      processData: false,
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      success: function (response) {
-        dt_user.ajax.reload();
-        $('#offcanvasEditLote').modal('hide');
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: response.message,
-          customClass: {
-            confirmButton: 'btn btn-success'
+  $(function () {
+    const editLoteForm = document.getElementById('loteFormEdit');
+    
+    // Configuración de FormValidation
+    const fv = FormValidation.formValidation(editLoteForm, {
+      fields: {
+        nombre_lote: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el nombre del lote'
+            }
           }
-        });
-      },
-      error: function (xhr) {
-        if (xhr.status === 422) {
-          var errors = xhr.responseJSON.errors;
-          var errorMessages = Object.keys(errors).map(function (key) {
-            return errors[key].join('<br>');
-          }).join('<br>');
-
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            html: errorMessages,
-            customClass: {
-              confirmButton: 'btn btn-danger'
+        },
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione el cliente'
             }
-          });
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Ha ocurrido un error al actualizar el lote.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
+          }
+        },
+        tipo_lote: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione el tipo de lote'
             }
-          });
+          }
+        },
+        'id_guia[]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione al menos un folio de guía'
+            }
+          }
+        },
+        volumen: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el volumen del lote'
+            }
+          }
+        },
+        cont_alc: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el contenido alcohólico'
+            }
+          }
+        },
+        id_categoria: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la categoría'
+            }
+          }
+        },
+        id_clase: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la clase'
+            }
+          }
+        },
+        id_tipo: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un tipo'
+            }
+          }
         }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: '.mb-4'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
       }
+    }).on('core.form.valid', function () {
+      var formData = new FormData(editLoteForm);
+      var loteId = $('#edit_lote_id').val();
+  
+      $.ajax({
+        url: '/lotes-a-granel/' + loteId,
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+          dt_user.ajax.reload();
+          $('#offcanvasEditLote').modal('hide');
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          if (xhr.status === 422) {
+            var errors = xhr.responseJSON.errors;
+            var errorMessages = Object.keys(errors).map(function (key) {
+              return errors[key].join('<br>');
+            }).join('<br>');
+  
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              html: errorMessages,
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Ha ocurrido un error al actualizar el lote.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        }
+      });
+    });
+  
+    // Inicializar select2 y revalidar el campo cuando cambie
+    $('#id_empresa, #id_guia, #tipo_agave').on('change', function () {
+      fv.revalidateField($(this).attr('name'));
     });
   });
+  
+  
+  $(document).ready(function () {
+    $('#es_creado_a_partir').on('change', function () {
+        var loteOriginalSelect = $('#lote_original_id');
+        if ($(this).val() === 'si') {
+            loteOriginalSelect.prop('disabled', false);
+        } else {
+            loteOriginalSelect.prop('disabled', true).val(''); // Limpiar selección
+        }
+    });
+});
 
 
 
