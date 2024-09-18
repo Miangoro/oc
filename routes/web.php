@@ -675,6 +675,8 @@ Route::resource('certificados-list',Certificado_InstalacionesController::class);
 Route::post('certificados-list', [Certificado_InstalacionesController::class, 'store'])->name('certificados.store');
 Route::get('certificados-list/{id}/edit', [Certificado_InstalacionesController::class, 'edit']);
 Route::put('certificados-list/{id}', [Certificado_InstalacionesController::class, 'update']);
+Route::get('/ruta-para-obtener-revisores', [Certificado_InstalacionesController::class, 'obtenerRevisores']);
+Route::post('/asignar-revisor', [Certificado_InstalacionesController::class, 'storeRevisor'])->name('asignarRevisor'); //Agregar
 
 //Pdfs de certificados de instalaciones
 Route::get('/certificado_comercializador/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_comercializador'])->name('certificado_comercializador');
