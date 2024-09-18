@@ -1145,10 +1145,19 @@ $('#ActaUnidadesForm').on('submit', function (e) {
 
 
 
-/* 
 $(document).ready(function () {
   // Cuando se haga clic en el botón .add-row
   $('.add-row').click(function () {
+      // Obtener el target donde se agregarán las nuevas filas
+      var target = $(this).data('target');
+      var namePrefix = $(this).data('name-prefix');
+      var nameEspacio = $(this).data('name-espacio');
+      var nameSuperficie = $(this).data('name-superficie');
+      var nameMadurez = $(this).data('name-madurez');
+      var namePlagas = $(this).data('name-plagas');
+      var namePlantas = $(this).data('name-plantas');
+      var nameCoordenadas = $(this).data('name-coordenadas');
+
       // Crear una nueva fila
       var newRow = `
           <tr>
@@ -1158,42 +1167,55 @@ $(document).ready(function () {
                   </button>
               </th>
               <td>
-                  <select class="form-control select2-nuevo" name="id_empresa[]">
-                      <!-- Opciones -->
+                  <select class="form-control select2-nuevo" name="${namePrefix}">
+                      <!-- Opciones llenadas dinámicamente -->
                   </select>
               </td>
               <td>
-                  <input type="text" class="form-control form-control-sm" name="espacio_agave[]" readonly />
+                  <select class="form-control select2-nuevo" name="${nameEspacio}">
+                      <!-- Opciones llenadas dinámicamente -->
+                  </select>
               </td>
               <td>
-                  <input type="text" class="form-control form-control-sm" name="superficie[]" readonly />
+                  <select class="form-control select2-nuevo" name="${nameSuperficie}" readonly>
+                      <option value="" selected></option>
+                  </select>
               </td>
               <td>
-                  <input type="text" class="form-control form-control-sm" name="madurez_agave[]" readonly />
+                  <select class="form-control select2-nuevo" name="${nameMadurez}" readonly>
+                      <option value="" selected></option>
+                  </select>
               </td>
               <td>
-                  <input type="text" class="form-control form-control-sm" name="plagas[]" />
+                  <input type="text" class="form-control form-control-sm" name="${namePlagas}" />
               </td>
               <td>
-                  <input type="text" class="form-control form-control-sm" name="cantidad_plantas[]" readonly />
+                  <select class="form-control select2-nuevo" name="${namePlantas}" readonly>
+                      <option value="" selected></option>
+                  </select>
               </td>
               <td>
-                  <input type="text" class="form-control form-control-sm" name="coordenadas[]" readonly />
+                  <select class="form-control select2-nuevo" name="${nameCoordenadas}" readonly>
+                      <option value="" selected></option>
+                  </select>
               </td>
           </tr>`;
 
-      $('#unidadProduccion').append(newRow);
+      // Agregar la nueva fila al target
+      $(target).append(newRow);
 
-      // Re-inicializar select2 en la nueva fila
-      $('#unidadProduccion').find('.select2-nuevo').select2({
-          dropdownParent: $('#ActaUnidades'), // Asegúrate de usar el modal correcto si es necesario
-          width: '100%',
-          dropdownCssClass: 'select2-dropdown'
+      // Re-inicializar select2 en los nuevos selects
+      $(target).find('.select2-nuevo').select2({
+          dropdownParent: $('#ActaUnidades'), // Ajusta si estás usando un modal
+          width: '100%'
       });
 
-      // Copiar opciones del primer select al nuevo select
-      var options = $('#unidadProduccion tr:first-child .select2').html();
-      $('#unidadProduccion tr:last-child .select2-nuevo').html(options);
+      // Copiar las opciones del primer select al nuevo select de la nueva fila
+      var optionsEmpresa = $('#unidadProduccion tr:first-child .select2[name="id_empresa[]"]').html();
+      $(target).find('tr:last-child .select2-nuevo[name="id_empresa[]"]').html(optionsEmpresa);
+
+      var optionsEspacio = $('#unidadProduccion tr:first-child .select2[name="nombre[]"]').html();
+      $(target).find('tr:last-child .select2-nuevo[name="nombre[]"]').html(optionsEspacio);
   });
 
   // Función para eliminar una fila
@@ -1203,9 +1225,10 @@ $(document).ready(function () {
 
   // Inicializar select2 en los selects existentes al cargar la página
   $('.select2').select2({
-      width: '100%',
+      width: '100%'
   });
-}); */
+});
+
 
 
   
