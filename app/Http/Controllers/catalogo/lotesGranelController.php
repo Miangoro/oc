@@ -194,7 +194,7 @@ class LotesGranelController extends Controller
 
     public function store(Request $request)
     {
-        // Validar los datos del formulario
+
         $validatedData = $request->validate([
             'id_empresa' => 'required|exists:empresa,id_empresa',
             'nombre_lote' => 'required|string|max:70',
@@ -215,7 +215,10 @@ class LotesGranelController extends Controller
             'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
             'folio_fq_completo' => 'nullable|string|max:50',
             'folio_fq_ajuste' => 'nullable|string|max:50',
-            'folio_fq' => 'nullable|string|max:50'
+            'folio_fq' => 'nullable|string|max:50',
+            'es_creado_a_partir' => 'required|string',
+            'lote_original_id' => 'required_if:es_creado_a_partir,si|integer|exists:lotes_granel,id_lote_granel',
+
         ]);
     
         // Crear una nueva instancia del modelo LotesGranel
@@ -249,6 +252,27 @@ class LotesGranelController extends Controller
             $lote->folio_fq = $folio_fq_Completo;
         }
         
+                // Si el lote es creado a partir de otro lote
+        if ($validatedData['es_creado_a_partir'] === 'si') {
+            $loteOriginal = LotesGranel::find($validatedData['lote_original_id']);
+            
+            // Verificar si el lote original existe y tiene suficiente volumen
+            if (!$loteOriginal || $loteOriginal->volumen < $validatedData['volumen']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El lote original no tiene suficiente volumen',
+                ], 400);
+            }
+            
+            // Restar el volumen al lote original
+            $loteOriginal->volumen -= $validatedData['volumen'];
+            $loteOriginal->save();
+            
+            // Establecer el lote original en el nuevo lote
+            $lote->lote_original_id = $validatedData['lote_original_id'];
+        } else {
+            $lote->lote_original_id = null;
+        }
         // Guardar el nuevo lote en la base de datos
         $lote->save();
     
@@ -322,13 +346,13 @@ class LotesGranelController extends Controller
             $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
     
-      // Obtener las guías asociadas con su ID y folio
-$guias = $lote->lotesGuias->map(function ($loteGuia) {
-    return [
-        'id' => $loteGuia->guia->id_guia,
-        'folio' => $loteGuia->guia->folio,
-    ];
-});
+             // Obtener las guías asociadas con su ID y folio
+            $guias = $lote->lotesGuias->map(function ($loteGuia) {
+                return [
+                    'id' => $loteGuia->guia->id_guia,
+                    'folio' => $loteGuia->guia->folio,
+                ];
+            });
 
             // Obtener la URL del archivo para "otro organismo"
             $archivoUrlOtroOrganismo = $lote->tipo_lote == '2' ? $lote->url_certificado : '';
