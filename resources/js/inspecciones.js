@@ -1049,7 +1049,7 @@ $(function () {
               </tr>`;
 
           $(targetTable).append(newRow);
-      } /* else if (targetTable === '#unidadProduccion') {
+      }  else if (targetTable === '#unidadMezcal') {
           // Obtener nombres para los diferentes campos de la tabla "unidadProduccion"
           var namePredio = $(this).data('name-prefix');
           var nameEspacio = $(this).data('name-espacio');
@@ -1091,7 +1091,7 @@ $(function () {
               </tr>`;
 
           $(targetTable).append(newRow);
-      } */
+      } 
   });
 
   // Función para eliminar una fila
