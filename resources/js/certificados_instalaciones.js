@@ -957,80 +957,126 @@ $('#pdfViewerDictamen').on('load', function () {
 });
 
 
-//Funcion Cargar Users por 
 $(document).ready(function() {
   $('#tipoRevisor').on('change', function() {
-      var tipoRevisor = $(this).val(); 
+      var tipoRevisor = $(this).val();
 
       $('#nombreRevisor').empty().append('<option value="">Seleccione un nombre</option>');
 
       if (tipoRevisor) {
-          var tipo = (tipoRevisor === 'organismo') ? 1 : 4;
+          var tipo = (tipoRevisor === '2') ? 1 : 4; 
 
           $.ajax({
               url: '/ruta-para-obtener-revisores',
               type: 'GET',
               data: { tipo: tipo },
               success: function(response) {
-                  response.forEach(function(revisor) {
-                      $('#nombreRevisor').append('<option value="' + revisor.id + '">' + revisor.name + '</option>');
-                  });
+
+                  if (Array.isArray(response) && response.length > 0) {
+                      response.forEach(function(revisor) {
+                          $('#nombreRevisor').append('<option value="' + revisor.id + '">' + revisor.name + '</option>');
+                      });
+                  } else {
+                      $('#nombreRevisor').append('<option value="">No hay revisores disponibles</option>');
+                  }
               },
-              error: function() {
+              error: function(xhr) {
+                  console.log('Error:', xhr.responseText);
                   alert('Error al cargar los revisores. Inténtelo de nuevo.');
               }
           });
       }
   });
-
-  $('#asignarRevisorForm').on('submit', function(e) {
-      e.preventDefault(); 
-
-      var formData = $(this).serialize(); 
-      var esCorreccion = $('#esCorreccion').is(':checked') ? 1 : 0;
-
-      formData = formData + '&esCorreccion=' + esCorreccion;
-
-      $.ajax({
-          url: '/asignar-revisor', 
-          method: 'POST',
-          data: formData,
-          dataType: 'json',
-          success: function(response) {
-              Swal.fire({
-                  icon: 'success',
-                  title: '¡Éxito!',
-                  text: response.message,
-                  customClass: {
-                      confirmButton: 'btn btn-primary'
-                  }
-              });
-              $('#asignarRevisorModal').modal('hide'); 
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-              Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: 'Ocurrió un error al asignar el revisor.',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
-              console.error('Error:', textStatus, errorThrown);
-              console.error('Response:', jqXHR.responseText);
-          }
-      });
-  });
 });
 
+  $(function () {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
+    const form = document.getElementById('asignarRevisorForm');
+    const fv = FormValidation.formValidation(form, {
+        fields: {
+            'tipoRevisor': {
+                validators: {
+                    notEmpty: {
+                        message: 'Debe seleccionar una opción para la revisión.'
+                    }
+                }
+            },
+            'nombreRevisor': {
+                validators: {
+                    notEmpty: {
+                        message: 'Debe seleccionar un nombre para el revisor.'
+                    }
+                }
+            },
+            'numeroRevision': {
+                validators: {
+                    notEmpty: {
+                        message: 'Debe seleccionar un número de revisión.'
+                    }
+                }
+            }
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: '.mb-3'
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+    }).on('core.form.valid', function (e) {
+        var formData = new FormData(form);
 
-//Funcion Agregar Revisor
+        var esCorreccion = $('#esCorreccion').is(':checked') ? 'si' : 'no';
+        formData.append('esCorreccion', esCorreccion);
 
+        $.ajax({
+            url: '/asignar-revisor',  
+            type: 'POST',
+            data: formData,
+            processData: false,  
+            contentType: false,  
+            success: function (response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.message,
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                }).then(function () {
+                    $('#asignarRevisorModal').modal('hide');
 
+                    form.reset();
+                    $('#nombreRevisor').empty().append('<option value="">Seleccione un nombre</option>');
+                    $('#esCorreccion').prop('checked', false);
+                });
+            },
+            error: function (xhr) {
+                console.log('Error:', xhr.responseText);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Error al asignar el revisor.',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
+        });
+    });
+});
 
 //end
 });
- 
+
 
 
