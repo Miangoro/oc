@@ -12,6 +12,9 @@
             <form id="ActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                 <input type="hidden" class="id_inspeccion" name="id_inspeccion">
                 <input type="hidden" class="id_empresa" name="acta_id_empresa">
+{{--                 <input type="text" class="fecha_visita" name="fecha_visita">
+ --}}
+                
                 
 
                 @csrf
@@ -58,7 +61,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-5">
                         <div class="form-floating form-floating-outline">
-                            <input type="text" class="form-control" id="encargado" name="encargado"
+                            <input type="text" class="form-control Inspector" id="encargado" name="encargado"
                                 placeholder="Ingresa el nombre del encargado" aria-label="Ingresa el No. guia" />
                             <label for="encargado">Encargado</label>
                         </div>
@@ -77,7 +80,7 @@
                 </div>
 
                 <div class="form-floating form-floating-outline mb-5">
-                    <input type="text" class="form-control" id="lugar_inspeccion" name="lugar_inspeccion"
+                    <input type="text" class="form-control direccion_completa" id="lugar_inspeccion" name="lugar_inspeccion"
                         placeholder="Lugar de inspeccion:" aria-label="Ingresa el No. guia" />
                     <label for="lugar_inspeccion">Lugar de inspeccion:</label>
                 </div>
@@ -85,7 +88,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-5">
                         <div class="form-floating form-floating-outline">
-                            <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio"
+                            <input type="datetime-local" class="form-control " id="fecha_inicio" name="fecha_inicio"
                                 aria-label="Fecha de Emisión">
                             <label for="fecha_inicio">Fecha de inicio</label>
                         </div>
@@ -93,7 +96,7 @@
 
                     <div class="col-md-6 mb-5">
                         <div class="form-floating form-floating-outline">
-                            <input type="date" class="form-control" id="fecha_fin" name="fecha_fin"
+                            <input type="datetime-local" class="form-control" id="fecha_fin" name="fecha_fin"
                                 aria-label="Fecha de Emisión">
                             <label for="fecha_fin">Fecha de final</label>
                         </div>
@@ -136,43 +139,31 @@
 
                 <div style="padding: 20px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
-                <div class="">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-primary add-row"
-                                    data-target="#unidadProduccion" data-name-prefix="id_empresa[]"
-                                    data-name-espacio="nombre[]"  data-name-superficie="superficie[]" 
-                                    data-name-madurez="madurez_agave[]" data-name-plagas="plagas[]" 
-                                    data-name-plantas="cantidad_plantas[]" data-name-coordenadas="coordenadas[]">
-                                    <i class="ri-add-line"></i>
-                                </button>
-                            </th>
-                            <th style="width: 150px">Nombre del Predio/Plantación</th>
-                            <th>Plagas en el cultivo</th>
-                        </tr>
-                    </thead>
-                    <tbody id="unidadProduccion">
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled>
-                                    <i class="ri-delete-bin-5-fill"></i>
-                                </button>
-                            </th>
-                            <td><select  class="form-control select2 plantacion"  name="id_empresa[]">
-                                 
-                                </select></td>
-                              
-                    
-                            
-                            <td><input type="text" class="form-control form-control-sm" name="plagas[]" /></td>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th><button type="button" class="btn btn-primary add-row"> <i
+                                    class="ri-add-line"></i> </button></th>
+                                <th >Nombre del Predio/Plantación</th>
+                                <th>Plagas en el cultivo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="unidadProduccion">
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-danger remove-row" disabled>
+                                        <i class="ri-delete-bin-5-fill"></i>
+                                    </button>
+                                </th>
+                                <td><select class="form-control select2 plantacion" name="id_empresa[]">
+                                        <!-- Opciones -->
+                                    </select>
+                                </td>
+                                <td><input type="text" class="form-control form-control-sm" name="plagas[]"></td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                           
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
                 
 
 

@@ -298,26 +298,14 @@ class inspeccionesController extends Controller
                 $testigo->save();
             }
 
-            
 
-/*             for ($i = 0; $i < count($request->nombre_testigo); $i++) {
-                $testigo = new actas_testigo();
-                $testigo->id_acta = $acta->id_acta;  // Relacionar con la acta creada
-                $testigo->nombre_testigo = $request->nombre_testigo[$i];
-                $testigo->domicilio = $request->domicilio[$i];
-                $testigo->save();
-            } */
         // Guardar las producciones relacionadas
         for ($i = 0; $i < count($request->id_empresa); $i++) {
             $produccion = new actas_produccion();
             $produccion->id_acta = $acta->id_acta;  // Relacionar con la acta creada
-            $produccion->id_empresa = $request->id_empresa[$i];
-            $produccion->nombre = $request->nombre[$i];
-            $produccion->superficie = $request->superficie[$i];
-            $produccion->madurez_agave = $request->madurez_agave[$i];
+            $produccion->id_empresa = $request->id_empresa[$i];   
             $produccion->plagas = $request->plagas[$i];
-            $produccion->cant_plantas = $request->cant_plantas[$i];
-            $produccion->coordenadas = $request->coordenadas[$i];
+
             $produccion->save();
         }
             return response()->json(['success' => 'Lote registrado exitosamente.']);

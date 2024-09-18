@@ -93,7 +93,7 @@ $(function () {
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalAsignarInspector(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']},'${escapeHtml(full['num_servicio'])}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
-                `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
+                `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}','${full['direccion_completa']}','${full['fecha_visita']}','${full['inspector']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
 
                 
                 '</div>' +
@@ -1101,6 +1101,54 @@ $(function () {
 });
 
 
+$(document).ready(function () {
+  // Añadir fila a la tabla con id "unidadProduccion"
+  $('.add-row').click(function () {
+      // Seleccionamos el tbody de la tabla específica (en este caso, "unidadProduccion")
+      var targetTable = $('#unidadProduccion'); 
+
+      // Crear una nueva fila con el formato que necesitas
+      var newRow = `
+          <tr>
+              <th>
+                  <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+              </th>
+              <td>
+                  <select class="form-control select2-nuevo plantacion" name="id_empresa[]">
+                      <!-- Opciones -->
+                  </select>
+              </td>
+              <td>
+                  <input type="text" class="form-control form-control-sm" name="plagas[]">
+              </td>
+          </tr>`;
+
+      // Agregar la nueva fila al tbody de la tabla objetivo
+      $(targetTable).append(newRow);
+
+      // Re-inicializar select2 en el nuevo select
+      $(targetTable).find('.select2-nuevo').select2({
+          dropdownParent: $('#ActaUnidades'), // Asegúrate de que este es el id correcto de tu modal
+          width: '100%',
+          dropdownCssClass: 'select2-dropdown'
+      });
+
+      // Asegurar que el z-index esté configurado correctamente para el dropdown de select2
+      $('.select2-dropdown').css('z-index', 9999);
+
+      // Copiar las opciones del primer select al nuevo select
+      var options = $(targetTable).find('tr:first-child .plantacion').html();
+      $(targetTable).find('tr:last-child .plantacion').html(options);
+  });
+
+  // Función para eliminar una fila
+  $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+  });
+});
+
+
+
 
 
 // Añadir método para agregar acta
@@ -1140,147 +1188,6 @@ $('#ActaUnidadesForm').on('submit', function (e) {
   }
   });
 });
-
-
-
-
-/* $(document).ready(function () {
-  // Función para inicializar select2
-  function initializeSelect2(elements) {
-      elements.select2({
-          width: '100%',
-          dropdownParent: $('#ActaUnidades') // Ajusta si estás usando un modal
-      });
-  }
-
-  // Inicializar select2 en los selects existentes al cargar la página
-  initializeSelect2($('.select2'));
-
-  // Cuando se haga clic en el botón .add-row
-  $(document).on('click', '.add-row', function () {
-      // Obtener el target donde se agregarán las nuevas filas
-      var target = $(this).data('target');
-      var namePrefix = $(this).data('name-prefix');
-      var nameEspacio = $(this).data('name-espacio');
-      var nameSuperficie = $(this).data('name-superficie');
-      var nameMadurez = $(this).data('name-madurez');
-      var namePlagas = $(this).data('name-plagas');
-      var namePlantas = $(this).data('name-plantas');
-      var nameCoordenadas = $(this).data('name-coordenadas');
-
-      // Crear una nueva fila
-      var newRow = `
-          <tr>
-              <th>
-                  <button type="button" class="btn btn-danger remove-row"> 
-                      <i class="ri-delete-bin-5-fill"></i> 
-                  </button>
-              </th>
-              <td>
-                  <select class="form-control select2-nuevo" name="${namePrefix}">
-                      <!-- Opciones llenadas dinámicamente -->
-                  </select>
-              </td>
-              <td>
-                  <select class="form-control select2-nuevo" name="${nameEspacio}">
-                      <!-- Opciones llenadas dinámicamente -->
-                  </select>
-              </td>
-              <td>
-                  <select class="form-control select2-nuevo" name="${nameSuperficie}" readonly>
-                      <option value="" selected></option>
-                  </select>
-              </td>
-              <td>
-                  <select class="form-control select2-nuevo" name="${nameMadurez}" readonly>
-                      <option value="" selected></option>
-                  </select>
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="${namePlagas}" />
-              </td>
-              <td>
-                  <select class="form-control select2-nuevo" name="${namePlantas}" readonly>
-                      <option value="" selected></option>
-                  </select>
-              </td>
-              <td>
-                  <select class="form-control select2-nuevo" name="${nameCoordenadas}" readonly>
-                      <option value="" selected></option>
-                  </select>
-              </td>
-          </tr>`;
-
-      // Agregar la nueva fila al target
-      $(target).append(newRow);
-
-      // Re-inicializar select2 en los nuevos selects
-      initializeSelect2($(target).find('.select2-nuevo'));
-
-      // Copiar las opciones del primer select al nuevo select de la nueva fila
-      var optionsEmpresa = $('#unidadProduccion tr:first-child .select2[name="id_empresa[]"]').html();
-      $(target).find('tr:last-child .select2-nuevo[name="id_empresa[]"]').html(optionsEmpresa);
-
-      var optionsEspacio = $('#unidadProduccion tr:first-child .select2[name="nombre[]"]').html();
-      $(target).find('tr:last-child .select2-nuevo[name="nombre[]"]').html(optionsEspacio);
-  });
-
-  // Función para eliminar una fila
-  $(document).on('click', '.remove-row', function () {
-      $(this).closest('tr').remove();
-  });
-
-  // Función para manejar el evento onchange en los selects de las filas dinámicas
-  $(document).on('change', '.select2', function () {
-      var $row = $(this).closest('tr');
-      var empresa = $row.find('select[name="id_empresa[]"]').val();
-
-      // Actualizar otros selects en la misma fila basados en la selección
-      $.ajax({
-          url: '/getDatos/' + empresa,
-          method: 'GET',
-          success: function(response) {
-              console.log(response);
-
-              var $superficie = $row.find('select[name="superficie[]"]');
-              var $madurez = $row.find('select[name="madurez_agave[]"]');
-              var $plantas = $row.find('select[name="cantidad_plantas[]"]');
-              var $coordenadas = $row.find('select[name="coordenadas[]"]');
-
-              // Actualizar superficies
-              var optionsSuperficie = response.predios.map(predio => 
-                  `<option value="${predio.id_predio}">${predio.superficie}</option>`
-              ).join('');
-              $superficie.html(optionsSuperficie || '<option value="">Sin predios registradas</option>');
-
-              // Actualizar madurez
-              var optionsMadurez = response.guias.map(guia => 
-                  `<option value="${guia.id_predio}">${guia.edad}</option>`
-              ).join('');
-              $madurez.html(optionsMadurez || '<option value="">Sin datos</option>');
-
-              // Actualizar cantidad de plantas
-              var optionsPlantas = response.guias.map(guia => 
-                  `<option value="${guia.id_predio}">${guia.numero_plantas}</option>`
-              ).join('');
-              $plantas.html(optionsPlantas || '<option value="">Sin datos</option>');
-
-              // Actualizar coordenadas
-              var optionsCoordenadas = response.predios_coordenadas.map(coord => 
-                  `<option value="${coord.id_predio}">${coord.latitud}</option>`
-              ).join('');
-              $coordenadas.html(optionsCoordenadas || '<option value="">Sin datos</option>');
-          },
-          error: function() {
-              console.error('Error al cargar los datos.');
-          }
-      });
-  });
-}); */
-
-
-
-
 
   
   //end
