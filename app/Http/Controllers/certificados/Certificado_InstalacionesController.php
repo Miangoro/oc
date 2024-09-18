@@ -8,7 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\Certificados;
 use App\Models\Dictamen_instalaciones;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Models\User; // Modelo para usuarios
+use App\Models\User;
+use App\Models\Revisor; 
 
 class Certificado_InstalacionesController extends Controller
 {
@@ -233,6 +234,38 @@ class Certificado_InstalacionesController extends Controller
     $pdf = Pdf::loadView('pdfs.Certificado_comercializador', $pdfData);
     return $pdf->stream('Certificado de comercializador.pdf');
 }
+
+
+    public function obtenerRevisores(Request $request)
+    {
+        $tipo = $request->get('tipo');
+        $revisores = User::where('tipo', $tipo)->get(['id', 'name']);
+        return response()->json($revisores);
+    }
+
+    public function storeRevisor(Request $request)
+    {
+        $validatedData = $request->validate([
+            'tipoRevisor' => 'required|string',
+            'nombreRevisor' => 'required|integer',
+            'numeroRevision' => 'required|string',
+            'esCorreccion' => 'nullable|in:si,no', 
+            'observaciones' => 'nullable|string|max:255'
+        ]);
+    
+        $asignacion = Revisor::create([
+            'tipo_revision' => $validatedData['tipoRevisor'],
+            'id_revisor' => $validatedData['nombreRevisor'],
+            'numero_revision' => $validatedData['numeroRevision'],
+            'es_correccion' => $validatedData['esCorreccion'] ?? 'no',  
+            'observaciones' => $validatedData['observaciones'] ?? ''
+        ]);
+    
+        return response()->json([
+            'message' => 'Revisor asignado exitosamente',
+            'asignacion' => $asignacion
+        ]);
+    }
 
 //end
 }

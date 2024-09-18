@@ -93,7 +93,7 @@ $(function () {
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalAsignarInspector(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']},'${escapeHtml(full['num_servicio'])}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
-                `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
+                `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}','${full['direccion_completa']}','${full['fecha_visita']}','${full['inspector']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
 
                 
                 '</div>' +
@@ -1049,7 +1049,7 @@ $(function () {
               </tr>`;
 
           $(targetTable).append(newRow);
-      } /* else if (targetTable === '#unidadProduccion') {
+      }  else if (targetTable === '#unidadMezcal') {
           // Obtener nombres para los diferentes campos de la tabla "unidadProduccion"
           var namePredio = $(this).data('name-prefix');
           var nameEspacio = $(this).data('name-espacio');
@@ -1091,7 +1091,7 @@ $(function () {
               </tr>`;
 
           $(targetTable).append(newRow);
-      } */
+      } 
   });
 
   // Función para eliminar una fila
@@ -1102,65 +1102,53 @@ $(function () {
 
 
 $(document).ready(function () {
-  // Cuando se haga clic en el botón .add-row
+  // Añadir fila a la tabla con id "unidadProduccion"
   $('.add-row').click(function () {
-      // Crear una nueva fila
+      // Seleccionamos el tbody de la tabla específica (en este caso, "unidadProduccion")
+      var targetTable = $('#unidadProduccion'); 
+
+      // Crear una nueva fila con el formato que necesitas
       var newRow = `
           <tr>
               <th>
-                  <button type="button" class="btn btn-danger remove-row"> 
-                      <i class="ri-delete-bin-5-fill"></i> 
-                  </button>
+                  <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
               </th>
               <td>
-                  <select class="form-control select2-nuevo" name="nom_predio[]">
+                  <select class="form-control select2-nuevo plantacion" name="id_empresa[]">
                       <!-- Opciones -->
                   </select>
               </td>
               <td>
-                  <input type="text" class="form-control form-control-sm" name="espacio_agave[]" readonly />
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="superficie[]" readonly />
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="madurez_agave[]" readonly />
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="plagas[]" />
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="cantidad_plantas[]" readonly />
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="coordenadas[]" readonly />
+                  <input type="text" class="form-control form-control-sm" name="plagas[]">
               </td>
           </tr>`;
 
-      $('#unidadProduccion').append(newRow);
+      // Agregar la nueva fila al tbody de la tabla objetivo
+      $(targetTable).append(newRow);
 
-      // Re-inicializar select2 en la nueva fila
-      $('#unidadProduccion').find('.select2-nuevo').select2({
-          dropdownParent: $('#ActaUnidades'), // Asegúrate de usar el modal correcto si es necesario
+      // Re-inicializar select2 en el nuevo select
+      $(targetTable).find('.select2-nuevo').select2({
+          dropdownParent: $('#ActaUnidades'), // Asegúrate de que este es el id correcto de tu modal
           width: '100%',
           dropdownCssClass: 'select2-dropdown'
       });
 
-      // Copiar opciones del primer select al nuevo select
-      var options = $('#unidadProduccion tr:first-child .select2').html();
-      $('#unidadProduccion tr:last-child .select2-nuevo').html(options);
+      // Asegurar que el z-index esté configurado correctamente para el dropdown de select2
+      $('.select2-dropdown').css('z-index', 9999);
+
+      // Copiar las opciones del primer select al nuevo select
+      var options = $(targetTable).find('tr:first-child .plantacion').html();
+      $(targetTable).find('tr:last-child .plantacion').html(options);
   });
 
   // Función para eliminar una fila
   $(document).on('click', '.remove-row', function () {
       $(this).closest('tr').remove();
   });
-
-  // Inicializar select2 en los selects existentes al cargar la página
-  $('.select2').select2({
-      width: '100%',
-  });
 });
+
+
+
 
 
 // Añadir método para agregar acta
@@ -1200,10 +1188,6 @@ $('#ActaUnidadesForm').on('submit', function (e) {
   }
   });
 });
-
-
-
-
 
   
   //end

@@ -11,7 +11,10 @@ use App\Models\empresa;
 use App\Models\estados;
 use App\Models\actas_inspeccion;
 use App\Models\actas_testigo;
+use App\Models\actas_produccion;
 use App\Models\Predios;
+use App\Models\tipos;
+
 use App\Models\Organismos;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
@@ -31,9 +34,12 @@ class inspeccionesController extends Controller
         $Predios = Predios::all(); // Obtener todas las instalaciones
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = estados::all(); // Obtener todos los estados
+        $tipos = tipos::all(); // Obtener todos los estados
+
+
 
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
-        return view('inspecciones.find_inspecciones_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'Predios'));
+        return view('inspecciones.find_inspecciones_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos',));
     }
 
     public function index(Request $request)
@@ -292,13 +298,16 @@ class inspeccionesController extends Controller
                 $testigo->save();
             }
 
-/*             for ($i = 0; $i < count($request->nombre_testigo); $i++) {
-                $testigo = new actas_testigo();
-                $testigo->id_acta = $acta->id_acta;  // Relacionar con la acta creada
-                $testigo->nombre_testigo = $request->nombre_testigo[$i];
-                $testigo->domicilio = $request->domicilio[$i];
-                $testigo->save();
-            } */
+
+        // Guardar las producciones relacionadas
+        for ($i = 0; $i < count($request->id_empresa); $i++) {
+            $produccion = new actas_produccion();
+            $produccion->id_acta = $acta->id_acta;  // Relacionar con la acta creada
+            $produccion->id_empresa = $request->id_empresa[$i];   
+            $produccion->plagas = $request->plagas[$i];
+
+            $produccion->save();
+        }
             return response()->json(['success' => 'Lote registrado exitosamente.']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);

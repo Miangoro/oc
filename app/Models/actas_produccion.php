@@ -15,8 +15,8 @@ class actas_produccion extends Model
         'id_produccion',
         'id_acta',
         'id_predio',
-        'nom_predio',
-        'espacio_agave',
+        'id_empresa',
+        'especie_agave',
         'superficie',
         'madurez_agave',
         'plagas',
@@ -34,7 +34,14 @@ class actas_produccion extends Model
         return $this->belongsTo(Predios::class,'id_predio', 'nom_predio');
     }
 
+    public function empresa()
+    {
+        return $this->belongsTo(empresa::class, 'id_empresa');
+    }
 
-
+    public function tipos()
+    {
+        return $this->belongsTo(tipos::class,'nombre', 'nombre');
+    }
     
 }
