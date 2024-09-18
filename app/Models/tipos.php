@@ -16,5 +16,10 @@ class tipos extends Model
         'cientifico',
       ];
 
+
+      public function acats()
+      {
+          return $this->hasMany(actas_produccion::class,'nombre', 'nombre');
+      }
       
 }

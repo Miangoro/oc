@@ -229,6 +229,7 @@
     
     $(".id_empresa").val(id_empresa);
     $('.solicitud').text(tipo);
+    obtenerNombrePredio();
     $('#ActaUnidades').modal('show');
   } 
 

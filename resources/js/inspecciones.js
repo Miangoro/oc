@@ -1101,66 +1101,6 @@ $(function () {
 });
 
 
-$(document).ready(function () {
-  // Cuando se haga clic en el botón .add-row
-  $('.add-row').click(function () {
-      // Crear una nueva fila
-      var newRow = `
-          <tr>
-              <th>
-                  <button type="button" class="btn btn-danger remove-row"> 
-                      <i class="ri-delete-bin-5-fill"></i> 
-                  </button>
-              </th>
-              <td>
-                  <select class="form-control select2-nuevo" name="nom_predio[]">
-                      <!-- Opciones -->
-                  </select>
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="espacio_agave[]" readonly />
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="superficie[]" readonly />
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="madurez_agave[]" readonly />
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="plagas[]" />
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="cantidad_plantas[]" readonly />
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="coordenadas[]" readonly />
-              </td>
-          </tr>`;
-
-      $('#unidadProduccion').append(newRow);
-
-      // Re-inicializar select2 en la nueva fila
-      $('#unidadProduccion').find('.select2-nuevo').select2({
-          dropdownParent: $('#ActaUnidades'), // Asegúrate de usar el modal correcto si es necesario
-          width: '100%',
-          dropdownCssClass: 'select2-dropdown'
-      });
-
-      // Copiar opciones del primer select al nuevo select
-      var options = $('#unidadProduccion tr:first-child .select2').html();
-      $('#unidadProduccion tr:last-child .select2-nuevo').html(options);
-  });
-
-  // Función para eliminar una fila
-  $(document).on('click', '.remove-row', function () {
-      $(this).closest('tr').remove();
-  });
-
-  // Inicializar select2 en los selects existentes al cargar la página
-  $('.select2').select2({
-      width: '100%',
-  });
-});
 
 
 // Añadir método para agregar acta
@@ -1200,6 +1140,143 @@ $('#ActaUnidadesForm').on('submit', function (e) {
   }
   });
 });
+
+
+
+
+/* $(document).ready(function () {
+  // Función para inicializar select2
+  function initializeSelect2(elements) {
+      elements.select2({
+          width: '100%',
+          dropdownParent: $('#ActaUnidades') // Ajusta si estás usando un modal
+      });
+  }
+
+  // Inicializar select2 en los selects existentes al cargar la página
+  initializeSelect2($('.select2'));
+
+  // Cuando se haga clic en el botón .add-row
+  $(document).on('click', '.add-row', function () {
+      // Obtener el target donde se agregarán las nuevas filas
+      var target = $(this).data('target');
+      var namePrefix = $(this).data('name-prefix');
+      var nameEspacio = $(this).data('name-espacio');
+      var nameSuperficie = $(this).data('name-superficie');
+      var nameMadurez = $(this).data('name-madurez');
+      var namePlagas = $(this).data('name-plagas');
+      var namePlantas = $(this).data('name-plantas');
+      var nameCoordenadas = $(this).data('name-coordenadas');
+
+      // Crear una nueva fila
+      var newRow = `
+          <tr>
+              <th>
+                  <button type="button" class="btn btn-danger remove-row"> 
+                      <i class="ri-delete-bin-5-fill"></i> 
+                  </button>
+              </th>
+              <td>
+                  <select class="form-control select2-nuevo" name="${namePrefix}">
+                      <!-- Opciones llenadas dinámicamente -->
+                  </select>
+              </td>
+              <td>
+                  <select class="form-control select2-nuevo" name="${nameEspacio}">
+                      <!-- Opciones llenadas dinámicamente -->
+                  </select>
+              </td>
+              <td>
+                  <select class="form-control select2-nuevo" name="${nameSuperficie}" readonly>
+                      <option value="" selected></option>
+                  </select>
+              </td>
+              <td>
+                  <select class="form-control select2-nuevo" name="${nameMadurez}" readonly>
+                      <option value="" selected></option>
+                  </select>
+              </td>
+              <td>
+                  <input type="text" class="form-control form-control-sm" name="${namePlagas}" />
+              </td>
+              <td>
+                  <select class="form-control select2-nuevo" name="${namePlantas}" readonly>
+                      <option value="" selected></option>
+                  </select>
+              </td>
+              <td>
+                  <select class="form-control select2-nuevo" name="${nameCoordenadas}" readonly>
+                      <option value="" selected></option>
+                  </select>
+              </td>
+          </tr>`;
+
+      // Agregar la nueva fila al target
+      $(target).append(newRow);
+
+      // Re-inicializar select2 en los nuevos selects
+      initializeSelect2($(target).find('.select2-nuevo'));
+
+      // Copiar las opciones del primer select al nuevo select de la nueva fila
+      var optionsEmpresa = $('#unidadProduccion tr:first-child .select2[name="id_empresa[]"]').html();
+      $(target).find('tr:last-child .select2-nuevo[name="id_empresa[]"]').html(optionsEmpresa);
+
+      var optionsEspacio = $('#unidadProduccion tr:first-child .select2[name="nombre[]"]').html();
+      $(target).find('tr:last-child .select2-nuevo[name="nombre[]"]').html(optionsEspacio);
+  });
+
+  // Función para eliminar una fila
+  $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+  });
+
+  // Función para manejar el evento onchange en los selects de las filas dinámicas
+  $(document).on('change', '.select2', function () {
+      var $row = $(this).closest('tr');
+      var empresa = $row.find('select[name="id_empresa[]"]').val();
+
+      // Actualizar otros selects en la misma fila basados en la selección
+      $.ajax({
+          url: '/getDatos/' + empresa,
+          method: 'GET',
+          success: function(response) {
+              console.log(response);
+
+              var $superficie = $row.find('select[name="superficie[]"]');
+              var $madurez = $row.find('select[name="madurez_agave[]"]');
+              var $plantas = $row.find('select[name="cantidad_plantas[]"]');
+              var $coordenadas = $row.find('select[name="coordenadas[]"]');
+
+              // Actualizar superficies
+              var optionsSuperficie = response.predios.map(predio => 
+                  `<option value="${predio.id_predio}">${predio.superficie}</option>`
+              ).join('');
+              $superficie.html(optionsSuperficie || '<option value="">Sin predios registradas</option>');
+
+              // Actualizar madurez
+              var optionsMadurez = response.guias.map(guia => 
+                  `<option value="${guia.id_predio}">${guia.edad}</option>`
+              ).join('');
+              $madurez.html(optionsMadurez || '<option value="">Sin datos</option>');
+
+              // Actualizar cantidad de plantas
+              var optionsPlantas = response.guias.map(guia => 
+                  `<option value="${guia.id_predio}">${guia.numero_plantas}</option>`
+              ).join('');
+              $plantas.html(optionsPlantas || '<option value="">Sin datos</option>');
+
+              // Actualizar coordenadas
+              var optionsCoordenadas = response.predios_coordenadas.map(coord => 
+                  `<option value="${coord.id_predio}">${coord.latitud}</option>`
+              ).join('');
+              $coordenadas.html(optionsCoordenadas || '<option value="">Sin datos</option>');
+          },
+          error: function() {
+              console.error('Error al cargar los datos.');
+          }
+      });
+  });
+}); */
 
 
 

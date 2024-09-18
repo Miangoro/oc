@@ -956,8 +956,81 @@ $('#pdfViewerDictamen').on('load', function () {
   $('#pdfViewerDictamen').show();
 });
 
-  //end
- });
+
+//Funcion Cargar Users por 
+$(document).ready(function() {
+  $('#tipoRevisor').on('change', function() {
+      var tipoRevisor = $(this).val(); 
+
+      $('#nombreRevisor').empty().append('<option value="">Seleccione un nombre</option>');
+
+      if (tipoRevisor) {
+          var tipo = (tipoRevisor === 'organismo') ? 1 : 4;
+
+          $.ajax({
+              url: '/ruta-para-obtener-revisores',
+              type: 'GET',
+              data: { tipo: tipo },
+              success: function(response) {
+                  response.forEach(function(revisor) {
+                      $('#nombreRevisor').append('<option value="' + revisor.id + '">' + revisor.name + '</option>');
+                  });
+              },
+              error: function() {
+                  alert('Error al cargar los revisores. Inténtelo de nuevo.');
+              }
+          });
+      }
+  });
+
+  $('#asignarRevisorForm').on('submit', function(e) {
+      e.preventDefault(); 
+
+      var formData = $(this).serialize(); 
+      var esCorreccion = $('#esCorreccion').is(':checked') ? 1 : 0;
+
+      formData = formData + '&esCorreccion=' + esCorreccion;
+
+      $.ajax({
+          url: '/asignar-revisor', 
+          method: 'POST',
+          data: formData,
+          dataType: 'json',
+          success: function(response) {
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.message,
+                  customClass: {
+                      confirmButton: 'btn btn-primary'
+                  }
+              });
+              $('#asignarRevisorModal').modal('hide'); 
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Ocurrió un error al asignar el revisor.',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+              console.error('Error:', textStatus, errorThrown);
+              console.error('Response:', jqXHR.responseText);
+          }
+      });
+  });
+});
+
+
+
+//Funcion Agregar Revisor
+
+
+
+//end
+});
  
 
 
