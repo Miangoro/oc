@@ -29,5 +29,13 @@ class lotes_envasado extends Model
     {
         return $this->belongsTo(Empresa::class, 'id_empresa', 'id_empresa');
     }
+    public function marca(){
+        return $this->belongsTo(marcas::class, 'id_marca', 'id_marca');
+    }
+    public function lotesGranel()
+    {
+        return $this->belongsToMany(LotesGranel::class, 'lotes_envasado_granel', 'id_lote_envasado', 'id_lote_granel');
+    }
     
+
 }

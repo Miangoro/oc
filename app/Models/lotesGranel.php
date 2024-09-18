@@ -78,4 +78,10 @@ class LotesGranel extends Model
     {
         return $this->hasMany(LotesGranel::class, 'lote_original_id');
     }
+
+    public function lotesEnvasado()
+    {
+        return $this->belongsToMany(LotesEnvasado::class, 'lotes_envasado_granel', 'id_lote_granel', 'id_lote_envasado');
+    }
+    
 }

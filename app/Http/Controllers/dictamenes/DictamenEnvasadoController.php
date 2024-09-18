@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\empresa; 
 use App\Models\lotes_envasado;
 use App\Models\Dictamen_Envasado; 
+use App\Models\marcas;
+use App\Models\LotesGranel;
 use App\Helpers\Helpers;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -23,10 +25,12 @@ class DictamenEnvasadoController extends Controller
         $inspecciones = Inspecciones::all();
         $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $inspectores = User::where('tipo', 2)->get(); // Obtener solo los usuarios con tipo '2' (inspectores)
+        $marcas = marcas::all(); // Obtener todas las marcas
+        $lotes_granel = LotesGranel::all();
         $envasado = lotes_envasado::all(); // Usa la clase correcta
 
         // Pasar los datos a la vista
-        return view('dictamenes.dictamen_envasado_view', compact('inspecciones', 'empresas', 'envasado', 'inspectores'));
+        return view('dictamenes.dictamen_envasado_view', compact('inspecciones', 'empresas', 'envasado', 'inspectores',  'marcas', 'lotes_granel'));
     }
 
     public function index(Request $request)
@@ -262,13 +266,16 @@ class DictamenEnvasadoController extends Controller
 
     public function dictamenDeCumplimientoEnvasado($id_dictamen)
     {
-        // Obtener los datos del dictamen específico
-        $data = Dictamen_Envasado::find($id_dictamen);
+        // Obtener los datos del dictamen con la relación de lotes a granel
+        $data = Dictamen_Envasado::with(['lote_envasado.lotesGranel'])->find($id_dictamen);
 
         if (!$data) {
             return abort(404, 'Dictamen no encontrado');
         }
-        // Verifica qué valor tiene esta variable
+
+        $loteEnvasado = $data->lote_envasado;
+        $marca = $loteEnvasado ? $loteEnvasado->marca : null;
+        $lotesGranel = $loteEnvasado ? $loteEnvasado->lotesGranel : collect(); // Si no hay, devuelve una colección vacía
 
         $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
@@ -277,16 +284,22 @@ class DictamenEnvasadoController extends Controller
         // Determinar si la marca de agua debe ser visible
         $watermarkText = $data->estatus === 'Cancelado';
 
+        // Renderizar el PDF con los lotes a granel
         $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_mezcal-envasado', [
+            'lote_envasado' => $loteEnvasado,
+            'marca' => $marca,
+            'lotesGranel' => $lotesGranel, // Pasamos los lotes a granel a la vista
             'data' => $data,
             'fecha_servicio' => $fecha_servicio,
             'fecha_emision' => $fecha_emision,
             'fecha_vigencia' => $fecha_vigencia,
             'watermarkText' => $watermarkText,
         ]);
-    
+
         return $pdf->stream('Dictamen de Cumplimiento NOM de Mezcal Envasado.pdf');
     }
+
+    
 
 
 

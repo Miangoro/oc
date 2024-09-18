@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Certificados;
 use App\Models\Dictamen_instalaciones;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Models\User; // Modelo para usuarios
+use App\Models\User;
 use App\Models\Revisor; 
 
 class Certificado_InstalacionesController extends Controller
@@ -17,7 +17,6 @@ class Certificado_InstalacionesController extends Controller
     {
         $dictamenes = Dictamen_instalaciones::all();
         $users = User::all(); 
-        $users = Revisor::all(); 
         return view('certificados.certificados_instalaciones_view', compact('dictamenes', 'users'));
     }
 
@@ -250,7 +249,7 @@ class Certificado_InstalacionesController extends Controller
             'tipoRevisor' => 'required|string',
             'nombreRevisor' => 'required|integer',
             'numeroRevision' => 'required|string',
-            'esCorreccion' => 'nullable|boolean',
+            'esCorreccion' => 'nullable|in:si,no', 
             'observaciones' => 'nullable|string|max:255'
         ]);
     
@@ -258,11 +257,10 @@ class Certificado_InstalacionesController extends Controller
             'tipo_revision' => $validatedData['tipoRevisor'],
             'id_revisor' => $validatedData['nombreRevisor'],
             'numero_revision' => $validatedData['numeroRevision'],
-            'es_correccion' => $validatedData['esCorreccion'] ? 1 : 0,
+            'es_correccion' => $validatedData['esCorreccion'] ?? 'no',  
             'observaciones' => $validatedData['observaciones'] ?? ''
         ]);
     
-        // Retornar respuesta JSON
         return response()->json([
             'message' => 'Revisor asignado exitosamente',
             'asignacion' => $asignacion

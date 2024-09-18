@@ -8,39 +8,39 @@
       </div>
       <div class="modal-body">
         <form id="asignarRevisorForm">
-          
-        <!-- Revisión por parte de -->
-          <div class="mb-3">
-            <label for="tipoRevisor" class="form-label">Revisión por parte de:</label>
-            <select class="form-select" id="tipoRevisor" name="tipoRevisor" required>
+
+          <!-- Revisión por parte de -->
+          <div class="form-floating form-floating-outline mb-3">
+            <select class="form-select" id="tipoRevisor" name="tipoRevisor" aria-label="Revisión por parte de" required>
               <option value="">Seleccione una opción</option>
               <option value="2">Personal del organismo certificador</option>
               <option value="1">Miembro del consejo para la decisión de la certificación</option>
             </select>
+            <label for="tipoRevisor">Revisión por parte de</label>
           </div>
 
           <!-- Selecciona el nombre del revisor -->
-          <div class="mb-3">
-            <label for="nombreRevisor" class="form-label">Selecciona el nombre del revisor:</label>
-            <select class="form-select" id="nombreRevisor" name="nombreRevisor" required>
+          <div class="form-floating form-floating-outline mb-3">
+            <select class="form-select" id="nombreRevisor" name="nombreRevisor" aria-label="Selecciona el nombre del revisor" required>
               <option value="">Seleccione un nombre</option>
             </select>
+            <label for="nombreRevisor">Selecciona el nombre del revisor</label>
           </div>
 
           <!-- Selecciona el número de revisión -->
-          <div class="mb-3">
-            <label for="numeroRevision" class="form-label">Selecciona el número de revisión:</label>
-            <select class="form-select" id="numeroRevision" name="numeroRevision" required>
+          <div class="form-floating form-floating-outline mb-3">
+            <select class="form-select" id="numeroRevision" name="numeroRevision" aria-label="Selecciona el número de revisión" required>
               <option value="">Seleccione una opción</option>
               <option value="2">Primera revisión</option>
               <option value="1">Segunda revisión</option>
             </select>
+            <label for="numeroRevision">Selecciona el número de revisión</label>
           </div>
 
           <!-- ¿Es una corrección? -->
           <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="esCorreccion" name="esCorreccion">
-              <label class="form-check-label" for="esCorreccion">¿Es una corrección?</label>
+            <input type="checkbox" class="form-check-input" id="esCorreccion" name="esCorreccion">
+            <label class="form-check-label" for="esCorreccion">¿Es una corrección?</label>
           </div>
 
           <!-- Observaciones o indicaciones -->
@@ -48,14 +48,13 @@
             <label for="observaciones" class="form-label">Observaciones o indicaciones que le ayuden al revisor:</label>
             <textarea class="form-control" id="observaciones" name="observaciones" rows="3" placeholder="Escribe observaciones o indicaciones (opcional)"></textarea>
           </div>
-
+          
           <!-- Botón de enviar -->
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary">Asignar Revisor</button>
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
           </div>
         </form>
-        
       </div>
     </div>
   </div>
