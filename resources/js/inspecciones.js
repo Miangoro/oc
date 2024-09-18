@@ -1144,10 +1144,20 @@ $('#ActaUnidadesForm').on('submit', function (e) {
 
 
 
+/* $(document).ready(function () {
+  // Función para inicializar select2
+  function initializeSelect2(elements) {
+      elements.select2({
+          width: '100%',
+          dropdownParent: $('#ActaUnidades') // Ajusta si estás usando un modal
+      });
+  }
 
-$(document).ready(function () {
+  // Inicializar select2 en los selects existentes al cargar la página
+  initializeSelect2($('.select2'));
+
   // Cuando se haga clic en el botón .add-row
-  $('.add-row').click(function () {
+  $(document).on('click', '.add-row', function () {
       // Obtener el target donde se agregarán las nuevas filas
       var target = $(this).data('target');
       var namePrefix = $(this).data('name-prefix');
@@ -1205,10 +1215,7 @@ $(document).ready(function () {
       $(target).append(newRow);
 
       // Re-inicializar select2 en los nuevos selects
-      $(target).find('.select2-nuevo').select2({
-          dropdownParent: $('#ActaUnidades'), // Ajusta si estás usando un modal
-          width: '100%'
-      });
+      initializeSelect2($(target).find('.select2-nuevo'));
 
       // Copiar las opciones del primer select al nuevo select de la nueva fila
       var optionsEmpresa = $('#unidadProduccion tr:first-child .select2[name="id_empresa[]"]').html();
@@ -1223,11 +1230,55 @@ $(document).ready(function () {
       $(this).closest('tr').remove();
   });
 
-  // Inicializar select2 en los selects existentes al cargar la página
-  $('.select2').select2({
-      width: '100%'
+  // Función para manejar el evento onchange en los selects de las filas dinámicas
+  $(document).on('change', '.select2', function () {
+      var $row = $(this).closest('tr');
+      var empresa = $row.find('select[name="id_empresa[]"]').val();
+
+      // Actualizar otros selects en la misma fila basados en la selección
+      $.ajax({
+          url: '/getDatos/' + empresa,
+          method: 'GET',
+          success: function(response) {
+              console.log(response);
+
+              var $superficie = $row.find('select[name="superficie[]"]');
+              var $madurez = $row.find('select[name="madurez_agave[]"]');
+              var $plantas = $row.find('select[name="cantidad_plantas[]"]');
+              var $coordenadas = $row.find('select[name="coordenadas[]"]');
+
+              // Actualizar superficies
+              var optionsSuperficie = response.predios.map(predio => 
+                  `<option value="${predio.id_predio}">${predio.superficie}</option>`
+              ).join('');
+              $superficie.html(optionsSuperficie || '<option value="">Sin predios registradas</option>');
+
+              // Actualizar madurez
+              var optionsMadurez = response.guias.map(guia => 
+                  `<option value="${guia.id_predio}">${guia.edad}</option>`
+              ).join('');
+              $madurez.html(optionsMadurez || '<option value="">Sin datos</option>');
+
+              // Actualizar cantidad de plantas
+              var optionsPlantas = response.guias.map(guia => 
+                  `<option value="${guia.id_predio}">${guia.numero_plantas}</option>`
+              ).join('');
+              $plantas.html(optionsPlantas || '<option value="">Sin datos</option>');
+
+              // Actualizar coordenadas
+              var optionsCoordenadas = response.predios_coordenadas.map(coord => 
+                  `<option value="${coord.id_predio}">${coord.latitud}</option>`
+              ).join('');
+              $coordenadas.html(optionsCoordenadas || '<option value="">Sin datos</option>');
+          },
+          error: function() {
+              console.error('Error al cargar los datos.');
+          }
+      });
   });
-});
+}); */
+
+
 
 
 
