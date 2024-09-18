@@ -1086,5 +1086,26 @@ $(function () {
 
     });
     
+        // Reciben los datos del PDF
+        $(document).on('click', '.pdf', function () {
+            var id = $(this).data('id'); // Obtén el ID desde el atributo data-id
+            var iframe = $('#pdfViewerDictamen');
+            var spinner = $('#loading-spinner');
+            // Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+            spinner.show();
+            iframe.hide();
+    
+            // Cargar el PDF con el ID
+            iframe.attr('src', '/Dictamen-MezcalEnvasado/' + id); // Usa URL absoluta
+    
+            $("#titulo_modal_Dictamen").text("Dictamen de Cumplimiento NOM de Mezcal Envasado");
+            $("#subtitulo_modal_Dictamen").text("PDF de Dictamen");
+    
+            // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+            iframe.on('load', function () {
+                spinner.hide();
+                iframe.show();
+            });
+        });
 
 });

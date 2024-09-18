@@ -260,5 +260,34 @@ class DictamenEnvasadoController extends Controller
     }
     
 
+    public function dictamenDeCumplimientoEnvasado($id_dictamen)
+    {
+        // Obtener los datos del dictamen específico
+        $data = Dictamen_Envasado::find($id_dictamen);
+
+        if (!$data) {
+            return abort(404, 'Dictamen no encontrado');
+        }
+        // Verifica qué valor tiene esta variable
+
+        $fecha_emision = Helpers::formatearFecha($data->fecha_emision);
+        $fecha_vigencia = Helpers::formatearFecha($data->fecha_vigencia);
+        $fecha_servicio = Helpers::formatearFecha($data->fecha_servicio);
+
+        // Determinar si la marca de agua debe ser visible
+        $watermarkText = $data->estatus === 'Cancelado';
+
+        $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_mezcal-envasado', [
+            'data' => $data,
+            'fecha_servicio' => $fecha_servicio,
+            'fecha_emision' => $fecha_emision,
+            'fecha_vigencia' => $fecha_vigencia,
+            'watermarkText' => $watermarkText,
+        ]);
+    
+        return $pdf->stream('Dictamen de Cumplimiento NOM de Mezcal Envasado.pdf');
+    }
+
+
 
 }
