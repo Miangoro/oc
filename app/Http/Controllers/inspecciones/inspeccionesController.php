@@ -12,8 +12,11 @@ use App\Models\estados;
 use App\Models\actas_inspeccion;
 use App\Models\actas_testigo;
 use App\Models\actas_produccion;
+use App\Models\actas_equipo_mezcal;
 use App\Models\Predios;
 use App\Models\tipos;
+use App\Models\equipos;
+
 
 use App\Models\Organismos;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -35,11 +38,13 @@ class inspeccionesController extends Controller
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = estados::all(); // Obtener todos los estados
         $tipos = tipos::all(); // Obtener todos los estados
+        $equipos = equipos::all(); // Obtener todos los estados
+
 
 
 
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
-        return view('inspecciones.find_inspecciones_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos',));
+        return view('inspecciones.find_inspecciones_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos', 'equipos'));
     }
 
     public function index(Request $request)
@@ -307,6 +312,18 @@ class inspeccionesController extends Controller
             $produccion->plagas = $request->plagas[$i];
 
             $produccion->save();
+        }
+
+        for ($i = 0; $i < count($request->equipo); $i++) {
+            $equiMezcal = new actas_equipo_mezcal();
+            $equiMezcal->id_acta = $acta->id_acta;  // Relacionar con la acta creada
+            $equiMezcal->equipo = $request->equipo[$i];   
+            $equiMezcal->cantidad = $request->cantidad[$i];
+            $equiMezcal->capacidad = $request->capacidad[$i];
+            $equiMezcal->tipo_material = $request->tipo_material[$i];
+
+
+            $equiMezcal->save();
         }
             return response()->json(['success' => 'Lote registrado exitosamente.']);
         } catch (\Exception $e) {

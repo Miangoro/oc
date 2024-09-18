@@ -165,7 +165,7 @@
                 </table>
 
                 {{-- Modificar --}}
-                <div style="padding: 20px"></div>
+{{--                 <div style="padding: 20px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción de Mezcal</p>
                 <table class="table table-bordered">
                     <thead>
@@ -182,8 +182,8 @@
                             <th>Recepción
                                 (materia
                                 prima)</th>
-                            <th>Area de pesado</th>
-                            <th>Area de coccion</th>
+                            <th>Área de pesado</th>
+                            <th>Área de coccion</th>
                             <th>Área de
                                 maguey
                                 cocido</th>
@@ -231,7 +231,7 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table> --}}
 
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De Equipo Mezcal</p>
                 <table class="table table-bordered">
@@ -251,7 +251,7 @@
                             <th>Tipo de material</th>
                         </tr>
                     </thead>
-                    <tbody id="unidadProduccion">
+                    <tbody id="equipoMezcal">
                         <tr>
                             <th>
                                 <button type="button" class="btn btn-danger remove-row" disabled>
@@ -259,24 +259,29 @@
                                 </button>
                             </th>
                             <td>
-                                <select class="rango_inicial form-control select2" name="rango_inicial[]">
-                                    <!-- Opciones -->
+                                <select class="rango_inicial form-control select2 equipo" name="equipo[]">
+                                    <option value="">Selecciona cliente</option>
+                                    @foreach ($equipos as $equipo)
+                                        <option value="{{ $equipo->equipo }}">{{ $equipo->equipo }}</option>
+                                    @endforeach
                                 </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="superficie[]" />
+                                <input type="text" class="form-control form-control-sm" name="cantidad[]" />
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="madurez[]" />
+                                <input type="text" class="form-control form-control-sm" name="capacidad[]" />
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
+                                <input type="text" class="form-control form-control-sm" name="tipo_material[]" />
 
                         </tr>
                     </tbody>
                 </table>
 
 
+
+                
 
                 <div style="text-align: center; color: black; font-size: 20px; padding: 20px"><b
                         style="color: red">Anote: </b>No conformidades identificadas en la inspección</div>

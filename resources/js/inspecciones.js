@@ -1049,7 +1049,7 @@ $(function () {
               </tr>`;
 
           $(targetTable).append(newRow);
-      }  else if (targetTable === '#unidadMezcal') {
+      } /* else if (targetTable === '#unidadProduccion') {
           // Obtener nombres para los diferentes campos de la tabla "unidadProduccion"
           var namePredio = $(this).data('name-prefix');
           var nameEspacio = $(this).data('name-espacio');
@@ -1091,7 +1091,7 @@ $(function () {
               </tr>`;
 
           $(targetTable).append(newRow);
-      } 
+      } */
   });
 
   // Función para eliminar una fila
@@ -1148,6 +1148,62 @@ $(document).ready(function () {
 });
 
 
+$(document).ready(function () {
+  // Añadir fila a la tabla con id "equipoMezcal"
+  $('.add-row').click(function () {
+      // Seleccionamos el tbody de la tabla específica (en este caso, "equipoMezcal")
+      var targetTable = $('#equipoMezcal');
+
+      // Crear una nueva fila con el formato que necesitas
+      var newRow = `
+          <tr>
+              <th>
+                  <button type="button" class="btn btn-danger remove-row"> 
+                      <i class="ri-delete-bin-5-fill"></i> 
+                  </button>
+              </th>
+              <td>
+                  <select class="form-control select2-nuevo equipo" name="equipo[]">
+                      <option value="">Selecciona equipo</option>
+                      @foreach ($equipos as $equipo)
+                          <option value="{{ $equipo->equipo }}">{{ $equipo->equipo }}</option>
+                      @endforeach
+                  </select>
+              </td>
+              <td>
+                  <input type="text" class="form-control form-control-sm" name="cantidad[]" />
+              </td>
+              <td>
+                  <input type="text" class="form-control form-control-sm" name="capacidad[]" />
+              </td>
+              <td>
+                  <input type="text" class="form-control form-control-sm" name="tipo_material[]" />
+              </td>
+          </tr>`;
+
+      // Agregar la nueva fila al tbody de la tabla objetivo
+      $(targetTable).append(newRow);
+
+      // Re-inicializar select2 en el nuevo select
+      $(targetTable).find('.select2-nuevo').select2({
+          dropdownParent: $('#ActaUnidades'), // Asegúrate de que este es el id correcto de tu modal
+          width: '100%',
+          dropdownCssClass: 'select2-dropdown'
+      });
+
+      // Asegurar que el z-index esté configurado correctamente para el dropdown de select2
+      $('.select2-dropdown').css('z-index', 9999);
+
+      // Copiar las opciones del primer select al nuevo select
+      var options = $(targetTable).find('tr:first-child .equipo').html();
+      $(targetTable).find('tr:last-child .equipo').html(options);
+  });
+
+  // Función para eliminar una fila
+  $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+  });
+});
 
 
 
