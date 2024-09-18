@@ -142,8 +142,8 @@
                         <tr>
                             <th>
                                 <button type="button" class="btn btn-primary add-row"
-                                    data-target="#unidadProduccion" data-name-prefix="nom_predio[]"
-                                    data-name-espacio="espacio_agave[]"  data-name-superficie="superficie[]" 
+                                    data-target="#unidadProduccion" data-name-prefix="id_empresa[]"
+                                    data-name-espacio="nombre[]"  data-name-superficie="superficie[]" 
                                     data-name-madurez="madurez_agave[]" data-name-plagas="plagas[]" 
                                     data-name-plantas="cantidad_plantas[]" data-name-coordenadas="coordenadas[]">
                                     <i class="ri-add-line"></i>
@@ -165,20 +165,40 @@
                                     <i class="ri-delete-bin-5-fill"></i>
                                 </button>
                             </th>
-                            <td>
-                                <select class="form-control select2" name="nom_predio[]">
+                            <td><select onchange="obtenerNombrePredio(); obtenerMadurez(); obtenerNumPlantas(); obtenerCoordenadas();" class="form-control select2" id="id_empresa" name="id_empresa[]">
                                     <!-- Opciones -->
                                     @foreach ($Predios as $Predio)
-                                        <option value="{{ $Predio->nom_predio }}">{{ $Predio->nombre_predio }}</option>
+                                        <option value="{{ $Predio->id_empresa }}">{{ $Predio->nombre_predio }}</option>
                                     @endforeach
-                                </select>
-                            </td>
-                            <td><input type="text" class="form-control form-control-sm" name="espacio_agave[]" readonly /></td>
-                            <td><input type="text" class="form-control form-control-sm" name="superficie[]" readonly /></td>
-                            <td><input type="text" class="form-control form-control-sm" name="madurez_agave[]" readonly /></td>
+                                </select></td>
+                                <td>
+                                    <select class="form-control select2" id="nombre" name="nombre[]">
+                                        @foreach ($tipos as $tipo)
+                                            <option value="{{ $tipo->nombre }}">{{ $tipo->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                
+                            <td><select class="form-control select2" id="superficie" name="superficie[]" readonly >
+                                <option value="" selected></option>
+
+                            </select>
+                        </td>
+                            <td><select class="form-control select2" id="madurez_agave" name="madurez_agave[]" readonly >
+                                <option value="" selected></option>
+
+                            </select></td>
+                            
                             <td><input type="text" class="form-control form-control-sm" name="plagas[]" /></td>
-                            <td><input type="text" class="form-control form-control-sm" name="cantidad_plantas[]" readonly /></td>
-                            <td><input type="text" class="form-control form-control-sm" name="coordenadas[]" readonly /></td>
+
+                            <td><select class="form-control select2" id="cant_plantas" name="cant_plantas[]" readonly >
+                                <option value="" selected></option>
+
+                                </select></td>
+                            <td><select  class="form-control select2" id="coordenadas" name="coordenadas[]" readonly >
+                                <option value="" selected></option>
+
+                                </select></td>
                         </tr>
                     </tbody>
                 </table>
@@ -214,25 +234,113 @@
                 
 
 <script>
-        function obtenerNomPredio() {
+    function obtenerNombrePredio() {
         var empresa = $("#id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
             success: function(response) {
+                console.log(response);
+
                 // Cargar los detalles en el modal
                 var contenido = "";
-                for (let index = 0; index < response.lotes_granel.length; index++) {
-                    contenido = '<option value="' + response.lotes_granel[index].id_empresa + '">' +
-                        response.lotes_granel[index].nombre_lote + '</option>' + contenido;
+                for (let index = 0; index < response.predios.length; index++) {
+                    contenido = '<option value="' + response.predios[index].id_predio + '">' + response
+                        .predios[index].superficie + '</option>' + contenido;
                     // console.log(response.normas[index].norma);
                 }
 
-                if (response.lotes_granel.length == 0) {
-                    contenido = '<option value="">Sin lotes a granel registrados</option>';
+                if (response.predios.length == 0) {
+                    contenido = '<option value="">Sin predios registradas</option>';
                 }
-                $('.id_lote_granel').html(contenido);
+                $('#superficie').html(contenido);
+            },
+            error: function() {
+                //alert('Error al cargar los lotes a granel.');
+            }
+        });
+    }
+
+    function obtenerMadurez() {
+        var empresa = $("#id_empresa").val();
+        // Hacer una petición AJAX para obtener los detalles de la empresa
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                console.log(response);
+
+                // Cargar los detalles en el modal
+                var contenido = "";
+                for (let index = 0; index < response.guias.length; index++) {
+                    contenido = '<option value="' + response.guias[index].id_predio + '">' + response
+                        .guias[index].edad + '</option>' + contenido;
+                    // console.log(response.normas[index].norma);
+                }
+
+                if (response.predios.length == 0) {
+                    contenido = '<option value="">Sin predios registradas</option>';
+                }
+                $('#madurez_agave').html(contenido);
+            },
+            error: function() {
+                //alert('Error al cargar los lotes a granel.');
+            }
+        });
+    }
+
+
+    function obtenerNumPlantas() {
+        var empresa = $("#id_empresa").val();
+        // Hacer una petición AJAX para obtener los detalles de la empresa
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                console.log(response);
+
+                // Cargar los detalles en el modal
+                var contenido = "";
+                for (let index = 0; index < response.guias.length; index++) {
+                    contenido = '<option value="' + response.guias[index].id_predio + '">' + response
+                        .guias[index].numero_plantas + '</option>' + contenido;
+                    // console.log(response.normas[index].norma);
+                }
+
+                if (response.predios.length == 0) {
+                    contenido = '<option value="">Sin predios registradas</option>';
+                }
+                $('#cant_plantas').html(contenido);
+            },
+            error: function() {
+                //alert('Error al cargar los lotes a granel.');
+            }
+        });
+    }
+
+
+    function obtenerCoordenadas() {
+        var empresa = $("#id_empresa").val();
+        // Hacer una petición AJAX para obtener los detalles de la empresa
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                console.log(response);
+
+                // Cargar los detalles en el modal
+                var contenido = "";
+                for (let index = 0; index < response.predios_coordenadas.length; index++) {
+                    contenido = '<option value="' + response.predios_coordenadas[index].id_predio + '">' + response
+                        .predios_coordenadas[index].latitud + '</option>' + contenido;
+                    // console.log(response.normas[index].norma);
+                }
+
+                if (response.predios.length == 0) {
+                    contenido = '<option value="">Sin predios registradas</option>';
+                }
+                $('#coordenadas').html(contenido);
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');

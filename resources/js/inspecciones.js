@@ -1101,6 +1101,51 @@ $(function () {
 });
 
 
+
+
+// Añadir método para agregar acta
+$('#ActaUnidadesForm').on('submit', function (e) {
+  e.preventDefault();
+  
+  var formData = $(this).serialize(); // Serializar los datos del formulario
+
+  $.ajax({
+    url: '/acta-unidades', // Asegúrate que esta URL sea la correcta en tus rutas
+    type: 'POST',
+    data: formData,
+    success: function (response) {
+      $('#ActaUnidades').modal('hide'); // Cerrar modal
+      $('#ActaUnidadesForm')[0].reset(); // Limpiar formulario
+      // Mostrar alerta de éxito
+      Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.success,
+          customClass: {
+              confirmButton: 'btn btn-success'
+          }
+      });
+  },
+  error: function (xhr) {
+    console.log('Error:', xhr.responseText);
+      // Mostrar alerta de error
+      Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al agregar la clase',
+          customClass: {
+              confirmButton: 'btn btn-danger'
+          }
+      });
+  }
+  });
+});
+
+
+
+
+
+/* 
 $(document).ready(function () {
   // Cuando se haga clic en el botón .add-row
   $('.add-row').click(function () {
@@ -1113,7 +1158,7 @@ $(document).ready(function () {
                   </button>
               </th>
               <td>
-                  <select class="form-control select2-nuevo" name="nom_predio[]">
+                  <select class="form-control select2-nuevo" name="id_empresa[]">
                       <!-- Opciones -->
                   </select>
               </td>
@@ -1160,49 +1205,7 @@ $(document).ready(function () {
   $('.select2').select2({
       width: '100%',
   });
-});
-
-
-// Añadir método para agregar acta
-$('#ActaUnidadesForm').on('submit', function (e) {
-  e.preventDefault();
-  
-  var formData = $(this).serialize(); // Serializar los datos del formulario
-
-  $.ajax({
-    url: '/acta-unidades', // Asegúrate que esta URL sea la correcta en tus rutas
-    type: 'POST',
-    data: formData,
-    success: function (response) {
-      $('#ActaUnidades').modal('hide'); // Cerrar modal
-      $('#ActaUnidadesForm')[0].reset(); // Limpiar formulario
-      // Mostrar alerta de éxito
-      Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: response.success,
-          customClass: {
-              confirmButton: 'btn btn-success'
-          }
-      });
-  },
-  error: function (xhr) {
-    console.log('Error:', xhr.responseText);
-      // Mostrar alerta de error
-      Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al agregar la clase',
-          customClass: {
-              confirmButton: 'btn btn-danger'
-          }
-      });
-  }
-  });
-});
-
-
-
+}); */
 
 
   
