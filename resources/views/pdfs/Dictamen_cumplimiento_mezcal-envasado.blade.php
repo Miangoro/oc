@@ -245,9 +245,29 @@
             text-align: left;
             font-size: 13px;
         }
+        .watermark {
+            color: red;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
+            opacity: 0.5;
+            /* Opacidad predeterminada */
+            letter-spacing: 3px;
+            font-size: 150px;
+            white-space: nowrap;
+            z-index: -1;
+        }
     </style>
 </head>
 <body>
+    
+    @if ($watermarkText)
+        <div class="watermark">
+            Cancelado
+        </div>
+    @endif
+
 <div class="container">
     <div class="header">
         <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="275px">
@@ -271,7 +291,7 @@
 	<tbody>
 		<tr>
 			<td class="column">Nombre de la empresa</td>
-			<td colspan="3"></td>
+			<td colspan="3">{{ $data->empresa->razon_social }}</td>
 		</tr>
 		<tr>
 			<td class="column">Representante legal</td>
