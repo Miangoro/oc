@@ -1049,68 +1049,57 @@ $(function () {
               </tr>`;
 
           $(targetTable).append(newRow);
-      } else  if (targetTable === '#unidadProduccion') {
-        var namePredio = $(this).data('name-prefix');
-        var nameEspacio = $(this).data('name-espacio');
-        var nameSuperficie = $(this).data('name-superficie');
-        var nameMadurez = $(this).data('name-madurez');
-        var namePlagas = $(this).data('name-plagas');
-        var namePlantas = $(this).data('name-plantas');
-        var nameCoordenadas = $(this).data('name-coordenadas');
+      } /* else if (targetTable === '#unidadProduccion') {
+          // Obtener nombres para los diferentes campos de la tabla "unidadProduccion"
+          var namePredio = $(this).data('name-prefix');
+          var nameEspacio = $(this).data('name-espacio');
+          var nameSuperficie = $(this).data('name-superficie');
+          var nameMadurez = $(this).data('name-madurez');
+          var namePlagas = $(this).data('name-plagas');
+          var namePlantas = $(this).data('name-plantas');
+          var nameCoordenadas = $(this).data('name-coordenadas');
 
-        // Crear una nueva fila para la tabla "unidadProduccion"
-        var newRow = `
-            <tr>
-                <th>
-                    <button type="button" class="btn btn-danger remove-row"> 
-                        <i class="ri-delete-bin-5-fill"></i> 
-                    </button>
-                </th>
-                <td>
-                    <select class="form-control select2-nuevo" name="${namePredio}">
-                        <!-- Opciones -->
-                    </select>
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control-sm" name="${nameEspacio}" />
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control-sm" name="${nameSuperficie}" />
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control-sm" name="${nameMadurez}" />
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control-sm" name="${namePlagas}" />
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control-sm" name="${namePlantas}" />
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control-sm" name="${nameCoordenadas}" />
-                </td>
-            </tr>`;
+          // Crear una nueva fila para la tabla "unidadProduccion"
+          var newRow = `
+              <tr>
+                  <th>
+                      <button type="button" class="btn btn-danger remove-row"> 
+                          <i class="ri-delete-bin-5-fill"></i> 
+                      </button>
+                  </th>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${namePredio}" />
+                  </td>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${nameEspacio}" />
+                  </td>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${nameSuperficie}" />
+                  </td>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${nameMadurez}" />
+                  </td>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${namePlagas}" />
+                  </td>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${namePlantas}" />
+                  </td>
+                  <td>
+                      <input type="text" class="form-control form-control-sm" name="${nameCoordenadas}" />
+                  </td>
+              </tr>`;
 
-        $(targetTable).append(newRow);
+          $(targetTable).append(newRow);
+      } */
+  });
 
-        // Re-inicializar select2 en la nueva fila
-        $(targetTable).find('.select2-nuevo').select2({
-            width: '100%',
-            dropdownParent: $('#ActaUnidades'), // Asegúrate de usar el modal correcto si es necesario
-        });
-    }
+  // Función para eliminar una fila
+  $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+  });
 });
 
-// Función para eliminar una fila
-$(document).on('click', '.remove-row', function () {
-    $(this).closest('tr').remove();
-});
-
-// Inicializar select2 en los selects existentes al cargar la página
-$('.select2').select2({
-    width: '100%',
-});
-});
 
 
 
@@ -1153,6 +1142,92 @@ $('#ActaUnidadesForm').on('submit', function (e) {
 });
 
 
+
+
+
+$(document).ready(function () {
+  // Cuando se haga clic en el botón .add-row
+  $('.add-row').click(function () {
+      // Obtener el target donde se agregarán las nuevas filas
+      var target = $(this).data('target');
+      var namePrefix = $(this).data('name-prefix');
+      var nameEspacio = $(this).data('name-espacio');
+      var nameSuperficie = $(this).data('name-superficie');
+      var nameMadurez = $(this).data('name-madurez');
+      var namePlagas = $(this).data('name-plagas');
+      var namePlantas = $(this).data('name-plantas');
+      var nameCoordenadas = $(this).data('name-coordenadas');
+
+      // Crear una nueva fila
+      var newRow = `
+          <tr>
+              <th>
+                  <button type="button" class="btn btn-danger remove-row"> 
+                      <i class="ri-delete-bin-5-fill"></i> 
+                  </button>
+              </th>
+              <td>
+                  <select class="form-control select2-nuevo" name="${namePrefix}">
+                      <!-- Opciones llenadas dinámicamente -->
+                  </select>
+              </td>
+              <td>
+                  <select class="form-control select2-nuevo" name="${nameEspacio}">
+                      <!-- Opciones llenadas dinámicamente -->
+                  </select>
+              </td>
+              <td>
+                  <select class="form-control select2-nuevo" name="${nameSuperficie}" readonly>
+                      <option value="" selected></option>
+                  </select>
+              </td>
+              <td>
+                  <select class="form-control select2-nuevo" name="${nameMadurez}" readonly>
+                      <option value="" selected></option>
+                  </select>
+              </td>
+              <td>
+                  <input type="text" class="form-control form-control-sm" name="${namePlagas}" />
+              </td>
+              <td>
+                  <select class="form-control select2-nuevo" name="${namePlantas}" readonly>
+                      <option value="" selected></option>
+                  </select>
+              </td>
+              <td>
+                  <select class="form-control select2-nuevo" name="${nameCoordenadas}" readonly>
+                      <option value="" selected></option>
+                  </select>
+              </td>
+          </tr>`;
+
+      // Agregar la nueva fila al target
+      $(target).append(newRow);
+
+      // Re-inicializar select2 en los nuevos selects
+      $(target).find('.select2-nuevo').select2({
+          dropdownParent: $('#ActaUnidades'), // Ajusta si estás usando un modal
+          width: '100%'
+      });
+
+      // Copiar las opciones del primer select al nuevo select de la nueva fila
+      var optionsEmpresa = $('#unidadProduccion tr:first-child .select2[name="id_empresa[]"]').html();
+      $(target).find('tr:last-child .select2-nuevo[name="id_empresa[]"]').html(optionsEmpresa);
+
+      var optionsEspacio = $('#unidadProduccion tr:first-child .select2[name="nombre[]"]').html();
+      $(target).find('tr:last-child .select2-nuevo[name="nombre[]"]').html(optionsEspacio);
+  });
+
+  // Función para eliminar una fila
+  $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+  });
+
+  // Inicializar select2 en los selects existentes al cargar la página
+  $('.select2').select2({
+      width: '100%'
+  });
+});
 
 
 
