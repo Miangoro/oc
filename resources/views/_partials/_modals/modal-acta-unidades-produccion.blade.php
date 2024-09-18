@@ -10,8 +10,8 @@
                 </div>
             </div>
             <form id="ActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
-                <input type="text" class="id_inspeccion" name="id_inspeccion">
-                <input type="text" class="id_empresa" name="acta_id_empresa">
+                <input type="hidden" class="id_inspeccion" name="id_inspeccion">
+                <input type="hidden" class="id_empresa" name="acta_id_empresa">
                 
 
                 @csrf
@@ -69,7 +69,7 @@
                             <input type="text" class="form-control" id="num_credencial_encargado"
                                 name="num_credencial_encargado" placeholder="Ingresa el No. de la credencial"
                                 aria-label="Ingresa el No. guia" />
-                            <label for="num_credencial_encargado">credencial vigente número</label>
+                            <label for="num_credencial_encargado">Credencial vigente número</label>
                         </div>
                     </div>
 
@@ -133,6 +133,60 @@
                     </tbody>
                 </table>
 
+
+                <div style="padding: 20px"></div>
+                <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <button type="button" class="btn btn-primary add-row"
+                                    data-target="#unidadProduccion" data-name-prefix="nom_predio[]"
+                                    data-name-espacio="espacio_agave[]"  data-name-superficie="superficie[]" 
+                                    data-name-madurez="madurez_agave[]" data-name-plagas="plagas[]" 
+                                    data-name-plantas="cantidad_plantas[]" data-name-coordenadas="coordenadas[]">
+                                    <i class="ri-add-line"></i>
+                                </button>
+                            </th>
+                            <th style="width: 150px">Nombre del predio</th>
+                            <th>Especie de agave</th>
+                            <th>Superficie (hectáreas)</th>
+                            <th>Madurez del agave (años)</th>
+                            <th>Plagas en el cultivo</th>
+                            <th>Cantidad de plantas</th>
+                            <th>Coordenadas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="unidadProduccion">
+                        <tr>
+                            <th>
+                                <button type="button" class="btn btn-danger remove-row" disabled>
+                                    <i class="ri-delete-bin-5-fill"></i>
+                                </button>
+                            </th>
+                            <td>
+                                <select class="form-control select2" name="nom_predio[]">
+                                    <!-- Opciones -->
+                                    @foreach ($Predios as $Predio)
+                                        <option value="{{ $Predio->nom_predio }}">{{ $Predio->nombre_predio }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td><input type="text" class="form-control form-control-sm" name="espacio_agave[]" readonly /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="superficie[]" readonly /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="madurez_agave[]" readonly /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="plagas[]" /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="cantidad_plantas[]" readonly /></td>
+                            <td><input type="text" class="form-control form-control-sm" name="coordenadas[]" readonly /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                
+
+
+
                 <div style="text-align: center; color: black; font-size: 20px; padding: 20px"><b style="color: red">Anote: </b>No conformidades identificadas en la inspección</div>
                 <div class="form-floating form-floating-outline mb-5">
                     <textarea name="no_conf_infraestructura" class="form-control h-px-100" id="no_conf_infraestructura"
@@ -159,3 +213,30 @@
 
                 
 
+<script>
+        function obtenerNomPredio() {
+        var empresa = $("#id_empresa").val();
+        // Hacer una petición AJAX para obtener los detalles de la empresa
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                // Cargar los detalles en el modal
+                var contenido = "";
+                for (let index = 0; index < response.lotes_granel.length; index++) {
+                    contenido = '<option value="' + response.lotes_granel[index].id_empresa + '">' +
+                        response.lotes_granel[index].nombre_lote + '</option>' + contenido;
+                    // console.log(response.normas[index].norma);
+                }
+
+                if (response.lotes_granel.length == 0) {
+                    contenido = '<option value="">Sin lotes a granel registrados</option>';
+                }
+                $('.id_lote_granel').html(contenido);
+            },
+            error: function() {
+                //alert('Error al cargar los lotes a granel.');
+            }
+        });
+    }
+</script>
