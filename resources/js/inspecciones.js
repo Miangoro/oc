@@ -1245,11 +1245,7 @@ $(document).ready(function () {
                   </button>
               </th>
               <td>
-                  <select class="form-control select2-nuevo equipo" name="equipo[]">
-                      <option value="">Selecciona equipo</option>
-                      @foreach ($equipos as $equipo)
-                          <option value="{{ $equipo->equipo }}">{{ $equipo->equipo }}</option>
-                      @endforeach
+                  <select class="form-control select2-nuevo2 equipo" name="equipo[]">
                   </select>
               </td>
               <td>
@@ -1267,7 +1263,7 @@ $(document).ready(function () {
       $(targetTable).append(newRow);
 
       // Re-inicializar select2 en el nuevo select
-      $(targetTable).find('.select2-nuevo').select2({
+      $(targetTable).find('.select2-nuevo2').select2({
           dropdownParent: $('#ActaUnidades'), // Asegúrate de que este es el id correcto de tu modal
           width: '100%',
           dropdownCssClass: 'select2-dropdown'
