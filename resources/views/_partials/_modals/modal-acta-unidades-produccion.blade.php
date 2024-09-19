@@ -127,7 +127,7 @@
 
                 {{-- tabla de produccion --}}
 
-                <div style="padding: 20px"></div>
+                <div style="padding: 10px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
                 <table class="table table-bordered">
                     <thead>
@@ -155,7 +155,7 @@
                 </table>
 
                 {{-- Tabla de produccion mezcal o instalaciones --}}
-                <div style="padding: 20px"></div>
+                <div style="padding: 10px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción de Mezcal</p>
                 <table class="table table-bordered">
                     <thead>
@@ -244,6 +244,7 @@
                 </table>
                 
                 {{-- tabla de equipos mezcal --}}
+                <div style="padding: 10px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De Equipo Mezcal</p>
                 <table class="table table-bordered">
                     <thead>
@@ -271,7 +272,7 @@
                             </th>
                             <td>
                                 <select class="rango_inicial form-control select2 equipo" name="equipo[]">
-                                    <option value="">Selecciona cliente</option>
+                                    <option >Selecciona cliente</option>
                                     @foreach ($equipos as $equipo)
                                         <option value="{{ $equipo->equipo }}">{{ $equipo->equipo }}</option>
                                     @endforeach
