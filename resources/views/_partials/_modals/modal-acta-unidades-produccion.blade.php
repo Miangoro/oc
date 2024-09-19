@@ -6,7 +6,6 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Acta circunstanciada para Unidades de producción</h4>
-
                 </div>
             </div>
             <form id="ActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
@@ -14,12 +13,7 @@
                 <input type="hidden" class="id_empresa" name="acta_id_empresa">
                 {{--                 <input type="text" class="fecha_visita" name="fecha_visita">
  --}}
-
-
-
                 @csrf
-
-
                 <div class="row">
                     <div class="col-md-5 mb-5">
                         <div class="form-floating form-floating-outline">
@@ -49,13 +43,10 @@
                             <select id="testigos" name="testigos" class="form-select" required>
                                 <option value="1">Si</option>
                                 <option value="2">No</option>
-
-
                             </select>
                             <label for="testigos">Testigos:</label>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="row">
@@ -75,8 +66,6 @@
                             <label for="num_credencial_encargado">Credencial vigente número</label>
                         </div>
                     </div>
-
-
                 </div>
 
                 <div class="form-floating form-floating-outline mb-5">
@@ -136,13 +125,14 @@
                     </tbody>
                 </table>
 
+                {{-- tabla de produccion --}}
 
                 <div style="padding: 20px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th><button type="button" class="btn btn-primary add-row"> <i class="ri-add-line"></i>
+                            <th><button type="button" class="btn btn-primary add-row-produccion"> <i class="ri-add-line"></i>
                                 </button></th>
                             <th>Nombre del Predio/Plantación</th>
                             <th>Plagas en el cultivo</th>
@@ -164,37 +154,25 @@
                     </tbody>
                 </table>
 
-                {{-- Modificar --}}
-{{--                 <div style="padding: 20px"></div>
+                {{-- Tabla de produccion mezcal o instalaciones --}}
+                <div style="padding: 20px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción de Mezcal</p>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>
-                                <button type="button" class="btn btn-primary add-row"
-                                    data-target="#unidadMezcal" data-name-prefix="nombre_predio[]"
-                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
-                                    data-name-chelo="chelo[]" data-name-plantas="cantidad_plantas[]"
-                                    data-name-coordenadas="coordenadas[]">
+                                <button type="button" class="btn btn-primary add-row">
                                     <i class="ri-add-line"></i>
                                 </button>
                             </th>
-                            <th>Recepción
-                                (materia
-                                prima)</th>
+                            <th>Recepción (materia prima)</th>
                             <th>Área de pesado</th>
-                            <th>Área de coccion</th>
-                            <th>Área de
-                                maguey
-                                cocido</th>
-                            <th>Área de
-                                molienda</th>
-                            <th>Área de
-                                fermentación</th>
-                            <th>Área de
-                                destilación</th>
-                            <th>Almacén a
-                                graneles</th>
+                            <th>Área de cocción</th>
+                            <th>Área de maguey cocido</th>
+                            <th>Área de molienda</th>
+                            <th>Área de fermentación</th>
+                            <th>Área de destilación</th>
+                            <th>Almacén a graneles</th>
                         </tr>
                     </thead>
                     <tbody id="unidadMezcal">
@@ -204,41 +182,74 @@
                                     <i class="ri-delete-bin-5-fill"></i>
                                 </button>
                             </th>
+                            <!-- Indexado por fila (0) y columna (áreas) -->
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="nombre_predio[]" />
+                                <select class="form-control select2" name="respuesta[0][0]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="superficie[]" />
+                                <select class="form-control select2" name="respuesta[0][1]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="madurez[]" />
+                                <select class="form-control select2" name="respuesta[0][2]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
+                                <select class="form-control select2" name="respuesta[0][3]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm"
-                                    name="cantidad_plantas[]" />
+                                <select class="form-control select2" name="respuesta[0][4]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
+                                <select class="form-control select2" name="respuesta[0][5]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
+                                <select class="form-control select2" name="respuesta[0][6]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
+                                <select class="form-control select2" name="respuesta[0][7]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
                         </tr>
                     </tbody>
-                </table> --}}
-
+                </table>
+                
+                {{-- tabla de equipos mezcal --}}
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De Equipo Mezcal</p>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>
-                                <button type="button" class="btn btn-primary add-row"
+                                <button type="button" class="btn btn-primary add-row-equipoMezcal"
                                     data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
                                     data-name-superficie="superficie[]" data-name-madurez="madurez[]"
                                     data-name-plagas="plagas[]">
@@ -274,14 +285,13 @@
                             </td>
                             <td>
                                 <input type="text" class="form-control form-control-sm" name="tipo_material[]" />
-
                         </tr>
                     </tbody>
                 </table>
 
 
 
-                
+
 
                 <div style="text-align: center; color: black; font-size: 20px; padding: 20px"><b
                         style="color: red">Anote: </b>No conformidades identificadas en la inspección</div>
