@@ -162,7 +162,7 @@
                     <thead>
                         <tr>
                             <th>
-                                <button type="button" class="btn btn-primary add-row">
+                                <button type="button" class="btn btn-primary add-rowMezcal">
                                     <i class="ri-add-line"></i>
                                 </button>
                             </th>
@@ -358,7 +358,7 @@
                 </table> --}}
 
                 {{-- UNIDAD EQUIPO ENVASADO --}}
-                 <div style="padding: 20px"></div>
+               {{--   <div style="padding: 20px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Envasado</p>
                 <table class="table table-bordered">
                     <thead>
@@ -400,7 +400,7 @@
                                 <input type="text" class="form-control form-control-sm" name="tipo_material_envasado[]" />
                         </tr>
                     </tbody>
-                </table> 
+                </table>  --}}
 
 
 

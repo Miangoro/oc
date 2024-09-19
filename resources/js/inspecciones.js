@@ -1157,7 +1157,7 @@ $(document).ready(function () {
   var rowCount = $('#unidadMezcal tr').length; // Inicializar el contador de filas
 
   // Añadir fila a la tabla
-  $('.add-row').click(function () {
+  $('.add-rowMezcal').click(function () {
       var newRow = `
       <tr>
           <th>

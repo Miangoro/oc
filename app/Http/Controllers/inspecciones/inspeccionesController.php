@@ -331,7 +331,7 @@ class inspeccionesController extends Controller
 
 
                     /* equipo envasado */
-             for ($i = 0; $i < count($request->equipo_envasado); $i++) {
+/*              for ($i = 0; $i < count($request->equipo_envasado); $i++) {
                 $equiEnvasado = new actas_equipo_envasado();
                 $equiEnvasado->id_acta = $acta->id_acta;  // Relacionar con la acta creada
                 $equiEnvasado->equipo_envasado = $request->equipo_envasado[$i];
@@ -341,7 +341,7 @@ class inspeccionesController extends Controller
 
 
                 $equiEnvasado->save();
-            } 
+            }  */
         // Guardar las respuestas de las áreas de producción de mezcal
         $areas = ['Recepción (materia prima)', 'Área de pesado', 'Área de cocción', 'Área de maguey cocido', 'Área de molienda', 'Área de fermentación', 'Área de destilación', 'Almacén a graneles'];
 
