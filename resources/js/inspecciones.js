@@ -1435,7 +1435,68 @@ $(document).ready(function () {
 });
 
 
+/* COMERCIALIZACION */
+$(document).ready(function () {
+  var rowCount = $('#unidadComercializadora tr').length; // Inicializar el contador de filas
 
+  // Añadir fila a la tabla
+  $('.add-rowComercializadora').click(function () {
+      var newRow = `
+      <tr>
+          <th>
+              <button type="button" class="btn btn-danger remove-row">
+                  <i class="ri-delete-bin-5-fill"></i>
+              </button>
+          </th>
+          <td><select class="form-control select2-comercio" name="respuestas_comercio[` + rowCount + `][0]">
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+          <td><select class="form-control select2-comercio" name="respuestas_comercio[` + rowCount + `][1]">
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+          <td><select class="form-control select2-comercio" name="respuestas_comercio[` + rowCount + `][2]">
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+          <td><select class="form-control select2-comercio" name="respuestas_comercio[` + rowCount + `][3]">
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+          <td><select class="form-control select2-comercio" name="respuestas_comercio[` + rowCount + `][4]">
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+
+      </tr>`;
+
+      $('#unidadComercializadora').append(newRow);
+      rowCount++; // Incrementa el contador de filas
+
+      // Re-inicializar select2 en los nuevos selects
+      $('#unidadComercializadora').find('.select2-comercio').select2({
+          dropdownParent: $('#ActaUnidades'),
+          width: '100%',
+          dropdownCssClass: 'select2-dropdown'
+      });
+
+      var select2Elements = $('.select2-comercio');
+      initializeSelect2(select2Elements);
+      
+  });
+  
+  // Eliminar fila
+  $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+      rowCount--; // Disminuir el contador de filas
+  });
+});
 
 
 
