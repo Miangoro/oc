@@ -989,12 +989,12 @@ $(document).ready(function() {
   });
 });
 
-  $(function () {
     $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
     });
+
 
     const form = document.getElementById('asignarRevisorForm');
     const fv = FormValidation.formValidation(form, {
@@ -1073,7 +1073,7 @@ $(document).ready(function() {
             }
         });
     });
-});
+
 
 //end
 });
