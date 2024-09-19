@@ -84,7 +84,7 @@
 
         .text {
             text-align: justify;
-            font-size: 17px;
+            font-size: 15px;
             margin-top: -25px;
             margin-left: 30px;
             margin-right: 30px;
@@ -93,7 +93,7 @@
 
         .text2 {
             text-align: justify;
-            font-size: 17px;
+            font-size: 15px;
             margin-left: 30px;
             margin-right: 30px;
             margin-top: -1px;
@@ -283,20 +283,20 @@
         <div class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C.</div>
         <div class="textimg font-lucida-sans-seminegrita">No.: UMC-00_/20</div><br>
 
-        <div class="title">Dictamen de Cumplimiento NOM de Mezcal Envasado</div><br>
+        <div class="title">Dictamen de Cumplimiento NOM de Mezcal <br> Envasado</div><br>
 
-        <p class="text">La Unidad de Inspección CIDAM A.C. con domicilio en Kilómetro 8 Antigua Carretera a
+        <p class="text" style="margin-bottom: 20px;">La Unidad de Inspección CIDAM A.C. con domicilio en Kilómetro 8 Antigua Carretera a
             Pátzcuaro, S/N Colonia Otra no Especificada en el Catálogo, C.P. 58341, Morelia,
             Michoacán. Unidad de Verificación tipo A con acreditación No. UVNOM-129, acreditada
             por la entidad mexicana de acreditación, A.C.</p>
 
-        <p class="subtema">I. &nbsp;&nbsp;&nbsp;&nbsp;Datos de la empresa</p>
+        <p class="subtema" >I. &nbsp;&nbsp;&nbsp;&nbsp;Datos de la empresa</p>
 
         <table>
             <tbody>
                 <tr>
                     <td class="column">Nombre de la empresa</td>
-                    <td colspan="3">{{ $data->empresa->razon_social }}</td>
+                    <td colspan="3" style="text-align: center;">{{ $data->empresa->razon_social }}</td>
                 </tr>
                 <tr>
                     <td class="column">Representante legal</td>

@@ -453,6 +453,8 @@ Route::get('/solicitud_de_servicios', [CartaAsignacionController::class, 'Solici
 Route::get('/dictamen_cumplimiento_instalaciones', [CartaAsignacionController::class, 'DictamenDeCumplimienoInstalaciones'])->name('DictamenDeCumplimienoInstalaciones');
 
 
+/* orden-trabajo-inspeccion-etiquetas */
+Route::get('/orden_trabajo_inspeccion_etiquetas', [CartaAsignacionController::class, 'OrdenTrabajoInspeccionEtiquetas'])->name('OrdenTrabajoInspeccionEtiquetas');
 
 
 
