@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+//Notificacion
+use Spatie\Activitylog\Traits\LogsActivity;
+use App\Traits\TranslatableActivityLog;
 
 class Revisor extends Model
 {
@@ -19,4 +22,9 @@ class Revisor extends Model
         'es_correccion',
         'observaciones',
     ];
+
+    public function getLogName2(): string
+    {
+        return 'Revisor';
+    }
 }

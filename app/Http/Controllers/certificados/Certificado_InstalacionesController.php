@@ -10,6 +10,8 @@ use App\Models\Dictamen_instalaciones;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\User;
 use App\Models\Revisor; 
+//Notificacion
+use App\Notifications\GeneralNotification;
 
 class Certificado_InstalacionesController extends Controller
 {
@@ -261,11 +263,43 @@ class Certificado_InstalacionesController extends Controller
             'observaciones' => $validatedData['observaciones'] ?? ''
         ]);
     
+        // Notificación
+        $revisor = User::find($validatedData['nombreRevisor']);
+    
+        $users = User::whereIn('id', [18, 19, 20])->get(); 
+    
+        $tipoRevision = '';
+        if ($validatedData['numeroRevision'] == '1') {
+            $tipoRevision = 'Primera revisión';
+        } elseif ($validatedData['numeroRevision'] == '2') {
+            $tipoRevision = 'Segunda revisión';
+        } else {
+            $tipoRevision = 'Revisión ' . $validatedData['numeroRevision'];
+        }
+    
+        $mensaje = 'Nuevo revisor asignado: ' . ($revisor ? $revisor->name : 'Desconocido') . 
+                   ' - ' . $tipoRevision;
+    
+        if ($validatedData['esCorreccion'] === 'si') {
+            $mensaje .= ' (Corrección)';
+        }
+    
+        $data1 = [
+            'title' => 'Nuevo revisor asignado',
+            'message' => $mensaje,
+            'url' => 'solicitudes-historial',
+        ];
+    
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
+    
         return response()->json([
             'message' => 'Revisor asignado exitosamente',
             'asignacion' => $asignacion
         ]);
     }
+    
 
 //end
 }
