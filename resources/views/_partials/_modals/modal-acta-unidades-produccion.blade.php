@@ -132,7 +132,8 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th><button type="button" class="btn btn-primary add-row-produccion"> <i class="ri-add-line"></i>
+                            <th><button type="button" class="btn btn-primary add-row-produccion"> <i
+                                        class="ri-add-line"></i>
                                 </button></th>
                             <th>Nombre del Predio/Plantación</th>
                             <th>Plagas en el cultivo</th>
@@ -161,7 +162,7 @@
                     <thead>
                         <tr>
                             <th>
-                                <button type="button" class="btn btn-primary add-row">
+                                <button type="button" class="btn btn-primary add-rowMezcal">
                                     <i class="ri-add-line"></i>
                                 </button>
                             </th>
@@ -242,7 +243,7 @@
                         </tr>
                     </tbody>
                 </table>
-                
+
                 {{-- tabla de equipos mezcal --}}
                 <div style="padding: 10px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Mezcal</p>
@@ -250,14 +251,11 @@
                     <thead>
                         <tr>
                             <th>
-                                <button type="button" class="btn btn-primary add-row-equipoMezcal"
-                                    data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
-                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
-                                    data-name-plagas="plagas[]">
+                                <button type="button" class="btn btn-primary add-row-equipoMezcal">
                                     <i class="ri-add-line"></i>
                                 </button>
                             </th>
-                            <th style="width: 200px">Equipo</th>
+                            <th >Equipo</th>
                             <th>Cantidad</th>
                             <th>Capacidad</th>
                             <th>Tipo de material</th>
@@ -271,8 +269,8 @@
                                 </button>
                             </th>
                             <td>
-                                <select class="rango_inicial form-control select2 equipo" name="equipo[]">
-                                    <option >Selecciona cliente</option>
+                                <select class="form-control select2 equipo" name="equipo[]">
+                                    <option value="" disabled selected>Selecciona equipo</option>
                                     @foreach ($equipos as $equipo)
                                         <option value="{{ $equipo->equipo }}">{{ $equipo->equipo }}</option>
                                     @endforeach
@@ -292,8 +290,8 @@
 
 
 
-{{-- UNIDAD ENVASADSO --}}
-<div style="padding: 20px"></div>
+                {{-- UNIDAD ENVASADSO --}}
+{{--                 <div style="padding: 20px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De Envasado</p>
                 <table class="table table-bordered">
                     <thead>
@@ -357,29 +355,26 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table> --}}
 
-{{-- UNIDAD EQUIPO ENVASADO --}}
-<div style="padding: 20px"></div>
+                {{-- UNIDAD EQUIPO ENVASADO --}}
+               {{--   <div style="padding: 20px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Envasado</p>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>
-                                <button type="button" class="btn btn-primary add-row"
-                                    data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
-                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
-                                    data-name-plagas="plagas[]">
+                                <button type="button" class="btn btn-primary add-row-equipoEnvasado">
                                     <i class="ri-add-line"></i>
                                 </button>
                             </th>
-                            <th style="width: 200px">Equipo</th>
+                            <th>Equipo</th>
                             <th>Cantidad</th>
                             <th>Capacidad</th>
                             <th>Tipo de material</th>
                         </tr>
                     </thead>
-                    <tbody id="unidadProduccion">
+                    <tbody id="equipoEnvasado">
                         <tr>
                             <th>
                                 <button type="button" class="btn btn-danger remove-row" disabled>
@@ -387,22 +382,25 @@
                                 </button>
                             </th>
                             <td>
-                                <select class="rango_inicial form-control select2" name="rango_inicial[]">
-                                    <!-- Opciones -->
+                                <select class="form-control select2 " name="equipo_envasado[]">
+                                    <option value="" disabled selected>Selecciona equipo</option>
+                                    @foreach ($equipos as $equipoEnva)
+                                        <option value="{{ $equipoEnva->equipo }}">{{ $equipoEnva->equipo }}</option>
+                                    @endforeach
                                 </select>
+                                
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="superficie[]" />
+                                <input type="text" class="form-control form-control-sm" name="cantidad_envasado[]" />
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="madurez[]" />
+                                <input type="text" class="form-control form-control-sm" name="capacidad_envasado[]" />
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
-
+                                <input type="text" class="form-control form-control-sm" name="tipo_material_envasado[]" />
                         </tr>
                     </tbody>
-                </table>
+                </table>  --}}
 
 
 

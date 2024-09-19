@@ -283,4 +283,8 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('F7.1-03-24 Reporte Técnico de cumplimiento NOM-199-SCFI-2017 Ed 9 VIGENTE.pdf');
     }
  
+    public function OrdenTrabajoInspeccionEtiquetas(){
+        $pdf = Pdf::loadView('pdfs.orden_trabajo_inspeccion_etiquetas');
+        return $pdf->stream('R-UNIIC-004 Orden de trabajo de inspección de etiquetas, tq CAFE.pdf');
+    }
 }
