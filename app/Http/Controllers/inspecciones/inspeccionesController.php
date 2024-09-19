@@ -12,8 +12,13 @@ use App\Models\estados;
 use App\Models\actas_inspeccion;
 use App\Models\actas_testigo;
 use App\Models\actas_produccion;
+use App\Models\actas_equipo_mezcal;
+use App\Models\actas_equipo_envasado;
+use App\Models\acta_produccion_mezcal;
 use App\Models\Predios;
 use App\Models\tipos;
+use App\Models\equipos;
+
 
 use App\Models\Organismos;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -35,11 +40,13 @@ class inspeccionesController extends Controller
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = estados::all(); // Obtener todos los estados
         $tipos = tipos::all(); // Obtener todos los estados
+        $equipos = equipos::all(); // Obtener todos los estados
+
 
 
 
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
-        return view('inspecciones.find_inspecciones_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos',));
+        return view('inspecciones.find_inspecciones_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'Predios', 'tipos', 'equipos'));
     }
 
     public function index(Request $request)
@@ -308,6 +315,49 @@ class inspeccionesController extends Controller
 
             $produccion->save();
         }
+
+        for ($i = 0; $i < count($request->equipo); $i++) {
+            $equiMezcal = new actas_equipo_mezcal();
+            $equiMezcal->id_acta = $acta->id_acta;  // Relacionar con la acta creada
+            $equiMezcal->equipo = $request->equipo[$i];   
+            $equiMezcal->cantidad = $request->cantidad[$i];
+            $equiMezcal->capacidad = $request->capacidad[$i];
+            $equiMezcal->tipo_material = $request->tipo_material[$i];
+
+
+            $equiMezcal->save();
+        }
+
+
+
+                    /* equipo envasado */
+             for ($i = 0; $i < count($request->equipo_envasado); $i++) {
+                $equiEnvasado = new actas_equipo_envasado();
+                $equiEnvasado->id_acta = $acta->id_acta;  // Relacionar con la acta creada
+                $equiEnvasado->equipo_envasado = $request->equipo_envasado[$i];
+                $equiEnvasado->cantidad_envasado = $request->cantidad_envasado[$i];
+                $equiEnvasado->capacidad_envasado = $request->capacidad_envasado[$i];
+                $equiEnvasado->tipo_material_envasado = $request->tipo_material_envasado[$i];
+
+
+                $equiEnvasado->save();
+            } 
+        // Guardar las respuestas de las áreas de producción de mezcal
+        $areas = ['Recepción (materia prima)', 'Área de pesado', 'Área de cocción', 'Área de maguey cocido', 'Área de molienda', 'Área de fermentación', 'Área de destilación', 'Almacén a graneles'];
+
+        foreach ($request->respuesta as $rowIndex => $respuestasPorFila) {
+            foreach ($respuestasPorFila as $areaIndex => $respuesta) {
+                if (isset($areas[$areaIndex])) {
+                    $actaProduc = new acta_produccion_mezcal();
+                    $actaProduc->id_acta = $acta->id_acta; // Relacionar con la acta creada
+                    $actaProduc->area = $areas[$areaIndex]; // Guardar el área correspondiente
+                    $actaProduc->respuesta = $respuesta; // Guardar la respuesta seleccionada
+                    $actaProduc->save();
+                }
+            }
+        }
+        
+        
             return response()->json(['success' => 'Lote registrado exitosamente.']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);

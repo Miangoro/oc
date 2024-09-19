@@ -6,7 +6,6 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Acta circunstanciada para Unidades de producción</h4>
-
                 </div>
             </div>
             <form id="ActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
@@ -14,12 +13,7 @@
                 <input type="hidden" class="id_empresa" name="acta_id_empresa">
                 {{--                 <input type="text" class="fecha_visita" name="fecha_visita">
  --}}
-
-
-
                 @csrf
-
-
                 <div class="row">
                     <div class="col-md-5 mb-5">
                         <div class="form-floating form-floating-outline">
@@ -49,13 +43,10 @@
                             <select id="testigos" name="testigos" class="form-select" required>
                                 <option value="1">Si</option>
                                 <option value="2">No</option>
-
-
                             </select>
                             <label for="testigos">Testigos:</label>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="row">
@@ -75,8 +66,6 @@
                             <label for="num_credencial_encargado">Credencial vigente número</label>
                         </div>
                     </div>
-
-
                 </div>
 
                 <div class="form-floating form-floating-outline mb-5">
@@ -136,13 +125,15 @@
                     </tbody>
                 </table>
 
+                {{-- tabla de produccion --}}
 
-                <div style="padding: 20px"></div>
+                <div style="padding: 10px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th><button type="button" class="btn btn-primary add-row"> <i class="ri-add-line"></i>
+                            <th><button type="button" class="btn btn-primary add-row-produccion"> <i
+                                        class="ri-add-line"></i>
                                 </button></th>
                             <th>Nombre del Predio/Plantación</th>
                             <th>Plagas en el cultivo</th>
@@ -164,40 +155,175 @@
                     </tbody>
                 </table>
 
-                {{-- Modificar --}}
-                <div style="padding: 20px"></div>
+                {{-- Tabla de produccion mezcal o instalaciones --}}
+                <div style="padding: 10px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción de Mezcal</p>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>
-                                <button type="button" class="btn btn-primary add-row"
-                                    data-target="#unidadMezcal" data-name-prefix="nombre_predio[]"
-                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
-                                    data-name-chelo="chelo[]" data-name-plantas="cantidad_plantas[]"
-                                    data-name-coordenadas="coordenadas[]">
+                                <button type="button" class="btn btn-primary add-row">
                                     <i class="ri-add-line"></i>
                                 </button>
                             </th>
-                            <th>Recepción
-                                (materia
-                                prima)</th>
-                            <th>Area de pesado</th>
-                            <th>Area de coccion</th>
-                            <th>Área de
-                                maguey
-                                cocido</th>
-                            <th>Área de
-                                molienda</th>
-                            <th>Área de
-                                fermentación</th>
-                            <th>Área de
-                                destilación</th>
-                            <th>Almacén a
-                                graneles</th>
+                            <th>Recepción (materia prima)</th>
+                            <th>Área de pesado</th>
+                            <th>Área de cocción</th>
+                            <th>Área de maguey cocido</th>
+                            <th>Área de molienda</th>
+                            <th>Área de fermentación</th>
+                            <th>Área de destilación</th>
+                            <th>Almacén a graneles</th>
                         </tr>
                     </thead>
                     <tbody id="unidadMezcal">
+                        <tr>
+                            <th>
+                                <button type="button" class="btn btn-danger remove-row" disabled>
+                                    <i class="ri-delete-bin-5-fill"></i>
+                                </button>
+                            </th>
+                            <!-- Indexado por fila (0) y columna (áreas) -->
+                            <td>
+                                <select class="form-control select2" name="respuesta[0][0]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control select2" name="respuesta[0][1]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control select2" name="respuesta[0][2]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control select2" name="respuesta[0][3]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control select2" name="respuesta[0][4]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control select2" name="respuesta[0][5]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control select2" name="respuesta[0][6]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control select2" name="respuesta[0][7]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                {{-- tabla de equipos mezcal --}}
+                <div style="padding: 10px"></div>
+                <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Mezcal</p>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <button type="button" class="btn btn-primary add-row-equipoMezcal">
+                                    <i class="ri-add-line"></i>
+                                </button>
+                            </th>
+                            <th >Equipo</th>
+                            <th>Cantidad</th>
+                            <th>Capacidad</th>
+                            <th>Tipo de material</th>
+                        </tr>
+                    </thead>
+                    <tbody id="equipoMezcal">
+                        <tr>
+                            <th>
+                                <button type="button" class="btn btn-danger remove-row" disabled>
+                                    <i class="ri-delete-bin-5-fill"></i>
+                                </button>
+                            </th>
+                            <td>
+                                <select class="form-control select2 equipo" name="equipo[]">
+                                    <option value="" disabled selected>Selecciona equipo</option>
+                                    @foreach ($equipos as $equipo)
+                                        <option value="{{ $equipo->equipo }}">{{ $equipo->equipo }}</option>
+                                    @endforeach
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="cantidad[]" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="capacidad[]" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="tipo_material[]" />
+                        </tr>
+                    </tbody>
+                </table>
+
+
+
+                {{-- UNIDAD ENVASADSO --}}
+{{--                 <div style="padding: 20px"></div>
+                <p class="address-subtitle"><b style="color: red">Unidad: </b>De Envasado</p>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <button type="button" class="btn btn-primary add-row"
+                                    data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
+                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
+                                    data-name-plagas="plagas[]" data-name-plantas="cantidad_plantas[]">
+                                    <i class="ri-add-line"></i>
+                                </button>
+                            </th>
+                            <th>Almacén de
+                                insumos</th>
+                            <th>Almacén a
+                                gráneles
+                            </th>
+                            <th>Sistema
+                                de
+                                filtrado</th>
+                            <th>Área de
+                                envasado</th>
+                            <th>Área de
+                                tiquetado</th>
+                            <th>Almacén de
+                                producto
+                                terminado</th>
+                            <th>Área de
+                                aseo personal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="unidadProduccion">
                         <tr>
                             <th>
                                 <button type="button" class="btn btn-danger remove-row" disabled>
@@ -220,9 +346,7 @@
                                 <input type="text" class="form-control form-control-sm"
                                     name="cantidad_plantas[]" />
                             </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
-                            </td>
+
                             <td>
                                 <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
                             </td>
@@ -231,27 +355,26 @@
                             </td>
                         </tr>
                     </tbody>
-                </table>
+                </table> --}}
 
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>De Equipo Mezcal</p>
+                {{-- UNIDAD EQUIPO ENVASADO --}}
+                 <div style="padding: 20px"></div>
+                <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Envasado</p>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>
-                                <button type="button" class="btn btn-primary add-row"
-                                    data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
-                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
-                                    data-name-plagas="plagas[]">
+                                <button type="button" class="btn btn-primary add-row-equipoEnvasado">
                                     <i class="ri-add-line"></i>
                                 </button>
                             </th>
-                            <th style="width: 200px">Equipo</th>
+                            <th>Equipo</th>
                             <th>Cantidad</th>
                             <th>Capacidad</th>
                             <th>Tipo de material</th>
                         </tr>
                     </thead>
-                    <tbody id="unidadProduccion">
+                    <tbody id="equipoEnvasado">
                         <tr>
                             <th>
                                 <button type="button" class="btn btn-danger remove-row" disabled>
@@ -259,22 +382,25 @@
                                 </button>
                             </th>
                             <td>
-                                <select class="rango_inicial form-control select2" name="rango_inicial[]">
-                                    <!-- Opciones -->
+                                <select class="form-control select2 " name="equipo_envasado[]">
+                                    <option value="" disabled selected>Selecciona equipo</option>
+                                    @foreach ($equipos as $equipoEnva)
+                                        <option value="{{ $equipoEnva->equipo }}">{{ $equipoEnva->equipo }}</option>
+                                    @endforeach
                                 </select>
+                                
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="superficie[]" />
+                                <input type="text" class="form-control form-control-sm" name="cantidad_envasado[]" />
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="madurez[]" />
+                                <input type="text" class="form-control form-control-sm" name="capacidad_envasado[]" />
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
-
+                                <input type="text" class="form-control form-control-sm" name="tipo_material_envasado[]" />
                         </tr>
                     </tbody>
-                </table>
+                </table> 
 
 
 

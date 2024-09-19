@@ -13,8 +13,8 @@
           <div class="form-floating form-floating-outline mb-3">
             <select class="form-select" id="tipoRevisor" name="tipoRevisor" aria-label="Revisión por parte de" required>
               <option value="">Seleccione una opción</option>
-              <option value="2">Personal del organismo certificador</option>
-              <option value="1">Miembro del consejo para la decisión de la certificación</option>
+              <option value="1">Personal del organismo certificador</option>
+              <option value="2">Miembro del consejo para la decisión de la certificación</option>
             </select>
             <label for="tipoRevisor">Revisión por parte de</label>
           </div>
@@ -31,8 +31,8 @@
           <div class="form-floating form-floating-outline mb-3">
             <select class="form-select" id="numeroRevision" name="numeroRevision" aria-label="Selecciona el número de revisión" required>
               <option value="">Seleccione una opción</option>
-              <option value="2">Primera revisión</option>
-              <option value="1">Segunda revisión</option>
+              <option value="1">Primera revisión</option>
+              <option value="2">Segunda revisión</option>
             </select>
             <label for="numeroRevision">Selecciona el número de revisión</label>
           </div>
