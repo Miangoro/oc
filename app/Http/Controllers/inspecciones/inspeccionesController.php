@@ -15,6 +15,7 @@ use App\Models\actas_produccion;
 use App\Models\actas_equipo_mezcal;
 use App\Models\actas_equipo_envasado;
 use App\Models\acta_produccion_mezcal;
+use App\Models\actas_unidad_envasado;
 use App\Models\Predios;
 use App\Models\tipos;
 use App\Models\equipos;
@@ -331,7 +332,7 @@ class inspeccionesController extends Controller
 
 
                     /* equipo envasado */
-             for ($i = 0; $i < count($request->equipo_envasado); $i++) {
+              for ($i = 0; $i < count($request->equipo_envasado); $i++) {
                 $equiEnvasado = new actas_equipo_envasado();
                 $equiEnvasado->id_acta = $acta->id_acta;  // Relacionar con la acta creada
                 $equiEnvasado->equipo_envasado = $request->equipo_envasado[$i];
@@ -341,7 +342,7 @@ class inspeccionesController extends Controller
 
 
                 $equiEnvasado->save();
-            } 
+            }  
         // Guardar las respuestas de las áreas de producción de mezcal
         $areas = ['Recepción (materia prima)', 'Área de pesado', 'Área de cocción', 'Área de maguey cocido', 'Área de molienda', 'Área de fermentación', 'Área de destilación', 'Almacén a graneles'];
 
@@ -357,8 +358,26 @@ class inspeccionesController extends Controller
             }
         }
         
+        $areas = [
+            'Almacén de insumos','Almacén a gráneles','Sistema de filtrado','Área de envasado','Área de tiquetado','Almacén de producto terminado','Área de aseo personal'];
+    
+        // Recorrer las filas de respuestas
+        foreach ($request->respuestas as $rowIndex => $respuestasPorFilas) {
+            // Recorrer las respuestas de cada fila
+            foreach ($respuestasPorFilas as $areaIndex => $respuesta) {
+                // Verificar que exista un área definida para el índice actual
+                if (isset($areas[$areaIndex])) {
+                    // Crear un nuevo registro de acta_unidad_envasado
+                    $actaUnidadEnvasado = new actas_unidad_envasado();
+                    $actaUnidadEnvasado->id_acta = $acta->id_acta; // Relacionar con la acta creada
+                    $actaUnidadEnvasado->areas = $areas[$areaIndex]; // Guardar el área correspondiente
+                    $actaUnidadEnvasado->respuestas = $respuesta; // Guardar la respuesta seleccionada (C, NC, NA)
+                    $actaUnidadEnvasado->save(); // Guardar en la base de datos
+                }
+            }
+        }
         
-            return response()->json(['success' => 'Lote registrado exitosamente.']);
+            return response()->json(['success' => 'Acta circunstanciada para Unidades de producción registrado exitosamente.']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
