@@ -989,90 +989,90 @@ $(document).ready(function() {
   });
 });
 
-    $.ajaxSetup({
-      headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+$.ajaxSetup({
+  headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+
+const form = document.getElementById('asignarRevisorForm');
+const fv = FormValidation.formValidation(form, {
+  fields: {
+      'tipoRevisor': {
+          validators: {
+              notEmpty: {
+                  message: 'Debe seleccionar una opción para la revisión.'
+              }
+          }
+      },
+      'nombreRevisor': {
+          validators: {
+              notEmpty: {
+                  message: 'Debe seleccionar un nombre para el revisor.'
+              }
+          }
+      },
+      'numeroRevision': {
+          validators: {
+              notEmpty: {
+                  message: 'Debe seleccionar un número de revisión.'
+              }
+          }
       }
-    });
+  },
+  plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.mb-3'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  var formData = new FormData(form);
 
+  var esCorreccion = $('#esCorreccion').is(':checked') ? 'si' : 'no';
+  formData.append('esCorreccion', esCorreccion);
 
-    const form = document.getElementById('asignarRevisorForm');
-    const fv = FormValidation.formValidation(form, {
-        fields: {
-            'tipoRevisor': {
-                validators: {
-                    notEmpty: {
-                        message: 'Debe seleccionar una opción para la revisión.'
-                    }
-                }
-            },
-            'nombreRevisor': {
-                validators: {
-                    notEmpty: {
-                        message: 'Debe seleccionar un nombre para el revisor.'
-                    }
-                }
-            },
-            'numeroRevision': {
-                validators: {
-                    notEmpty: {
-                        message: 'Debe seleccionar un número de revisión.'
-                    }
-                }
-            }
-        },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: '.mb-3'
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-    }).on('core.form.valid', function (e) {
-        var formData = new FormData(form);
+  $.ajax({
+      url: '/asignar-revisor',  
+      type: 'POST',
+      data: formData,
+      processData: false,  
+      contentType: false,  
+      success: function (response) {
+          $('#asignarRevisorModal').modal('hide');
 
-        var esCorreccion = $('#esCorreccion').is(':checked') ? 'si' : 'no';
-        formData.append('esCorreccion', esCorreccion);
+          Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.message,
+              customClass: {
+                  confirmButton: 'btn btn-success'
+              }
+          }).then(function () {
+              form.reset();
+              $('#nombreRevisor').empty().append('<option value="">Seleccione un nombre</option>');
+              $('#esCorreccion').prop('checked', false);
+          });
+      },
+      error: function (xhr) {
+          console.log('Error:', xhr.responseText);
 
-        $.ajax({
-            url: '/asignar-revisor',  
-            type: 'POST',
-            data: formData,
-            processData: false,  
-            contentType: false,  
-            success: function (response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.message,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                }).then(function () {
-                    $('#asignarRevisorModal').modal('hide');
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al asignar el revisor.',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      }
+  });
+});
 
-                    form.reset();
-                    $('#nombreRevisor').empty().append('<option value="">Seleccione un nombre</option>');
-                    $('#esCorreccion').prop('checked', false);
-                });
-            },
-            error: function (xhr) {
-                console.log('Error:', xhr.responseText);
-
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: 'Error al asignar el revisor.',
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
-            }
-        });
-    });
 
 
 //end
