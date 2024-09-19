@@ -1,6 +1,14 @@
 <!-- Add New Lote Envasado Modal -->
+
+<style>
+    .modal-custom-size {
+    max-width: 90%; /* Ajusta este valor para hacerlo más grande */
+    width: 90%; /* Ajusta según tus necesidades */
+}
+
+</style>
 <div class="modal fade" id="ActaUnidades" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+    <div class="modal-dialog modal-custom-size modal-simple modal-add-new-address">
         <div class="modal-content">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
@@ -92,7 +100,7 @@
                     </div>
                 </div>
 
-                <p class="address-subtitle"><b style="color: red">Designacion: </b>De testigos</b></p>
+                <p class="address-subtitle"><b style="color: red">Designacion: </b>Testigos</b></p>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -291,74 +299,88 @@
 
 
                 {{-- UNIDAD ENVASADSO --}}
-{{--                 <div style="padding: 20px"></div>
+                <div style="padding: 20px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De Envasado</p>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>
-                                <button type="button" class="btn btn-primary add-row"
-                                    data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
-                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
-                                    data-name-plagas="plagas[]" data-name-plantas="cantidad_plantas[]">
+                                <button type="button" class="btn btn-primary add-rowEnvasado">
                                     <i class="ri-add-line"></i>
                                 </button>
                             </th>
-                            <th>Almacén de
-                                insumos</th>
-                            <th>Almacén a
-                                gráneles
+                            <th>Almacén de insumos</th>
+                            <th>Almacén a gráneles
                             </th>
-                            <th>Sistema
-                                de
-                                filtrado</th>
-                            <th>Área de
-                                envasado</th>
-                            <th>Área de
-                                tiquetado</th>
-                            <th>Almacén de
-                                producto
-                                terminado</th>
-                            <th>Área de
-                                aseo personal</th>
+                            <th>Sistema de filtrado</th>
+                            <th>Área de envasado</th>
+                            <th>Área de tiquetado</th>
+                            <th>Almacén de producto terminado</th>
+                            <th>Área de aseo personal</th>
                         </tr>
                     </thead>
-                    <tbody id="unidadProduccion">
+                    <tbody id="unidadEnvasado">
                         <tr>
                             <th>
                                 <button type="button" class="btn btn-danger remove-row" disabled>
                                     <i class="ri-delete-bin-5-fill"></i>
                                 </button>
                             </th>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="nombre_predio[]" />
+                                                        <td>
+                                <select class="form-control select2" name="respuestas[0][0]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="superficie[]" />
+                                <select class="form-control select2" name="respuestas[0][1]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="madurez[]" />
+                                <select class="form-control select2" name="respuestas[0][2]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
+                                <select class="form-control select2" name="respuestas[0][3]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm"
-                                    name="cantidad_plantas[]" />
+                                <select class="form-control select2" name="respuestas[0][4]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
-
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
+                                <select class="form-control select2" name="respuestas[0][5]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
+                                <select class="form-control select2" name="respuestas[0][6]">
+                                    <option value="C">C</option>
+                                    <option value="NC">NC</option>
+                                    <option value="NA">NA</option>
+                                </select>
                             </td>
                         </tr>
                     </tbody>
-                </table> --}}
+                </table> 
 
                 {{-- UNIDAD EQUIPO ENVASADO --}}
-               {{--   <div style="padding: 20px"></div>
+                 <div style="padding: 20px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Envasado</p>
                 <table class="table table-bordered">
                     <thead>
@@ -382,7 +404,7 @@
                                 </button>
                             </th>
                             <td>
-                                <select class="form-control select2 " name="equipo_envasado[]">
+                                <select class="form-control select2 equipo2" name="equipo_envasado[]">
                                     <option value="" disabled selected>Selecciona equipo</option>
                                     @foreach ($equipos as $equipoEnva)
                                         <option value="{{ $equipoEnva->equipo }}">{{ $equipoEnva->equipo }}</option>
@@ -400,7 +422,7 @@
                                 <input type="text" class="form-control form-control-sm" name="tipo_material_envasado[]" />
                         </tr>
                     </tbody>
-                </table>  --}}
+                </table>  
 
 
 
