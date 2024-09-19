@@ -245,7 +245,7 @@
                 
                 {{-- tabla de equipos mezcal --}}
                 <div style="padding: 10px"></div>
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>De Equipo Mezcal</p>
+                <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Mezcal</p>
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -291,6 +291,118 @@
                 </table>
 
 
+
+{{-- UNIDAD ENVASADSO --}}
+<div style="padding: 20px"></div>
+                <p class="address-subtitle"><b style="color: red">Unidad: </b>De Envasado</p>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <button type="button" class="btn btn-primary add-row"
+                                    data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
+                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
+                                    data-name-plagas="plagas[]" data-name-plantas="cantidad_plantas[]">
+                                    <i class="ri-add-line"></i>
+                                </button>
+                            </th>
+                            <th>Almacén de
+                                insumos</th>
+                            <th>Almacén a
+                                gráneles
+                            </th>
+                            <th>Sistema
+                                de
+                                filtrado</th>
+                            <th>Área de
+                                envasado</th>
+                            <th>Área de
+                                tiquetado</th>
+                            <th>Almacén de
+                                producto
+                                terminado</th>
+                            <th>Área de
+                                aseo personal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="unidadProduccion">
+                        <tr>
+                            <th>
+                                <button type="button" class="btn btn-danger remove-row" disabled>
+                                    <i class="ri-delete-bin-5-fill"></i>
+                                </button>
+                            </th>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="nombre_predio[]" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="superficie[]" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="madurez[]" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm"
+                                    name="cantidad_plantas[]" />
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="coordenadas[]" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+{{-- UNIDAD EQUIPO ENVASADO --}}
+<div style="padding: 20px"></div>
+                <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Envasado</p>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>
+                                <button type="button" class="btn btn-primary add-row"
+                                    data-target="#unidadProduccion" data-name-prefix="nombre_predio[]"
+                                    data-name-superficie="superficie[]" data-name-madurez="madurez[]"
+                                    data-name-plagas="plagas[]">
+                                    <i class="ri-add-line"></i>
+                                </button>
+                            </th>
+                            <th style="width: 200px">Equipo</th>
+                            <th>Cantidad</th>
+                            <th>Capacidad</th>
+                            <th>Tipo de material</th>
+                        </tr>
+                    </thead>
+                    <tbody id="unidadProduccion">
+                        <tr>
+                            <th>
+                                <button type="button" class="btn btn-danger remove-row" disabled>
+                                    <i class="ri-delete-bin-5-fill"></i>
+                                </button>
+                            </th>
+                            <td>
+                                <select class="rango_inicial form-control select2" name="rango_inicial[]">
+                                    <!-- Opciones -->
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="superficie[]" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="madurez[]" />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm" name="plagas[]" />
+
+                        </tr>
+                    </tbody>
+                </table>
 
 
 
