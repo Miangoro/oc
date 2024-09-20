@@ -286,7 +286,7 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm" name="cantidad[]" />
+                                <input type="number" class="form-control form-control-sm" name="cantidad[]" />
                             </td>
                             <td>
                                 <input type="text" class="form-control form-control-sm" name="capacidad[]" />
@@ -414,7 +414,7 @@
 
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm"
+                                <input type="number" class="form-control form-control-sm"
                                     name="cantidad_envasado[]" />
                             </td>
                             <td>
