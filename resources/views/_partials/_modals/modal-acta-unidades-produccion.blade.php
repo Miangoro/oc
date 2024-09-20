@@ -20,8 +20,8 @@
             <form id="ActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                 <input type="hidden" class="id_inspeccion" name="id_inspeccion">
                 <input type="hidden" class="id_empresa" name="acta_id_empresa">
-                {{--                 <input type="text" class="fecha_visita" name="fecha_visita">
- --}}
+                <input type="text" class="tipo" name="tipo">
+
                 @csrf
                 <div class="row">
                     <div class="col-md-5 mb-5">
@@ -37,7 +37,7 @@
                         <div class="form-floating form-floating-outline mb-4">
                             <select id="categoria_acta" name="categoria_acta" class="form-select" required>
                                 <option value="1">Unidad de producción de Agave </option>
-                                <option value="2">Unidad de producción de Mezca</option>
+                                <option value="2">Unidad de producción de Mezcal</option>
                                 <option value="3">Planta de Envasado</option>
                                 <option value="4">Comercializadora</option>
                                 <option value="5">Almacén</option>
@@ -164,7 +164,7 @@
                     </tbody>
                 </table>
 
-                {{-- Tabla de produccion mezcal o instalaciones --}}
+                {{-- Tabla de produccion de mezcal --}}
                 <div style="padding: 10px"></div>
                 <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción de Mezcal</p>
                 <table class="table table-bordered">

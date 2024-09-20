@@ -131,6 +131,7 @@ class inspeccionesController extends Controller
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
                 $nestedData['tipo'] = $solicitud->tipo_solicitud->tipo  ?? 'N/A';
                 $nestedData['direccion_completa'] = $solicitud->instalacion->direccion_completa  ?? 'N/A';
+                $nestedData['tipo'] = $solicitud->instalacion->tipo  ?? 'N/A';
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</span>'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</span>';
