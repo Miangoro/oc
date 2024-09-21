@@ -1500,7 +1500,7 @@ $(document).ready(function () {
 
 
 
-// Añadir método para agregar acta
+/* // Añadir método para agregar acta
 $('#ActaUnidadesForm').on('submit', function (e) {
   e.preventDefault();
   
@@ -1535,6 +1535,127 @@ $('#ActaUnidadesForm').on('submit', function (e) {
           }
       });
   }
+  });
+}); */
+
+
+
+// Añadir método para agregar acta con validación
+const actaUnidadesForm = document.getElementById('ActaUnidadesForm');
+
+// Validación del formulario
+const fv = FormValidation.formValidation(actaUnidadesForm, {
+  fields: {
+    // Asegúrate de ajustar los nombres de los campos según tu formulario
+    num_acta: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor introduzca un número de actas'
+        }
+      }
+    },
+    categoria_acta: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese una marca'
+        }
+      }
+    },
+    testigos: {
+      validators: {
+        notEmpty: {
+          message: 'Introduzca el nombre del testigo'
+        }
+      }
+    },
+    encargado: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor, ingrese el número de hologramas solicitado'
+        }
+      }
+    },
+    num_credencial_encargado: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor, ingrese la credencial vigente'
+        }
+      }
+    },
+    fecha_inicio: {
+      validators: {
+        notEmpty: {
+          message: 'Elija una fecha de inicio'
+        }
+      }
+    },
+    fecha_fin: {
+      validators: {
+        notEmpty: {
+          message: 'Elija una fecha de finalización'
+        }
+      }
+    },
+    no_conf_infraestructura: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese no conformidades identificadas en la inspección'
+        }
+      }
+    },
+    no_conf_equipo: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese no conformidades identificadas en la inspección'
+        }
+      }
+    }
+  },
+  plugins: {
+    trigger: new FormValidation.plugins.Trigger(),
+    bootstrap5: new FormValidation.plugins.Bootstrap5({
+      eleValidClass: '',
+      rowSelector: function (field, ele) {
+        return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+      }
+    }),
+    submitButton: new FormValidation.plugins.SubmitButton(),
+    autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function () {
+  var formData = $(actaUnidadesForm).serialize(); // Serializar los datos del formulario
+
+  $.ajax({
+    url: '/acta-unidades', // Asegúrate de que esta URL sea correcta en tus rutas
+    type: 'POST',
+    data: formData,
+    success: function (response) {
+      $('#ActaUnidades').modal('hide'); // Cerrar modal
+      $('#ActaUnidadesForm')[0].reset(); // Limpiar formulario
+
+      // Mostrar alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.success,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+    },
+    error: function (xhr) {
+      console.log('Error:', xhr.responseText);
+
+      // Mostrar alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al agregar la clase',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
   });
 });
 
