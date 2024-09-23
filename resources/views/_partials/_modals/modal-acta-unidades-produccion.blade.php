@@ -2,10 +2,11 @@
 
 <style>
     .modal-custom-size {
-    max-width: 90%; /* Ajusta este valor para hacerlo más grande */
-    width: 90%; /* Ajusta según tus necesidades */
-}
-
+        max-width: 90%;
+        /* Ajusta este valor para hacerlo más grande */
+        width: 90%;
+        /* Ajusta según tus necesidades */
+    }
 </style>
 <div class="modal fade" id="ActaUnidades" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-custom-size modal-simple modal-add-new-address">
@@ -19,8 +20,7 @@
             <form id="ActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                 <input type="hidden" class="id_inspeccion" name="id_inspeccion">
                 <input type="hidden" class="id_empresa" name="acta_id_empresa">
-                {{--                 <input type="text" class="fecha_visita" name="fecha_visita">
- --}}
+
                 @csrf
                 <div class="row">
                     <div class="col-md-5 mb-5">
@@ -32,23 +32,18 @@
                     </div>
 
 
+
                     <div class="col-md-5">
                         <div class="form-floating form-floating-outline mb-4">
-                            <select id="categoria_acta" name="categoria_acta" class="form-select" required>
-                                <option value="1">Unidad de producción de Agave </option>
-                                <option value="2">Unidad de producción de Mezca</option>
-                                <option value="3">Planta de Envasado</option>
-                                <option value="4">Comercializadora</option>
-                                <option value="5">Almacén</option>
-
-                            </select>
+                            <input type="text" id="categoria_acta" name="categoria_acta"
+                                class="form-control tipo_instalacion" required oninput="tablasCategorias()" readonly>
                             <label for="categoria_acta">En la categoría de:</label>
                         </div>
                     </div>
 
                     <div class="col-md-2">
                         <div class="form-floating form-floating-outline mb-4">
-                            <select id="testigos" name="testigos" class="form-select" required>
+                            <select id="testigos" name="testigos" class="form-select" required onchange="Testigos()">
                                 <option value="1">Si</option>
                                 <option value="2">No</option>
                             </select>
@@ -60,7 +55,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-5">
                         <div class="form-floating form-floating-outline">
-                            <input type="text" class="form-control Inspector" id="encargado" name="encargado"
+                            <input type="text" class="form-control " id="encargado" name="encargado"
                                 placeholder="Ingresa el nombre del encargado" aria-label="Ingresa el No. guia" />
                             <label for="encargado">Encargado</label>
                         </div>
@@ -100,8 +95,9 @@
                     </div>
                 </div>
 
-                <p class="address-subtitle"><b style="color: red">Designacion: </b>Testigos</b></p>
-                <table class="table table-bordered">
+                <p class="address-subtitle" id="tabla-testigos-label"><b style="color: red">Designacion: </b>Testigos
+                </p>
+                <table class="table table-bordered" id="tabla-testigos">
                     <thead>
                         <tr>
                             <th>
@@ -134,295 +130,400 @@
                 </table>
 
                 {{-- tabla de produccion --}}
+                <div id="tablaProduccion" style="display: none;">
 
-                <div style="padding: 10px"></div>
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th><button type="button" class="btn btn-primary add-row-produccion"> <i
-                                        class="ri-add-line"></i>
-                                </button></th>
-                            <th>Nombre del Predio/Plantación</th>
-                            <th>Plagas en el cultivo</th>
-                        </tr>
-                    </thead>
-                    <tbody id="unidadProduccion">
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled>
-                                    <i class="ri-delete-bin-5-fill"></i>
-                                </button>
-                            </th>
-                            <td><select class="form-control select2 plantacion" name="id_empresa[]">
-                                    <!-- Opciones -->
-                                </select>
-                            </td>
-                            <td><input type="text" class="form-control form-control-sm" name="plagas[]"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <div style="padding: 10px"></div>
+                    <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th><button type="button" class="btn btn-primary add-row-produccion"> <i
+                                            class="ri-add-line"></i>
+                                    </button></th>
+                                <th>Nombre del Predio/Plantación</th>
+                                <th>Plagas en el cultivo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="unidadProduccion">
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-danger remove-row" disabled>
+                                        <i class="ri-delete-bin-5-fill"></i>
+                                    </button>
+                                </th>
+                                <td><select class="form-control select2 plantacion" name="id_empresa[]">
+                                        <!-- Opciones -->
+                                    </select>
+                                </td>
+                                <td><input type="text" class="form-control form-control-sm" name="plagas[]"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-                {{-- Tabla de produccion mezcal o instalaciones --}}
-                <div style="padding: 10px"></div>
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción de Mezcal</p>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-primary add-rowMezcal">
-                                    <i class="ri-add-line"></i>
-                                </button>
-                            </th>
-                            <th>Recepción (materia prima)</th>
-                            <th>Área de pesado</th>
-                            <th>Área de cocción</th>
-                            <th>Área de maguey cocido</th>
-                            <th>Área de molienda</th>
-                            <th>Área de fermentación</th>
-                            <th>Área de destilación</th>
-                            <th>Almacén a graneles</th>
-                        </tr>
-                    </thead>
-                    <tbody id="unidadMezcal">
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled>
-                                    <i class="ri-delete-bin-5-fill"></i>
-                                </button>
-                            </th>
-                            <!-- Indexado por fila (0) y columna (áreas) -->
-                            <td>
-                                <select class="form-control select2" name="respuesta[0][0]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control select2" name="respuesta[0][1]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control select2" name="respuesta[0][2]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control select2" name="respuesta[0][3]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control select2" name="respuesta[0][4]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control select2" name="respuesta[0][5]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control select2" name="respuesta[0][6]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control select2" name="respuesta[0][7]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                {{-- Tabla de produccion de mezcal --}}
+                <div id="tablaProduccionMezcal" style="display: none;">
+
+                    <div style="padding: 10px"></div>
+                    <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción de Mezcal</p>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-primary add-rowMezcal">
+                                        <i class="ri-add-line"></i>
+                                    </button>
+                                </th>
+                                <th>Recepción (materia prima)</th>
+                                <th>Área de pesado</th>
+                                <th>Área de cocción</th>
+                                <th>Área de maguey cocido</th>
+                                <th>Área de molienda</th>
+                                <th>Área de fermentación</th>
+                                <th>Área de destilación</th>
+                                <th>Almacén a graneles</th>
+                            </tr>
+                        </thead>
+                        <tbody id="unidadMezcal">
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-danger remove-row" disabled>
+                                        <i class="ri-delete-bin-5-fill"></i>
+                                    </button>
+                                </th>
+                                <!-- Indexado por fila (0) y columna (áreas) -->
+                                <td>
+                                    <select class="form-control select" name="respuesta[0][0]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuesta[0][1]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuesta[0][2]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuesta[0][3]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuesta[0][4]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuesta[0][5]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuesta[0][6]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuesta[0][7]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 {{-- tabla de equipos mezcal --}}
-                <div style="padding: 10px"></div>
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Mezcal</p>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-primary add-row-equipoMezcal">
-                                    <i class="ri-add-line"></i>
-                                </button>
-                            </th>
-                            <th >Equipo</th>
-                            <th>Cantidad</th>
-                            <th>Capacidad</th>
-                            <th>Tipo de material</th>
-                        </tr>
-                    </thead>
-                    <tbody id="equipoMezcal">
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled>
-                                    <i class="ri-delete-bin-5-fill"></i>
-                                </button>
-                            </th>
-                            <td>
-                                <select class="form-control select2 equipo" name="equipo[]">
-                                    <option value="" disabled selected>Selecciona equipo</option>
-                                    @foreach ($equipos as $equipo)
-                                        <option value="{{ $equipo->equipo }}">{{ $equipo->equipo }}</option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="cantidad[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="capacidad[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="tipo_material[]" />
-                        </tr>
-                    </tbody>
-                </table>
+                <div id="tablaProduccionEquipo" style="display: none;">
+
+                    <div style="padding: 10px"></div>
+                    <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Mezcal</p>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-primary add-row-equipoMezcal">
+                                        <i class="ri-add-line"></i>
+                                    </button>
+                                </th>
+                                <th>Equipo</th>
+                                <th>Cantidad</th>
+                                <th>Capacidad</th>
+                                <th>Tipo de material</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equipoMezcal">
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-danger remove-row" disabled>
+                                        <i class="ri-delete-bin-5-fill"></i>
+                                    </button>
+                                </th>
+                                <td>
+                                    <select class="form-control select2 equipo" name="equipo[]">
+                                        <option value="" disabled selected>Selecciona equipo</option>
+                                        @foreach ($equipos as $equipo)
+                                            <option value="{{ $equipo->equipo }}">{{ $equipo->equipo }}</option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm" name="cantidad[]" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm" name="capacidad[]" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm"
+                                        name="tipo_material[]" />
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
 
 
                 {{-- UNIDAD ENVASADSO --}}
-                <div style="padding: 20px"></div>
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>De Envasado</p>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-primary add-rowEnvasado">
-                                    <i class="ri-add-line"></i>
-                                </button>
-                            </th>
-                            <th>Almacén de insumos</th>
-                            <th>Almacén a gráneles
-                            </th>
-                            <th>Sistema de filtrado</th>
-                            <th>Área de envasado</th>
-                            <th>Área de tiquetado</th>
-                            <th>Almacén de producto terminado</th>
-                            <th>Área de aseo personal</th>
-                        </tr>
-                    </thead>
-                    <tbody id="unidadEnvasado">
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled>
-                                    <i class="ri-delete-bin-5-fill"></i>
-                                </button>
-                            </th>
-                                                        <td>
-                                <select class="form-control select2" name="respuestas[0][0]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control select2" name="respuestas[0][1]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control select2" name="respuestas[0][2]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control select2" name="respuestas[0][3]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control select2" name="respuestas[0][4]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control select2" name="respuestas[0][5]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="form-control select2" name="respuestas[0][6]">
-                                    <option value="C">C</option>
-                                    <option value="NC">NC</option>
-                                    <option value="NA">NA</option>
-                                </select>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table> 
+                <div id="tablaEnvasadora" style="display: none;">
+                    <div style="padding: 20px"></div>
+                    <p class="address-subtitle"><b style="color: red">Unidad: </b>De Envasado</p>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-primary add-rowEnvasado">
+                                        <i class="ri-add-line"></i>
+                                    </button>
+                                </th>
+                                <th>Almacén de insumos</th>
+                                <th>Almacén a gráneles
+                                </th>
+                                <th>Sistema de filtrado</th>
+                                <th>Área de envasado</th>
+                                <th>Área de tiquetado</th>
+                                <th>Almacén de producto terminado</th>
+                                <th>Área de aseo personal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="unidadEnvasado">
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-danger remove-row" disabled>
+                                        <i class="ri-delete-bin-5-fill"></i>
+                                    </button>
+                                </th>
+                                <td>
+                                    <select class="form-control select" name="respuestas[0][0]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuestas[0][1]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuestas[0][2]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuestas[0][3]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuestas[0][4]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuestas[0][5]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuestas[0][6]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 {{-- UNIDAD EQUIPO ENVASADO --}}
-                 <div style="padding: 20px"></div>
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Envasado</p>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-primary add-row-equipoEnvasado">
-                                    <i class="ri-add-line"></i>
-                                </button>
-                            </th>
-                            <th>Equipo</th>
-                            <th>Cantidad</th>
-                            <th>Capacidad</th>
-                            <th>Tipo de material</th>
-                        </tr>
-                    </thead>
-                    <tbody id="equipoEnvasado">
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled>
-                                    <i class="ri-delete-bin-5-fill"></i>
-                                </button>
-                            </th>
-                            <td>
-                                <select class="form-control select2 equipo2" name="equipo_envasado[]">
-                                    <option value="" disabled selected>Selecciona equipo</option>
-                                    @foreach ($equipos as $equipoEnva)
-                                        <option value="{{ $equipoEnva->equipo }}">{{ $equipoEnva->equipo }}</option>
-                                    @endforeach
-                                </select>
-                                
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="cantidad_envasado[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="capacidad_envasado[]" />
-                            </td>
-                            <td>
-                                <input type="text" class="form-control form-control-sm" name="tipo_material_envasado[]" />
-                        </tr>
-                    </tbody>
-                </table>  
+                <div id="tablaEnvasadoraEquipo" style="display: none;">
+
+                    <div style="padding: 20px"></div>
+                    <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Envasado</p>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-primary add-row-equipoEnvasado">
+                                        <i class="ri-add-line"></i>
+                                    </button>
+                                </th>
+                                <th>Equipo</th>
+                                <th>Cantidad</th>
+                                <th>Capacidad</th>
+                                <th>Tipo de material</th>
+                            </tr>
+                        </thead>
+                        <tbody id="equipoEnvasado">
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-danger remove-row" disabled>
+                                        <i class="ri-delete-bin-5-fill"></i>
+                                    </button>
+                                </th>
+                                <td>
+                                    <select class="form-control select2 equipo2" name="equipo_envasado[]">
+                                        <option value="" disabled selected>Selecciona equipo</option>
+                                        @foreach ($equipos as $equipoEnva)
+                                            <option value="{{ $equipoEnva->equipo }}">{{ $equipoEnva->equipo }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm"
+                                        name="cantidad_envasado[]" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm"
+                                        name="capacidad_envasado[]" />
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm"
+                                        name="tipo_material_envasado[]" />
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {{-- UNIDAD COMERCIALIZADORA --}}
+                <div id="tablaComercializadora" style="display: none;">
+
+                    <div style="padding: 20px"></div>
+                    <p class="address-subtitle"><b style="color: red">Unidad: </b>De Comercialización</p>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-primary add-rowComercializadora">
+                                        <i class="ri-add-line"></i>
+                                    </button>
+                                </th>
+                                <th>Bodega o almacén</th>
+                                <th>Tarimas</th>
+                                <th>Bitácoras</th>
+                                <th>Otro:</th>
+                                <th>Otro</th>
+                            </tr>
+                        </thead>
+                        <tbody id="unidadComercializadora">
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-danger remove-row" disabled>
+                                        <i class="ri-delete-bin-5-fill"></i>
+                                    </button>
+                                </th>
+                                <td>
+                                    <select class="form-control select" name="respuestas_comercio[0][0]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuestas_comercio[0][1]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuestas_comercio[0][2]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuestas_comercio[0][3]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <select class="form-control select" name="respuestas_comercio[0][4]">
+                                        <option value="" selected>Selecciona</option>
+                                        <option value="C">C</option>
+                                        <option value="NC">NC</option>
+                                        <option value="NA">NA</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
 
 
@@ -495,4 +596,78 @@
             }
         });
     }
+
+    function Testigos() {
+        // Obtener el valor seleccionado en el select
+        const tipoLote = document.getElementById('testigos').value;
+
+        // Obtener la tabla y el label de testigos
+        const tablaTestigos = document.getElementById('tabla-testigos');
+        const tablaTestigosLabel = document.getElementById('tabla-testigos-label');
+
+        // Mostrar u ocultar la tabla dependiendo del valor seleccionado
+        if (tipoLote === '1') {
+            // Mostrar la tabla si elige "Por un solo lote a granel"
+            tablaTestigos.style.display = 'table';
+            tablaTestigosLabel.style.display = 'block';
+        } else {
+            // Ocultar la tabla si elige "Por más de un lote a granel"
+            tablaTestigos.style.display = 'none';
+            tablaTestigosLabel.style.display = 'none';
+        }
+    }
+
+
+    function initializeModalFunctionality() {
+        // Función para mostrar u ocultar la tabla dependiendo del valor de "categoria_acta"
+        function tablasCategorias() {
+            const tipo_instalacion = document.getElementById('categoria_acta').value;
+            const tablaProduccion = document.getElementById('tablaProduccion');
+            const tablaProduccionMezcal = document.getElementById('tablaProduccionMezcal');
+            const tablaProduccionEquipo = document.getElementById('tablaProduccionEquipo');
+            const tablaEnvasadora = document.getElementById('tablaEnvasadora');
+            const tablaEnvasadoraEquipo = document.getElementById('tablaEnvasadoraEquipo');
+            const tablaComercializadora = document.getElementById('tablaComercializadora');
+
+            if (tipo_instalacion === 'Productora') {
+                tablaProduccion.style.display = 'block';
+                tablaProduccionMezcal.style.display = 'block';
+                tablaProduccionEquipo.style.display = 'block';
+            } else if (tipo_instalacion === 'Envasadora') {
+                tablaEnvasadora.style.display = 'block';
+                tablaEnvasadoraEquipo.style.display = 'block';
+            } else if (tipo_instalacion === 'Comercializadora') {
+                tablaComercializadora.style.display = 'block';
+            } else {
+                tablaProduccion.style.display = 'none';
+                tablaProduccionMezcal.style.display = 'none';
+                tablaProduccionEquipo.style.display = 'none';
+                tablaEnvasadora.style.display = 'none';
+                tablaEnvasadoraEquipo.style.display = 'none';
+                tablaComercializadora.style.display = 'none';
+
+
+
+            }
+        }
+
+        // Asegúrate de que el evento se vincule al modal correcto
+        const modalElement = document.getElementById('ActaUnidades');
+
+        if (modalElement) {
+            // Se ejecuta cuando el modal se muestra completamente
+            modalElement.addEventListener('shown.bs.modal', function() {
+                tablasCategorias(); // Llamar a la función cuando se abra el modal
+            });
+
+            // Llamar a la función también cuando el usuario cambie el valor del input
+            const categoriaInput = document.getElementById('categoria_acta');
+            if (categoriaInput) {
+                categoriaInput.addEventListener('input', tablasCategorias);
+            }
+        }
+    }
+
+    // Iniciar la funcionalidad cuando se cargue el DOM
+    document.addEventListener('DOMContentLoaded', initializeModalFunctionality);
 </script>

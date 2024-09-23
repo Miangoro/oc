@@ -47,7 +47,7 @@ class inspecciones extends Model
 
     public function actas_inspeccion()
     {
-        return $this->hasMany(actas_inspeccion::class, 'id_inspeccion', 'id_inspeccion');
+        return $this->belongsTo(actas_inspeccion::class, 'id_inspeccion', 'id_inspeccion');
     }
     
 }
