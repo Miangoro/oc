@@ -165,6 +165,7 @@
                     <th>Fecha y hora de visita estimada</th>
                     <th>Inspector asignado</th>
                     <th>Fecha y hora de inspección</th>
+                    <th>pdf</th>
                     <th>Acciones</th>
                 </tr>
             </thead>

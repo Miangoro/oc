@@ -20,7 +20,6 @@
             <form id="ActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                 <input type="hidden" class="id_inspeccion" name="id_inspeccion">
                 <input type="hidden" class="id_empresa" name="acta_id_empresa">
-                <input type="text" class="tipo" name="tipo">
 
                 @csrf
                 <div class="row">
@@ -33,23 +32,19 @@
                     </div>
 
 
+
                     <div class="col-md-5">
                         <div class="form-floating form-floating-outline mb-4">
-                            <select id="categoria_acta" name="categoria_acta" class="form-select" required>
-                                <option value="1">Unidad de producción de Agave </option>
-                                <option value="2">Unidad de producción de Mezcal</option>
-                                <option value="3">Planta de Envasado</option>
-                                <option value="4">Comercializadora</option>
-                                <option value="5">Almacén</option>
-
-                            </select>
+                            <input type="text" id="categoria_acta" name="categoria_acta" class="form-control tipo"
+                                required oninput="toggleProductionTable()">
                             <label for="categoria_acta">En la categoría de:</label>
                         </div>
                     </div>
 
                     <div class="col-md-2">
                         <div class="form-floating form-floating-outline mb-4">
-                            <select id="testigos" name="testigos" class="form-select" required>
+                            <select id="testigos" name="testigos" class="form-select" required
+                                onchange="toggleFields()">
                                 <option value="1">Si</option>
                                 <option value="2">No</option>
                             </select>
@@ -101,8 +96,9 @@
                     </div>
                 </div>
 
-                <p class="address-subtitle"><b style="color: red">Designacion: </b>Testigos</b></p>
-                <table class="table table-bordered">
+                <p class="address-subtitle" id="tabla-testigos-label"><b style="color: red">Designacion: </b>Testigos
+                </p>
+                <table class="table table-bordered" id="tabla-testigos">
                     <thead>
                         <tr>
                             <th>
@@ -135,34 +131,36 @@
                 </table>
 
                 {{-- tabla de produccion --}}
+                <div id="unidadProduccionContainer" style="display: none;">
 
-                <div style="padding: 10px"></div>
-                <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th><button type="button" class="btn btn-primary add-row-produccion"> <i
-                                        class="ri-add-line"></i>
-                                </button></th>
-                            <th>Nombre del Predio/Plantación</th>
-                            <th>Plagas en el cultivo</th>
-                        </tr>
-                    </thead>
-                    <tbody id="unidadProduccion">
-                        <tr>
-                            <th>
-                                <button type="button" class="btn btn-danger remove-row" disabled>
-                                    <i class="ri-delete-bin-5-fill"></i>
-                                </button>
-                            </th>
-                            <td><select class="form-control select2 plantacion" name="id_empresa[]">
-                                    <!-- Opciones -->
-                                </select>
-                            </td>
-                            <td><input type="text" class="form-control form-control-sm" name="plagas[]"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <div style="padding: 10px"></div>
+                    <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th><button type="button" class="btn btn-primary add-row-produccion"> <i
+                                            class="ri-add-line"></i>
+                                    </button></th>
+                                <th>Nombre del Predio/Plantación</th>
+                                <th>Plagas en el cultivo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="unidadProduccion">
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-danger remove-row" disabled>
+                                        <i class="ri-delete-bin-5-fill"></i>
+                                    </button>
+                                </th>
+                                <td><select class="form-control select2 plantacion" name="id_empresa[]">
+                                        <!-- Opciones -->
+                                    </select>
+                                </td>
+                                <td><input type="text" class="form-control form-control-sm" name="plagas[]"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 {{-- Tabla de produccion de mezcal --}}
                 <div style="padding: 10px"></div>
@@ -563,4 +561,59 @@
             }
         });
     }
+
+    function toggleFields() {
+        // Obtener el valor seleccionado en el select
+        const tipoLote = document.getElementById('testigos').value;
+
+        // Obtener la tabla y el label de testigos
+        const tablaTestigos = document.getElementById('tabla-testigos');
+        const tablaTestigosLabel = document.getElementById('tabla-testigos-label');
+
+        // Mostrar u ocultar la tabla dependiendo del valor seleccionado
+        if (tipoLote === '1') {
+            // Mostrar la tabla si elige "Por un solo lote a granel"
+            tablaTestigos.style.display = 'table';
+            tablaTestigosLabel.style.display = 'block';
+        } else {
+            // Ocultar la tabla si elige "Por más de un lote a granel"
+            tablaTestigos.style.display = 'none';
+            tablaTestigosLabel.style.display = 'none';
+        }
+    }
+
+
+    function initializeModalFunctionality() {
+    // Función para mostrar u ocultar la tabla dependiendo del valor de "categoria_acta"
+    function toggleProductionTable() {
+        const tipo = document.getElementById('categoria_acta').value;
+        const unidadProduccionContainer = document.getElementById('unidadProduccionContainer');
+        
+        if (tipo === 'Productora') {
+            unidadProduccionContainer.style.display = 'block';
+        } else {
+            unidadProduccionContainer.style.display = 'none';
+        }
+    }
+
+    // Asegúrate de que el evento se vincule al modal correcto
+    const modalElement = document.getElementById('ActaUnidades');
+
+    if (modalElement) {
+        // Se ejecuta cuando el modal se muestra completamente
+        modalElement.addEventListener('shown.bs.modal', function () {
+            toggleProductionTable();  // Llamar a la función cuando se abra el modal
+        });
+
+        // Llamar a la función también cuando el usuario cambie el valor del input
+        const categoriaInput = document.getElementById('categoria_acta');
+        if (categoriaInput) {
+            categoriaInput.addEventListener('input', toggleProductionTable);
+        }
+    }
+}
+
+// Iniciar la funcionalidad cuando se cargue el DOM
+document.addEventListener('DOMContentLoaded', initializeModalFunctionality);
+
 </script>

@@ -35,6 +35,7 @@ $(function () {
         { data: 'fecha_visita' },
         { data: 'inspector' },
         { data: 'fecha_servicio' },
+        { data: '' },
         { data: 'action' }
    
         
@@ -74,6 +75,16 @@ $(function () {
           }
           }
         },¨*/
+
+        {
+          // email verify
+          targets: 11,
+          className: 'text-center',
+          render: function (data, type, full, meta) {
+            var $id = full['id_inspeccion'];
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_inspeccion']}" data-registro="${full['id_inspeccion']} "></i>`;
+          }
+        },
         {
             // Acciones
             targets: -1,
@@ -944,7 +955,7 @@ $(function () {
   });
   
   
-  $(document).on('click', '.pdf', function () {
+/*   $(document).on('click', '.pdf', function () {
     var url = $(this).data('url');
     var registro = $(this).data('registro');
         var iframe = $('#pdfViewer');
@@ -952,8 +963,16 @@ $(function () {
   
         $("#titulo_modal").text("Certificado de instalaciones");
         $("#subtitulo_modal").text(registro);
-  });
-
+  }); */
+  $(document).on('click', '.pdf', function () {
+    var id_inspeccion = $(this).data('id_inspeccion');
+    var registro = $(this).data('registro');
+        var iframe = $('#pdfViewer');
+        iframe.attr('src', '../acta_circunstanciada_unidades_produccion/'+id_inspeccion);
+  
+        $("#titulo_modal").text("Certificado de instalaciones");
+        $("#subtitulo_modal").text(registro);
+      });
   //Añadir row
 
   $('.add-row').click(function () {
@@ -1540,7 +1559,7 @@ $('#ActaUnidadesForm').on('submit', function (e) {
 
 
 
-// Añadir método para agregar acta con validación
+// Añadir método para agregar acta con validación 
 const actaUnidadesForm = document.getElementById('ActaUnidadesForm');
 
 // Validación del formulario
@@ -1609,7 +1628,8 @@ const fv = FormValidation.formValidation(actaUnidadesForm, {
           message: 'Por favor ingrese no conformidades identificadas en la inspección'
         }
       }
-    }
+    },
+    
   },
   plugins: {
     trigger: new FormValidation.plugins.Trigger(),

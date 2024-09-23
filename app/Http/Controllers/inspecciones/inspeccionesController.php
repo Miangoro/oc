@@ -410,4 +410,26 @@ class inspeccionesController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
+
+
+
+
+    
+ /*     public function acta_circunstanciada_produccion($id_inspeccion)
+    {
+
+
+        $datos = actas_inspeccion::with('actas_testigo')->findOrFail($id_inspeccion);
+
+        $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion', ['datos' => $datos]);
+        return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
+    }  */
+
+
+
+     public function acta_circunstanciada_produccion()
+    {
+        $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion');
+        return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
+    } 
 }
