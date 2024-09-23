@@ -4,9 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-//Notificacion
-use Spatie\Activitylog\Traits\LogsActivity;
-use App\Traits\TranslatableActivityLog;
 
 class Revisor extends Model
 {
@@ -18,13 +15,21 @@ class Revisor extends Model
     protected $fillable = [
         'tipo_revision',
         'id_revisor',
+        'id_certificado',
         'numero_revision',
         'es_correccion',
         'observaciones',
     ];
 
-    public function getLogName2(): string
+    // Relación inversa con Certificados
+    public function certificado()
     {
-        return 'Revisor';
+        return $this->belongsTo(Certificados::class, 'id_certificado', 'id_certificado');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_revisor', 'id'); // id_revisor es la clave foránea en la tabla revisores
+    }
+
 }

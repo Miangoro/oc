@@ -36,7 +36,7 @@ class Certificado_InstalacionesController extends Controller
         ];
     
         $search = $request->input('search.value');
-        $totalData = Certificados::with(['dictamen', 'firmante'])->count();
+        $totalData = Certificados::with(['dictamen', 'firmante', 'revisor'])->count();
         $totalFiltered = $totalData;
         $limit = $request->input('length');
         $start = $request->input('start');
@@ -46,8 +46,8 @@ class Certificado_InstalacionesController extends Controller
         $order = $columns[$orderIndex] ?? 'num_certificado';
         $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
     
-        $query = Certificados::with(['dictamen', 'firmante'])
-            ->when($search, function($q, $search) {
+        $query = Certificados::with(['dictamen', 'firmante', 'revisor.user']) // Carga la relación del revisor y su usuario
+        ->when($search, function($q, $search) {
                 $q->where('num_certificado', 'LIKE', "%{$search}%")
                   ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
                   ->orWhereHas('firmante', function($q) use ($search) {
@@ -81,7 +81,8 @@ class Certificado_InstalacionesController extends Controller
                 'maestro_mezcalero' => $certificado->maestro_mezcalero ?? 'N/A',
                 'num_dictamen' => $certificado->dictamen->num_dictamen,
                 'tipo_dictamen' => $certificado->dictamen->tipo_dictamen,
-                'id_firmante' => $certificado->firmante->name, 
+                'id_firmante' => $certificado->firmante->name,
+                'id_revisor' => $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'N/A',
             ];
         });
     
@@ -92,7 +93,7 @@ class Certificado_InstalacionesController extends Controller
             'code' => 200,
             'data' => $data,
         ]);
-    }    
+    }
     
     // Función para eliminar
     public function destroy($id_certificado)
@@ -233,9 +234,9 @@ class Certificado_InstalacionesController extends Controller
             'numero_cliente' => $numero_cliente,'nombre_firmante' => $datos->firmante->name ?? 'Nombre del firmante no disponible'
     ];
 
-    $pdf = Pdf::loadView('pdfs.Certificado_comercializador', $pdfData);
-    return $pdf->stream('Certificado de comercializador.pdf');
-}
+        $pdf = Pdf::loadView('pdfs.Certificado_comercializador', $pdfData);
+        return $pdf->stream('Certificado de comercializador.pdf');
+    }
 
 
     public function obtenerRevisores(Request $request)
@@ -249,33 +250,31 @@ class Certificado_InstalacionesController extends Controller
     {
         $validatedData = $request->validate([
             'tipoRevisor' => 'required|string',
-            'nombreRevisor' => 'required|integer',
+            'nombreRevisor' => 'required|integer|exists:users,id', 
             'numeroRevision' => 'required|string',
             'esCorreccion' => 'nullable|in:si,no', 
-            'observaciones' => 'nullable|string|max:255'
+            'observaciones' => 'nullable|string|max:255',
+            'id_certificado' => 'required|integer|exists:certificados,id_certificado',
         ]);
-    
+
         $asignacion = Revisor::create([
             'tipo_revision' => $validatedData['tipoRevisor'],
             'id_revisor' => $validatedData['nombreRevisor'],
             'numero_revision' => $validatedData['numeroRevision'],
             'es_correccion' => $validatedData['esCorreccion'] ?? 'no',  
-            'observaciones' => $validatedData['observaciones'] ?? ''
+            'observaciones' => $validatedData['observaciones'] ?? '',
+            'id_certificado' => $validatedData['id_certificado'], 
         ]);
     
         // Notificación
         $revisor = User::find($validatedData['nombreRevisor']);
-    
         $users = User::whereIn('id', [18, 19, 20])->get(); 
     
-        $tipoRevision = '';
-        if ($validatedData['numeroRevision'] == '1') {
-            $tipoRevision = 'Primera revisión';
-        } elseif ($validatedData['numeroRevision'] == '2') {
-            $tipoRevision = 'Segunda revisión';
-        } else {
-            $tipoRevision = 'Revisión ' . $validatedData['numeroRevision'];
-        }
+        $tipoRevision = match($validatedData['numeroRevision']) {
+            '1' => 'Primera revisión',
+            '2' => 'Segunda revisión',
+            default => 'Revisión ' . $validatedData['numeroRevision'],
+        };
     
         $mensaje = 'Nuevo revisor asignado: ' . ($revisor ? $revisor->name : 'Desconocido') . 
                    ' - ' . $tipoRevision;
@@ -300,6 +299,5 @@ class Certificado_InstalacionesController extends Controller
         ]);
     }
     
-
 //end
 }

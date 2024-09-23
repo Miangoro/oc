@@ -53,6 +53,7 @@
             <button type="submit" class="btn btn-primary">Asignar Revisor</button>
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
           </div>
+          <input type="hidden" name="id_certificado" id="id_certificado">
         </form>
       </div>
     </div>
