@@ -224,16 +224,17 @@
     $('#asignarInspector').modal('show');
   } 
 
-  function abrirModalActaProduccion(id_inspeccion,tipo ,nombre_empresa, id_empresa,direccion_completa, tipo) {
+  function abrirModalActaProduccion(id_inspeccion,tipo ,nombre_empresa, id_empresa,direccion_completa, tipo_instalacion) {
 
     $(".id_inspeccion").val(id_inspeccion);
     $(".direccion_completa").val(direccion_completa);
-    $(".tipo").val(tipo);
+    $(".tipo_instalacion").val(tipo_instalacion);
     $(".id_empresa").val(id_empresa);
     $('.solicitud').text(tipo);
     obtenerNombrePredio();
     $('#ActaUnidades').modal('show');
     initializeModalFunctionality();
+    Testigos();
   } 
 
   

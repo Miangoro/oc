@@ -30,7 +30,11 @@ $(function () {
         { data: 'num_servicio' },
         { data: 'razon_social' },
         { data: 'fecha_solicitud' },
-        { data: 'tipo' },
+        { 
+          data: function(row) {
+              return row.tipo + ' - ' + row.tipo_instalacion; // Concatenar 'tipo' con 'otroDato'
+          } 
+      },
         { data: 'direccion_completa' },
         { data: 'fecha_visita' },
         { data: 'inspector' },
@@ -104,7 +108,7 @@ $(function () {
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalAsignarInspector(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']},'${escapeHtml(full['num_servicio'])}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
-                `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}','${full['direccion_completa']}','${full['tipo']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
+                `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}','${full['direccion_completa']}','${full['tipo_instalacion']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
 
                 
                 '</div>' +
@@ -1187,42 +1191,58 @@ $(document).ready(function () {
                   <i class="ri-delete-bin-5-fill"></i>
               </button>
           </th>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][0]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][0]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][1]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][1]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][2]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][2]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][3]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][3]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][4]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][4]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][5]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][5]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][6]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][6]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][7]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][7]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
@@ -1233,14 +1253,14 @@ $(document).ready(function () {
       rowCount++; // Incrementa el contador de filas
 
       // Re-inicializar select2 en los nuevos selects
-      $('#unidadMezcal').find('.select2').select2({
+      $('#unidadMezcal').find('.select').select({
           dropdownParent: $('#ActaUnidades'),
           width: '100%',
-          dropdownCssClass: 'select2-dropdown'
+          dropdownCssClass: 'select-dropdown'
       });
 
-      var select2Elements = $('.select2');
-      initializeSelect2(select2Elements);
+      var selectElements = $('.select');
+      initializeSelect(selectElements);
       
   });
   
@@ -1333,37 +1353,51 @@ $(document).ready(function () {
                   <i class="ri-delete-bin-5-fill"></i>
               </button>
           </th>
-          <td><select class="form-control select2-unidad" name="respuestas[` + rowCount + `][0]">
+          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][0]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2-unidad" name="respuestas[` + rowCount + `][1]">
+          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][1]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2-unidad" name="respuestas[` + rowCount + `][2]">
+          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][2]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2-unidad" name="respuestas[` + rowCount + `][3]">
+          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][3]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2-unidad" name="respuestas[` + rowCount + `][4]">
+          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][4]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2-unidad" name="respuestas[` + rowCount + `][5]">
+          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][5]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2-unidad" name="respuestas[` + rowCount + `][6]">
+          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][6]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
@@ -1374,14 +1408,14 @@ $(document).ready(function () {
       rowCount++; // Incrementa el contador de filas
 
       // Re-inicializar select2 en los nuevos selects
-      $('#unidadEnvasado').find('.select2-unidad').select2({
+      $('#unidadEnvasado').find('.select-unidad').select({
           dropdownParent: $('#ActaUnidades'),
           width: '100%',
-          dropdownCssClass: 'select2-dropdown'
+          dropdownCssClass: 'select-dropdown'
       });
 
-      var select2Elements = $('.select2-unidad');
-      initializeSelect2(select2Elements);
+      var selectElements = $('.select-unidad');
+      initializeSelect(selectElements);
       
   });
   
@@ -1467,27 +1501,36 @@ $(document).ready(function () {
                   <i class="ri-delete-bin-5-fill"></i>
               </button>
           </th>
-          <td><select class="form-control select2-comercio" name="respuestas_comercio[` + rowCount + `][0]">
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][0]">
+                                                  <option value="" selected>Selecciona</option>
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2-comercio" name="respuestas_comercio[` + rowCount + `][1]">
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][1]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2-comercio" name="respuestas_comercio[` + rowCount + `][2]">
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][2]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2-comercio" name="respuestas_comercio[` + rowCount + `][3]">
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][3]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2-comercio" name="respuestas_comercio[` + rowCount + `][4]">
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][4]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
@@ -1499,14 +1542,14 @@ $(document).ready(function () {
       rowCount++; // Incrementa el contador de filas
 
       // Re-inicializar select2 en los nuevos selects
-      $('#unidadComercializadora').find('.select2-comercio').select2({
+      $('#unidadComercializadora').find('.select-comercio').select({
           dropdownParent: $('#ActaUnidades'),
           width: '100%',
-          dropdownCssClass: 'select2-dropdown'
+          dropdownCssClass: 'select-dropdown'
       });
 
-      var select2Elements = $('.select2-comercio');
-      initializeSelect2(select2Elements);
+      var select2Elements = $('.select-comercio');
+      initializeSelect(selectElements);
       
   });
   
@@ -1670,7 +1713,7 @@ const fv = FormValidation.formValidation(actaUnidadesForm, {
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
-        text: 'Error al agregar la clase',
+        text: 'Error al agregar la acta',
         customClass: {
           confirmButton: 'btn btn-danger'
         }
