@@ -51,9 +51,7 @@
                     <th>Tipo de Certificado</th>
                     <th>No. Dictamen</th>
                     <th>No. Certificado</th>
-                    <th>Firmante</th>
                     <th>Maestro Mezcalero</th>
-                    <th>No. Autorizacion</th>
                     <th>Fecha de Vigencia</th>
                     <th>Fecha de Vencimiento</th>
                     <th>Certificado</th>

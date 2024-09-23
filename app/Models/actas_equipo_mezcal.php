@@ -10,9 +10,9 @@ class actas_equipo_mezcal extends Model
     use HasFactory;
 
     protected $table = 'actas_equipo_mezcal'; // Asegúrate de que este nombre coincida con tu tabla en la base de datos
-    protected $primaryKey = 'id_mezcal '; // Clave primaria de la tabla
+    protected $primaryKey = 'id_mezcal'; // Clave primaria de la tabla
     protected $fillable = [
-        'id_mezcal ',
+        'id_mezcal',
         'id_acta',
         'equipo',
         'cantidad',

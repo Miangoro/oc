@@ -45,10 +45,11 @@
          { data: 'num_dictamen' }, 
          { data: 'num_certificado' },
          { data: 'maestro_mezcalero' },
-         { data: 'num_autorizacion' },
+         { data: '' },
          { data: 'fecha_vigencia' },
          { data: 'fecha_vencimiento' },
          { data: 'Certificado' },
+         { data: '' },
          { data: 'actions', orderable: false, searchable: false }
        ],
        columnDefs: [
@@ -125,33 +126,19 @@
           {
             targets: 5,
             render: function (data, type, full, meta) {
-              var $id_firmante = full['id_firmante'];
-              return '<span class="user-email">' + $id_firmante + '</span>';
-            }
-          }, 
-          {
-            targets: 6,
-            render: function (data, type, full, meta) {
               var $maestro_mezcalero = full['maestro_mezcalero'] ?? 'N/A';
               return '<span class="user-email">' + $maestro_mezcalero + '</span>';
             }
           },
           {
-            targets: 7,
-            render: function (data, type, full, meta) {
-              var $num_autorizacion = full['num_autorizacion'] ?? 'N/A';
-              return '<span class="user-email">' + $num_autorizacion + '</span>';
-            }
-          },
-          {
-            targets: 8,
+            targets: 6,
             render: function (data, type, full, meta) {
               var $fecha_vigencia = full['fecha_vigencia'];
               return '<span class="user-email">' + $fecha_vigencia + '</span>';
             }
           },
           {
-            targets: 9,
+            targets: 7,
             render: function (data, type, full, meta) {
               var $fecha_vencimiento = full['fecha_vencimiento'];
               return '<span class="user-email">' + $fecha_vencimiento + '</span>';
@@ -159,7 +146,7 @@
           },
           {
             // Abre el pdf del certificado
-            targets: 10,
+            targets: 8,
             className: 'text-center',
             render: function (data, type, full, meta) {
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
@@ -167,7 +154,7 @@
           },
          {
            // Actions
-           targets: 11,
+           targets: 9,
            title: 'Acciones',
            searchable: false,
            orderable: false,
@@ -964,7 +951,7 @@ $(document).ready(function() {
       $('#nombreRevisor').empty().append('<option value="">Seleccione un nombre</option>');
 
       if (tipoRevisor) {
-          var tipo = (tipoRevisor === '2') ? 1 : 4; 
+          var tipo = (tipoRevisor === '1') ? 1 : 4; 
 
           $.ajax({
               url: '/ruta-para-obtener-revisores',
@@ -1054,8 +1041,10 @@ const fv = FormValidation.formValidation(form, {
               }
           }).then(function () {
               form.reset();
-              $('#nombreRevisor').empty().append('<option value="">Seleccione un nombre</option>');
+              $('#nombreRevisor').val(null).trigger('change'); 
               $('#esCorreccion').prop('checked', false);
+
+              fv.resetForm();
           });
       },
       error: function (xhr) {
@@ -1073,7 +1062,9 @@ const fv = FormValidation.formValidation(form, {
   });
 });
 
-
+$('#nombreRevisor').on('change', function() { 
+  fv.revalidateField($(this).attr('name'));
+});
 
 //end
 });

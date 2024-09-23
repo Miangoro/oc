@@ -21,10 +21,9 @@
 
           <!-- Selecciona el nombre del revisor -->
           <div class="form-floating form-floating-outline mb-3">
-            <select class="form-select" id="nombreRevisor" name="nombreRevisor" aria-label="Selecciona el nombre del revisor" required>
+            <select class="select2 form-select" id="nombreRevisor" name="nombreRevisor" aria-label="Selecciona el nombre del revisor" required>
               <option value="">Seleccione un nombre</option>
             </select>
-            <label for="nombreRevisor">Selecciona el nombre del revisor</label>
           </div>
 
           <!-- Selecciona el número de revisión -->
