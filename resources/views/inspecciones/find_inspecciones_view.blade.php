@@ -233,6 +233,7 @@
     $('.solicitud').text(tipo);
     obtenerNombrePredio();
     $('#ActaUnidades').modal('show');
+    initializeModalFunctionality();
   } 
 
   

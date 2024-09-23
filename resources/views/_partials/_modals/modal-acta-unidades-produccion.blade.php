@@ -583,7 +583,7 @@
     }
 
 
-    function initializeModalFunctionality() {
+    function initializeModalFunctionality() { 
     // Función para mostrar u ocultar la tabla dependiendo del valor de "categoria_acta"
     function toggleProductionTable() {
         const tipo = document.getElementById('categoria_acta').value;

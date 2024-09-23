@@ -131,7 +131,7 @@ class inspeccionesController extends Controller
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
                 $nestedData['tipo'] = $solicitud->tipo_solicitud->tipo  ?? 'N/A';
                 $nestedData['direccion_completa'] = $solicitud->instalacion->direccion_completa  ?? 'N/A';
-                $nestedData['tipo'] = $solicitud->instalacion->tipo  ?? 'N/A';
+                $nestedData['tipo_instalacion'] = $solicitud->instalacion->tipo  ?? 'N/A';
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</span>'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</span>';
@@ -415,21 +415,21 @@ class inspeccionesController extends Controller
 
 
     
- /*     public function acta_circunstanciada_produccion($id_inspeccion)
+      public function acta_circunstanciada_produccion($id_inspeccion)
     {
 
 
-        $datos = actas_inspeccion::with('actas_testigo')->findOrFail($id_inspeccion);
+        $datos = inspecciones::with('solicitud.empresa','actas_inspeccion')->find($id_inspeccion);
 
-        $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion', ['datos' => $datos]);
+        $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion', compact('datos'));
         return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
-    }  */
+    }  
 
 
 
-     public function acta_circunstanciada_produccion()
+   /*  public function acta_circunstanciada_produccion()
     {
         $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion');
         return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
-    } 
+    } */
 }

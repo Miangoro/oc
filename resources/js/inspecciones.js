@@ -965,7 +965,7 @@ $(function () {
         $("#subtitulo_modal").text(registro);
   }); */
   $(document).on('click', '.pdf', function () {
-    var id_inspeccion = $(this).data('id_inspeccion');
+    var id_inspeccion = $(this).data('id');
     var registro = $(this).data('registro');
         var iframe = $('#pdfViewer');
         iframe.attr('src', '../acta_circunstanciada_unidades_produccion/'+id_inspeccion);

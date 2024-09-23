@@ -261,7 +261,7 @@
         <table class="content-table" style="margin-top: 15px;">
             <tr>
                 <td style="border: 2px solid #31849B; width: 80%; padding: 0px;">Acta número: <span
-                        style="font-size: 13.5px;  font-family: Century Gothic Negrita;">UMS-____________/2024</span>
+                        style="font-size: 13.5px;  font-family: Century Gothic Negrita;">{{ $datos->actas_inspeccion->num_acta ?? 'Sin asignar' }}</span>
                 </td>
                 <td style="border: 2px solid ##31849B;">
 
@@ -292,7 +292,7 @@
                 <tr>
                     <td style="width: ; font-family:Century Gothic Negrita;">Denominación social:</td>
                     <td style="width: 450px;">
-                        MEZCAL BUENAVISTA S.P.R. DE R.L.
+                       {{ $datos->solicitud->empresa->razon_social }}
                     </td>
                     <td style="border: none;">
 
