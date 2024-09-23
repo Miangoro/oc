@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Traits\TranslatableActivityLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+
 
 class Revisor extends Model
 {
-    use HasFactory;
+    use LogsActivity, TranslatableActivityLog, HasFactory;
 
     protected $table = 'certificados_revision';
     protected $primaryKey = 'id_revision'; 
@@ -27,6 +30,7 @@ class Revisor extends Model
     public function certificado()
     {
         return $this->belongsTo(Certificados::class, 'id_certificado', 'id_certificado');
+        return 'revisor'; // Devuelve el nombre que desees
     }
 
     public function user()

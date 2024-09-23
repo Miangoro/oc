@@ -165,6 +165,7 @@
                     <th>Fecha y hora de visita estimada</th>
                     <th>Inspector asignado</th>
                     <th>Fecha y hora de inspección</th>
+                    <th>pdf</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -223,16 +224,17 @@
     $('#asignarInspector').modal('show');
   } 
 
-  function abrirModalActaProduccion(id_inspeccion,tipo ,nombre_empresa, id_empresa,direccion_completa, fecha_visita, inspector) {
+  function abrirModalActaProduccion(id_inspeccion,tipo ,nombre_empresa, id_empresa,direccion_completa, tipo_instalacion) {
 
     $(".id_inspeccion").val(id_inspeccion);
     $(".direccion_completa").val(direccion_completa);
-    $(".inspector").val(inspector);
-    $(".fecha_visita").val(fecha_visita);
+    $(".tipo_instalacion").val(tipo_instalacion);
     $(".id_empresa").val(id_empresa);
     $('.solicitud').text(tipo);
     obtenerNombrePredio();
     $('#ActaUnidades').modal('show');
+    initializeModalFunctionality();
+    Testigos();
   } 
 
   

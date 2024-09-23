@@ -30,11 +30,16 @@ $(function () {
         { data: 'num_servicio' },
         { data: 'razon_social' },
         { data: 'fecha_solicitud' },
-        { data: 'tipo' },
+        { 
+          data: function(row) {
+              return row.tipo + ' - ' + row.tipo_instalacion; // Concatenar 'tipo' con 'otroDato'
+          } 
+      },
         { data: 'direccion_completa' },
         { data: 'fecha_visita' },
         { data: 'inspector' },
         { data: 'fecha_servicio' },
+        { data: '' },
         { data: 'action' }
    
         
@@ -74,6 +79,16 @@ $(function () {
           }
           }
         },¨*/
+
+        {
+          // email verify
+          targets: 11,
+          className: 'text-center',
+          render: function (data, type, full, meta) {
+            var $id = full['id_inspeccion'];
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_inspeccion']}" data-registro="${full['id_inspeccion']} "></i>`;
+          }
+        },
         {
             // Acciones
             targets: -1,
@@ -93,7 +108,7 @@ $(function () {
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalAsignarInspector(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']},'${escapeHtml(full['num_servicio'])}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
-                `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}','${full['direccion_completa']}','${full['fecha_visita']}','${full['inspector']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
+                `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}','${full['direccion_completa']}','${full['tipo_instalacion']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
 
                 
                 '</div>' +
@@ -944,7 +959,7 @@ $(function () {
   });
   
   
-  $(document).on('click', '.pdf', function () {
+/*   $(document).on('click', '.pdf', function () {
     var url = $(this).data('url');
     var registro = $(this).data('registro');
         var iframe = $('#pdfViewer');
@@ -952,8 +967,16 @@ $(function () {
   
         $("#titulo_modal").text("Certificado de instalaciones");
         $("#subtitulo_modal").text(registro);
-  });
-
+  }); */
+  $(document).on('click', '.pdf', function () {
+    var id_inspeccion = $(this).data('id');
+    var registro = $(this).data('registro');
+        var iframe = $('#pdfViewer');
+        iframe.attr('src', '../acta_circunstanciada_unidades_produccion/'+id_inspeccion);
+  
+        $("#titulo_modal").text("Certificado de instalaciones");
+        $("#subtitulo_modal").text(registro);
+      });
   //Añadir row
 
   $('.add-row').click(function () {
@@ -1139,6 +1162,9 @@ $(document).ready(function () {
       // Copiar las opciones del primer select al nuevo select
       var options = $(targetTable).find('tr:first-child .plantacion').html();
       $(targetTable).find('tr:last-child .plantacion').html(options);
+
+      var select2Elements = $('.select2-nuevo');
+      initializeSelect2(select2Elements);
   });
 
   // Función para eliminar una fila
@@ -1151,7 +1177,7 @@ $(document).ready(function () {
 
 
 
-
+/* PRODUCCION DE MEZCAL */
 
 $(document).ready(function () {
   var rowCount = $('#unidadMezcal tr').length; // Inicializar el contador de filas
@@ -1165,42 +1191,58 @@ $(document).ready(function () {
                   <i class="ri-delete-bin-5-fill"></i>
               </button>
           </th>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][0]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][0]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][1]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][1]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][2]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][2]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][3]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][3]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][4]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][4]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][5]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][5]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][6]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][6]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
           </select></td>
-          <td><select class="form-control select2" name="respuesta[` + rowCount + `][7]">
+          <td><select class="form-control select" name="respuesta[` + rowCount + `][7]">
+                                                  <option value="" selected>Selecciona</option>
+
               <option value="C">C</option>
               <option value="NC">NC</option>
               <option value="NA">NA</option>
@@ -1211,13 +1253,17 @@ $(document).ready(function () {
       rowCount++; // Incrementa el contador de filas
 
       // Re-inicializar select2 en los nuevos selects
-      $('#unidadMezcal').find('.select2').select2({
+      $('#unidadMezcal').find('.select').select({
           dropdownParent: $('#ActaUnidades'),
           width: '100%',
-          dropdownCssClass: 'select2-dropdown'
+          dropdownCssClass: 'select-dropdown'
       });
-  });
 
+      var selectElements = $('.select');
+      initializeSelect(selectElements);
+      
+  });
+  
   // Eliminar fila
   $(document).on('click', '.remove-row', function () {
       $(this).closest('tr').remove();
@@ -1249,7 +1295,7 @@ $(document).ready(function () {
                   </select>
               </td>
               <td>
-                  <input type="text" class="form-control form-control-sm" name="cantidad[]" />
+                  <input type="number" class="form-control form-control-sm" name="cantidad[]" />
               </td>
               <td>
                   <input type="text" class="form-control form-control-sm" name="capacidad[]" />
@@ -1275,7 +1321,11 @@ $(document).ready(function () {
       // Copiar las opciones del primer select al nuevo select
       var options = $(targetTable).find('tr:first-child .equipo').html();
       $(targetTable).find('tr:last-child .equipo').html(options);
+
+      var select2Elements = $('.select2-nuevo2');
+      initializeSelect2(select2Elements);
   });
+  
 
   // Función para eliminar una fila
   $(document).on('click', '.remove-row', function () {
@@ -1285,7 +1335,234 @@ $(document).ready(function () {
 
 
 
-// Añadir método para agregar acta
+
+
+
+
+/* PRODUCCION ENVASADO */
+
+$(document).ready(function () {
+  var rowCount = $('#unidadEnvasado tr').length; // Inicializar el contador de filas
+
+  // Añadir fila a la tabla
+  $('.add-rowEnvasado').click(function () {
+      var newRow = `
+      <tr>
+          <th>
+              <button type="button" class="btn btn-danger remove-row">
+                  <i class="ri-delete-bin-5-fill"></i>
+              </button>
+          </th>
+          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][0]">
+                                                  <option value="" selected>Selecciona</option>
+
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][1]">
+                                                  <option value="" selected>Selecciona</option>
+
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][2]">
+                                                  <option value="" selected>Selecciona</option>
+
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][3]">
+                                                  <option value="" selected>Selecciona</option>
+
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][4]">
+                                                  <option value="" selected>Selecciona</option>
+
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][5]">
+                                                  <option value="" selected>Selecciona</option>
+
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+          <td><select class="form-control select-unidad" name="respuestas[` + rowCount + `][6]">
+                                                  <option value="" selected>Selecciona</option>
+
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+      </tr>`;
+
+      $('#unidadEnvasado').append(newRow);
+      rowCount++; // Incrementa el contador de filas
+
+      // Re-inicializar select2 en los nuevos selects
+      $('#unidadEnvasado').find('.select-unidad').select({
+          dropdownParent: $('#ActaUnidades'),
+          width: '100%',
+          dropdownCssClass: 'select-dropdown'
+      });
+
+      var selectElements = $('.select-unidad');
+      initializeSelect(selectElements);
+      
+  });
+  
+  // Eliminar fila
+  $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+      rowCount--; // Disminuir el contador de filas
+  });
+});
+
+
+
+/* EQUIPO ENVASADO */
+
+$(document).ready(function () {
+  // Añadir fila a la tabla con id "equipoMezcal"
+  $('.add-row-equipoEnvasado').click(function () {
+      // Seleccionamos el tbody de la tabla específica (en este caso, "equipoMezcal")
+      var targetTable = $('#equipoEnvasado');
+
+      // Crear una nueva fila con el formato que necesitas
+      var newRow = `
+          <tr>
+              <th>
+                  <button type="button" class="btn btn-danger remove-row"> 
+                      <i class="ri-delete-bin-5-fill"></i> 
+                  </button>
+              </th>
+              <td>
+                  <select class="form-control select2-nuevo3 equipo2" name="equipo_envasado[]">
+                  </select>
+              </td>
+              <td>
+                  <input type="number" class="form-control form-control-sm" name="cantidad_envasado[]" />
+              </td>
+              <td>
+                  <input type="text" class="form-control form-control-sm" name="capacidad_envasado[]" />
+              </td>
+              <td>
+                  <input type="text" class="form-control form-control-sm" name="tipo_material_envasado[]" />
+              </td>
+          </tr>`;
+
+      // Agregar la nueva fila al tbody de la tabla objetivo
+      $(targetTable).append(newRow);
+
+      // Re-inicializar select2 en el nuevo select
+      $(targetTable).find('.select2-nuevo3').select2({
+          dropdownParent: $('#ActaUnidades'), // Asegúrate de que este es el id correcto de tu modal
+          width: '100%',
+          dropdownCssClass: 'select2-dropdown'
+      });
+
+      // Asegurar que el z-index esté configurado correctamente para el dropdown de select2
+      $('.select2-dropdown').css('z-index', 9999);
+
+      // Copiar las opciones del primer select al nuevo select
+      var options = $(targetTable).find('tr:first-child .equipo2').html();
+      $(targetTable).find('tr:last-child .equipo2').html(options);
+
+      var select2Elements = $('.select2-nuevo3');
+      initializeSelect2(select2Elements);
+  });
+  
+
+  // Función para eliminar una fila
+  $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+  });
+});
+
+
+/* COMERCIALIZACION */
+$(document).ready(function () {
+  var rowCount = $('#unidadComercializadora tr').length; // Inicializar el contador de filas
+
+  // Añadir fila a la tabla
+  $('.add-rowComercializadora').click(function () {
+      var newRow = `
+      <tr>
+          <th>
+              <button type="button" class="btn btn-danger remove-row">
+                  <i class="ri-delete-bin-5-fill"></i>
+              </button>
+          </th>
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][0]">
+                                                  <option value="" selected>Selecciona</option>
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][1]">
+                                                  <option value="" selected>Selecciona</option>
+
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][2]">
+                                                  <option value="" selected>Selecciona</option>
+
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][3]">
+                                                  <option value="" selected>Selecciona</option>
+
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+          <td><select class="form-control select-comercio" name="respuestas_comercio[` + rowCount + `][4]">
+                                                  <option value="" selected>Selecciona</option>
+
+              <option value="C">C</option>
+              <option value="NC">NC</option>
+              <option value="NA">NA</option>
+          </select></td>
+
+      </tr>`;
+
+      $('#unidadComercializadora').append(newRow);
+      rowCount++; // Incrementa el contador de filas
+
+      // Re-inicializar select2 en los nuevos selects
+      $('#unidadComercializadora').find('.select-comercio').select({
+          dropdownParent: $('#ActaUnidades'),
+          width: '100%',
+          dropdownCssClass: 'select-dropdown'
+      });
+
+      var select2Elements = $('.select-comercio');
+      initializeSelect(selectElements);
+      
+  });
+  
+  // Eliminar fila
+  $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+      rowCount--; // Disminuir el contador de filas
+  });
+});
+
+
+
+/* // Añadir método para agregar acta
 $('#ActaUnidadesForm').on('submit', function (e) {
   e.preventDefault();
   
@@ -1320,6 +1597,128 @@ $('#ActaUnidadesForm').on('submit', function (e) {
           }
       });
   }
+  });
+}); */
+
+
+
+// Añadir método para agregar acta con validación 
+const actaUnidadesForm = document.getElementById('ActaUnidadesForm');
+
+// Validación del formulario
+const fv = FormValidation.formValidation(actaUnidadesForm, {
+  fields: {
+    // Asegúrate de ajustar los nombres de los campos según tu formulario
+    num_acta: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor introduzca un número de actas'
+        }
+      }
+    },
+    categoria_acta: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese una marca'
+        }
+      }
+    },
+    testigos: {
+      validators: {
+        notEmpty: {
+          message: 'Introduzca el nombre del testigo'
+        }
+      }
+    },
+    encargado: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor, ingrese el número de hologramas solicitado'
+        }
+      }
+    },
+    num_credencial_encargado: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor, ingrese la credencial vigente'
+        }
+      }
+    },
+    fecha_inicio: {
+      validators: {
+        notEmpty: {
+          message: 'Elija una fecha de inicio'
+        }
+      }
+    },
+    fecha_fin: {
+      validators: {
+        notEmpty: {
+          message: 'Elija una fecha de finalización'
+        }
+      }
+    },
+    no_conf_infraestructura: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese no conformidades identificadas en la inspección'
+        }
+      }
+    },
+    no_conf_equipo: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese no conformidades identificadas en la inspección'
+        }
+      }
+    },
+    
+  },
+  plugins: {
+    trigger: new FormValidation.plugins.Trigger(),
+    bootstrap5: new FormValidation.plugins.Bootstrap5({
+      eleValidClass: '',
+      rowSelector: function (field, ele) {
+        return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+      }
+    }),
+    submitButton: new FormValidation.plugins.SubmitButton(),
+    autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function () {
+  var formData = $(actaUnidadesForm).serialize(); // Serializar los datos del formulario
+
+  $.ajax({
+    url: '/acta-unidades', // Asegúrate de que esta URL sea correcta en tus rutas
+    type: 'POST',
+    data: formData,
+    success: function (response) {
+      $('#ActaUnidades').modal('hide'); // Cerrar modal
+      $('#ActaUnidadesForm')[0].reset(); // Limpiar formulario
+
+      // Mostrar alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.success,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+    },
+    error: function (xhr) {
+      console.log('Error:', xhr.responseText);
+
+      // Mostrar alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al agregar la acta',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
   });
 });
 

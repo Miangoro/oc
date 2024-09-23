@@ -56,11 +56,7 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('F4.1-01-07 Contrato Prestación de Servicios NOM-199 Ed 5 VIGENTE.pdf');
     }
 
-    public function acta_circunstanciada_produccion()
-    {
-        $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion');
-        return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
-    }
+
 
 
     public function solicitudInfoNOM_199()
@@ -291,5 +287,12 @@ class CartaAsignacionController extends Controller
     public function SolicitudEspecificaciones(){
         $pdf = Pdf::loadView('pdfs.Solicitud-Especificaciones');
         return $pdf->stream('R-UNIIC-001 Solicitud y especificaciones del Servicio para emisión de Constancias de Conformidad JUAN RAMÓN.pdf');
+
+    }
+    
+    public function ListaVerificacionNom051Mod20200327Solrev005(){
+        $pdf = Pdf::loadView('pdfs.lista_verificacion_nom051-mod20200327_solrev005');
+        return $pdf->stream('R-UNIIC-005, Lista de Verificación  NOM-051-SCFI_SSA1-2010 y MOD 27.03.2020 SOL-REV-005.PDF');
     }
 }
+
