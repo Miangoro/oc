@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\TranslatableActivityLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-//Notificacion
 use Spatie\Activitylog\Traits\LogsActivity;
-use App\Traits\TranslatableActivityLog;
 
 class Revisor extends Model
 {
-    use HasFactory;
+    use LogsActivity, TranslatableActivityLog, HasFactory;
 
     protected $table = 'certificados_revision';
     protected $primaryKey = 'id_revision'; 
@@ -25,6 +24,6 @@ class Revisor extends Model
 
     public function getLogName2(): string
     {
-        return 'Revisor';
+        return 'revisor'; // Devuelve el nombre que desees
     }
 }

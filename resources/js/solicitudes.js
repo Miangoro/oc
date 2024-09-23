@@ -64,6 +64,36 @@ $(function () {
           }
         },
         {
+          // User full name
+          targets: 9,
+          responsivePriority: 4,
+          render: function (data, type, full, meta) {
+            var $name = full['inspector'];
+            var foto_inspector = full['foto_inspector'];
+
+            // For Avatar badge
+     
+            var $output;
+            if(foto_inspector !=''){
+              $output = '<div class="avatar-wrapper"><div class="avatar avatar-sm me-3"> <div class="avatar "><img src="storage/'+foto_inspector+'" alt class="rounded-circle"></div></div></div>';
+            }else{
+              $output = '';
+            }
+
+            // Creates full output for row
+            var $row_output =
+              '<div class="d-flex justify-content-start align-items-center user-name">' +
+              $output +
+              '<div class="d-flex flex-column">' +
+              '<a href="#" class="text-truncate text-heading"><span class="fw-medium">' +
+              $name +
+              '</span></a>' +
+              '</div>' +
+              '</div>';
+            return $row_output;
+          }
+        },
+        {
       
           targets: 11,
           className: 'text-center',
