@@ -19,6 +19,9 @@ class acta_produccion_mezcal extends Model
     ];
     
 
-
+    public function actas_inspeccion()
+    {
+        return $this->belongsTo(actas_inspeccion::class,'id_acta', 'id_acta');
+    }
     
 }

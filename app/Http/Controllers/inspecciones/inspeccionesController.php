@@ -426,7 +426,8 @@ class inspeccionesController extends Controller
     {
 
 
-        $datos = inspecciones::with('solicitud.empresa', 'actas_inspeccion')->find($id_inspeccion);
+        $datos = inspecciones::with('solicitud.empresa', 'actas_inspeccion.actas_testigo','inspector', 'actas_inspeccion.acta_produccion_mezcal', 'actas_inspeccion.actas_equipo_mezcal',
+        'actas_inspeccion.actas_equipo_envasado', 'actas_inspeccion.actas_unidad_comercializacion')->find($id_inspeccion);
 
         $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion', compact('datos'));
         return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');

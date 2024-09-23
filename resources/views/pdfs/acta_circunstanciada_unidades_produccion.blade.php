@@ -342,7 +342,7 @@
             <br>
             <p>Cuyo original se entrega en el presente acto al C._____________________________, quien dijo tener el
                 cargo de responsable de instalaciones y ante quien me identifiqué debidamente exhibiendo la credencial
-                vigente número ______________, expedida por CIDAM A.C. misma que la persona con quien se entiende la
+                vigente número {{ $datos->actas_inspeccion->num_credencial_encargado ?? 'Sin datos' }}, expedida por CIDAM A.C. misma que la persona con quien se entiende la
                 diligencia tiene a la vista, examina y devuelve al Inspector.</p>
             <br>
             <b>Designación de testigos</b>
@@ -376,8 +376,8 @@
             </tr>
             <tr>
                 <td style="height: 28px;">1</td>
-                <td></td>
-                <td></td>
+                <td>{{ $datos->actas_inspeccion->actas_testigo->nombre_testigo }}</td>
+                <td>{{ $datos->actas_inspeccion->actas_testigo->domicilio }}</td>
             </tr>
             <tr>
                 <td style="height: 28px;">2</td>
@@ -442,7 +442,7 @@
             </tr>
             <tr>
                 <td style="height: 40px;"></td>
-                <td></td>
+                <td>{{ $datos->actas_inspeccion->acta_produccion_mezcal->respuesta }}</td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -466,10 +466,10 @@
             </thead>
             <tbody>
                 <tr>
-                    <td style="height: 40px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="height: 40px;">{{ $datos->actas_inspeccion->actas_equipo_mezcal->equipo }}</td>
+                    <td>{{ $datos->actas_inspeccion->actas_equipo_mezcal->cantidad }}</td>
+                    <td>{{ $datos->actas_inspeccion->actas_equipo_mezcal->capacidad }}</td>
+                    <td>{{ $datos->actas_inspeccion->actas_equipo_mezcal->tipo_material }}</td>
                 </tr>
                 <tr>
                     <td style="height: 40px;"></td>
@@ -539,10 +539,10 @@
             </thead>
             <tbody>
                 <tr>
-                    <td style="height: 48px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td style="height: 48px;">{{ $datos->actas_inspeccion->actas_equipo_envasado->equipo_envasado }}</td>
+                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->cantidad_envasado }}</td>
+                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->capacidad_envasado }}</td>
+                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->tipo_material_envasado }}</td>
                 </tr>
                 <tr>
                     <td style="height: 48px;"></td>
@@ -570,11 +570,11 @@
                 <td style="width: 120px;">Otro:</td>
             </tr>
             <tr>
-                <td style="height: 55px;"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td style="height: 55px;">{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion }}</td>
+                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion }}</td>
+                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion }}</td>
+                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion }}</td>
+                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion }}</td>
             </tr>
         </table>
         <br>
@@ -615,7 +615,7 @@
                 </tr>
                 <tr>
                     <td style="height: 90px;"></td>
-                    <td style="text-align: end; vertical-align: top; padding-top: 70px;"></td>
+                    <td style="text-align: center; vertical-align: top">{{ $datos->inspector->name}}</td>
                 </tr>
             </table>
 
@@ -630,8 +630,8 @@
                     <td style="height: 35px; text-align: start;  vertical-align: top;">Equipo</td>
                 </tr>
                 <tr>
-                    <td style="height: 35px;"></td>
-                    <td style="height: 35px;"></td>
+                    <td style="height: 35px;">{{ $datos->actas_inspeccion->no_conf_infraestructura ?? 'Sin datos' }}</td>
+                    <td style="height: 35px;">{{ $datos->actas_inspeccion->no_conf_equipo ?? 'Sin datos' }}</td>
                 </tr>
             </table>
         </div>
