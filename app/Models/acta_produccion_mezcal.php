@@ -16,10 +16,6 @@ class acta_produccion_mezcal extends Model
         'area',
         'id_acta',
         'respuesta',
-        
-
-
- 
     ];
     
 

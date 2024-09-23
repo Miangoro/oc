@@ -107,6 +107,7 @@ class solicitudesController extends Controller
                 $nestedData['direccion_completa'] = $solicitud->instalacion->direccion_completa ?? $solicitud->predios->ubicacion_predio ?? 'N/A';
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</apan>';
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</apan>'; // Maneja el caso donde el organismo sea nulo
+                $nestedData['foto_inspector'] = $solicitud->inspector->profile_photo_path ?? ''; // Maneja el caso donde el organismo sea nulo
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</apan>';
                 
                 $nestedData['estatus'] = $solicitud->estatus ?? 'Vacío';

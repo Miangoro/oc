@@ -13,6 +13,7 @@ use App\Models\actas_inspeccion;
 use App\Models\actas_testigo;
 use App\Models\actas_produccion;
 use App\Models\actas_equipo_mezcal;
+use App\Models\acta_produccion_mezcal;
 use App\Models\Predios;
 use App\Models\tipos;
 use App\Models\equipos;
@@ -325,6 +326,22 @@ class inspeccionesController extends Controller
 
             $equiMezcal->save();
         }
+        // Guardar las respuestas de las áreas de producción de mezcal
+        $areas = ['Recepción (materia prima)', 'Área de pesado', 'Área de cocción', 'Área de maguey cocido', 'Área de molienda', 'Área de fermentación', 'Área de destilación', 'Almacén a graneles'];
+
+        foreach ($request->respuesta as $rowIndex => $respuestasPorFila) {
+            foreach ($respuestasPorFila as $areaIndex => $respuesta) {
+                if (isset($areas[$areaIndex])) {
+                    $actaProduc = new acta_produccion_mezcal();
+                    $actaProduc->id_acta = $acta->id_acta; // Relacionar con la acta creada
+                    $actaProduc->area = $areas[$areaIndex]; // Guardar el área correspondiente
+                    $actaProduc->respuesta = $respuesta; // Guardar la respuesta seleccionada
+                    $actaProduc->save();
+                }
+            }
+        }
+        
+        
             return response()->json(['success' => 'Lote registrado exitosamente.']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
