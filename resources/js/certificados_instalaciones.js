@@ -163,7 +163,7 @@
           {
             targets: 10,
             render: function (data, type, full, meta) {
-                var $id_revisor = full['id_revisor'];
+                var $id_revisor = full['id_revisor'] || 'N/A'; // Usar 'N/A' si es null
                 var $estatus;
                 var $colorEstatus;
         
@@ -176,7 +176,7 @@
                 }
                 return `<span class="badge rounded-pill bg-${$colorEstatus}">${$estatus}</span>`;
             }
-         },      
+        },             
          {
            // Actions
            targets: 11,
@@ -1011,8 +1011,7 @@ $(document).ready(function() {
   });
 });
 
-//Agregar Revisor
-
+// Agregar Revisor
 $.ajaxSetup({
   headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1056,12 +1055,29 @@ const fv = FormValidation.formValidation(form, {
   }
 }).on('core.form.valid', function (e) {
   var formData = new FormData(form);
+  var id_certificado = $('#id_certificado').val(); // Obtener ID del certificado
+  var tipoRevisor = $('#tipoRevisor').val(); // Obtener el tipo de revisor
+  var revisorValue = $('#nombreRevisor').val(); // Obtener valor del revisor
+  
+  console.log('ID Certificado:', id_certificado);
+  console.log('Tipo de Revisor:', tipoRevisor);
+  console.log('Valor del Revisor:', revisorValue);
 
-  var id_certificado = $('#id_certificado').val();
+  // Asignar el ID del revisor según el tipo
+  if (tipoRevisor == '1') { // Personal del organismo
+      formData.append('id_revisor', revisorValue);
+      formData.append('id_revisor2', null); // No se usa
+  } else if (tipoRevisor == '2') { // Miembro del consejo
+      formData.append('id_revisor2', revisorValue);
+      formData.append('id_revisor', null); // No se usa
+  }
+
+  // Añadir otros datos
   formData.append('id_certificado', id_certificado);
-
   var esCorreccion = $('#esCorreccion').is(':checked') ? 'si' : 'no';
   formData.append('esCorreccion', esCorreccion);
+
+  console.log('FormData:', Array.from(formData.entries())); // Mostrar datos a enviar
 
   $.ajax({
       url: '/asignar-revisor',
@@ -1071,7 +1087,6 @@ const fv = FormValidation.formValidation(form, {
       contentType: false,
       success: function (response) {
           $('#asignarRevisorModal').modal('hide');
-
           Swal.fire({
               icon: 'success',
               title: '¡Éxito!',
@@ -1084,13 +1099,11 @@ const fv = FormValidation.formValidation(form, {
               $('#nombreRevisor').val(null).trigger('change');
               $('#esCorreccion').prop('checked', false);
               fv.resetForm();
-
               $('.datatables-users').DataTable().ajax.reload();
           });
       },
       error: function (xhr) {
           console.log('Error:', xhr.responseText);
-
           Swal.fire({
               icon: 'error',
               title: '¡Error!',
@@ -1103,18 +1116,17 @@ const fv = FormValidation.formValidation(form, {
   });
 });
 
+// Validación del campo de revisor
 $('#nombreRevisor').on('change', function () {
   fv.revalidateField($(this).attr('name'));
 });
 
+// Manejo del modal al abrir
 $('#asignarRevisorModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget); 
   var id_certificado = button.data('id'); 
-
-  console.log('ID Certificado para asignar:', id_certificado);
-
   $('#id_certificado').val(id_certificado);
-
+  console.log('ID Certificado al abrir modal:', id_certificado); // Asignar ID del certificado al input
   fv.resetForm();
   form.reset();
 });

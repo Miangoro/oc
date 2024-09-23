@@ -287,4 +287,9 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.orden_trabajo_inspeccion_etiquetas');
         return $pdf->stream('R-UNIIC-004 Orden de trabajo de inspección de etiquetas, tq CAFE.pdf');
     }
+
+    public function SolicitudEspecificaciones(){
+        $pdf = Pdf::loadView('pdfs.Solicitud-Especificaciones');
+        return $pdf->stream('R-UNIIC-001 Solicitud y especificaciones del Servicio para emisión de Constancias de Conformidad JUAN RAMÓN.pdf');
+    }
 }

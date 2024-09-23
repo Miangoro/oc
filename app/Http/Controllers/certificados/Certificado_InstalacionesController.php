@@ -247,57 +247,57 @@ class Certificado_InstalacionesController extends Controller
     }
 
     public function storeRevisor(Request $request)
-    {
-        $validatedData = $request->validate([
-            'tipoRevisor' => 'required|string',
-            'nombreRevisor' => 'required|integer|exists:users,id', 
-            'numeroRevision' => 'required|string',
-            'esCorreccion' => 'nullable|in:si,no', 
-            'observaciones' => 'nullable|string|max:255',
-            'id_certificado' => 'required|integer|exists:certificados,id_certificado',
-        ]);
+{
+    $validatedData = $request->validate([
+        'tipoRevisor' => 'required|string',
+        'nombreRevisor' => 'required|integer|exists:users,id', 
+        'numeroRevision' => 'required|string',
+        'esCorreccion' => 'nullable|in:si,no', 
+        'observaciones' => 'nullable|string|max:255',
+        'id_certificado' => 'required|integer|exists:certificados,id_certificado',
+    ]);
 
-        $asignacion = Revisor::create([
+    // Buscar el registro existente
+    $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])->first();
+
+    // Asignar el ID del revisor según el tipo
+    if ($validatedData['tipoRevisor'] == '1') {
+        $id_revisor = $validatedData['nombreRevisor'];
+        $id_revisor2 = null; // No se usa
+    } else {
+        $id_revisor = null; // No se usa
+        $id_revisor2 = $validatedData['nombreRevisor'];
+    }
+
+    if ($revisor) {
+        // Actualizar el registro existente
+        $revisor->update([
             'tipo_revision' => $validatedData['tipoRevisor'],
-            'id_revisor' => $validatedData['nombreRevisor'],
+            'id_revisor' => $id_revisor,
+            'id_revisor2' => $id_revisor2,
+            'numero_revision' => $validatedData['numeroRevision'],
+            'es_correccion' => $validatedData['esCorreccion'] ?? 'no',  
+            'observaciones' => $validatedData['observaciones'] ?? '',
+        ]);
+    } else {
+        // Crear un nuevo registro si no existe
+        $revisor = Revisor::create([
+            'tipo_revision' => $validatedData['tipoRevisor'],
+            'id_revisor' => $id_revisor,
+            'id_revisor2' => $id_revisor2,
             'numero_revision' => $validatedData['numeroRevision'],
             'es_correccion' => $validatedData['esCorreccion'] ?? 'no',  
             'observaciones' => $validatedData['observaciones'] ?? '',
             'id_certificado' => $validatedData['id_certificado'], 
         ]);
-    
-        // Notificación
-        $revisor = User::find($validatedData['nombreRevisor']);
-        $users = User::whereIn('id', [18, 19, 20])->get(); 
-    
-        $tipoRevision = match($validatedData['numeroRevision']) {
-            '1' => 'Primera revisión',
-            '2' => 'Segunda revisión',
-            default => 'Revisión ' . $validatedData['numeroRevision'],
-        };
-    
-        $mensaje = 'Nuevo revisor asignado: ' . ($revisor ? $revisor->name : 'Desconocido') . 
-                   ' - ' . $tipoRevision;
-    
-        if ($validatedData['esCorreccion'] === 'si') {
-            $mensaje .= ' (Corrección)';
-        }
-    
-        $data1 = [
-            'title' => 'Nuevo revisor asignado',
-            'message' => $mensaje,
-            'url' => 'solicitudes-historial',
-        ];
-    
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
-        }
-    
-        return response()->json([
-            'message' => 'Revisor asignado exitosamente',
-            'asignacion' => $asignacion
-        ]);
     }
+
+    return response()->json([
+        'message' => 'Revisor asignado exitosamente',
+        'asignacion' => $revisor
+    ]);
+}
+
     
 //end
 }
