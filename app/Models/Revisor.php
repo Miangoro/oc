@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
-
 class Revisor extends Model
 {
     use LogsActivity, TranslatableActivityLog, HasFactory;
@@ -24,13 +23,16 @@ class Revisor extends Model
         'es_correccion',
         'observaciones',
     ];
-    
+
+    public function getLogName2(): string
+    {
+        return 'predio'; // Devuelve el nombre que desees
+    }
 
     // Relación inversa con Certificados
     public function certificado()
     {
         return $this->belongsTo(Certificados::class, 'id_certificado', 'id_certificado');
-        return 'revisor'; // Devuelve el nombre que desees
     }
 
     public function user()
@@ -39,8 +41,7 @@ class Revisor extends Model
     }
 
     public function user2()
-{
-    return $this->belongsTo(User::class, 'id_revisor2', 'id'); // id_revisor2 es la clave foránea en la tabla revisores
-}
-
+    {
+        return $this->belongsTo(User::class, 'id_revisor2', 'id'); // id_revisor2 es la clave foránea en la tabla revisores
+    }
 }

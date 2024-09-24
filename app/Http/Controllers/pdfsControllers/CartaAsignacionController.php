@@ -294,5 +294,10 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.lista_verificacion_nom051-mod20200327_solrev005');
         return $pdf->stream('R-UNIIC-005, Lista de Verificación  NOM-051-SCFI_SSA1-2010 y MOD 27.03.2020 SOL-REV-005.PDF');
     }
+
+    public function OrdenTrabajo () {
+        $pdf = Pdf::loadView('pdfs.Orden-Trabajo');
+        return $pdf->stream('Copia de R-UNIIC-004 Orden de trabajo de inspección de etiquetas, tq CAFE.PDF');
+    }
 }
 

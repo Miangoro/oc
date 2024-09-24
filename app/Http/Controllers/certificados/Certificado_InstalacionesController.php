@@ -245,58 +245,75 @@ class Certificado_InstalacionesController extends Controller
         $revisores = User::where('tipo', $tipo)->get(['id', 'name']);
         return response()->json($revisores);
     }
-
     public function storeRevisor(Request $request)
-{
-    $validatedData = $request->validate([
-        'tipoRevisor' => 'required|string',
-        'nombreRevisor' => 'required|integer|exists:users,id', 
-        'numeroRevision' => 'required|string',
-        'esCorreccion' => 'nullable|in:si,no', 
-        'observaciones' => 'nullable|string|max:255',
-        'id_certificado' => 'required|integer|exists:certificados,id_certificado',
-    ]);
-
-    // Buscar el registro existente
-    $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])->first();
-
-    // Asignar el ID del revisor según el tipo
-    if ($validatedData['tipoRevisor'] == '1') {
-        $id_revisor = $validatedData['nombreRevisor'];
-        $id_revisor2 = null; // No se usa
-    } else {
-        $id_revisor = null; // No se usa
-        $id_revisor2 = $validatedData['nombreRevisor'];
+    {
+        try {
+            // Validación de los datos de entrada
+            $validatedData = $request->validate([
+                'tipoRevisor' => 'required|string',
+                'nombreRevisor' => 'required|integer|exists:users,id',
+                'numeroRevision' => 'required|string',
+                'esCorreccion' => 'nullable|in:si,no',
+                'observaciones' => 'nullable|string|max:255',
+                'id_certificado' => 'required|integer|exists:certificados,id_certificado',
+            ]);
+    
+            // Determinar qué ID de revisor usar
+            $id_revisor = null;
+            $id_revisor2 = null;
+    
+            // Asignar el ID del revisor según el tipo
+            if ($validatedData['tipoRevisor'] == '1') {
+                $id_revisor = $validatedData['nombreRevisor'];
+            } else {
+                $id_revisor2 = $validatedData['nombreRevisor'];
+            }
+    
+            // Buscar el revisor existente para el certificado
+            $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])->first();
+    
+            if ($revisor) {
+                // Si existe, actualiza los campos
+                $revisor->fill([
+                    'id_revisor' => $id_revisor,
+                    'id_revisor2' => $id_revisor2,
+                    'tipo_revision' => $validatedData['tipoRevisor'],
+                    'numero_revision' => $validatedData['numeroRevision'],
+                    'es_correccion' => $validatedData['esCorreccion'] ?? 'no',
+                    'observaciones' => $validatedData['observaciones'] ?? '',
+                ]);
+                $revisor->save(); // Guarda los cambios
+            } else {
+                // Si no existe, crea uno nuevo
+                $revisor = Revisor::create([
+                    'tipo_revision' => $validatedData['tipoRevisor'],
+                    'id_revisor' => $id_revisor,
+                    'id_revisor2' => $id_revisor2,
+                    'numero_revision' => $validatedData['numeroRevision'],
+                    'es_correccion' => $validatedData['esCorreccion'] ?? 'no',
+                    'observaciones' => $validatedData['observaciones'] ?? '',
+                    'id_certificado' => $validatedData['id_certificado'],
+                ]);
+            }
+    
+            return response()->json([
+                'message' => 'Revisor asignado exitosamente',
+                'asignacion' => $revisor
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Error de validación: ' . $e->getMessage(),
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al asignar revisor: ' . $e->getMessage(),
+                'errors' => $e->getTrace() // Muestra la traza del error para diagnóstico
+            ], 500);
+        }
     }
+    
 
-    if ($revisor) {
-        // Actualizar el registro existente
-        $revisor->update([
-            'tipo_revision' => $validatedData['tipoRevisor'],
-            'id_revisor' => $id_revisor,
-            'id_revisor2' => $id_revisor2,
-            'numero_revision' => $validatedData['numeroRevision'],
-            'es_correccion' => $validatedData['esCorreccion'] ?? 'no',  
-            'observaciones' => $validatedData['observaciones'] ?? '',
-        ]);
-    } else {
-        // Crear un nuevo registro si no existe
-        $revisor = Revisor::create([
-            'tipo_revision' => $validatedData['tipoRevisor'],
-            'id_revisor' => $id_revisor,
-            'id_revisor2' => $id_revisor2,
-            'numero_revision' => $validatedData['numeroRevision'],
-            'es_correccion' => $validatedData['esCorreccion'] ?? 'no',  
-            'observaciones' => $validatedData['observaciones'] ?? '',
-            'id_certificado' => $validatedData['id_certificado'], 
-        ]);
-    }
-
-    return response()->json([
-        'message' => 'Revisor asignado exitosamente',
-        'asignacion' => $revisor
-    ]);
-}
 
     
 //end
