@@ -755,4 +755,6 @@ Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAu
 Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico');
 
 
+//PDFS NEW
 
+Route::get('/Solicitud-Especificaciones', [CartaAsignacionController::class, 'SolicitudEspecificaciones'])->name('Solicitud-Especificaciones');
