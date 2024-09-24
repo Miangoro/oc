@@ -170,6 +170,7 @@ $(function () {
                             '<div class="d-flex align-items-center gap-50">' +
                             '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                            `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddPredioInspeccion" class="dropdown-item inspeccion-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar inspección</a>` +
                             `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredio" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
                             `<a data-id="${full['id_predio']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
@@ -972,7 +973,7 @@ $(function () {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-    
+
         // Inicializar FormValidation para el formulario de edición
         const addEditPredioForm = document.getElementById('addEditPredioForm');
         const fvEdit = FormValidation.formValidation(addEditPredioForm, {
@@ -1065,7 +1066,7 @@ $(function () {
         }).on('core.form.valid', function (e) {
             var formData = new FormData(addEditPredioForm);
             var predioId = $('#edit_id_predio').val(); // Asegúrate de que este ID esté correctamente asignado
-    
+
             $.ajax({
                 url: '/domicilios-predios/' + predioId,
                 type: 'POST',
@@ -1091,7 +1092,7 @@ $(function () {
                         var errorMessages = Object.keys(errors).map(function (key) {
                             return errors[key].join('<br>');
                         }).join('<br>');
-    
+
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
@@ -1113,12 +1114,12 @@ $(function () {
                 }
             });
         });
-    
+
         // Manejar el clic en el botón de editar
         $(document).on('click', '.edit-record', function () {
             var predioId = $(this).data('id'); // Obtener el ID del predio a editar
             $('#edit_id_predio').val(predioId);
-    
+
             // Solicitar los datos del predio desde el servidor
             $.ajax({
                 url: '/domicilios-predios/' + predioId + '/edit',
@@ -1126,7 +1127,7 @@ $(function () {
                 success: function (data) {
                     if (data.success) {
                         var predio = data.predio;
-    
+
                         // Rellenar el formulario con los datos del predio
                         $('#edit_id_empresa').val(predio.id_empresa).trigger('change');
                         $('#edit_nombre_productor').val(predio.nombre_productor);
@@ -1136,22 +1137,22 @@ $(function () {
                         $('#edit_puntos_referencia').val(predio.puntos_referencia);
                         $('#edit_tiene_coordenadas').val(predio.cuenta_con_coordenadas).trigger('change');
                         $('#edit_superficie').val(predio.superficie);
-    
+
                         console.log(data.documentos); // Verifica el contenido
 
                         if (Array.isArray(data.documentos)) {
                             $('#archivo_url_contrato').empty(); // Limpia el contenido existente
-    
+
                             data.documentos.forEach(function (documento) {
                                 var nombre = documento.nombre; // Nombre del documento
                                 var url = documento.url; // URL del documento
-    
+
                                 // Codificar la URL del archivo
                                 var urlCodificada = encodeURIComponent(url);
-    
+
                                 // Construir la URL completa utilizando el numeroCliente
                                 var urlCompleta = '../files/' + data.numeroCliente + '/' + urlCodificada;
-    
+
                                 // Agregar el enlace al documento en el div
                                 $('#archivo_url_contrato').append(`
                                     <a href="${urlCompleta}" target="_blank">${nombre}</a>
@@ -1164,7 +1165,7 @@ $(function () {
 
                         // Limpiar las filas de coordenadas anteriores
                         $('#edit_coordenadas tbody').empty();
-    
+
                         // Rellenar coordenadas o añadir una fila vacía si no hay coordenadas
                         if (predio.cuenta_con_coordenadas === 'Si' && data.coordenadas.length > 0) {
                             data.coordenadas.forEach(function (coordenada) {
@@ -1209,22 +1210,22 @@ $(function () {
                     </tr>`;
                             $('#edit_coordenadas tbody').append(emptyRow);
                         }
-    
+
                         // Mostrar u ocultar la sección de coordenadas basado en la presencia de coordenadas
                         if (predio.cuenta_con_coordenadas === 'Si' && data.coordenadas.length > 0) {
                             $('#edit_coordenadas').removeClass('d-none');
                         } else {
                             $('#edit_coordenadas').addClass('d-none');
                         }
-    
+
                         // Limpiar las filas de plantaciones anteriores
                         $('.edit_ContenidoPlantacion').empty();
-    
+
                         // Cargar tipos de agave en el select
                         var tipoOptions = data.tipos.map(function (tipo) {
                             return `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`;
                         }).join('');
-    
+
                         // Rellenar plantaciones o añadir una fila vacía si no hay plantaciones
                         if (data.plantaciones.length > 0) {
                             data.plantaciones.forEach(function (plantacion) {
@@ -1324,10 +1325,10 @@ $(function () {
                             </tr>`;
                             $('.edit_ContenidoPlantacion').append(emptyRow);
                         }
-    
+
                         // Mostrar el modal
                         $('#modalEditPredio').modal('show');
-    
+
                         // Aplicar validaciones a las coordenadas dinámicas
                         $('#edit_coordenadas input').each(function () {
                             fvEdit.addField($(this).attr('name'), {
@@ -1341,7 +1342,7 @@ $(function () {
                                 }
                             });
                         });
-    
+
                         // Aplicar validaciones a las plantaciones dinámicas
                         $('.edit_ContenidoPlantacion input').each(function () {
                             fvEdit.addField($(this).attr('name'), {
@@ -1380,7 +1381,7 @@ $(function () {
             });
         });
     });
-    
+
 
     //Reciben los datos del pdf
     $(document).on('click', '.pdf', function () {
