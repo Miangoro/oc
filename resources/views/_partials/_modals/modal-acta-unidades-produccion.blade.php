@@ -94,7 +94,7 @@
                         </div>
                     </div>
                 </div>
-
+                {{-- Tabla testigos --}}
                 <p class="address-subtitle" id="tabla-testigos-label"><b style="color: red">Designacion: </b>Testigos
                 </p>
                 <table class="table table-bordered" id="tabla-testigos">
@@ -131,7 +131,6 @@
 
                 {{-- tabla de produccion --}}
                 <div id="tablaProduccion" style="display: none;">
-
                     <div style="padding: 10px"></div>
                     <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
                     <table class="table table-bordered">
@@ -163,7 +162,6 @@
 
                 {{-- Tabla de produccion de mezcal --}}
                 <div id="tablaProduccionMezcal" style="display: none;">
-
                     <div style="padding: 10px"></div>
                     <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción de Mezcal</p>
                     <table class="table table-bordered">
@@ -263,7 +261,6 @@
 
                 {{-- tabla de equipos mezcal --}}
                 <div id="tablaProduccionEquipo" style="display: none;">
-
                     <div style="padding: 10px"></div>
                     <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Mezcal</p>
                     <table class="table table-bordered">
@@ -308,8 +305,6 @@
                         </tbody>
                     </table>
                 </div>
-
-
 
                 {{-- UNIDAD ENVASADSO --}}
                 <div id="tablaEnvasadora" style="display: none;">
@@ -403,7 +398,6 @@
 
                 {{-- UNIDAD EQUIPO ENVASADO --}}
                 <div id="tablaEnvasadoraEquipo" style="display: none;">
-
                     <div style="padding: 20px"></div>
                     <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Envasado</p>
                     <table class="table table-bordered">
@@ -448,6 +442,7 @@
                                 <td>
                                     <input type="text" class="form-control form-control-sm"
                                         name="tipo_material_envasado[]" />
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -455,7 +450,6 @@
 
                 {{-- UNIDAD COMERCIALIZADORA --}}
                 <div id="tablaComercializadora" style="display: none;">
-
                     <div style="padding: 20px"></div>
                     <p class="address-subtitle"><b style="color: red">Unidad: </b>De Comercialización</p>
                     <table class="table table-bordered">
@@ -524,8 +518,6 @@
                         </tbody>
                     </table>
                 </div>
-
-
 
                 <div style="text-align: center; color: black; font-size: 20px; padding: 20px"><b
                         style="color: red">Anote: </b>No conformidades identificadas en la inspección</div>
