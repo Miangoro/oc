@@ -307,7 +307,7 @@
                 </div>
 
                 {{-- UNIDAD ENVASADSO --}}
-                <div id="tablaEnvasadora" style="display: none;">
+                <div id="tablaEnvasadora" style="display: block;">
                     <div style="padding: 20px"></div>
                     <p class="address-subtitle"><b style="color: red">Unidad: </b>De Envasado</p>
                     <table class="table table-bordered">
@@ -449,7 +449,8 @@
                 </div>
 
                 {{-- UNIDAD COMERCIALIZADORA --}}
-                <div id="tablaComercializadora" style="display: none;">
+                <div id="tablaComercializadora" style="display: block;">
+
                     <div style="padding: 20px"></div>
                     <p class="address-subtitle"><b style="color: red">Unidad: </b>De Comercialización</p>
                     <table class="table table-bordered">
