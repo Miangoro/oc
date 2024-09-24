@@ -22,20 +22,27 @@ class Certificados extends Model
         'num_autorizacion',
     ];
 
+    // Relación con el modelo Dictamen_instalaciones
     public function dictamen()
     {
         return $this->belongsTo(Dictamen_instalaciones::class, 'id_dictamen', 'id_dictamen');
     }
-    
-    // Relación con el modelo User
+
+    // Relación con el modelo User (Firmante)
     public function firmante()
     {
         return $this->belongsTo(User::class, 'id_firmante', 'id');
     }
 
-    // Relación con Empresa
+    // Relación con el modelo Empresa
     public function empresa()
     {
         return $this->belongsTo(Empresa::class, 'id_empresa', 'id');
     }
+
+    public function revisor()
+    {
+        return $this->belongsTo(Revisor::class, 'id_certificado', 'id_certificado');
+    }
+    
 }

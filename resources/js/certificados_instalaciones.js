@@ -20,12 +20,11 @@
   }
 
   $('.datepicker').datepicker({
-    format: 'yyyy-mm-dd',
-    autoclose: true,
-    todayHighlight: true
-});
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      todayHighlight: true
+  });
 
- 
    // AJAX setup
    $.ajaxSetup({
     headers: {
@@ -48,7 +47,9 @@
          { data: '' },
          { data: 'fecha_vigencia' },
          { data: 'fecha_vencimiento' },
+         { data: 'id_revisor' },
          { data: 'Certificado' },
+         { data: '' },
          { data: '' },
          { data: 'actions', orderable: false, searchable: false }
        ],
@@ -145,16 +146,40 @@
             }
           },
           {
-            // Abre el pdf del certificado
             targets: 8,
+            render: function (data, type, full, meta) {
+              var $id_revisor = full['id_revisor'];
+              return '<span class="user-email">' + $id_revisor + '</span>';
+            }
+          },
+          {
+            // Abre el pdf del certificado
+            targets: 9,
             className: 'text-center',
             render: function (data, type, full, meta) {
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
             }
           },
+          {
+            targets: 10,
+            render: function (data, type, full, meta) {
+                var $id_revisor = full['id_revisor'] || 'N/A'; // Usar 'N/A' si es null
+                var $estatus;
+                var $colorEstatus;
+        
+                if ($id_revisor && $id_revisor !== 'N/A') {
+                    $estatus = 'Vigente';
+                    $colorEstatus = 'success';
+                } else {
+                    $estatus = 'Sin asignar';
+                    $colorEstatus = 'secondary';
+                }
+                return `<span class="badge rounded-pill bg-${$colorEstatus}">${$estatus}</span>`;
+            }
+        },             
          {
            // Actions
-           targets: 9,
+           targets: 11,
            title: 'Acciones',
            searchable: false,
            orderable: false,
@@ -392,7 +417,7 @@
      });
    } 
 
-
+  //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
 
   // Eliminar registro
   $(document).on('click', '.delete-record', function () {
@@ -445,6 +470,7 @@
     });
   });  
 
+//Agregar
 
   $(document).ready(function () {
 
@@ -478,12 +504,12 @@
                 }
             },
             'id_firmante': {
-              validators: {
-                  notEmpty: {
-                      message: 'El nombre del firmante es obligatorio.'
-                  }
-              }
-          },
+                validators: {
+                    notEmpty: {
+                        message: 'El nombre del firmante es obligatorio.'
+                    }
+                }
+            },
             'num_certificado': {
                 validators: {
                     notEmpty: {
@@ -535,71 +561,70 @@
     const fieldsAdded = new Set();
 
     function updateMaestroMezcaleroValidation() {
-      const selectedData = dictamenSelect.select2('data')[0];
-      const tipoDictamen = selectedData ? selectedData.element.dataset.tipoDictamen : '';
-  
-      if (tipoDictamen === '1') {
-          maestroMezcaleroContainer.style.display = 'block';
-  
-          if (!fieldsAdded.has('maestro_mezcalero')) {
-              try {
-                  validator.addField('maestro_mezcalero', {
-                      validators: {
-                          notEmpty: {
-                              message: 'El nombre del maestro mezcalero es obligatorio'
-                          }
-                      }
-                  });
-                  fieldsAdded.add('maestro_mezcalero'); 
-              } catch (error) {
-                  console.error('Error al añadir la validación del campo maestro_mezcalero:', error);
-              }
-          }
-  
-          noAutorizacionContainer.style.display = 'block';
-  
-          if (!fieldsAdded.has('num_autorizacion')) {
-              try {
-                  validator.addField('num_autorizacion', {
-                      validators: {
-                          notEmpty: {
-                              message: 'El número de autorización es obligatorio.'
-                          },
-                          numeric: {
-                              message: 'El número de autorización debe ser numérico.'
-                          }
-                      }
-                  });
-                  fieldsAdded.add('num_autorizacion');
-              } catch (error) {
-                  console.error('Error al añadir la validación del campo num_autorizacion:', error);
-              }
-          }
-      } else {
-          maestroMezcaleroContainer.style.display = 'none';
-  
-          if (fieldsAdded.has('maestro_mezcalero')) {
-              try {
-                  validator.removeField('maestro_mezcalero');
-                  fieldsAdded.delete('maestro_mezcalero'); 
-              } catch (error) {
-                  console.error('Error al eliminar la validación del campo maestro_mezcalero:', error);
-              }
-          }
-  
-          noAutorizacionContainer.style.display = 'none';
-  
-          if (fieldsAdded.has('num_autorizacion')) {
-              try {
-                  validator.removeField('num_autorizacion');
-                  fieldsAdded.delete('num_autorizacion');
-              } catch (error) {
-                  console.error('Error al eliminar la validación del campo num_autorizacion:', error);
-              }
-          }
-      }
-  }
-  
+        const selectedData = dictamenSelect.select2('data')[0];
+        const tipoDictamen = selectedData ? selectedData.element.dataset.tipoDictamen : '';
+
+        if (tipoDictamen === '1') {
+            maestroMezcaleroContainer.style.display = 'block';
+
+            if (!fieldsAdded.has('maestro_mezcalero')) {
+                try {
+                    validator.addField('maestro_mezcalero', {
+                        validators: {
+                            notEmpty: {
+                                message: 'El nombre del maestro mezcalero es obligatorio'
+                            }
+                        }
+                    });
+                    fieldsAdded.add('maestro_mezcalero'); 
+                } catch (error) {
+                    console.error('Error al añadir la validación del campo maestro_mezcalero:', error);
+                }
+            }
+
+            noAutorizacionContainer.style.display = 'block';
+
+            if (!fieldsAdded.has('num_autorizacion')) {
+                try {
+                    validator.addField('num_autorizacion', {
+                        validators: {
+                            notEmpty: {
+                                message: 'El número de autorización es obligatorio.'
+                            },
+                            numeric: {
+                                message: 'El número de autorización debe ser numérico.'
+                            }
+                        }
+                    });
+                    fieldsAdded.add('num_autorizacion');
+                } catch (error) {
+                    console.error('Error al añadir la validación del campo num_autorizacion:', error);
+                }
+            }
+        } else {
+            maestroMezcaleroContainer.style.display = 'none';
+
+            if (fieldsAdded.has('maestro_mezcalero')) {
+                try {
+                    validator.removeField('maestro_mezcalero');
+                    fieldsAdded.delete('maestro_mezcalero'); 
+                } catch (error) {
+                    console.error('Error al eliminar la validación del campo maestro_mezcalero:', error);
+                }
+            }
+
+            noAutorizacionContainer.style.display = 'none';
+
+            if (fieldsAdded.has('num_autorizacion')) {
+                try {
+                    validator.removeField('num_autorizacion');
+                    fieldsAdded.delete('num_autorizacion');
+                } catch (error) {
+                    console.error('Error al eliminar la validación del campo num_autorizacion:', error);
+                }
+            }
+        }
+    }
 
     function updateDatepickerValidation() {
         $('#fecha_vigencia').on('change', function() {
@@ -638,8 +663,16 @@
             success: function (response) {
                 console.log('Éxito:', response);
                 $('#addCertificadoModal').modal('hide');
+
                 $('#addCertificadoForm')[0].reset();
-                dt_user.ajax.reload();
+                $('#id_dictamen').val(null).trigger('change');
+                $('#id_firmante').val(null).trigger('change');
+                $('#num_certificado').val(null).trigger('change');
+                maestroMezcaleroContainer.style.display = 'none'; 
+                noAutorizacionContainer.style.display = 'none'; 
+                fieldsAdded.clear(); 
+
+                dt_user_table.DataTable().ajax.reload();
 
                 Swal.fire({
                     icon: 'success',
@@ -664,19 +697,21 @@
         });
     });
 
-    //Validar select2
+    // Revalidar Select2
     $('#id_dictamen, #id_firmante, #num_certificado').on('change', function() { 
-      validator.revalidateField($(this).attr('name'));
-  });
-  
-    $('#id_firmante, #num_certificado').on('change', function() {
-      validator.revalidateField($(this).attr('name'));
-  });
+        validator.revalidateField($(this).attr('name'));
+    });
 
     dictamenSelect.on('change', updateMaestroMezcaleroValidation);
     updateMaestroMezcaleroValidation();
     updateDatepickerValidation();
+
+    $('#addCertificadoModal').on('show.bs.modal', function () {
+        validator.resetForm();
+        fieldsAdded.clear();
+    });
 });
+
 
 
 // Editar
@@ -976,6 +1011,7 @@ $(document).ready(function() {
   });
 });
 
+// Agregar Revisor
 $.ajaxSetup({
   headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1019,19 +1055,38 @@ const fv = FormValidation.formValidation(form, {
   }
 }).on('core.form.valid', function (e) {
   var formData = new FormData(form);
+  var id_certificado = $('#id_certificado').val(); // Obtener ID del certificado
+  var tipoRevisor = $('#tipoRevisor').val(); // Obtener el tipo de revisor
+  var revisorValue = $('#nombreRevisor').val(); // Obtener valor del revisor
+  
+  console.log('ID Certificado:', id_certificado);
+  console.log('Tipo de Revisor:', tipoRevisor);
+  console.log('Valor del Revisor:', revisorValue);
 
+  // Asignar el ID del revisor según el tipo
+  if (tipoRevisor == '1') { // Personal del organismo
+      formData.append('id_revisor', revisorValue);
+      formData.append('id_revisor2', null); // No se usa
+  } else if (tipoRevisor == '2') { // Miembro del consejo
+      formData.append('id_revisor2', revisorValue);
+      formData.append('id_revisor', null); // No se usa
+  }
+
+  // Añadir otros datos
+  formData.append('id_certificado', id_certificado);
   var esCorreccion = $('#esCorreccion').is(':checked') ? 'si' : 'no';
   formData.append('esCorreccion', esCorreccion);
 
+  console.log('FormData:', Array.from(formData.entries())); // Mostrar datos a enviar
+
   $.ajax({
-      url: '/asignar-revisor',  
+      url: '/asignar-revisor',
       type: 'POST',
       data: formData,
-      processData: false,  
-      contentType: false,  
+      processData: false,
+      contentType: false,
       success: function (response) {
           $('#asignarRevisorModal').modal('hide');
-
           Swal.fire({
               icon: 'success',
               title: '¡Éxito!',
@@ -1041,15 +1096,14 @@ const fv = FormValidation.formValidation(form, {
               }
           }).then(function () {
               form.reset();
-              $('#nombreRevisor').val(null).trigger('change'); 
+              $('#nombreRevisor').val(null).trigger('change');
               $('#esCorreccion').prop('checked', false);
-
               fv.resetForm();
+              $('.datatables-users').DataTable().ajax.reload();
           });
       },
       error: function (xhr) {
           console.log('Error:', xhr.responseText);
-
           Swal.fire({
               icon: 'error',
               title: '¡Error!',
@@ -1062,9 +1116,21 @@ const fv = FormValidation.formValidation(form, {
   });
 });
 
-$('#nombreRevisor').on('change', function() { 
+// Validación del campo de revisor
+$('#nombreRevisor').on('change', function () {
   fv.revalidateField($(this).attr('name'));
 });
+
+// Manejo del modal al abrir
+$('#asignarRevisorModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget); 
+  var id_certificado = button.data('id'); 
+  $('#id_certificado').val(id_certificado);
+  console.log('ID Certificado al abrir modal:', id_certificado); // Asignar ID del certificado al input
+  fv.resetForm();
+  form.reset();
+});
+
 
 //end
 });

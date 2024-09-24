@@ -54,7 +54,9 @@
                     <th>Maestro Mezcalero</th>
                     <th>Fecha de Vigencia</th>
                     <th>Fecha de Vencimiento</th>
+                    <th>Revisor Asignado</th>
                     <th>Certificado</th>
+                    <th>Status</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
