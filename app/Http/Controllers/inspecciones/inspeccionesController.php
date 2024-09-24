@@ -324,7 +324,7 @@ class inspeccionesController extends Controller
             for ($i = 0; $i < count($request->equipo); $i++) {
                 $equiMezcal = new actas_equipo_mezcal();
                 $equiMezcal->id_acta = $acta->id_acta;  // Relacionar con la acta creada
-                $equiMezcal->equipo = $request->equipo[$i];
+                $equiMezcal->equipo = !empty($request->equipo[$i]) ? $request->equipo[$i] : null;
                 $equiMezcal->cantidad = $request->cantidad[$i];
                 $equiMezcal->capacidad = $request->capacidad[$i];
                 $equiMezcal->tipo_material = $request->tipo_material[$i];
@@ -337,7 +337,7 @@ class inspeccionesController extends Controller
             for ($i = 0; $i < count($request->equipo_envasado); $i++) {
                 $equiEnvasado = new actas_equipo_envasado();
                 $equiEnvasado->id_acta = $acta->id_acta;  // Relacionar con la acta creada
-                $equiEnvasado->equipo_envasado = $request->equipo_envasado[$i];
+                $equiEnvasado->equipo_envasado = !empty($request->equipo_envasado[$i]) ? $request->equipo_envasado[$i] : null;
                 $equiEnvasado->cantidad_envasado = $request->cantidad_envasado[$i];
                 $equiEnvasado->capacidad_envasado = $request->capacidad_envasado[$i];
                 $equiEnvasado->tipo_material_envasado = $request->tipo_material_envasado[$i];

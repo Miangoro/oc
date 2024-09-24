@@ -286,7 +286,7 @@
                                 </th>
                                 <td>
                                     <select class="form-control select2 equipo" name="equipo[]">
-                                        <option value="" disabled selected>Selecciona equipo</option>
+                                        <option value="">Selecciona equipo</option>
                                         @foreach ($equipos as $equipo)
                                             <option value="{{ $equipo->equipo }}">{{ $equipo->equipo }}</option>
                                         @endforeach
@@ -301,13 +301,14 @@
                                 <td>
                                     <input type="text" class="form-control form-control-sm"
                                         name="tipo_material[]" />
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
                 {{-- UNIDAD ENVASADSO --}}
-                <div id="tablaEnvasadora" style="display: block;">
+                <div id="tablaEnvasadora" style="display: none;">
                     <div style="padding: 20px"></div>
                     <p class="address-subtitle"><b style="color: red">Unidad: </b>De Envasado</p>
                     <table class="table table-bordered">
@@ -423,7 +424,7 @@
                                 </th>
                                 <td>
                                     <select class="form-control select2 equipo2" name="equipo_envasado[]">
-                                        <option value="" disabled selected>Selecciona equipo</option>
+                                        <option value="" selected>Selecciona equipo</option>
                                         @foreach ($equipos as $equipoEnva)
                                             <option value="{{ $equipoEnva->equipo }}">{{ $equipoEnva->equipo }}
                                             </option>
@@ -449,7 +450,7 @@
                 </div>
 
                 {{-- UNIDAD COMERCIALIZADORA --}}
-                <div id="tablaComercializadora" style="display: block;">
+                <div id="tablaComercializadora" style="display: none;">
 
                     <div style="padding: 20px"></div>
                     <p class="address-subtitle"><b style="color: red">Unidad: </b>De Comercialización</p>
