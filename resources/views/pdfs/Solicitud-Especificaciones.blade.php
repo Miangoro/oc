@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plan de auditoría de esquema de certificación</title>
+    <title>R-UNIIC-001 Solicitud y especificaciones del Servicio para emisión de Constancias de Conformidad JUAN RAMÓN</title>
 
     <style>
         body {
@@ -109,63 +109,64 @@
             margin-left: 30px; 
             text-align: center; 
             color: #1F497D; 
-            text-decoration: underline; 
             margin-top: 20px; 
             font-weight: bold; 
-            font-size: 16px;
+            font-size: 18px;
+            line-height: 2;
         }
 
         .title3 {
             text-align: center; 
             color: #1F497D; 
-            text-decoration: underline; 
-            margin-top: 100px; 
+            margin-top: 90px; 
             font-weight: bold; 
             font-size: 16px;
+            line-height: 2;
         }
 
         .subtitle {
-            margin-left: 5px; /* Puedes ajustar este margen según sea necesario */
+            margin-left: 5px; 
             font-size: 14px;
             margin-bottom: -10px;
         }
 
         .subtitle2 {
-            margin-left: 25px; /* Puedes ajustar este margen según sea necesario */
-            font-size: 16px;
+            margin-left: 25px; 
+            font-size: 14px;
             font-weight: bold; 
         }
 
         .subtitle3 {
             margin-top: -20px;
             margin-left: 25px; 
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold; 
-            margin-bottom: 60px; /* Aumenta este valor si es necesario */
-        }
-
-        .subtitle-nn {
-            margin-top: 2px;
-            margin-left: 25px; 
-            font-size: 12px;
-            font-weight: bold; 
-            margin-bottom: -2px; /* Aumenta este valor si es necesario */
-        }
-
-        
-        .subtitle4 {
-            margin-top: -25px;
-            margin-left: 25px; 
-            font-size: 16px;
-            font-weight: bold; 
+            margin-bottom: 60px;
         }
 
         .subtitlex {
             margin-top: 30px;
             margin-left: 25px; 
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold; 
         }
+
+        .subtitle-nn {
+            margin-top: 2px;
+            margin-left: 25px; 
+            font-size: 13px;
+            font-weight: bold; 
+            margin-bottom: -2px; 
+        }
+
+        .subtitle4 {
+            margin-top: -25px;
+            margin-left: 25px; 
+            font-size: 14px;
+            font-weight: bold; 
+        }
+
+
 
         table {
             width: 90%;
@@ -215,30 +216,31 @@
         
         .bullet {
             margin-top: -10px;
-            margin-left: 20px; /* Espacio a la izquierda */
-            margin-bottom: 20px; /* Espacio entre los elementos */
-            line-height: 1.5; /* Ajusta el interlineado aquí */
+            margin-left: 20px;
+            margin-bottom: 20px; 
+            line-height: 1.5; 
+            font-size: 13px;
         }
 
         .table-container {
-            display: inline-block; /* Para que la tabla esté al lado del texto */
-            vertical-align: top; /* Alinear la tabla con la parte superior de la lista */
-            margin-left: 420px;
-            margin-top: -85px;
+            display: inline-block; 
+            vertical-align: top;
+            margin-left: 350px;
+            margin-top: -70px;
         }
 
         .my-table {
             border: 1px solid #E36C09; 
-            border-collapse: collapse; /* Para que las celdas estén juntas */
-            width: 100%; /* Ajustar el ancho de la tabla */
+            border-collapse: collapse;
+            width: 100%; 
         }
 
         .my-table td {
             vertical-align: middle;
             text-align: center;
-            border: 3px solid #E36C09; /* Borde de la celda */
-            padding: 5px; /* Espacio dentro de las celdas */
-            text-align: center; /* Centrar texto */
+            border: 3px solid #E36C09;
+            padding: 5px; 
+            text-align: center;
         }
 
         .table-x {
@@ -253,6 +255,8 @@
             text-align: justify;
             margin-right: 450px;
             color: #243F60;
+            font-weight: bold; 
+            margin-top: -2px;
         }
 
         .nota2 {
@@ -262,6 +266,7 @@
             margin-right: 35px;
             color: #243F60;
             margin-top: 40px;
+            font-weight: bold; 
         }
 
         .nota3 {
@@ -271,11 +276,12 @@
             margin-right: 35px;
             color: #243F60;
             margin-top: 1px;
+            font-weight: bold; 
         }
         
         .img-botellas-right {
             float: right;
-            margin-right: 100px; /* Ajusta el margen según sea necesario */
+            margin-right: 100px;
             margin-top: -150px;
             width: 250px;
         }
@@ -289,6 +295,10 @@
             margin-left: 40px;
             color: #E36C09;
             font-size: 14px;
+        }
+
+        .cuadro {
+            text-align: justify;
         }
     </style>
 </head>
@@ -309,9 +319,9 @@
     <table>
 	<tbody>
 		<tr>
-			<td class="colum-n">Nombre del cliente </td>
-			<td class="colum-n">Nombre del Representante </td>
-			<td colspan="2" class="colum-n">Domicilio fiscal </td>
+			<td class="colum-n">Nombre del cliente</td>
+			<td class="colum-n">Nombre del Representante</td>
+			<td colspan="2" class="colum-n">Domicilio fiscal</td>
 		</tr>
 		<tr>
 			<td class="colum-n">Juan Ramón Rugarcía</td>
@@ -321,14 +331,14 @@
 		<tr>
 			<td class="colum-n">Número de teléfono</td>
 			<td class="colum-n">Correo Electrónico</td>
-			<td class="colum-n">RFC </td>
+			<td class="colum-n">RFC</td>
 			<td class="colum-n">País Destino</td>
 		</tr>
 		<tr>
 			<td class="colum-p">222 661 6883</td>
 			<td class="colum-p">juanra.rugba97@gmail.com</td>
 			<td class="colum-p">RUBJ971109GI3</td>
-			<td class="colum-n">No aplica </td>
+			<td class="colum-n">No aplica</td>
 		</tr>
 		<tr>
 			<td colspan="2" class="colum-n">DOMICILIO DEL/LOS RESPONSABLES DEL PRODUCTO: (Indicando nombre, calle, número, código postal y entidad federativa)</td>
@@ -337,7 +347,10 @@
 	</tbody>
 </table>
 
-<p class="title2"><strong>Apartado para etiquetas de bebidas alcohólicas <br> (NOM-142-SSA1/SCFI-2014 / NOM-199-SCFI-2017)</strong></p>
+<p class="title2">
+    <strong><u>Apartado para etiquetas de bebidas alcohólicas</u> <br> (NOM-142-SSA1/SCFI-2014 / NOM-199-SCFI-2017)</strong>
+</p>
+
 
 <p class="subtitle2">Marque con una X</p>
 
@@ -351,10 +364,10 @@
     <div class="table-container">
         <table class="my-table">
             <tr>
-                <td style="width:40px; height: 25px">---</td>
+                <td style="width:30px; height: 15px">---</td>
             </tr>
             <tr>
-                <td style="height: 25px">---</td>
+                <td style="height: 15px">---</td>
             </tr>
             <tr>
                 <td style="height: 40px">---</td>
@@ -375,10 +388,10 @@
 			<td class="colum-n">Abocado o destilado con</td>
 		</tr>
 		<tr>
-			<td style="height: 25px;"></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td style="height: 25px;" class="colum-p">---</td>
+			<td class="colum-p">---</td>
+			<td class="colum-p">---</td>
+			<td class="colum-p">---</td>
 		</tr>
 		<tr>
 			<td class="colum-n">Tipo de marca</td>
@@ -387,10 +400,10 @@
 			<td class="colum-n">País de Origen (Bebidas importadas)</td>
 		</tr>
         <tr>
-			<td style="height: 25px;"></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td style="height: 25px;" class="colum-p">---</td>
+			<td class="colum-p">---</td>
+			<td class="colum-p">---</td>
+			<td class="colum-p">---</td>
 		</tr>
 		<tr>
 			<td colspan="2" class="colum-x"><strong>&nbsp;&nbsp;&nbsp;INGREDIENTES DEL PRODUCTO (Bebidas alcohólicas preparadas, licores o cremas y todas las bebidas alcohólicas, que después de destiladas y/o antes de embotellar utilicen ingredientes opcionales y/o aditivos):</strong> 
@@ -405,7 +418,7 @@
 		</tr>
 		<tr>
 			<td colspan="2" style="height: 25px; vertical-align: middle;"><strong>&nbsp;&nbsp;&nbsp;Observaciones</strong></td>
-			<td colspan="2"></td>
+			<td colspan="2" class="colum-p">---</td>
 		</tr>
 	</tbody>
 </table>
@@ -414,7 +427,7 @@
         <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido
         externamente sin la autorización escrita del Director Ejecutivo
         </div>
-        <div class="page-number">Página <strong>1</strong> de <strong>5</strong></div>
+        <div class="page-number">Página <strong>1</strong> de <strong>4</strong></div>
     </div>
     <div class="page-break"></div>
 
@@ -439,7 +452,7 @@
 
 <img class="img-botellas-right" src="{{ public_path('img_pdf/Botellas.jpg') }}">
 
-<p class="title3"><strong>Apartado para alimentos y bebidas no alcohólicas  <br> NOM-051- SCFI/SSA1-2010 Mod. 27.03.2020</strong></p>
+<p class="title3"><strong><u>Apartado para alimentos y bebidas no alcohólicas </u><br> NOM-051- SCFI/SSA1-2010 Mod. 27.03.2020</strong></p>
 
 <p class="subtitle2">Marque con una X</p>
 
@@ -452,7 +465,7 @@
 <div class="table-container">
         <table class="my-table">
             <tr>
-            <td style="width:30px; height:25px; color: #E36C09;"><b>X</b></td>
+            <td style="width:30px; height:10px; color: #E36C09;"><b>X</b></td>
             </tr>
             <tr>
                 <td style="height: 25px">---</td>
@@ -511,14 +524,13 @@
         <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido
         externamente sin la autorización escrita del Director Ejecutivo
         </div>
-        <div class="page-number">Página <strong>2</strong> de <strong>5</strong></div>
+        <div class="page-number">Página <strong>2</strong> de <strong>4</strong></div>
 </div>
 
 
 <div class="absolute">
 
 <p class="nota2">Nota: Se debe indicar el agua añadida por orden de predominio, excepto cuando ésta forme parte de un ingrediente compuesto y la que se utilice en los procesos de cocción y reconstitución. No es necesario declarar el agua u otros ingredientes volátiles que se evaporan durante la fabricación.
-II. Información de la Declaración Nutrimental del producto
 </p><br>
 
 <p class="subtitle3">I. Información del Producto</p>
@@ -529,64 +541,75 @@ II. Información de la Declaración Nutrimental del producto
             <td colspan="3">Breve descripción del producto: </td>
         </tr>
         <tr>
-            <td style="width: 250px;">
+            <td style="width: 250px; vertical-align: middle; position: relative;">
                 ¿Se adicionan azúcares? 
-                <div style="display: inline-block; border: 1px solid #1E4678; padding: 5px; margin-right: 10px; margin-top: 10px;">
-                    NO
-                </div>
-                <div style="display: inline-block; border: 1px solid #1E4678; padding: 5px; margin-top: 10px;">
-                    SI
+                <div style="position: absolute; right: 10px; top: 8.5px;">
+                    <div style="display: inline-block; border: 1px solid #1E4678; padding: 5px; margin-left: 10px;">
+                        NO
+                    </div>
+                    <div style="display: inline-block; border: 1px solid #1E4678; padding: 5px;">
+                        SI
+                    </div>
                 </div>
             </td>
-            <td>En caso afirmativo, indique la cantidad que se añade en 100 g: </td>
-            <td></td>
+            <td style="width:250px; vertical-align: middle;">En caso afirmativo, indique la cantidad que se añade en 100 g: </td>
+            <td class="colum-p">---</td>
+        </tr>
+        <tr>
+            <td style="vertical-align: middle; position: relative;">
+                ¿Se adicionan aditivos? 
+                <div style="position: absolute;  right: 10px; top: 8.5px;">
+                    <div style="display: inline-block; border: 1px solid #1E4678; padding: 5px; margin-left: 10px;">
+                        NO
+                    </div>
+                    <div style="display: inline-block; border: 1px solid #1E4678; padding: 5px;">
+                        SI
+                    </div>
+                </div>
+            </td>
+            <td style="vertical-align: middle;">En caso afirmativo, indique la cantidad y tipo/s de aditivo que se añade en 100 g: </td>
+            <td class="colum-p">---</td>
+        </tr>
+        <tr>
+            <td style="vertical-align: middle; position: relative;">
+                ¿Se adiciona cafeína? 
+                <div style="position: absolute;  right: 10px; top: 8.5px;">
+                    <div style="display: inline-block; border: 1px solid #1E4678; padding: 5px; margin-left: 10px;">
+                        NO
+                    </div>
+                    <div style="display: inline-block; border: 1px solid #1E4678; padding: 5px;">
+                        SI
+                    </div>
+                </div>
+            </td>
+            <td style="vertical-align: middle;">En caso afirmativo, indique la cantidad que se añade en 100 g:</td>
+            <td class="colum-p">---</td>
         </tr>
         <tr>
             <td>
-                ¿Se adicionan aditivos?&nbsp;&nbsp;&nbsp;
-                <div style="display: inline-block; border: 1px solid #1E4678; padding: 5px; margin-right: 10px; margin-top: 10px;">
-                    NO
-                </div>
-                <div style="display: inline-block; border: 1px solid #1E4678; padding: 5px; margin-top: 5px;">
-                    SI
-                </div>
+                Los valores de la tabla nutrimental fueron obtenidos por medio de:<br><br>
+                &nbsp;&nbsp;&nbsp; <div style="display: inline-block; width: 20px; height: 20px; border: 1px solid #1E4678; vertical-align: middle; margin-right: 10px;"></div> 
+                <strong>Análisis bromatológicos.</strong><br><br>
+                &nbsp;&nbsp;&nbsp; <div style="display: inline-block; width: 20px; height: 20px; border: 1px solid #1E4678; vertical-align: middle; margin-right: 10px;"></div> 
+                <strong>Tablas reconocidas.</strong><br><br>
+                &nbsp;&nbsp;&nbsp; <div style="display: inline-block; width: 20px; height: 20px; border: 1px solid #1E4678; vertical-align: middle; margin-right: 10px;"></div> 
+                <strong>Otro.</strong>
             </td>
-            <td>En caso afirmativo, indique la cantidad y tipo/s de aditivo que se añade en 100 g: </td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>
-                ¿Se adiciona cafeína? &nbsp;&nbsp;&nbsp;&nbsp;
-                <div style="display: inline-block; border: 1px solid #1E4678; padding: 5px; margin-right: 10px; margin-top: 10px;">
-                    NO
-                </div>
-                <div style="display: inline-block; border: 1px solid #1E4678; padding: 5px; margin-top: 5px;">
-                    SI
-                </div>
-            </td>
-            <td>En caso afirmativo, indique la cantidad que se añade en 100 g:</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Los valores de la tabla nutrimental fueron obtenidos por medio de:<br><br>
-
-            &nbsp;&nbsp;&nbsp; <strong>Análisis bromatológicos.</strong><br><br>
-            &nbsp;&nbsp;&nbsp; <strong>Tablas reconocidas.</strong><br><br>
-            &nbsp;&nbsp;&nbsp; <strong>Otro.</strong>
-            </td>
-
-            <td style="  vertical-align: middle; text-align: left;">Observaciones:</td>
-            <td></td>
+            <td style="vertical-align: middle; text-align: left;">Observaciones:</td>
+            <td class="colum-p">---</td>
         </tr>
     </tbody>
 </table>
+
+
+
 <p class="nota3">Nota: Adjuntar imágenes y dimensiones del empaque o contenedor del alimento o bebida no alcohólicas, así como el análisis bromatológico o documentación utilizada para la declaración nutrimental. En caso de que la declaración no haya sido obtenida por las opciones antes mencionadas; especificar en el apartado de observaciones como fue obtenida.
 </div>
 
-<div class="cuadrado" style="font-size: 11px; border: 1px solid #1F497D; padding: 10px;">
-    <p class="subtitle-nn">I. Información del Producto</p>
+<div class="cuadrado" style="font-size: 11px; border: 1px solid #1F497D; margin-left: 20px;  margin-right: 20px;">
+    <p class="subtitle-nn">III. TÉRMINOS Y CONDICIONES DEL SERVICIO</p>
 
-    <ol>
+    <ol class="cuadro">
         <li>
             Para iniciar la revisión de la Información Comercial es necesario enviar la <strong>etiqueta en imagen vectorial en formato electrónico (.pdf), en tamaño real, indicando las medidas de la etiqueta;</strong> así como una imagen del empaque o envase original en el que es comercializado.
         </li>
@@ -608,11 +631,12 @@ II. Información de la Declaración Nutrimental del producto
         <li>
             Se emitirá una Constancia de Conformidad únicamente a los productos importados que se presentarán ya etiquetados en el despacho aduanero correspondiente para su importación. Las etiquetas de productos importados deben ser revisadas previo a la importación del producto.
         </li>
+        <p>Por este medio acepto los términos y condiciones de la revisión de etiquetado antes mencionados.</p>
     </ol>
 
-    <div style="text-align: center; margin-top: 10px;">
+    <div style="text-align: center; margin-top: 5px; line-height: 0.5;">
         <p><strong>NOMBRE Y FIRMA DE LA PERSONA QUE AUTORIZA</strong></p>
-        <p><strong><u>Juan Ramón Rugarcía</u></strong></p>
+        <p style="font-size: 13px;"><strong><u>Juan Ramón Rugarcía</u></strong></p>
     </div>
 </div>
 
@@ -620,7 +644,7 @@ II. Información de la Declaración Nutrimental del producto
         <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido
         externamente sin la autorización escrita del Director Ejecutivo
         </div>
-        <div class="page-number">Página <strong>3</strong> de <strong>5</strong></div>
+        <div class="page-number">Página <strong>3</strong> de <strong>4</strong></div>
     </div>
 
     <div class="page-break"></div>
@@ -632,28 +656,34 @@ II. Información de la Declaración Nutrimental del producto
 	<tbody>
 		<tr>
 			<td colspan="2" rowspan="2"><strong>La unidad de Inspección tiene la experiencia técnica y los recursos adecuados para llevar a cabo el servicio.</strong></td>
-			<td  class="colum-n"  style="background-color: #F79646;">si</td>
-			<td  class="colum-n"  style="background-color: #F79646;">no</td>
+			<td  class="colum-n"  style="background-color: #F79646; width: 100px;">si</td>
+			<td  class="colum-n"  style="background-color: #F79646; width: 100px;">no</td>
 		</tr>
 		<tr>
 			<td class="colum-p">x</td>
 			<td class="colum-p"></td>
 		</tr>
 		<tr>
-        <td class="colum-n" style="background-color: #F79646;">Nombre y firma del personal que revisa y valida la solicitud:</td>
-			<td style="text-align:: justify">Ing. Zaida Selenia Coronado Sánchez </td>
+        <td class="colum-n" style="background-color: #F79646; width: 150px;">Nombre y firma del personal que revisa y valida la solicitud:</td>
+			<td style="text-align: justify">Ing. Zaida Selenia Coronado Sánchez </td>
 			<td  class="colum-n"  style="background-color: #F79646;">Fecha de revisión y validación</td>
-			<td  class="colum-p">18/09/2024</td>
+			<td  class="colum-p" style="text-align: left">18/09/2024</td>
 		</tr>
 		<tr>
 			<td  class="colum-n"  style="background-color: #F79646;">No. de solicitud:</td>
 			<td> <strong>001-2024</strong></td>
 			<td  class="colum-n"  style="background-color: #F79646;">Equipo a utilizar:</td>
-			<td  class="colum-p" >Pendiente </td>
+			<td  class="colum-p" style="text-align: left">Pendiente</td>
 		</tr>
 	</tbody>
 </table>
 </div>
 
+<div class="footer">
+        <div>Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no puede ser distribuido
+        externamente sin la autorización escrita del Director Ejecutivo
+        </div>
+        <div class="page-number">Página <strong>4</strong> de <strong>4</strong></div>
+</div>
 </body>
 </html>
