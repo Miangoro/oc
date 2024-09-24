@@ -539,10 +539,10 @@
             </thead>
             <tbody>
                 <tr>
-                    <td style="height: 48px;">{{ $datos->actas_inspeccion->actas_equipo_envasado->equipo_envasado }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->cantidad_envasado }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->capacidad_envasado }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->tipo_material_envasado }}</td>
+                    <td style="height: 48px;">{{ $datos->actas_inspeccion->actas_equipo_envasado->equipo_envasado ?? 'Sin datos' }}</td>
+                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->cantidad_envasado ?? 'Sin datos' }}</td>
+                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->capacidad_envasado  ?? 'Sin datos'}}</td>
+                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->tipo_material_envasado ?? 'Sin datos' }}</td>
                 </tr>
                 <tr>
                     <td style="height: 48px;"></td>
@@ -570,11 +570,11 @@
                 <td style="width: 120px;">Otro:</td>
             </tr>
             <tr>
-                <td style="height: 55px;">{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion }}</td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion }}</td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion }}</td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion }}</td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion }}</td>
+                <td style="height: 55px;">{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion  ?? 'Sin datos'}}</td>
+                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion  ?? 'Sin datos'}}</td>
+                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion  ?? 'Sin datos'}}</td>
+                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion  ?? 'Sin datos'}}</td>
+                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion  ?? 'Sin datos'}}</td>
             </tr>
         </table>
         <br>
