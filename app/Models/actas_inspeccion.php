@@ -44,13 +44,13 @@ class actas_inspeccion extends Model
 
     public function actas_testigo()
     {
-        return $this->belongsTo(actas_testigo::class,'id_acta', 'id_acta');
+        return $this->hasMany(actas_testigo::class,'id_acta', 'id_acta');
     }
 
 
     public function acta_produccion_mezcal()
     {
-        return $this->belongsTo(acta_produccion_mezcal::class,'id_acta', 'id_acta');
+        return $this->hasMany(acta_produccion_mezcal::class,'id_acta', 'id_acta');
     }
 
 

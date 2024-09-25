@@ -407,17 +407,17 @@
                 <td>Nombre y firma del testigo</td>
                 <td style="width: 280px;">Domicilio</td>
             </tr>
-            <tr>
-                <td style="height: 28px;">{{ $datos->actas_inspeccion->actas_testigo->id_acta_testigo }}</td>
-                <td>{{ $datos->actas_inspeccion->actas_testigo->nombre_testigo }}</td>
-                <td>{{ $datos->actas_inspeccion->actas_testigo->domicilio }}</td>
-            </tr>
-            <tr>
-                <td style="height: 28px;">2</td>
-                <td></td>
-                <td></td>
-            </tr>
+        
+            @foreach ($datos->actas_inspeccion->actas_testigo AS $testigo)
+                <tr>
+                    <td style="height: 28px;">{{ $testigo->id_acta_testigo ?? 'vacío' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
+                    <td>{{ $testigo->nombre_testigo ?? 'vacío' }}</td> <!-- Mostrar "vacío" si el nombre es nulo -->
+                    <td>{{ $testigo->domicilio ?? 'vacío' }}</td> <!-- Mostrar "vacío" si el domicilio es nulo -->
+                </tr>
+            @endforeach
+        
         </table>
+        
     </div>
     <br>
     {{-- contenedor --}}
@@ -462,34 +462,56 @@
             <br>
             <p>Se constató físicamente la existencia del siguiente de las áreas y equipo:</p>
         </div>
-        <table class="sign-table" style=" font-size: 10;">
-            <tr>
-                <td style="width: 90px; height: 60px;">Recepción (materia prima)</td>
-                <td>Área de pesado</td>
-                <td>Área de cocción</td>
-                <td>Área de maguey cocido</td>
-                <td>Área de molienda</td>
-                <td>Área de fermentación</td>
-                <td style="width: 90px;">Área de destilación</td>
-                <td>Almacén a graneles</td>
-            </tr>
-            <tr>
-                <td style="height: 40px;"></td>
-                <td>
-                    @if ($datos->actas_inspeccion->acta_produccion_mezcal->area == 'Área de pesado')
-                        {{ $datos->actas_inspeccion->acta_produccion_mezcal->respuesta }}
-                    @else
-                        No disponible
+        <table class="sign-table" >
+            <thead>
+                <tr>
+                    <td style="width: 90px; height: 60px;">Recepción (materia prima)</td>
+                    <td>Área de pesado</td>
+                    <td>Área de cocción</td>
+                    <td>Área de maguey cocido</td>
+                    <td>Área de molienda</td>
+                    <td>Área de fermentación</td>
+                    <td style="width: 90px;">Área de destilación</td>
+                    <td>Almacén a graneles</td>
+                </tr>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $counter = 0; // Contador para las respuestas
+                @endphp
+        
+                @foreach ($datos->actas_inspeccion->acta_produccion_mezcal AS $area)
+                    @if ($counter % 8 == 0) <!-- Si el contador es múltiplo de 8, empieza un nuevo <tr> -->
+                        <tr>
                     @endif
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+        
+                    <td>{{ $area->respuesta ?? 'vacío' }}</td> <!-- Mostrar "vacío" si la respuesta es nula -->
+        
+                    @php
+                        $counter++; // Incrementar el contador
+                    @endphp
+        
+                    @if ($counter % 8 == 0) <!-- Si el contador es múltiplo de 8, cierra el <tr> -->
+                        </tr>
+                    @endif
+                @endforeach
+        
+                @if ($counter % 8 != 0) <!-- Si no hemos cerrado el último <tr>, ciérralo aquí -->
+                    </tr>
+                @endif
+        
+                <!-- Si deseas agregar una fila adicional si hay respuestas restantes -->
+                @if ($counter % 8 != 0)
+                    <tr>
+                        @for ($i = $counter % 8; $i < 8; $i++)
+                            <td></td> <!-- Rellenar celdas vacías si no se llenaron -->
+                        @endfor
+                    </tr>
+                @endif
+            </tbody>
         </table>
+        
         <br>
         <div class="texto">
             <p>Se constató físicamente la existencia de los siguientes equipos: </p>
