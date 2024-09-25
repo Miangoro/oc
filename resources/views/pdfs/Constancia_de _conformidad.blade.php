@@ -214,7 +214,7 @@
         .img-background-left {
             position: absolute;
             top: -60px;
-            right: -80px;
+            right: -75px;
             width: 48px;
             height: 120%;
             z-index: -1;
@@ -228,7 +228,7 @@
         .img-background-right {
             position: absolute;
             top: -60px;
-            right: -79px;
+            right: -75px;
             width: 48px;
             height: 120%;
             z-index: -1;
@@ -477,7 +477,7 @@
                 </td>
             </tr>
         </table>
-        <div style="padding: 10px"></div>
+        <div style="padding: 15px"></div>
         <div class="signature-line"></div>
         <div style="color: #0c1344; font-size: 15.5px; line-height: 1.2;font-family: Arial, sans-serif">
             La presente constancia no deberá ser alterada ni reproducida en forma parcial o total sin la autorización
