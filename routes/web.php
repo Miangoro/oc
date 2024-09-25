@@ -547,6 +547,7 @@ Route::delete('/predios-list/{id_predio}', [PrediosController::class, 'destroy']
 Route::post('/predios-register/store', [PrediosController::class, 'store'])->name('predios-register.store');
 Route::get('/domicilios-predios/{id_predio}/edit', [PrediosController::class, 'edit'])->name('domicilios-predios.edit');
 Route::post('/domicilios-predios/{id_predio}', [PrediosController::class, 'update'])->name('domicilios-predios.update');
+Route::post('/domicilios-predios/{id_predio}/inspeccion', [PrediosController::class, 'inspeccion'])->name('domicilios-predios.inspeccion');
 Route::get('/pre-registro_predios/{id_predio}', [prediosController::class, 'PdfPreRegistroPredios'])->name('pre-registro_predios');
 
 //Domicilio Destinos
@@ -675,7 +676,7 @@ Route::post('/agregar-resultados', [inspeccionesController::class, 'agregarResul
 //pdf rutas
 Route::post('/acta-unidades', [inspeccionesController::class, 'store'])->name('acta.unidades.store');
 Route::get('/acta_circunstanciada_unidades_produccion/{id_inspeccion}', [inspeccionesController::class, 'acta_circunstanciada_produccion'])->name('acta_circunstanciada_unidades_produccion');
- 
+
 
 //Hologramas - solicitud hologramas
 Route::get('/hologramas/solicitud', [solicitudHolograma::class, 'UserManagement'])->name('hologramas-solicitud');
