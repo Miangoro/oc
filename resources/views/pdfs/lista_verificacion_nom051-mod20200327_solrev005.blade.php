@@ -62,8 +62,8 @@
         }
 
         .container {
-            padding-left: 45px;
-            padding-right: 45px;
+/*             padding-left: 45px;
+            padding-right: 45px; */
             padding-top: 100px;
             margin-left: 35px;
             margin-right: 35px;
@@ -71,8 +71,8 @@
         }
 
         .titulo {
-            padding-left: 80px;
-            padding-right: 80px;
+            padding-left: 150px;
+            padding-right: 150px;
             font-size: 18px;
             font-weight: bold;
             text-align: center;
@@ -80,6 +80,8 @@
 
         /* tabla1 */
         .mi-tabla {
+            padding-left: 80px;
+            padding-right: 80px;
             border-collapse: collapse;
             width: 100%;
         }
@@ -92,19 +94,9 @@
         .mi-tabla td {
             padding: 1px;
             text-align: center;
-            /*             font-weight: bold;
-            font-size: 13px; */
         }
 
-        .green {
-            background-color: #A8D08D;
-        }
 
-        .yellow {
-            background-color: #F6FB63;
-            font-weight: bold;
-            font-size: 12px;
-        }
 
         .N {
             font-weight: bold;
@@ -123,21 +115,34 @@
 
         .table-largue td {
             padding: 1px;
-            text-align: center;
+           text-align: center;
             /*             font-weight: bold;
             font-size: 13px; */
         }
+        .green {
+            background-color: #A8D08D;
+        }
 
+        .yellow {
+            background-color: #F6FB63;
+            font-weight: bold;
+            font-size: 12px;
+        }
         .gray {
             background-color: #E7E6E6;
         }
-
+        .gray2{
+            background-color: #ECECEC;
+        }
         .fondo {
             background-color: #a7a7a7;
         }
 
         .yellow-2 {
             background-color: #FFE699;
+        }
+        .blue{
+            background-color: #DEEAF6;
         }
 
         /* .mi-tabla, */
@@ -206,19 +211,19 @@
         <br>
         <table class="mi-tabla">
             <tr>
-                <td class="yellow">Inspector asignado:</td>
+                <td class="yellow" style="font-weight:normal;">Inspector asignado:</td>
                 <td colspan="3">Andres Alejandro Vidales Aroche</td>
                 <td class="green" style="width: 90px;">Fecha de revisión</td>
                 <td>12/09/2024</td>d>
             </tr>
             <tr>
-                <td class="yellow">Producto:</td>
+                <td class="yellow" style="font-weight:normal;">Producto:</td>
                 <td colspan="3">Mix de Semillas con Miel</td>
                 <td class="green">OSC</td>
                 <td>no aplica</td>
             </tr>
             <tr>
-                <td class="yellow">Marca:</td>
+                <td class="yellow" style="font-weight:normal;">Marca:</td>
                 <td colspan="3">Sarayu Productos nutritivos(marca en tramite)</td>
                 <td class="green">No. de servicio</td>
                 <td>SOL-REV-005</td>
@@ -252,11 +257,11 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">1</b></td>
-                <td colspan="3" class="yellow">Generalidades</td>
+                <td colspan="3" class="yellow" style="text-align:center;">Generalidades</td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">1</b> (4.2.10.1.4)</td>
-                <td class="gray">En caso de que el envase esté cubierto por una envoltura,
+                <td class="gray" style="text-align: left;">En caso de que el envase esté cubierto por una envoltura,
                     debe figurar en ésta toda la información aplicable, a menos
                     de que la etiqueta pueda leerse fácilmente a través de la
                     envoltura exterior.</td>
@@ -265,7 +270,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">1.2</b> (4.2.10.1.1)</td>
-                <td class="gray">La etiqueta debe fijarse de manera tal que permanezcan
+                <td class="gray" style="text-align: left;">La etiqueta debe fijarse de manera tal que permanezcan
                     disponibles hasta el momento del consumo en condiciones
                     normales.</td>
                 <td class="N">C</td>
@@ -273,7 +278,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">1.3 </b>(4.1.11.1)</td>
-                <td class="gray">Los alimentos y bebidas no alcohólicas deben ostentar la
+                <td class="gray" style="text-align: left;">Los alimentos y bebidas no alcohólicas deben ostentar la
                     informacion obligatoria que se refiere a la NOM-051-
                     SCFI/SSA1-2010 en idioma español, sin prejuicio de que se
                     exprese en otros idiomas.</td>
@@ -282,7 +287,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">1.4</b> (4.2.11.2)</td>
-                <td class="gray">La información o representación gráfica adicional en la
+                <td class="gray" style="text-align: left;">La información o representación gráfica adicional en la
                     etiqueta que puede estar presente en otro idioma, no debe
                     sustituir, sino añadirse a los requisitos de etiquetado,
                     siempre y cuando dicha información resulte necesaria para
@@ -293,7 +298,7 @@
             {{-- fin parte pagina 1 --}}
             <tr>
                 <td class="green"><b style="font-size: 12px;">1.5</b> (4.2.10.1.3)</td>
-                <td class="gray">Los datos que aparecen en la etiqueta deben indicarse con
+                <td class="gray" style="text-align: left;">Los datos que aparecen en la etiqueta deben indicarse con
                     caracteres claros, visibles, indelebles y en colores
                     contrastantes, fáciles de leer por el consumidor en
                     circunstancias normales de compra y uso.</td>
@@ -313,7 +318,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">1.7</b> (4.2.10.1.2)</td>
-                <td class="gray">Se debe indicar la leyenda "No etiquetado para su venta
+                <td class="gray" style="text-align: left;">Se debe indicar la leyenda "No etiquetado para su venta
                     individual" o similar cuando los alimentos o bebidas no
                     alcohólicas no tengan la información obligatoria.</td>
                 <td class="N">C</td>
@@ -321,11 +326,11 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2</b></td>
-                <td colspan="3" class="yellow">Superficie Principal de Exhibición (SPE)</td>
+                <td colspan="3" class="yellow" style="text-align:center;">Superficie Principal de Exhibición (SPE)</td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.1</b> (4.2.10.1.5)</td>
-                <td>Debe aparecer en la SPE del producto cuando menos la
+                <td  style="text-align: left;">Debe aparecer en la SPE del producto cuando menos la
                     marca, la declaración de cantidad y la denominación del
                     alimento o bebida no alcohólica.</td>
                 <td class="N">C</td>
@@ -333,7 +338,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.2</b> (4.2.10.1.5)</td>
-                <td>El cálculo de la superficie principal de exhibición coincide con
+                <td style="text-align: left;">El cálculo de la superficie principal de exhibición coincide con
                     lo indicado en el punto <b style="font-size: 12px;">4.3</b> de la NOM-030-SCFI-2006. (Ver hoja
                     cálculo SPE)
                 </td>
@@ -342,7 +347,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.3</b> (4.2.8.3.1)</td>
-                <td>Las unidades de medida son acordes a lo establecido en la
+                <td  style="text-align: left;">Las unidades de medida son acordes a lo establecido en la
                     NOM-008-SCFI-2002. Masa: <b style="font-size: 12px;">kg, g.</b> Volumen: <b style="font-size: 12px;">L,l, mL, ml.</b></td>
                 <td class="yellow-2"><b style="font-size:12px;">NC</b></td>
                 <td class="yellow-2">los gramos se representan con
@@ -351,7 +356,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.4</b></td>
-                <td>El dato cuantitativo y la unidad declarado en el contenido
+                <td  style="text-align: left;">El dato cuantitativo y la unidad declarado en el contenido
                     neto corresponden a las caracteristícas del mismo (si es un:
                     líquido = L, l, mL, ml; Sólido =kg, g).</td>
                 <td class="N">C</td>
@@ -359,7 +364,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.5</b></td>
-                <td>El dato cuantitativo y la unidad se ubican en la SPE y se
+                <td style="text-align: left;">El dato cuantitativo y la unidad se ubican en la SPE y se
                     encuentra libre de cualquier información que pueda
                     impedir su lectura.</td>
                 <td class="N">C</td>
@@ -367,7 +372,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.6</b></td>
-                <td>El dato cuantitativo y la unidad debe tener como mínimo el
+                <td style="text-align: left;">El dato cuantitativo y la unidad debe tener como mínimo el
                     tamaño con base a la SPE (ver tabla 1 NOM-030-SCFI-2006)
                 </td>
                 <td class="yellow-2"  style="font-size: 12px;"><b>NC</b></td>
@@ -378,7 +383,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.7</b></td>
-                <td>La leyenda de contenido se expresa: <b style="font-size: 12px;">CONTENIDO,
+                <td style="text-align: left;">La leyenda de contenido se expresa: <b style="font-size: 12px;">CONTENIDO,
                     CONTENIDO NETO, CONT., CONT. NET. y CONT. NETO.</b>
                     Pueden ser escritas con letra mayúsculas y/o minúsculas
                     acompañando al dato cuantitativo y la unidad. </td>
@@ -387,7 +392,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.8</b></td>
-                <td>La leyenda <b>"Masa Drenada</b> o <b>Masa drenada"</b> debe ir junto a
+                <td style="text-align: left;">La leyenda <b>"Masa Drenada</b> o <b>Masa drenada"</b> debe ir junto a
                     la declaración de contenido neto, solo cuando aplique.</td>
                 <td class="N">C</td>
                 <td class="fondo"></td>
@@ -395,7 +400,7 @@
             {{-- pagina 3 --}}
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.9</b> (4.2.1.1)</td>
-                <td>El nombre o denominación del producto debe corresponder
+                <td style="text-align: left;">El nombre o denominación del producto debe corresponder
                     con la establecida en los ordenamientos juridicos; en
                     ausencia de éstos, indicar el nombre de uso común, o bien,
                     emplear una descripción acorde a las características básica
@@ -409,7 +414,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.10</b></td>
-                <td>La denominación del producto tiene un tamaño igual o
+                <td style="text-align: left;">La denominación del producto tiene un tamaño igual o
                     mayor al del dato cuantitativo del contenido neto conforme
                     a la NOM-030-SCFI-2006.</td>
                 <td class="N">C</td>
@@ -417,21 +422,21 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.11</b> (4.2.1.1-M)</td>
-                <td>La denominación del producto se encuentra en negrillas
+                <td style="text-align: left;">La denominación del producto se encuentra en negrillas
                     dentro de la SPE.</td>
                 <td class="N">C</td>
                 <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.12</b> (4.2.1.1-M)</td>
-                <td>La denominación del prodcuto se encuentra en linea
+                <td style="text-align: left;">La denominación del prodcuto se encuentra en linea
                     paralela a la base .</td>
                 <td class="N">C</td>
-                <td></td>
+                <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.13</b> (4.1.1)</td>
-                <td>La información contenida en la etiqueta debe ser veraz,
+                <td style="text-align: left;">La información contenida en la etiqueta debe ser veraz,
                     clara y no confunde al consumidor sobre su naturaleza y
                     caracteristicas</td>
                 <td class="N">C</td>
@@ -439,7 +444,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.14</b> (4.1.2)</td>
-                <td>La etiqueta describe o emplea palabras o ilustraciones que
+                <td style="text-align: left;">La etiqueta describe o emplea palabras o ilustraciones que
                     hacen referencia al producto. Pueden incorporar
                     descripción gráfica o descriptiva de la sugerencia de uso,
                     empleo o preparación</td>
@@ -448,7 +453,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.15</b></td>
-                <td>No deben describirse ni presentarse palabras, textos,
+                <td style="text-align: left;">No deben describirse ni presentarse palabras, textos,
                     ilustraciones, imagenes o denominaciones de origen que
                     confundan al consumidor con otro producto.
                 </td>
@@ -457,7 +462,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.16</b></td>
-                <td>El nombre de uso común o descripción del producto no
+                <td style="text-align: left;">El nombre de uso común o descripción del producto no
                     engaña al consumidor. Si tuvo algún tratamiento, puede
                     indicarse el nombre de éste, a excepción de los que sean de
                     carácter obligatorio.</td>
@@ -466,7 +471,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.17</b> (4.2.1.1-M)</td>
-                <td>Para productos<b> IMITACION,</b>  la leyenda debe aparacer en la
+                <td style="text-align: left;">Para productos<b> IMITACION,</b>  la leyenda debe aparacer en la
                     parte superior izquierda, en negrillas, en mayúsculas con
                     fondo claro y con tamaño al doble del resto de la
                     denominación.</td>
@@ -475,7 +480,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.18</b> (4.2.1.1-M)</td>
-                <td>No se permite el uso de la palabra imitación a productos
+                <td style="text-align: left;">No se permite el uso de la palabra imitación a productos
                     que cuenten con denominación de origen o indicación
                     geográfica protegida o reconocida por el Estado mexicano.</td>
                 <td class="N">C</td>
@@ -483,7 +488,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">2.19</b> (4.2.1.1.2)</td>
-                <td>Los productos imitación no deben hacer uso de las palabras
+                <td style="text-align: left;">Los productos imitación no deben hacer uso de las palabras
                     "tipo", "estilo" o algún otro término similar, en la
                     denominación del producto o dentro de la etiqueta.</td>
                 <td class="N">C</td>
@@ -491,11 +496,11 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3</b></td>
-                <td colspan="3" class="yellow">LISTA DE INGREDIENTES</td>
+                <td colspan="3" class="yellow" style="text-align:center;">LISTA DE INGREDIENTES</td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.1</b> (4.2.2.1)</td>
-                <td>En productos cuya comercialización se haga de forma
+                <td style="text-align: left;">En productos cuya comercialización se haga de forma
                     individual debe contener lista de ingredientes. A excepción
                     cuando se trate de productos de un solo ingrediente.</td>
                 <td class="N">C</td>
@@ -504,14 +509,14 @@
             {{-- pagina 4 --}}
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.2</b> (4.2.2.1.1)</td>
-                <td>La lista de ingredientes debe ir encabezada o precedida por
+                <td style="text-align: left;">La lista de ingredientes debe ir encabezada o precedida por
                     el término "ingrediente".</td>
                 <td class="N">C</td>
                 <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.3</b> (4.2.2.1.2)</td>
-                <td>Los ingredientes deben enumerarse por orden cuantitativo
+                <td  style="text-align: left;">Los ingredientes deben enumerarse por orden cuantitativo
                     decreciente (m/m).
                 </td>
                 <td class="N">C</td>
@@ -521,7 +526,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.4</b> (4.2.2.1.3)</td>
-                <td>Se debe declarar un ingrediente compuesto cuando
+                <td  style="text-align: left;">Se debe declarar un ingrediente compuesto cuando
                     constituya más del 5% del alimento o bebida no alcohólica.
                     Por ejemplo leche condensada utilizada para hacer un
                     alimento o bebida no alcohólica).</td>
@@ -538,7 +543,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.6</b> (4.2.2.1.3)</td>
-                <td>Los ingredientes compuestos declaran sus ingredientes
+                <td  style="text-align: left;">Los ingredientes compuestos declaran sus ingredientes
                     constitutivos en orden decreciente (m/m) incluyendo los
                     aditivos que desempeñen una función tecnológica en el
                     producto o que se asocien a reacciones alérgicas.
@@ -548,7 +553,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.7</b> (4.2.2.1.4)</td>
-                <td>Se indica en la lista de ingredientes el agua añadida por
+                <td  style="text-align: left;">Se indica en la lista de ingredientes el agua añadida por
                     orden de predominio, excepto cuando forme parte de un
                     ingrediente compuesto. Por ejemplo: Salmuera, jarabe o
                     caldo, la utilizada en procesos de cocción y reconstitución.
@@ -560,97 +565,97 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.8</b> (4.2.2.1.5)</td>
-                <td>Los productos deshidratados o condensados, destinados a
+                <td  style="text-align: left;">Los productos deshidratados o condensados, destinados a
                     ser reconstituidos, pueden enumerar sus ingredientes por
                     orden cuantitativo decreciente (m/m) en el producto
                     reconstituido, Siempre que se incluya las indicaciones de
                     preparación.
                 </td>
                 <td class="N">C</td>
-                <td></td>
+                <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.9</b> (4.2.2.1.6)</td>
-                <td>En la lista de ingredientes debe emplearse una
+                <td style="text-align: left;">En la lista de ingredientes debe emplearse una
                     denominación específica, con excepción de los ingredientes
                     con denominación genérica señalados en la <b>tabla 1</b> de la
                     NOM-051-SCFI/SSA1-2010.</td>
                 <td class="N">C</td>
-                <td></td>
+                <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.10</b> (4.2.2.1.7)</td>
-                <td>La manteca de cerdo, la grasa de bovino o sebo deben
+                <td style="text-align: left;">La manteca de cerdo, la grasa de bovino o sebo deben
                     declararse por sus denominaciones específicas.
                 </td>
                 <td class="N">C</td>
-                <td></td>
+                <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.11</b> (4.2.2.1.8-M)</td>
-                <td>a) Los azúcares añadidos se deben declarar agrupados
+                <td style="text-align: left;">a) Los azúcares añadidos se deben declarar agrupados
                     anteponiendo las palabras "azúcares añadidos" seguido de
                     la lista entre paréntesis con sus denominaciones especificas
                 </td>
                 <td class="N">C</td>
-                <td></td>
+                <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.12</b> (4.2.2.1.9)</td>
-                <td>b) Los azúcares añadidos se declaran en orden cuantitativo
+                <td style="text-align: left;">b) Los azúcares añadidos se declaran en orden cuantitativo
                     decreciente m/m.</td>
                 <td class="N">C</td>
-                <td></td>
+                <td class="fondo"></td>
             </tr>
             {{-- pagina 5 --}}
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.13</b> (4.2.2.1.8-M)</td>
-                <td>Ingredientes compuestos en los que formen parte varios
+                <td style="text-align: left;">Ingredientes compuestos en los que formen parte varios
                     azúcares añadidos, éstos tambien deben declararse
                     conforme lo establecido en los incisos a) y b)</td>
                 <td class="N">C</td>
-                <td></td>
+                <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.14</b> (4.2.2.2.1 )</td>
-                <td>Los aditivos empleados en un alimento o bebida no
+                <td class="blue" style="text-align: left;">Los aditivos empleados en un alimento o bebida no
                     alcohólica que se transfiera en cantidad notable o suficiente
                     para desempeñar en él una función tecnológica debe ser
-                    incluido en la lista de ingredientes. Un aditivo es aquella
+                    incluido en la lista de ingredientes. <i>Un aditivo es aquella
                     sustancia que normalmente no se consume como alimento
                     ni tampoco se utiliza como ingrediente básico, puede o no
                     tener valor nutritivo y solo se adiciona en cualquier etapa del
                     proceso de producción con fines tecnológicos, por ejemplo:
-                    glutamato monosódico</td>
+                    glutamato monosódico</i></td>
                 <td class="N">C</td>
                 <td>Confirmar que no añade
                     ningun tipo de aditivo?</td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.15</b> (4.2.2.2.3 )</td>
-                <td>Se deben declarar todos aquellos ingredientes o aditivos
+                <td class="blue" style="text-align: left;">Se deben declarar todos aquellos ingredientes o aditivos
                     que causan hipersensibilidad, intolerancia o alergia (ver
                     4.2.2.2.3 NOM-051-SCFI/SSA1-2010) deben declararse.
                 </td>
                 <td class="N">C</td>
-                <td></td>
+                <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.16</b> (4.2.2.2.3-M)</td>
-                <td>Cuando el alimentos, ingrediente o derivado sea o contenga
+                <td  style="text-align: left;" class="blue">Cuando el alimentos, ingrediente o derivado sea o contenga
                     algún causante de hipersensibilidad deben declararse al final
                     de la lista de ingredientes anteponiendo la palabra
                     <b style="font-size: 12px;">"CONTIENE".</b>
                 </td>
-                <td class="N">NC</td>
-                <td>Debe indicar al final de la lista
+                <td class="yellow-2"><b style="font-size: 12px;">NC</b></td>
+                <td class="yellow-2">Debe indicar al final de la lista
                     de ingredientes que contiene
                     Cacahuate, Almendra y Nuez
                     en negritas</td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.17</b> (4.2.2.2.3-M)</td>
-                <td>Alimentos, ingredientes o derivados sea o contenga algún
+                <td class="blue" style="text-align: left;">Alimentos, ingredientes o derivados sea o contenga algún
                     causante de hipersensibilidad se declara en negrillas de
                     igual o mayor tamaño a las letras de los ingredientes
                     generales.</td>
@@ -661,56 +666,56 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.18</b> (4.2.2.2.3-M)</td>
-                <td>Si el alimento pudo ser contaminado con ingredientes que
+                <td class="blue" style="text-align: left;">Si el alimento pudo ser contaminado con ingredientes que
                     causan hipersensibilidad o con trazas de estos durante su
                     producción o elaboración hasta el envasado, debe declararse
                     al final de la lista de ingredientes con la precedidos de la
                     leyenda <b style="font-size: 12px;">"PUEDE CONTENER"</b> en negrillas.
                 </td>
                 <td class="N">C</td>
-                <td></td>
+                <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.19</b> (4.2.2.2.3-M)</td>
-                <td>Si el ingrediente es un derivado que contiene albúmina,
+                <td class="blue" style="text-align: left;">Si el ingrediente es un derivado que contiene albúmina,
                     caseína o gluten puede rotularse declarando su origen. Por
                     ejemplo: contiene caseína (leche) o caseína de leche</td>
                 <td class="N">C</td>
-                <td></td>
+                <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.2</b> (4.2.2.2.4)</td>
-                <td>Los aditivos deben declararse con su nombre común. Las
+                <td class="blue" style="text-align: left;">Los aditivos deben declararse con su nombre común. Las
                     enzimas y saborizantes, saboreador o aromatizantes podran
                     ser declarados genericamente. Los saborizantes,
                     saboreadores o aromatizantes podrán estar calificados con
                     términos "naturales", "idénticos a los naturales",
                     "artificiales".</td>
                 <td class="N">C</td>
-                <td></td>
+                <td class="fondo"></td>
             </tr>
             {{-- pagina 6 --}}
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.21</b> (4.2.2.3.1)</td>
-                <td>En todo alimento o bebida no alcoholica preenvasada que
+                <td class="gray2" style="text-align: left;">En todo alimento o bebida no alcoholica preenvasada que
                     se venda como mezcla o combinacion, se declara el
                     porcentaje del ingrediente, ya sea al peso o volumen según
                     corresponda al momento de la elaboración del alimento,
                     cuando:
-                    a) El porcentaje del ingrediente se enfatiza en la etiqueta
-                    por medio de palabras o imágenes o gráficos.
-                    b) El ingrediente no se menciona en el nombre o
+                   <p> a) El porcentaje del ingrediente se enfatiza en la etiqueta
+                    por medio de palabras o imágenes o gráficos.</p>
+                    <p>b) El ingrediente no se menciona en el nombre o
                     denominacion del alimento o bebida no alcoholica y es
                     esencial para caracterizar al mismo, ya que los
                     consumidores asumen la presencia de este ingrediente en el
-                    producto.
+                    producto.</p>
                 </td>
                 <td class="N">C</td>
                 <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.22</b> (4.2.2.3.2)</td>
-                <td>El porcentaje del ingrediente se declara en la etiqueta cerca
+                <td class="gray2" style="text-align: left;">El porcentaje del ingrediente se declara en la etiqueta cerca
                     de las palabras o imágenes o gráficos que enfatizan el
                     ingrediente particular, o al lado del nombre común o
                     denominación del alimento o bebida no alcohólica, o
@@ -721,7 +726,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">3.23</b></td>
-                <td>Si el alimento perdió humedad luego de un tratamiento
+                <td class="gray2" style="text-align: left;">Si el alimento perdió humedad luego de un tratamiento
                     térmico u otro, el porcentaje corresponderá a la cantidad
                     del ingrediente o ingredientes usados, cuando se tiene el
                     producto terminado.</td>
@@ -730,7 +735,7 @@
             </tr>
             <tr>
                 <td class="green"></td>
-                <td colspan="3"><b style="font-size: 12px;">Nota:</b> no se requiere la declaración del porcentaje del ingrediente
+                <td colspan="3"><b style="font-size: 12px;">Nota:</b> <span style="font-size: 12px;">no se requiere la declaración del porcentaje del ingrediente
                     cuando es utilizado en pequeñas cantidades
                     con el propósito de impartir sabor y/o aroma. La referencia en el nombre del alimento, el
                     ingrediente no
@@ -738,16 +743,16 @@
                     error o
                     engaño o crea una impresión erronea en el consumidor, respecto de su naturaleza ya que la cantidad
                     del
-                    ingrediente no es necesaria para caracterizar al producto o distinguirlo de similares.</td>
+                    ingrediente no es necesaria para caracterizar al producto o distinguirlo de similares.</span></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">4</b></td>
-                <td class="yellow" colspan="3"><b>Nombre, denominación o razón social y domicilio fiscal</b>
+                <td class="yellow" colspan="3" style="text-align:center;"><b>Nombre, denominación o razón social y domicilio fiscal</b>
                 </td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">4.1 </b>(4.2.4.1)</td>
-                <td>Se indica el nombre, denominación o razón social y
+                <td style="text-align: left;">Se indica el nombre, denominación o razón social y
                     domicilio fiscal del responsable del producto (calle, número,
                     código postal y entidad federativa en que se encuentre.</td>
                 <td class="yellow-2"><b style="font-size: 12px;">NC</b></td>
@@ -758,7 +763,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">4.2</b> (4.2.4.2)</td>
-                <td>Productos importados. Nombre, razón social y domicilio del
+                <td style="text-align: left;">Productos importados. Nombre, razón social y domicilio del
                     responsable del producto, en ambos casos, puede incluirse
                     la expresión "fabricado o envasado por o para", seguido por
                     el nombre y domicilio.
@@ -769,7 +774,7 @@
             {{-- pagina 7 --}}
             <tr>
                 <td class="green"><b style="font-size: 12px;">4.3 </b>(4.2.5.1)</td>
-                <td>Los alimentos y bebidas no alcohólicas nacionales o de
+                <td style="text-align: left;">Los alimentos y bebidas no alcohólicas nacionales o de
                     procedencia extranjera deben incorporar la leyenda que
                     identifique al país de origen del producto. Por ejemplo:
                     "Hecho en...","Producto de...".,"Fabricado en...", u otras
@@ -787,11 +792,11 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">5</b></td>
-                <td class="yellow" colspan="3">Identificación del lote</td>
+                <td class="yellow" colspan="3" style="text-align:center;">Identificación del lote</td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">5.1</b> (4.2.6.1)</td>
-                <td>Cada envase debe llevar grabada o marcada la identificación
+                <td style="text-align: left;">Cada envase debe llevar grabada o marcada la identificación
                     del lote al que pertenece, con una indicación en clave que
                     permita su rastreabilidad.
                 </td>
@@ -800,7 +805,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">5.2</b> (4.2.6.2)</td>
-                <td>La identificación del lote debe marcarse en forma indeleble
+                <td style="text-align: left;">La identificación del lote debe marcarse en forma indeleble
                     y permanente evitando que pueda ser alterada u ocultada
                     hasta que sea adquirido por el consumidor. (puede estar
                     colocada en cualquier parte del envase).</td>
@@ -810,7 +815,7 @@
             <tr>
                 <td class="green"><b style="font-size: 12px;">5.3</b> (4.2.6.3)
                 </td>
-                <td>La clave del lote es precedida por cualquiera de las
+                <td style="text-align: left;">La clave del lote es precedida por cualquiera de las
                     siguientes indicaciones: LOTE, Lot, L, Lote, lote, lot, l, lt, LT,
                     LOT. o bien, incluir una referencia al lugar donde aparece.</td>
                 <td class="N">C</td>
@@ -818,32 +823,32 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">6</b></td>
-                <td class="yellow" colspan="3"><b>Fecha de caducidad o consumo preferente</b>
+                <td class="yellow" colspan="3" style="text-align:center;"><b>Fecha de caducidad o consumo preferente</b>
                 </td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">6.1</b></td>
-                <td>Se declara en la etiqueta o en el envase.</td>
+                <td style="text-align: left;">Se declara en la etiqueta o en el envase.</td>
                 <td class="N">C</td>
                 <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">6.2</b> (4.2.7.1 - i)</td>
-                <td>Cuenta con el día y el mes para productos de duración
+                <td style="text-align: left;">Cuenta con el día y el mes para productos de duración
                     máxima a tres meses.</td>
                 <td class="N">C</td>
                 <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">6.3</b> (4.2.7.1 - i)</td>
-                <td>Cuenta con el mes y el año para productos de duración
+                <td style="text-align: left;">Cuenta con el mes y el año para productos de duración
                     superior a tres meses</td>
                 <td class="N">C</td>
                 <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">6.4</b> (4.2.7.1 - ii)</td>
-                <td>La fecha esta precedida por una leyenda "consumo
+                <td style="text-align: left;">La fecha esta precedida por una leyenda "consumo
                     preferente" si es menor a tres meses, "fecha de caducidad"
                     si es mayor a tres meses., o bien, una referencia al lugar
                     donde aparece la fecha. (puede estar colocada en cualquier
@@ -853,7 +858,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">6.5</b> (4.2.7.1 - ii)</td>
-                <td>Para fecha de caducidad debe utilizarse: "Fecha de
+                <td style="text-align: left;">Para fecha de caducidad debe utilizarse: "Fecha de
                     caducidad___", "Caducidad___","Fech Cad___", CAD, Cad,
                     cad, Fecha de expiración, Expira, Exp, EXP, exp, Fecha de
                     vencimiento, Vencimiento.</td>
@@ -862,7 +867,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">6.6</b> (4.2.7.1 - ii)</td>
-                <td>Para consumo preferente debe indicarse alguna de las
+                <td style="text-align: left;">Para consumo preferente debe indicarse alguna de las
                     siguientes: "Consumir preferentemente antes del__","Cons.
                     Pref. antes del__". y "Cons Pref".</td>
                 <td class="N">C</td>
@@ -871,7 +876,7 @@
             {{-- pagina 8 --}}
             <tr>
                 <td class="green"><b style="font-size: 12px;">7</b> (4.2.7.1 - iii)</td>
-                <td>Para productos importados, si el codificado de la fecha de
+                <td style="text-align: left;">Para productos importados, si el codificado de la fecha de
                     caducidad o consumo preferente no corresponde al
                     formato, éste podrá ajustarse a efecto de cumplir con la
                     formalidad establecida, o en su caso, el envase debe
@@ -884,7 +889,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">6.8</b> (4.2.7.2)</td>
-                <td>Al declarar fecha de caducidad o consumo preferente, debe
+                <td style="text-align: left;">Al declarar fecha de caducidad o consumo preferente, debe
                     indicarse en la etiqueta cualquier condición especial que se
                     requiera para conservación del alimento o bebida no
                     alcohólica. En caso de que su cumplimiento depende la
@@ -895,14 +900,14 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">6.9</b> (4.2.7.3) </td>
-                <td>La fecha de caducidad o consumo preferente debe
+                <td style="text-align: left;">La fecha de caducidad o consumo preferente debe
                     incorporarse de tal forma que se evite su alteración. </td>
                 <td class="N">C</td>
                 <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">6.1</b> (4.2.7.4) </td>
-                <td>No se requerirá la declaración de fecha de caducidad o
+                <td style="text-align: left;">No se requerirá la declaración de fecha de caducidad o
                     consumo preferente, para: vinagre, sal de calidad
                     alimentaria, azúcar sólido, productos de confitería
                     consistentes en azúcar aromatizados y/o coloreados, y
@@ -912,12 +917,12 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">7</b></td>
-                <td class="yellow" colspan="3">Productos preenvasados con Norma Oficial Mexicana
+                <td class="yellow" colspan="3" style="text-align:center;">Productos preenvasados con Norma Oficial Mexicana
                 </td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">7.1</b></td>
-                <td>Los productos preenvasados deben exhibir su contraseña
+                <td style="text-align: left;">Los productos preenvasados deben exhibir su contraseña
                     oficial cuando asi lo determine su Norma Oficial Mexicana
                     que regula su denominación o la Ley Federal sobre
                     Metrología y Normalización. (ver NOM-106-SCFI-2017)</td>
@@ -926,7 +931,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">7.2</b></td>
-                <td>Los productos que se encuentran en empaque múltiple o
+                <td style="text-align: left;">Los productos que se encuentran en empaque múltiple o
                     colectivo y requieren de una contraseña oficial, se indica
                     únicamente en el empaque múltiple o colectivo.</td>
                 <td class="N">C</td>
@@ -934,7 +939,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">7.3</b></td>
-                <td>Los productos que ostenten la contraseña oficial, deben
+                <td style="text-align: left;">Los productos que ostenten la contraseña oficial, deben
                     incluir debajo de esta o del lado derecho de la misma, los
                     tres dígitos correspondientes a la clave o código de la NOM
                     específica para la denominación de producto, con la misma
@@ -944,11 +949,11 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">8</b></td>
-                <td class="yellow" colspan="3">Instrucciones para el uso</td>
+                <td class="yellow" colspan="3" style="text-align:center;">Instrucciones para el uso</td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">8.1</b> (4.3-M)</td>
-                <td>La etiqueta debe contener instrucciones de uso cuando
+                <td style="text-align: left;">La etiqueta debe contener instrucciones de uso cuando
                     sean necesarias sobre el modo de empleo para asegurar el
                     correcto uso del producto preenvasado.</td>
                 <td class="N">C</td>
@@ -956,41 +961,38 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9</b></td>
-                <td class="yellow" colspan="3">Información nutrimental
+                <td class="yellow" colspan="3" style="text-align:center;">Información nutrimental
                 </td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.1 </b>(4.2.8.1)</td>
-                <td>La declaración nutrimental es obligatoria</td>
+                <td style="text-align: left;">La declaración nutrimental es obligatoria</td>
                 <td class="N">C</td>
                 <td class="fondo"></td>
             </tr>
             {{--  pagina 9 --}}
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.2</b></td>
-                <td>Los valores de bromatologicos que figuran en la declaración
+                <td style="text-align: left;">Los valores de bromatologicos que figuran en la declaración
                     nutrimental deben ser valores medios ponderados
                     derivados por análisis, bases de datos o tablas reconocidas
                     internacionalmente.</td>
                 <td class="N">C</td>
-                <td></td>
+                <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.3</b> (4.2.8.2.1)</td>
-                <td>Es obligatorio declarar:
-                    a) Contenido energético;
-                    b) La cantidad de proteínas;
-                    c) La cantidad de hidratos de carbono disponibles,
-                    indicando la cantidad correspondiente a azúcares;
-                    d) La cantidad de grasas o lípidos, especificando la cantidad
-                    que corresponda a grasa saturada;
-                    e) La cantidad de fibra dietética;
-                    f) La cantidad de sodio;
-                    g) La cantidad de cualquier otro nutrimento acerca del cual
-                    se haga una declaración de propiedades;
-                    h) La cantidad de cualquier otro nutrimento que se
+                <td style="text-align: left;">Es obligatorio declarar:
+                    <p>a) Contenido energético;</p>
+                    <p>b) La cantidad de proteínas;</p>
+                   <p>c) La cantidad de hidratos de carbono disponibles, indicando la cantidad correspondiente a azúcares;</p>
+                   <p>d) La cantidad de grasas o lípidos, especificando la cantidad que corresponda a grasa saturada;</p>
+                   <p>e) La cantidad de fibra dietética;</p>
+                   <p>f) La cantidad de sodio;</p>
+                  <p>g) La cantidad de cualquier otro nutrimento acerca del cual se haga una declaración de propiedades;</p>
+                   <p>h) La cantidad de cualquier otro nutrimento que se
                     considere importante, regulado por los ordenamientos
-                    jurídicos aplicables.
+                    jurídicos aplicables.</p>
                 </td>
                 <td class="yellow-2"><b style="font-size: 12px;">NC</b></td>
                 <td class="yellow-2">Debe indicar la cantidad
@@ -998,28 +1000,28 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.4</b> (4.2.8.2.4)</td>
-                <td>Quedan excentos de incluir información nutrimental los
+                <td  style="text-align: left;">Quedan excentos de incluir información nutrimental los
                     siguietes productos siempre y cuando no incluyan alguna
                     declaración de propiedades:
-                    I. Productos que incluyan un solo ingrediente
-                    II. Hierbas, especias, o mezclas de ellas, III.
+                    <p>I. Productos que incluyan un solo ingrediente</p>
+                    <p>II. Hierbas, especias, o mezclas de ellas, III.
                     Extractos de café, granos de café enteros o molidos
                     descafeínados o no, IV.
                     Infusiones de hierbas, té descafeinado o no, instantáneo y/o
-                    soluble que no contenga ingredientes añadidos,
-                    V. Vinagres fermentados y secedáneos VI.
-                    Aguas purificadas embotelladas, aguas minerales naturales.
-                    VII. Los productos con una superficie inferior a 78 cm2,
+                    soluble que no contenga ingredientes añadidos,</p>
+                    <p>V. Vinagres fermentados y secedáneos VI.
+                    Aguas purificadas embotelladas, aguas minerales naturales.</p>
+                    <p>VII. Los productos con una superficie inferior a 78 cm2,
                     siempre y cuando se incluya un número telefónico o página
                     web donde el consumidor puede obtener la información
-                    sobre la declaración nutrimental.
+                    sobre la declaración nutrimental.</p>
                 </td>
                 <td class="N">C</td>
                 <td></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.5</b></td>
-                <td>La inclusión de uno de los siguientes no obliga a incluir a los
+                <td style="text-align: left;">La inclusión de uno de los siguientes no obliga a incluir a los
                     otros: Almidones (g), polialcoholes (g), polidextrosas (g).
                 </td>
                 <td class="N">C</td>
@@ -1027,7 +1029,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.6</b></td>
-                <td>Todos o ninguno de los siguientes: Grasa poliinsaturada (g),
+                <td style="text-align: left;">Todos o ninguno de los siguientes: Grasa poliinsaturada (g),
                     monoinsaturasa (g), colesterol (mg).
                 </td>
                 <td class="N">C</td>
@@ -1035,7 +1037,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.7 </b>(4.2.8.3.1)</td>
-                <td>La declaración nutrimental debe presentarse en unidades
+                <td style="text-align: left;">La declaración nutrimental debe presentarse en unidades
                     correspondientes al Sistema General de Unidades de
                     Medida (ver NOM-008-SCFI-2002). Para la fibra dietética,
                     vitaminas y nutrimentos inorgánicos (minerales) deben
@@ -1047,7 +1049,7 @@
             {{-- pagina 10 --}}
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.8 </b>(4.2.8.3.2)</td>
-                <td>La declaración del contenido energético debe expresarse en
+                <td style="text-align: left;">La declaración del contenido energético debe expresarse en
                     kcal por 100 g, o por 100 ml, así como por el contenido
                     total del envase. Adicionalmente se puede declarar por
                     porción.
@@ -1067,7 +1069,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.9 </b>(4.2.8.3.3)</td>
-                <td>La declaración de la cantidad de proteínas, hidratos de
+                <td style="text-align: left;">La declaración de la cantidad de proteínas, hidratos de
                     carbono disponibles, de grasas, de fibra dietética y de sodio
                     contenidas en el alimento o bebida no alcohólica debe
                     expresarse en unidades de medida por 100 g o por 100 ml.
@@ -1080,7 +1082,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.10 </b>(4.2.8.3.4)</td>
-                <td>La declaración numérica sobre fibra dietética, vitaminas y
+                <td style="text-align: left;">La declaración numérica sobre fibra dietética, vitaminas y
                     nutrimetnos inorgánicos (minerales) debe expresarse en
                     unidades de medida por 100 g o por 100 ml o en porcentaje
                     de los valores nutrimentales de referencia por porción.
@@ -1092,7 +1094,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.11</b></td>
-                <td>En productos destinados a ser reconstituidos o que
+                <td style="text-align: left;">En productos destinados a ser reconstituidos o que
                     requieran preparación antes de ser consumidos, la
                     declaración nutrimental debe realizarse de acuerdo con las
                     instrucciones para el uso indicadas en la etiqueta.</td>
@@ -1101,7 +1103,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.12</b></td>
-                <td>La declaración nutrimental puede expresarse como se
+                <td style="text-align: left;">La declaración nutrimental puede expresarse como se
                     establece en la tabla 3 (NOM-051-SCFI/SSA1-2010) o en
                     cualquier otro formato que contenga la información
                     requerida conforme lo indicado en la tabla 3.
@@ -1112,7 +1114,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.13</b></td>
-                <td>La información impresa en la declaración nutrimental se
+                <td style="text-align: left;">La información impresa en la declaración nutrimental se
                     presenta en un tamaño de fuente de cuando menos 1.5 mm
                     de altura.
                 </td>
@@ -1122,7 +1124,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.14</b></td>
-                <td>La información impresa en la declaración nutrimental se
+                <td style="text-align: left;">La información impresa en la declaración nutrimental se
                     destaca en negrillas la declaración y la cantidad de
                     contenido energético, la cantidad de grasa saturada, la
                     cantidad de azúcares añadidos, la cantidad de grasas trans y
@@ -1135,7 +1137,7 @@
             {{-- pagina 11 --}}
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.15</b></td>
-                <td>La declaración nutrimental debe mostrarse, al menos, en un
+                <td style="text-align: left;">La declaración nutrimental debe mostrarse, al menos, en un
                     tamaño de fuente de 1 mm de altura en los siguientes
                     casos:
                     a) Productos cuya SPE sea igual o inferior a 32 cm2
@@ -1148,7 +1150,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.16</b></td>
-                <td>Para cumplir con el contenido declarado de vitaminas y
+                <td style="text-align: left;">Para cumplir con el contenido declarado de vitaminas y
                     minerales al final de la vida útil, se acepta una cantidad
                     superior a lo declarado dentro de las BPM, siempre y
                     cuando las empresas mantengan los antecedentes técnicos
@@ -1158,7 +1160,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.17</b></td>
-                <td>La declaración del contenido de vitaminas y de minerales es
+                <td style="text-align: left;">La declaración del contenido de vitaminas y de minerales es
                     opcional, excepto cuando el alimento o bebida se modifico
                     en su composición, debiendo cumplir con la NOM-086-SSA1-
                     1996.
@@ -1168,7 +1170,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">9.18</b></td>
-                <td>La inclusión de uno de los nutrimentos mencionados en el
+                <td style="text-align: left;">La inclusión de uno de los nutrimentos mencionados en el
                     punto 4.5.2.4.9 (Modificación de la NOM-051) no obliga
                     incluir uno de los otros, y sólo si se tiene asignado un VNR y
                     el contenido de la porción sea igual o esté por arriba del 5%
@@ -1178,11 +1180,11 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">10</b></td>
-                <td class="yellow" colspan="3">Cálculo de nutrimentos</td>
+                <td class="yellow" colspan="3" style="text-align:center;">Cálculo de nutrimentos</td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">10.1</b> (5.1.1-M)</td>
-                <td>La cantidad de energía debe calcularse utilizando el siguiente
+                <td style="text-align: left;">La cantidad de energía debe calcularse utilizando el siguiente
                     factor de conversión:
                     <b style="font-size: 12px;">
                         Carbohidratos disponibles: 4 kcal/g --- 17 kJ/g
@@ -1194,7 +1196,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">10.2</b></td>
-                <td>La cantidad de proteínas que se indica, debe calcularse
+                <td style="text-align: left;">La cantidad de proteínas que se indica, debe calcularse
                     utilizando la siguiente fórmula:
                     <b style="font-size: 12px;">Proteína = contenido total de nitrógeno kjeldahl x 6.25</b>
                 </td>
@@ -1203,17 +1205,17 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">10.3</b></td>
-                <td colspan="3"><b style="font-size: 12px;">Nota:</b> Para la expresión de la declaración nutrimental se puede utilizar los
+                <td colspan="3"><b style="font-size: 12px;">Nota:</b> <span style="font-size: 12px;">Para la expresión de la declaración nutrimental se puede utilizar los
                     parámetros de redondeo de la tabla
-                    5 (Modificación a la NOM-051).</td>
+                    5 (Modificación a la NOM-051).</span></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">11</b></td>
-                <td class="yellow" colspan="3">Información nutrimental complementaria</td>
+                <td class="yellow" colspan="3" style="text-align:center;">Información nutrimental complementaria</td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">11.1 </b>(4.5.3-M)</td>
-                <td>Debe incluirse la información nutrimental complementaria
+                <td style="text-align: left;">Debe incluirse la información nutrimental complementaria
                     en la etiqueta los productos que contengan añadidos:
                     azúcares libres, grasas o sodio.</td>
                 <td class="N">C</td>
@@ -1221,7 +1223,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">11.2</b> (4.5.3-M)</td>
-                <td>Debe incluir la información nutrimental complementaria los
+                <td style="text-align: left;">Debe incluir la información nutrimental complementaria los
                     productos que su valor de energía, la cantidad de azúcares
                     libres, de grasa saturada, grasas trans y de sodio cumplan
                     con los perfiles nutrimentales establecidos en la tabla 6 (ver
@@ -1232,7 +1234,7 @@
             {{-- pagina 12 --}}
             <tr>
                 <td class="green"></td>
-                <td colspan="3"><b style="font-size: 12px;">Nota:</b> para los efectos del punto anterior se entiende por: a)
+                <td colspan="3"><b style="font-size: 12px;">Nota:</b> <span style="font-size: 12px;">>para los efectos del punto anterior se entiende por: a)
                     Producto preenvasado añadido de azúcares libres, aquellos a los que durante el proceso de
                     elaboración se les
                     haya añadido azúcares libres, e ingredientes que contengan agregados azúcares libres.
@@ -1245,11 +1247,11 @@
                     como
                     ingrediente o aditivo cualquier sal que contenga sodio o cualquier ingrediente que contenga sales de
                     sodio
-                    agregadas. </td>
+                    agregadas. </span</td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">11.3</b></td>
-                <td>En los productos destinados a ser reconstituidos o que
+                <td style="text-align: left;">En los productos destinados a ser reconstituidos o que
                     requieran preparación antes de ser consumidos, la
                     información nutrimental complementaria debe declararse
                     conforme a los contenidos de energía, de azúcares libres,
@@ -1262,11 +1264,11 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">12</b></td>
-                <td class="yellow" colspan="3">Sistema de etiquetado frontal</td>
+                <td class="yellow" colspan="3" style="text-align:center;">Sistema de etiquetado frontal</td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">12.1</b> (4.5.3.4.1-M) </td>
-                <td>La información nutrimental complementaria debe realizarse
+                <td style="text-align: left;">La información nutrimental complementaria debe realizarse
                     utilizando los sellos, segun corresponda y conforme a lo
                     establecido en la tabla <b style="font-size: 12px;">A1-Tamaño de los sellos</b> del Apéndice
                     A (Normativo) (Modificiación de NOM-051).</td>
@@ -1276,7 +1278,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">12.2 </b>(4.5.3.4.2-M)</td>
-                <td>Los productos cuya SPE sea ≤40 cm2 sólo deben incluir un
+                <td style="text-align: left;">Los productos cuya SPE sea ≤40 cm2 sólo deben incluir un
                     sello con el número que corresponda a la cantidad de
                     nutrimentos como se establece en la tabla A1 del Apéndice
                     A (Modificación de NOM-051).</td>
@@ -1285,7 +1287,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">12.3 </b>(4.5.3.4.2-M)</td>
-                <td>Los productos cuya SPE sea ≤ 5 cm2 el sello aplicable debe
+                <td style="text-align: left;">Los productos cuya SPE sea ≤ 5 cm2 el sello aplicable debe
                     cumplir con las características descritas en el numeral A.4.5
                     del Apéndice A (Modificación de NOM-051).</td>
                 <td class="N">C</td>
@@ -1293,7 +1295,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">12.4 </b>(4.5.3.4.3-M)</td>
-                <td>Para productos con envases retornables y que se utilizan
+                <td style="text-align: left;">Para productos con envases retornables y que se utilizan
                     como contenedores para más de un tipo de producto o
                     sabor, expresar en la parte externa de la tapa el sello
                     correspondiente como se establece en 4.5.3.4.2
@@ -1304,7 +1306,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">12.5</b> (4.5.3.4.4-M)</td>
-                <td>Los productos etiquetados con la leyenda "No etiquetado
+                <td style="text-align: left;">Los productos etiquetados con la leyenda "No etiquetado
                     para su venta individual" o similar, debe incluirse los sellos
                     que correspondan en el envase colectivo o múltiple.</td>
                 <td class="N">C</td>
@@ -1312,7 +1314,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">12.6</b> (4.5.3.4.5-M)</td>
-                <td>Cuando el envase colectivo o múltiple contenga más de un
+                <td style="text-align: left;">Cuando el envase colectivo o múltiple contenga más de un
                     tipo de producto, debe estar etiquetado de manera
                     individual. </td>
                 <td class="N">C</td>
@@ -1320,19 +1322,19 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">13</b></td>
-                <td class="yellow" colspan="3">Ubicación y orden de los sellos y leyendas</td>
+                <td class="yellow" colspan="3" style="text-align:center;">Ubicación y orden de los sellos y leyendas</td>
             </tr>
             {{-- pagina 13 --}}
             <tr>
                 <td class="green"><b style="font-size: 12px;">13.1 </b>(4.5.3.4.6-M)</td>
-                <td>El o los sellos se encuentran en la esquina superior derecha
+                <td style="text-align: left;">El o los sellos se encuentran en la esquina superior derecha
                     de la SPE.</td>
                 <td class="yellow-2"><b style="font-size: 12px;">NC</b></td>
                 <td class="yellow-2">La SPE mide 48 cm2</td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">13.2 </b>(4.5.3.4.6-M)</td>
-                <td>Producto con SPE menor a 60 cm2, los sellos pueden
+                <td style="text-align: left;">Producto con SPE menor a 60 cm2, los sellos pueden
                     aplicarse en cualquier área de dicha superficie.
                 </td>
                 <td class="N">C</td>
@@ -1340,20 +1342,20 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">13.3 </b>(4.5.3.4.6-M)</td>
-                <td>Productos con más de un sello, el orden de inclusión debe
+                <td style="text-align: left;">Productos con más de un sello, el orden de inclusión debe
                     ser izquierda a derecha el siguiente:
-                    1) EXCESO DE CALORÍAS 2)
-                    EXCESO DE AZÚCARES
-                    3) EXCESO DE GRASAS SATURADAS 4)
+                    <p>1) EXCESO DE CALORÍAS 2)
+                    EXCESO DE AZÚCARES</p>
+                    <p>3) EXCESO DE GRASAS SATURADAS 4)
                     EXCESO DE GRASAS TRANS 5)
-                    EXCESO DE SODIO
+                    EXCESO DE SODIO</p>
                 </td>
                 <td class="N">C</td>
                 <td class="fondo"></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">13.4 </b>(4.5.3.4.7-M)</td>
-                <td>En la lista de ingredientes se declaran edulcorantes o el
+                <td style="text-align: left;">En la lista de ingredientes se declaran edulcorantes o el
                     producto preenvasado contiene cafeína en cualquier
                     cantidad indicar las leyendas "COTIENE CAFEÍNA EVITAR EN
                     NIÑOS" o "CONTIENE EDULCORANTES - NO RECOMENDABLE
@@ -1364,7 +1366,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">13.5 </b>(4.5.3.4.7-M)</td>
-                <td>Las leyendas "CONTIENE CAFEÍNA EVITAR EN NIÑOS" o
+                <td style="text-align: left;">Las leyendas "CONTIENE CAFEÍNA EVITAR EN NIÑOS" o
                     "CONTIENE EDULCORANTES - NO RECOMENDABLE EN
                     NIÑOS", deben ir en la parte superior derecha de la SPE, en
                     caso de que contenga sellos, las leyendas deben ir debajo
@@ -1374,16 +1376,16 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">13.6 </b>(6.3D - M)</td>
-                <td>Si el producto contiene sellos o leyendas mencionadas en
+                <td style="text-align: left;">Si el producto contiene sellos o leyendas mencionadas en
                     los puntos anteriores, no debe realizarse declaraciones de
                     propiedades saludables.
                 </td>
                 <td class="yellow-2"><b style="font-size: 12px;">NC</b></td>
-                <td class="yellow-2"><b>Retirar la leyenda "Productos nutritivos"</b></td>
+                <td class="yellow-2"><b style="font-size: 12px;">Retirar la leyenda "Productos nutritivos"</b></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">13.7</b> (6.3D - M)</td>
-                <td>Si el producto contiene sellos o leyendas mencionadas en
+                <td style="text-align: left;">Si el producto contiene sellos o leyendas mencionadas en
                     los puntos anteriores, no debe realizarse declaraciones de
                     propiedades nutrimentales relacionadas directamente con
                     el sello que haya declarado en la etiqueta.
@@ -1393,7 +1395,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">13.8</b></td>
-                <td>Si la etiqueta del producto preenvasado no contiene sellos y
+                <td style="text-align: left;">Si la etiqueta del producto preenvasado no contiene sellos y
                     leyendas precautorias, puede declararlo únicamente de
                     forma escrita con la frase "Este producto no contiene sellos
                     ni leyendas".</td>
@@ -1402,7 +1404,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">13.9</b></td>
-                <td>El producto contiene la frase "Este producto no contiene
+                <td style="text-align: left;">El producto contiene la frase "Este producto no contiene
                     sellos ni leyendas", ésta debe ser colocada en la SPE y su
                     tipografía y tamaño debe ser igual o menor al tamaño
                     mínimo cuantitativo del contenido neto conforme a la NOM030-SCFI-2006.
@@ -1413,7 +1415,7 @@
             {{-- pagina 14 --}}
             <tr>
                 <td class="green"><b style="font-size: 12px;">13.1 </b>(6.3D - M) </td>
-                <td>En caso de que puedan realizarse declaraciones de
+                <td style="text-align: left;">En caso de que puedan realizarse declaraciones de
                     propiedades nutrimentales, deben fijarse en la superficie de
                     información con una altura máxima correspondiente a la
                     altura mínima del dato cuantitativo y la unidad de medida.</td>
@@ -1422,7 +1424,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">13.11 </b>(4.1.5.-M)</td>
-                <td>Si el producto cuenta con leyendas de edulcorantes o sellos
+                <td style="text-align: left;">Si el producto cuenta con leyendas de edulcorantes o sellos
                     de advertencia, no deben incluir en la etiqueta personajes
                     infantiles, animaciones, dibujos animados, celebridades,
                     deportistas o mascotas, elementos interactivos (juegos
@@ -1435,7 +1437,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">13.12 </b>(4.1.5.-M)</td>
-                <td>No se debe hacer referencia en la etiqueta a elementos
+                <td style="text-align: left;">No se debe hacer referencia en la etiqueta a elementos
                     ajenos al producto preenvasado con las mismas finalidades
                     del párrafo anterior.</td>
                 <td class="N">C</td>
@@ -1443,12 +1445,12 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">14</b></td>
-                <td class="yellow" colspan="3">Información adicional
+                <td class="yellow" colspan="3" style="text-align:center;">Información adicional
                 </td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">14.1</b></td>
-                <td>Puede presentarse cualquier información o representación
+                <td style="text-align: left;">Puede presentarse cualquier información o representación
                     gráfica, siempre que no esté en contradicción con los
                     requisitos obligatorios de esta norma, sea veraz y no
                     induzca a error al consumidor con respecto a la naturaleza y
@@ -1459,7 +1461,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">14.2</b></td>
-                <td>Cuando se empleen designaciones de calidad, éstas deben
+                <td style="text-align: left;">Cuando se empleen designaciones de calidad, éstas deben
                     ser fácilmente comprensibles, evitando
                     ser equívocas o engañosas en forma alguna para el
                     consumidor.</td>
@@ -1468,7 +1470,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">14.3</b></td>
-                <td>Puede presentarse cualquier información o representación
+                <td style="text-align: left;">Puede presentarse cualquier información o representación
                     gráfica indicada en el envase que no se afecta al ambiente,
                     evitando que sea falta o equivoca para el consumidor. Por
                     ejemplo: Símbolo de reciclaje </td>
@@ -1477,7 +1479,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">14.4</b></td>
-                <td>Pueden incluirse sellos o leyendas de recomendaciones o
+                <td style="text-align: left;">Pueden incluirse sellos o leyendas de recomendaciones o
                     reconocimiento por organizaciones, siempre y cuando se
                     presente la documentación apropiada. Por ejemplo:
                     Certificaciones como Halal o Kosher, Orgánico, TIF,
@@ -1488,11 +1490,11 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">15</b></td>
-                <td class="yellow" colspan="3">Declaración de propiedades</td>
+                <td class="yellow" colspan="3" style="text-align:center;">Declaración de propiedades</td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">15.1</b></td>
-                <td>Se prohíbe el uso de declaraciones que hagan suponer al
+                <td style="text-align: left;">Se prohíbe el uso de declaraciones que hagan suponer al
                     consumidor que se trata de un alimento equilibrado,
                     declaraciones que no pueden comprobarse, que es útil para
                     prevenir, aliviar, tratar o curar una enfermedad, trastorno o
@@ -1505,7 +1507,7 @@
             {{-- paginA 15 --}}
             <tr>
                 <td class="green"><b style="font-size: 12px;">15.2</b></td>
-                <td>Se prohíbe el uso de declaraciones que puedan ser
+                <td style="text-align: left;">Se prohíbe el uso de declaraciones que puedan ser
                     engañosas, que carecen de sentido, incluidos los
                     comparativos y superlativos incompletos. Declaraciones
                     respecto a prácticas correctas de higiene o comercio como:
@@ -1513,11 +1515,11 @@
                     excepto las señaladas en otros ordenamientos jurídicos
                     aplicables.</td>
                 <td class="yellow-2"><b style="font-size: 12px;">NC</b></td>
-                <td class="yellow-2"></td>
+                <td class="yellow-2"><b style="font-size: 12px;">Retirar la leyenda "Productos nutritivos"</b></td>
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">15.3</b></td>
-                <td>Se permiten las declaraciones de propiedades condicionales
+                <td style="text-align: left;">Se permiten las declaraciones de propiedades condicionales
                     como: a) Que un
                     alimento ha adquirido un valor nutritivo especial o superior.
                     (ver 7. especificaciones nutrimentales, NOM-086-SSA1-
@@ -1527,7 +1529,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">15.4</b></td>
-                <td>Se permiten las declaraciones de propiedades condicionales
+                <td style="text-align: left;">Se permiten las declaraciones de propiedades condicionales
                     como: b) Las indicaciones
                     de que el alimento tiene cualidades nutricionales especiales
                     gracias a la reducción u omisión de un nutrimento. (ver 7.
@@ -1538,7 +1540,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">15.5</b></td>
-                <td>Se prohíbe las declaraciones de propiedades que afirmen
+                <td style="text-align: left;">Se prohíbe las declaraciones de propiedades que afirmen
                     que el alimento tiene características especiales cuando
                     todos los de su tipo también las tienen.</td>
                 <td class="yellow-2"><b style="font-size: 12px;">NC</b></td>
@@ -1549,7 +1551,7 @@
             {{-- pagina 16 --}}
             <tr>
                 <td class="green"><b style="font-size: 12px;">15.6</b></td>
-                <td>Puede utiizarse declaraciones de propiedades que
+                <td style="text-align: left;">Puede utiizarse declaraciones de propiedades que
                     destaquen la ausencia o no adición de sustancias a los
                     alimentos, siempre y cuando: a)
                     no sea engañosa b)
@@ -1567,7 +1569,7 @@
             </tr>
             <tr>
                 <td class="green"><b style="font-size: 12px;">15.7</b></td>
-                <td>f) Las declaraciones de propiedades que pongan de relieve
+                <td style="text-align: left;">f) Las declaraciones de propiedades que pongan de relieve
                     la ausencia o no adición de uno o más nutrimentos deberán
                     considerarse como declaraciones de propiedades
                     nutrimentales y, por consiguiente, deberán ajustarse a la

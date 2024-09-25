@@ -1,5 +1,4 @@
 <!-- Add New Lote Envasado Modal -->
-
 <style>
     .modal-custom-size {
         max-width: 90%;
@@ -8,26 +7,26 @@
         /* Ajusta según tus necesidades */
     }
 </style>
-<div class="modal fade" id="ActaUnidades" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="editActaUnidades" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-custom-size modal-simple modal-add-new-address">
         <div class="modal-content">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Acta circunstanciada para Unidades de producción</h4>
+                    <h4 class="address-title mb-2">Editar acta circunstanciada para Unidades de producción</h4>
                 </div>
-
-                <form id="ActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
-                    <input type="hidden" class="id_inspeccion" name="id_inspeccion">
-                    <input type="hidden" class="id_empresa" name="acta_id_empresa">
-
+                <form id="editActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
+                    <input type="text" class="id_inspeccion" name="edit_id_inspeccion">
+                    <input type="text" class="id_empresa" name="edit_acta_id_empresa">  
+                    <input type="text" id="id_acta" name="id_acta">
+                  
                     @csrf
                     <div class="row">
                         <div class="col-md-5 mb-5">
                             <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" id="num_acta" name="num_acta"
+                                <input type="text" class="form-control" id="edit_num_acta" name="edit_num_acta"
                                     placeholder="Ingresa el No. de acta" aria-label="Ingresa el No. guia" />
-                                <label for="num_acta">Acta número:</label>
+                                <label for="edit_num_acta">Acta número:</label>
                             </div>
                         </div>
 
@@ -551,124 +550,124 @@
         </div>
     </div>
 </div>
-</div>
+
 
 
 
 <script>
-    $(document).ready(function() {
+       $(document).ready(function() {
 
 
+});
+
+function obtenerNombrePredio() {
+    var empresa = $(".id_empresa").val();
+
+    // Hacer una petición AJAX para obtener los detalles de la empresa
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            console.log(response);
+
+            // Cargar los detalles en el modal
+            var contenido = "";
+            for (let index = 0; index < response.predio_plantacion.length; index++) {
+                contenido =
+                    '<option value="' + response.predio_plantacion[index].id_plantacion + '">' +
+                    response.predio_plantacion[index].nombre_predio + ' | ' +
+                    response.predio_plantacion[index].nombre + ' | Superficie: ' +
+                    response.predio_plantacion[index].superficie + ' | Año: ' +
+                    response.predio_plantacion[index].anio_plantacion + ' | ' +
+                    response.predio_plantacion[index].num_plantas +
+                    ' Plantas</option>' +
+
+                    contenido;
+                // console.log(response.normas[index].norma);
+            }
+
+            if (response.predio_plantacion.length == 0) {
+                contenido = '<option value="">Sin predios registrados</option>';
+            }
+            $('.plantacion').html(contenido);
+        },
+        error: function() {
+            //alert('Error al cargar los lotes a granel.');
+        }
     });
+}
 
-    function obtenerNombrePredio() {
-        var empresa = $(".id_empresa").val();
+function Testigos() {
+    // Obtener el valor seleccionado en el select
+    const tipoLote = document.getElementById('testigos').value;
 
-        // Hacer una petición AJAX para obtener los detalles de la empresa
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
+    // Obtener la tabla y el label de testigos
+    const tablaTestigos = document.getElementById('tabla-testigos');
+    const tablaTestigosLabel = document.getElementById('tabla-testigos-label');
 
-                // Cargar los detalles en el modal
-                var contenido = "";
-                for (let index = 0; index < response.predio_plantacion.length; index++) {
-                    contenido =
-                        '<option value="' + response.predio_plantacion[index].id_plantacion + '">' +
-                        response.predio_plantacion[index].nombre_predio + ' | ' +
-                        response.predio_plantacion[index].nombre + ' | Superficie: ' +
-                        response.predio_plantacion[index].superficie + ' | Año: ' +
-                        response.predio_plantacion[index].anio_plantacion + ' | ' +
-                        response.predio_plantacion[index].num_plantas +
-                        ' Plantas</option>' +
-
-                        contenido;
-                    // console.log(response.normas[index].norma);
-                }
-
-                if (response.predio_plantacion.length == 0) {
-                    contenido = '<option value="">Sin predios registrados</option>';
-                }
-                $('.plantacion').html(contenido);
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
-            }
-        });
+    // Mostrar u ocultar la tabla dependiendo del valor seleccionado
+    if (tipoLote === '1') {
+        // Mostrar la tabla si elige "Por un solo lote a granel"
+        tablaTestigos.style.display = 'table';
+        tablaTestigosLabel.style.display = 'block';
+    } else {
+        // Ocultar la tabla si elige "Por más de un lote a granel"
+        tablaTestigos.style.display = 'none';
+        tablaTestigosLabel.style.display = 'none';
     }
+}
 
-    function Testigos() {
-        // Obtener el valor seleccionado en el select
-        const tipoLote = document.getElementById('testigos').value;
 
-        // Obtener la tabla y el label de testigos
-        const tablaTestigos = document.getElementById('tabla-testigos');
-        const tablaTestigosLabel = document.getElementById('tabla-testigos-label');
+function initializeModalFunctionality() {
+    // Función para mostrar u ocultar la tabla dependiendo del valor de "categoria_acta"
+    function tablasCategorias() {
+        const tipo_instalacion = document.getElementById('categoria_acta').value;
+        const tablaProduccion = document.getElementById('tablaProduccion');
+        const tablaProduccionMezcal = document.getElementById('tablaProduccionMezcal');
+        const tablaProduccionEquipo = document.getElementById('tablaProduccionEquipo');
+        const tablaEnvasadora = document.getElementById('tablaEnvasadora');
+        const tablaEnvasadoraEquipo = document.getElementById('tablaEnvasadoraEquipo');
+        const tablaComercializadora = document.getElementById('tablaComercializadora');
 
-        // Mostrar u ocultar la tabla dependiendo del valor seleccionado
-        if (tipoLote === '1') {
-            // Mostrar la tabla si elige "Por un solo lote a granel"
-            tablaTestigos.style.display = 'table';
-            tablaTestigosLabel.style.display = 'block';
+        if (tipo_instalacion === 'Productora') {
+            tablaProduccion.style.display = 'block';
+            tablaProduccionMezcal.style.display = 'block';
+            tablaProduccionEquipo.style.display = 'block';
+        } else if (tipo_instalacion === 'Envasadora') {
+            tablaEnvasadora.style.display = 'block';
+            tablaEnvasadoraEquipo.style.display = 'block';
+        } else if (tipo_instalacion === 'Comercializadora') {
+            tablaComercializadora.style.display = 'block';
         } else {
-            // Ocultar la tabla si elige "Por más de un lote a granel"
-            tablaTestigos.style.display = 'none';
-            tablaTestigosLabel.style.display = 'none';
+            tablaProduccion.style.display = 'none';
+            tablaProduccionMezcal.style.display = 'none';
+            tablaProduccionEquipo.style.display = 'none';
+            tablaEnvasadora.style.display = 'none';
+            tablaEnvasadoraEquipo.style.display = 'none';
+            tablaComercializadora.style.display = 'none';
+
+
+
         }
     }
 
+    // Asegúrate de que el evento se vincule al modal correcto
+    const modalElement = document.getElementById('ActaUnidades');
 
-    function initializeModalFunctionality() {
-        // Función para mostrar u ocultar la tabla dependiendo del valor de "categoria_acta"
-        function tablasCategorias() {
-            const tipo_instalacion = document.getElementById('categoria_acta').value;
-            const tablaProduccion = document.getElementById('tablaProduccion');
-            const tablaProduccionMezcal = document.getElementById('tablaProduccionMezcal');
-            const tablaProduccionEquipo = document.getElementById('tablaProduccionEquipo');
-            const tablaEnvasadora = document.getElementById('tablaEnvasadora');
-            const tablaEnvasadoraEquipo = document.getElementById('tablaEnvasadoraEquipo');
-            const tablaComercializadora = document.getElementById('tablaComercializadora');
+    if (modalElement) {
+        // Se ejecuta cuando el modal se muestra completamente
+        modalElement.addEventListener('shown.bs.modal', function() {
+            tablasCategorias(); // Llamar a la función cuando se abra el modal
+        });
 
-            if (tipo_instalacion === 'Productora') {
-                tablaProduccion.style.display = 'block';
-                tablaProduccionMezcal.style.display = 'block';
-                tablaProduccionEquipo.style.display = 'block';
-            } else if (tipo_instalacion === 'Envasadora') {
-                tablaEnvasadora.style.display = 'block';
-                tablaEnvasadoraEquipo.style.display = 'block';
-            } else if (tipo_instalacion === 'Comercializadora') {
-                tablaComercializadora.style.display = 'block';
-            } else {
-                tablaProduccion.style.display = 'none';
-                tablaProduccionMezcal.style.display = 'none';
-                tablaProduccionEquipo.style.display = 'none';
-                tablaEnvasadora.style.display = 'none';
-                tablaEnvasadoraEquipo.style.display = 'none';
-                tablaComercializadora.style.display = 'none';
-
-
-
-            }
-        }
-
-        // Asegúrate de que el evento se vincule al modal correcto
-        const modalElement = document.getElementById('ActaUnidades');
-
-        if (modalElement) {
-            // Se ejecuta cuando el modal se muestra completamente
-            modalElement.addEventListener('shown.bs.modal', function() {
-                tablasCategorias(); // Llamar a la función cuando se abra el modal
-            });
-
-            // Llamar a la función también cuando el usuario cambie el valor del input
-            const categoriaInput = document.getElementById('categoria_acta');
-            if (categoriaInput) {
-                categoriaInput.addEventListener('input', tablasCategorias);
-            }
+        // Llamar a la función también cuando el usuario cambie el valor del input
+        const categoriaInput = document.getElementById('categoria_acta');
+        if (categoriaInput) {
+            categoriaInput.addEventListener('input', tablasCategorias);
         }
     }
+}
 
-    // Iniciar la funcionalidad cuando se cargue el DOM
-    document.addEventListener('DOMContentLoaded', initializeModalFunctionality);
+// Iniciar la funcionalidad cuando se cargue el DOM
+document.addEventListener('DOMContentLoaded', initializeModalFunctionality);
 </script>

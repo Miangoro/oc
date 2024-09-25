@@ -17,13 +17,13 @@
         @font-face {
             font-family: 'Century Gothic';
             src: url('fonts/CenturyGothic.ttf') format('truetype');
-            
+
         }
 
         @font-face {
             font-family: 'Century Gothic Negrita';
             src: url('fonts/GOTHICB.TTF') format('truetype');
-            
+
         }
 
         body {
@@ -35,7 +35,8 @@
             font-size: 15px;
         }
 
-        strong, b {
+        strong,
+        b {
 
             font-weight: bold;
         }
@@ -50,7 +51,7 @@
             text-align: left;
             vertical-align: middle;
             position: relative;
-        
+
         }
 
         .header {
@@ -62,7 +63,7 @@
             text-align: right;
             z-index: 1;
             margin-bottom: 30px;
-            
+
         }
 
 
@@ -203,8 +204,8 @@
             content: counter(page);
         }
 
-        .cat{
-          
+        .cat {
+
             margin-bottom: -3;
         }
 
@@ -221,7 +222,7 @@
             width: 100%;
             height: 100%;
             border-top: 2px solid black;
-           
+
             transform: rotate(60deg);
             transform-origin: center;
         }
@@ -271,10 +272,26 @@
         <br>
         <div class="texto">
             <p class="cat">En la categoría de:</p>
-            <p class="cat">Unidad de producción de Agave ( ), </p>
-            <p class="cat">Unidad de producción de Mezcal ( )</p>
-            <p class="cat">Planta de Envasado ( )</p>
-            <p class="cat">Comercializadora ( )</p>
+            <p class="cat">Unidad de producción de Agave ( @if ($datos->actas_inspeccion->categoria_acta == 'Productora')
+                    X
+                @else
+                    &nbsp;
+                @endif), </p>
+            <p class="cat">Unidad de producción de Mezcal (@if ($datos->actas_inspeccion->categoria_acta == 'Productora')
+                    X
+                @else
+                    &nbsp;
+                @endif )</p>
+            <p class="cat">Planta de Envasado (@if ($datos->actas_inspeccion->categoria_acta == 'Envasadora')
+                    X
+                @else
+                    &nbsp;
+                @endif )</p>
+            <p class="cat">Comercializadora ( @if ($datos->actas_inspeccion->categoria_acta == 'Comercializadora')
+                    X
+                @else
+                    &nbsp;
+                @endif)</p>
             <p class="cat">Almacén ( ).</p>
             <br>
             <p>En _______________________________ siendo las _______ horas del día _____ del mes de ______ del 202_____.
@@ -285,14 +302,15 @@
             <br>
             <table class="table-sign">
                 <tr>
-                    <td colspan="2" style="text-align: center; font-family: Century Gothic Negrita;">Datos de la Unidad de Producción</td>
+                    <td colspan="2" style="text-align: center; font-family: Century Gothic Negrita;">Datos de la
+                        Unidad de Producción</td>
                     <td style="border: none;">
                     </td>
                 </tr>
                 <tr>
                     <td style="width: ; font-family:Century Gothic Negrita;">Denominación social:</td>
                     <td style="width: 450px;">
-                       {{ $datos->solicitud->empresa->razon_social }}
+                        {{ $datos->solicitud->empresa->razon_social }}
                     </td>
                     <td style="border: none;">
 
@@ -300,7 +318,8 @@
                 </tr>
                 <tr>
                     <td style="width: 200px; font-family:Century Gothic Negrita;">Dirección:</td>
-                    <td style="width: 450px">Janamoro , S/N, Libramiento Norte Km 6+800, Ciudad Hidalgo, Hidalgo, Michoacán de Ocampo, C.P. 61040.</td>
+                    <td style="width: 450px">Janamoro , S/N, Libramiento Norte Km 6+800, Ciudad Hidalgo, Hidalgo,
+                        Michoacán de Ocampo, C.P. 61040.</td>
                     <td style="border: none;"></td>
                 </tr>
                 <tr>
@@ -342,7 +361,8 @@
             <br>
             <p>Cuyo original se entrega en el presente acto al C._____________________________, quien dijo tener el
                 cargo de responsable de instalaciones y ante quien me identifiqué debidamente exhibiendo la credencial
-                vigente número {{ $datos->actas_inspeccion->num_credencial_encargado ?? 'Sin datos' }}, expedida por CIDAM A.C. misma que la persona con quien se entiende la
+                vigente número {{ $datos->actas_inspeccion->num_credencial_encargado ?? 'Sin datos' }}, expedida por
+                CIDAM A.C. misma que la persona con quien se entiende la
                 diligencia tiene a la vista, examina y devuelve al Inspector.</p>
             <br>
             <b>Designación de testigos</b>
@@ -354,9 +374,22 @@
             <table class="table-sign">
                 <tr>
                     <td style="width: 5%;">SI</td>
-                    <td style="width: 5%;"></td>
+                    <td style="width: 5%;">
+                        @if ($datos->actas_inspeccion->testigos == 1)
+                            X
+                        @else
+                            &nbsp;
+                        @endif
+                    </td>
                     <td style="width: 5%;">NO</td>
-                    <td style="width: 5%;"></td>
+                    <td style="width: 5%;">
+                        @if ($datos->actas_inspeccion->testigos == 2)
+                            X.
+                        @else
+                            &nbsp;
+                        @endif
+                    </td>
+                    </td>
                     <td style="border: none;">designa testigos</td>
                     <td style="border: none;"></td>
                 </tr>
@@ -375,7 +408,7 @@
                 <td style="width: 280px;">Domicilio</td>
             </tr>
             <tr>
-                <td style="height: 28px;">1</td>
+                <td style="height: 28px;">{{ $datos->actas_inspeccion->actas_testigo->id_acta_testigo }}</td>
                 <td>{{ $datos->actas_inspeccion->actas_testigo->nombre_testigo }}</td>
                 <td>{{ $datos->actas_inspeccion->actas_testigo->domicilio }}</td>
             </tr>
@@ -442,7 +475,13 @@
             </tr>
             <tr>
                 <td style="height: 40px;"></td>
-                <td>{{ $datos->actas_inspeccion->acta_produccion_mezcal->respuesta }}</td>
+                <td>
+                    @if ($datos->actas_inspeccion->acta_produccion_mezcal->area == 'Área de pesado')
+                        {{ $datos->actas_inspeccion->acta_produccion_mezcal->respuesta }}
+                    @else
+                        No disponible
+                    @endif
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -539,10 +578,12 @@
             </thead>
             <tbody>
                 <tr>
-                    <td style="height: 48px;">{{ $datos->actas_inspeccion->actas_equipo_envasado->equipo_envasado ?? 'Sin datos' }}</td>
+                    <td style="height: 48px;">
+                        {{ $datos->actas_inspeccion->actas_equipo_envasado->equipo_envasado ?? 'Sin datos' }}</td>
                     <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->cantidad_envasado ?? 'Sin datos' }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->capacidad_envasado  ?? 'Sin datos'}}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->tipo_material_envasado ?? 'Sin datos' }}</td>
+                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->capacidad_envasado ?? 'Sin datos' }}</td>
+                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->tipo_material_envasado ?? 'Sin datos' }}
+                    </td>
                 </tr>
                 <tr>
                     <td style="height: 48px;"></td>
@@ -570,11 +611,17 @@
                 <td style="width: 120px;">Otro:</td>
             </tr>
             <tr>
-                <td style="height: 55px;">{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion  ?? 'Sin datos'}}</td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion  ?? 'Sin datos'}}</td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion  ?? 'Sin datos'}}</td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion  ?? 'Sin datos'}}</td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion  ?? 'Sin datos'}}</td>
+                <td style="height: 55px;">
+                    {{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
+                </td>
+                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
+                </td>
+                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
+                </td>
+                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
+                </td>
+                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
+                </td>
             </tr>
         </table>
         <br>
@@ -615,7 +662,7 @@
                 </tr>
                 <tr>
                     <td style="height: 90px;"></td>
-                    <td style="text-align: center; vertical-align: top">{{ $datos->inspector->name}}</td>
+                    <td style="text-align: center; vertical-align: top">{{ $datos->inspector->name }}</td>
                 </tr>
             </table>
 
@@ -630,7 +677,8 @@
                     <td style="height: 35px; text-align: start;  vertical-align: top;">Equipo</td>
                 </tr>
                 <tr>
-                    <td style="height: 35px;">{{ $datos->actas_inspeccion->no_conf_infraestructura ?? 'Sin datos' }}</td>
+                    <td style="height: 35px;">{{ $datos->actas_inspeccion->no_conf_infraestructura ?? 'Sin datos' }}
+                    </td>
                     <td style="height: 35px;">{{ $datos->actas_inspeccion->no_conf_equipo ?? 'Sin datos' }}</td>
                 </tr>
             </table>
