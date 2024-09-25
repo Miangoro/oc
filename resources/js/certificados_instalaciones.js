@@ -156,16 +156,16 @@
         
                 // Para el revisor personal
                 if (id_revisor !== 'Sin asignar') {
-                    revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Personal:</strong> ${id_revisor}</span>`;
+                    revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Revisión OC:</strong> ${id_revisor}</span>`;
                 } else {
-                    revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Personal:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
+                    revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Revisión OC:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
                 }
         
                 // Para el revisor miembro
                 if (id_revisor2 !== 'Sin asignar') {
-                    revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Miembro:</strong> ${id_revisor2}</span>`;
+                    revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Revisión Consejo:</strong> ${id_revisor2}</span>`;
                 } else {
-                    revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Miembro:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
+                    revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Revisión Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
                 }
         
                 // Retorna los revisores en formato HTML
@@ -194,13 +194,12 @@
         
                 // Verificar si ambos revisores están vacíos o son nulos
                 var isActive = (id_revisor && id_revisor !== 'Sin asignar') || (id_revisor2 && id_revisor2 !== 'Sin asignar'); 
-                var estatus = isActive ? 'Activo' : 'Sin asignar'; // Establecer el estatus
+                var estatus = isActive ? 'Vigente' : 'Sin asignar'; // Establecer el estatus
                 var colorEstatus = isActive ? 'success' : 'secondary'; // Color según el estatus
         
                 return `<span class="badge rounded-pill bg-label-${colorEstatus}">${estatus}</span>`;
             }
         },
-           
          {
            // Actions
            targets: 11,
