@@ -26,7 +26,7 @@ class Revisor extends Model
 
     public function getLogName2(): string
     {
-        return 'predio'; // Devuelve el nombre que desees
+        return 'Revisor'; // Devuelve el nombre que desees
     }
 
     // Relación inversa con Certificados

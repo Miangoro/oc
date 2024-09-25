@@ -450,6 +450,7 @@ Route::get('/certificado_como_comercializador', [CartaAsignacionController::clas
 Route::get('/certificado_como_envasador', [CartaAsignacionController::class, 'CertificadoComoEnvasador'])->name('CertificadoComoEnvasador');
 Route::get('/solicitud_de_servicios', [CartaAsignacionController::class, 'SolicitudDeServicios052'])->name('CertificadoComoEnvasador');
 Route::get('/dictamen_cumplimiento_instalaciones', [CartaAsignacionController::class, 'DictamenDeCumplimienoInstalaciones'])->name('DictamenDeCumplimienoInstalaciones');
+Route::get('/carta_asignacion', [CartaAsignacionController::class, 'Contancia_trabajo'])->name('Contancia_trabajo');
 
 
 /* orden-trabajo-inspeccion-etiquetas */
@@ -757,6 +758,5 @@ Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnic
 
 
 //PDFS NEW
-
 Route::get('/Solicitud-Especificaciones', [CartaAsignacionController::class, 'SolicitudEspecificaciones'])->name('Solicitud-Especificaciones');
 Route::get('/Oreden-Trabajo', [CartaAsignacionController::class, 'OrdenTrabajo'])->name('Oreden-Trabajo');
