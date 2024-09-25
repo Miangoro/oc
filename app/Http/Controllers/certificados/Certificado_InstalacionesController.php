@@ -285,7 +285,7 @@ class Certificado_InstalacionesController extends Controller
                         $message = 'Revisor reasignado.';
                     } else {
                         $revisor->id_revisor2 = $validatedData['nombreRevisor'];
-                        $message = 'Revisor secundario asignado exitosamente.';
+                        $message = 'Revisor Miembro del consejo asignado exitosamente.';
                     }
                 }
             } else {
@@ -297,7 +297,7 @@ class Certificado_InstalacionesController extends Controller
                     $revisor->id_revisor = $validatedData['nombreRevisor'];
                 } else {
                     $revisor->id_revisor2 = $validatedData['nombreRevisor'];
-                    $message = 'Revisor secundario asignado exitosamente.';
+                    $message = 'Revisor Miembro del consejo asignado exitosamente.';
                 }
             }
     
@@ -321,7 +321,7 @@ class Certificado_InstalacionesController extends Controller
             }
     
             return response()->json([
-                'message' => $message ?? 'Revisor asignado exitosamente',
+                'message' => $message ?? 'Revisor del OC asignado exitosamente',
             ]);
     
         } catch (\Illuminate\Validation\ValidationException $e) {
