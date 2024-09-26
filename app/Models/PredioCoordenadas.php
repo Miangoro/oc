@@ -12,13 +12,14 @@ class PredioCoordenadas extends Model
         protected $table = 'predios_coordenadas';
 
         protected $primaryKey = 'id_coordenada'; // Clave primaria de la tabla
-    
+
         // Define los campos que se pueden llenar de forma masiva
         protected $fillable = [
             'id_predio',
+            'id_inspeccion',
             'latitud',
             'longitud'
-    
+
         ];
 
         public function PredioCoordenadas()
@@ -29,5 +30,11 @@ class PredioCoordenadas extends Model
         public function predio()
         {
             return $this->belongsTo(Predios::class, 'id_predio');
+        }
+
+        // En el modelo PredioCoordenadas
+        public function inspeccion()
+        {
+            return $this->belongsTo(Predios_Inspeccion::class, 'id_inspeccion', 'id_inspeccion');
         }
 }

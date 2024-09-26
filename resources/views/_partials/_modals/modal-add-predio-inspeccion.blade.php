@@ -4,22 +4,20 @@
        <div class="modal-dialog modal-xl">
            <div class="modal-content">
                <div class="modal-header">
-                   <h5 id="modalAddPredioInspeccionLabel" class="modal-title">Agregar Predio Inspeccion</h5>
+                   <h5 id="modalAddPredioInspeccionLabel" class="modal-title">Agregar Inspeccion del Predio</h5>
                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                </div>
                <div class="modal-body">
                    <form id="addAddPredioInspeccionForm">
                        @csrf
-                       <input type="hidden" id="edit_id_predio" name="id_predio" value="">
-
+                       <input type="hidden" id="inspeccion_id_predio" name="id_predio" value="">
                        {{--  --}}
-
                        <!-- Datos Generales -->
                        <div class="mb-4 p-3 border rounded">
-                           <h6 class="mb-3">Datos Generales</h6>
+                           <h6 class="mb-4">Datos Generales</h6>
                            <div class="row mb-4">
                                <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline">
+                                   <div class="form-floating form-floating-outline mb-4">
                                        <input type="text" class="form-control" id="noOrdenServicio"
                                            autocomplete="off" name="no_orden_servicio"
                                            placeholder="No. Orden de Servicio">
@@ -33,26 +31,40 @@
                                        <label for="noCliente">No. Cliente</label>
                                    </div>
                                </div>
+                               <!-- Select de Empresa Cliente -->
                            </div>
                            <div class="row mb-4">
                                <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline">
-                                       <input type="text" class="form-control" id="nombreCliente" autocomplete="off"
-                                           name="nombre_cliente" placeholder="Nombre del Cliente">
+                                   <div class="form-floating form-floating-outline mb-4">
+                                       <select id="inspeccion_id_empresa" name="id_empresa" class="select2 form-select">
+                                           <option value="" disabled selected>Selecciona la el Nombre del cliente
+                                           </option>
+                                           @foreach ($empresas as $empresa)
+                                               <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
+                                               </option>
+                                           @endforeach
+                                       </select>
                                        <label for="nombreCliente">Nombre del Cliente</label>
                                    </div>
                                </div>
+                               <!-- Tipo de Agave -->
                                <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline">
-                                       <input type="text" class="form-control" id="tipoAgave" autocomplete="off"
-                                           name="tipo_agave" placeholder="Tipo de Agave">
+                                   <div class="form-floating form-floating-outline mb-4">
+                                       <select id="tipoAgave" name="id_tipo_agave" placeholder="Tipo de Agave"
+                                           class="select2 form-select tipo_agave">
+                                           <option value="" disabled selected>Tipo de Agave</option>
+                                           @foreach ($tipos as $tipo)
+                                               <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
+                                           @endforeach
+                                       </select>
                                        <label for="tipoAgave">Tipo de Agave</label>
                                    </div>
                                </div>
+
                            </div>
                            <div class="row mb-4">
                                <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline">
+                                   <div class="form-floating form-floating-outline mb-4">
                                        <input type="text" class="form-control" id="domicilioFiscal"
                                            autocomplete="off" name="domicilio_fiscal" placeholder="Domicilio Fiscal">
                                        <label for="domicilioFiscal">Domicilio Fiscal</label>
@@ -68,22 +80,30 @@
                            </div>
                            <div class="row mb-4">
                                <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline">
-                                       <input type="text" class="form-control" id="ubicacionPredio"
+                                   <div class="form-floating form-floating-outline mb-4">
+                                       <input type="text" class="form-control" id="inspeccion_ubicacion_predio"
                                            autocomplete="off" name="ubicacion_predio"
-                                           placeholder="Ubicación del Predio">
-                                       <label for="ubicacionPredio">Ubicación del Predio</label>
+                                           placeholder="Ubicación del predio"></input>
+                                       <label for="ubicacion_predio">Ubicación del Predio</label>
                                    </div>
                                </div>
+                               <div class="col-md-6 mb-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" id="fecha_inspeccion" name="fecha_inspeccion"
+                                        autocomplete="off" class="form-control datepicker"
+                                        placeholder="Fecha de inspección" readonly/>
+                                    <label for="fecha_inspeccion">Fecha de inspección</label>
+                                </div>
+                            </div>
                            </div>
                        </div>
 
                        <!-- Datos del Predio -->
                        <div class="mb-4 p-3 border rounded">
-                           <h6 class="mb-3">Datos del Predio</h6>
+                           <h6 class="mb-4">Datos del Predio</h6>
                            <div class="row mb-4">
                                <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline">
+                                   <div class="form-floating form-floating-outline mb-4">
                                        <input type="text" class="form-control" id="localidad" autocomplete="off"
                                            name="localidad" placeholder="Localidad">
                                        <label for="localidad">Localidad</label>
@@ -99,23 +119,27 @@
                            </div>
                            <div class="row mb-4">
                                <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline">
+                                   <div class="form-floating form-floating-outline mb-4">
                                        <input type="text" class="form-control" id="distrito" autocomplete="off"
                                            name="distrito" placeholder="Distrito">
                                        <label for="distrito">Distrito</label>
                                    </div>
                                </div>
                                <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline">
-                                       <input type="text" class="form-control" id="estado" autocomplete="off"
-                                           name="estado" placeholder="Estado">
-                                       <label for="estado">Estado</label>
-                                   </div>
-                               </div>
+                                <div class="form-floating form-floating-outline">
+                                    <select class="form-select select2" name="estado" id="estado">
+                                        <option disabled selected>Selecciona un estado</option>
+                                        @foreach ($estados as $estado)
+                                            <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
+                                        @endforeach
+                                    </select>
+                                    <label for="estado">Estado</label>
+                                </div>
+                            </div>
                            </div>
                            <div class="row mb-4">
                                <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline">
+                                   <div class="form-floating form-floating-outline mb-4">
                                        <input type="text" class="form-control" id="nombreParaje"
                                            autocomplete="off" name="nombre_paraje" placeholder="Nombre del Paraje">
                                        <label for="nombreParaje">Nombre del Paraje</label>
@@ -135,121 +159,58 @@
                        </div>
 
                        <div class="mb-4 p-3 border rounded">
-                        <h6 class="mb-3">Características del maguey</h6>
-                        <div class="row mb-4">
-                            <!-- Tipo de Maguey -->
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="text" class="form-control" id="tipoMaguey" autocomplete="off" name="tipo_maguey" placeholder="Tipo de Maguey">
-                                    <label for="tipoMaguey">Tipo de Maguey</label>
-                                </div>
-                            </div>
-                            <!-- Marco de Plantación (m2) -->
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="number" class="form-control" id="marcoPlantacion" autocomplete="off" name="marco_plantacion" placeholder="Marco de Plantación (m2)">
-                                    <label for="marcoPlantacion">Marco de Plantación (m2)</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-4">
-                            <!-- Distancia entre Surcos (m) -->
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="number" class="form-control" id="distanciaSurcos" autocomplete="off" name="distancia_surcos" placeholder="Distancia entre Surcos (m)">
-                                    <label for="distanciaSurcos">Distancia entre Surcos (m)</label>
-                                </div>
-                            </div>
-                            <!-- Distancia entre Plantas (m) -->
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="number" class="form-control" id="distanciaPlantas" autocomplete="off" name="distancia_plantas" placeholder="Distancia entre Plantas (m)">
-                                    <label for="distanciaPlantas">Distancia entre Plantas (m)</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                       <!-- Select de Empresa Cliente -->
-                       <div class="form-floating form-floating-outline mb-4">
-                           <select id="edit_id_empresa" name="id_empresa" class="select2 form-select">
-                               <option value="" disabled selected>Selecciona la empresa cliente</option>
-                               @foreach ($empresas as $empresa)
-                                   <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
-                               @endforeach
-                           </select>
-                           <label for="id_empresa">Empresa Cliente</label>
-                       </div>
-                       <!-- Nombre del Productor -->
-                       <div class="row mb-4">
-                           <div class="col-md-6">
-                               <div class="form-floating form-floating-outline">
-                                   <input type="text" class="form-control" id="edit_nombre_productor"
-                                       autocomplete="off" name="nombre_productor" placeholder="Nombre del productor">
-                                   <label for="nombre_productor">Nombre del Productor</label>
+                           <h6 class="mb-4">Características del maguey</h6>
+                           <div class="row mb-4">
+                               <!-- Tipo de Maguey -->
+                               <div class="col-md-6">
+                                   <div class="form-floating form-floating-outline mb-4">
+                                       <select id="tipoMaguey" name="id_tipo_maguey" placeholder="Tipo de Maguey"
+                                           class="select2 form-select tipo_maguey">
+                                           <option value="" disabled selected>Tipo de Maguey</option>
+                                           @foreach ($tipos as $tipo)
+                                               <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
+                                           @endforeach
+                                       </select>
+                                       <label for="tipoMaguey">Tipo de Maguey</label>
+                                   </div>
+                               </div>
+                               <!-- Marco de Plantación (m2) -->
+                               <div class="col-md-6">
+                                   <div class="form-floating form-floating-outline">
+                                       <input type="number" class="form-control" id="marcoPlantacion"
+                                           autocomplete="off" name="marco_plantacion"
+                                           placeholder="Marco de Plantación (m²)">
+                                       <label for="marcoPlantacion">Marco de Plantación (m²)</label>
+                                   </div>
                                </div>
                            </div>
-
-                           <!-- Nombre del Predio -->
-                           <div class="col-md-6">
-                               <div class="form-floating form-floating-outline">
-                                   <input type="text" class="form-control" id="edit_nombre_predio"
-                                       autocomplete="off" name="nombre_predio" placeholder="Nombre del predio">
-                                   <label for="nombre_predio">Nombre del Predio</label>
+                           <div class="row mb-4">
+                               <!-- Distancia entre Surcos (m) -->
+                               <div class="col-md-6">
+                                   <div class="form-floating form-floating-outline mb-4">
+                                       <input type="number" class="form-control" id="distanciaSurcos"
+                                           autocomplete="off" name="distancia_surcos"
+                                           placeholder="Distancia entre Surcos (m)">
+                                       <label for="distanciaSurcos">Distancia entre Surcos (m)</label>
+                                   </div>
                                </div>
-                           </div>
-                       </div>
-                       <div class="row mb-4">
-                           <!-- Ubicación del Predio -->
-                           <div class="col-md-6">
-                               <div class="form-floating form-floating-outline mb-3">
-                                   <input type="text" class="form-control" id="edit_ubicacion_predio"
-                                       autocomplete="off" name="ubicacion_predio"
-                                       placeholder="Ubicación del predio"></input>
-                                   <label for="ubicacion_predio">Ubicación del Predio</label>
-                               </div>
-                           </div>
-                           <div class="col-md-6">
-                               <div class="form-floating form-floating-outline">
-                                   <select class="form-select" id="edit_tipo_predio" name="tipo_predio"
-                                       aria-label="Tipo de Predio">
-                                       <option value="" disabled selected>Seleccione un tipo de predio</option>
-                                       <option value="Comunal">Comunal</option>
-                                       <option value="Ejidal">Ejidal</option>
-                                       <option value="Propiedad privada">Propiedad privada</option>
-                                       <option value="Otro">Otro</option>
-                                   </select>
-                                   <label for="tipo_predio">Tipo de Predio</label>
+                               <!-- Distancia entre Plantas (m) -->
+                               <div class="col-md-6">
+                                   <div class="form-floating form-floating-outline">
+                                       <input type="number" class="form-control" id="distanciaPlantas"
+                                           autocomplete="off" name="distancia_plantas"
+                                           placeholder="Distancia entre Plantas (m)">
+                                       <label for="distanciaPlantas">Distancia entre Plantas (m)</label>
+                                   </div>
                                </div>
                            </div>
                        </div>
                        <!-- Tipo de Predio y Puntos de Referencia -->
                        <div class="row mb-4">
+                           <!-- Coordenadas -->
                            <div class="col-md-6">
-                               <div class="form-floating form-floating-outline">
-                                   <input type="text" class="form-control" id="edit_puntos_referencia"
-                                       autocomplete="off" name="puntos_referencia"
-                                       placeholder="Puntos de referencia"></input>
-                                   <label for="puntos_referencia">Puntos de Referencia</label>
-                               </div>
-                           </div>
-                           <!-- Superficie del Predio -->
-                           <div class="col-md-6">
-                               <div class="form-floating form-floating-outline">
-                                   <input type="number" class="form-control" id="edit_superficie"
-                                       autocomplete="off" name="superficie" placeholder="Superficie del predio (Ha)"
-                                       step="0.01">
-                                   <label for="superficie">Superficie del Predio (Ha)</label>
-                               </div>
-                           </div>
-                       </div>
-
-                       <!-- Coordenadas -->
-                       <div class="row mb-4">
-                           <!-- ¿Cuenta con Coordenadas? -->
-                           <div class="col-md-6">
-                               <div class="form-floating form-floating-outline">
-                                   <select class="form-select" id="edit_tiene_coordenadas" name="tiene_coordenadas"
+                               <div class="form-floating form-floating-outline mb-4">
+                                   <select class="form-select" id="inspeccion_tiene_coordenadas" name="tiene_coordenadas"
                                        aria-label="¿Cuenta con coordenadas?">
                                        <option value="" disabled selected>Seleccione una opción</option>
                                        <option value="Si">Si</option>
@@ -258,46 +219,42 @@
                                    <label for="tiene_coordenadas">¿Cuenta con Coordenadas?</label>
                                </div>
                            </div>
-
-                           <div class="col-md-6 mb-4">
+                           <!-- Superficie del Predio -->
+                           <div class="col-md-6">
                                <div class="form-floating form-floating-outline">
-                                   <input class="form-control form-control-sm" type="file" id="edit_file-34"
-                                       name="url">
-                                   <input value="34" class="form-control" type="hidden" name="id_documento">
-                                   <input
-                                       value="Comprobante de posesión de instalaciones (Si es propietario, este documento debe estar a nombre de la persona física o moral que se inscribe) o Contrato de arrendamiento"
-                                       class="form-control" type="hidden" name="nombre_documento">
-                                   <label for="contrato_arrendamiento_o_escrituras">Adjuntar Contrato de arrendamiento
-                                       del terreno o copias de escrituras</label>
+                                   <input type="number" class="form-control" id="inspeccion_superficie"
+                                       autocomplete="off" name="superficie" placeholder="Superficie del predio (Ha)"
+                                       step="0.01">
+                                   <label for="superficie">Superficie del Predio (Ha)</label>
                                </div>
-                               <div id="archivo_url_contrato" class="mb-4"></div>
                            </div>
                        </div>
-                       <div id="edit_coordenadas" class="d-none mb-4">
+                       <!-- ¿Cuenta con Coordenadas? -->
+                       <div id="inspeccion_coordenadas" class="d-none mb-4">
                            <div class="card">
                                <table class="table table-bordered">
                                    <thead>
                                        <tr>
                                            <th><button type="button"
-                                                   class="btn btn-primary add-row-cordenadas-edit"><i
+                                                   class="btn btn-primary add-row-cordenadas-inspeccion"><i
                                                        class="ri-add-line"></i></button></th>
                                            <th colspan="2" style="width: 95%">
                                                <h5 class="card-title mb-0 text-center">Coordenadas</h5>
                                            </th>
                                        </tr>
                                    </thead>
-                                   <tbody id="coordenadas-body-edit">
+                                   <tbody id="coordenadas-body-inspeccion">
                                        <!-- Campos de coordenadas se agregarán aquí dinámicamente -->
                                    </tbody>
                                </table>
                            </div>
                        </div>
 
-                       <div class="edit_InformacionAgave mb-4">
+                       <div class="inspeccion_InformacionAgave mb-4">
                            <!-- Información sobre el Agave/Maguey y Plantación combinada -->
                            <div class="card">
                                <div class="card-body">
-                                   <table class="table table-bordered table-striped mb-3">
+                                   <table class="table table-bordered table-striped mb-4">
                                        <tr>
                                            <th><button type="button" class="btn btn-primary add-row-plantacion"><i
                                                        class="ri-add-line"></i></button></th>
@@ -306,7 +263,7 @@
                                                    Plantación</h5>
                                            </th>
                                        </tr>
-                                       <tbody class="edit_ContenidoPlantacion">
+                                       <tbody class="inspeccion_ContenidoPlantacion">
                                            <tr>
                                                <td rowspan="4">
                                                    <!-- El botón de eliminar estará en cada fila que se agregue -->
@@ -317,7 +274,7 @@
                                                    <b>Nombre y Especie de Agave/Maguey</b>
                                                </td>
                                                <td>
-                                                   <div class="form-floating form-floating-outline mb-3">
+                                                   <div class="form-floating form-floating-outline mb-4">
                                                        <select id="edit_id_tipo" name="id_tipo[]"
                                                            class="select2 form-select tipo_agave">
                                                            <option value="" disabled selected>Tipo de agave

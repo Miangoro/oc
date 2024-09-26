@@ -33,7 +33,9 @@ $(function () {
 
   $(document).ready(function () {
     $('.datepicker').datepicker({
-      format: 'yyyy-mm-dd'
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      todayHighlight: true
     });
 
   });
@@ -685,7 +687,7 @@ $(function () {
 
   $(function () {
     const editLoteForm = document.getElementById('loteFormEdit');
-    
+
     // Configuración de FormValidation
     const fv = FormValidation.formValidation(editLoteForm, {
       fields: {
@@ -765,7 +767,7 @@ $(function () {
     }).on('core.form.valid', function () {
       var formData = new FormData(editLoteForm);
       var loteId = $('#edit_lote_id').val();
-  
+
       $.ajax({
         url: '/lotes-a-granel/' + loteId,
         type: 'POST',
@@ -793,7 +795,7 @@ $(function () {
             var errorMessages = Object.keys(errors).map(function (key) {
               return errors[key].join('<br>');
             }).join('<br>');
-  
+
             Swal.fire({
               icon: 'error',
               title: 'Error',
@@ -815,13 +817,13 @@ $(function () {
         }
       });
     });
-  
+
     // Inicializar select2 y revalidar el campo cuando cambie
     $('#id_empresa, #id_guia, #tipo_agave').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
   });
-  
+
 
   $(function () {
     const addNewLote = document.getElementById('loteForm');
@@ -849,7 +851,7 @@ $(function () {
     $('#es_creado_a_partir').on('change', function () {
         const isEnabled = $(this).val() === 'si';
         $('#lote_original_id').prop('disabled', !isEnabled).val(isEnabled ? $('#lote_original_id').val() : '');
-        
+
         if (isEnabled) {
             fv.addField('lote_original_id', {
                 validators: {

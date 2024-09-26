@@ -44,7 +44,7 @@ class Predios extends Model
     {
         return $this->belongsTo(tipos::class, 'id_tipo');
     }
-      
+
     public function plantaciones()
     {
         return $this->hasMany(predio_plantacion::class, 'id_tipo');
@@ -68,7 +68,7 @@ class Predios extends Model
         }
 
 
-        
+
         // Relación con el modelo Documentacion_url
         public function actas_produccion()
         {
