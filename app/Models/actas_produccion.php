@@ -14,7 +14,7 @@ class actas_produccion extends Model
     protected $fillable = [
         'id_produccion',
         'id_acta',
-        'id_empresa',
+        'id_plantacion',
         'plagas',
 
 
@@ -23,10 +23,17 @@ class actas_produccion extends Model
     
 
 
+    public function predio_plantacion()
+    {
+        return $this->belongsTo(predio_plantacion::class,'id_plantacion', 'id_plantacion');
+    }
+    
+
     public function predios()
     {
-        return $this->belongsTo(Predios::class,'id_predio', 'nom_predio');
+        return $this->belongsTo(Predios::class, 'id_empresa');
     }
+
 
     public function empresa()
     {

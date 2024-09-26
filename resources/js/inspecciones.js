@@ -66,19 +66,19 @@ $(function () {
           return `<span>${full.fake_id}</span>`;
         }
       },
-      /* {
+      /*       {
      
-         targets: 10,
-         className: 'text-center',
-         render: function (data, type, full, meta) {
- 
-           if (full['url'] && full['url'].trim() !== '') {
-             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${full['url']}" data-registro="${full['url']}"></i>`;
-         } else {
-             return '---';
-         }
-         }
-       },¨*/
+        targets: 11,
+        className: 'text-center',
+        render: function (data, type, full, meta) {
+
+          if (full['id_inspeccion'] && full['razon_social'].trim() !== '') {
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_inspeccion']}" data-registro="${full['razon_social']}"></i>`;
+        } else {
+            return '---';
+        }
+        }
+      },*/
 
       {
         // email verify
@@ -86,7 +86,7 @@ $(function () {
         className: 'text-center',
         render: function (data, type, full, meta) {
           var $id = full['id_inspeccion'];
-          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_inspeccion']}" data-registro="${full['id_inspeccion']} "></i>`;
+          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_inspeccion']}" data-registro="${full['razon_social']} "></i>`;
         }
       },
       {

@@ -294,7 +294,7 @@
                 @endif)</p>
             <p class="cat">Almacén ( ).</p>
             <br>
-            <p>En _______________________________ siendo las _______ horas del día _____ del mes de ______ del 202_____.
+            <p>En <u>{{$datos->actas_inspeccion->lugar_inspeccion}}</u> siendo las <u>{{$hora_llenado}}</u> horas del día {{$fecha_llenado}}.
             </p> <br>
             <p>El suscrito Inspector comisionado por la Unidad de Inspección CIDAM A.C. con domicilio en Kilómetro 8
                 Antigua Carretera a Pátzcuaro, S/N Colonia Otra no Especificada en el Catálogo, C.P. 58341, Morelia,
@@ -359,7 +359,7 @@
                 </tr>
             </table>
             <br>
-            <p>Cuyo original se entrega en el presente acto al C._____________________________, quien dijo tener el
+            <p>Cuyo original se entrega en el presente acto al C.<u>{{$datos->actas_inspeccion->encargado}} </u>, quien dijo tener el
                 cargo de responsable de instalaciones y ante quien me identifiqué debidamente exhibiendo la credencial
                 vigente número {{ $datos->actas_inspeccion->num_credencial_encargado ?? 'Sin datos' }}, expedida por
                 CIDAM A.C. misma que la persona con quien se entiende la
@@ -421,9 +421,10 @@
     </div>
     <br>
     {{-- contenedor --}}
+    
     <div class="contenedor">
         <div class="texto">
-            <p><strong>Parte I Unidad de producción de ________________.</strong></p>
+            <p><strong>Parte I Unidad de producción de Agave.</strong></p>
             <br>
             <p>Se constató físicamente la existencia de la unidad de producción de agave: </p>
         </div>
@@ -435,23 +436,20 @@
                 <td>Madurez del agave (años)</td>
                 <td>Plagas en el cultivo</td>
                 <td>Cantidad de Plantas</td>
-                <td style="width: 90px;">Coordenadas</td>
-            </tr>
-            @foreach ($datos->actas_inspeccion->actas_produccion AS $produccion)
+{{--                 <td style="width: 90px;">Coordenadas</td>
+ --}}            </tr>
+           
+           @foreach ($datos->actas_inspeccion->actas_produccion AS $plantacion)
             <tr>
-                <td style="height: 28px;">{{ $produccion->plagas ?? '- -' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
-                <td>{{ $produccion->id_empresa ?? '- -' }}</td> <!-- Mostrar "vacío" si el nombre es nulo -->
+                <td ></td>
+                <td></td>
+                <td></td>
+                <td>{{$plantacion->predio_plantacion->anio_plantacion}}</td>
+                <td>{{ $plantacion->plagas ?? '- -' }}</td>
+                <td >{{ $plantacion->predio_plantacion->num_plantas ?? '- -' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
+
             </tr>
-        @endforeach
-            <tr>
-                <td style="height: 40px;"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+        @endforeach 
         </table>
         <br>
         <div class="texto">
@@ -545,7 +543,7 @@
     {{-- contenedor --}}
     <div class="contenedor">
         <div class="texto">
-            <p>Se constató que ( ) cuenta con la infraestructura y equipo para producir <u>_______</u></p>
+            <p>Se constató que ( ) cuenta con la infraestructura y equipo para producir _______</p>
             <br>
             <p>Categoría(s): ____________________ Clase(s): _________________ Otra: ______________.</p>
             <br>
