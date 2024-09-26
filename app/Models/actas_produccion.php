@@ -14,14 +14,8 @@ class actas_produccion extends Model
     protected $fillable = [
         'id_produccion',
         'id_acta',
-        'id_predio',
         'id_empresa',
-        'especie_agave',
-        'superficie',
-        'madurez_agave',
         'plagas',
-        'cant_plantas',
-        'coordenadas',
 
 
  
@@ -43,5 +37,11 @@ class actas_produccion extends Model
     {
         return $this->belongsTo(tipos::class,'nombre', 'nombre');
     }
+
+    public function actas_inspeccion()
+    {
+        return $this->hasMany(actas_inspeccion::class,'id_acta', 'id_acta');
+    }
+    
     
 }

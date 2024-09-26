@@ -56,16 +56,27 @@ class actas_inspeccion extends Model
 
     public function actas_equipo_mezcal()
     {
-        return $this->belongsTo(actas_equipo_mezcal::class,'id_acta', 'id_acta');
+        return $this->hasMany(actas_equipo_mezcal::class,'id_acta', 'id_acta');
     }
 
     public function actas_equipo_envasado()
     {
-        return $this->belongsTo(actas_equipo_envasado::class,'id_acta', 'id_acta');
+        return $this->hasMany(actas_equipo_envasado::class,'id_acta', 'id_acta');
     }
+
     public function actas_unidad_comercializacion()
     {
-        return $this->belongsTo(actas_unidad_comercializacion::class,'id_acta', 'id_acta');
+        return $this->hasMany(actas_unidad_comercializacion::class,'id_acta', 'id_acta');
+    }
+
+    public function actas_unidad_envasado()
+    {
+        return $this->hasMany(actas_unidad_envasado::class,'id_acta', 'id_acta');
+    }
+
+    public function actas_produccion()
+    {
+        return $this->hasMany(actas_produccion::class,'id_acta', 'id_acta');
     }
     
     

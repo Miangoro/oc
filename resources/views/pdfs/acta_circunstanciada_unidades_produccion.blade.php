@@ -410,9 +410,9 @@
         
             @foreach ($datos->actas_inspeccion->actas_testigo AS $testigo)
                 <tr>
-                    <td style="height: 28px;">{{ $testigo->id_acta_testigo ?? 'vacío' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
-                    <td>{{ $testigo->nombre_testigo ?? 'vacío' }}</td> <!-- Mostrar "vacío" si el nombre es nulo -->
-                    <td>{{ $testigo->domicilio ?? 'vacío' }}</td> <!-- Mostrar "vacío" si el domicilio es nulo -->
+                    <td style="height: 28px;">{{ $testigo->id_acta_testigo ?? '- -' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
+                    <td>{{ $testigo->nombre_testigo ?? '- -' }}</td> <!-- Mostrar "vacío" si el nombre es nulo -->
+                    <td>{{ $testigo->domicilio ?? '- -' }}</td> <!-- Mostrar "vacío" si el domicilio es nulo -->
                 </tr>
             @endforeach
         
@@ -437,15 +437,12 @@
                 <td>Cantidad de Plantas</td>
                 <td style="width: 90px;">Coordenadas</td>
             </tr>
+            @foreach ($datos->actas_inspeccion->actas_produccion AS $produccion)
             <tr>
-                <td style="height: 40px;"></td>
-                <td class="diagonal-cell"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td style="height: 28px;">{{ $produccion->plagas ?? '- -' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
+                <td>{{ $produccion->id_empresa ?? '- -' }}</td> <!-- Mostrar "vacío" si el nombre es nulo -->
             </tr>
+        @endforeach
             <tr>
                 <td style="height: 40px;"></td>
                 <td></td>
@@ -486,7 +483,7 @@
                         <tr>
                     @endif
         
-                    <td>{{ $area->respuesta ?? 'vacío' }}</td> <!-- Mostrar "vacío" si la respuesta es nula -->
+                    <td>{{ $area->respuesta ?? '- -' }}</td> <!-- Mostrar "vacío" si la respuesta es nula -->
         
                     @php
                         $counter++; // Incrementar el contador
@@ -526,18 +523,14 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach ($datos->actas_inspeccion->actas_equipo_mezcal AS $equipo_maezcal)
                 <tr>
-                    <td style="height: 40px;">{{ $datos->actas_inspeccion->actas_equipo_mezcal->equipo }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_mezcal->cantidad }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_mezcal->capacidad }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_mezcal->tipo_material }}</td>
+                    <td style="height: 28px;">{{ $equipo_maezcal->equipo ?? '- -' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
+                    <td>{{ $equipo_maezcal->cantidad ?? '- -' }}</td> <!-- Mostrar "vacío" si el nombre es nulo -->
+                    <td>{{ $equipo_maezcal->capacidad ?? '- -' }}</td> <!-- Mostrar "vacío" si el domicilio es nulo -->
+                    <td>{{ $equipo_maezcal->tipo_material ?? '- -' }}</td> <!-- Mostrar "vacío" si el domicilio es nulo -->
                 </tr>
-                <tr>
-                    <td style="height: 40px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+            @endforeach
             </tbody>
         </table>
 
@@ -562,7 +555,7 @@
         </div>
 
         <table class="sign-table" style="margin-top: 20px; font-size: 10;">
-            <tr>
+            <thead>
                 <td style="width: 90px; height: 80px;">Almacén de insumos</td>
                 <td style="width: 105px;">Almacén a gráneles</td>
                 <td>Sistema de filtrado</td>
@@ -570,16 +563,41 @@
                 <td>Área de tiquetado</td>
                 <td>Almacén de producto terminado</td>
                 <td style="width: 115px;">Área de aseo personal</td>
-            </tr>
-            <tr>
-                <td style="height: 40px;"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            </thead>
+            <tbody>
+                @php
+                    $counter = 0; // Contador para las respuestas
+                @endphp
+        
+                @foreach ($datos->actas_inspeccion->actas_unidad_envasado AS $envasado)
+                    @if ($counter % 7 == 0) <!-- Si el contador es múltiplo de 8, empieza un nuevo <tr> -->
+                        <tr>
+                    @endif
+        
+                    <td>{{ $envasado->respuestas ?? '- -' }}</td> <!-- Mostrar "vacío" si la respuesta es nula -->
+        
+                    @php
+                        $counter++; // Incrementar el contador
+                    @endphp
+        
+                    @if ($counter % 7 == 0) <!-- Si el contador es múltiplo de 8, cierra el <tr> -->
+                        </tr>
+                    @endif
+                @endforeach
+        
+                @if ($counter % 7 != 0) <!-- Si no hemos cerrado el último <tr>, ciérralo aquí -->
+                    </tr>
+                @endif
+        
+                <!-- Si deseas agregar una fila adicional si hay respuestas restantes -->
+                @if ($counter % 7 != 0)
+                    <tr>
+                        @for ($i = $counter % 7; $i < 7; $i++)
+                            <td></td> <!-- Rellenar celdas vacías si no se llenaron -->
+                        @endfor
+                    </tr>
+                @endif
+            </tbody>
         </table>
         <br>
         <div class="texto">
@@ -599,20 +617,14 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach ($datos->actas_inspeccion->actas_equipo_envasado AS $equipo_envasado)
                 <tr>
-                    <td style="height: 48px;">
-                        {{ $datos->actas_inspeccion->actas_equipo_envasado->equipo_envasado ?? 'Sin datos' }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->cantidad_envasado ?? 'Sin datos' }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->capacidad_envasado ?? 'Sin datos' }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->tipo_material_envasado ?? 'Sin datos' }}
-                    </td>
+                    <td style="height: 28px;">{{ $equipo_envasado->equipo_envasado ?? '- -' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
+                    <td>{{ $equipo_envasado->cantidad_envasado ?? '- -' }}</td> <!-- Mostrar "vacío" si el nombre es nulo -->
+                    <td>{{ $equipo_envasado->capacidad_envasado ?? '- -' }}</td> <!-- Mostrar "vacío" si el domicilio es nulo -->
+                    <td>{{ $equipo_envasado->tipo_material_envasado ?? '- -' }}</td> <!-- Mostrar "vacío" si el domicilio es nulo -->
                 </tr>
-                <tr>
-                    <td style="height: 48px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+            @endforeach
             </tbody>
         </table>
         <br>
@@ -625,26 +637,47 @@
         </div>
 
         <table class="sign-table" style=" font-size: 10;">
-            <tr>
+            <thead>
                 <td style="width: 180px; height: 55px;">Bodega o almacén</td>
                 <td>Tarimas</td>
                 <td>Bitácoras</td>
                 <td style="width: 120px;">Otro:</td>
                 <td style="width: 120px;">Otro:</td>
-            </tr>
-            <tr>
-                <td style="height: 55px;">
-                    {{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
-                </td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
-                </td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
-                </td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
-                </td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
-                </td>
-            </tr>
+            </thead>
+            <tbody>
+                @php
+                    $counter = 0; // Contador para las respuestas
+                @endphp
+        
+                @foreach ($datos->actas_inspeccion->actas_unidad_comercializacion AS $comercio)
+                    @if ($counter % 5 == 0) <!-- Si el contador es múltiplo de 8, empieza un nuevo <tr> -->
+                        <tr>
+                    @endif
+        
+                    <td>{{ $comercio->respuestas_comercio ?? '- -' }}</td> <!-- Mostrar "vacío" si la respuesta es nula -->
+        
+                    @php
+                        $counter++; // Incrementar el contador
+                    @endphp
+        
+                    @if ($counter % 5 == 0) <!-- Si el contador es múltiplo de 8, cierra el <tr> -->
+                        </tr>
+                    @endif
+                @endforeach
+        
+                @if ($counter % 5 != 0) <!-- Si no hemos cerrado el último <tr>, ciérralo aquí -->
+                    </tr>
+                @endif
+        
+                <!-- Si deseas agregar una fila adicional si hay respuestas restantes -->
+                @if ($counter % 5 != 0)
+                    <tr>
+                        @for ($i = $counter % 5; $i < 5; $i++)
+                            <td></td> <!-- Rellenar celdas vacías si no se llenaron -->
+                        @endfor
+                    </tr>
+                @endif
+            </tbody>
         </table>
         <br>
         <div class="texto">

@@ -19,6 +19,9 @@ class actas_unidad_envasado extends Model
     ];
     
 
-
+    public function actas_inspeccion()
+    {
+        return $this->hasMany(actas_inspeccion::class,'id_acta', 'id_acta');
+    }
     
 }
