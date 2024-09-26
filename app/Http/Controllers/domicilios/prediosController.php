@@ -496,99 +496,100 @@ class PrediosController extends Controller
             return $pdf->stream('F-UV-21-01 Pre-registro de predios de maguey o agave Ed.1 Vigente.pdf');
         }
 
-/* Registro de predio inspección */
-public function inspeccion(Request $request, $id_predio)
-{
-    // Validar los datos del formulario
-    $validatedData = $request->validate([
-        'id_empresa' => 'required|exists:empresa,id_empresa',
-        'no_orden_servicio' => 'required|string|max:255',
-        'no_cliente' => 'required|string|max:255',
-        'id_tipo_agave' => 'required|exists:catalogo_tipo_agave,id_tipo',
-        'domicilio_fiscal' => 'required|string|max:255',
-        'telefono' => 'nullable|string|max:20',
-        'ubicacion_predio' => 'required|string|max:255',
-        'fecha_inspeccion' => 'required|date',
-        'localidad' => 'required|string|max:255',
-        'municipio' => 'required|string|max:255',
-        'distrito' => 'required|string|max:255',
-        'estado' => 'required|exists:estados,id',
-        'nombre_paraje' => 'required|string|max:255',
-        'zona_dom' => 'required|string|in:si,no',
-        'id_tipo_maguey' => 'required|exists:catalogo_tipo_agave,id_tipo',
-        'marco_plantacion' => 'required|numeric',
-        'distancia_surcos' => 'required|numeric',
-        'distancia_plantas' => 'required|numeric',
-        'tiene_coordenadas' => 'required|string|max:2',
-        'superficie' => 'required|numeric',
-        'latitud' => 'nullable|array',
-        'longitud' => 'nullable|array',
-        'id_tipo' => 'nullable|array',
-        'numero_plantas' => 'nullable|array',
-        'edad_plantacion' => 'nullable|array',
-        'tipo_plantacion' => 'nullable|array',
-    ]);
+    /* Registro de predio inspección */
+    public function inspeccion(Request $request, $id_predio)
+    {
+        // Validar los datos del formulario
+        $validatedData = $request->validate([
+            'id_empresa' => 'required|exists:empresa,id_empresa',
+            'no_orden_servicio' => 'required|string|max:255',
+            'no_cliente' => 'required|string|max:255',
+            'id_tipo_agave' => 'required|exists:catalogo_tipo_agave,id_tipo',
+            'domicilio_fiscal' => 'required|string|max:255',
+            'telefono' => 'nullable|string|max:20',
+            'ubicacion_predio' => 'required|string|max:255',
+            'fecha_inspeccion' => 'required|date',
+            'localidad' => 'required|string|max:255',
+            'municipio' => 'required|string|max:255',
+            'distrito' => 'required|string|max:255',
+            'estado' => 'required|exists:estados,id',
+            'nombre_paraje' => 'required|string|max:255',
+            'zona_dom' => 'required|string|in:si,no',
+            'id_tipo_maguey' => 'required|exists:catalogo_tipo_agave,id_tipo',
+            'marco_plantacion' => 'required|numeric',
+            'distancia_surcos' => 'required|numeric',
+            'distancia_plantas' => 'required|numeric',
+            'tiene_coordenadas' => 'required|string|max:2',
+            'superficie' => 'required|numeric',
+            'latitud' => 'nullable|array',
+            'longitud' => 'nullable|array',
+            'id_tipo' => 'nullable|array',
+            'numero_plantas' => 'nullable|array',
+            'edad_plantacion' => 'nullable|array',
+            'tipo_plantacion' => 'nullable|array',
+        ]);
 
-    // Crear una nueva instancia del modelo Predios_Inspeccion
-    $inspeccion = new Predios_Inspeccion();
-    $inspeccion->id_predio = $id_predio;
-    $inspeccion->id_empresa = $validatedData['id_empresa'];
-    $inspeccion->no_orden_servicio = $validatedData['no_orden_servicio'];
-    $inspeccion->no_cliente = $validatedData['no_cliente'];
-    $inspeccion->id_tipo_agave = $validatedData['id_tipo_agave'];
-    $inspeccion->domicilio_fiscal = $validatedData['domicilio_fiscal'];
-    $inspeccion->telefono = $validatedData['telefono'];
-    $inspeccion->ubicacion_predio = $validatedData['ubicacion_predio'];
-    $inspeccion->fecha_inspeccion = $validatedData['fecha_inspeccion'];
-    $inspeccion->localidad = $validatedData['localidad'];
-    $inspeccion->municipio = $validatedData['municipio'];
-    $inspeccion->distrito = $validatedData['distrito'];
-    $inspeccion->id_estado = $validatedData['estado'];
-    $inspeccion->nombre_paraje = $validatedData['nombre_paraje'];
-    $inspeccion->zona_dom = $validatedData['zona_dom'];
-    $inspeccion->id_tipo_maguey = $validatedData['id_tipo_maguey'];
-    $inspeccion->marco_plantacion = $validatedData['marco_plantacion'];
-    $inspeccion->distancia_surcos = $validatedData['distancia_surcos'];
-    $inspeccion->distancia_plantas = $validatedData['distancia_plantas'];
-    $inspeccion->superficie = $validatedData['superficie'];
+        // Crear una nueva instancia del modelo Predios_Inspeccion
+        $inspeccion = new Predios_Inspeccion();
+        $inspeccion->id_predio = $id_predio;
+        $inspeccion->id_empresa = $validatedData['id_empresa'];
+        $inspeccion->no_orden_servicio = $validatedData['no_orden_servicio'];
+        $inspeccion->no_cliente = $validatedData['no_cliente'];
+        $inspeccion->id_tipo_agave = $validatedData['id_tipo_agave'];
+        $inspeccion->domicilio_fiscal = $validatedData['domicilio_fiscal'];
+        $inspeccion->telefono = $validatedData['telefono'];
+        $inspeccion->ubicacion_predio = $validatedData['ubicacion_predio'];
+        $inspeccion->fecha_inspeccion = $validatedData['fecha_inspeccion'];
+        $inspeccion->localidad = $validatedData['localidad'];
+        $inspeccion->municipio = $validatedData['municipio'];
+        $inspeccion->distrito = $validatedData['distrito'];
+        $inspeccion->id_estado = $validatedData['estado'];
+        $inspeccion->nombre_paraje = $validatedData['nombre_paraje'];
+        $inspeccion->zona_dom = $validatedData['zona_dom'];
+        $inspeccion->id_tipo_maguey = $validatedData['id_tipo_maguey'];
+        $inspeccion->marco_plantacion = $validatedData['marco_plantacion'];
+        $inspeccion->distancia_surcos = $validatedData['distancia_surcos'];
+        $inspeccion->distancia_plantas = $validatedData['distancia_plantas'];
+        $inspeccion->superficie = $validatedData['superficie'];
 
-    // Guardar el nuevo registro de inspección en la base de datos
-    $inspeccion->save();
-
-    // Guardar coordenadas, si existen y no son nulas
-    if ($request->has('latitud') && $request->has('longitud')) {
-        foreach ($request->latitud as $index => $latitud) {
-            if (!is_null($latitud) && !is_null($request->longitud[$index])) {
-                PredioCoordenadas::create([
-                    'id_inspeccion' => $inspeccion->id_inspeccion, // Asegúrate de que estás accediendo correctamente a la clave primaria
-                    'latitud' => $latitud,
-                    'longitud' => $request->longitud[$index],
-                ]);
-            }
+        // Guardar el nuevo registro de inspección en la base de datos
+        $inspeccion->save();
+        // Guardar coordenadas, si existen y no son nulas
+        if ($request->has('latitud') && $request->has('longitud')) {
+          foreach ($request->latitud as $index => $latitud) {
+              if (!is_null($latitud) && !is_null($request->longitud[$index])) {
+                  PredioCoordenadas::create([
+                      'id_predio' => $id_predio, // Asegúrate de que esto esté correcto
+                      'id_inspeccion' => $inspeccion->id_inspeccion, // Aquí debe ir el id_inspeccion recién generado
+                      'latitud' => $latitud,
+                      'longitud' => $request->longitud[$index],
+                  ]);
+              }
+          }
         }
-    }
 
-    // Guardar plantaciones, si existen y no son nulas
-    if ($request->has('id_tipo')) {
-        foreach ($request->id_tipo as $index => $id_tipo) {
-            if (!is_null($id_tipo) && !is_null($request->numero_plantas[$index]) && !is_null($request->edad_plantacion[$index]) && !is_null($request->tipo_plantacion[$index])) {
-                predio_plantacion::create([
-                    'id_inspeccion' => $inspeccion->id_inspeccion, // Asegúrate de que estás accediendo correctamente a la clave primaria
-                    'id_tipo' => $id_tipo,
-                    'num_plantas' => $request->numero_plantas[$index],
-                    'anio_plantacion' => $request->edad_plantacion[$index],
-                    'tipo_plantacion' => $request->tipo_plantacion[$index],
-                ]);
-            }
+        // Guardar plantaciones, si existen y no son nulas
+        if ($request->has('id_tipo')) {
+          foreach ($request->id_tipo as $index => $id_tipo) {
+              if (!is_null($id_tipo) && !is_null($request->numero_plantas[$index]) && !is_null($request->edad_plantacion[$index]) && !is_null($request->tipo_plantacion[$index])) {
+                  predio_plantacion::create([
+                      'id_predio' => $id_predio, // Asegúrate de que esto esté correcto
+                      'id_inspeccion' => $inspeccion->id_inspeccion, // Aquí debe ir el id_inspeccion recién generado
+                      'id_tipo' => $id_tipo,
+                      'num_plantas' => $request->numero_plantas[$index],
+                      'anio_plantacion' => $request->edad_plantacion[$index],
+                      'tipo_plantacion' => $request->tipo_plantacion[$index],
+                  ]);
+              }
+          }
         }
-    }
 
-    // Retornar una respuesta exitosa
-    return response()->json([
-        'success' => true,
-        'message' => 'Inspección y datos relacionados registrados exitosamente.',
-    ]);
-}
+        // Retornar una respuesta exitosa
+        return response()->json([
+            'success' => true,
+            'message' => 'Inspección registrada exitosamente.',
+        ]);
+    }
 
 
 }

@@ -14,6 +14,7 @@ class predio_plantacion extends Model
     protected $fillable = [
         'id_plantacion',
         'id_predio',
+        'id_inspeccion',
         'id_tipo',
         'num_plantas',
         'anio_plantacion',
@@ -39,5 +40,9 @@ class predio_plantacion extends Model
     {
         return $this->hasMany(solicitudHolograma::class, 'num_plantas', 'numero_plantas');
     }
-
+    // En el modelo PredioPlantacion
+    public function inspeccion()
+    {
+        return $this->belongsTo(Predios_Inspeccion::class, 'id_inspeccion', 'id_inspeccion');
+    }
 }
