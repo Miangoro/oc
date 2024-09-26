@@ -674,6 +674,9 @@ Route::post('/asignar-inspector', [inspeccionesController::class, 'asignarInspec
 Route::get('/oficio_de_comision/{id_inspeccion}', [inspeccionesController::class, 'pdf_oficio_comision'])->name('oficioDeComision');
 Route::get('/orden_de_servicio/{id_inspeccion}', [inspeccionesController::class, 'pdf_orden_servicio'])->name('ordenDeServicio');
 Route::post('/agregar-resultados', [inspeccionesController::class, 'agregarResultados']);
+//update acta
+Route::get('/acta-solicitud/edit/{id_acta}', [inspeccionesController::class, 'editActa']);
+
 //pdf rutas
 Route::post('/acta-unidades', [inspeccionesController::class, 'store'])->name('acta.unidades.store');
 Route::get('/acta_circunstanciada_unidades_produccion/{id_inspeccion}', [inspeccionesController::class, 'acta_circunstanciada_produccion'])->name('acta_circunstanciada_unidades_produccion');

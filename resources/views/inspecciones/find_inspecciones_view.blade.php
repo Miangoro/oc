@@ -222,18 +222,31 @@
 
 
 
-    function editModalActaProduccion(id_inspeccion, tipo, nombre_empresa, id_empresa, direccion_completa,
-        tipo_instalacion) {
+    function editModalActaProduccion(id_acta) {
 
-        $(".id_inspeccion").val(id_inspeccion);
-        $(".direccion_completa").val(direccion_completa);
-        $(".tipo_instalacion").val(tipo_instalacion);
-        $(".id_empresa").val(id_empresa);
-        $('.solicitud').text(tipo);
-        obtenerNombrePredio();
-        $('#editActaUnidades').modal('show');
-        initializeModalFunctionality();
-        Testigos();
+            $.get('/acta-solicitud/edit/' + id_acta, function (data) {
+      // Rellenar el formulario con los datos obtenidos
+      $('#edit_num_acta').val(data.num_acta);
+      $('#edit_categoria_acta').val(data.categoria_acta);
+      $('#edit_testigos').val(data.testigos);
+      $('#edit_encargado').val(data.encargado);
+      $('#edit_num_credencial_encargado').val(data.num_credencial_encargado);
+      $('#edit_lugar_inspeccion').val(data.lugar_inspeccion);
+      $('#edit_fecha_inicio').val(data.fecha_inicio);
+      $('#edit_fecha_fin').val(data.fecha_fin);
+      $('#edit_no_conf_infraestructura').val(data.no_conf_infraestructura);
+      $('#edit_no_conf_equipo').val(data.no_conf_equipo);
+      $('#edit_nombre_testigo').val(data.nombre_testigo);
+      $('#edit_domicilio').val(data.domicilio);
+
+
+
+ 
+      // Mostrar el modal de edición
+      $('#editActaUnidades').modal('show');
+
+    })
+    edit_Testigos();
     }
 
 

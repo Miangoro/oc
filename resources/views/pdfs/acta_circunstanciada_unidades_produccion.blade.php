@@ -272,7 +272,7 @@
         <br>
         <div class="texto">
             <p class="cat">En la categoría de:</p>
-            <p class="cat">Unidad de producción de Agave ( @if ($datos->actas_inspeccion->categoria_acta == 'Productora')
+            <p class="cat">Unidad de producción de Agave ( @if ($datos->actas_inspeccion->categoria_acta == 'Productora de Agave')
                     X
                 @else
                     &nbsp;
@@ -292,9 +292,13 @@
                 @else
                     &nbsp;
                 @endif)</p>
-            <p class="cat">Almacén ( ).</p>
+            <p class="cat">Almacén ( @if ($datos->actas_inspeccion->categoria_acta == 'Almacén')
+                X
+            @else
+                &nbsp;
+            @endif)</p>
             <br>
-            <p>En <u>{{$datos->actas_inspeccion->lugar_inspeccion}}</u> siendo las <u>{{$hora_llenado}}</u> horas del día {{$fecha_llenado}}.
+            <p>En <u>{{$datos->actas_inspeccion->lugar_inspeccion ?? 'Sin datos'}}</u> siendo las <u>{{$hora_llenado }}</u> horas del día {{$fecha_llenado }}.
             </p> <br>
             <p>El suscrito Inspector comisionado por la Unidad de Inspección CIDAM A.C. con domicilio en Kilómetro 8
                 Antigua Carretera a Pátzcuaro, S/N Colonia Otra no Especificada en el Catálogo, C.P. 58341, Morelia,
@@ -310,7 +314,7 @@
                 <tr>
                     <td style="width: ; font-family:Century Gothic Negrita;">Denominación social:</td>
                     <td style="width: 450px;">
-                        {{ $datos->solicitud->empresa->razon_social }}
+                        {{ $datos->solicitud->empresa->razon_social ?? 'Sin datos'}}
                     </td>
                     <td style="border: none;">
 
@@ -335,7 +339,7 @@
             <table class="table-sign">
                 <tr>
                     <td style="width: 200px;"><b>Orden de servicio número</b></td>
-                    <td style="width: 200px;">{{$datos->num_servicio}}</td>
+                    <td style="width: 200px;">{{$datos->num_servicio ?? 'Sin datos'}}</td>
                     <td style="border: none;">
 
                     </td>
@@ -343,7 +347,7 @@
                 <tr>
                     <td><b>De fecha:</b></td>
                     <td>
-                        {{$fecha_llenado}}
+                        {{$fecha_llenado ?? 'Sin datos'}}
                     </td>
                     <td style="border: none;">
 
@@ -352,14 +356,14 @@
                 <tr>
                     <td><b>Numero de cliente:</b>
                     </td>
-                    <td>{{$datos->empresa_num_cliente->numero_cliente}}</td>
+                    <td>{{$datos->empresa_num_cliente->numero_cliente ?? 'Sin datos'}}</td>
                     <td style="border: none;">
 
                     </td>
                 </tr>
             </table>
             <br>
-            <p>Cuyo original se entrega en el presente acto al C.<u>{{$datos->actas_inspeccion->encargado}} </u>, quien dijo tener el
+            <p>Cuyo original se entrega en el presente acto al C.<u>{{$datos->actas_inspeccion->encargado ?? 'Sin datos'}} </u>, quien dijo tener el
                 cargo de responsable de instalaciones y ante quien me identifiqué debidamente exhibiendo la credencial
                 vigente número {{ $datos->actas_inspeccion->num_credencial_encargado ?? 'Sin datos' }}, expedida por
                 CIDAM A.C. misma que la persona con quien se entiende la
@@ -441,10 +445,10 @@
            
            @foreach ($datos->actas_inspeccion->actas_produccion AS $plantacion)
             <tr>
-                <td >{{$plantacion->predio_plantacion->predio->nombre_predio}}</td>
-                <td>{{$plantacion->predio_plantacion->predio->catalogo_tipo_agave->nombre}}</td>
-                <td>{{$plantacion->predio_plantacion->predio->superficie}}</td>
-                <td>{{$plantacion->predio_plantacion->anio_plantacion}}</td>
+                <td >{{$plantacion->predio_plantacion->predio->nombre_predio ?? '- -'}}</td>
+                <td>{{$plantacion->predio_plantacion->predio->catalogo_tipo_agave->nombre ?? '- -'}}</td>
+                <td>{{$plantacion->predio_plantacion->predio->superficie ?? '- -'}}</td>
+                <td>{{$plantacion->predio_plantacion->anio_plantacion ?? '- -'}}</td>
                 <td>{{ $plantacion->plagas ?? '- -' }}</td>
                 <td >{{ $plantacion->predio_plantacion->num_plantas ?? '- -' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
 
@@ -702,7 +706,7 @@
                 contenidos en ella o por escrito hacer uso de tal derecho dentro del término de cinco días
                 hábiles siguientes a la fecha en que se haya levantado la presente acta.</p>
             <br>
-            <p>Se da por terminada la presente diligencia siendo las <u>{{$hora_llenado_fin}}</u> horas del día {{$fecha_llenado_fin}}.
+            <p>Se da por terminada la presente diligencia siendo las <u>{{$hora_llenado_fin }}</u> horas del día {{$fecha_llenado_fin }}.
             </p>
         </div>
 
@@ -713,8 +717,8 @@
                     <td>Nombre del Inspector</td>
                 </tr>
                 <tr>
-                    <td style="height: 90px;">{{ $datos->actas_inspeccion->encargado }}</td>
-                    <td style="text-align: center; vertical-align: top">{{ $datos->inspector->name }}</td>
+                    <td style="height: 90px;">{{ $datos->actas_inspeccion->encargado ?? 'Sin datos'}}</td>
+                    <td style="text-align: center;">{{ $datos->inspector->name ?? 'Sin datos'}}</td>
                 </tr>
             </table>
 
