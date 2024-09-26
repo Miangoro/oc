@@ -514,123 +514,137 @@ $(function () {
     });
   });
 
+/* creacion seccion de plantacion */
+$(document).ready(function () {
+  // Definir los contenedores
+  const containerAdd = '.contenidoPlantacion';           // Contenedor para agregar plantaciones
+  const containerEdit = '.edit_ContenidoPlantacion';      // Contenedor para editar plantaciones
+  const containerInspeccion = '.inspeccion_ContenidoPlantacion'; // Contenedor para inspección
 
-  $(document).ready(function () {
-    // Definir contenedores
-    const containerAdd = '.contenidoPlantacion';
-    const containerEdit = '.edit_ContenidoPlantacion';
-    const containerInspeccion = '.inspeccion_ContenidoPlantacion'; // Contenedor para inspección
-
-    // Función para generar las opciones de tipos de agave
-    function generateOptions(tipos) {
+  // Función para generar las opciones de tipos de agave
+  function generateOptions(tipos) {
       return tipos.map(tipo => `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`).join('');
-    }
+  }
 
-    // Función para agregar una nueva sección de plantación
-    function addRow(container) {
-      var options = generateOptions(tiposAgave);
+  // Función para agregar una nueva sección de plantación
+  function addRow(container) {
+      var options = generateOptions(tiposAgave); // Asumiendo que `tiposAgave` es un array con los tipos de agave
       var newSection = `
-              <tr class="plantacion-row">
-                  <td rowspan="4">
-                      <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
-                  </td>
-                  <td><b>Nombre y Especie de Agave/Maguey</b></td>
-                  <td>
-                      <div class="form-floating form-floating-outline mb-3">
-                          <select name="id_tipo[]" class="select2 form-select tipo_agave" required>
-                              <option value="" disabled selected>Tipo de agave</option>
-                              ${options}
-                          </select>
-                          <label for="especie_agave"></label>
-                      </div>
-                  </td>
-              </tr>
-              <tr class="plantacion-row">
-                  <td><b>Número de Plantas</b></td>
-                  <td>
-                      <div class="form-floating form-floating-outline">
-                          <input type="number" class="form-control" name="numero_plantas[]" placeholder="Número de plantas" step="1" autocomplete="off" required>
-                          <label for="numero_plantas">Número de Plantas</label>
-                      </div>
-                  </td>
-              </tr>
-              <tr class="plantacion-row">
-                  <td><b>Edad de la Plantación</b></td>
-                  <td>
-                      <div class="form-floating form-floating-outline">
-                          <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Edad de la plantación (años)" step="1" autocomplete="off" required>
-                          <label for="edad_plantacion">Edad de la Plantación</label>
-                      </div>
-                  </td>
-              </tr>
-              <tr class="plantacion-row">
-                  <td><b>Tipo de Plantación</b></td>
-                  <td>
-                      <div class="form-floating form-floating-outline">
-                          <input type="text" class="form-control" name="tipo_plantacion[]" placeholder="Tipo de plantación" autocomplete="off" required>
-                          <label for="tipo_plantacion">Tipo de Plantación</label>
-                      </div>
-                  </td>
-              </tr>`;
+          <tr class="plantacion-row">
+              <td rowspan="4">
+                  <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
+              </td>
+              <td><b>Nombre y Especie de Agave/Maguey</b></td>
+              <td>
+                  <div class="form-floating form-floating-outline mb-3">
+                      <select name="id_tipo[]" class="select2 form-select tipo_agave" required>
+                          <option value="" disabled selected>Tipo de agave</option>
+                          ${options}
+                      </select>
+                      <label for="especie_agave"></label>
+                  </div>
+              </td>
+          </tr>
+          <tr class="plantacion-row">
+              <td><b>Número de Plantas</b></td>
+              <td>
+                  <div class="form-floating form-floating-outline">
+                      <input type="number" class="form-control" name="numero_plantas[]" placeholder="Número de plantas" step="1" autocomplete="off" required>
+                      <label for="numero_plantas">Número de Plantas</label>
+                  </div>
+              </td>
+          </tr>
+          <tr class="plantacion-row">
+              <td><b>Edad de la Plantación</b></td>
+              <td>
+                  <div class="form-floating form-floating-outline">
+                      <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Edad de la plantación (años)" step="1" autocomplete="off" required>
+                      <label for="edad_plantacion">Edad de la Plantación</label>
+                  </div>
+              </td>
+          </tr>
+          <tr class="plantacion-row">
+              <td><b>Tipo de Plantación</b></td>
+              <td>
+                  <div class="form-floating form-floating-outline">
+                      <input type="text" class="form-control" name="tipo_plantacion[]" placeholder="Tipo de plantación" autocomplete="off" required>
+                      <label for="tipo_plantacion">Tipo de Plantación</label>
+                  </div>
+              </td>
+          </tr>`;
 
-      // Agregar la nueva sección al contenedor correspondiente
+      // Agregar la nueva sección al contenedor correspondiente (al final)
       $(container).append(newSection);
 
       // Inicializar Select2 en los nuevos campos
       $(container).find('.select2').select2();
+      // Inicializar los elementos select2
+      var select2Elements = $('.select2');
+      initializeSelect2(select2Elements);
 
       // Añadir validación a los nuevos campos
       fv.addField('id_tipo[]', {
-        validators: {
-          notEmpty: {
-            message: 'Por favor selecciona el tipo de agave/maguey'
+          validators: {
+              notEmpty: {
+                  message: 'Por favor selecciona el tipo de agave/maguey'
+              }
           }
-        }
       });
       fv.addField('numero_plantas[]', {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingresa el número de plantas'
-          },
-          numeric: {
-            message: 'Por favor ingresa un valor numérico válido'
+          validators: {
+              notEmpty: {
+                  message: 'Por favor ingresa el número de plantas'
+              },
+              numeric: {
+                  message: 'Por favor ingresa un valor numérico válido'
+              }
           }
-        }
       });
       fv.addField('edad_plantacion[]', {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingresa la edad de la plantación'
-          },
-          numeric: {
-            message: 'Por favor ingresa un valor numérico válido'
+          validators: {
+              notEmpty: {
+                  message: 'Por favor ingresa la edad de la plantación'
+              },
+              numeric: {
+                  message: 'Por favor ingresa un valor numérico válido'
+              }
           }
-        }
       });
       fv.addField('tipo_plantacion[]', {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingresa el tipo de plantación'
+          validators: {
+              notEmpty: {
+                  message: 'Por favor ingresa el tipo de plantación'
+              }
           }
-        }
       });
 
-      // Habilitar el botón de eliminación para las nuevas filas, pero no para la primera
+      // Habilitar el botón de eliminación para las nuevas filas
       if ($(container).find('.plantacion-row').length > 1) {
-        $(container).find('.remove-row-plantacion').not(':first').prop('disabled', false);
+          $(container).find('.remove-row-plantacion').not(':first').prop('disabled', false);
       }
 
       // Revalidar el formulario completo para asegurar que todos los campos sean validados
       fv.validate();
-    }
+  }
 
-    // Evento para agregar filas de plantación en la sección de inspección
-    $('.add-row-plantacion').on('click', function () {
-      addRow(containerInspeccion); // Cambiado a containerInspeccion para agregar en la sección correcta
-    });
+  // Evento para agregar filas de plantación (para agregar, editar e inspección)
+  $('.add-row-plantacion').on('click', function () {
+      // Determinar en qué sección estamos
+      const isEdit = $(this).closest('.edit_InformacionAgave').length > 0;
+      const isInspeccion = $(this).closest('.inspeccion_InformacionAgave').length > 0;
 
-    // Evento para eliminar filas de plantación
-    $(document).on('click', '.remove-row-plantacion', function () {
+      let container = containerAdd; // Por defecto, usar contenedor de agregar
+      if (isEdit) {
+          container = containerEdit;
+      } else if (isInspeccion) {
+          container = containerInspeccion;
+      }
+
+      addRow(container);
+  });
+
+  // Evento para eliminar filas de plantación
+  $(document).on('click', '.remove-row-plantacion', function () {
       var $currentRow = $(this).closest('tr');
       var container = $currentRow.closest('tbody');
 
@@ -640,17 +654,18 @@ $(function () {
 
       // Deshabilitar el botón de eliminación si queda solo una fila
       if (container.find('.plantacion-row').length <= 1) {
-        container.find('.remove-row-plantacion').prop('disabled', true);
+          container.find('.remove-row-plantacion').prop('disabled', true);
       }
 
       // Revalidar el formulario después de eliminar
       fv.validate();
-    });
-
-    // Deshabilitar el botón de eliminación en la primera fila de inspección
-    $(containerInspeccion).find('.remove-row-plantacion').first().prop('disabled', true);
   });
 
+  // Deshabilitar el botón de eliminación en la primera fila de cada contenedor
+  $(containerAdd).find('.remove-row-plantacion').first().prop('disabled', true);
+  $(containerEdit).find('.remove-row-plantacion').first().prop('disabled', true);
+  $(containerInspeccion).find('.remove-row-plantacion').first().prop('disabled', true);
+});
 
 
   // Definir fv en un alcance global
@@ -975,7 +990,7 @@ $(document).ready(function () {
 
     // Inicializar FormValidation para el formulario de edición
     const addEditPredioForm = document.getElementById('addEditPredioForm');
-    const fvEdit = FormValidation.formValidation(addEditPredioForm, {
+    const fv = FormValidation.formValidation(addEditPredioForm, {
       fields: {
         id_empresa: {
           validators: {
@@ -1330,7 +1345,7 @@ $(document).ready(function () {
 
             // Aplicar validaciones a las coordenadas dinámicas
             $('#edit_coordenadas input').each(function () {
-              fvEdit.addField($(this).attr('name'), {
+              fv.addField($(this).attr('name'), {
                 validators: {
                   notEmpty: {
                     message: 'Este campo es requerido'
@@ -1344,7 +1359,7 @@ $(document).ready(function () {
 
             // Aplicar validaciones a las plantaciones dinámicas
             $('.edit_ContenidoPlantacion input').each(function () {
-              fvEdit.addField($(this).attr('name'), {
+              fv.addField($(this).attr('name'), {
                 validators: {
                   notEmpty: {
                     message: 'Este campo es requerido'
@@ -1393,8 +1408,130 @@ $(document).ready(function () {
     $("#subtitulo_modal").text(registro);
   });
 
-  /* seccion para la inserccion de los datos de los predios inspecciones */
+    $(document).ready(function () {
+      // Función para agregar una nueva fila de características
+      function addRow() {
+          const newRow = `
+              <tr class="caracteristicas-row">
+                  <td rowspan="5">
+                      <button type="button" class="btn btn-danger remove-row-caracteristicas"><i class="ri-delete-bin-5-fill"></i></button>
+                  </td>
+              </tr>
+              <tr class="caracteristicas-row">
+                  <td>No. planta</td>
+                  <td><input type="number" class="form-control" name="no_planta[]" placeholder="Número de planta" required></td>
+              </tr>
+              <tr class="caracteristicas-row">
+                  <td>Altura (m)</td>
+                  <td><input type="number" step="0.01" class="form-control" name="altura[]" placeholder="Altura (m)" required></td>
+              </tr>
+              <tr class="caracteristicas-row">
+                  <td>Diámetro (m)</td>
+                  <td><input type="number" step="0.01" class="form-control" name="diametro[]" placeholder="Diámetro (m)" required></td>
+              </tr>
+              <tr class="caracteristicas-row">
+                  <td>Número de hojas</td>
+                  <td><input type="number" class="form-control" name="numero_hojas[]" placeholder="Número de hojas" required></td>
+              </tr>`;
 
+          $('#plant-table tbody').append(newRow);
+
+          // Añadir validación a los nuevos campos
+          addValidationFields();
+
+          // Habilitar el botón de eliminar si hay más de una fila
+          if ($('#plant-table tbody .caracteristicas-row').length > 1) {
+              $('#plant-table .remove-row-caracteristicas').not(':first').prop('disabled', false);
+          }
+      }
+
+      // Función para agregar validaciones a los campos de características
+      function addValidationFields() {
+          // Validación para No. planta
+          fv.addField('no_planta[]', {
+              validators: {
+                  notEmpty: {
+                      message: 'Por favor ingresa el número de planta'
+                  },
+                  integer: {
+                      message: 'Por favor ingresa un número entero válido para el número de planta'
+                  }
+              }
+          });
+
+          // Validación para Altura
+          fv.addField('altura[]', {
+              validators: {
+                  notEmpty: {
+                      message: 'Por favor ingresa la altura'
+                  },
+                  numeric: {
+                      message: 'Por favor ingresa un valor numérico válido para la altura'
+                  },
+                  greaterThan: {
+                      value: 0,
+                      message: 'La altura debe ser un número mayor que 0'
+                  }
+              }
+          });
+
+          // Validación para Diámetro
+          fv.addField('diametro[]', {
+              validators: {
+                  notEmpty: {
+                      message: 'Por favor ingresa el diámetro'
+                  },
+                  numeric: {
+                      message: 'Por favor ingresa un valor numérico válido para el diámetro'
+                  },
+                  greaterThan: {
+                      value: 0,
+                      message: 'El diámetro debe ser un número mayor que 0'
+                  }
+              }
+          });
+
+          // Validación para Número de hojas
+          fv.addField('numero_hojas[]', {
+              validators: {
+                  notEmpty: {
+                      message: 'Por favor ingresa el número de hojas'
+                  },
+                  integer: {
+                      message: 'Por favor ingresa un número entero válido para el número de hojas'
+                  },
+                  greaterThan: {
+                      value: 0,
+                      message: 'El número de hojas debe ser un número mayor que 0'
+                  }
+              }
+          });
+      }
+
+      // Evento para agregar filas
+      $('.add-row-caracteristicas').on('click', function () {
+          addRow();
+      });
+
+      // Evento para eliminar filas
+      $(document).on('click', '.remove-row-caracteristicas', function () {
+          const $currentRow = $(this).closest('tr');
+          if ($currentRow.index() === 0) return; // No permitir eliminar la primera fila
+
+          $currentRow.nextUntil('tr:not(.caracteristicas-row)').addBack().remove();
+
+          // Deshabilitar el botón de eliminación si queda solo una fila
+          if ($('#plant-table tbody .caracteristicas-row').length <= 1) {
+              $('#plant-table .remove-row-caracteristicas').prop('disabled', true);
+          }
+      });
+
+      // Deshabilitar el botón de eliminación en la primera fila
+      $('#plant-table .remove-row-caracteristicas').first().prop('disabled', true);
+  });
+
+
+  /* seccion para la inserccion de los datos de los predios inspecciones */
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -1405,12 +1542,140 @@ $(document).ready(function () {
 
     // Inicializar FormValidation para el formulario de edición
     const addAddPredioInspeccionForm = document.getElementById('addAddPredioInspeccionForm');
-    const fvEdit = FormValidation.formValidation(addAddPredioInspeccionForm, {
+    const fv = FormValidation.formValidation(addAddPredioInspeccionForm, {
       fields: {
+        no_orden_servicio:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el número del servicio'
+            }
+          }
+        },
+        no_cliente:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el número del cliente'
+            }
+          }
+        },
+        id_empresa:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el nombre del cliente'
+            }
+          }
+        },
+        id_tipo_agave:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el tipo de agave'
+            }
+          }
+        },
+        domicilio_fiscal:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el domicilio fiscal'
+            }
+          }
+        },
+        telefono: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el teléfono'
+            },
+            regexp: {
+              regexp: /^[0-9]{10}$/, // Aquí puedes ajustar la cantidad de dígitos que necesitas
+              message: 'Por favor ingrese un número de teléfono válido de 10 dígitos'
+            },
+            stringLength: {
+              min: 10,
+              max: 10,
+              message: 'El teléfono debe tener exactamente 10 dígitos'
+            }
+          }
+        },
         ubicacion_predio: {
           validators: {
             notEmpty: {
               message: 'Por favor ingresa la ubicación del predio'
+            }
+          }
+        },
+        fecha_inspeccion:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha de inspección'
+            }
+          }
+        },
+        localidad:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la localidad'
+            }
+          }
+        },
+        distrito:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el distrito'
+            }
+          }
+        },
+        municipio:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el municipio'
+            }
+          }
+        },
+        estado:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el estado'
+            }
+          }
+        },
+        nombre_paraje:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el nombre del paraje'
+            }
+          }
+        },
+        zona_dom:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor selecciona la opción'
+            }
+          }
+        },
+        id_tipo_maguey:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el tipo de maguey'
+            }
+          }
+        },
+        marco_plantacion:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el '
+            }
+          }
+        },
+        distancia_surcos:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese '
+            }
+          }
+        },
+        distancia_plantas:{
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese'
             }
           }
         },
@@ -1468,32 +1733,17 @@ $(document).ready(function () {
           });
         },
         error: function (xhr) {
-          if (xhr.status === 422) {
-            var errors = xhr.responseJSON.errors;
-            var errorMessages = Object.keys(errors).map(function (key) {
-              return errors[key].join('<br>');
-            }).join('<br>');
-
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              html: errorMessages,
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Ha ocurrido un error al actualizar el predio.',
-              customClass: {
-                confirmButton: 'btn btn-danger'
-              }
-            });
-          }
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al agregar el predio',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
         }
       });
+
     });
 
     // Manejar el clic en el botón de editar
@@ -1682,7 +1932,7 @@ $(document).ready(function () {
 
             // Aplicar validaciones a las coordenadas dinámicas
             $('#edit_coordenadas input').each(function () {
-              fvEdit.addField($(this).attr('name'), {
+              fv.addField($(this).attr('name'), {
                 validators: {
                   notEmpty: {
                     message: 'Este campo es requerido'
@@ -1696,7 +1946,7 @@ $(document).ready(function () {
 
             // Aplicar validaciones a las plantaciones dinámicas
             $('.inspeccion_ContenidoPlantacion input').each(function () {
-              fvEdit.addField($(this).attr('name'), {
+              fv.addField($(this).attr('name'), {
                 validators: {
                   notEmpty: {
                     message: 'Este campo es requerido'
@@ -1731,7 +1981,10 @@ $(document).ready(function () {
         }
       });
     });
-
+              // Inicializar select2 y revalidar el campo cuando cambie
+              $('#fecha_inspeccion, #tipoMaguey, #inspeccion_id_empresa, #tipoAgave, #estado').on('change', function () {
+                fv.revalidateField($(this).attr('name'));
+              });
   });
 
 

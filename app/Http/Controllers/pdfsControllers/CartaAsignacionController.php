@@ -300,10 +300,15 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Copia de R-UNIIC-004 Orden de trabajo de inspección de etiquetas, tq CAFE.PDF');
     }
 
-
     public function  Contancia_trabajo() {
         $pdf = Pdf::loadView('pdfs.Constancia_de _conformidad');
         return $pdf->stream('R-UNIIC-010 Constancia de Conformidad NOM-142-SSA1_SCFI-2014 Ed. 1 Vigente.pdf');
     }
+
+    public function SolicitudUNIIC() {
+        $pdf = Pdf::loadView('pdfs.Solicitud-Servicio-UNIIC');
+        return $pdf->stream('Solicitud de servicio UNIIC.pdf');
+    }
+
 }
 

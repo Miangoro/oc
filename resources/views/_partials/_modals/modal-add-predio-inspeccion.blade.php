@@ -128,7 +128,7 @@
                                <div class="col-md-6">
                                 <div class="form-floating form-floating-outline">
                                     <select class="form-select select2" name="estado" id="estado">
-                                        <option disabled selected>Selecciona un estado</option>
+                                        <option value=""  disabled selected>Selecciona un estado</option>
                                         @foreach ($estados as $estado)
                                             <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
                                         @endforeach
@@ -149,6 +149,7 @@
                                    <div class="form-floating form-floating-outline">
                                        <select class="form-select" id="zonaDom" name="zona_dom"
                                            aria-label="Zona DOM">
+                                           <option value=""  disabled selected>Selecciona una opción</option>
                                            <option value="si">Sí</option>
                                            <option value="no">No</option>
                                        </select>
@@ -205,6 +206,45 @@
                                </div>
                            </div>
                        </div>
+
+                       <div class="card mb-4">
+                        <table id="plant-table" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <button type="button" class="btn btn-primary add-row-caracteristicas"><i class="ri-add-line"></i></button>
+                                    </th>
+                                    <th colspan="2" style="width: 95%">
+                                        <h5 class="card-title mb-0 text-center">Características del maguey <br>Edad</h5>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="caracteristicas-row">
+                                    <td rowspan="5">
+                                        <button type="button" class="btn btn-danger remove-row-caracteristicas" disabled><i class="ri-delete-bin-5-fill"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="caracteristicas-row">
+                                    <td>No. planta</td>
+                                    <td><input type="number" class="form-control" name="no_planta[]" placeholder="Número de planta" required></td>
+                                </tr>
+                                <tr class="caracteristicas-row">
+                                    <td>Altura (m)</td>
+                                    <td><input type="number" step="0.01" class="form-control" name="altura[]" placeholder="Altura (m)" required></td>
+                                </tr>
+                                <tr class="caracteristicas-row">
+                                    <td>Diámetro (m)</td>
+                                    <td><input type="number" step="0.01" class="form-control" name="diametro[]" placeholder="Diámetro (m)" required></td>
+                                </tr>
+                                <tr class="caracteristicas-row">
+                                    <td>Número de hojas</td>
+                                    <td><input type="number" class="form-control" name="numero_hojas[]" placeholder="Número de hojas" required></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
                        <!-- Tipo de Predio y Puntos de Referencia -->
                        <div class="row mb-4">
                            <!-- Coordenadas -->
