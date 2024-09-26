@@ -45,6 +45,11 @@ class Predios extends Model
         return $this->belongsTo(tipos::class, 'id_tipo');
     }
 
+    public function catalogo_tipo_agave()
+    {
+        return $this->belongsTo(tipos::class, 'id_predio', 'id_tipo');
+    }
+
     public function plantaciones()
     {
         return $this->hasMany(predio_plantacion::class, 'id_tipo');

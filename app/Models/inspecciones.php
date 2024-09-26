@@ -39,6 +39,11 @@ class inspecciones extends Model
         return $this->belongsTo(User::class, 'id_inspector', 'id');
     }
 
+    public function empresa_num_cliente()
+    {
+        return $this->belongsTo(empresaNumCliente::class, 'id_inspeccion', 'id');
+    }
+
     public function dictamen()
     {
         return $this->hasOne(Dictamen_instalaciones::class, 'id_inspeccion', 'id_inspeccion');

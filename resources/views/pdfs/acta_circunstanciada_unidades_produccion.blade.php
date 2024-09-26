@@ -335,7 +335,7 @@
             <table class="table-sign">
                 <tr>
                     <td style="width: 200px;"><b>Orden de servicio número</b></td>
-                    <td style="width: 200px;">UMS-______/2024</td>
+                    <td style="width: 200px;">{{$datos->num_servicio}}</td>
                     <td style="border: none;">
 
                     </td>
@@ -343,7 +343,7 @@
                 <tr>
                     <td><b>De fecha:</b></td>
                     <td>
-
+                        {{$fecha_llenado}}
                     </td>
                     <td style="border: none;">
 
@@ -352,7 +352,7 @@
                 <tr>
                     <td><b>Numero de cliente:</b>
                     </td>
-                    <td>NOM-070-_________C</td>
+                    <td>{{$datos->empresa_num_cliente->numero_cliente}}</td>
                     <td style="border: none;">
 
                     </td>
@@ -441,9 +441,9 @@
            
            @foreach ($datos->actas_inspeccion->actas_produccion AS $plantacion)
             <tr>
-                <td ></td>
-                <td></td>
-                <td></td>
+                <td >{{$plantacion->predio_plantacion->predio->nombre_predio}}</td>
+                <td>{{$plantacion->predio_plantacion->predio->catalogo_tipo_agave->nombre}}</td>
+                <td>{{$plantacion->predio_plantacion->predio->superficie}}</td>
                 <td>{{$plantacion->predio_plantacion->anio_plantacion}}</td>
                 <td>{{ $plantacion->plagas ?? '- -' }}</td>
                 <td >{{ $plantacion->predio_plantacion->num_plantas ?? '- -' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
@@ -702,8 +702,7 @@
                 contenidos en ella o por escrito hacer uso de tal derecho dentro del término de cinco días
                 hábiles siguientes a la fecha en que se haya levantado la presente acta.</p>
             <br>
-            <p>Se da por terminada la presente diligencia siendo las _______ horas del día ______ del mes
-                de _____________ del dos mil veinticuatro.
+            <p>Se da por terminada la presente diligencia siendo las <u>{{$hora_llenado_fin}}</u> horas del día {{$fecha_llenado_fin}}.
             </p>
         </div>
 
@@ -714,7 +713,7 @@
                     <td>Nombre del Inspector</td>
                 </tr>
                 <tr>
-                    <td style="height: 90px;"></td>
+                    <td style="height: 90px;">{{ $datos->actas_inspeccion->encargado }}</td>
                     <td style="text-align: center; vertical-align: top">{{ $datos->inspector->name }}</td>
                 </tr>
             </table>

@@ -29,6 +29,12 @@ class actas_produccion extends Model
     }
     
 
+    public function predio()
+    {
+        return $this->belongsTo(Predios::class,'id_plantacion', 'id_predio');
+    }
+    
+
     public function predios()
     {
         return $this->belongsTo(Predios::class, 'id_empresa');
