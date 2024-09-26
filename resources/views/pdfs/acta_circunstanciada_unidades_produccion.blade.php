@@ -294,7 +294,7 @@
                 @endif)</p>
             <p class="cat">Almacén ( ).</p>
             <br>
-            <p>En _______________________________ siendo las _______ horas del día _____ del mes de ______ del 202_____.
+            <p>En <u>{{$datos->actas_inspeccion->lugar_inspeccion}}</u> siendo las <u>{{$hora_llenado}}</u> horas del día {{$fecha_llenado}}.
             </p> <br>
             <p>El suscrito Inspector comisionado por la Unidad de Inspección CIDAM A.C. con domicilio en Kilómetro 8
                 Antigua Carretera a Pátzcuaro, S/N Colonia Otra no Especificada en el Catálogo, C.P. 58341, Morelia,
@@ -335,7 +335,7 @@
             <table class="table-sign">
                 <tr>
                     <td style="width: 200px;"><b>Orden de servicio número</b></td>
-                    <td style="width: 200px;">UMS-______/2024</td>
+                    <td style="width: 200px;">{{$datos->num_servicio}}</td>
                     <td style="border: none;">
 
                     </td>
@@ -343,7 +343,7 @@
                 <tr>
                     <td><b>De fecha:</b></td>
                     <td>
-
+                        {{$fecha_llenado}}
                     </td>
                     <td style="border: none;">
 
@@ -352,14 +352,14 @@
                 <tr>
                     <td><b>Numero de cliente:</b>
                     </td>
-                    <td>NOM-070-_________C</td>
+                    <td>{{$datos->empresa_num_cliente->numero_cliente}}</td>
                     <td style="border: none;">
 
                     </td>
                 </tr>
             </table>
             <br>
-            <p>Cuyo original se entrega en el presente acto al C._____________________________, quien dijo tener el
+            <p>Cuyo original se entrega en el presente acto al C.<u>{{$datos->actas_inspeccion->encargado}} </u>, quien dijo tener el
                 cargo de responsable de instalaciones y ante quien me identifiqué debidamente exhibiendo la credencial
                 vigente número {{ $datos->actas_inspeccion->num_credencial_encargado ?? 'Sin datos' }}, expedida por
                 CIDAM A.C. misma que la persona con quien se entiende la
@@ -410,9 +410,9 @@
         
             @foreach ($datos->actas_inspeccion->actas_testigo AS $testigo)
                 <tr>
-                    <td style="height: 28px;">{{ $testigo->id_acta_testigo ?? 'vacío' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
-                    <td>{{ $testigo->nombre_testigo ?? 'vacío' }}</td> <!-- Mostrar "vacío" si el nombre es nulo -->
-                    <td>{{ $testigo->domicilio ?? 'vacío' }}</td> <!-- Mostrar "vacío" si el domicilio es nulo -->
+                    <td style="height: 28px;">{{ $testigo->id_acta_testigo ?? '- -' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
+                    <td>{{ $testigo->nombre_testigo ?? '- -' }}</td> <!-- Mostrar "vacío" si el nombre es nulo -->
+                    <td>{{ $testigo->domicilio ?? '- -' }}</td> <!-- Mostrar "vacío" si el domicilio es nulo -->
                 </tr>
             @endforeach
         
@@ -421,9 +421,10 @@
     </div>
     <br>
     {{-- contenedor --}}
+    
     <div class="contenedor">
         <div class="texto">
-            <p><strong>Parte I Unidad de producción de ________________.</strong></p>
+            <p><strong>Parte I Unidad de producción de Agave.</strong></p>
             <br>
             <p>Se constató físicamente la existencia de la unidad de producción de agave: </p>
         </div>
@@ -435,26 +436,20 @@
                 <td>Madurez del agave (años)</td>
                 <td>Plagas en el cultivo</td>
                 <td>Cantidad de Plantas</td>
-                <td style="width: 90px;">Coordenadas</td>
-            </tr>
+{{--                 <td style="width: 90px;">Coordenadas</td>
+ --}}            </tr>
+           
+           @foreach ($datos->actas_inspeccion->actas_produccion AS $plantacion)
             <tr>
-                <td style="height: 40px;"></td>
-                <td class="diagonal-cell"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td >{{$plantacion->predio_plantacion->predio->nombre_predio}}</td>
+                <td>{{$plantacion->predio_plantacion->predio->catalogo_tipo_agave->nombre}}</td>
+                <td>{{$plantacion->predio_plantacion->predio->superficie}}</td>
+                <td>{{$plantacion->predio_plantacion->anio_plantacion}}</td>
+                <td>{{ $plantacion->plagas ?? '- -' }}</td>
+                <td >{{ $plantacion->predio_plantacion->num_plantas ?? '- -' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
+
             </tr>
-            <tr>
-                <td style="height: 40px;"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+        @endforeach 
         </table>
         <br>
         <div class="texto">
@@ -486,7 +481,7 @@
                         <tr>
                     @endif
         
-                    <td>{{ $area->respuesta ?? 'vacío' }}</td> <!-- Mostrar "vacío" si la respuesta es nula -->
+                    <td>{{ $area->respuesta ?? '- -' }}</td> <!-- Mostrar "vacío" si la respuesta es nula -->
         
                     @php
                         $counter++; // Incrementar el contador
@@ -526,18 +521,14 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach ($datos->actas_inspeccion->actas_equipo_mezcal AS $equipo_maezcal)
                 <tr>
-                    <td style="height: 40px;">{{ $datos->actas_inspeccion->actas_equipo_mezcal->equipo }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_mezcal->cantidad }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_mezcal->capacidad }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_mezcal->tipo_material }}</td>
+                    <td style="height: 28px;">{{ $equipo_maezcal->equipo ?? '- -' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
+                    <td>{{ $equipo_maezcal->cantidad ?? '- -' }}</td> <!-- Mostrar "vacío" si el nombre es nulo -->
+                    <td>{{ $equipo_maezcal->capacidad ?? '- -' }}</td> <!-- Mostrar "vacío" si el domicilio es nulo -->
+                    <td>{{ $equipo_maezcal->tipo_material ?? '- -' }}</td> <!-- Mostrar "vacío" si el domicilio es nulo -->
                 </tr>
-                <tr>
-                    <td style="height: 40px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+            @endforeach
             </tbody>
         </table>
 
@@ -552,7 +543,7 @@
     {{-- contenedor --}}
     <div class="contenedor">
         <div class="texto">
-            <p>Se constató que ( ) cuenta con la infraestructura y equipo para producir <u>_______</u></p>
+            <p>Se constató que ( ) cuenta con la infraestructura y equipo para producir _______</p>
             <br>
             <p>Categoría(s): ____________________ Clase(s): _________________ Otra: ______________.</p>
             <br>
@@ -562,7 +553,7 @@
         </div>
 
         <table class="sign-table" style="margin-top: 20px; font-size: 10;">
-            <tr>
+            <thead>
                 <td style="width: 90px; height: 80px;">Almacén de insumos</td>
                 <td style="width: 105px;">Almacén a gráneles</td>
                 <td>Sistema de filtrado</td>
@@ -570,16 +561,41 @@
                 <td>Área de tiquetado</td>
                 <td>Almacén de producto terminado</td>
                 <td style="width: 115px;">Área de aseo personal</td>
-            </tr>
-            <tr>
-                <td style="height: 40px;"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+            </thead>
+            <tbody>
+                @php
+                    $counter = 0; // Contador para las respuestas
+                @endphp
+        
+                @foreach ($datos->actas_inspeccion->actas_unidad_envasado AS $envasado)
+                    @if ($counter % 7 == 0) <!-- Si el contador es múltiplo de 8, empieza un nuevo <tr> -->
+                        <tr>
+                    @endif
+        
+                    <td>{{ $envasado->respuestas ?? '- -' }}</td> <!-- Mostrar "vacío" si la respuesta es nula -->
+        
+                    @php
+                        $counter++; // Incrementar el contador
+                    @endphp
+        
+                    @if ($counter % 7 == 0) <!-- Si el contador es múltiplo de 8, cierra el <tr> -->
+                        </tr>
+                    @endif
+                @endforeach
+        
+                @if ($counter % 7 != 0) <!-- Si no hemos cerrado el último <tr>, ciérralo aquí -->
+                    </tr>
+                @endif
+        
+                <!-- Si deseas agregar una fila adicional si hay respuestas restantes -->
+                @if ($counter % 7 != 0)
+                    <tr>
+                        @for ($i = $counter % 7; $i < 7; $i++)
+                            <td></td> <!-- Rellenar celdas vacías si no se llenaron -->
+                        @endfor
+                    </tr>
+                @endif
+            </tbody>
         </table>
         <br>
         <div class="texto">
@@ -599,20 +615,14 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach ($datos->actas_inspeccion->actas_equipo_envasado AS $equipo_envasado)
                 <tr>
-                    <td style="height: 48px;">
-                        {{ $datos->actas_inspeccion->actas_equipo_envasado->equipo_envasado ?? 'Sin datos' }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->cantidad_envasado ?? 'Sin datos' }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->capacidad_envasado ?? 'Sin datos' }}</td>
-                    <td>{{ $datos->actas_inspeccion->actas_equipo_envasado->tipo_material_envasado ?? 'Sin datos' }}
-                    </td>
+                    <td style="height: 28px;">{{ $equipo_envasado->equipo_envasado ?? '- -' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
+                    <td>{{ $equipo_envasado->cantidad_envasado ?? '- -' }}</td> <!-- Mostrar "vacío" si el nombre es nulo -->
+                    <td>{{ $equipo_envasado->capacidad_envasado ?? '- -' }}</td> <!-- Mostrar "vacío" si el domicilio es nulo -->
+                    <td>{{ $equipo_envasado->tipo_material_envasado ?? '- -' }}</td> <!-- Mostrar "vacío" si el domicilio es nulo -->
                 </tr>
-                <tr>
-                    <td style="height: 48px;"></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+            @endforeach
             </tbody>
         </table>
         <br>
@@ -625,26 +635,47 @@
         </div>
 
         <table class="sign-table" style=" font-size: 10;">
-            <tr>
+            <thead>
                 <td style="width: 180px; height: 55px;">Bodega o almacén</td>
                 <td>Tarimas</td>
                 <td>Bitácoras</td>
                 <td style="width: 120px;">Otro:</td>
                 <td style="width: 120px;">Otro:</td>
-            </tr>
-            <tr>
-                <td style="height: 55px;">
-                    {{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
-                </td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
-                </td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
-                </td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
-                </td>
-                <td>{{ $datos->actas_inspeccion->actas_unidad_comercializacion->comercializacion ?? 'Sin datos' }}
-                </td>
-            </tr>
+            </thead>
+            <tbody>
+                @php
+                    $counter = 0; // Contador para las respuestas
+                @endphp
+        
+                @foreach ($datos->actas_inspeccion->actas_unidad_comercializacion AS $comercio)
+                    @if ($counter % 5 == 0) <!-- Si el contador es múltiplo de 8, empieza un nuevo <tr> -->
+                        <tr>
+                    @endif
+        
+                    <td>{{ $comercio->respuestas_comercio ?? '- -' }}</td> <!-- Mostrar "vacío" si la respuesta es nula -->
+        
+                    @php
+                        $counter++; // Incrementar el contador
+                    @endphp
+        
+                    @if ($counter % 5 == 0) <!-- Si el contador es múltiplo de 8, cierra el <tr> -->
+                        </tr>
+                    @endif
+                @endforeach
+        
+                @if ($counter % 5 != 0) <!-- Si no hemos cerrado el último <tr>, ciérralo aquí -->
+                    </tr>
+                @endif
+        
+                <!-- Si deseas agregar una fila adicional si hay respuestas restantes -->
+                @if ($counter % 5 != 0)
+                    <tr>
+                        @for ($i = $counter % 5; $i < 5; $i++)
+                            <td></td> <!-- Rellenar celdas vacías si no se llenaron -->
+                        @endfor
+                    </tr>
+                @endif
+            </tbody>
         </table>
         <br>
         <div class="texto">
@@ -671,8 +702,7 @@
                 contenidos en ella o por escrito hacer uso de tal derecho dentro del término de cinco días
                 hábiles siguientes a la fecha en que se haya levantado la presente acta.</p>
             <br>
-            <p>Se da por terminada la presente diligencia siendo las _______ horas del día ______ del mes
-                de _____________ del dos mil veinticuatro.
+            <p>Se da por terminada la presente diligencia siendo las <u>{{$hora_llenado_fin}}</u> horas del día {{$fecha_llenado_fin}}.
             </p>
         </div>
 
@@ -683,7 +713,7 @@
                     <td>Nombre del Inspector</td>
                 </tr>
                 <tr>
-                    <td style="height: 90px;"></td>
+                    <td style="height: 90px;">{{ $datos->actas_inspeccion->encargado }}</td>
                     <td style="text-align: center; vertical-align: top">{{ $datos->inspector->name }}</td>
                 </tr>
             </table>

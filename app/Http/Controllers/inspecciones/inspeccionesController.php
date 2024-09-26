@@ -309,11 +309,11 @@ class inspeccionesController extends Controller
         }
 
         // Guardar las producciones relacionadas si existen
-        if (isset($request->id_empresa) && is_array($request->id_empresa)) {
-            for ($i = 0; $i < count($request->id_empresa); $i++) {
+        if (isset($request->id_plantacion) && is_array($request->id_plantacion)) {
+            for ($i = 0; $i < count($request->id_plantacion); $i++) {
                 $produccion = new actas_produccion();
                 $produccion->id_acta = $acta->id_acta;  // Relacionar con la acta creada
-                $produccion->id_empresa = $request->id_empresa[$i];
+                $produccion->id_plantacion = $request->id_plantacion[$i];
                 $produccion->plagas = $request->plagas[$i];
                 $produccion->save();
             }
@@ -427,9 +427,12 @@ class inspeccionesController extends Controller
 
 
         $datos = inspecciones::with('solicitud.empresa', 'actas_inspeccion.actas_testigo','inspector', 'actas_inspeccion.acta_produccion_mezcal', 'actas_inspeccion.actas_equipo_mezcal',
-        'actas_inspeccion.actas_equipo_envasado', 'actas_inspeccion.actas_unidad_comercializacion')->find($id_inspeccion);
-
-        $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion', compact('datos'));
+        'actas_inspeccion.actas_equipo_envasado', 'actas_inspeccion.actas_unidad_comercializacion', 'actas_inspeccion.actas_unidad_envasado','actas_inspeccion.actas_produccion.predio_plantacion.predio.catalogo_tipo_agave', 'empresa_num_cliente')->find($id_inspeccion);
+        $fecha_llenado = Helpers::formatearFecha($datos->actas_inspeccion->fecha_inicio);
+       $hora_llenado = Helpers::extraerHora($datos->actas_inspeccion->fecha_inicio);
+       $fecha_llenado_fin = Helpers::formatearFecha($datos->actas_inspeccion->fecha_fin);
+       $hora_llenado_fin = Helpers::extraerHora($datos->actas_inspeccion->fecha_fin);
+        $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion', compact('datos','hora_llenado', 'fecha_llenado', 'fecha_llenado_fin','hora_llenado_fin'));
         return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
     }
 

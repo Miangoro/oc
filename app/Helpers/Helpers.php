@@ -43,19 +43,26 @@ class Helpers
         // Retornar el folio en el formato SOL-año-consecutivo
         return "SOL-$year-$consecutivo";
     }
-
-  public static function formatearFecha($fecha)
-    { 
-      if (empty($fecha) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
-        return 'N/A'; // Retornar 'N/A' si el formato es incorrecto o la fecha es vacía
-       }
-        // Crear un objeto Carbon a partir de la cadena de fecha
-        $fechaCarbon = Carbon::createFromFormat('Y-m-d', $fecha);
-        $fechaCarbon->locale('es'); 
-        // Formatear la fecha
-        return $fechaCarbon->translatedFormat('d \d\e F \d\e\l Y');
+    public static function formatearFecha($fecha)
+    {
+        if (empty($fecha)) {
+            return 'N/A'; // Retornar 'N/A' si la fecha es vacía
+        }
+    
+        try {
+            // Intentar crear un objeto Carbon, sin importar si es 'date' o 'datetime'
+            $fechaCarbon = Carbon::parse($fecha);
+            $fechaCarbon->locale('es'); // Establecer el idioma a español
+    
+            // Formatear la fecha
+            return $fechaCarbon->translatedFormat('d \d\e F \d\e\l Y');
+        } catch (\Exception $e) {
+            return 'N/A'; // Retornar 'N/A' si hay algún error al parsear la fecha
+    }
     }
 
+
+    
     public static function formatearFechaHora($fecha)
       {
           // Verificar que la cadena de fecha tenga el formato correcto: 'Y-m-d H:i:s' (Año-Mes-Día Hora:Minutos:Segundos)
@@ -71,6 +78,10 @@ class Helpers
           return $fechaCarbon->translatedFormat('d \d\e F \d\e\l Y \a \l\a\s H:i:s');
       }
 
+
+      public static function extraerHora($fecha){
+        return Carbon::parse($fecha)->format("H:i:s");
+      }
 
   public static function appClasses()
   {

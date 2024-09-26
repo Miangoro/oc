@@ -14,14 +14,8 @@ class actas_produccion extends Model
     protected $fillable = [
         'id_produccion',
         'id_acta',
-        'id_predio',
-        'id_empresa',
-        'especie_agave',
-        'superficie',
-        'madurez_agave',
+        'id_plantacion',
         'plagas',
-        'cant_plantas',
-        'coordenadas',
 
 
  
@@ -29,10 +23,23 @@ class actas_produccion extends Model
     
 
 
+    public function predio_plantacion()
+    {
+        return $this->belongsTo(predio_plantacion::class,'id_plantacion', 'id_plantacion');
+    }
+    
+
+    public function predio()
+    {
+        return $this->belongsTo(Predios::class,'id_plantacion', 'id_predio');
+    }
+    
+
     public function predios()
     {
-        return $this->belongsTo(Predios::class,'id_predio', 'nom_predio');
+        return $this->belongsTo(Predios::class, 'id_empresa');
     }
+
 
     public function empresa()
     {
@@ -43,5 +50,11 @@ class actas_produccion extends Model
     {
         return $this->belongsTo(tipos::class,'nombre', 'nombre');
     }
+
+    public function actas_inspeccion()
+    {
+        return $this->hasMany(actas_inspeccion::class,'id_acta', 'id_acta');
+    }
+    
     
 }

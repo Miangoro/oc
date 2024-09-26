@@ -28,7 +28,7 @@ class actas_equipo_envasado extends Model
 
     public function actas_inspeccion()
     {
-        return $this->belongsTo(actas_inspeccion::class,'id_acta', 'id_acta');
+        return $this->hasMany(actas_inspeccion::class,'id_acta', 'id_acta');
     }
     
 }
