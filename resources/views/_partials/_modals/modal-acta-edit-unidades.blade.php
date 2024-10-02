@@ -280,7 +280,7 @@
                                     <th>Tipo de material</th>
                                 </tr>
                             </thead>
-                            <tbody id="equipoMezcal">
+                            <tbody id="edit_equipoMezcal">
                                 <tr>
                                     <th>
                                         <button type="button" class="btn btn-danger remove-row" disabled>
@@ -288,24 +288,24 @@
                                         </button>
                                     </th>
                                     <td>
-                                        <select class="form-control select2 equipo" name="equipo[]">
+                                        <select class="form-control select2 equipo" name="edit_equipo[]">
                                             <option value="">Selecciona equipo</option>
                                             @foreach ($equipos as $equipo)
-                                                <option value="{{ $equipo->equipo }}">{{ $equipo->equipo }}</option>
+                                                <option value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }}</option>
                                             @endforeach
                                         </select>
                                     </td>
                                     <td>
                                         <input type="number" class="form-control form-control-sm"
-                                            name="cantidad[]" />
+                                            name="edit_cantidad[]" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control form-control-sm"
-                                            name="capacidad[]" />
+                                            name="edit_capacidad[]" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control form-control-sm"
-                                            name="tipo_material[]" />
+                                            name="edit_tipo_material[]" />
                                     </td>
                                 </tr>
                             </tbody>

@@ -259,6 +259,39 @@
             $('#edit_testigoss').append(newRow);
         });
 
+
+
+        //equipo mezcal
+        $('#edit_equipoMezcal').empty();
+
+// Iterar sobre los testigos y agregar filas a la tabla
+data.actas_equipo_mezcal.forEach(function (equipoMezcal, index) {
+    var newRow = `
+        <tr>
+            <th>
+                <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
+                    <i class="ri-delete-bin-5-fill"></i>
+                </button>
+            </th>
+            <td>
+                <input type="text" class="form-control form-control-sm" name="edit_equipo[]" value="${equipoMezcal.equipo}" />
+            </td>
+            <td>
+                <input type="number" class="form-control form-control-sm" name="edit_cantidad[]" value="${equipoMezcal.cantidad}" />
+            </td>
+                        <td>
+                <input type="text" class="form-control form-control-sm" name="edit_capacidad[]" value="${equipoMezcal.capacidad}" />
+            </td>
+                        <td>
+                <input type="text" class="form-control form-control-sm" name="edit_tipo_material[]" value="${equipoMezcal.tipo_material}" />
+            </td>
+        </tr>
+    `;
+    $('#edit_equipoMezcal').append(newRow);
+});
+
+//mezcal
+
         $('#edit_unidadMezcal').empty();
 
 // Iterar sobre los testigos y agregar filas a la tabla
