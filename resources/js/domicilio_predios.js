@@ -1152,7 +1152,7 @@ $(document).ready(function () {
             $('#edit_tiene_coordenadas').val(predio.cuenta_con_coordenadas).trigger('change');
             $('#edit_superficie').val(predio.superficie);
 
-            console.log(data.documentos); // Verifica el contenido
+            /* console.log(data.documentos); // Verifica el contenido */
 
             if (Array.isArray(data.documentos)) {
               $('#archivo_url_contrato').empty(); // Limpia el contenido existente
@@ -1758,7 +1758,7 @@ $(document).ready(function () {
         success: function (data) {
           if (data.success) {
             var predio = data.predio;
-            console.log(data)
+            /* console.log(data) */
 
             // Rellenar el formulario con los datos del predio
             $('#inspeccion_id_empresa').val(predio.id_empresa).trigger('change');
@@ -1985,6 +1985,19 @@ $(document).ready(function () {
               $('#fecha_inspeccion, #tipoMaguey, #inspeccion_id_empresa, #tipoAgave, #estado').on('change', function () {
                 fv.revalidateField($(this).attr('name'));
               });
+  });
+
+  $(document).ready(function () {
+    $('#inspeccion_tiene_coordenadas').on('change', function () {
+      var tieneCoordenadasSelect = $(this);
+      var coordenadasDiv = $('#inspeccion_coordenadas');
+
+      if (tieneCoordenadasSelect.val() === 'Si') {
+        coordenadasDiv.removeClass('d-none');
+      } else {
+        coordenadasDiv.addClass('d-none');
+      }
+    });
   });
 
 
