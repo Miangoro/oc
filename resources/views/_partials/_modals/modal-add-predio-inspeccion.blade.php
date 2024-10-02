@@ -4,7 +4,7 @@
        <div class="modal-dialog modal-xl">
            <div class="modal-content">
                <div class="modal-header">
-                   <h5 id="modalAddPredioInspeccionLabel" class="modal-title">Agregar Inspeccion del Predio</h5>
+                   <h5 id="modalAddPredioInspeccionLabel" class="modal-title">Agregar Inspección del Predio</h5>
                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                </div>
                <div class="modal-body">
@@ -12,74 +12,11 @@
                        @csrf
                        <input type="hidden" id="inspeccion_id_predio" name="id_predio" value="">
                        {{--  --}}
-                       <!-- Datos Generales -->
+                       <!-- Datos del Predio -->
                        <div class="mb-4 p-3 border rounded">
-                           <h6 class="mb-4">Datos Generales</h6>
+                           <h6 class="mb-4">Datos del Predio</h6>
                            <div class="row mb-4">
-                               <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline mb-4">
-                                       <input type="text" class="form-control" id="noOrdenServicio"
-                                           autocomplete="off" name="no_orden_servicio"
-                                           placeholder="No. Orden de Servicio">
-                                       <label for="noOrdenServicio">No. Orden de Servicio</label>
-                                   </div>
-                               </div>
-                               <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline">
-                                       <input type="text" class="form-control" id="noCliente" autocomplete="off"
-                                           name="no_cliente" placeholder="No. Cliente">
-                                       <label for="noCliente">No. Cliente</label>
-                                   </div>
-                               </div>
-                               <!-- Select de Empresa Cliente -->
-                           </div>
-                           <div class="row mb-4">
-                               <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline mb-4">
-                                       <select id="inspeccion_id_empresa" name="id_empresa" class="select2 form-select">
-                                           <option value="" disabled selected>Selecciona la el Nombre del cliente
-                                           </option>
-                                           @foreach ($empresas as $empresa)
-                                               <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
-                                               </option>
-                                           @endforeach
-                                       </select>
-                                       <label for="nombreCliente">Nombre del Cliente</label>
-                                   </div>
-                               </div>
-                               <!-- Tipo de Agave -->
-                               <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline mb-4">
-                                       <select id="tipoAgave" name="id_tipo_agave" placeholder="Tipo de Agave"
-                                           class="select2 form-select tipo_agave">
-                                           <option value="" disabled selected>Tipo de Agave</option>
-                                           @foreach ($tipos as $tipo)
-                                               <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
-                                           @endforeach
-                                       </select>
-                                       <label for="tipoAgave">Tipo de Agave</label>
-                                   </div>
-                               </div>
-
-                           </div>
-                           <div class="row mb-4">
-                               <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline mb-4">
-                                       <input type="text" class="form-control" id="domicilioFiscal"
-                                           autocomplete="off" name="domicilio_fiscal" placeholder="Domicilio Fiscal">
-                                       <label for="domicilioFiscal">Domicilio Fiscal</label>
-                                   </div>
-                               </div>
-                               <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline">
-                                       <input type="text" class="form-control" id="telefono" autocomplete="off"
-                                           name="telefono" placeholder="Teléfono">
-                                       <label for="telefono">Teléfono</label>
-                                   </div>
-                               </div>
-                           </div>
-                           <div class="row mb-4">
-                               <div class="col-md-6">
+                               <div class="col-md-4">
                                    <div class="form-floating form-floating-outline mb-4">
                                        <input type="text" class="form-control" id="inspeccion_ubicacion_predio"
                                            autocomplete="off" name="ubicacion_predio"
@@ -87,29 +24,14 @@
                                        <label for="ubicacion_predio">Ubicación del Predio</label>
                                    </div>
                                </div>
-                               <div class="col-md-6 mb-4">
-                                <div class="form-floating form-floating-outline">
-                                    <input type="text" id="fecha_inspeccion" name="fecha_inspeccion"
-                                        autocomplete="off" class="form-control datepicker"
-                                        placeholder="Fecha de inspección" readonly/>
-                                    <label for="fecha_inspeccion">Fecha de inspección</label>
-                                </div>
-                            </div>
-                           </div>
-                       </div>
-
-                       <!-- Datos del Predio -->
-                       <div class="mb-4 p-3 border rounded">
-                           <h6 class="mb-4">Datos del Predio</h6>
-                           <div class="row mb-4">
-                               <div class="col-md-6">
+                               <div class="col-md-4">
                                    <div class="form-floating form-floating-outline mb-4">
                                        <input type="text" class="form-control" id="localidad" autocomplete="off"
                                            name="localidad" placeholder="Localidad">
                                        <label for="localidad">Localidad</label>
                                    </div>
                                </div>
-                               <div class="col-md-6">
+                               <div class="col-md-4">
                                    <div class="form-floating form-floating-outline">
                                        <input type="text" class="form-control" id="municipio" autocomplete="off"
                                            name="municipio" placeholder="Municipio">
@@ -126,30 +48,29 @@
                                    </div>
                                </div>
                                <div class="col-md-6">
-                                <div class="form-floating form-floating-outline">
-                                    <select class="form-select select2" name="estado" id="estado">
-                                        <option value=""  disabled selected>Selecciona un estado</option>
-                                        @foreach ($estados as $estado)
-                                            <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                    <label for="estado">Estado</label>
-                                </div>
-                            </div>
+                                   <div class="form-floating form-floating-outline">
+                                       <select class="form-select select2" name="estado" id="estado">
+                                           <option value="" disabled selected>Selecciona un estado</option>
+                                           @foreach ($estados as $estado)
+                                               <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
+                                           @endforeach
+                                       </select>
+                                       <label for="estado">Estado</label>
+                                   </div>
+                               </div>
                            </div>
                            <div class="row mb-4">
                                <div class="col-md-6">
                                    <div class="form-floating form-floating-outline mb-4">
-                                       <input type="text" class="form-control" id="nombreParaje"
-                                           autocomplete="off" name="nombre_paraje" placeholder="Nombre del Paraje">
+                                       <input type="text" class="form-control" id="nombreParaje" autocomplete="off"
+                                           name="nombre_paraje" placeholder="Nombre del Paraje">
                                        <label for="nombreParaje">Nombre del Paraje</label>
                                    </div>
                                </div>
                                <div class="col-md-6">
                                    <div class="form-floating form-floating-outline">
-                                       <select class="form-select" id="zonaDom" name="zona_dom"
-                                           aria-label="Zona DOM">
-                                           <option value=""  disabled selected>Selecciona una opción</option>
+                                       <select class="form-select" id="zonaDom" name="zona_dom" aria-label="Zona DOM">
+                                           <option value="" disabled selected>Selecciona una opción</option>
                                            <option value="si">Sí</option>
                                            <option value="no">No</option>
                                        </select>
@@ -162,21 +83,8 @@
                        <div class="mb-4 p-3 border rounded">
                            <h6 class="mb-4">Características del maguey</h6>
                            <div class="row mb-4">
-                               <!-- Tipo de Maguey -->
-                               <div class="col-md-6">
-                                   <div class="form-floating form-floating-outline mb-4">
-                                       <select id="tipoMaguey" name="id_tipo_maguey" placeholder="Tipo de Maguey"
-                                           class="select2 form-select tipo_maguey">
-                                           <option value="" disabled selected>Tipo de Maguey</option>
-                                           @foreach ($tipos as $tipo)
-                                               <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
-                                           @endforeach
-                                       </select>
-                                       <label for="tipoMaguey">Tipo de Maguey</label>
-                                   </div>
-                               </div>
                                <!-- Marco de Plantación (m2) -->
-                               <div class="col-md-6">
+                               <div class="col-md-4">
                                    <div class="form-floating form-floating-outline">
                                        <input type="number" class="form-control" id="marcoPlantacion"
                                            autocomplete="off" name="marco_plantacion"
@@ -184,10 +92,9 @@
                                        <label for="marcoPlantacion">Marco de Plantación (m²)</label>
                                    </div>
                                </div>
-                           </div>
-                           <div class="row mb-4">
+
                                <!-- Distancia entre Surcos (m) -->
-                               <div class="col-md-6">
+                               <div class="col-md-4">
                                    <div class="form-floating form-floating-outline mb-4">
                                        <input type="number" class="form-control" id="distanciaSurcos"
                                            autocomplete="off" name="distancia_surcos"
@@ -196,7 +103,7 @@
                                    </div>
                                </div>
                                <!-- Distancia entre Plantas (m) -->
-                               <div class="col-md-6">
+                               <div class="col-md-4">
                                    <div class="form-floating form-floating-outline">
                                        <input type="number" class="form-control" id="distanciaPlantas"
                                            autocomplete="off" name="distancia_plantas"
@@ -208,50 +115,57 @@
                        </div>
 
                        <div class="card mb-4">
-                        <table id="plant-table" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-primary add-row-caracteristicas"><i class="ri-add-line"></i></button>
-                                    </th>
-                                    <th colspan="2" style="width: 95%">
-                                        <h5 class="card-title mb-0 text-center">Características del maguey <br>Edad</h5>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="caracteristicas-row">
-                                    <td rowspan="5">
-                                        <button type="button" class="btn btn-danger remove-row-caracteristicas" disabled><i class="ri-delete-bin-5-fill"></i></button>
-                                    </td>
-                                </tr>
-                                <tr class="caracteristicas-row">
-                                    <td>No. planta</td>
-                                    <td><input type="number" class="form-control" name="no_planta[]" placeholder="Número de planta" required></td>
-                                </tr>
-                                <tr class="caracteristicas-row">
-                                    <td>Altura (m)</td>
-                                    <td><input type="number" step="0.01" class="form-control" name="altura[]" placeholder="Altura (m)" required></td>
-                                </tr>
-                                <tr class="caracteristicas-row">
-                                    <td>Diámetro (m)</td>
-                                    <td><input type="number" step="0.01" class="form-control" name="diametro[]" placeholder="Diámetro (m)" required></td>
-                                </tr>
-                                <tr class="caracteristicas-row">
-                                    <td>Número de hojas</td>
-                                    <td><input type="number" class="form-control" name="numero_hojas[]" placeholder="Número de hojas" required></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <br>
+                           <table id="plant-table" class="table table-bordered table-striped">
+                               <thead>
+                                   <tr>
+                                       <th>
+                                           <button type="button" class="btn btn-primary add-row-caracteristicas"><i
+                                                   class="ri-add-line"></i></button>
+                                       </th>
+                                       <th colspan="2" style="width: 95%">
+                                           <h5 class="card-title mb-0 text-center">Características del maguey <br>Edad
+                                           </h5>
+                                       </th>
+                                   </tr>
+                               </thead>
+                               <tbody>
+                                   <tr class="caracteristicas-row">
+                                       <td rowspan="5">
+                                           <button type="button" class="btn btn-danger remove-row-caracteristicas"
+                                               disabled><i class="ri-delete-bin-5-fill"></i></button>
+                                       </td>
+                                   </tr>
+                                   <tr class="caracteristicas-row">
+                                       <td>No. planta</td>
+                                       <td><input type="number" class="form-control" name="no_planta[]"
+                                               placeholder="Número de planta" required></td>
+                                   </tr>
+                                   <tr class="caracteristicas-row">
+                                       <td>Altura (m)</td>
+                                       <td><input type="number" step="0.01" class="form-control" name="altura[]"
+                                               placeholder="Altura (m)" required></td>
+                                   </tr>
+                                   <tr class="caracteristicas-row">
+                                       <td>Diámetro (m)</td>
+                                       <td><input type="number" step="0.01" class="form-control"
+                                               name="diametro[]" placeholder="Diámetro (m)" required></td>
+                                   </tr>
+                                   <tr class="caracteristicas-row">
+                                       <td>Número de hojas</td>
+                                       <td><input type="number" class="form-control" name="numero_hojas[]"
+                                               placeholder="Número de hojas" required></td>
+                                   </tr>
+                               </tbody>
+                           </table>
+                       </div>
+                       <br>
                        <!-- Tipo de Predio y Puntos de Referencia -->
                        <div class="row mb-4">
                            <!-- Coordenadas -->
                            <div class="col-md-6">
                                <div class="form-floating form-floating-outline mb-4">
-                                   <select class="form-select" id="inspeccion_tiene_coordenadas" name="tiene_coordenadas"
-                                       aria-label="¿Cuenta con coordenadas?">
+                                   <select class="form-select" id="inspeccion_tiene_coordenadas"
+                                       name="tiene_coordenadas" aria-label="¿Cuenta con coordenadas?">
                                        <option value="" disabled selected>Seleccione una opción</option>
                                        <option value="Si">Si</option>
                                        <option value="No">No</option>

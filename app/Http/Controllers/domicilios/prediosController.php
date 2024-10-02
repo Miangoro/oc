@@ -568,7 +568,7 @@ class PrediosController extends Controller
                 foreach ($request->latitud as $index => $latitud) {
                     if (!is_null($latitud) && !is_null($request->longitud[$index])) {
                         PredioCoordenadas::create([
-                            'id_predio' => $id_predio,
+                           /*  'id_predio' => $id_predio, */
                             'id_inspeccion' => $inspeccion->id_inspeccion,
                             'latitud' => $latitud,
                             'longitud' => $request->longitud[$index],
@@ -583,7 +583,7 @@ class PrediosController extends Controller
             foreach ($request->id_tipo as $index => $id_tipo) {
                 if (!is_null($id_tipo) && !is_null($request->numero_plantas[$index]) && !is_null($request->edad_plantacion[$index]) && !is_null($request->tipo_plantacion[$index])) {
                     predio_plantacion::create([
-                        'id_predio' => $id_predio,
+                        /* 'id_predio' => $id_predio, */
                         'id_inspeccion' => $inspeccion->id_inspeccion,
                         'id_tipo' => $id_tipo,
                         'num_plantas' => $request->numero_plantas[$index],

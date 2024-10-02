@@ -310,5 +310,9 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Solicitud de servicio UNIIC.pdf');
     }
 
+    public function RegistroPrediosMagueyAgave() {
+      $pdf = Pdf::loadView('pdfs.Registro_de_Predios_Maguey_Agave');
+      return $pdf->stream('Registro de Predios Maguey Agave.pdf');
+    }
 }
 

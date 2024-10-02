@@ -459,7 +459,7 @@ Route::get('/orden_trabajo_inspeccion_etiquetas', [CartaAsignacionController::cl
 Route::get('/lista_verificacion_nom051-mod20200327_solrev005', [CartaAsignacionController::class, 'ListaVerificacionNom051Mod20200327Solrev005'])->name('ListaVerificacionNom051Mod20200327Solrev005');
 
 
-
+Route::get('/registro_predios_maguey_o_agave', [CartaAsignacionController::class, 'RegistroPrediosMagueyAgave'])->name('RegistroPrediosMagueyAgave');
 
 
 //Etiquetas Etiqueta_Barrica
