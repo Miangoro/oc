@@ -124,6 +124,7 @@ class inspeccionesController extends Controller
                 $nestedData['id_inspeccion'] = $solicitud->inspeccion->id_inspeccion ?? '0';
                 $nestedData['id_empresa'] = $solicitud->empresa->id_empresa ?? '0';
                 $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
+                $nestedData['id_acta'] = $solicitud->inspeccion->actas_inspeccion->id_acta ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids  ?? 'N/A';
                 $nestedData['folio'] = '<b class="text-primary">' . $solicitud->folio . '</b>';
                 $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? '<span class="badge bg-danger">Sin asignar</apan>';
@@ -273,8 +274,16 @@ class inspeccionesController extends Controller
         }
     }
 
-
-    //agregar inspeccionespdf
+    // Método para obtener una guía por ID
+    public function editActa($id_acta)
+    {
+        try {
+            $acta = actas_inspeccion::findOrFail($id_acta);
+            return response()->json($acta);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener la actaid'], 500);
+        }
+    }
     // Método para insertar el formulario de Acta de Inspección
     public function store(Request $request)
 {
@@ -421,7 +430,7 @@ class inspeccionesController extends Controller
 
 
 
-
+//Metodo para llenar el pdf
     public function acta_circunstanciada_produccion($id_inspeccion)
     {
 
@@ -436,11 +445,4 @@ class inspeccionesController extends Controller
         return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
     }
 
-
-
-    /*  public function acta_circunstanciada_produccion()
-    {
-        $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion');
-        return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
-    } */
 }

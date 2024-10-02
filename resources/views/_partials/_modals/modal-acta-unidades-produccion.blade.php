@@ -133,10 +133,10 @@
                         </tbody>
                     </table>
 
-                    {{-- tabla de produccion --}}
-                    <div id="tablaProduccion" style="display: none;">
+                    {{-- tabla de produccion de Agave --}}
+                    <div id="tablaProduccionAgave" style="display: none;">
                         <div style="padding: 10px"></div>
-                        <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
+                        <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción de Agave</p>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -623,33 +623,31 @@
         // Función para mostrar u ocultar la tabla dependiendo del valor de "categoria_acta"
         function tablasCategorias() {
             const tipo_instalacion = document.getElementById('categoria_acta').value;
-            const tablaProduccion = document.getElementById('tablaProduccion');
+            const tablaProduccionAgave = document.getElementById('tablaProduccionAgave');
             const tablaProduccionMezcal = document.getElementById('tablaProduccionMezcal');
             const tablaProduccionEquipo = document.getElementById('tablaProduccionEquipo');
             const tablaEnvasadora = document.getElementById('tablaEnvasadora');
             const tablaEnvasadoraEquipo = document.getElementById('tablaEnvasadoraEquipo');
             const tablaComercializadora = document.getElementById('tablaComercializadora');
 
-            if (tipo_instalacion === 'Productora') {
-                tablaProduccion.style.display = 'block';
+            if (tipo_instalacion === 'Productora de Agave') {
+                tablaProduccionAgave.style.display = 'block';
+            } else if (tipo_instalacion === 'Productora') {
                 tablaProduccionMezcal.style.display = 'block';
                 tablaProduccionEquipo.style.display = 'block';
             } else if (tipo_instalacion === 'Envasadora') {
                 tablaEnvasadora.style.display = 'block';
                 tablaEnvasadoraEquipo.style.display = 'block';
-            } else if (tipo_instalacion === 'Comercializadora') {
-                tablaComercializadora.style.display = 'block';
-            } else {
-                tablaProduccion.style.display = 'none';
-                tablaProduccionMezcal.style.display = 'none';
-                tablaProduccionEquipo.style.display = 'none';
-                tablaEnvasadora.style.display = 'none';
-                tablaEnvasadoraEquipo.style.display = 'none';
-                tablaComercializadora.style.display = 'none';
-
-
-
-            }
+            } else if (['Comercializadora', 'Almacén'].includes(tipo_instalacion)) {
+    tablaComercializadora.style.display = 'block';
+} else {
+    tablaProduccionAgave.style.display = 'none';
+    tablaProduccionMezcal.style.display = 'none';
+    tablaProduccionEquipo.style.display = 'none';
+    tablaEnvasadora.style.display = 'none';
+    tablaEnvasadoraEquipo.style.display = 'none';
+    tablaComercializadora.style.display = 'none';
+}
         }
 
         // Asegúrate de que el evento se vincule al modal correcto

@@ -16,9 +16,9 @@
                     <h4 class="address-title mb-2">Editar acta circunstanciada para Unidades de producción</h4>
                 </div>
                 <form id="editActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
-                    <input type="text" class="id_inspeccion" name="edit_id_inspeccion">
-                    <input type="text" class="id_empresa" name="edit_acta_id_empresa">  
-                    <input type="text" id="id_acta" name="id_acta">
+                    <input type="hidden" class="id_inspeccion" name="edit_id_inspeccion">
+                    <input type="hidden" class="id_empresa" name="edit_acta_id_empresa">  
+                    <input type="hidden" class="id_acta" name="id_acta">
                   
                     @csrf
                     <div class="row">
@@ -34,21 +34,21 @@
 
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-4">
-                                <input type="text" id="categoria_acta" name="categoria_acta"
-                                    class="form-control tipo_instalacion" required oninput="tablasCategorias()"
+                                <input type="text" id="edit_categoria_acta" name="edit_categoria_acta"
+                                    class="form-control edit_tipo_instalacion" required oninput="tablasCategorias()"
                                     readonly>
-                                <label for="categoria_acta">En la categoría de:</label>
+                                <label for="edit_categoria_acta">En la categoría de:</label>
                             </div>
                         </div>
 
                         <div class="col-md-2">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select id="testigos" name="testigos" class="form-select" required
-                                    onchange="Testigos()">
+                                <select id="edit_testigos" name="edit_testigos" class="form-select" required
+                                    onchange="edit_Testigos()">
                                     <option value="1">Si</option>
                                     <option value="2">No</option>
                                 </select>
-                                <label for="testigos">Testigos:</label>
+                                <label for="edit_testigos">Testigos:</label>
                             </div>
                         </div>
                     </div>
@@ -56,51 +56,51 @@
                     <div class="row">
                         <div class="col-md-6 mb-5">
                             <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control " id="encargado" name="encargado"
+                                <input type="text" class="form-control " id="edit_encargado" name="edit_encargado"
                                     placeholder="Ingresa el nombre del encargado" aria-label="Ingresa el No. guia" />
-                                <label for="encargado">Encargado</label>
+                                <label for="edit_encargado">Encargado</label>
                             </div>
                         </div>
 
                         <div class="col-md-6 mb-5">
                             <div class="form-floating form-floating-outline">
-                                <input type="text" class="form-control" id="num_credencial_encargado"
-                                    name="num_credencial_encargado" placeholder="Ingresa el No. de la credencial"
+                                <input type="text" class="form-control" id="edit_num_credencial_encargado"
+                                    name="edit_num_credencial_encargado" placeholder="Ingresa el No. de la credencial"
                                     aria-label="Ingresa el No. guia" />
-                                <label for="num_credencial_encargado">Credencial vigente número</label>
+                                <label for="edit_num_credencial_encargado">Credencial vigente número</label>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control direccion_completa" id="lugar_inspeccion"
-                            name="lugar_inspeccion" placeholder="Lugar de inspeccion:"
+                        <input type="text" class="form-control direccion_completa" id="edit_lugar_inspeccion"
+                            name="edit_lugar_inspeccion" placeholder="Lugar de inspeccion:"
                             aria-label="Ingresa el No. guia" />
-                        <label for="lugar_inspeccion">Lugar de inspeccion:</label>
+                        <label for="edit_lugar_inspeccion">Lugar de inspeccion:</label>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-5">
                             <div class="form-floating form-floating-outline">
-                                <input type="datetime-local" class="form-control " id="fecha_inicio" name="fecha_inicio"
+                                <input type="datetime-local" class="form-control " id="edit_fecha_inicio" name="edit_fecha_inicio"
                                     aria-label="Fecha de Emisión">
-                                <label for="fecha_inicio">Fecha de inicio</label>
+                                <label for="edit_fecha_inicio">Fecha de inicio</label>
                             </div>
                         </div>
 
                         <div class="col-md-6 mb-5">
                             <div class="form-floating form-floating-outline">
-                                <input type="datetime-local" class="form-control" id="fecha_fin" name="fecha_fin"
+                                <input type="datetime-local" class="form-control" id="edit_fecha_fin" name="edit_fecha_fin"
                                     aria-label="Fecha de Emisión">
-                                <label for="fecha_fin">Fecha de final</label>
+                                <label for="edit_fecha_fin">Fecha de final</label>
                             </div>
                         </div>
                     </div>
                     {{-- Tabla testigos --}}
-                    <p class="address-subtitle" id="tabla-testigos-label"><b style="color: red">Designacion:
+                    <p class="address-subtitle" id="edit_tabla-testigos-label"><b style="color: red">Designacion:
                         </b>Testigos
                     </p>
-                    <table class="table table-bordered" id="tabla-testigos">
+                    <table class="table table-bordered" id="edit_tabla-testigos">
                         <thead>
                             <tr>
                                 <th>
@@ -122,11 +122,11 @@
                                 </th>
                                 <td>
                                     <input type="text" class="form-control form-control-sm"
-                                        name="nombre_testigo[]" id="nombre_testigo" />
+                                        name="edit_nombre_testigo[]" id="edit_nombre_testigo" />
                                 </td>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm" name="domicilio[]"
-                                        id="domicilio" />
+                                    <input type="text" class="form-control form-control-sm" name="edit_domicilio[]"
+                                        id="edit_domicilio" />
                                 </td>
                             </tr>
                         </tbody>
@@ -530,14 +530,14 @@
                     <div style="text-align: center; color: black; font-size: 20px; padding: 20px"><b
                             style="color: red">Anote: </b>No conformidades identificadas en la inspección</div>
                     <div class="form-floating form-floating-outline mb-5">
-                        <textarea name="no_conf_infraestructura" class="form-control h-px-100" id="no_conf_infraestructura"
+                        <textarea name="edit_no_conf_infraestructura" class="form-control h-px-100" id="edit_no_conf_infraestructura"
                             placeholder="Observaciones..."></textarea>
-                        <label for="no_conf_infraestructura">Infraestructura</label>
+                        <label for="edit_no_conf_infraestructura">Infraestructura</label>
                     </div>
 
                     <div class="form-floating form-floating-outline mb-5">
-                        <textarea name="no_conf_equipo" class="form-control h-px-100" id="no_conf_equipo" placeholder="Observaciones..."></textarea>
-                        <label for="no_conf_equipo">Equipo</label>
+                        <textarea name="edit_no_conf_equipo" class="form-control h-px-100" id="edit_no_conf_equipo" placeholder="Observaciones..."></textarea>
+                        <label for="edit_no_conf_equipo">Equipo</label>
                     </div>
 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
@@ -555,7 +555,7 @@
 
 
 <script>
-       $(document).ready(function() {
+/*        $(document).ready(function() {
 
 
 });
@@ -595,33 +595,33 @@ function obtenerNombrePredio() {
             //alert('Error al cargar los lotes a granel.');
         }
     });
-}
+} */
 
-function Testigos() {
+function edit_Testigos() {
     // Obtener el valor seleccionado en el select
-    const tipoLote = document.getElementById('testigos').value;
+    const edit_tipoLote = document.getElementById('edit_testigos').value;
 
     // Obtener la tabla y el label de testigos
-    const tablaTestigos = document.getElementById('tabla-testigos');
-    const tablaTestigosLabel = document.getElementById('tabla-testigos-label');
+    const edittablaTestigos = document.getElementById('edit_tabla-testigos');
+    const edittablaTestigosLabel = document.getElementById('edit_tabla-testigos');
 
     // Mostrar u ocultar la tabla dependiendo del valor seleccionado
-    if (tipoLote === '1') {
+    if (edit_tipoLote === '1') {
         // Mostrar la tabla si elige "Por un solo lote a granel"
-        tablaTestigos.style.display = 'table';
-        tablaTestigosLabel.style.display = 'block';
+        edittablaTestigos.style.display = 'table';
+        edittablaTestigosLabel.style.display = 'block';
     } else {
         // Ocultar la tabla si elige "Por más de un lote a granel"
-        tablaTestigos.style.display = 'none';
-        tablaTestigosLabel.style.display = 'none';
+        edittablaTestigos.style.display = 'none';
+        edittablaTestigosLabel.style.display = 'none';
     }
 }
 
 
-function initializeModalFunctionality() {
+/* function initializeModalFunctionality() {
     // Función para mostrar u ocultar la tabla dependiendo del valor de "categoria_acta"
     function tablasCategorias() {
-        const tipo_instalacion = document.getElementById('categoria_acta').value;
+        const edit_tipo_instalacion = document.getElementById('edit_categoria_acta').value;
         const tablaProduccion = document.getElementById('tablaProduccion');
         const tablaProduccionMezcal = document.getElementById('tablaProduccionMezcal');
         const tablaProduccionEquipo = document.getElementById('tablaProduccionEquipo');
@@ -629,14 +629,14 @@ function initializeModalFunctionality() {
         const tablaEnvasadoraEquipo = document.getElementById('tablaEnvasadoraEquipo');
         const tablaComercializadora = document.getElementById('tablaComercializadora');
 
-        if (tipo_instalacion === 'Productora') {
+        if (edit_tipo_instalacion === 'Productora') {
             tablaProduccion.style.display = 'block';
             tablaProduccionMezcal.style.display = 'block';
             tablaProduccionEquipo.style.display = 'block';
-        } else if (tipo_instalacion === 'Envasadora') {
+        } else if (edit_tipo_instalacion === 'Envasadora') {
             tablaEnvasadora.style.display = 'block';
             tablaEnvasadoraEquipo.style.display = 'block';
-        } else if (tipo_instalacion === 'Comercializadora') {
+        } else if (edit_tipo_instalacion === 'Comercializadora') {
             tablaComercializadora.style.display = 'block';
         } else {
             tablaProduccion.style.display = 'none';
@@ -661,7 +661,7 @@ function initializeModalFunctionality() {
         });
 
         // Llamar a la función también cuando el usuario cambie el valor del input
-        const categoriaInput = document.getElementById('categoria_acta');
+        const categoriaInput = document.getElementById('edit_categoria_acta');
         if (categoriaInput) {
             categoriaInput.addEventListener('input', tablasCategorias);
         }
@@ -669,5 +669,5 @@ function initializeModalFunctionality() {
 }
 
 // Iniciar la funcionalidad cuando se cargue el DOM
-document.addEventListener('DOMContentLoaded', initializeModalFunctionality);
+document.addEventListener('DOMContentLoaded', initializeModalFunctionality); */
 </script>

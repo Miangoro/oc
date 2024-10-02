@@ -674,6 +674,9 @@ Route::post('/asignar-inspector', [inspeccionesController::class, 'asignarInspec
 Route::get('/oficio_de_comision/{id_inspeccion}', [inspeccionesController::class, 'pdf_oficio_comision'])->name('oficioDeComision');
 Route::get('/orden_de_servicio/{id_inspeccion}', [inspeccionesController::class, 'pdf_orden_servicio'])->name('ordenDeServicio');
 Route::post('/agregar-resultados', [inspeccionesController::class, 'agregarResultados']);
+//update acta
+Route::get('/acta-solicitud/edit/{id_acta}', [inspeccionesController::class, 'editActa']);
+
 //pdf rutas
 Route::post('/acta-unidades', [inspeccionesController::class, 'store'])->name('acta.unidades.store');
 Route::get('/acta_circunstanciada_unidades_produccion/{id_inspeccion}', [inspeccionesController::class, 'acta_circunstanciada_produccion'])->name('acta_circunstanciada_unidades_produccion');
@@ -760,3 +763,4 @@ Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnic
 //PDFS NEW
 Route::get('/Solicitud-Especificaciones', [CartaAsignacionController::class, 'SolicitudEspecificaciones'])->name('Solicitud-Especificaciones');
 Route::get('/Oreden-Trabajo', [CartaAsignacionController::class, 'OrdenTrabajo'])->name('Oreden-Trabajo');
+Route::get('/Solicitud-Servicio-UNIIC', [CartaAsignacionController::class, 'SolicitudUNIIC'])->name('Solicitud-Servicio-UNIIC');
