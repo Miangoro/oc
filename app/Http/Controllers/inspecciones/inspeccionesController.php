@@ -278,171 +278,183 @@ class inspeccionesController extends Controller
     public function editActa($id_acta)
     {
         try {
-            $acta = actas_inspeccion::findOrFail($id_acta);
+            // Aquí obtienes el acta de inspección junto con sus testigos
+            $acta = actas_inspeccion::with('actas_testigo', 'acta_produccion_mezcal')->findOrFail($id_acta);
+    
             return response()->json($acta);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener la actaid'], 500);
+            return response()->json(['error' => 'Error al obtener el acta por ID'], 500);
         }
     }
+    
     // Método para insertar el formulario de Acta de Inspección
     public function store(Request $request)
-{
-    try {
-        // Crear un nuevo registro en la tabla `actas_inspeccion`
-        $acta = new actas_inspeccion();
-        $acta->id_inspeccion = $request->id_inspeccion;
-        $acta->id_empresa = $request->acta_id_empresa;
-        $acta->num_acta = $request->num_acta;
-        $acta->categoria_acta = $request->categoria_acta;
-        $acta->testigos = $request->testigos;
-        $acta->encargado = $request->encargado;
-        $acta->num_credencial_encargado = $request->num_credencial_encargado;
-        $acta->lugar_inspeccion = $request->lugar_inspeccion;
-        $acta->fecha_inicio = $request->fecha_inicio;
-        $acta->fecha_fin = $request->fecha_fin;
-        $acta->no_conf_infraestructura = $request->no_conf_infraestructura;
-        $acta->no_conf_equipo = $request->no_conf_equipo;
+    {
+        try {
+            // Crear un nuevo registro en la tabla `actas_inspeccion`
+            $acta = new actas_inspeccion();
+            $acta->id_inspeccion = $request->id_inspeccion;
+            $acta->id_empresa = $request->acta_id_empresa;
+            $acta->num_acta = $request->num_acta;
+            $acta->categoria_acta = $request->categoria_acta;
+            $acta->testigos = $request->testigos;
+            $acta->encargado = $request->encargado;
+            $acta->num_credencial_encargado = $request->num_credencial_encargado;
+            $acta->lugar_inspeccion = $request->lugar_inspeccion;
+            $acta->fecha_inicio = $request->fecha_inicio;
+            $acta->fecha_fin = $request->fecha_fin;
+            $acta->no_conf_infraestructura = $request->no_conf_infraestructura;
+            $acta->no_conf_equipo = $request->no_conf_equipo;
 
-        // Guardar el registro en la base de datos
-        $acta->save();
+            // Guardar el registro en la base de datos
+            $acta->save();
 
-        // Guardar los testigos relacionados si existen
-        if (isset($request->nombre_testigo) && is_array($request->nombre_testigo)) {
-            for ($i = 0; $i < count($request->nombre_testigo); $i++) {
-                $testigo = new actas_testigo();
-                $testigo->id_acta = $acta->id_acta;  // Relacionar con la acta creada
-                $testigo->nombre_testigo = $request->nombre_testigo[$i];
-                $testigo->domicilio = $request->domicilio[$i];
-                $testigo->save();
+            // Guardar los testigos relacionados si existen
+            if (isset($request->nombre_testigo) && is_array($request->nombre_testigo)) {
+                for ($i = 0; $i < count($request->nombre_testigo); $i++) {
+                    $testigo = new actas_testigo();
+                    $testigo->id_acta = $acta->id_acta;  // Relacionar con la acta creada
+                    $testigo->nombre_testigo = $request->nombre_testigo[$i];
+                    $testigo->domicilio = $request->domicilio[$i];
+                    $testigo->save();
+                }
             }
-        }
 
-        // Guardar las producciones relacionadas si existen
-        if (isset($request->id_plantacion) && is_array($request->id_plantacion)) {
-            for ($i = 0; $i < count($request->id_plantacion); $i++) {
-                $produccion = new actas_produccion();
-                $produccion->id_acta = $acta->id_acta;  // Relacionar con la acta creada
-                $produccion->id_plantacion = $request->id_plantacion[$i];
-                $produccion->plagas = $request->plagas[$i];
-                $produccion->save();
+            // Guardar las producciones relacionadas si existen
+            if (isset($request->id_plantacion) && is_array($request->id_plantacion)) {
+                for ($i = 0; $i < count($request->id_plantacion); $i++) {
+                    $produccion = new actas_produccion();
+                    $produccion->id_acta = $acta->id_acta;  // Relacionar con la acta creada
+                    $produccion->id_plantacion = $request->id_plantacion[$i];
+                    $produccion->plagas = $request->plagas[$i];
+                    $produccion->save();
+                }
             }
-        }
 
-        // Guardar el equipo de mezcal relacionado si existe
-        if (isset($request->equipo) && is_array($request->equipo)) {
-            for ($i = 0; $i < count($request->equipo); $i++) {
-                $equiMezcal = new actas_equipo_mezcal();
-                $equiMezcal->id_acta = $acta->id_acta;  // Relacionar con la acta creada
-                $equiMezcal->equipo = !empty($request->equipo[$i]) ? $request->equipo[$i] : null;
-                $equiMezcal->cantidad = $request->cantidad[$i];
-                $equiMezcal->capacidad = $request->capacidad[$i];
-                $equiMezcal->tipo_material = $request->tipo_material[$i];
-                $equiMezcal->save();
+            // Guardar el equipo de mezcal relacionado si existe
+            if (isset($request->equipo) && is_array($request->equipo)) {
+                for ($i = 0; $i < count($request->equipo); $i++) {
+                    $equiMezcal = new actas_equipo_mezcal();
+                    $equiMezcal->id_acta = $acta->id_acta;  // Relacionar con la acta creada
+                    $equiMezcal->equipo = !empty($request->equipo[$i]) ? $request->equipo[$i] : null;
+                    $equiMezcal->cantidad = $request->cantidad[$i];
+                    $equiMezcal->capacidad = $request->capacidad[$i];
+                    $equiMezcal->tipo_material = $request->tipo_material[$i];
+                    $equiMezcal->save();
+                }
             }
-        }
 
-        // Guardar el equipo de envasado relacionado si existe
-        if (isset($request->equipo_envasado) && is_array($request->equipo_envasado)) {
-            for ($i = 0; $i < count($request->equipo_envasado); $i++) {
-                $equiEnvasado = new actas_equipo_envasado();
-                $equiEnvasado->id_acta = $acta->id_acta;  // Relacionar con la acta creada
-                $equiEnvasado->equipo_envasado = !empty($request->equipo_envasado[$i]) ? $request->equipo_envasado[$i] : null;
-                $equiEnvasado->cantidad_envasado = $request->cantidad_envasado[$i];
-                $equiEnvasado->capacidad_envasado = $request->capacidad_envasado[$i];
-                $equiEnvasado->tipo_material_envasado = $request->tipo_material_envasado[$i];
-                $equiEnvasado->save();
+            // Guardar el equipo de envasado relacionado si existe
+            if (isset($request->equipo_envasado) && is_array($request->equipo_envasado)) {
+                for ($i = 0; $i < count($request->equipo_envasado); $i++) {
+                    $equiEnvasado = new actas_equipo_envasado();
+                    $equiEnvasado->id_acta = $acta->id_acta;  // Relacionar con la acta creada
+                    $equiEnvasado->equipo_envasado = !empty($request->equipo_envasado[$i]) ? $request->equipo_envasado[$i] : null;
+                    $equiEnvasado->cantidad_envasado = $request->cantidad_envasado[$i];
+                    $equiEnvasado->capacidad_envasado = $request->capacidad_envasado[$i];
+                    $equiEnvasado->tipo_material_envasado = $request->tipo_material_envasado[$i];
+                    $equiEnvasado->save();
+                }
             }
-        }
 
-        // Guardar las respuestas de las áreas de producción de mezcal si existen
-        if (isset($request->respuesta) && is_array($request->respuesta)) {
-            $area = ['Recepción (materia prima)', 'Área de pesado', 'Área de cocción', 'Área de maguey cocido', 'Área de molienda', 'Área de fermentación', 'Área de destilación', 'Almacén a graneles'];
-        
-            foreach ($request->respuesta as $rowIndex => $respuestasPorFila) {
-                foreach ($respuestasPorFila as $areaIndex => $respuesta) {
-                    if (isset($area[$areaIndex])) {
-                        $actaProduc = new acta_produccion_mezcal();
-                        $actaProduc->id_acta = $acta->id_acta; // Relacionar con la acta creada
-                        $actaProduc->area = $area[$areaIndex]; // Guardar el área correspondiente
-                        $actaProduc->respuesta = !empty($respuesta) ? $respuesta : null; // Convertir vacío a null
-                        $actaProduc->save();
+            // Guardar las respuestas de las áreas de producción de mezcal si existen
+            if (isset($request->respuesta) && is_array($request->respuesta)) {
+                $area = ['Recepción (materia prima)', 'Área de pesado', 'Área de cocción', 'Área de maguey cocido', 'Área de molienda', 'Área de fermentación', 'Área de destilación', 'Almacén a graneles'];
+
+                foreach ($request->respuesta as $rowIndex => $respuestasPorFila) {
+                    foreach ($respuestasPorFila as $areaIndex => $respuesta) {
+                        if (isset($area[$areaIndex])) {
+                            $actaProduc = new acta_produccion_mezcal();
+                            $actaProduc->id_acta = $acta->id_acta; // Relacionar con la acta creada
+                            $actaProduc->area = $area[$areaIndex]; // Guardar el área correspondiente
+                            $actaProduc->respuesta = !empty($respuesta) ? $respuesta : null; // Convertir vacío a null
+                            $actaProduc->save();
+                        }
                     }
                 }
             }
-        }
-        
-        
 
-        // Guardar las respuestas de las áreas de envasado si existen
-        if (isset($request->respuestas) && is_array($request->respuestas)) {
-            $areas = [
-                'Almacén de insumos',
-                'Almacén a gráneles',
-                'Sistema de filtrado',
-                'Área de envasado',
-                'Área de tiquetado',
-                'Almacén de producto terminado',
-                'Área de aseo personal'
-            ];
 
-            foreach ($request->respuestas as $rowIndex => $respuestasPorFilas) {
-                foreach ($respuestasPorFilas as $areaIndex => $respuestas) {
-                    if (isset($areas[$areaIndex])) {
-                        $actaUnidadEnvasado = new actas_unidad_envasado();
-                        $actaUnidadEnvasado->id_acta = $acta->id_acta; // Relacionar con la acta creada
-                        $actaUnidadEnvasado->areas = $areas[$areaIndex]; // Guardar el área correspondiente
-                        $actaUnidadEnvasado->respuestas = !empty($respuestas) ? $respuestas : null; // Guardar la respuesta seleccionada (C, NC, NA)
-                        $actaUnidadEnvasado->save();
+
+            // Guardar las respuestas de las áreas de envasado si existen
+            if (isset($request->respuestas) && is_array($request->respuestas)) {
+                $areas = [
+                    'Almacén de insumos',
+                    'Almacén a gráneles',
+                    'Sistema de filtrado',
+                    'Área de envasado',
+                    'Área de tiquetado',
+                    'Almacén de producto terminado',
+                    'Área de aseo personal'
+                ];
+
+                foreach ($request->respuestas as $rowIndex => $respuestasPorFilas) {
+                    foreach ($respuestasPorFilas as $areaIndex => $respuestas) {
+                        if (isset($areas[$areaIndex])) {
+                            $actaUnidadEnvasado = new actas_unidad_envasado();
+                            $actaUnidadEnvasado->id_acta = $acta->id_acta; // Relacionar con la acta creada
+                            $actaUnidadEnvasado->areas = $areas[$areaIndex]; // Guardar el área correspondiente
+                            $actaUnidadEnvasado->respuestas = !empty($respuestas) ? $respuestas : null; // Guardar la respuesta seleccionada (C, NC, NA)
+                            $actaUnidadEnvasado->save();
+                        }
                     }
                 }
             }
-        }
 
-        // Guardar las respuestas de comercialización si existen
-        if (isset($request->respuestas_comercio) && is_array($request->respuestas_comercio)) {
-            $comercializacion = [
-                'Bodega o almacén',
-                'Tarimas',
-                'Bitácoras',
-                'Otro:',
-                'Otro:'
-            ];
+            // Guardar las respuestas de comercialización si existen
+            if (isset($request->respuestas_comercio) && is_array($request->respuestas_comercio)) {
+                $comercializacion = [
+                    'Bodega o almacén',
+                    'Tarimas',
+                    'Bitácoras',
+                    'Otro:',
+                    'Otro:'
+                ];
 
-            foreach ($request->respuestas_comercio as $rowIndex => $respuestasPorFilas2) {
-                foreach ($respuestasPorFilas2 as $areaIndex => $respuestas_comercio) {
-                    if (isset($comercializacion[$areaIndex])) {
-                        $actaUnidadComer = new actas_unidad_comercializacion();
-                        $actaUnidadComer->id_acta = $acta->id_acta; // Relacionar con la acta creada
-                        $actaUnidadComer->comercializacion = $comercializacion[$areaIndex]; // Guardar el área correspondiente
-                        $actaUnidadComer->respuestas_comercio = !empty($respuestas_comercio) ? $respuestas_comercio : null; // Guardar la respuesta seleccionada (C, NC, NA)
-                        $actaUnidadComer->save();
+                foreach ($request->respuestas_comercio as $rowIndex => $respuestasPorFilas2) {
+                    foreach ($respuestasPorFilas2 as $areaIndex => $respuestas_comercio) {
+                        if (isset($comercializacion[$areaIndex])) {
+                            $actaUnidadComer = new actas_unidad_comercializacion();
+                            $actaUnidadComer->id_acta = $acta->id_acta; // Relacionar con la acta creada
+                            $actaUnidadComer->comercializacion = $comercializacion[$areaIndex]; // Guardar el área correspondiente
+                            $actaUnidadComer->respuestas_comercio = !empty($respuestas_comercio) ? $respuestas_comercio : null; // Guardar la respuesta seleccionada (C, NC, NA)
+                            $actaUnidadComer->save();
+                        }
                     }
                 }
             }
-        }
 
-        return response()->json(['success' => 'Acta circunstanciada para Unidades de producción registrado exitosamente.']);
-    } catch (\Exception $e) {
-        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            return response()->json(['success' => 'Acta circunstanciada para Unidades de producción registrado exitosamente.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
-}
 
 
 
 
-//Metodo para llenar el pdf
+    //Metodo para llenar el pdf
     public function acta_circunstanciada_produccion($id_inspeccion)
     {
 
 
-        $datos = inspecciones::with('solicitud.empresa', 'actas_inspeccion.actas_testigo','inspector', 'actas_inspeccion.acta_produccion_mezcal', 'actas_inspeccion.actas_equipo_mezcal',
-        'actas_inspeccion.actas_equipo_envasado', 'actas_inspeccion.actas_unidad_comercializacion', 'actas_inspeccion.actas_unidad_envasado','actas_inspeccion.actas_produccion.predio_plantacion.predio.catalogo_tipo_agave', 'empresa_num_cliente')->find($id_inspeccion);
+        $datos = inspecciones::with(
+            'solicitud.empresa',
+            'actas_inspeccion.actas_testigo',
+            'inspector',
+            'actas_inspeccion.acta_produccion_mezcal',
+            'actas_inspeccion.actas_equipo_mezcal',
+            'actas_inspeccion.actas_equipo_envasado',
+            'actas_inspeccion.actas_unidad_comercializacion',
+            'actas_inspeccion.actas_unidad_envasado',
+            'actas_inspeccion.actas_produccion.predio_plantacion.predio.catalogo_tipo_agave',
+            'empresa_num_cliente'
+        )->find($id_inspeccion);
         $fecha_llenado = Helpers::formatearFecha($datos->actas_inspeccion->fecha_inicio);
-       $hora_llenado = Helpers::extraerHora($datos->actas_inspeccion->fecha_inicio);
-       $fecha_llenado_fin = Helpers::formatearFecha($datos->actas_inspeccion->fecha_fin);
-       $hora_llenado_fin = Helpers::extraerHora($datos->actas_inspeccion->fecha_fin);
-        $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion', compact('datos','hora_llenado', 'fecha_llenado', 'fecha_llenado_fin','hora_llenado_fin'));
+        $hora_llenado = Helpers::extraerHora($datos->actas_inspeccion->fecha_inicio);
+        $fecha_llenado_fin = Helpers::formatearFecha($datos->actas_inspeccion->fecha_fin);
+        $hora_llenado_fin = Helpers::extraerHora($datos->actas_inspeccion->fecha_fin);
+        $pdf = Pdf::loadView('pdfs.acta_circunstanciada_unidades_produccion', compact('datos', 'hora_llenado', 'fecha_llenado', 'fecha_llenado_fin', 'hora_llenado_fin'));
         return $pdf->stream('F-UV-02-02 ACTA CIRCUNSTANCIADA V6.pdf');
     }
-
 }

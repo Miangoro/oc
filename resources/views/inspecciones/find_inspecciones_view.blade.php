@@ -223,31 +223,70 @@
 
 
     function editModalActaProduccion(id_acta) {
+    $.get('/acta-solicitud/edit/' + id_acta, function (data) {
+        // Rellenar el formulario con los datos obtenidos
+        $('.edit_id_acta').val(data.id_acta);
+        $('#edit_num_acta').val(data.num_acta);
+        $('#edit_categoria_acta').val(data.categoria_acta);
+        $('#edit_encargado').val(data.encargado);
+        $('#edit_num_credencial_encargado').val(data.num_credencial_encargado);
+        $('#edit_lugar_inspeccion').val(data.lugar_inspeccion);
+        $('#edit_fecha_inicio').val(data.fecha_inicio);
+        $('#edit_fecha_fin').val(data.fecha_fin);
+        $('#edit_no_conf_infraestructura').val(data.no_conf_infraestructura);
+        $('#edit_no_conf_equipo').val(data.no_conf_equipo);
 
-            $.get('/acta-solicitud/edit/' + id_acta, function (data) {
-      // Rellenar el formulario con los datos obtenidos
-      $('#edit_num_acta').val(data.num_acta);
-      $('#edit_categoria_acta').val(data.categoria_acta);
-      $('#edit_testigos').val(data.testigos);
-      $('#edit_encargado').val(data.encargado);
-      $('#edit_num_credencial_encargado').val(data.num_credencial_encargado);
-      $('#edit_lugar_inspeccion').val(data.lugar_inspeccion);
-      $('#edit_fecha_inicio').val(data.fecha_inicio);
-      $('#edit_fecha_fin').val(data.fecha_fin);
-      $('#edit_no_conf_infraestructura').val(data.no_conf_infraestructura);
-      $('#edit_no_conf_equipo').val(data.no_conf_equipo);
-      $('#edit_nombre_testigo').val(data.nombre_testigo);
-      $('#edit_domicilio').val(data.domicilio);
+        // Limpiar tabla antes de agregar nuevos testigos
+        $('#edit_testigoss').empty();
 
+        // Iterar sobre los testigos y agregar filas a la tabla
+        data.actas_testigo.forEach(function (testigo, index) {
+            var newRow = `
+                <tr>
+                    <th>
+                        <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
+                            <i class="ri-delete-bin-5-fill"></i>
+                        </button>
+                    </th>
+                    <td>
+                        <input type="text" class="form-control form-control-sm" name="edit_nombre_testigo[]" value="${testigo.nombre_testigo}" />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control form-control-sm" name="edit_domicilio[]" value="${testigo.domicilio}" />
+                    </td>
+                </tr>
+            `;
+            $('#edit_testigoss').append(newRow);
+        });
 
+        $('#edit_unidadMezcal').empty();
 
- 
-      // Mostrar el modal de edición
-      $('#editActaUnidades').modal('show');
+// Iterar sobre los testigos y agregar filas a la tabla
+data.acta_produccion_mezcal.forEach(function (mezcal, index) {
+    var newRow = `
+        <tr>
+            <th>
+                <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
+                    <i class="ri-delete-bin-5-fill"></i>
+                </button>
+            </th>
+            <td>
+                <input type="text" class="form-control form-control-sm" name="respuesta[]" value="${mezcal.respuesta}" />
+            </td>
+        </tr>
+    `;
+    $('#edit_unidadMezcal').append(newRow);
+});
 
-    })
+        // Mostrar el modal de edición
+        $('#editActaUnidades').modal('show');
+    });
+
+    // Cualquier otra lógica adicional
     edit_Testigos();
-    }
+    iniciarCategorias();
+}
+
 
 
     function abrirModalSubirResultados(id_solicitud, num_servicio) {

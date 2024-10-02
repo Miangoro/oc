@@ -18,8 +18,7 @@
                 <form id="editActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <input type="hidden" class="id_inspeccion" name="edit_id_inspeccion">
                     <input type="hidden" class="id_empresa" name="edit_acta_id_empresa">  
-                    <input type="hidden" class="id_acta" name="id_acta">
-                  
+                    <input type="text" class="edit_id_acta" name="id_acta">
                     @csrf
                     <div class="row">
                         <div class="col-md-5 mb-5">
@@ -35,7 +34,7 @@
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-4">
                                 <input type="text" id="edit_categoria_acta" name="edit_categoria_acta"
-                                    class="form-control edit_tipo_instalacion" required oninput="tablasCategorias()"
+                                    class="form-control edit_tipo_instalacion" required oninput="edit_tablasCategorias()"
                                     readonly>
                                 <label for="edit_categoria_acta">En la categoría de:</label>
                             </div>
@@ -104,8 +103,8 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <button type="button" class="btn btn-primary add-row" data-target="#testigoss"
-                                        data-name-prefix="nombre_testigo[]" data-name-suffix="domicilio[]">
+                                    <button type="button" class="btn btn-primary add-row" data-target="#edit_testigoss"
+                                        data-name-prefix="edit_nombre_testigo[]" data-name-suffix="edit_domicilio[]">
                                         <i class="ri-add-line"></i>
                                     </button>
                                 </th>
@@ -113,7 +112,7 @@
                                 <th>Domicilio</th>
                             </tr>
                         </thead>
-                        <tbody id="testigoss">
+                        <tbody id="edit_testigoss">
                             <tr>
                                 <th>
                                     <button type="button" class="btn btn-danger remove-row" disabled>
@@ -132,8 +131,8 @@
                         </tbody>
                     </table>
 
-                    {{-- tabla de produccion --}}
-                    <div id="tablaProduccion" style="display: none;">
+                    {{-- tabla de produccion Agave--}}
+                    <div id="tablaProduccionAgave" style="display: none;">
                         <div style="padding: 10px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
                         <table class="table table-bordered">
@@ -165,7 +164,7 @@
                     </div>
 
                     {{-- Tabla de produccion de mezcal --}}
-                    <div id="tablaProduccionMezcal" style="display: none;">
+                    <div id="edit_tablaProduccionMezcal" style="display: none;">
                         <div style="padding: 10px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción de Mezcal</p>
                         <table class="table table-bordered">
@@ -186,7 +185,7 @@
                                     <th>Almacén a graneles</th>
                                 </tr>
                             </thead>
-                            <tbody id="unidadMezcal">
+                            <tbody id="edit_unidadMezcal">
                                 <tr>
                                     <th>
                                         <button type="button" class="btn btn-danger remove-row" disabled>
@@ -264,7 +263,7 @@
                     </div>
 
                     {{-- tabla de equipos mezcal --}}
-                    <div id="tablaProduccionEquipo" style="display: none;">
+                    <div id="edit_tablaProduccionEquipo" style="display: none;">
                         <div style="padding: 10px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Mezcal</p>
                         <table class="table table-bordered">
@@ -603,7 +602,7 @@ function edit_Testigos() {
 
     // Obtener la tabla y el label de testigos
     const edittablaTestigos = document.getElementById('edit_tabla-testigos');
-    const edittablaTestigosLabel = document.getElementById('edit_tabla-testigos');
+    const edittablaTestigosLabel = document.getElementById('edit_tabla-testigos-label');
 
     // Mostrar u ocultar la tabla dependiendo del valor seleccionado
     if (edit_tipoLote === '1') {
@@ -617,57 +616,55 @@ function edit_Testigos() {
     }
 }
 
-
-/* function initializeModalFunctionality() {
+ 
+ function iniciarCategorias() {
     // Función para mostrar u ocultar la tabla dependiendo del valor de "categoria_acta"
-    function tablasCategorias() {
-        const edit_tipo_instalacion = document.getElementById('edit_categoria_acta').value;
-        const tablaProduccion = document.getElementById('tablaProduccion');
-        const tablaProduccionMezcal = document.getElementById('tablaProduccionMezcal');
-        const tablaProduccionEquipo = document.getElementById('tablaProduccionEquipo');
-        const tablaEnvasadora = document.getElementById('tablaEnvasadora');
-        const tablaEnvasadoraEquipo = document.getElementById('tablaEnvasadoraEquipo');
-        const tablaComercializadora = document.getElementById('tablaComercializadora');
+    function edit_tablasCategorias() {
+            const edit_tipo_instalacion = document.getElementById('edit_categoria_acta').value;
+            const tablaProduccionAgave = document.getElementById('tablaProduccionAgave');
+            const edit_tablaProduccionMezcal = document.getElementById('edit_tablaProduccionMezcal');
+            const edit_tablaProduccionEquipo = document.getElementById('edit_tablaProduccionEquipo');
+            const tablaEnvasadora = document.getElementById('tablaEnvasadora');
+            const tablaEnvasadoraEquipo = document.getElementById('tablaEnvasadoraEquipo');
+            const tablaComercializadora = document.getElementById('tablaComercializadora');
 
-        if (edit_tipo_instalacion === 'Productora') {
-            tablaProduccion.style.display = 'block';
-            tablaProduccionMezcal.style.display = 'block';
-            tablaProduccionEquipo.style.display = 'block';
-        } else if (edit_tipo_instalacion === 'Envasadora') {
-            tablaEnvasadora.style.display = 'block';
-            tablaEnvasadoraEquipo.style.display = 'block';
-        } else if (edit_tipo_instalacion === 'Comercializadora') {
-            tablaComercializadora.style.display = 'block';
-        } else {
-            tablaProduccion.style.display = 'none';
-            tablaProduccionMezcal.style.display = 'none';
-            tablaProduccionEquipo.style.display = 'none';
-            tablaEnvasadora.style.display = 'none';
-            tablaEnvasadoraEquipo.style.display = 'none';
-            tablaComercializadora.style.display = 'none';
-
-
-
-        }
+            if (edit_tipo_instalacion === 'Productora de Agave') {
+                tablaProduccionAgave.style.display = 'block';
+            } else if (edit_tipo_instalacion === 'Productora') {
+                edit_tablaProduccionMezcal.style.display = 'block';
+                edit_tablaProduccionEquipo.style.display = 'block';
+            } else if (edit_tipo_instalacion === 'Envasadora') {
+                tablaEnvasadora.style.display = 'block';
+                tablaEnvasadoraEquipo.style.display = 'block';
+            } else if (['Comercializadora', 'Almacén'].includes(edit_tipo_instalacion)) {
+                tablaComercializadora.style.display = 'block';
+            } else {
+                tablaProduccionAgave.style.display = 'none';
+                edit_tablaProduccionMezcal.style.display = 'none';
+                edit_tablaProduccionEquipo.style.display = 'none';
+                tablaEnvasadora.style.display = 'none';
+                tablaEnvasadoraEquipo.style.display = 'none';
+                tablaComercializadora.style.display = 'none';
+            }
     }
 
     // Asegúrate de que el evento se vincule al modal correcto
-    const modalElement = document.getElementById('ActaUnidades');
+    const modalElement = document.getElementById('editActaUnidades');
 
     if (modalElement) {
         // Se ejecuta cuando el modal se muestra completamente
         modalElement.addEventListener('shown.bs.modal', function() {
-            tablasCategorias(); // Llamar a la función cuando se abra el modal
+            edit_tablasCategorias(); // Llamar a la función cuando se abra el modal
         });
 
         // Llamar a la función también cuando el usuario cambie el valor del input
         const categoriaInput = document.getElementById('edit_categoria_acta');
         if (categoriaInput) {
-            categoriaInput.addEventListener('input', tablasCategorias);
+            categoriaInput.addEventListener('input', edit_tablasCategorias);
         }
     }
-}
+} 
 
 // Iniciar la funcionalidad cuando se cargue el DOM
-document.addEventListener('DOMContentLoaded', initializeModalFunctionality); */
+document.addEventListener('DOMContentLoaded', initializeModalFunctionality); 
 </script>

@@ -639,15 +639,15 @@
                 tablaEnvasadora.style.display = 'block';
                 tablaEnvasadoraEquipo.style.display = 'block';
             } else if (['Comercializadora', 'Almacén'].includes(tipo_instalacion)) {
-    tablaComercializadora.style.display = 'block';
-} else {
-    tablaProduccionAgave.style.display = 'none';
-    tablaProduccionMezcal.style.display = 'none';
-    tablaProduccionEquipo.style.display = 'none';
-    tablaEnvasadora.style.display = 'none';
-    tablaEnvasadoraEquipo.style.display = 'none';
-    tablaComercializadora.style.display = 'none';
-}
+                tablaComercializadora.style.display = 'block';
+            } else {
+                tablaProduccionAgave.style.display = 'none';
+                tablaProduccionMezcal.style.display = 'none';
+                tablaProduccionEquipo.style.display = 'none';
+                tablaEnvasadora.style.display = 'none';
+                tablaEnvasadoraEquipo.style.display = 'none';
+                tablaComercializadora.style.display = 'none';
+            }
         }
 
         // Asegúrate de que el evento se vincule al modal correcto
