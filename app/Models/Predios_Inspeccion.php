@@ -38,8 +38,9 @@ class Predios_Inspeccion extends Model
 
     public function getLogName2(): string
     {
-        return 'equisde'; // Devuelve el nombre que desees
+        return 'inspección'; // Devuelve el nombre que desees
     }
+
     // Relación con PredioCoordenadas
     public function coordenadas()
     {
