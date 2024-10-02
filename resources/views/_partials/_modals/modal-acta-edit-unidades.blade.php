@@ -132,7 +132,7 @@
                     </table>
 
                     {{-- tabla de produccion Agave--}}
-                    <div id="tablaProduccionAgave" style="display: none;">
+                    <div id="edit_tablaProduccionAgave" style="display: block;">
                         <div style="padding: 10px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
                         <table class="table table-bordered">
@@ -152,11 +152,11 @@
                                             <i class="ri-delete-bin-5-fill"></i>
                                         </button>
                                     </th>
-                                    <td><select class="form-control select2 plantacion" name="id_empresa[]">
+                                    <td><select class="form-control select2 plantacion" name="edit_id_empresa[]">
                                             <!-- Opciones -->
                                         </select>
                                     </td>
-                                    <td><input type="text" class="form-control form-control-sm" name="plagas[]">
+                                    <td><input type="text" class="form-control form-control-sm" name="edit_plagas[]">
                                     </td>
                                 </tr>
                             </tbody>
@@ -164,7 +164,7 @@
                     </div>
 
                     {{-- Tabla de produccion de mezcal --}}
-                    <div id="edit_tablaProduccionMezcal" style="display: none;">
+                    <div id="edit_tablaProduccionMezcal" style="display: block;">
                         <div style="padding: 10px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción de Mezcal</p>
                         <table class="table table-bordered">
@@ -255,7 +255,7 @@
                     </div>
 
                     {{-- tabla de equipos mezcal --}}
-                    <div id="edit_tablaProduccionEquipo" style="display: none;">
+                    <div id="edit_tablaProduccionEquipo" style="display: block;">
                         <div style="padding: 10px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Mezcal</p>
                         <table class="table table-bordered">
@@ -305,7 +305,7 @@
                     </div>
 
                     {{-- UNIDAD ENVASADSO --}}
-                    <div id="tablaEnvasadora" style="display: block;">
+                    <div id="edit_tablaEnvasadora" style="display: block;">
                         <div style="padding: 20px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>De Envasado</p>
                         <table class="table table-bordered">
@@ -387,7 +387,7 @@
                     </div>
 
                     {{-- UNIDAD EQUIPO ENVASADO --}}
-                    <div id="tablaEnvasadoraEquipo" style="display: none;">
+                    <div id="edit_tablaEnvasadoraEquipo" style="display: block;">
                         <div style="padding: 20px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Envasado</p>
                         <table class="table table-bordered">
@@ -404,7 +404,7 @@
                                     <th>Tipo de material</th>
                                 </tr>
                             </thead>
-                            <tbody id="equipoEnvasado">
+                            <tbody id="edit_equipoEnvasado">
                                 <tr>
                                     <th>
                                         <button type="button" class="btn btn-danger remove-row" disabled>
@@ -439,7 +439,7 @@
                     </div>
 
                     {{-- UNIDAD COMERCIALIZADORA --}}
-                    <div id="tablaComercializadora" style="display: block;">
+                    <div id="edit_tablaComercializadora" style="display: block;">
 
                         <div style="padding: 20px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>De Comercialización</p>
@@ -530,12 +530,12 @@
 
 
 <script>
-/*        $(document).ready(function() {
+/*         $(document).ready(function() {
 
 
-});
+}); */
 
-function obtenerNombrePredio() {
+/* function edit_obtenerNombrePredio() {
     var empresa = $(".id_empresa").val();
 
     // Hacer una petición AJAX para obtener los detalles de la empresa
@@ -570,7 +570,7 @@ function obtenerNombrePredio() {
             //alert('Error al cargar los lotes a granel.');
         }
     });
-} */
+}  */
 
 function edit_Testigos() {
     // Obtener el valor seleccionado en el select
@@ -597,30 +597,30 @@ function edit_Testigos() {
     // Función para mostrar u ocultar la tabla dependiendo del valor de "categoria_acta"
     function edit_tablasCategorias() {
             const edit_tipo_instalacion = document.getElementById('edit_categoria_acta').value;
-            const tablaProduccionAgave = document.getElementById('tablaProduccionAgave');
+            const edit_tablaProduccionAgave = document.getElementById('edit_tablaProduccionAgave');
             const edit_tablaProduccionMezcal = document.getElementById('edit_tablaProduccionMezcal');
             const edit_tablaProduccionEquipo = document.getElementById('edit_tablaProduccionEquipo');
-            const tablaEnvasadora = document.getElementById('tablaEnvasadora');
-            const tablaEnvasadoraEquipo = document.getElementById('tablaEnvasadoraEquipo');
-            const tablaComercializadora = document.getElementById('tablaComercializadora');
+            const edit_tablaEnvasadora = document.getElementById('edit_tablaEnvasadora');
+            const edit_tablaEnvasadoraEquipo = document.getElementById('edit_tablaEnvasadoraEquipo');
+            const edit_tablaComercializadora = document.getElementById('edit_tablaComercializadora');
 
             if (edit_tipo_instalacion === 'Productora de Agave') {
-                tablaProduccionAgave.style.display = 'block';
+                edit_tablaProduccionAgave.style.display = 'block';
             } else if (edit_tipo_instalacion === 'Productora') {
                 edit_tablaProduccionMezcal.style.display = 'block';
                 edit_tablaProduccionEquipo.style.display = 'block';
             } else if (edit_tipo_instalacion === 'Envasadora') {
-                tablaEnvasadora.style.display = 'block';
-                tablaEnvasadoraEquipo.style.display = 'block';
+                edit_tablaEnvasadora.style.display = 'block';
+                edit_tablaEnvasadoraEquipo.style.display = 'block';
             } else if (['Comercializadora', 'Almacén'].includes(edit_tipo_instalacion)) {
-                tablaComercializadora.style.display = 'block';
+                edit_tablaComercializadora.style.display = 'block';
             } else {
-                tablaProduccionAgave.style.display = 'none';
+                edit_tablaProduccionAgave.style.display = 'none';
                 edit_tablaProduccionMezcal.style.display = 'none';
                 edit_tablaProduccionEquipo.style.display = 'none';
-                tablaEnvasadora.style.display = 'none';
-                tablaEnvasadoraEquipo.style.display = 'none';
-                tablaComercializadora.style.display = 'none';
+                edit_tablaEnvasadora.style.display = 'none';
+                edit_tablaEnvasadoraEquipo.style.display = 'none';
+                edit_tablaComercializadora.style.display = 'none';
             }
     }
 

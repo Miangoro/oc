@@ -223,25 +223,25 @@
 
 
     function editModalActaProduccion(id_acta) {
-    $.get('/acta-solicitud/edit/' + id_acta, function (data) {
-        // Rellenar el formulario con los datos obtenidos
-        $('.edit_id_acta').val(data.id_acta);
-        $('#edit_num_acta').val(data.num_acta);
-        $('#edit_categoria_acta').val(data.categoria_acta);
-        $('#edit_encargado').val(data.encargado);
-        $('#edit_num_credencial_encargado').val(data.num_credencial_encargado);
-        $('#edit_lugar_inspeccion').val(data.lugar_inspeccion);
-        $('#edit_fecha_inicio').val(data.fecha_inicio);
-        $('#edit_fecha_fin').val(data.fecha_fin);
-        $('#edit_no_conf_infraestructura').val(data.no_conf_infraestructura);
-        $('#edit_no_conf_equipo').val(data.no_conf_equipo);
+        $.get('/acta-solicitud/edit/' + id_acta, function(data) {
+            // Rellenar el formulario con los datos obtenidos
+            $('.edit_id_acta').val(data.id_acta);
+            $('#edit_num_acta').val(data.num_acta);
+            $('#edit_categoria_acta').val(data.categoria_acta);
+            $('#edit_encargado').val(data.encargado);
+            $('#edit_num_credencial_encargado').val(data.num_credencial_encargado);
+            $('#edit_lugar_inspeccion').val(data.lugar_inspeccion);
+            $('#edit_fecha_inicio').val(data.fecha_inicio);
+            $('#edit_fecha_fin').val(data.fecha_fin);
+            $('#edit_no_conf_infraestructura').val(data.no_conf_infraestructura);
+            $('#edit_no_conf_equipo').val(data.no_conf_equipo);
 
-        // Limpiar tabla antes de agregar nuevos testigos
-        $('#edit_testigoss').empty();
+            // Limpiar tabla antes de agregar nuevos testigos
+            $('#edit_testigoss').empty();
 
-        // Iterar sobre los testigos y agregar filas a la tabla
-        data.actas_testigo.forEach(function (testigo, index) {
-            var newRow = `
+            // Iterar sobre los testigos y agregar filas a la tabla
+            data.actas_testigo.forEach(function(testigo, index) {
+                var newRow = `
                 <tr>
                     <th>
                         <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
@@ -256,17 +256,17 @@
                     </td>
                 </tr>
             `;
-            $('#edit_testigoss').append(newRow);
-        });
+                $('#edit_testigoss').append(newRow);
+            });
 
 
 
-        //equipo mezcal
-        $('#edit_equipoMezcal').empty();
+            //EQUIPO MEZCAL
+            $('#edit_equipoMezcal').empty();
 
-// Iterar sobre los testigos y agregar filas a la tabla
-data.actas_equipo_mezcal.forEach(function (equipoMezcal, index) {
-    var newRow = `
+            // Iterar sobre los testigos y agregar filas a la tabla
+            data.actas_equipo_mezcal.forEach(function(equipoMezcal, index) {
+                var newRow = `
         <tr>
             <th>
                 <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
@@ -277,7 +277,7 @@ data.actas_equipo_mezcal.forEach(function (equipoMezcal, index) {
                 <input type="text" class="form-control form-control-sm" name="edit_equipo[]" value="${equipoMezcal.equipo}" />
                 <select class="form-control equipo" name="edit_equipo[]">
                     @foreach ($equipos as $equipo)
-                        @if('${equipoMezcal.equipo}'==$equipo->edit_equipo)
+                        @if ('${equipoMezcal.equipo}' == $equipo->edit_equipo)
                             <option selected value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }} si entra</option>
                          @else
                              <option value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }} No entra</option>
@@ -296,173 +296,187 @@ data.actas_equipo_mezcal.forEach(function (equipoMezcal, index) {
             </td>
         </tr>
     `;
-    $('#edit_equipoMezcal').append(newRow);
-});
+                $('#edit_equipoMezcal').append(newRow);
+            });
 
-//mezcal
 
-        $('#edit_unidadMezcal').empty();
 
-        var newRow = `<tr>
+
+            //EQUIPO ENVASADO
+            $('#edit_equipoEnvasado').empty();
+
+            // Iterar sobre los testigos y agregar filas a la tabla
+            data.actas_equipo_envasado.forEach(function(equipoEnvasado, index) {
+                var newRow = `
+        <tr>
+            <th>
+                <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
+                    <i class="ri-delete-bin-5-fill"></i>
+                </button>
+            </th>
+            <td>
+                <input type="text" class="form-control form-control-sm" name="edit_equipo[]" value="${equipoEnvasado.equipo_envasado}" />
+                <select class="form-control equipo" name="edit_equipo[]">
+                    @foreach ($equipos as $equipo)
+                        @if ('${equipoMezcal.equipo}' == $equipo->edit_equipo)
+                            <option selected value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }} si entra</option>
+                         @else
+                             <option value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }} No entra</option>
+                        @endif
+                      @endforeach
+                </select>
+            </td>
+            <td>
+                <input type="number" class="form-control form-control-sm" name="edit_cantidad[]" value="${equipoEnvasado.cantidad_envasado}" />
+            </td>
+                        <td>
+                <input type="text" class="form-control form-control-sm" name="edit_capacidad[]" value="${equipoEnvasado.capacidad_envasado}" />
+            </td>
+                        <td>
+                <input type="text" class="form-control form-control-sm" name="edit_tipo_material[]" value="${equipoEnvasado.tipo_material_envasado}" />
+            </td>
+        </tr>
+    `;
+                $('#edit_equipoEnvasado').append(newRow);
+            });
+
+            //UNIDAD MEZCAL
+            $('#edit_unidadMezcal').empty();
+            var newRow = `<tr>
                             `;
+            // Iterar sobre los testigos y agregar filas a la tabla
+            var c = "";
+            var nc = "";
+            var na = "";
+            data.acta_produccion_mezcal.forEach(function(mezcal, index) {
+                if (mezcal.respuesta == 'C') {
+                    c = "selected";
+                    nc = "";
+                    na = "";
+                }
+                if (mezcal.respuesta == 'NC') {
+                    nc = "selected";
+                    na = "";
+                    c = "";
+                }
+                if (mezcal.respuesta == 'NA') {
+                    na = "selected";
+                    nc = "";
+                    c = "";
+                }
 
-                // Iterar sobre los testigos y agregar filas a la tabla
-                var c = "";
-                var nc = "";
-                var na = "";
-                data.acta_produccion_mezcal.forEach(function (mezcal, index) {
-                    if(mezcal.respuesta=='C'){
-                        c = "selected";
-                        nc = "";
-                        na = "";
-                    }
-                    if(mezcal.respuesta=='NC'){
-                        nc = "selected";
-                        na = "";
-                        c = "";
-                    }
-                    if(mezcal.respuesta=='NA'){
-                        na = "selected";
-                        nc = "";
-                        c = "";
-                    }
-
-                  newRow += `
-                     
+                newRow += `
                             <td>
                                 <select class="form-control" name="edit_respuesta[]">
                                     <option value="" selected>Selecciona</option>
-                                    <option `+c+` value="C">C</option>
-                                    <option `+nc+` value="NC">NC</option>
-                                    <option `+na+` value="NA">NA</option>
+                                    <option ` + c + ` value="C">C</option>
+                                    <option ` + nc + ` value="NC">NC</option>
+                                    <option ` + na + ` value="NA">NA</option>
                                 </select>
                             </td>
-                      
                     `;
-             
+            });
 
-                   
-                });
-
-                $('#edit_unidadMezcal').append(newRow);
-
-                newRow += `</tr>`;
-
-
-
-
-//ENVASADO
-                 $('#edit_unidadEnvasado').empty();
-
-        var newRow = `<tr>
+            //UNIDAD ENVASADO
+            $('#edit_unidadMezcal').append(newRow);
+            newRow += `</tr>`;
+            $('#edit_unidadEnvasado').empty();
+            var newRow = `<tr>
                             `;
+            // Iterar sobre los testigos y agregar filas a la tabla
+            var c = "";
+            var nc = "";
+            var na = "";
+            data.actas_unidad_envasado.forEach(function(enva, index) {
+                if (enva.respuestas == 'C') {
+                    c = "selected";
+                    nc = "";
+                    na = "";
+                }
+                if (enva.respuestas == 'NC') {
+                    nc = "selected";
+                    na = "";
+                    c = "";
+                }
+                if (enva.respuestas == 'NA') {
+                    na = "selected";
+                    nc = "";
+                    c = "";
+                }
 
-                // Iterar sobre los testigos y agregar filas a la tabla
-                var c = "";
-                var nc = "";
-                var na = "";
-                data.actas_unidad_envasado.forEach(function (enva, index) {
-                    if(enva.respuestas=='C'){
-                        c = "selected";
-                        nc = "";
-                        na = "";
-                    }
-                    if(enva.respuestas=='NC'){
-                        nc = "selected";
-                        na = "";
-                        c = "";
-                    }
-                    if(enva.respuestas=='NA'){
-                        na = "selected";
-                        nc = "";
-                        c = "";
-                    }
-
-                  newRow += `
-                     
+                newRow += `
                             <td>
                                 <select class="form-control" name="edit_respuestas[]">
                                     <option value="" selected>Selecciona</option>
-                                    <option `+c+` value="C">C</option>
-                                    <option `+nc+` value="NC">NC</option>
-                                    <option `+na+` value="NA">NA</option>
+                                    <option ` + c + ` value="C">C</option>
+                                    <option ` + nc + ` value="NC">NC</option>
+                                    <option ` + na + ` value="NA">NA</option>
                                 </select>
                             </td>
-                      
                     `;
-             
+            });
 
-                   
-                });
+            $('#edit_unidadEnvasado').append(newRow);
 
-                $('#edit_unidadEnvasado').append(newRow);
+            newRow += `</tr>`;
 
-                newRow += `</tr>`;
+            //UNIDAD COMERCIALIZAION
+            $('#edit_unidadComercializadora').empty();
 
-
-
-
-
-
-                //COMERCIALIZADO
-                $('#edit_unidadComercializadora').empty();
-
-var newRow = `<tr>
+            var newRow = `<tr>
                     `;
 
-        // Iterar sobre los testigos y agregar filas a la tabla
-        var c = "";
-        var nc = "";
-        var na = "";
-        data.actas_unidad_comercializacion.forEach(function (comer, index) {
-            if(comer.respuestas_comercio=='C'){
-                c = "selected";
-                nc = "";
-                na = "";
-            }
-            if(comer.respuestas_comercio=='NC'){
-                nc = "selected";
-                na = "";
-                c = "";
-            }
-            if(comer.respuestas_comercio=='NA'){
-                na = "selected";
-                nc = "";
-                c = "";
-            }
+            // Iterar sobre los testigos y agregar filas a la tabla
+            var c = "";
+            var nc = "";
+            var na = "";
+            data.actas_unidad_comercializacion.forEach(function(comer, index) {
+                if (comer.respuestas_comercio == 'C') {
+                    c = "selected";
+                    nc = "";
+                    na = "";
+                }
+                if (comer.respuestas_comercio == 'NC') {
+                    nc = "selected";
+                    na = "";
+                    c = "";
+                }
+                if (comer.respuestas_comercio == 'NA') {
+                    na = "selected";
+                    nc = "";
+                    c = "";
+                }
 
-          newRow += `
-             
+                newRow += `
                     <td>
                         <select class="form-control" name="edit_respuestas_comercio[]">
                             <option value="" selected>Selecciona</option>
-                            <option `+c+` value="C">C</option>
-                            <option `+nc+` value="NC">NC</option>
-                            <option `+na+` value="NA">NA</option>
+                            <option ` + c + ` value="C">C</option>
+                            <option ` + nc + ` value="NC">NC</option>
+                            <option ` + na + ` value="NA">NA</option>
                         </select>
                     </td>
-              
             `;
-     
+            });
 
-           
+            $('#edit_unidadComercializadora').append(newRow);
+            newRow += `</tr>`;
+            // Mostrar el modal de edición
+            $('#editActaUnidades').modal('show');
         });
-
-        $('#edit_unidadComercializadora').append(newRow);
-
-        newRow += `</tr>`;
-
-        // Mostrar el modal de edición
-        $('#editActaUnidades').modal('show');
-    });
-
-    // Cualquier otra lógica adicional
-    edit_Testigos();
-    iniciarCategorias();
-}
+        // Cualquier otra lógica adicional
+        edit_obtenerNombrePredio();
+        edit_Testigos();
+        iniciarCategorias();
+    }
 
 
 
+
+
+
+
+//modal resulatdos
     function abrirModalSubirResultados(id_solicitud, num_servicio) {
 
         $(".id_solicitud").val(id_solicitud);
