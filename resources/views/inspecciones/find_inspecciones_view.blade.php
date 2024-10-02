@@ -275,6 +275,15 @@ data.actas_equipo_mezcal.forEach(function (equipoMezcal, index) {
             </th>
             <td>
                 <input type="text" class="form-control form-control-sm" name="edit_equipo[]" value="${equipoMezcal.equipo}" />
+                <select class="form-control equipo" name="edit_equipo[]">
+                    @foreach ($equipos as $equipo)
+                        @if('${equipoMezcal.equipo}'==$equipo->edit_equipo)
+                            <option selected value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }} si entra</option>
+                         @else
+                             <option value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }} No entra</option>
+                        @endif
+                      @endforeach
+                </select>
             </td>
             <td>
                 <input type="number" class="form-control form-control-sm" name="edit_cantidad[]" value="${equipoMezcal.cantidad}" />
@@ -294,22 +303,54 @@ data.actas_equipo_mezcal.forEach(function (equipoMezcal, index) {
 
         $('#edit_unidadMezcal').empty();
 
-// Iterar sobre los testigos y agregar filas a la tabla
-data.acta_produccion_mezcal.forEach(function (mezcal, index) {
-    var newRow = `
-        <tr>
-            <th>
-                <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
-                    <i class="ri-delete-bin-5-fill"></i>
-                </button>
-            </th>
-            <td>
-                <input type="text" class="form-control form-control-sm" name="respuesta[]" value="${mezcal.respuesta}" />
-            </td>
-        </tr>
-    `;
-    $('#edit_unidadMezcal').append(newRow);
-});
+        var newRow = `<tr>
+                            <th>
+                                <button type="button" class="btn btn-danger remove-row" >
+                                    <i class="ri-delete-bin-5-fill"></i>
+                                </button>
+                            </th>`;
+
+                // Iterar sobre los testigos y agregar filas a la tabla
+                var c = "";
+                var nc = "";
+                var na = "";
+                data.acta_produccion_mezcal.forEach(function (mezcal, index) {
+                    if(mezcal.respuesta=='C'){
+                        c = "selected";
+                        nc = "";
+                        na = "";
+                    }
+                    if(mezcal.respuesta=='NC'){
+                        nc = "selected";
+                        na = "";
+                        c = "";
+                    }
+                    if(mezcal.respuesta=='NA'){
+                        na = "selected";
+                        nc = "";
+                        c = "";
+                    }
+
+                  newRow += `
+                     
+                            <td>
+                                <select class="form-control" name="respuesta[]">
+                                    <option value="" selected>Selecciona</option>
+                                    <option `+c+` value="C">C</option>
+                                    <option `+nc+` value="NC">NC</option>
+                                    <option `+na+` value="NA">NA</option>
+                                </select>
+                            </td>
+                      
+                    `;
+             
+
+                   
+                });
+
+                $('#edit_unidadMezcal').append(newRow);
+
+                newRow += `</tr>`;
 
         // Mostrar el modal de edición
         $('#editActaUnidades').modal('show');
