@@ -348,6 +348,110 @@ data.actas_equipo_mezcal.forEach(function (equipoMezcal, index) {
 
                 newRow += `</tr>`;
 
+
+
+
+//ENVASADO
+                 $('#edit_unidadEnvasado').empty();
+
+        var newRow = `<tr>
+                            `;
+
+                // Iterar sobre los testigos y agregar filas a la tabla
+                var c = "";
+                var nc = "";
+                var na = "";
+                data.actas_unidad_envasado.forEach(function (enva, index) {
+                    if(enva.respuestas=='C'){
+                        c = "selected";
+                        nc = "";
+                        na = "";
+                    }
+                    if(enva.respuestas=='NC'){
+                        nc = "selected";
+                        na = "";
+                        c = "";
+                    }
+                    if(enva.respuestas=='NA'){
+                        na = "selected";
+                        nc = "";
+                        c = "";
+                    }
+
+                  newRow += `
+                     
+                            <td>
+                                <select class="form-control" name="edit_respuestas[]">
+                                    <option value="" selected>Selecciona</option>
+                                    <option `+c+` value="C">C</option>
+                                    <option `+nc+` value="NC">NC</option>
+                                    <option `+na+` value="NA">NA</option>
+                                </select>
+                            </td>
+                      
+                    `;
+             
+
+                   
+                });
+
+                $('#edit_unidadEnvasado').append(newRow);
+
+                newRow += `</tr>`;
+
+
+
+
+
+
+                //COMERCIALIZADO
+                $('#edit_unidadComercializadora').empty();
+
+var newRow = `<tr>
+                    `;
+
+        // Iterar sobre los testigos y agregar filas a la tabla
+        var c = "";
+        var nc = "";
+        var na = "";
+        data.actas_unidad_comercializacion.forEach(function (comer, index) {
+            if(comer.respuestas_comercio=='C'){
+                c = "selected";
+                nc = "";
+                na = "";
+            }
+            if(comer.respuestas_comercio=='NC'){
+                nc = "selected";
+                na = "";
+                c = "";
+            }
+            if(comer.respuestas_comercio=='NA'){
+                na = "selected";
+                nc = "";
+                c = "";
+            }
+
+          newRow += `
+             
+                    <td>
+                        <select class="form-control" name="edit_respuestas_comercio[]">
+                            <option value="" selected>Selecciona</option>
+                            <option `+c+` value="C">C</option>
+                            <option `+nc+` value="NC">NC</option>
+                            <option `+na+` value="NA">NA</option>
+                        </select>
+                    </td>
+              
+            `;
+     
+
+           
+        });
+
+        $('#edit_unidadComercializadora').append(newRow);
+
+        newRow += `</tr>`;
+
         // Mostrar el modal de edición
         $('#editActaUnidades').modal('show');
     });

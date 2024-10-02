@@ -446,11 +446,7 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-primary add-rowComercializadora">
-                                            <i class="ri-add-line"></i>
-                                        </button>
-                                    </th>
+
                                     <th>Bodega o almacén</th>
                                     <th>Tarimas</th>
                                     <th>Bitácoras</th>
@@ -458,15 +454,11 @@
                                     <th>Otro</th>
                                 </tr>
                             </thead>
-                            <tbody id="unidadComercializadora">
+                            <tbody id="edit_unidadComercializadora">
                                 <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-danger remove-row" disabled>
-                                            <i class="ri-delete-bin-5-fill"></i>
-                                        </button>
-                                    </th>
+
                                     <td>
-                                        <select class="form-control select" name="respuestas_comercio[0][0]">
+                                        <select class="form-control select" name="edit_respuestas_comercio[0][0]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -474,7 +466,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas_comercio[0][1]">
+                                        <select class="form-control select" name="edit_respuestas_comercio[0][1]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -482,7 +474,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas_comercio[0][2]">
+                                        <select class="form-control select" name="edit_respuestas_comercio[0][2]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -490,7 +482,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas_comercio[0][3]">
+                                        <select class="form-control select" name="edit_respuestas_comercio[0][3]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -498,7 +490,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas_comercio[0][4]">
+                                        <select class="form-control select" name="edit_respuestas_comercio[0][4]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
