@@ -304,11 +304,7 @@ data.actas_equipo_mezcal.forEach(function (equipoMezcal, index) {
         $('#edit_unidadMezcal').empty();
 
         var newRow = `<tr>
-                            <th>
-                                <button type="button" class="btn btn-danger remove-row" >
-                                    <i class="ri-delete-bin-5-fill"></i>
-                                </button>
-                            </th>`;
+                            `;
 
                 // Iterar sobre los testigos y agregar filas a la tabla
                 var c = "";
@@ -334,7 +330,7 @@ data.actas_equipo_mezcal.forEach(function (equipoMezcal, index) {
                   newRow += `
                      
                             <td>
-                                <select class="form-control" name="respuesta[]">
+                                <select class="form-control" name="edit_respuesta[]">
                                     <option value="" selected>Selecciona</option>
                                     <option `+c+` value="C">C</option>
                                     <option `+nc+` value="NC">NC</option>

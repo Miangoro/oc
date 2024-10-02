@@ -170,11 +170,7 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-primary add-rowMezcal">
-                                            <i class="ri-add-line"></i>
-                                        </button>
-                                    </th>
+
                                     <th>Recepción (materia prima)</th>
                                     <th>Área de pesado</th>
                                     <th>Área de cocción</th>
@@ -187,14 +183,10 @@
                             </thead>
                             <tbody id="edit_unidadMezcal">
                                 <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-danger remove-row" disabled>
-                                            <i class="ri-delete-bin-5-fill"></i>
-                                        </button>
-                                    </th>
+
                                     <!-- Indexado por fila (0) y columna (áreas) -->
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][0]">
+                                        <select class="form-control select" name="edit_respuesta[0][0]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -202,7 +194,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][1]">
+                                        <select class="form-control select" name="edit_respuesta[0][1]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -210,7 +202,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][2]">
+                                        <select class="form-control select" name="edit_respuesta[0][2]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -218,7 +210,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][3]">
+                                        <select class="form-control select" name="edit_respuesta[0][3]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -226,7 +218,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][4]">
+                                        <select class="form-control select" name="edit_respuesta[0][4]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -234,7 +226,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][5]">
+                                        <select class="form-control select" name="edit_respuesta[0][5]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -242,7 +234,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][6]">
+                                        <select class="form-control select" name="edit_respuesta[0][6]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -250,7 +242,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][7]">
+                                        <select class="form-control select" name="edit_respuesta[0][7]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -313,17 +305,13 @@
                     </div>
 
                     {{-- UNIDAD ENVASADSO --}}
-                    <div id="tablaEnvasadora" style="display: none;">
+                    <div id="tablaEnvasadora" style="display: block;">
                         <div style="padding: 20px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>De Envasado</p>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-primary add-rowEnvasado">
-                                            <i class="ri-add-line"></i>
-                                        </button>
-                                    </th>
+
                                     <th>Almacén de insumos</th>
                                     <th>Almacén a gráneles
                                     </th>
@@ -334,15 +322,11 @@
                                     <th>Área de aseo personal</th>
                                 </tr>
                             </thead>
-                            <tbody id="unidadEnvasado">
+                            <tbody id="edit_unidadEnvasado">
                                 <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-danger remove-row" disabled>
-                                            <i class="ri-delete-bin-5-fill"></i>
-                                        </button>
-                                    </th>
+
                                     <td>
-                                        <select class="form-control select" name="respuestas[0][0]">
+                                        <select class="form-control select" name="edit_respuestas[0][0]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -350,7 +334,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas[0][1]">
+                                        <select class="form-control select" name="edit_respuestas[0][1]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -358,7 +342,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas[0][2]">
+                                        <select class="form-control select" name="edit_respuestas[0][2]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -366,7 +350,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas[0][3]">
+                                        <select class="form-control select" name="edit_respuestas[0][3]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -374,7 +358,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas[0][4]">
+                                        <select class="form-control select" name="edit_respuestas[0][4]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -382,7 +366,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas[0][5]">
+                                        <select class="form-control select" name="edit_respuestas[0][5]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -390,7 +374,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas[0][6]">
+                                        <select class="form-control select" name="edit_respuestas[0][6]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -455,7 +439,7 @@
                     </div>
 
                     {{-- UNIDAD COMERCIALIZADORA --}}
-                    <div id="tablaComercializadora" style="display: none;">
+                    <div id="tablaComercializadora" style="display: block;">
 
                         <div style="padding: 20px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>De Comercialización</p>

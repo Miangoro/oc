@@ -172,11 +172,11 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>
+{{--                                     <th>
                                         <button type="button" class="btn btn-primary add-rowMezcal">
                                             <i class="ri-add-line"></i>
                                         </button>
-                                    </th>
+                                    </th> --}}
                                     <th>Recepción (materia prima)</th>
                                     <th>Área de pesado</th>
                                     <th>Área de cocción</th>
@@ -189,11 +189,11 @@
                             </thead>
                             <tbody id="unidadMezcal">
                                 <tr>
-                                    <th>
+{{--                                     <th>
                                         <button type="button" class="btn btn-danger remove-row" disabled>
                                             <i class="ri-delete-bin-5-fill"></i>
                                         </button>
-                                    </th>
+                                    </th> --}}
                                     <!-- Indexado por fila (0) y columna (áreas) -->
                                     <td>
                                         <select class="form-control select" name="respuesta[0][0]">
@@ -321,11 +321,11 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>
+{{--                                     <th>
                                         <button type="button" class="btn btn-primary add-rowEnvasado">
                                             <i class="ri-add-line"></i>
                                         </button>
-                                    </th>
+                                    </th> --}}
                                     <th>Almacén de insumos</th>
                                     <th>Almacén a gráneles
                                     </th>
@@ -338,11 +338,11 @@
                             </thead>
                             <tbody id="unidadEnvasado">
                                 <tr>
-                                    <th>
+{{--                                     <th>
                                         <button type="button" class="btn btn-danger remove-row" disabled>
                                             <i class="ri-delete-bin-5-fill"></i>
                                         </button>
-                                    </th>
+                                    </th> --}}
                                     <td>
                                         <select class="form-control select" name="respuestas[0][0]">
                                             <option value="" selected>Selecciona</option>
@@ -464,11 +464,11 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>
+{{--                                     <th>
                                         <button type="button" class="btn btn-primary add-rowComercializadora">
                                             <i class="ri-add-line"></i>
                                         </button>
-                                    </th>
+                                    </th> --}}
                                     <th>Bodega o almacén</th>
                                     <th>Tarimas</th>
                                     <th>Bitácoras</th>
@@ -478,11 +478,11 @@
                             </thead>
                             <tbody id="unidadComercializadora">
                                 <tr>
-                                    <th>
+{{--                                     <th>
                                         <button type="button" class="btn btn-danger remove-row" disabled>
                                             <i class="ri-delete-bin-5-fill"></i>
                                         </button>
-                                    </th>
+                                    </th> --}}
                                     <td>
                                         <select class="form-control select" name="respuestas_comercio[0][0]">
                                             <option value="" selected>Selecciona</option>
