@@ -18,7 +18,7 @@
                 <form id="editActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <input type="hidden" class="id_inspeccion" name="edit_id_inspeccion">
                     <input type="hidden" class="id_empresa" name="edit_acta_id_empresa">  
-                    <input type="text" class="edit_id_acta" name="id_acta">
+                    <input type="hidden" class="edit_id_acta" name="id_acta">
                     @csrf
                     <div class="row">
                         <div class="col-md-5 mb-5">
@@ -145,14 +145,14 @@
                                     <th>Plagas en el cultivo</th>
                                 </tr>
                             </thead>
-                            <tbody id="unidadProduccion">
+                            <tbody id="edit_unidadProduccion">
                                 <tr>
                                     <th>
                                         <button type="button" class="btn btn-danger remove-row" disabled>
                                             <i class="ri-delete-bin-5-fill"></i>
                                         </button>
                                     </th>
-                                    <td><select class="form-control select2 plantacion" name="edit_id_empresa[]">
+                                    <td><select class="form-control select2 plantacion" name="edit_id_plantacion[]">
                                             <!-- Opciones -->
                                         </select>
                                     </td>
@@ -412,10 +412,10 @@
                                         </button>
                                     </th>
                                     <td>
-                                        <select class="form-control select2 equipo2" name="equipo_envasado[]">
+                                        <select class="form-control select2 equipo2" name="edit_equipo_envasado[]">
                                             <option value="" selected>Selecciona equipo</option>
                                             @foreach ($equipos as $equipoEnva)
-                                                <option value="{{ $equipoEnva->equipo }}">{{ $equipoEnva->equipo }}
+                                                <option value="{{ $equipoEnva->edit_equipo_envasado }}">{{ $equipoEnva->equipo }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -423,15 +423,15 @@
                                     </td>
                                     <td>
                                         <input type="number" class="form-control form-control-sm"
-                                            name="cantidad_envasado[]" />
+                                            name="edit_cantidad_envasado[]" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control form-control-sm"
-                                            name="capacidad_envasado[]" />
+                                            name="edit_capacidad_envasado[]" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control form-control-sm"
-                                            name="tipo_material_envasado[]" />
+                                            name="edit_tipo_material_envasado[]" />
                                     </td>
                                 </tr>
                             </tbody>

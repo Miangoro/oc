@@ -236,7 +236,7 @@
             $('#edit_no_conf_infraestructura').val(data.no_conf_infraestructura);
             $('#edit_no_conf_equipo').val(data.no_conf_equipo);
 
-            // Limpiar tabla antes de agregar nuevos testigos
+            // EDIT TESTIGOS
             $('#edit_testigoss').empty();
 
             // Iterar sobre los testigos y agregar filas a la tabla
@@ -259,14 +259,12 @@
                 $('#edit_testigoss').append(newRow);
             });
 
+    // EDIT PRODUCCION AGAVE
+    $('#edit_unidadProduccion').empty();
 
-
-            //EQUIPO MEZCAL
-            $('#edit_equipoMezcal').empty();
-
-            // Iterar sobre los testigos y agregar filas a la tabla
-            data.actas_equipo_mezcal.forEach(function(equipoMezcal, index) {
-                var newRow = `
+    // Iterar sobre los testigos y agregar filas a la tabla
+    data.actas_produccion.forEach(function(plantacion, index) {
+        var newRow = `
         <tr>
             <th>
                 <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
@@ -274,33 +272,53 @@
                 </button>
             </th>
             <td>
-                <input type="text" class="form-control form-control-sm" name="edit_equipo[]" value="${equipoMezcal.equipo}" />
-                <select class="form-control equipo" name="edit_equipo[]">
+                <input type="text" class="form-control form-control-sm" name="edit_id_empresa[]" value="${plantacion.id_plantacion}" />
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm" name="edit_plagas[]" value="${plantacion.plagas}" />
+            </td>
+        </tr>
+    `;
+        $('#edit_unidadProduccion').append(newRow);
+    });
+
+                //EQUIPO MEZCAL
+    //EQUIPO MEZCAL
+    $('#edit_equipoMezcal').empty();
+
+    // Iterar sobre los testigos y agregar filas a la tabla
+    data.actas_equipo_mezcal.forEach(function(equipoMezcal, index) {
+        var newRow = `
+        <tr>
+            <th>
+                <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
+                    <i class="ri-delete-bin-5-fill"></i>
+                </button>
+            </th>
+            <td>
+                <select class="form-control select2" name="edit_equipo[]">
+                    <option value="" selected>Selecciona equipo</option>
+                    <option value="${equipoMezcal.equipo}" selected>${equipoMezcal.equipo}</option>
                     @foreach ($equipos as $equipo)
-                        @if ('${equipoMezcal.equipo}' == $equipo->edit_equipo)
-                            <option selected value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }} si entra</option>
-                         @else
-                             <option value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }} No entra</option>
+                        @if ('${equipoMezcal.equipo}' != $equipo->edit_equipo)
+                            <option value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }}</option>
                         @endif
-                      @endforeach
+                    @endforeach
                 </select>
             </td>
             <td>
                 <input type="number" class="form-control form-control-sm" name="edit_cantidad[]" value="${equipoMezcal.cantidad}" />
             </td>
-                        <td>
+            <td>
                 <input type="text" class="form-control form-control-sm" name="edit_capacidad[]" value="${equipoMezcal.capacidad}" />
             </td>
-                        <td>
+            <td>
                 <input type="text" class="form-control form-control-sm" name="edit_tipo_material[]" value="${equipoMezcal.tipo_material}" />
             </td>
         </tr>
     `;
-                $('#edit_equipoMezcal').append(newRow);
-            });
-
-
-
+        $('#edit_equipoMezcal').append(newRow);
+    });
 
             //EQUIPO ENVASADO
             $('#edit_equipoEnvasado').empty();
@@ -315,25 +333,24 @@
                 </button>
             </th>
             <td>
-                <input type="text" class="form-control form-control-sm" name="edit_equipo[]" value="${equipoEnvasado.equipo_envasado}" />
-                <select class="form-control equipo" name="edit_equipo[]">
-                    @foreach ($equipos as $equipo)
-                        @if ('${equipoMezcal.equipo}' == $equipo->edit_equipo)
-                            <option selected value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }} si entra</option>
-                         @else
-                             <option value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }} No entra</option>
-                        @endif
-                      @endforeach
-                </select>
+            <select class="form-control select2" name="edit_equipo_envasado[]">
+                <option value="" selected>Selecciona equipo</option>
+                <option value="${equipoEnvasado.equipo_envasado}" selected>${equipoEnvasado.equipo_envasado}</option>
+                @foreach ($equipos as $equipo)
+                    @if ('${equipoEnvasado.equipo_envasado}' != $equipo->edit_equipo_envasado)
+                        <option value="{{ $equipo->edit_equipo_envasado }}">{{ $equipo->equipo }}</option>
+                    @endif
+                @endforeach
+            </select>
             </td>
             <td>
-                <input type="number" class="form-control form-control-sm" name="edit_cantidad[]" value="${equipoEnvasado.cantidad_envasado}" />
+                <input type="number" class="form-control form-control-sm" name="edit_cantidad_envasado[]" value="${equipoEnvasado.cantidad_envasado}" />
             </td>
                         <td>
-                <input type="text" class="form-control form-control-sm" name="edit_capacidad[]" value="${equipoEnvasado.capacidad_envasado}" />
+                <input type="text" class="form-control form-control-sm" name="edit_capacidad_envasado[]" value="${equipoEnvasado.capacidad_envasado}" />
             </td>
                         <td>
-                <input type="text" class="form-control form-control-sm" name="edit_tipo_material[]" value="${equipoEnvasado.tipo_material_envasado}" />
+                <input type="text" class="form-control form-control-sm" name="edit_tipo_material_envasado[]" value="${equipoEnvasado.tipo_material_envasado}" />
             </td>
         </tr>
     `;
@@ -465,8 +482,8 @@
             $('#editActaUnidades').modal('show');
         });
         // Cualquier otra lógica adicional
-        edit_obtenerNombrePredio();
-        edit_Testigos();
+/*         edit_obtenerNombrePredio();
+ */        edit_Testigos();
         iniciarCategorias();
     }
 

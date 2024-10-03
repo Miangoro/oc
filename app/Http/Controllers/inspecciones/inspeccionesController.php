@@ -279,7 +279,8 @@ class inspeccionesController extends Controller
     {
         try {
             // Aquí obtienes el acta de inspección junto con sus testigos
-            $acta = actas_inspeccion::with('actas_testigo', 'acta_produccion_mezcal', 'actas_equipo_mezcal', 'actas_unidad_envasado', 'actas_unidad_comercializacion', 'actas_equipo_envasado')->findOrFail($id_acta);
+            $acta = actas_inspeccion::with('actas_testigo', 'acta_produccion_mezcal', 'actas_equipo_mezcal', 'actas_unidad_envasado', 'actas_unidad_comercializacion',
+             'actas_equipo_envasado','actas_produccion')->findOrFail($id_acta);
     
             return response()->json($acta);
         } catch (\Exception $e) {

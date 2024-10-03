@@ -451,6 +451,8 @@ Route::get('/certificado_como_envasador', [CartaAsignacionController::class, 'Ce
 Route::get('/solicitud_de_servicios', [CartaAsignacionController::class, 'SolicitudDeServicios052'])->name('CertificadoComoEnvasador');
 Route::get('/dictamen_cumplimiento_instalaciones', [CartaAsignacionController::class, 'DictamenDeCumplimienoInstalaciones'])->name('DictamenDeCumplimienoInstalaciones');
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'Contancia_trabajo'])->name('Contancia_trabajo');
+Route::get('/informe_inspeccion_etiqueta', [CartaAsignacionController::class, 'InformeInspeccionEtiqueta'])->name('InformeInspeccionEtiqueta');
+
 
 
 /* orden-trabajo-inspeccion-etiquetas */
@@ -765,3 +767,12 @@ Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnic
 Route::get('/Solicitud-Especificaciones', [CartaAsignacionController::class, 'SolicitudEspecificaciones'])->name('Solicitud-Especificaciones');
 Route::get('/Oreden-Trabajo', [CartaAsignacionController::class, 'OrdenTrabajo'])->name('Oreden-Trabajo');
 Route::get('/Solicitud-Servicio-UNIIC', [CartaAsignacionController::class, 'SolicitudUNIIC'])->name('Solicitud-Servicio-UNIIC');
+<<<<<<< HEAD
+=======
+
+/* Route::get('/lista_empresas/{id_empresa}', [clientesConfirmadosController::class, 'obtenerContratos']);
+ */
+Route::get('/empresa_contrato/{id_empresa}', [clientesConfirmadosController::class, 'obtenerContratosPorEmpresa']);
+Route::get('/empresa_num_cliente/{id_empresa}', [clientesConfirmadosController::class, 'obtenerNumeroCliente']);
+Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'actualizarRegistros']);
+>>>>>>> ddab3a394c54031c478b011b350163a146d60d47
