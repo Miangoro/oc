@@ -283,42 +283,43 @@ data.actas_produccion.forEach(function(plantacion, index) {
 });
 
             //EQUIPO MEZCAL
-            $('#edit_equipoMezcal').empty();
+//EQUIPO MEZCAL
+$('#edit_equipoMezcal').empty();
 
-            // Iterar sobre los testigos y agregar filas a la tabla
-            data.actas_equipo_mezcal.forEach(function(equipoMezcal, index) {
-                var newRow = `
-        <tr>
-            <th>
-                <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
-                    <i class="ri-delete-bin-5-fill"></i>
-                </button>
-            </th>
-            <td>
-                <input type="text" class="form-control form-control-sm" name="edit_equipo[]" value="${equipoMezcal.equipo}" />
-                <select class="form-control equipo" name="edit_equipo[]">
-                    @foreach ($equipos as $equipo)
-                        @if ('${equipoMezcal.equipo}' == $equipo->edit_equipo)
-                            <option selected value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }} si entra</option>
-                         @else
-                             <option value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }} No entra</option>
-                        @endif
-                      @endforeach
-                </select>
-            </td>
-            <td>
-                <input type="number" class="form-control form-control-sm" name="edit_cantidad[]" value="${equipoMezcal.cantidad}" />
-            </td>
-                        <td>
-                <input type="text" class="form-control form-control-sm" name="edit_capacidad[]" value="${equipoMezcal.capacidad}" />
-            </td>
-                        <td>
-                <input type="text" class="form-control form-control-sm" name="edit_tipo_material[]" value="${equipoMezcal.tipo_material}" />
-            </td>
-        </tr>
-    `;
-                $('#edit_equipoMezcal').append(newRow);
-            });
+// Iterar sobre los testigos y agregar filas a la tabla
+data.actas_equipo_mezcal.forEach(function(equipoMezcal, index) {
+    var newRow = `
+    <tr>
+        <th>
+            <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
+                <i class="ri-delete-bin-5-fill"></i>
+            </button>
+        </th>
+        <td>
+            <select class="form-control" name="edit_equipo[]">
+                                                            <option value="" selected>Selecciona equipo</option>
+
+                <option value="${equipoMezcal.equipo}" selected>${equipoMezcal.equipo}</option>
+                @foreach ($equipos as $equipo)
+                    @if ('${equipoMezcal.equipo}' != $equipo->edit_equipo)
+                        <option value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }}</option>
+                    @endif
+                @endforeach
+            </select>
+        </td>
+        <td>
+            <input type="number" class="form-control form-control-sm" name="edit_cantidad[]" value="${equipoMezcal.cantidad}" />
+        </td>
+        <td>
+            <input type="text" class="form-control form-control-sm" name="edit_capacidad[]" value="${equipoMezcal.capacidad}" />
+        </td>
+        <td>
+            <input type="text" class="form-control form-control-sm" name="edit_tipo_material[]" value="${equipoMezcal.tipo_material}" />
+        </td>
+    </tr>
+`;
+    $('#edit_equipoMezcal').append(newRow);
+});
 
 
 
@@ -336,16 +337,17 @@ data.actas_produccion.forEach(function(plantacion, index) {
                 </button>
             </th>
             <td>
-                <input type="text" class="form-control form-control-sm" name="edit_equipo[]" value="${equipoEnvasado.equipo_envasado}" />
-                <select class="form-control equipo" name="edit_equipo[]">
-                    @foreach ($equipos as $equipo)
-                        @if ('${equipoMezcal.equipo}' == $equipo->edit_equipo)
-                            <option selected value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }} si entra</option>
-                         @else
-                             <option value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }} No entra</option>
-                        @endif
-                      @endforeach
-                </select>
+                <input type="text" class="form-control form-control-sm" name="equipo_envasado[]" value="${equipoEnvasado.equipo_envasado}" />
+            <select class="form-control" name="equipo_envasado[]">
+                <option value="${equipoEnvasado.equipo_envasado}" selected>${equipoEnvasado.equipo_envasado}</option>
+                                                            <option value="" selected>Selecciona equipo</option>
+
+                @foreach ($equipos as $equipo)
+                    @if ('${equipoEnvasado.equipo_envasado}' != $equipo->equipo_envasado)
+                        <option value="{{ $equipo->equipo_envasado }}">{{ $equipo->equipo }}</option>
+                    @endif
+                @endforeach
+            </select>
             </td>
             <td>
                 <input type="number" class="form-control form-control-sm" name="edit_cantidad[]" value="${equipoEnvasado.cantidad_envasado}" />
