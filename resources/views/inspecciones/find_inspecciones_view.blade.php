@@ -296,9 +296,8 @@
                 </button>
             </th>
             <td>
-                <select class="form-control" name="edit_equipo[]">
+                <select class="form-control select2" name="edit_equipo[]">
                     <option value="" selected>Selecciona equipo</option>
-
                     <option value="${equipoMezcal.equipo}" selected>${equipoMezcal.equipo}</option>
                     @foreach ($equipos as $equipo)
                         @if ('${equipoMezcal.equipo}' != $equipo->edit_equipo)
@@ -320,6 +319,7 @@
     `;
         $('#edit_equipoMezcal').append(newRow);
     });
+$('.select2').select2();
 
             //EQUIPO ENVASADO
             $('#edit_equipoEnvasado').empty();
@@ -334,9 +334,8 @@
                 </button>
             </th>
             <td>
-            <select class="form-control" name="edit_equipo_envasado[]">
+            <select class="form-control select2" name="edit_equipo_envasado[]">
                 <option value="" selected>Selecciona equipo</option>
-
                 <option value="${equipoEnvasado.equipo_envasado}" selected>${equipoEnvasado.equipo_envasado}</option>
                 @foreach ($equipos as $equipo)
                     @if ('${equipoEnvasado.equipo_envasado}' != $equipo->edit_equipo_envasado)
