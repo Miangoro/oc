@@ -188,9 +188,9 @@
 
         .header img {
             float: left;
-            max-width: 225px;
+            max-width: 205px;
             padding: 0;
-            margin-top: -50px;
+            margin-top: -60px;
             margin-left: -30px;
             margin-right: -10px;
 
@@ -203,25 +203,27 @@
 
     <div class="header">
         <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM" >
-        <div style=" font-size: 14.5px;line-height: 0.9;">Informe de Inspección de Etiqueta R-UNIIC-008<br>Edición 1,19/08/2024
+        <div style=" font-size: 14.5px;line-height: 0.9; ">Informe de Inspección de Etiqueta R-UNIIC-008<br>Edición 1,19/08/2024
         </div>
-        <div style="margin-top: -18px">____________________________________________________________________</div>
-        <div style="height: 30px;"></div>
+        <div style="margin-top: -18px; ">______________________________________________________________________</div>
+        <div style="height: 15px;"></div>
         <div style="text-align: center">
+            <div style="height: 10px"></div>
             <div>
-                <span class="negrita" style=" font-size: 18.5px; line-height: 0.9; color: #00b050"><u> Informe De
-                        Inspección De Etiqueta</u>
-                </span>
+                <div class="negrita" style=" font-size: 19.5px; line-height: 0.9; color: #00b050"><u>Informe De
+                    Inspección De Etiqueta</u>
+
+                </div>
                 <div class="rightLetter"
-                    style="font-size: 14px;color: #0c1344; font-family: Lucida Sans Unicode; padding-right: 30px">
+                    style="font-size: 14.5px;color: #0c1344; font-family: Lucida Sans Unicode; padding-right: 30px;  margin-right: -20px ">
                     Número de Acreditación: UVNOM 145
                 </div>
-                <div class="rightLetter" style="color: #eb7b08; font-size: 10px; padding-right: 30px">
+                <div class="rightLetter" style="color: #eb7b08; font-size: 12.5px; padding-right: 30px; margin-right: -20px ">
                     <span class="negrita">No. de Informe: XXX-XXXXRX
                     </span>
                 </div>
                 <div class="rightLetter"
-                    style="padding-bottom: 20px; font-size: 13px; font-family: Lucida Sans Unicode; padding-right: 30px">
+                    style="padding-bottom: 20px; font-size: 13.5px; font-family: Lucida Sans Unicode; padding-right: 30px; margin-right: -20px ">
                     Morelia, Michoacán, a __ de ____ del ___
                 </div>
             </div>
