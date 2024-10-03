@@ -318,7 +318,7 @@ class CartaAsignacionController extends Controller
 
     public function InformeInspeccionEtiqueta() {
         $pdf = Pdf::loadView('pdfs.Informe_de_inspección_de_etiqueta');
-        return $pdf->stream('Informe_de_inspección_de_etiqueta,_Ed_1,_Vigente');
+        return $pdf->stream('Informe_de_inspección_de_etiqueta,_Ed_1,_Vigente.pdf');
       }
 }
 

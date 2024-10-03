@@ -12,8 +12,8 @@
         }
 
         @page {
-            margin-left: 100px;
-            margin-right: 100px;
+            margin-left: 87px;
+            margin-right: 115px;
             margin-top: 60px;
             margin-bottom: 60px;
 
