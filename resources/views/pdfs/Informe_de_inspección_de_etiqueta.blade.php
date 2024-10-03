@@ -192,6 +192,8 @@
             padding: 0;
             margin-top: -50px;
             margin-left: -30px;
+            margin-right: -10px;
+
         }
     </style>
 </head>
@@ -201,10 +203,10 @@
 
     <div class="header">
         <img src="{{ public_path('img_pdf/logo_cidam_texto.png') }}" alt="Logo CIDAM" >
-        <div>Informe de Inspección de Etiqueta R-UNIIC-008<br>Edición 2 Entrada en Vigor: 08/03/2023
-            <br>___________________________________________________________________
+        <div style=" font-size: 14.5px;line-height: 0.9;">Informe de Inspección de Etiqueta R-UNIIC-008<br>Edición 1,19/08/2024
         </div>
-        <br>
+        <div style="margin-top: -18px">____________________________________________________________________</div>
+        <div style="height: 30px;"></div>
         <div style="text-align: center">
             <div>
                 <span class="negrita" style=" font-size: 18.5px; line-height: 0.9; color: #00b050"><u> Informe De
@@ -259,7 +261,7 @@
                     <td class="negrita3">Especificaciones</td>
                     <td class="negrita3" style="width: 65px">Resultado <br>
                         (NC)</td>
-                    <td class="negrita3">Observaciones</td>
+                    <td class="negrita3" style="width: 200px">Observaciones</td>
                 </tr>
                 <tr>
                     <td style="height: 20px"></td>
