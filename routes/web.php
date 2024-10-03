@@ -451,6 +451,8 @@ Route::get('/certificado_como_envasador', [CartaAsignacionController::class, 'Ce
 Route::get('/solicitud_de_servicios', [CartaAsignacionController::class, 'SolicitudDeServicios052'])->name('CertificadoComoEnvasador');
 Route::get('/dictamen_cumplimiento_instalaciones', [CartaAsignacionController::class, 'DictamenDeCumplimienoInstalaciones'])->name('DictamenDeCumplimienoInstalaciones');
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'Contancia_trabajo'])->name('Contancia_trabajo');
+Route::get('/informe_inspeccion_etiqueta', [CartaAsignacionController::class, 'InformeInspeccionEtiqueta'])->name('InformeInspeccionEtiqueta');
+
 
 
 /* orden-trabajo-inspeccion-etiquetas */
