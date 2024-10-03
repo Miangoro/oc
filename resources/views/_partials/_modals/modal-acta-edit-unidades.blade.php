@@ -18,7 +18,7 @@
                 <form id="editActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <input type="hidden" class="id_inspeccion" name="edit_id_inspeccion">
                     <input type="hidden" class="id_empresa" name="edit_acta_id_empresa">  
-                    <input type="text" class="edit_id_acta" name="id_acta">
+                    <input type="hidden" class="edit_id_acta" name="id_acta">
                     @csrf
                     <div class="row">
                         <div class="col-md-5 mb-5">
@@ -145,7 +145,7 @@
                                     <th>Plagas en el cultivo</th>
                                 </tr>
                             </thead>
-                            <tbody id="unidadProduccion">
+                            <tbody id="edit_unidadProduccion">
                                 <tr>
                                     <th>
                                         <button type="button" class="btn btn-danger remove-row" disabled>

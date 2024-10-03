@@ -236,7 +236,7 @@
             $('#edit_no_conf_infraestructura').val(data.no_conf_infraestructura);
             $('#edit_no_conf_equipo').val(data.no_conf_equipo);
 
-            // Limpiar tabla antes de agregar nuevos testigos
+            // EDIT TESTIGOS
             $('#edit_testigoss').empty();
 
             // Iterar sobre los testigos y agregar filas a la tabla
@@ -259,7 +259,28 @@
                 $('#edit_testigoss').append(newRow);
             });
 
+ // EDIT PRODUCCION AGAVE
+ $('#edit_unidadProduccion').empty();
 
+// Iterar sobre los testigos y agregar filas a la tabla
+data.actas_produccion.forEach(function(plantacion, index) {
+    var newRow = `
+    <tr>
+        <th>
+            <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
+                <i class="ri-delete-bin-5-fill"></i>
+            </button>
+        </th>
+        <td>
+            <input type="text" class="form-control form-control-sm" name="edit_id_empresa[]" value="${plantacion.id_plantacion}" />
+        </td>
+        <td>
+            <input type="text" class="form-control form-control-sm" name="edit_plagas[]" value="${plantacion.plagas}" />
+        </td>
+    </tr>
+`;
+    $('#edit_unidadProduccion').append(newRow);
+});
 
             //EQUIPO MEZCAL
             $('#edit_equipoMezcal').empty();
@@ -465,8 +486,8 @@
             $('#editActaUnidades').modal('show');
         });
         // Cualquier otra lógica adicional
-        edit_obtenerNombrePredio();
-        edit_Testigos();
+/*         edit_obtenerNombrePredio();
+ */        edit_Testigos();
         iniciarCategorias();
     }
 
