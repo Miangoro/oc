@@ -152,7 +152,7 @@
                                             <i class="ri-delete-bin-5-fill"></i>
                                         </button>
                                     </th>
-                                    <td><select class="form-control select2 plantacion" name="edit_id_empresa[]">
+                                    <td><select class="form-control select2 plantacion" name="edit_id_plantacion[]">
                                             <!-- Opciones -->
                                         </select>
                                     </td>

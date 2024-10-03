@@ -319,7 +319,6 @@
     `;
         $('#edit_equipoMezcal').append(newRow);
     });
-$('.select2').select2();
 
             //EQUIPO ENVASADO
             $('#edit_equipoEnvasado').empty();
