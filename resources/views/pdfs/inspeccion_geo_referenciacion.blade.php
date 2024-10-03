@@ -309,7 +309,7 @@
             </tr>
             <tr>
                 <td>Ubicacion del predio</td>
-                <td style="background-color: #D9D9D9;"></td>
+                <td style="background-color: #D9D9D9; font-weight: normal;"> {{ $inspeccion->ubicacion_predio }}</td>
             </tr>
         </table> <br>
         <p class="indice">II. &nbsp;&nbsp;&nbsp;&nbsp; Datos del predio</p>
@@ -317,67 +317,36 @@
         <table class="datosprediotabla">
             <tr>
                 <td style="width: 29%">Localidad</td>
-                <td></td>
+                <td>{{ $inspeccion->localidad }}</td>
             </tr>
             <tr>
                 <td>Municipio</td>
-                <td></td>
+                <td>{{ $inspeccion->municipio }}</td>
             </tr>
             <tr>
                 <td>Distrito</td>
-                <td></td>
+                <td>{{ $inspeccion->distrito }}</td>
             </tr>
             <tr>
                 <td>Estado</td>
-                <td></td>
+                <td>{{ $inspeccion->estados->nombre }}</td> {{-- cambiarlo por el estado --}}
+
             </tr>
             <tr>
                 <td>Nombre del paraje</td>
-                <td></td>
+                <td>{{ $inspeccion->nombre_paraje }}</td>
             </tr>
             <tr>
                 <td>Predio en zona DOM (Si/No)</td>
-                <td></td>
+                <td>{{ $inspeccion->zona_dom }}</td>
             </tr>
         </table>
         <br>
         <p class="indice">III. &nbsp;&nbsp;&nbsp;&nbsp; Datos de geo-referenciación del predio</p>
         <br>
-        <table class="tabla-coordenadas">
+        {{--         <table class="tabla-coordenadas">
             <tr>
-                <td rowspan="10" style="width: 25%;">Grados decimales</td>
-                <td>Latitud</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Longitud</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Latitud</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Longitud</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Latitud</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Longitud</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Latitud</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Longitud</td>
-                <td></td>
-            </tr>
-            <tr>
+                <td rowspan="2" style="width: 25%;">Grados decimales</td>
                 <td>Latitud</td>
                 <td></td>
             </tr>
@@ -387,9 +356,50 @@
             </tr>
             <tr>
                 <td>Superficie</td>
-                <td colspan="2"></td>
+                <td colspan="2">{{$inspeccion->superficie}}</td>
+            </tr>
+        </table> --}}
+        <table class="tabla-coordenadas">
+            <tr>
+                <td rowspan="{{ max(count($coordenadas) * 2, 2) }}" style="width: 25%;">Grados decimales</td>
+                <td>Latitud</td>
+                <td style="font-weight: normal;">
+                    @if ($coordenadas->isNotEmpty())
+                        {{ $coordenadas[0]->latitud }}
+                    @else
+                        N/A
+                    @endif
+                </td>
+            </tr>
+            <tr>
+                <td>Longitud</td>
+                <td style="font-weight: normal;">
+                    @if ($coordenadas->isNotEmpty())
+                        {{ $coordenadas[0]->longitud }}
+                    @else
+                        N/A
+                    @endif
+                </td>
+            </tr>
+
+            @foreach ($coordenadas->slice(1) as $coordenada)
+                <tr>
+                    <td>Latitud</td>
+                    <td style="font-weight: normal;">{{ $coordenada->latitud }}</td>
+                </tr>
+                <tr>
+                    <td>Longitud</td>
+                    <td style="font-weight: normal;">{{ $coordenada->longitud }}</td>
+                </tr>
+            @endforeach
+
+            <tr>
+                <td>Superficie</td>
+                <td colspan="2" style="font-weight: normal;">{{ $inspeccion->superficie ?? 'N/A' }}</td>
             </tr>
         </table>
+
+
     </div>
 
     <div class="container">
@@ -405,9 +415,9 @@
             </tr>
             <tr>
                 <td style="height: 50px;">Maguey cultivado</td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ $inspeccion->distancia_surcos }}</td>
+                <td>{{ $inspeccion->distancia_plantas }}</td>
+                <td>{{ $inspeccion->marco_plantacion }}</td>
             </tr>
         </table>
         <br>
@@ -451,79 +461,29 @@
         <p style="margin: 0;" class="indice">&nbsp;&nbsp; Edad</p>
         <br>
         <table class="caracteristicas">
-            <tr>
-                <td style="background-color: #DDFFFF;">No. planta</td>
-                <td style="background-color: #DDFFFF;">Altura (m)</td>
-                <td style="background-color: #DDFFFF;">Diámetro (cm)</td>
-                <td style="background-color: #DDFFFF;">Número de hojas</td>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>4</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>6</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>7</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>8</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>9</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>10</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Promedio</td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
+          <tr>
+              <td style="background-color: #DDFFFF;">No. planta</td>
+              <td style="background-color: #DDFFFF;">Altura (m)</td>
+              <td style="background-color: #DDFFFF;">Diámetro (cm)</td>
+              <td style="background-color: #DDFFFF;">Número de hojas</td>
+          </tr>
+          @php $contador = 1; @endphp <!-- Inicializa el contador -->
+          @foreach ($caracteristicas as $caracteristica)
+              <tr>
+                  <td>{{ $contador++ }}</td> <!-- Muestra el contador y luego lo incrementa -->
+                  <td>{{ $caracteristica->altura }}</td>
+                  <td>{{ $caracteristica->diametro }}</td>
+                  <td>{{ $caracteristica->numero_hojas }}</td>
+              </tr>
+          @endforeach
+          <tr>
+              <td>Promedio</td>
+              <td></td>
+              <td></td>
+              <td></td>
+          </tr>
+      </table>
+
         <br> <br>
         <table class="tabletipo">
             <tr>
@@ -533,13 +493,15 @@
                 <td style="background-color: #DDFFFF;">Edad (años)</td>
                 <td style="background-color: #DDFFFF;">Tipo de plantación</td>
             </tr>
+            @foreach ($plantacion as $plantacion)
             <tr>
-                <td style="height: 50px;"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ $plantacion->id_tipo }}</td>
+                <td>{{ $plantacion->id_tipo }}</td>
+                <td>{{ $plantacion->num_plantas }}</td>
+                <td>{{ $plantacion->anio_plantacion }}</td>
+                <td>{{ $plantacion->tipo_plantacion }}</td>
             </tr>
+            @endforeach
         </table>
         <br>
         <table class="firma-section">

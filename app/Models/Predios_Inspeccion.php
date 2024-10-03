@@ -15,12 +15,6 @@ class Predios_Inspeccion extends Model
     protected $primaryKey = 'id_inspeccion';
     protected $fillable = [
       'id_predio',
-      'no_orden_servicio',
-      'no_cliente',
-      'id_empresa',
-      'id_tipo_agave',
-      'domicilio_fiscal',
-      'telefono',
       'ubicacion_predio',
       'localidad',
       'municipio',
@@ -28,12 +22,10 @@ class Predios_Inspeccion extends Model
       'id_estado',
       'nombre_paraje',
       'zona_dom',
-      'id_tipo_maguey',
       'marco_plantacion',
       'distancia_surcos',
       'distancia_plantas',
       'superficie',
-      'fecha_inspeccion',
     ];
 
     public function getLogName2(): string
@@ -52,6 +44,13 @@ class Predios_Inspeccion extends Model
     {
         return $this->hasMany(predio_plantacion::class, 'id_inspeccion', 'id_inspeccion');
     }
+
+    public function estados()
+    {
+        return $this->belongsTo(estados::class, 'id_estado');
+    }
+
+
 
 
 

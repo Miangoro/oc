@@ -108,7 +108,7 @@
             font-size: 14px;
             text-align: left;
         }
-        
+
         .coordenadas {
             border-collapse: collapse;
             width: 100%;
@@ -120,19 +120,18 @@
             color: #006666;
             font-size: 16px;
             font-weight: bold;
-            
+
         }
         .watermark {
             position: absolute;
-            top: 50%; 
-            left: 50%; 
+            top: 50%;
+            left: 50%;
             width: 50%;
             height: auto;
             transform: translate(-50%, -50%);
             opacity: 0.1;
             z-index: -1;
         }
-  
     </style>
 </head>
 
@@ -156,7 +155,7 @@
     </div>
     {{-- marca de agua --}}
     <img src="{{ public_path('img_pdf/fondo_dictamen.png') }}" alt="Marca de Agua" class="watermark">
-    
+
     {{-- contenido --}}
     <div class="container">
         <p style="font-size: 20px; font-weight: bold; text-align: center; margin: 0;">Registro de predios de maguey o agave</p>
@@ -315,7 +314,7 @@
           </tr>
         </table>
         <br>
-        <p style="margin: 0;" class="indice">VI. &nbsp;&nbsp;&nbsp;&nbsp;  Ubicación y georreferenciación del agave</p>     
+        <p style="margin: 0;" class="indice">VI. &nbsp;&nbsp;&nbsp;&nbsp;  Ubicación y georreferenciación del agave</p>
         <br>
         <table class="generales">
             <tr>

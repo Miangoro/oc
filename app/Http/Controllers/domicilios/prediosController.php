@@ -504,21 +504,13 @@ class PrediosController extends Controller
     {
         // Validar los datos del formulario
         $validatedData = $request->validate([
-            'id_empresa' => 'required|exists:empresa,id_empresa',
-            'no_orden_servicio' => 'required|string|max:255',
-            'no_cliente' => 'required|string|max:255',
-            'id_tipo_agave' => 'required|exists:catalogo_tipo_agave,id_tipo',
-            'domicilio_fiscal' => 'required|string|max:255',
-            'telefono' => 'nullable|string|max:20',
             'ubicacion_predio' => 'required|string|max:255',
-            'fecha_inspeccion' => 'required|date',
             'localidad' => 'required|string|max:255',
             'municipio' => 'required|string|max:255',
             'distrito' => 'required|string|max:255',
             'estado' => 'required|exists:estados,id',
             'nombre_paraje' => 'required|string|max:255',
             'zona_dom' => 'required|string|in:si,no',
-            'id_tipo_maguey' => 'required|exists:catalogo_tipo_agave,id_tipo',
             'marco_plantacion' => 'required|numeric',
             'distancia_surcos' => 'required|numeric',
             'distancia_plantas' => 'required|numeric',
@@ -539,21 +531,13 @@ class PrediosController extends Controller
         // Crear una nueva instancia del modelo Predios_Inspeccion
         $inspeccion = new Predios_Inspeccion();
         $inspeccion->id_predio = $id_predio;
-        $inspeccion->id_empresa = $validatedData['id_empresa'];
-        $inspeccion->no_orden_servicio = $validatedData['no_orden_servicio'];
-        $inspeccion->no_cliente = $validatedData['no_cliente'];
-        $inspeccion->id_tipo_agave = $validatedData['id_tipo_agave'];
-        $inspeccion->domicilio_fiscal = $validatedData['domicilio_fiscal'];
-        $inspeccion->telefono = $validatedData['telefono'];
         $inspeccion->ubicacion_predio = $validatedData['ubicacion_predio'];
-        $inspeccion->fecha_inspeccion = $validatedData['fecha_inspeccion'];
         $inspeccion->localidad = $validatedData['localidad'];
         $inspeccion->municipio = $validatedData['municipio'];
         $inspeccion->distrito = $validatedData['distrito'];
         $inspeccion->id_estado = $validatedData['estado'];
         $inspeccion->nombre_paraje = $validatedData['nombre_paraje'];
         $inspeccion->zona_dom = $validatedData['zona_dom'];
-        $inspeccion->id_tipo_maguey = $validatedData['id_tipo_maguey'];
         $inspeccion->marco_plantacion = $validatedData['marco_plantacion'];
         $inspeccion->distancia_surcos = $validatedData['distancia_surcos'];
         $inspeccion->distancia_plantas = $validatedData['distancia_plantas'];
@@ -631,7 +615,24 @@ class PrediosController extends Controller
         ]);
     }
 
+    public function PDFInspeccionGeoreferenciacion($id_predio) {
+      // Obtener la primera (y única) inspección relacionada con el predio
+      $inspeccion = Predios_Inspeccion::where('id_predio', $id_predio)->first();
+      // Obtener todas las coordenadas relacionadas con la inspección
+      $coordenadas = PredioCoordenadas::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
+      $caracteristicas = PrediosCaracteristicasMaguey::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
+      $plantacion = predio_plantacion::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
 
+      // Cargar la vista PDF con la inspección y las coordenadas
+      $pdf = Pdf::loadView('pdfs.inspeccion_geo_referenciacion', [
+          'inspeccion' => $inspeccion,
+          'coordenadas' => $coordenadas,
+          'caracteristicas' => $caracteristicas,
+          'plantacion' => $plantacion,
+      ]);
+      // Generar y retornar el PDF
+      return $pdf->stream('Registro de Predios Maguey Agave.pdf');
+  }
 
 
 
