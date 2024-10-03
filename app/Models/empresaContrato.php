@@ -22,4 +22,10 @@ class empresaContrato extends Model
         'num_notario',
         'num_permiso'
     ];
+
+    public function normas()
+    {
+        return $this->hasMany(Norma::class, 'id_empresa', 'id_empresa');  
+    }
 }
+

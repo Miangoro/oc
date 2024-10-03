@@ -285,4 +285,95 @@ public function editarCliente($id)
             ]);
         }
     }
+
+
+
+    
+    public function obtenerContratosPorEmpresa($id_empresa)
+    {
+        // Intenta obtener los contratos relacionados con la empresa
+        try {
+            $contratos = EmpresaContrato::where('id_empresa', $id_empresa)->get();
+    
+            // Verifica si se encontraron contratos
+            if ($contratos->isEmpty()) {
+                return response()->json(['error' => 'No se encontraron contratos para esta empresa.'], 404);
+            }
+    
+            // Retornar los contratos como respuesta JSON
+            return response()->json($contratos);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener los contratos: ' . $e->getMessage()], 500);
+        }
+    }
+    
+    public function obtenerNumeroCliente($id_empresa)
+{
+    try {
+        // Suponiendo que tienes un modelo EmpresaNumCliente
+        $numero_cliente = EmpresaNumCliente::where('id_empresa', $id_empresa)->first();
+        
+        // Verifica si se encontró el número de cliente
+        if (!$numero_cliente) {
+            return response()->json(['error' => 'No se encontró el número de cliente para esta empresa.'], 404);
+        }
+
+        return response()->json($numero_cliente);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al obtener el número de cliente: ' . $e->getMessage()], 500);
+    }
+}
+
+
+// -- Funciones para actualizar Cientes Confirmados -- //
+public function actualizarRegistros(Request $request)
+{
+    $request->validate([
+        'id_empresa' => 'required|exists:empresa,id_empresa', 
+        'fecha_cedula' => 'required|date',
+        'idcif' => 'required|string|max:255',
+        'clave_ine' => 'required|string|max:255',
+        'sociedad_mercantil' => 'required|string|max:255',
+        'num_instrumento' => 'required|string|max:255',
+        'vol_instrumento' => 'required|string|max:255',
+        'fecha_instrumento' => 'required|date',
+        'nombre_notario' => 'required|string|max:255',
+        'num_notario' => 'required|string|max:255',
+        'estado_notario' => 'required|string|max:255',
+        'num_permiso' => 'required|string|max:255',
+        'numero_cliente' => 'required|string|max:255', 
+    ]);
+
+    try {
+        $contrato = EmpresaContrato::where('id_empresa', $request->id_empresa)->first();
+
+        if (!$contrato) {
+            return response()->json(['error' => 'Contrato no encontrado.'], 404);
+        }
+
+        $contrato->fecha_cedula = $request->fecha_cedula;
+        $contrato->idcif = $request->idcif;
+        $contrato->clave_ine = $request->clave_ine;
+        $contrato->sociedad_mercantil = $request->sociedad_mercantil;
+        $contrato->num_instrumento = $request->num_instrumento;
+        $contrato->vol_instrumento = $request->vol_instrumento;
+        $contrato->fecha_instrumento = $request->fecha_instrumento;
+        $contrato->nombre_notario = $request->nombre_notario;
+        $contrato->num_notario = $request->num_notario;
+        $contrato->estado_notario = $request->estado_notario;
+        $contrato->num_permiso = $request->num_permiso;
+        $contrato->save();
+
+        $numeroCliente = EmpresaNumCliente::where('id_empresa', $request->id_empresa)->first();
+        if ($numeroCliente) {
+            $numeroCliente->numero_cliente = $request->numero_cliente;
+            $numeroCliente->save();
+        }
+
+        return response()->json(['success' => 'Cliente confirmado actualizado con éxito.']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al actualizar los registros: ' . $e->getMessage()], 500);
+    }
+}
+
 }
