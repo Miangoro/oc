@@ -15,9 +15,6 @@ class empresaNumCliente extends Model
         'id_empresa'
     ];
 
-   
-
-
     public function empresa()
     {
         return $this->belongsTo(empresa::class, 'id_empresa', 'id_empresa');

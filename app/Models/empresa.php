@@ -85,10 +85,14 @@ class empresa extends Model
         ->get();
     }
 
-
     public function solicitudes()
     {
         return $this->hasMany(solicitudesModel::class, 'id_empresa','id_empresa');
     }
     
+    public function contratos()
+    {
+        return $this->hasMany(empresaContrato::class, 'id_empresa', 'id_empresa');
+    }
+
 }

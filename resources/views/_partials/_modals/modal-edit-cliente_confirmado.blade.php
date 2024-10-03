@@ -15,51 +15,12 @@
             <input name="id" type="hidden" id="edit_id">
             
 
-            <div class="col-12 col-md-12 col-sm-12">
-                <div class="form-floating form-floating-outline">
-                    <input id="edit_num_cliente" type="text" name="marca" class="form-control" placeholder="Introduce el número de la marca" />
-                    <label for="edit_num_cliente">Nombre de la marca</label>
-                </div>
-            </div>
-  
-           <!-- <div class="col-12">
-              <div class="row g-5">
-                <div class="col-md mb-md-0">
-                  <div class="form-check custom-option custom-option-basic">
-                    <label class="form-check-label custom-option-content" for="customRadioHome">
-                      <input name="customRadioTemp" class="form-check-input" type="radio" value="" id="customRadioHome" checked />
-                      <span class="custom-option-header">
-                        <span class="h6 mb-0 d-flex align-items-center"><i class="ri-home-smile-2-line ri-20px me-1"></i>Home</span>
-                      </span>
-                      <span class="custom-option-body">
-                        <small>Delivery time (9am – 9pm)</small>
-                      </span>
-                    </label>
-                  </div>
-                </div>
-                <div class="col-md mb-md-0">
-                  <div class="form-check custom-option custom-option-basic">
-                    <label class="form-check-label custom-option-content" for="customRadioOffice">
-                      <input name="customRadioTemp" class="form-check-input" type="radio" value="" id="customRadioOffice" />
-                      <span class="custom-option-header">
-                        <span class="h6 mb-0 d-flex align-items-center"><i class="ri-building-line ri-20px me-1"></i>Office</span>
-                      </span>
-                      <span class="custom-option-body">
-                        <small>Delivery time (9am – 5pm) </small>
-                      </span>
-                    </label>
-                  </div>
-                </div>
+            <div class="col-12">
+              <div class="form-floating form-floating-outline">
+                  <input type="text" id="numero_cliente" name="numero_cliente" class="form-control" placeholder="Número de Cliente" />
+                  <label for="numero_cliente">Número de cliente para la norma NOM-070-SCFI-2016</label>
               </div>
-            </div>-->
-  
-         
-              
-          
-            <div class="contenido">
-              
-            </div>
-  
+          </div>
             
             <div class="col-12">
               <div class="form-floating form-floating-outline">
@@ -71,9 +32,7 @@
                 <label for="id_contacto">Persona de contacto CIDAM</label>
               </div>
             </div>
-            
-  
-         
+          
             <hr class="my-6">
             <h5 class="mb-5">Información para el contrato</h5>
   
@@ -152,8 +111,6 @@
                 <div id="floatingInputHelp" class="form-text">(Clave única del documento) emitido por la Secretaria de Economía.</div>
               </div>
             </div>
-            
-           
             
             <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
               <button type="submit" class="btn btn-primary">Editar</button>
