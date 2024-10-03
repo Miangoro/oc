@@ -41,6 +41,7 @@
                         <th>Superficie</th>
                         <th>estatus</th>
                         <th>Pre-registro</th>
+                        <th>PDF</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
