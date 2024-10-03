@@ -218,9 +218,9 @@
                     style="font-size: 14.5px;color: #0c1344; font-family: Lucida Sans Unicode; padding-right: 30px;  margin-right: -20px ">
                     Número de Acreditación: UVNOM 145
                 </div>
-                <div class="rightLetter" style="color: #eb7b08; font-size: 12.5px; padding-right: 30px; margin-right: -20px ">
-                    <span class="negrita">No. de Informe: XXX-XXXXRX
-                    </span>
+                <div class="rightLetter negrita" style="color: #eb7b08; font-size: 16px; padding-right: 30px; margin-right: -20px ">
+                  No. de Informe: XXX-XXXXRX
+                  
                 </div>
                 <div class="rightLetter"
                     style="padding-bottom: 20px; font-size: 13.5px; font-family: Lucida Sans Unicode; padding-right: 30px; margin-right: -20px ">
@@ -251,7 +251,7 @@
                 </tr>
             </table>
             <div style="height: 10px;"></div>
-            <div style="font-size: 15.5px; font-family: Lucida Sans Unicode;text-align: justify; line-height: 1.1; padding-bottom:5px">
+            <div style="font-size: 15.5px; font-family: Lucida Sans Unicode;text-align: justify; line-height: 1.1; padding-bottom:9px">
                 Las especificaciones de información comercial con los que la etiqueta NO CUMPLE
                 de acuerdo con lo estipulado en la <span class="negrita"> NOM-XXXXXXX;</span> por lo que se le solicita realice
                 los cambios pertinentes mencionados en el siguiente cuadro; en un plazo no mayor
@@ -278,25 +278,25 @@
                     <td></td>
                 </tr>
             </table>
-            <div class="negrita4" style="padding-top: 20px;">Atentamente</div>
+            <div class="negrita4" style="padding-top: 28px; padding-bottom: 5px">Atentamente</div>
             <table>
                 <tr>
                     <td class="td-no-border" style="color: #0c1344; font-family: Arial, sans-serif;">
                         <div style="color: #1e2d9e">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ </div>
-                        <span class="negrita3" style="line-height: 0.9">Nombre y Firma</span><br>
-                        <span class="td-no-border negrita3" style="line-height: 0.9">Inspector (a)</span>
+                        <span class="negrita3" style="line-height: 1.1;  font-size: 15px">Nombre y Firma</span><br>
+                        <span class="td-no-border negrita3" style="line-height: 0.9;  font-size: 15px">Inspector (a)</span>
                         <br>
-                        <br><br>
+                        <br><br> <br>
                     </td>
                     <td class="td-no-border" style="color: #0c1344; font-family: Arial, sans-serif;">
                         <div style="color: #1e2d9e">_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ </div>
-                        <span class="negrita3" style="line-height: 0.9">Nombre y Firma</span><br>
-                        <span class="negrita3" style="line-height: 0.9">Gerente Técnico de la Unidad <br>
+                        <span class="negrita3" style="line-height: 1.1; font-size: 15px">Nombre y Firma</span><br>
+                        <span class="negrita3" style="line-height: 1.1;  font-size: 15px">Gerente Técnico de la Unidad <br>
                         de Inpeccion de Información <br> Comercial CIDAM</span>
                     </td>
                 </tr>
             </table>
-            <footer style="position: absolute; text-align: center; font-size: 11px; margin-top: 80px;">
+            <footer style="position: absolute; text-align: center; font-size: 11px; margin-top: 20px;">
                 Este documento es propiedad del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C. y no
                 puede ser distribuido externamente sin la autorización escrita del Director Ejecutivo
             </footer>
