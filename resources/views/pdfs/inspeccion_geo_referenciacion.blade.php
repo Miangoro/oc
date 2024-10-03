@@ -317,28 +317,28 @@
         <table class="datosprediotabla">
             <tr>
                 <td style="width: 29%">Localidad</td>
-                <td>{{ $inspeccion->localidad }}</td>
+                <td style="font-weight: normal;">{{ $inspeccion->localidad }}</td>
             </tr>
             <tr>
                 <td>Municipio</td>
-                <td>{{ $inspeccion->municipio }}</td>
+                <td style="font-weight: normal;">{{ $inspeccion->municipio }}</td>
             </tr>
             <tr>
                 <td>Distrito</td>
-                <td>{{ $inspeccion->distrito }}</td>
+                <td style="font-weight: normal;">{{ $inspeccion->distrito }}</td>
             </tr>
             <tr>
                 <td>Estado</td>
-                <td>{{ $inspeccion->estados->nombre }}</td> {{-- cambiarlo por el estado --}}
+                <td style="font-weight: normal;">{{ $inspeccion->estados->nombre }}</td> {{-- cambiarlo por el estado --}}
 
             </tr>
             <tr>
                 <td>Nombre del paraje</td>
-                <td>{{ $inspeccion->nombre_paraje }}</td>
+                <td style="font-weight: normal;">{{ $inspeccion->nombre_paraje }}</td>
             </tr>
             <tr>
                 <td>Predio en zona DOM (Si/No)</td>
-                <td>{{ $inspeccion->zona_dom }}</td>
+                <td style="font-weight: normal;">{{ $inspeccion->zona_dom }}</td>
             </tr>
         </table>
         <br>
@@ -415,9 +415,9 @@
             </tr>
             <tr>
                 <td style="height: 50px;">Maguey cultivado</td>
-                <td>{{ $inspeccion->distancia_surcos }}</td>
-                <td>{{ $inspeccion->distancia_plantas }}</td>
-                <td>{{ $inspeccion->marco_plantacion }}</td>
+                <td style="font-weight: normal;">{{ $inspeccion->distancia_surcos }}</td>
+                <td style="font-weight: normal;">{{ $inspeccion->distancia_plantas }}</td>
+                <td style="font-weight: normal;">{{ $inspeccion->marco_plantacion }}</td>
             </tr>
         </table>
         <br>
@@ -470,10 +470,10 @@
           @php $contador = 1; @endphp <!-- Inicializa el contador -->
           @foreach ($caracteristicas as $caracteristica)
               <tr>
-                  <td>{{ $contador++ }}</td> <!-- Muestra el contador y luego lo incrementa -->
-                  <td>{{ $caracteristica->altura }}</td>
-                  <td>{{ $caracteristica->diametro }}</td>
-                  <td>{{ $caracteristica->numero_hojas }}</td>
+                  <td style="font-weight: normal;">{{ $contador++ }}</td> <!-- Muestra el contador y luego lo incrementa -->
+                  <td style="font-weight: normal;">{{ $caracteristica->altura }}</td>
+                  <td style="font-weight: normal;">{{ $caracteristica->diametro }}</td>
+                  <td style="font-weight: normal;">{{ $caracteristica->numero_hojas }}</td>
               </tr>
           @endforeach
           <tr>
@@ -495,11 +495,11 @@
             </tr>
             @foreach ($plantacion as $plantacion)
             <tr>
-                <td>{{ $plantacion->id_tipo }}</td>
-                <td>{{ $plantacion->id_tipo }}</td>
-                <td>{{ $plantacion->num_plantas }}</td>
-                <td>{{ $plantacion->anio_plantacion }}</td>
-                <td>{{ $plantacion->tipo_plantacion }}</td>
+                <td style="font-weight: normal;">{{ $plantacion->id_tipo }}</td>
+                <td style="font-weight: normal;">{{ $plantacion->id_tipo }}</td>
+                <td style="font-weight: normal;">{{ $plantacion->num_plantas }}</td>
+                <td style="font-weight: normal;">{{ $plantacion->anio_plantacion }}</td>
+                <td style="font-weight: normal;">{{ $plantacion->tipo_plantacion }}</td>
             </tr>
             @endforeach
         </table>
