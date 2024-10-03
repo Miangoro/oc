@@ -412,10 +412,10 @@
                                         </button>
                                     </th>
                                     <td>
-                                        <select class="form-control select2 equipo2" name="equipo_envasado[]">
+                                        <select class="form-control select2 equipo2" name="edit_equipo_envasado[]">
                                             <option value="" selected>Selecciona equipo</option>
                                             @foreach ($equipos as $equipoEnva)
-                                                <option value="{{ $equipoEnva->equipo }}">{{ $equipoEnva->equipo }}
+                                                <option value="{{ $equipoEnva->edit_equipo_envasado }}">{{ $equipoEnva->equipo }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -423,15 +423,15 @@
                                     </td>
                                     <td>
                                         <input type="number" class="form-control form-control-sm"
-                                            name="cantidad_envasado[]" />
+                                            name="edit_cantidad_envasado[]" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control form-control-sm"
-                                            name="capacidad_envasado[]" />
+                                            name="edit_capacidad_envasado[]" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control form-control-sm"
-                                            name="tipo_material_envasado[]" />
+                                            name="edit_tipo_material_envasado[]" />
                                     </td>
                                 </tr>
                             </tbody>

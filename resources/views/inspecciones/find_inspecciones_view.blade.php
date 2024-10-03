@@ -337,26 +337,26 @@ data.actas_equipo_mezcal.forEach(function(equipoMezcal, index) {
                 </button>
             </th>
             <td>
-                <input type="text" class="form-control form-control-sm" name="equipo_envasado[]" value="${equipoEnvasado.equipo_envasado}" />
-            <select class="form-control" name="equipo_envasado[]">
+            <select class="form-control" name="edit_equipo_envasado[]">
+                                                                            <option value="" selected>Selecciona equipo</option>
+
                 <option value="${equipoEnvasado.equipo_envasado}" selected>${equipoEnvasado.equipo_envasado}</option>
-                                                            <option value="" selected>Selecciona equipo</option>
 
                 @foreach ($equipos as $equipo)
-                    @if ('${equipoEnvasado.equipo_envasado}' != $equipo->equipo_envasado)
-                        <option value="{{ $equipo->equipo_envasado }}">{{ $equipo->equipo }}</option>
+                    @if ('${equipoEnvasado.equipo_envasado}' != $equipo->edit_equipo_envasado)
+                        <option value="{{ $equipo->edit_equipo_envasado }}">{{ $equipo->equipo }}</option>
                     @endif
                 @endforeach
             </select>
             </td>
             <td>
-                <input type="number" class="form-control form-control-sm" name="edit_cantidad[]" value="${equipoEnvasado.cantidad_envasado}" />
+                <input type="number" class="form-control form-control-sm" name="edit_cantidad_envasado[]" value="${equipoEnvasado.cantidad_envasado}" />
             </td>
                         <td>
-                <input type="text" class="form-control form-control-sm" name="edit_capacidad[]" value="${equipoEnvasado.capacidad_envasado}" />
+                <input type="text" class="form-control form-control-sm" name="edit_capacidad_envasado[]" value="${equipoEnvasado.capacidad_envasado}" />
             </td>
                         <td>
-                <input type="text" class="form-control form-control-sm" name="edit_tipo_material[]" value="${equipoEnvasado.tipo_material_envasado}" />
+                <input type="text" class="form-control form-control-sm" name="edit_tipo_material_envasado[]" value="${equipoEnvasado.tipo_material_envasado}" />
             </td>
         </tr>
     `;
