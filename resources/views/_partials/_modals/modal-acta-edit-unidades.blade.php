@@ -18,8 +18,7 @@
                 <form id="editActaUnidadesForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <input type="hidden" class="id_inspeccion" name="edit_id_inspeccion">
                     <input type="hidden" class="id_empresa" name="edit_acta_id_empresa">  
-                    <input type="hidden" class="id_acta" name="id_acta">
-                  
+                    <input type="hidden" class="edit_id_acta" name="id_acta">
                     @csrf
                     <div class="row">
                         <div class="col-md-5 mb-5">
@@ -35,7 +34,7 @@
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-4">
                                 <input type="text" id="edit_categoria_acta" name="edit_categoria_acta"
-                                    class="form-control edit_tipo_instalacion" required oninput="tablasCategorias()"
+                                    class="form-control edit_tipo_instalacion" required oninput="edit_tablasCategorias()"
                                     readonly>
                                 <label for="edit_categoria_acta">En la categoría de:</label>
                             </div>
@@ -104,8 +103,8 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <button type="button" class="btn btn-primary add-row" data-target="#testigoss"
-                                        data-name-prefix="nombre_testigo[]" data-name-suffix="domicilio[]">
+                                    <button type="button" class="btn btn-primary add-row" data-target="#edit_testigoss"
+                                        data-name-prefix="edit_nombre_testigo[]" data-name-suffix="edit_domicilio[]">
                                         <i class="ri-add-line"></i>
                                     </button>
                                 </th>
@@ -113,7 +112,7 @@
                                 <th>Domicilio</th>
                             </tr>
                         </thead>
-                        <tbody id="testigoss">
+                        <tbody id="edit_testigoss">
                             <tr>
                                 <th>
                                     <button type="button" class="btn btn-danger remove-row" disabled>
@@ -132,8 +131,8 @@
                         </tbody>
                     </table>
 
-                    {{-- tabla de produccion --}}
-                    <div id="tablaProduccion" style="display: none;">
+                    {{-- tabla de produccion Agave--}}
+                    <div id="edit_tablaProduccionAgave" style="display: block;">
                         <div style="padding: 10px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción</p>
                         <table class="table table-bordered">
@@ -146,18 +145,18 @@
                                     <th>Plagas en el cultivo</th>
                                 </tr>
                             </thead>
-                            <tbody id="unidadProduccion">
+                            <tbody id="edit_unidadProduccion">
                                 <tr>
                                     <th>
                                         <button type="button" class="btn btn-danger remove-row" disabled>
                                             <i class="ri-delete-bin-5-fill"></i>
                                         </button>
                                     </th>
-                                    <td><select class="form-control select2 plantacion" name="id_empresa[]">
+                                    <td><select class="form-control select2 plantacion" name="edit_id_empresa[]">
                                             <!-- Opciones -->
                                         </select>
                                     </td>
-                                    <td><input type="text" class="form-control form-control-sm" name="plagas[]">
+                                    <td><input type="text" class="form-control form-control-sm" name="edit_plagas[]">
                                     </td>
                                 </tr>
                             </tbody>
@@ -165,17 +164,13 @@
                     </div>
 
                     {{-- Tabla de produccion de mezcal --}}
-                    <div id="tablaProduccionMezcal" style="display: none;">
+                    <div id="edit_tablaProduccionMezcal" style="display: block;">
                         <div style="padding: 10px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>De producción de Mezcal</p>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-primary add-rowMezcal">
-                                            <i class="ri-add-line"></i>
-                                        </button>
-                                    </th>
+
                                     <th>Recepción (materia prima)</th>
                                     <th>Área de pesado</th>
                                     <th>Área de cocción</th>
@@ -186,16 +181,12 @@
                                     <th>Almacén a graneles</th>
                                 </tr>
                             </thead>
-                            <tbody id="unidadMezcal">
+                            <tbody id="edit_unidadMezcal">
                                 <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-danger remove-row" disabled>
-                                            <i class="ri-delete-bin-5-fill"></i>
-                                        </button>
-                                    </th>
+
                                     <!-- Indexado por fila (0) y columna (áreas) -->
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][0]">
+                                        <select class="form-control select" name="edit_respuesta[0][0]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -203,7 +194,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][1]">
+                                        <select class="form-control select" name="edit_respuesta[0][1]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -211,7 +202,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][2]">
+                                        <select class="form-control select" name="edit_respuesta[0][2]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -219,7 +210,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][3]">
+                                        <select class="form-control select" name="edit_respuesta[0][3]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -227,7 +218,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][4]">
+                                        <select class="form-control select" name="edit_respuesta[0][4]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -235,7 +226,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][5]">
+                                        <select class="form-control select" name="edit_respuesta[0][5]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -243,7 +234,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][6]">
+                                        <select class="form-control select" name="edit_respuesta[0][6]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -251,7 +242,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuesta[0][7]">
+                                        <select class="form-control select" name="edit_respuesta[0][7]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -264,7 +255,7 @@
                     </div>
 
                     {{-- tabla de equipos mezcal --}}
-                    <div id="tablaProduccionEquipo" style="display: none;">
+                    <div id="edit_tablaProduccionEquipo" style="display: block;">
                         <div style="padding: 10px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Mezcal</p>
                         <table class="table table-bordered">
@@ -281,7 +272,7 @@
                                     <th>Tipo de material</th>
                                 </tr>
                             </thead>
-                            <tbody id="equipoMezcal">
+                            <tbody id="edit_equipoMezcal">
                                 <tr>
                                     <th>
                                         <button type="button" class="btn btn-danger remove-row" disabled>
@@ -289,24 +280,24 @@
                                         </button>
                                     </th>
                                     <td>
-                                        <select class="form-control select2 equipo" name="equipo[]">
+                                        <select class="form-control select2 equipo" name="edit_equipo[]">
                                             <option value="">Selecciona equipo</option>
                                             @foreach ($equipos as $equipo)
-                                                <option value="{{ $equipo->equipo }}">{{ $equipo->equipo }}</option>
+                                                <option value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }}</option>
                                             @endforeach
                                         </select>
                                     </td>
                                     <td>
                                         <input type="number" class="form-control form-control-sm"
-                                            name="cantidad[]" />
+                                            name="edit_cantidad[]" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control form-control-sm"
-                                            name="capacidad[]" />
+                                            name="edit_capacidad[]" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control form-control-sm"
-                                            name="tipo_material[]" />
+                                            name="edit_tipo_material[]" />
                                     </td>
                                 </tr>
                             </tbody>
@@ -314,17 +305,13 @@
                     </div>
 
                     {{-- UNIDAD ENVASADSO --}}
-                    <div id="tablaEnvasadora" style="display: none;">
+                    <div id="edit_tablaEnvasadora" style="display: block;">
                         <div style="padding: 20px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>De Envasado</p>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-primary add-rowEnvasado">
-                                            <i class="ri-add-line"></i>
-                                        </button>
-                                    </th>
+
                                     <th>Almacén de insumos</th>
                                     <th>Almacén a gráneles
                                     </th>
@@ -335,15 +322,11 @@
                                     <th>Área de aseo personal</th>
                                 </tr>
                             </thead>
-                            <tbody id="unidadEnvasado">
+                            <tbody id="edit_unidadEnvasado">
                                 <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-danger remove-row" disabled>
-                                            <i class="ri-delete-bin-5-fill"></i>
-                                        </button>
-                                    </th>
+
                                     <td>
-                                        <select class="form-control select" name="respuestas[0][0]">
+                                        <select class="form-control select" name="edit_respuestas[0][0]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -351,7 +334,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas[0][1]">
+                                        <select class="form-control select" name="edit_respuestas[0][1]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -359,7 +342,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas[0][2]">
+                                        <select class="form-control select" name="edit_respuestas[0][2]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -367,7 +350,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas[0][3]">
+                                        <select class="form-control select" name="edit_respuestas[0][3]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -375,7 +358,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas[0][4]">
+                                        <select class="form-control select" name="edit_respuestas[0][4]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -383,7 +366,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas[0][5]">
+                                        <select class="form-control select" name="edit_respuestas[0][5]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -391,7 +374,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas[0][6]">
+                                        <select class="form-control select" name="edit_respuestas[0][6]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -404,7 +387,7 @@
                     </div>
 
                     {{-- UNIDAD EQUIPO ENVASADO --}}
-                    <div id="tablaEnvasadoraEquipo" style="display: none;">
+                    <div id="edit_tablaEnvasadoraEquipo" style="display: block;">
                         <div style="padding: 20px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>Equipo de Envasado</p>
                         <table class="table table-bordered">
@@ -421,7 +404,7 @@
                                     <th>Tipo de material</th>
                                 </tr>
                             </thead>
-                            <tbody id="equipoEnvasado">
+                            <tbody id="edit_equipoEnvasado">
                                 <tr>
                                     <th>
                                         <button type="button" class="btn btn-danger remove-row" disabled>
@@ -429,10 +412,10 @@
                                         </button>
                                     </th>
                                     <td>
-                                        <select class="form-control select2 equipo2" name="equipo_envasado[]">
+                                        <select class="form-control select2 equipo2" name="edit_equipo_envasado[]">
                                             <option value="" selected>Selecciona equipo</option>
                                             @foreach ($equipos as $equipoEnva)
-                                                <option value="{{ $equipoEnva->equipo }}">{{ $equipoEnva->equipo }}
+                                                <option value="{{ $equipoEnva->edit_equipo_envasado }}">{{ $equipoEnva->equipo }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -440,15 +423,15 @@
                                     </td>
                                     <td>
                                         <input type="number" class="form-control form-control-sm"
-                                            name="cantidad_envasado[]" />
+                                            name="edit_cantidad_envasado[]" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control form-control-sm"
-                                            name="capacidad_envasado[]" />
+                                            name="edit_capacidad_envasado[]" />
                                     </td>
                                     <td>
                                         <input type="text" class="form-control form-control-sm"
-                                            name="tipo_material_envasado[]" />
+                                            name="edit_tipo_material_envasado[]" />
                                     </td>
                                 </tr>
                             </tbody>
@@ -456,18 +439,14 @@
                     </div>
 
                     {{-- UNIDAD COMERCIALIZADORA --}}
-                    <div id="tablaComercializadora" style="display: none;">
+                    <div id="edit_tablaComercializadora" style="display: block;">
 
                         <div style="padding: 20px"></div>
                         <p class="address-subtitle"><b style="color: red">Unidad: </b>De Comercialización</p>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-primary add-rowComercializadora">
-                                            <i class="ri-add-line"></i>
-                                        </button>
-                                    </th>
+
                                     <th>Bodega o almacén</th>
                                     <th>Tarimas</th>
                                     <th>Bitácoras</th>
@@ -475,15 +454,11 @@
                                     <th>Otro</th>
                                 </tr>
                             </thead>
-                            <tbody id="unidadComercializadora">
+                            <tbody id="edit_unidadComercializadora">
                                 <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-danger remove-row" disabled>
-                                            <i class="ri-delete-bin-5-fill"></i>
-                                        </button>
-                                    </th>
+
                                     <td>
-                                        <select class="form-control select" name="respuestas_comercio[0][0]">
+                                        <select class="form-control select" name="edit_respuestas_comercio[0][0]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -491,7 +466,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas_comercio[0][1]">
+                                        <select class="form-control select" name="edit_respuestas_comercio[0][1]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -499,7 +474,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas_comercio[0][2]">
+                                        <select class="form-control select" name="edit_respuestas_comercio[0][2]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -507,7 +482,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas_comercio[0][3]">
+                                        <select class="form-control select" name="edit_respuestas_comercio[0][3]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -515,7 +490,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select class="form-control select" name="respuestas_comercio[0][4]">
+                                        <select class="form-control select" name="edit_respuestas_comercio[0][4]">
                                             <option value="" selected>Selecciona</option>
                                             <option value="C">C</option>
                                             <option value="NC">NC</option>
@@ -555,12 +530,12 @@
 
 
 <script>
-/*        $(document).ready(function() {
+/*         $(document).ready(function() {
 
 
-});
+}); */
 
-function obtenerNombrePredio() {
+/* function edit_obtenerNombrePredio() {
     var empresa = $(".id_empresa").val();
 
     // Hacer una petición AJAX para obtener los detalles de la empresa
@@ -595,7 +570,7 @@ function obtenerNombrePredio() {
             //alert('Error al cargar los lotes a granel.');
         }
     });
-} */
+}  */
 
 function edit_Testigos() {
     // Obtener el valor seleccionado en el select
@@ -603,7 +578,7 @@ function edit_Testigos() {
 
     // Obtener la tabla y el label de testigos
     const edittablaTestigos = document.getElementById('edit_tabla-testigos');
-    const edittablaTestigosLabel = document.getElementById('edit_tabla-testigos');
+    const edittablaTestigosLabel = document.getElementById('edit_tabla-testigos-label');
 
     // Mostrar u ocultar la tabla dependiendo del valor seleccionado
     if (edit_tipoLote === '1') {
@@ -617,57 +592,58 @@ function edit_Testigos() {
     }
 }
 
-
-/* function initializeModalFunctionality() {
+ 
+ function iniciarCategorias() {
     // Función para mostrar u ocultar la tabla dependiendo del valor de "categoria_acta"
-    function tablasCategorias() {
-        const edit_tipo_instalacion = document.getElementById('edit_categoria_acta').value;
-        const tablaProduccion = document.getElementById('tablaProduccion');
-        const tablaProduccionMezcal = document.getElementById('tablaProduccionMezcal');
-        const tablaProduccionEquipo = document.getElementById('tablaProduccionEquipo');
-        const tablaEnvasadora = document.getElementById('tablaEnvasadora');
-        const tablaEnvasadoraEquipo = document.getElementById('tablaEnvasadoraEquipo');
-        const tablaComercializadora = document.getElementById('tablaComercializadora');
+    function edit_tablasCategorias() {
+            const edit_tipo_instalacion = document.getElementById('edit_categoria_acta').value;
+            const edit_tablaProduccionAgave = document.getElementById('edit_tablaProduccionAgave');
+            const edit_tablaProduccionMezcal = document.getElementById('edit_tablaProduccionMezcal');
+            const edit_tablaProduccionEquipo = document.getElementById('edit_tablaProduccionEquipo');
+            const edit_tablaEnvasadora = document.getElementById('edit_tablaEnvasadora');
+            const edit_tablaEnvasadoraEquipo = document.getElementById('edit_tablaEnvasadoraEquipo');
+            const edit_tablaComercializadora = document.getElementById('edit_tablaComercializadora');
 
-        if (edit_tipo_instalacion === 'Productora') {
-            tablaProduccion.style.display = 'block';
-            tablaProduccionMezcal.style.display = 'block';
-            tablaProduccionEquipo.style.display = 'block';
-        } else if (edit_tipo_instalacion === 'Envasadora') {
-            tablaEnvasadora.style.display = 'block';
-            tablaEnvasadoraEquipo.style.display = 'block';
-        } else if (edit_tipo_instalacion === 'Comercializadora') {
-            tablaComercializadora.style.display = 'block';
-        } else {
-            tablaProduccion.style.display = 'none';
-            tablaProduccionMezcal.style.display = 'none';
-            tablaProduccionEquipo.style.display = 'none';
-            tablaEnvasadora.style.display = 'none';
-            tablaEnvasadoraEquipo.style.display = 'none';
-            tablaComercializadora.style.display = 'none';
-
-
-
-        }
+            if (edit_tipo_instalacion === 'Productora de Agave') {
+                edit_tablaProduccionAgave.style.display = 'block';
+            } else if (edit_tipo_instalacion === 'Productora') {
+                edit_tablaProduccionMezcal.style.display = 'block';
+                edit_tablaProduccionEquipo.style.display = 'block';
+            } else if (edit_tipo_instalacion === 'Envasadora') {
+                edit_tablaEnvasadora.style.display = 'block';
+                edit_tablaEnvasadoraEquipo.style.display = 'block';
+            } else if (['Comercializadora', 'Almacén'].includes(edit_tipo_instalacion)) {
+                edit_tablaComercializadora.style.display = 'block';
+            } else {
+                edit_tablaProduccionAgave.style.display = 'none';
+                edit_tablaProduccionMezcal.style.display = 'none';
+                edit_tablaProduccionEquipo.style.display = 'none';
+                edit_tablaEnvasadora.style.display = 'none';
+                edit_tablaEnvasadoraEquipo.style.display = 'none';
+                edit_tablaComercializadora.style.display = 'none';
+            }
     }
 
     // Asegúrate de que el evento se vincule al modal correcto
-    const modalElement = document.getElementById('ActaUnidades');
+    const modalElement = document.getElementById('editActaUnidades');
 
     if (modalElement) {
         // Se ejecuta cuando el modal se muestra completamente
         modalElement.addEventListener('shown.bs.modal', function() {
-            tablasCategorias(); // Llamar a la función cuando se abra el modal
+            edit_tablasCategorias(); // Llamar a la función cuando se abra el modal
         });
 
         // Llamar a la función también cuando el usuario cambie el valor del input
         const categoriaInput = document.getElementById('edit_categoria_acta');
         if (categoriaInput) {
-            categoriaInput.addEventListener('input', tablasCategorias);
+            categoriaInput.addEventListener('input', edit_tablasCategorias);
         }
     }
-}
+} 
 
 // Iniciar la funcionalidad cuando se cargue el DOM
-document.addEventListener('DOMContentLoaded', initializeModalFunctionality); */
+document.addEventListener('DOMContentLoaded', initializeModalFunctionality); 
 </script>
+
+
+
