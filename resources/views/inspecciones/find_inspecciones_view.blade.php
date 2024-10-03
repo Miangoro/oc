@@ -259,70 +259,67 @@
                 $('#edit_testigoss').append(newRow);
             });
 
- // EDIT PRODUCCION AGAVE
- $('#edit_unidadProduccion').empty();
+    // EDIT PRODUCCION AGAVE
+    $('#edit_unidadProduccion').empty();
 
-// Iterar sobre los testigos y agregar filas a la tabla
-data.actas_produccion.forEach(function(plantacion, index) {
-    var newRow = `
-    <tr>
-        <th>
-            <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
-                <i class="ri-delete-bin-5-fill"></i>
-            </button>
-        </th>
-        <td>
-            <input type="text" class="form-control form-control-sm" name="edit_id_empresa[]" value="${plantacion.id_plantacion}" />
-        </td>
-        <td>
-            <input type="text" class="form-control form-control-sm" name="edit_plagas[]" value="${plantacion.plagas}" />
-        </td>
-    </tr>
-`;
-    $('#edit_unidadProduccion').append(newRow);
-});
+    // Iterar sobre los testigos y agregar filas a la tabla
+    data.actas_produccion.forEach(function(plantacion, index) {
+        var newRow = `
+        <tr>
+            <th>
+                <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
+                    <i class="ri-delete-bin-5-fill"></i>
+                </button>
+            </th>
+            <td>
+                <input type="text" class="form-control form-control-sm" name="edit_id_empresa[]" value="${plantacion.id_plantacion}" />
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm" name="edit_plagas[]" value="${plantacion.plagas}" />
+            </td>
+        </tr>
+    `;
+        $('#edit_unidadProduccion').append(newRow);
+    });
 
-            //EQUIPO MEZCAL
-//EQUIPO MEZCAL
-$('#edit_equipoMezcal').empty();
+                //EQUIPO MEZCAL
+    //EQUIPO MEZCAL
+    $('#edit_equipoMezcal').empty();
 
-// Iterar sobre los testigos y agregar filas a la tabla
-data.actas_equipo_mezcal.forEach(function(equipoMezcal, index) {
-    var newRow = `
-    <tr>
-        <th>
-            <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
-                <i class="ri-delete-bin-5-fill"></i>
-            </button>
-        </th>
-        <td>
-            <select class="form-control" name="edit_equipo[]">
-                                                            <option value="" selected>Selecciona equipo</option>
+    // Iterar sobre los testigos y agregar filas a la tabla
+    data.actas_equipo_mezcal.forEach(function(equipoMezcal, index) {
+        var newRow = `
+        <tr>
+            <th>
+                <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
+                    <i class="ri-delete-bin-5-fill"></i>
+                </button>
+            </th>
+            <td>
+                <select class="form-control" name="edit_equipo[]">
+                    <option value="" selected>Selecciona equipo</option>
 
-                <option value="${equipoMezcal.equipo}" selected>${equipoMezcal.equipo}</option>
-                @foreach ($equipos as $equipo)
-                    @if ('${equipoMezcal.equipo}' != $equipo->edit_equipo)
-                        <option value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }}</option>
-                    @endif
-                @endforeach
-            </select>
-        </td>
-        <td>
-            <input type="number" class="form-control form-control-sm" name="edit_cantidad[]" value="${equipoMezcal.cantidad}" />
-        </td>
-        <td>
-            <input type="text" class="form-control form-control-sm" name="edit_capacidad[]" value="${equipoMezcal.capacidad}" />
-        </td>
-        <td>
-            <input type="text" class="form-control form-control-sm" name="edit_tipo_material[]" value="${equipoMezcal.tipo_material}" />
-        </td>
-    </tr>
-`;
-    $('#edit_equipoMezcal').append(newRow);
-});
-
-
-
+                    <option value="${equipoMezcal.equipo}" selected>${equipoMezcal.equipo}</option>
+                    @foreach ($equipos as $equipo)
+                        @if ('${equipoMezcal.equipo}' != $equipo->edit_equipo)
+                            <option value="{{ $equipo->edit_equipo }}">{{ $equipo->equipo }}</option>
+                        @endif
+                    @endforeach
+                </select>
+            </td>
+            <td>
+                <input type="number" class="form-control form-control-sm" name="edit_cantidad[]" value="${equipoMezcal.cantidad}" />
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm" name="edit_capacidad[]" value="${equipoMezcal.capacidad}" />
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm" name="edit_tipo_material[]" value="${equipoMezcal.tipo_material}" />
+            </td>
+        </tr>
+    `;
+        $('#edit_equipoMezcal').append(newRow);
+    });
 
             //EQUIPO ENVASADO
             $('#edit_equipoEnvasado').empty();
@@ -338,10 +335,9 @@ data.actas_equipo_mezcal.forEach(function(equipoMezcal, index) {
             </th>
             <td>
             <select class="form-control" name="edit_equipo_envasado[]">
-                                                                            <option value="" selected>Selecciona equipo</option>
+                <option value="" selected>Selecciona equipo</option>
 
                 <option value="${equipoEnvasado.equipo_envasado}" selected>${equipoEnvasado.equipo_envasado}</option>
-
                 @foreach ($equipos as $equipo)
                     @if ('${equipoEnvasado.equipo_envasado}' != $equipo->edit_equipo_envasado)
                         <option value="{{ $equipo->edit_equipo_envasado }}">{{ $equipo->equipo }}</option>
