@@ -177,7 +177,6 @@
                 `;
             }
         },
-        
           {
             // Abre el pdf del certificado
             targets: 9,
@@ -187,19 +186,34 @@
             }
           },
           {
-            target: 10,
+            target: 10, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
-                var id_revisor = full['id_revisor'];   // Obtener el id_revisor
-                var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
+                var estatus = full['estatus']; // Obtener el estatus del certificado
+                
+                // Determinar el texto y el color del badge según el estatus
+                var badgeText = '';
+                var colorEstatus = '';
         
-                // Verificar si ambos revisores están vacíos o son nulos
-                var isActive = (id_revisor && id_revisor !== 'Sin asignar') || (id_revisor2 && id_revisor2 !== 'Sin asignar'); 
-                var estatus = isActive ? 'Vigente' : 'Sin asignar'; // Establecer el estatus
-                var colorEstatus = isActive ? 'success' : 'secondary'; // Color según el estatus
+                if (estatus == 1) {
+                    badgeText = 'Cancelado'; // Si el estatus es 1
+                    colorEstatus = 'danger'; // Cambia a color rojo
+                } else if (estatus == 2) {
+                    badgeText = 'Reexpedido'; // Si el estatus es 2
+                    colorEstatus = 'success'; // Cambia a color verde
+                } else {
+                    var id_revisor = full['id_revisor'];
+                    var id_revisor2 = full['id_revisor2'];
         
-                return `<span class="badge rounded-pill bg-label-${colorEstatus}">${estatus}</span>`;
+                    // Verificar si ambos revisores están vacíos o son nulos
+                    var isActive = (id_revisor && id_revisor !== 'Sin asignar') || (id_revisor2 && id_revisor2 !== 'Sin asignar'); 
+                    badgeText = isActive ? 'Vigente' : 'Sin asignar'; // Establecer el estatus
+                    colorEstatus = isActive ? 'success' : 'secondary'; // Color según el estatus
+                }
+        
+                return `<span class="badge rounded-pill bg-label-${colorEstatus}">${badgeText}</span>`;
             }
-        },
+        }
+,        
          {
            // Actions
            targets: 11,
@@ -225,9 +239,13 @@
                   `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-info">` +
                     '<i class="text-warning ri-user-search-fill"></i> <span class="text-warning">Asignar revisor</span>' +
                   '</a>' +
+                  // Botón para reexpedir certificado de instalaciones
+                  `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalReexpedirCertificadoInstalaciones" class="dropdown-item reexpedir-record waves-effect text-info">` +
+                    '<i class="ri-file-edit-fill"></i>Reexpedir certificado' +
+                  '</a>' +
                 '</div>' +
               '</div>'
-            );                  
+            );                                   
            }
          }
        ],
@@ -494,7 +512,6 @@
   });  
 
 //Agregar
-
   $(document).ready(function () {
 
     var dt_user_table = $('.datatables-users'),
@@ -1161,6 +1178,223 @@ $('#asignarRevisorModal').on('show.bs.modal', function (event) {
   $('#asignarRevisorForm').show();
 });
 
+
+
+
+
+
+
+
+  // new
+
+
+
+
+
+
+
+// Variable para evitar que se ejecute en bucle
+let isLoadingData = false;
+
+// Evento para mostrar el modal y establecer el ID del certificado
+$(document).on('click', '.reexpedir-record', function () {
+    var id_certificado = $(this).data('id');
+    console.log('ID Certificado para reexpedir:', id_certificado);
+
+    // Establecer el valor del id_certificado en el campo correspondiente
+    $('#reexpedir_id_certificado').val(id_certificado);
+
+    // Mostrar el modal
+    $('#modalReexpedirCertificadoInstalaciones').modal('show');
+
+    // Llamar a cargarDatosReexpedicion al abrir el modal
+    cargarDatosReexpedicion(id_certificado);
+});
+
+// Mostrar los campos condicionales y cargar datos según la opción seleccionada
+$(document).on('change', '#accion_reexpedir', function () {
+    var accionSeleccionada = $(this).val();
+    console.log('Acción seleccionada:', accionSeleccionada);
+
+    // Obtener el ID del certificado
+    var id_certificado = $('#reexpedir_id_certificado').val();
+
+    // Llamar a cargarDatosReexpedicion solo si no se está cargando
+    if (accionSeleccionada && !isLoadingData) {
+        isLoadingData = true; // Marcar como en carga
+        cargarDatosReexpedicion(id_certificado);
+    }
+
+    // Cargar el tipo de dictamen para saber cómo proceder
+    var tipoDictamen = $('#id_dictamen_rex option:selected').data('tipo-dictamen');
+    console.log('Tipo de Dictamen seleccionado:', tipoDictamen);
+
+    // Ocultar siempre los campos antes de mostrar nuevos
+    $('#campos_condicionales').hide();
+    $('#campos_productor').hide(); // Oculta los campos de Productor al inicio
+
+    if (accionSeleccionada === '2') {
+        $('#campos_condicionales').show(); // Muestra los campos condicionales
+    }
+
+    // Verifica el tipo de dictamen para mostrar campos de productor si es necesario
+    if (tipoDictamen === 1) { // Si es Productor
+        $('#campos_productor').show(); // Mostrar los campos del Productor
+    } else {
+        $('#campos_productor').hide(); // Ocultar los campos de Productor
+        // Limpiar los campos cuando se ocultan
+        $('#maestro_mezcalero_rex').val('');
+        $('#no_autorizacion_rex').val('');
+    }
+});
+
+// Lógica para mostrar campos de Productor cuando el tipo de dictamen es 1
+$(document).on('change', '#id_dictamen_rex', function () {
+    var tipoDictamen = $('#id_dictamen_rex option:selected').data('tipo-dictamen');
+    console.log('Tipo de Dictamen seleccionado:', tipoDictamen);
+
+    // Mostrar u ocultar los campos según el tipo de dictamen
+    if (tipoDictamen === 1) { // Si es Productor
+        $('#campos_productor').show(); // Mostrar los campos del Productor
+    } else {
+        $('#campos_productor').hide(); // Ocultar los campos de Productor
+        // Limpiar los campos cuando se ocultan
+        $('#maestro_mezcalero_rex').val('');
+        $('#no_autorizacion_rex').val('');
+    }
+});
+
+// Función para cargar los datos de reexpedición
+function cargarDatosReexpedicion(id_certificado) {
+    console.log('Cargando datos para la reexpedición con ID:', id_certificado);
+
+    // Limpiar los campos antes de cargar nuevos datos
+    $('#maestro_mezcalero_rex').val('');
+    $('#no_autorizacion_rex').val('');
+    $('#numero_certificado_rex').val('');
+    $('#id_firmante_rex').val('');
+    $('#fecha_vigencia_rex').val('');
+    $('#fecha_vencimiento_rex').val('');
+    $('#observaciones_rex').val('');
+
+    $.get(`/certificados-list/${id_certificado}/edit`)
+        .done(function (data) {
+            console.log(data); // Verifica los datos recibidos
+
+            if (data.error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: data.error,
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+                return;
+            }
+
+            // Asignación de datos en los campos del formulario
+            $('#id_dictamen_rex').val(data.id_dictamen).trigger('change');
+
+            // Mostrar y llenar maestro_mezcalero y num_autorizacion si existen
+            if (data.maestro_mezcalero && data.num_autorizacion) {
+                $('#campos_productor').show(); // Mostrar campos específicos
+                $('#maestro_mezcalero_rex').val(data.maestro_mezcalero);
+                $('#no_autorizacion_rex').val(data.num_autorizacion);
+                console.log('Campos de Productor cargados y mostrados.');
+            } else {
+                $('#campos_productor').hide(); // Ocultar si no hay datos para Productor
+                $('#maestro_mezcalero_rex').val(''); // Limpiar campo
+                $('#no_autorizacion_rex').val(''); // Limpiar campo
+                console.log('Campos de Productor ocultos por falta de datos.');
+            }
+
+            // Asignar el resto de los campos
+            $('#numero_certificado_rex').val(data.num_certificado);
+            $('#id_firmante_rex').val(data.id_firmante).trigger('change');
+            $('#fecha_vigencia_rex').val(data.fecha_vigencia);
+            $('#fecha_vencimiento_rex').val(data.fecha_vencimiento);
+            $('#observaciones_rex').val(data.observaciones);
+
+            // Llamar a la verificación de campos después de cargar los datos
+            $('#accion_reexpedir').trigger('change'); // Para verificar campos condicionales
+
+            // Marcar como no en carga
+            isLoadingData = false;
+        })
+        .fail(function () {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'No se pudieron cargar los datos para la reexpedición.',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+
+            // Marcar como no en carga en caso de error
+            isLoadingData = false;
+        });
+}
+
+// Limpiar los campos al cerrar el modal
+$('#modalReexpedirCertificadoInstalaciones').on('hidden.bs.modal', function () {
+    // Limpiar todos los campos dentro del modal
+    $('#addReexpedirCertificadoInstalacionesForm')[0].reset();
+
+    // También asegurarte de ocultar los campos condicionales
+    $('#campos_condicionales').hide();
+    $('#campos_productor').hide();
+});
+
+// Manejo del formulario de reexpedición
+$(document).ready(function () {
+    $('#addReexpedirCertificadoInstalacionesForm').on('submit', function (e) {
+        e.preventDefault();
+
+        const formData = $(this).serialize();
+
+        $.ajax({
+            url: $(this).attr('action'),
+            method: 'POST',
+            data: formData,
+            success: function (response) {
+                $('#modalReexpedirCertificadoInstalaciones').modal('hide');
+                $('#addReexpedirCertificadoInstalacionesForm')[0].reset();
+
+                // Recargar la tabla de usuarios
+                dt_user_table.DataTable().ajax.reload();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.message,
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                });
+            },
+            error: function (jqXHR) {
+                console.log('Error en la solicitud:', jqXHR);
+                let errorMessage = 'No se pudo registrar la reexpedición. Por favor, verifica los datos.';
+                try {
+                    let response = JSON.parse(jqXHR.responseText);
+                    errorMessage = response.message || errorMessage;
+                } catch (e) {
+                    console.error('Error al parsear la respuesta del servidor:', e);
+                }
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: errorMessage,
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
+        });
+    });
+});
 
 //end
 });

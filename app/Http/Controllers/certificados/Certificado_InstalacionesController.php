@@ -84,6 +84,7 @@ class Certificado_InstalacionesController extends Controller
                 'id_firmante' => $certificado->firmante->name,
                 'id_revisor' => $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar',
                 'id_revisor2' => $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar',
+                'estatus' => $certificado->estatus
             ];
         });
 
@@ -328,6 +329,56 @@ class Certificado_InstalacionesController extends Controller
             return response()->json(['message' => $e->validator->errors()->first()], 422);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Ocurrió un error al asignar el revisor: ' . $e->getMessage()], 500);
+        }
+    }
+
+    //Funcion para reexpedir certificado
+    public function reexpedir(Request $request)
+    {
+        try {
+            $request->validate([
+                'id_certificado' => 'required|exists:certificados,id_certificado',
+                'accion_reexpedir' => 'required|in:1,2', 
+                'observaciones' => 'nullable|string',
+                'id_dictamen' => 'required|integer',
+                'num_certificado' => 'required|string|max:25',
+                'fecha_vigencia' => 'required|date',
+                'fecha_vencimiento' => 'required|date',
+                'maestro_mezcalero' => 'nullable|string|max:60',
+                'num_autorizacion' => 'nullable|integer',
+                'id_firmante' => 'required|integer',
+            ]);
+    
+            $certificado = Certificados::findOrFail($request->id_certificado);
+    
+            if ($request->accion_reexpedir == '1') {
+                $certificado->estatus = 1; 
+                $certificado->observaciones = $request->observaciones; 
+                $certificado->save();
+            } elseif ($request->accion_reexpedir == '2') {
+                $certificado->estatus = 1;
+                $certificado->observaciones = $request->observaciones; 
+                $certificado->save(); 
+    
+                // Crear un nuevo registro de certificado (reexpedición)
+                $nuevoCertificado = new Certificados();
+                $nuevoCertificado->id_dictamen = $request->id_dictamen;
+                $nuevoCertificado->num_certificado = $request->num_certificado;
+                $nuevoCertificado->fecha_vigencia = $request->fecha_vigencia;
+                $nuevoCertificado->fecha_vencimiento = $request->fecha_vencimiento;
+                $nuevoCertificado->maestro_mezcalero = $request->maestro_mezcalero ?: null;
+                $nuevoCertificado->num_autorizacion = $request->num_autorizacion ?: null;
+                $nuevoCertificado->id_firmante = $request->id_firmante;
+                $nuevoCertificado->estatus = 2;
+                
+                // Guarda el nuevo certificado
+                $nuevoCertificado->save();
+            }
+    
+            return response()->json(['message' => 'Certificado procesado correctamente.']);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return response()->json(['message' => 'Error al procesar el certificado.', 'error' => $e->getMessage()], 500);
         }
     }
     
