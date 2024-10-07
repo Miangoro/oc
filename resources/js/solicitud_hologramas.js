@@ -1130,7 +1130,7 @@ $(function () {
 
   }); */
 
-  $(document).on('click', '.edit-holograma', function () {
+  $(document).on('click', '.activar_holograma', function () {
     var id_solicitud = $(this).data('id');
   
     // Realizar la solicitud AJAX para obtener los datos de la solicitud

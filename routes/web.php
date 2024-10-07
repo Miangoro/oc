@@ -697,6 +697,8 @@ Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3
 Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
 Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
 Route::post('/solicitud_holograma/editHolograma', [solicitudHolograma::class, 'editHolograma']);
+Route::post('/solicitud_holograma/storeActivar', [solicitudHolograma::class, 'storeActivar']);
+
 
 
 //Certificados Instalaciones

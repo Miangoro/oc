@@ -457,6 +457,8 @@ public function update(Request $request)
         return response()->json(['error' => 'Error al actualizar la solicitud de activación de hologramas'], 500);
     }
 }
+
+
 /* 
      public function storeActivar(Request $request)
     {
