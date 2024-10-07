@@ -477,7 +477,13 @@ public function update(Request $request)
         $loteEnvasado->tipo_agave = $request->tipo_agave;
         $loteEnvasado->lugar_produccion = $request->lugar_produccion;
         $loteEnvasado->lugar_envasado = $request->lugar_envasado;
-        $loteEnvasado->id_solicitudActivacion = $request->id_solicitudActivacion;
+        $loteEnvasado->id_solicitud = $request->id_solicitudActivacion;
+
+        $loteEnvasado->folios = json_encode([
+            'folio_inicial' => $request->rango_inicial,
+            'folio_final' => $request->rango_final // Puedes agregar otros valores también
+        ]);
+        //$loteEnvasado->folio_final = $request->id_solicitudActivacion;
     
         // Guardar el nuevo lote en la base de datos
         $loteEnvasado->save();
@@ -494,7 +500,7 @@ public function update(Request $request)
         }
  */
 
- if (isset($request->rango_inicial) && is_array($request->rango_inicial)) {
+/* if (isset($request->rango_inicial) && is_array($request->rango_inicial)) {
     for ($i = 0; $i < count($request->rango_inicial); $i++) {
         // Crear una nueva instancia para el rango de hologramas (no sobrescribir loteEnvasado)
         $rangoHolograma = new activarHologramasModelo();
@@ -503,7 +509,7 @@ public function update(Request $request)
         $rangoHolograma->rango_final = $request->rango_final[$i];
         $rangoHolograma->save();
     }
-}
+}*/
     
         // Retornar respuesta exitosa
         return response()->json(['message' => 'Hologramas activados exitosamente']);
