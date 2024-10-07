@@ -1120,7 +1120,7 @@ $(function () {
 
 
   //Activar hologramas
-  $(document).on('click', '.activar_holograma', function () {
+/*    $(document).on('click', '.activar_holograma', function () {
     var id_solicitud = $(this).data('id');
 
     $('#id_solicitudActivacion').val(id_solicitud);
@@ -1128,8 +1128,124 @@ $(function () {
     // Mostrar el modal de edición
     $('#activarHologramas').modal('show');
 
-  });
+  });  */
 
+/*   $(document).on('click', '.activar_holograma', function () {
+    var id_solicitud = $(this).data('id');
+  
+    // Realizar la solicitud AJAX para obtener los datos de la solicitud
+    $.get('/solicitud_holograma/editHolograma' + id_solicitud, function (data) {
+  
+      // Rellenar el formulario con los datos obtenidos
+      $('#id_solicitudActivacion').val(data.id_solicitud);
+      $('#id_inspeccion').val(data.id_inspeccion).trigger('change'); // Usamos trigger para actualizar el select2
+      $('#no_lote_agranel').val(data.no_lote_agranel);
+      $('#categoria').val(data.categoria).trigger('change');
+      $('#no_analisis').val(data.no_analisis);
+      $('#cont_neto').val(data.cont_neto);
+      $('#unidad').val(data.unidad).trigger('change');
+      $('#clase').val(data.clase).trigger('change');
+      $('#contenido').val(data.contenido);
+      $('#no_lote_envasado').val(data.no_lote_envasado);
+      $('#tipo_agave').val(data.tipo_agave);
+      $('#lugar_produccion').val(data.lugar_produccion);
+      $('#lugar_envasado').val(data.lugar_envasado);
+      $('#cantidad_hologramas').val(data.cantidad_hologramas);
+  
+      // Limpiar las filas existentes en la tabla de rangos
+      $('#contenidoRango').empty();
+  
+      // Si existen rangos, los añadimos al formulario
+      if (data.rangos && data.rangos.length > 0) {
+        data.rangos.forEach(function (rango) {
+          var rowHtml = `
+            <tr>
+              <th>
+                <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+              </th>
+              <td><input type="number" class="form-control form-control-sm" name="rango_inicial[]" value="${rango.folio_inicial}"></td>
+              <td><input type="number" class="form-control form-control-sm" name="rango_final[]" value="${rango.folio_final}"></td>
+            </tr>`;
+          $('#contenidoRango').append(rowHtml);
+        });
+      }
+  
+      // Mostrar el modal de edición
+      $('#activarHologramas').modal('show');
+  
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error: ' + textStatus + ' - ' + errorThrown);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos de la solicitud de holograma',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    });
+  });
+  
+  // Agregar nueva fila para los rangos
+  $('.add-row').click(function () {
+    var newRow = `
+      <tr>
+        <th>
+          <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+        </th>
+        <td><input type="number" class="form-control form-control-sm" name="rango_inicial[]"></td>
+        <td><input type="number" class="form-control form-control-sm" name="rango_final[]"></td>
+      </tr>`;
+    $('#contenidoRango').append(newRow);
+  });
+  
+  // Eliminar fila de rangos
+  $(document).on('click', '.remove-row', function () {
+    $(this).closest('tr').remove();
+  }); */
+  
+
+ 
+  $('#activarHologramasForm').submit(function (e) {
+    e.preventDefault();
+
+    var formData = new FormData(this);
+    console.log()
+
+    $.ajax({
+      url: '/solicitud_holograma/storeActivar',
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        Swal.fire({
+          title: 'Éxito',
+          text: response.success,
+          icon: 'success',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+        $('#activarHologramas').modal('hide');
+        $('.datatables-users').DataTable().ajax.reload();
+      },
+      error: function (response) {
+        console.log(response);
+
+        Swal.fire({
+          title: 'Error',
+          text: 'Ocurrió un error al actualizar la guía.',
+          icon: 'error',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      }
+    });
+  }); 
 
   const addRecepcionForm = document.getElementById('addRecepcionForm');
 

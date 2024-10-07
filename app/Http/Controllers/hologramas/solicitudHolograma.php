@@ -9,6 +9,8 @@ use App\Models\empresa;
 use App\Models\solicitudHolograma as ModelsSolicitudHolograma;
 use App\Models\direcciones;
 use App\Models\empresaNumCliente;
+use App\Models\inspecciones; 
+use App\Models\categorias;
 use App\Models\Documentacion_url;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +23,8 @@ class solicitudHolograma extends Controller
     public function UserManagement()
     {
         $Empresa = empresa::where('tipo', '=', '2')->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $inspeccion = inspecciones::all();
+        $categorias = categorias::all();
         $ModelsSolicitudHolograma = ModelsSolicitudHolograma::all();
         $userCount = $ModelsSolicitudHolograma->count();
         $verified = 5;
@@ -34,6 +38,10 @@ class solicitudHolograma extends Controller
             'userDuplicates' => $userDuplicates,
             'Empresa' => $Empresa, // Pasa la lista de clientes a la vista
             'ModelsSolicitudHolograma' => $ModelsSolicitudHolograma,     // Pasa la lista de marcas a la vista
+            'inspeccion' => $inspeccion, // Pasa la lista de clientes a la vista
+            'categorias' => $categorias, // Pasa la lista de clientes a la vista
+
+
 
 
         ]);
@@ -412,6 +420,100 @@ public function update(Request $request)
         // Generar y devolver el PDF
         return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
     }
+
+    //metodo para activar hologramas
+/*     public function editHolograma(Request $request)
+{
+    try {
+        // Encuentra la solicitud de activación de hologramas por su ID
+        $solicitud = activarHologramasModelo::findOrFail($request->input('id_solicitud'));
+
+        // Actualiza los datos de la solicitud con los valores enviados desde el formulario
+        $solicitud->id_inspeccion = $request->input('id_inspeccion');
+        $solicitud->no_lote_agranel = $request->input('no_lote_agranel');
+        $solicitud->categoria = $request->input('categoria');
+        $solicitud->no_analisis = $request->input('no_analisis');
+        $solicitud->cont_neto = $request->input('cont_neto');
+        $solicitud->unidad = $request->input('unidad');
+        $solicitud->clase = $request->input('clase');
+        $solicitud->contenido = $request->input('contenido');
+        $solicitud->no_lote_envasado = $request->input('no_lote_envasado');
+        $solicitud->tipo_agave = $request->input('tipo_agave');
+        $solicitud->lugar_produccion = $request->input('lugar_produccion');
+        $solicitud->lugar_envasado = $request->input('lugar_envasado');
+        $solicitud->cantidad_hologramas = $request->input('cantidad_hologramas');
+
+        // Actualiza los rangos inicial y final de hologramas
+        $solicitud->rango_inicial = $request->input('rango_inicial');
+        $solicitud->rango_final = $request->input('rango_final');
+
+        // Guarda la solicitud actualizada en la base de datos
+        $solicitud->save();
+
+        // Retorna una respuesta exitosa
+        return response()->json(['success' => 'Solicitud de activación de hologramas actualizada correctamente']);
+    } catch (\Exception $e) {
+        // Maneja cualquier error que ocurra durante el proceso
+        return response()->json(['error' => 'Error al actualizar la solicitud de activación de hologramas'], 500);
+    }
+} */
+
+
+ 
+     public function storeActivar(Request $request)
+    {
+        
+        // Crear nuevo registro en la base de datos
+        $loteEnvasado = new activarHologramasModelo();
+        $loteEnvasado->id_solicitud = $request->id_solicitud;
+        $loteEnvasado->id_inspeccion = $request->id_inspeccion;
+        $loteEnvasado->no_lote_agranel = $request->no_lote_agranel;
+        $loteEnvasado->categoria = $request->categoria;
+        $loteEnvasado->no_analisis = $request->no_analisis;
+        $loteEnvasado->cont_neto = $request->cont_neto;
+        $loteEnvasado->unidad = $request->unidad;
+        $loteEnvasado->clase = $request->clase;
+        $loteEnvasado->contenido = $request->contenido;
+        $loteEnvasado->no_lote_envasado = $request->no_lote_envasado;
+        $loteEnvasado->tipo_agave = $request->tipo_agave;
+        $loteEnvasado->lugar_produccion = $request->lugar_produccion;
+        $loteEnvasado->lugar_envasado = $request->lugar_envasado;
+        $loteEnvasado->id_solicitudActivacion = $request->id_solicitudActivacion;
+    
+        // Guardar el nuevo lote en la base de datos
+        $loteEnvasado->save();
+    
+        // Registrar los rangos de hologramas en la tabla correspondiente
+/*         if ($request->has('rango_inicial') && $request->has('rango_final')) {
+            foreach ($request->rango_inicial as $index => $rango_inicial) {
+                $rangoHolograma = new activarHologramasModelo();
+                 $rangoHolograma->lote_envasado_id = $loteEnvasado->id;
+              $rangoHolograma->rango_inicial = $rango_inicial;
+                $rangoHolograma->rango_final = $request->rango_final[$index];
+                $rangoHolograma->save();
+            }
+        }
+ */
+
+        if (isset($request->rango_inicial) && is_array($request->rango_inicial)) {
+            for ($i = 0; $i < count($request->rango_inicial); $i++) {
+                $testigo = new activarHologramasModelo();
+                $testigo->rango_inicial = $request->rango_inicial[$i];
+                $testigo->rango_final = $request->rango_final[$i];
+                $testigo->save();
+            }
+        }
+    
+        // Retornar respuesta exitosa
+        return response()->json(['message' => 'Hologramas activados exitosamente']);
+    } 
+     
+
+
+
+
+
+
 
     public function verificarFolios(Request $request)
 {

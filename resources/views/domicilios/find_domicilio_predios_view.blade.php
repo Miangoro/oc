@@ -4,7 +4,7 @@
 
 <!-- Vendor Styles -->
 @section('vendor-style')
-    @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.scss', 'resources/assets/vendor/libs/select2/select2.scss', 'resources/assets/vendor/libs/@form-validation/form-validation.scss', 'resources/assets/vendor/libs/animate-css/animate.scss', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss','resources\assets\vendor\libs\bootstrap-datepicker\bootstrap-datepicker.scss'])
+    @vite(['resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.scss', 'resources/assets/vendor/libs/select2/select2.scss', 'resources/assets/vendor/libs/@form-validation/form-validation.scss', 'resources/assets/vendor/libs/animate-css/animate.scss', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss','resources\assets\vendor\libs\bootstrap-datepicker\bootstrap-datepicker.scss', 'resources\assets\vendor\libs\spinkit\spinkit.scss'])
 @endsection
 
 <!-- Vendor Scripts -->
@@ -41,7 +41,7 @@
                         <th>Superficie</th>
                         <th>estatus</th>
                         <th>Pre-registro</th>
-                        <th>PDF</th>
+                        <th>Registro</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>

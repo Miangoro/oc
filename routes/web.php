@@ -451,6 +451,8 @@ Route::get('/certificado_como_envasador', [CartaAsignacionController::class, 'Ce
 Route::get('/solicitud_de_servicios', [CartaAsignacionController::class, 'SolicitudDeServicios052'])->name('CertificadoComoEnvasador');
 Route::get('/dictamen_cumplimiento_instalaciones', [CartaAsignacionController::class, 'DictamenDeCumplimienoInstalaciones'])->name('DictamenDeCumplimienoInstalaciones');
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'Contancia_trabajo'])->name('Contancia_trabajo');
+Route::get('/informe_inspeccion_etiqueta', [CartaAsignacionController::class, 'InformeInspeccionEtiqueta'])->name('InformeInspeccionEtiqueta');
+
 
 
 /* orden-trabajo-inspeccion-etiquetas */
@@ -550,6 +552,7 @@ Route::get('/domicilios-predios/{id_predio}/edit', [PrediosController::class, 'e
 Route::post('/domicilios-predios/{id_predio}', [PrediosController::class, 'update'])->name('domicilios-predios.update');
 Route::post('/domicilios-predios/{id_predio}/inspeccion', [PrediosController::class, 'inspeccion'])->name('domicilios-predios.inspeccion');
 Route::get('/pre-registro_predios/{id_predio}', [prediosController::class, 'PdfPreRegistroPredios'])->name('pre-registro_predios');
+Route::get('/inspeccion_geo_referenciacion/{id_predio}', [prediosController::class, 'PDFInspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion');
 
 //Domicilio Destinos
 Route::get('/domicilios/destinos', [DestinosController::class, 'UserManagement'])->name('domicilio-destinos');
@@ -693,6 +696,10 @@ Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2
 Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
 Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
 Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
+Route::post('/solicitud_holograma/editHolograma', [solicitudHolograma::class, 'editHolograma']);
+Route::post('/solicitud_holograma/storeActivar', [solicitudHolograma::class, 'storeActivar']);
+
+
 
 //Certificados Instalaciones
 Route::get('certificados/instalaciones', [Certificado_InstalacionesController::class, 'UserManagement'])->name('certificados-instalaciones');
@@ -771,3 +778,4 @@ Route::get('/Solicitud-Servicio-UNIIC', [CartaAsignacionController::class, 'Soli
 Route::get('/empresa_contrato/{id_empresa}', [clientesConfirmadosController::class, 'obtenerContratosPorEmpresa']);
 Route::get('/empresa_num_cliente/{id_empresa}', [clientesConfirmadosController::class, 'obtenerNumeroCliente']);
 Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'actualizarRegistros']);
+
