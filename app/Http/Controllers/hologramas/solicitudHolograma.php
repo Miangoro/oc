@@ -422,7 +422,7 @@ public function update(Request $request)
     }
 
     //metodo para activar hologramas
-    public function editHolograma(Request $request)
+/*     public function editHolograma(Request $request)
 {
     try {
         // Encuentra la solicitud de activación de hologramas por su ID
@@ -456,14 +456,30 @@ public function update(Request $request)
         // Maneja cualquier error que ocurra durante el proceso
         return response()->json(['error' => 'Error al actualizar la solicitud de activación de hologramas'], 500);
     }
-}
+} */
 
 
-/* 
+ 
      public function storeActivar(Request $request)
     {
         // Validar los datos del formulario
-
+        $request->validate([
+            'id_solicitud' => 'required|integer',
+            'id_inspeccion' => 'required|integer',
+            'no_lote_agranel' => 'required|string|max:255',
+            'categoria' => 'required|string|max:255',
+            'no_analisis' => 'required|string|max:255',
+            'cont_neto' => 'required|numeric',
+            'unidad' => 'required|string|max:255',
+            'clase' => 'required|string|max:255',
+            'contenido' => 'required|string|max:255',
+            'no_lote_envasado' => 'required|string|max:255',
+            'tipo_agave' => 'required|string|max:255',
+            'lugar_produccion' => 'required|string|max:255',
+            'lugar_envasado' => 'required|string|max:255',
+            'cantidad_hologramas' => 'required|integer',
+        ]);
+        
         // Crear nuevo registro en la base de datos
         $loteEnvasado = new activarHologramasModelo();
         $loteEnvasado->id_solicitud = $request->id_solicitud;
@@ -488,8 +504,8 @@ public function update(Request $request)
         if ($request->has('rango_inicial') && $request->has('rango_final')) {
             foreach ($request->rango_inicial as $index => $rango_inicial) {
                 $rangoHolograma = new activarHologramasModelo();
-                $rangoHolograma->lote_envasado_id = $loteEnvasado->id;
-                $rangoHolograma->rango_inicial = $rango_inicial;
+/*                 $rangoHolograma->lote_envasado_id = $loteEnvasado->id;
+ */             $rangoHolograma->rango_inicial = $rango_inicial;
                 $rangoHolograma->rango_final = $request->rango_final[$index];
                 $rangoHolograma->save();
             }
@@ -498,7 +514,7 @@ public function update(Request $request)
         // Retornar respuesta exitosa
         return response()->json(['message' => 'Hologramas activados exitosamente']);
     } 
-     */
+     
 
 
 

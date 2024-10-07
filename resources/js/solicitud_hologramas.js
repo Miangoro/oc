@@ -1130,7 +1130,7 @@ $(function () {
 
   }); */
 
-  $(document).on('click', '.activar_holograma', function () {
+/*   $(document).on('click', '.activar_holograma', function () {
     var id_solicitud = $(this).data('id');
   
     // Realizar la solicitud AJAX para obtener los datos de la solicitud
@@ -1202,10 +1202,10 @@ $(function () {
   // Eliminar fila de rangos
   $(document).on('click', '.remove-row', function () {
     $(this).closest('tr').remove();
-  });
+  }); */
   
 
-/* 
+ 
   $('#activarHologramasForm').submit(function (e) {
     e.preventDefault();
 
@@ -1245,7 +1245,7 @@ $(function () {
         });
       }
     });
-  }); */
+  }); 
 
   const addRecepcionForm = document.getElementById('addRecepcionForm');
 

@@ -43,7 +43,7 @@
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="Destino lote" id="no_analisis"
+                                <input class="form-control" type="text" placeholder="No de análisis de laboratorio:" id="no_analisis"
                                     name="no_analisis" />
                                 <label for="no_analisis">No de análisis de laboratorio:</label>
                             </div>
@@ -54,7 +54,7 @@
                         <div class="col-md-4">
 
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="nunber" step="0.01" placeholder="Costo de envio"
+                                <input class="form-control" type="number" step="0.01" placeholder="Contenido neto por botellas (ml/L):"
                                     id="cont_neto" name="cont_neto" />
                                 <label for="cont_neto">Contenido neto por botellas (ml/L):</label>
                             </div>
@@ -88,14 +88,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="Destino lote" id="contenido"
+                                <input class="form-control" type="text" placeholder="Contenido Alcohólico:" id="contenido"
                                     name="contenido" />
                                 <label for="contenido">Contenido Alcohólico:</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="Destino lote" id="no_lote_envasado"
+                                <input class="form-control" type="text" placeholder=">No. de lote de envasado:" id="no_lote_envasado"
                                     name="no_lote_envasado" />
                                 <label for="no_lote_envasado">No. de lote de envasado:</label>
                             </div>
@@ -113,21 +113,21 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="Destino lote" id="tipo_agave"
+                                <input class="form-control" type="text" placeholder="Tipo de agave" id="tipo_agave"
                                     name="tipo_agave" />
                                 <label for="tipo_agave">Tipo de agave</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="Destino lote" id="lugar_produccion"
+                                <input class="form-control" type="text" placeholder="Lugar de producción:" id="lugar_produccion"
                                     name="lugar_produccion" />
                                 <label for="lugar_produccion">Lugar de producción: </label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" step="0.01" placeholder="Volumen total"
+                                <input class="form-control" type="text" step="0.01" placeholder="Lugar de envasado:"
                                     id="lugar_envasado" name="lugar_envasado"  />
                                 <label for="lugar_envasado">Lugar de envasado:</label>
                             </div>
