@@ -52,7 +52,7 @@
                 <textarea name="observaciones" class="form-control h-px-100" id="observaciones" placeholder="Indicaciones..."></textarea>
                 <label for="observaciones">Indicaciones u observaciones para la inspección</label>
               </div>
-            
+
 
 
             

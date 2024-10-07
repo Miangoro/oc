@@ -11,6 +11,8 @@
                 <form id="activarHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
 
+                        <input type="hidden" class="id_solicitudActivacion" id="id_solicitudActivacion" name="id_solicitudActivacion">
+
                         <div class="form-floating form-floating-outline mb-6">
                             <select id="id_inspeccion" name="id_inspeccion" class="form-select select2" aria-label="Default select example">
                                 <option value="" disabled selected>Elige un numero de inspeccion</option>
@@ -36,7 +38,7 @@
                                     <option value="{{ $cate->categoria }}">{{ $cate->categoria }}</option>
                                     @endforeach
                                 </select>
-                                <label for="categoria">categoria</label>
+                                <label for="categoria">Categoría</label>
                             </div>
                         </div>
 
@@ -134,12 +136,7 @@
 
                     </div>
 
-                    <div class="col-md-12">
-                        <div class="form-floating form-floating-outline mb-5">
-                            <input class="form-control id_solicitudActivacion" type="number" id="id_solicitudActivacion" name="id_solicitudActivacion" placeholder="Número de hologramas solicitados"  readonly/>
-                            <label for="id_solicitudActivacion">Número de hologramas solicitados</label>
-                        </div>
-                    </div>
+                   
 
                     <div style="display: none;" id="mensaje" role="alert"></div>
 

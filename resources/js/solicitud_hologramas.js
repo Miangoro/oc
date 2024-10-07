@@ -1121,7 +1121,7 @@ $(function () {
 
 
   //Activar hologramas
-/*    $(document).on('click', '.activar_holograma', function () {
+    $(document).on('click', '.activar_holograma', function () {
     var id_solicitud = $(this).data('id');
 
     $('#id_solicitudActivacion').val(id_solicitud);
@@ -1129,7 +1129,7 @@ $(function () {
     // Mostrar el modal de edición
     $('#activarHologramas').modal('show');
 
-  });  */
+  });  
 
 /*   $(document).on('click', '.activar_holograma', function () {
     var id_solicitud = $(this).data('id');
