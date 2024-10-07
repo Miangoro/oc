@@ -78,6 +78,8 @@
  @include('_partials/_modals/modal-add-asignarHologramas')
  @include('_partials/_modals/modal-add-envioHologramas')
 @include('_partials/_modals/modal-edit-solicitudHologramas')
+@include('_partials/_modals/modal-add-activados')
+
 
 
 <!-- /Modal -->
