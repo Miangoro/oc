@@ -465,7 +465,6 @@ public function update(Request $request)
         
         // Crear nuevo registro en la base de datos
         $loteEnvasado = new activarHologramasModelo();
-        $loteEnvasado->id_solicitud = $request->id_solicitud;
         $loteEnvasado->id_inspeccion = $request->id_inspeccion;
         $loteEnvasado->no_lote_agranel = $request->no_lote_agranel;
         $loteEnvasado->categoria = $request->categoria;
@@ -495,14 +494,16 @@ public function update(Request $request)
         }
  */
 
-        if (isset($request->rango_inicial) && is_array($request->rango_inicial)) {
-            for ($i = 0; $i < count($request->rango_inicial); $i++) {
-                $testigo = new activarHologramasModelo();
-                $testigo->rango_inicial = $request->rango_inicial[$i];
-                $testigo->rango_final = $request->rango_final[$i];
-                $testigo->save();
-            }
-        }
+ if (isset($request->rango_inicial) && is_array($request->rango_inicial)) {
+    for ($i = 0; $i < count($request->rango_inicial); $i++) {
+        // Crear una nueva instancia para el rango de hologramas (no sobrescribir loteEnvasado)
+        $rangoHolograma = new activarHologramasModelo();
+        $rangoHolograma->lote_envasado_id = $loteEnvasado->id;  // Relacionar con el lote envasado
+        $rangoHolograma->rango_inicial = $request->rango_inicial[$i];
+        $rangoHolograma->rango_final = $request->rango_final[$i];
+        $rangoHolograma->save();
+    }
+}
     
         // Retornar respuesta exitosa
         return response()->json(['message' => 'Hologramas activados exitosamente']);
