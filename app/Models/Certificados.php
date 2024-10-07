@@ -20,6 +20,8 @@ class Certificados extends Model
         'fecha_vencimiento',
         'maestro_mezcalero',
         'num_autorizacion',
+        'estatus',
+        'observaciones'
     ];
 
     // Relación con el modelo Dictamen_instalaciones

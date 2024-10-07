@@ -699,6 +699,10 @@ Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2
 Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
 Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
 Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
+Route::post('/solicitud_holograma/editHolograma', [solicitudHolograma::class, 'editHolograma']);
+Route::post('/solicitud_holograma/storeActivar', [solicitudHolograma::class, 'storeActivar']);
+
+
 
 //Certificados Instalaciones
 Route::get('certificados/instalaciones', [Certificado_InstalacionesController::class, 'UserManagement'])->name('certificados-instalaciones');
@@ -708,6 +712,7 @@ Route::get('certificados-list/{id}/edit', [Certificado_InstalacionesController::
 Route::put('certificados-list/{id}', [Certificado_InstalacionesController::class, 'update']);
 Route::get('/ruta-para-obtener-revisores', [Certificado_InstalacionesController::class, 'obtenerRevisores']);
 Route::post('/asignar-revisor', [Certificado_InstalacionesController::class, 'storeRevisor'])->name('asignarRevisor'); //Agregar
+Route::post('/certificados/reexpedir', [Certificado_InstalacionesController::class, 'reexpedir'])->name('certificados.reexpedir');
 
 //Pdfs de certificados de instalaciones
 Route::get('/certificado_comercializador/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_comercializador'])->name('certificado_comercializador');
