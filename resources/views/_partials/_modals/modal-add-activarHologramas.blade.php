@@ -9,7 +9,6 @@
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="activarHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
-                    <input type="text" id="id_solicitudActivacion" name="id_solicitud">       
                     <div class="row">
 
                         <div class="form-floating form-floating-outline mb-6">
@@ -137,8 +136,8 @@
 
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <input class="form-control" type="number" id="cantidad_hologramas" name="cantidad_hologramas" placeholder="Número de hologramas solicitados"  />
-                            <label for="cantidad_hologramas">Número de hologramas solicitados</label>
+                            <input class="form-control id_solicitudActivacion" type="number" id="id_solicitudActivacion" name="id_solicitudActivacion" placeholder="Número de hologramas solicitados"  readonly/>
+                            <label for="id_solicitudActivacion">Número de hologramas solicitados</label>
                         </div>
                     </div>
 

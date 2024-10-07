@@ -478,7 +478,7 @@ public function update(Request $request)
         $loteEnvasado->tipo_agave = $request->tipo_agave;
         $loteEnvasado->lugar_produccion = $request->lugar_produccion;
         $loteEnvasado->lugar_envasado = $request->lugar_envasado;
-        $loteEnvasado->cantidad_hologramas = $request->cantidad_hologramas;
+        $loteEnvasado->id_solicitudActivacion = $request->id_solicitudActivacion;
     
         // Guardar el nuevo lote en la base de datos
         $loteEnvasado->save();

@@ -14,7 +14,6 @@ class activarHologramasModelo extends Model
     protected $fillable = [
         'id',
         'id_inspeccion',
-        'id_solicitud',
         'no_lote_agranel',
         'categoria',
         'no_analisis',
@@ -26,7 +25,7 @@ class activarHologramasModelo extends Model
         'tipo_agave',
         'lugar_produccion',
         'lugar_envasado',
-        'cantidad_hologramas',
+        'id_solicitudActivacion',
         'rango_inicial',
         'rango_final',
 
