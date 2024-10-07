@@ -462,23 +462,6 @@ public function update(Request $request)
  
      public function storeActivar(Request $request)
     {
-        // Validar los datos del formulario
-        $request->validate([
-            'id_solicitud' => 'required|integer',
-            'id_inspeccion' => 'required|integer',
-            'no_lote_agranel' => 'required|string|max:255',
-            'categoria' => 'required|string|max:255',
-            'no_analisis' => 'required|string|max:255',
-            'cont_neto' => 'required|numeric',
-            'unidad' => 'required|string|max:255',
-            'clase' => 'required|string|max:255',
-            'contenido' => 'required|string|max:255',
-            'no_lote_envasado' => 'required|string|max:255',
-            'tipo_agave' => 'required|string|max:255',
-            'lugar_produccion' => 'required|string|max:255',
-            'lugar_envasado' => 'required|string|max:255',
-            'cantidad_hologramas' => 'required|integer',
-        ]);
         
         // Crear nuevo registro en la base de datos
         $loteEnvasado = new activarHologramasModelo();
@@ -501,13 +484,23 @@ public function update(Request $request)
         $loteEnvasado->save();
     
         // Registrar los rangos de hologramas en la tabla correspondiente
-        if ($request->has('rango_inicial') && $request->has('rango_final')) {
+/*         if ($request->has('rango_inicial') && $request->has('rango_final')) {
             foreach ($request->rango_inicial as $index => $rango_inicial) {
                 $rangoHolograma = new activarHologramasModelo();
-/*                 $rangoHolograma->lote_envasado_id = $loteEnvasado->id;
- */             $rangoHolograma->rango_inicial = $rango_inicial;
+                 $rangoHolograma->lote_envasado_id = $loteEnvasado->id;
+              $rangoHolograma->rango_inicial = $rango_inicial;
                 $rangoHolograma->rango_final = $request->rango_final[$index];
                 $rangoHolograma->save();
+            }
+        }
+ */
+
+        if (isset($request->rango_inicial) && is_array($request->rango_inicial)) {
+            for ($i = 0; $i < count($request->rango_inicial); $i++) {
+                $testigo = new activarHologramasModelo();
+                $testigo->rango_inicial = $request->rango_inicial[$i];
+                $testigo->rango_final = $request->rango_final[$i];
+                $testigo->save();
             }
         }
     

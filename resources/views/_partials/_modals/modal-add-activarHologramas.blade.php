@@ -71,7 +71,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select" id="clase" name="clase" aria-label="Unidad">
+                                <select class=" form-select" id="clase" name="clase" aria-label="Clase">
                                     <option value="Blanco o Joven">Blanco o Joven</option>
                                     <option value="Maduro en Vidrio">Maduro en Vidrio</option>
                                     <option value="Reposado">Reposado</option>
