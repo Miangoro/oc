@@ -466,8 +466,8 @@ public function update(Request $request)
 
         // Crear nuevo registro en la base de datos
         $loteEnvasado = new activarHologramasModelo();
-        $loteEnvasado->id_inspeccion = $request->id_inspeccion;
         $loteEnvasado->id_solicitud = $request->id_solicitud;
+        $loteEnvasado->id_inspeccion = $request->id_inspeccion;
         $loteEnvasado->no_lote_agranel = $request->no_lote_agranel;
         $loteEnvasado->categoria = $request->categoria;
         $loteEnvasado->no_analisis = $request->no_analisis;

@@ -10,10 +10,11 @@ class activarHologramasModelo extends Model
     use HasFactory;
 
     protected $table = 'activar_hologramas';
-    protected $primaryKey = 'id_solicitud';
+    protected $primaryKey = 'id';
     protected $fillable = [
-        'id_solicitud',
+        'id',
         'id_inspeccion',
+        'id_solicitud',
         'no_lote_agranel',
         'categoria',
         'no_analisis',
