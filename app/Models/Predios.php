@@ -21,13 +21,16 @@ class Predios extends Model
         'id_predio',
         'id_empresa',
         'nombre_productor',
+        'num_predio',
         'nombre_predio',
         'ubicacion_predio',
         'tipo_predio',
         'puntos_referencia',
         'cuenta_con_coordenadas',
         'superficie',
-        'estatus'
+        'estatus',
+        'fecha_emision',
+        'fecha_vigencia'
 
     ];
 
@@ -71,8 +74,6 @@ class Predios extends Model
         {
             return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_predio');
         }
-
-
 
         // Relación con el modelo Documentacion_url
         public function actas_produccion()

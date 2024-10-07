@@ -54,6 +54,6 @@ class inspecciones extends Model
     {
         return $this->belongsTo(actas_inspeccion::class, 'id_inspeccion', 'id_inspeccion');
     }
-    
+
 }
 

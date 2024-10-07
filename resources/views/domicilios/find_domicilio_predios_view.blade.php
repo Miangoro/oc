@@ -42,6 +42,7 @@
                         <th>estatus</th>
                         <th>Pre-registro</th>
                         <th>Registro</th>
+                        <th>Registro</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -55,5 +56,6 @@
     @include('_partials/_modals/modal-add-new-predio')
     @include('_partials/_modals/modal-edit-predio')
     @include('_partials/_modals/modal-add-predio-inspeccion')
+    @include('_partials/_modals/modal-add-registro-predio')
     <!-- /Modal -->
 @endsection

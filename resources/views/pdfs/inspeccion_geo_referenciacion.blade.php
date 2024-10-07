@@ -277,7 +277,7 @@
             <tr>
                 <td style="width: 60%;"> No. orden de servicio
                 </td>
-                <td>
+                <td> {{ $inspeccionData->num_servicio ?? 'N/A' }}
                 </td>
             </tr>
             <tr>
@@ -286,7 +286,7 @@
             </tr>
             <tr>
                 <td>No. de Cliente</td>
-                <td></td>
+                <td> </td>
             </tr>
         </table>
         <br>

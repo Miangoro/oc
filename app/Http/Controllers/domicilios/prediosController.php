@@ -13,6 +13,8 @@ use App\Models\Documentacion;
 use App\Models\Documentacion_url;
 use App\Models\Predios_Inspeccion;
 use App\Models\estados;
+use App\Models\solicitudesModel;
+use App\Models\inspecciones;
 use App\Models\PrediosCaracteristicasMaguey;
 use App\Notifications\GeneralNotification;
 use App\Models\User;
@@ -319,7 +321,7 @@ class PrediosController extends Controller
         public function update(Request $request, $id_predio)
         {
             try {
-                Log::info('Datos recibidos:', $request->all());
+
 
                 // Validar los datos del formulario
                 $validated = $request->validate([
@@ -546,6 +548,16 @@ class PrediosController extends Controller
         // Guardar el nuevo registro de inspección en la base de datos
         $inspeccion->save();
 
+                // Recuperar el predio
+        $predio = Predios::findOrFail($id_predio);
+
+        // Cambiar el estatus a 'Inspeccionado'
+        $predio->estatus = 'Inspeccionado';
+
+        // Guardar los cambios en el predio
+        $predio->save();
+
+
         // Solo guardar coordenadas si tiene_coordenadas es 'Si'
         if ($validatedData['tiene_coordenadas'] === 'Si') {
             if ($request->has('latitud') && $request->has('longitud')) {
@@ -618,6 +630,28 @@ class PrediosController extends Controller
     public function PDFInspeccionGeoreferenciacion($id_predio) {
       // Obtener la primera (y única) inspección relacionada con el predio
       $inspeccion = Predios_Inspeccion::where('id_predio', $id_predio)->first();
+
+      if (!$inspeccion) {
+          // Manejo de errores si no se encuentra la inspección
+          return response()->json(['error' => 'No se encontró la inspección para este predio.'], 404);
+      }
+
+      // Obtener la solicitud relacionada a partir del id_predio
+      $solicitud = solicitudesModel::where('id_predio', $id_predio)->first();
+
+      if (!$solicitud) {
+          // Manejo de errores si no se encuentra la solicitud
+          return response()->json(['error' => 'No se encontró la solicitud.'], 404);
+      }
+
+      // Obtener la inspección relacionada a partir del id_solicitud de la solicitud
+      $inspeccionData = inspecciones::where('id_solicitud', $solicitud->id_solicitud)->first();
+
+      if (!$inspeccionData) {
+          // Manejo de errores si no se encuentra la inspección
+          return response()->json(['error' => 'No se encontró la inspección relacionada con la solicitud.'], 404);
+      }
+
       // Obtener todas las coordenadas relacionadas con la inspección
       $coordenadas = PredioCoordenadas::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
       $caracteristicas = PrediosCaracteristicasMaguey::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
@@ -626,12 +660,65 @@ class PrediosController extends Controller
       // Cargar la vista PDF con la inspección y las coordenadas
       $pdf = Pdf::loadView('pdfs.inspeccion_geo_referenciacion', [
           'inspeccion' => $inspeccion,
+          'solicitud' => $solicitud, // Pasar la solicitud
+          'inspeccionData' => $inspeccionData, // Pasar la inspección relacionada
           'coordenadas' => $coordenadas,
           'caracteristicas' => $caracteristicas,
           'plantacion' => $plantacion,
       ]);
+
       // Generar y retornar el PDF
       return $pdf->stream('Registro de Predios Maguey Agave.pdf');
+  }
+
+
+
+
+
+    public function PDFRegistroPredios($id_predio) {
+
+    /*  $inspeccion = Predios_Inspeccion::where('id_predio', $id_predio)->first(); */
+      // Cargar la vista PDF con la inspección y las coordenadas
+      $pdf = Pdf::loadView('pdfs.Registro_de_Predios_Maguey_Agave'/* , [
+          'inspeccion' => $inspeccion,
+          'coordenadas' => $coordenadas,
+          'caracteristicas' => $caracteristicas,
+          'plantacion' => $plantacion,
+      ] */);
+      // Generar y retornar el PDF
+      return $pdf->stream('F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.pdf');
+    }
+
+  public function registroPredio(Request $request, $id_predio)
+  {
+      try {
+          // Validar los datos del formulario
+          $validated = $request->validate([
+              'num_predio' => 'required|string',
+              'fecha_emision' => 'required|date',
+              'fecha_vigencia' => 'required|date',
+          ]);
+
+          $predio = Predios::findOrFail($id_predio);
+
+          // Actualizar los datos del predio, incluyendo el estatus
+          $predio->update([
+              'num_predio' => $validated['num_predio'],
+              'fecha_emision' => $validated['fecha_emision'],
+              'fecha_vigencia' => $validated['fecha_vigencia'],
+              'estatus' => 'Vigente'
+          ]);
+
+          return response()->json([
+              'success' => true,
+              'message' => 'Predio actualizado exitosamente',
+          ]);
+      } catch (\Exception $e) {
+          return response()->json([
+              'success' => false,
+              'message' => 'Error al actualizar el predio: ' . $e->getMessage(),
+          ], 500);
+      }
   }
 
 
