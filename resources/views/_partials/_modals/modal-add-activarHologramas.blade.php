@@ -33,7 +33,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <select class=" form-select select2" id="categoria" name="categoria" aria-label="categoria">
-                                    <option value="" disabled selected>Elige uan categoria</option>
+                                    <option value="" disabled selected>Elige una categoria</option>
                                     @foreach ($categorias as $cate)
                                     <option value="{{ $cate->categoria }}">{{ $cate->categoria }}</option>
                                     @endforeach
@@ -115,7 +115,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <select class=" form-select select2" id="id_tipo" name="id_tipo" aria-label="categoria">
-                                    <option value="" disabled selected>Elige uan categoria</option>
+                                    <option value="" disabled selected>Elige una categoria</option>
                                     @foreach ($tipos as $tipo)
                                     <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
                                     @endforeach
