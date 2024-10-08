@@ -23,10 +23,8 @@
                         <input type="text" class="id_solicitudActivacion" id="id_solicitud" name="id_solicitud">
 
                         <div class="form-floating form-floating-outline mb-6">
-                            <select id="edit_id_inspeccion" name="edit_id_inspeccion" class="form-select select2" aria-label="Default select example">
-                                <option value="" disabled selected>Elige un numero de inspeccion</option>
+                            <input id="edit_id_inspeccion" name="edit_id_inspeccion" class="form-select " aria-label="Default select example">
 
-                            </select>
                                 <label for="edit_id_inspeccion">No. de servicio</label>
                         </div>
                         <div class="col-md-4">
