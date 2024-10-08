@@ -1,6 +1,14 @@
 <!-- Add New Lote Envasado Modal -->
+<style>
+    .modal-custom-size {
+        max-width: 90%;
+        /* Ajusta este valor para hacerlo más grande */
+        width: 90%;
+        /* Ajusta según tus necesidades */
+    }
+</style>
 <div class="modal fade" id="activosHologramas" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+    <div class="modal-dialog modal-custom-size modal-simple modal-add-new-address">
         <div class="modal-content">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
