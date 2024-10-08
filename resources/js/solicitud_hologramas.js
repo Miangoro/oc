@@ -1149,12 +1149,10 @@ $(function () {
         var fila = `
             <tr>
                 <td>${item.id}</td>
-                <td>${item.id_inspeccion}</td>
                 <td>${item.no_lote_agranel}</td>
                 <td>${item.categoria}</td>
                 <td>${item.no_analisis}</td>
-                <td>${item.cont_neto}</td>
-                <td>${item.unidad}</td>
+<td>${item.cont_neto}, ${item.unidad}</td>
                 <td>${item.clase}</td>
                 <td>${item.contenido}</td>
                 <td>${item.no_lote_envasado}</td>
