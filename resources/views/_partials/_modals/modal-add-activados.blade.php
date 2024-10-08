@@ -16,6 +16,7 @@
                     <h4 class="address-title mb-2">Hologramas Activos</h4>
                     <p class="address-subtitle"></p>
                 </div>
+                
                 <form id="activosHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
                         
@@ -50,8 +51,9 @@
 
 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+                        <button type="submit" class="btn btn-primary">Registrar</button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cerrar</button>
+                            aria-label="Close">Cancelar</button>
                     </div>
                 </form>
             </div>

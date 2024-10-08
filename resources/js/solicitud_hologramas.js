@@ -1152,17 +1152,17 @@ $(function () {
                 <td>${item.id_inspeccion}</td>
                 <td>${item.no_lote_agranel}</td>
                 <td>${item.categoria}</td>
-                <td>${item.analisis_laboratorio}</td>
-                <td>${item.contenido_neto}</td>
+                <td>${item.no_analisis}</td>
+                <td>${item.cont_neto}</td>
                 <td>${item.unidad}</td>
                 <td>${item.clase}</td>
-                <td>${item.contenido_alcoholico}</td>
-                <td>${item.numero_lote_envasado}</td>
-                <td>${item.categoria}</td>
+                <td>${item.contenido}</td>
+                <td>${item.no_lote_envasado}</td>
+                <td>${item.id_tipo}</td>
                 <td>${item.lugar_produccion}</td>
                 <td>${item.lugar_envasado}</td>
-                <td>${item.rango_inicial}</td>
-                <td>${item.rango_final}</td>
+                <td>${item.folio_inicial}</td>
+                <td>${item.folio_final}</td>
             </tr>
         `;
 

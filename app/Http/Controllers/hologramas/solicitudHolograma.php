@@ -493,29 +493,6 @@ public function update(Request $request)
         // Guardar el nuevo lote en la base de datos
         $loteEnvasado->save();
     
-        // Registrar los rangos de hologramas en la tabla correspondiente
-/*         if ($request->has('rango_inicial') && $request->has('rango_final')) {
-            foreach ($request->rango_inicial as $index => $rango_inicial) {
-                $rangoHolograma = new activarHologramasModelo();
-                 $rangoHolograma->lote_envasado_id = $loteEnvasado->id;
-              $rangoHolograma->rango_inicial = $rango_inicial;
-                $rangoHolograma->rango_final = $request->rango_final[$index];
-                $rangoHolograma->save();
-            }
-        }
- */
-
-/* if (isset($request->rango_inicial) && is_array($request->rango_inicial)) {
-    for ($i = 0; $i < count($request->rango_inicial); $i++) {
-        // Crear una nueva instancia para el rango de hologramas (no sobrescribir loteEnvasado)
-        $rangoHolograma = new activarHologramasModelo();
-        $rangoHolograma->lote_envasado_id = $loteEnvasado->id;  // Relacionar con el lote envasado
-        $rangoHolograma->rango_inicial = $request->rango_inicial[$i];
-        $rangoHolograma->rango_final = $request->rango_final[$i];
-        $rangoHolograma->save();
-    }
-}*/
-    
         // Retornar respuesta exitosa
         return response()->json(['message' => 'Hologramas activados exitosamente']);
     } 
@@ -524,12 +501,23 @@ public function update(Request $request)
     public function editActivos($id)
     {
         try {
-            $activaciones = activarHologramasModelo::where('id_solicitud','=',$id)->get();
+            // Obtener los registros
+            $activaciones = activarHologramasModelo::where('id_solicitud', '=', $id)->get();
+    
+            // Decodificar el JSON de los folios en cada registro
+            $activaciones->transform(function($item) {
+                $folios = json_decode($item->folios, true); // Decodifica el JSON
+                $item->folio_inicial = $folios['folio_inicial'] ?? null;
+                $item->folio_final = $folios['folio_final'] ?? null;
+                return $item;
+            });
+    
             return response()->json($activaciones);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener las activaciones'], 500);
         }
     }
+    
 
 
 
