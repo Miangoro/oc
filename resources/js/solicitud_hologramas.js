@@ -274,7 +274,7 @@ $(function () {
               // Asumiendo que este es el código que ya tienes configurado
 /*               `<a id="activar_holograma" data-id="${full['id_solicitud']}" href="javascript:;" class="dropdown-item activar_holograma"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +
  */              `<a id="activar_holograma" data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#activarHologramas" href="javascript:;" class="dropdown-item activar_holograma"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +
-              `<a id="activos_hologramas" data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#activosHologramas" href="javascript:;" class="dropdown-item activos_hologramas"><i class="ri-barcode-box-line ri-20px text-primary"></i> Activos</a>` +
+              `<a id="activos_hologramas" data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#activosHologramas" href="javascript:;" class="dropdown-item activos_hologramas"><i class="ri-barcode-box-line ri-20px text-primary"></i> Activos</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addRecepcion" href="javascript:;" class="dropdown-item edit-recepcion"><i class="ri-article-fill ri-20px text-secondary"></i> Recepción hologramas</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addEnvio" href="javascript:;" class="dropdown-item edit-envio"><i class="ri-send-plane-fill ri-20px text-success"></i> Enviar</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#asignarHolograma" href="javascript:;" class="dropdown-item edit-signar"><i class="ri-qr-scan-fill ri-20px text-dark"></i> Asignar hologramas</a>` +
@@ -1132,16 +1132,6 @@ $(function () {
 
 
 
-  $(document).on('click', '.activos_hologramas', function () {
-    var id_solicitud = $(this).data('id');
-
-    $('#id_solicitud').val(id_solicitud);
-    
-
-    // Mostrar el modal de edición
-    $('#activosHologramas').modal('show');
-
-  });  
 
 
 
@@ -1151,11 +1141,35 @@ $(function () {
 
     $.get('/solicitud_holograma/editActivos/' + id, function (data) {
 
-
+      $('#tablita').empty();
+     
       // Rellenar el formulario con los datos obtenidos
-      $('#edit_id').val(data.id);
-      $('#id_solicitud').val(data.id_solicitud);
-      $('#edit_id_inspeccion').val(data.id_inspeccion);
+      data.forEach(function(item) {
+        // Crear una nueva fila con los datos
+        var fila = `
+            <tr>
+                <td>${item.id}</td>
+                <td>${item.id_inspeccion}</td>
+                <td>${item.no_lote_agranel}</td>
+                <td>${item.categoria}</td>
+                <td>${item.analisis_laboratorio}</td>
+                <td>${item.contenido_neto}</td>
+                <td>${item.unidad}</td>
+                <td>${item.clase}</td>
+                <td>${item.contenido_alcoholico}</td>
+                <td>${item.numero_lote_envasado}</td>
+                <td>${item.categoria}</td>
+                <td>${item.lugar_produccion}</td>
+                <td>${item.lugar_envasado}</td>
+                <td>${item.rango_inicial}</td>
+                <td>${item.rango_final}</td>
+            </tr>
+        `;
+
+        // Añadir la fila a la tabla
+        $('#tablita').append(fila);
+    });
+        
 
 
       // Mostrar el modal de edición
