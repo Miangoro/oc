@@ -1,50 +1,51 @@
 <!-- Add New Lote Envasado Modal -->
-<div class="modal fade" id="actiovosHologramas" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="activosHologramas" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Hologramas Activados</h4>
+                    <h4 class="address-title mb-2">Hologramas Activos</h4>
                     <p class="address-subtitle"></p>
                 </div>
-                <form id="actiovosHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
+                <form id="activosHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
+                        <input type="text" id="edit_id" name="id">
+
+                        <input type="text" class="id_solicitudActivacion" id="id_solicitud" name="id_solicitud">
 
                         <div class="form-floating form-floating-outline mb-6">
-                            <select id="id_inspeccion" name="id_inspeccion" class="form-select select2" aria-label="Default select example">
+                            <select id="edit_id_inspeccion" name="edit_id_inspeccion" class="form-select select2" aria-label="Default select example">
                                 <option value="" disabled selected>Elige un numero de inspeccion</option>
-                                    @foreach ($inspeccion as $insp)
-                                    <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option>
-                                    @endforeach
+
                             </select>
-                                <label for="id_inspeccion">No. de servicio</label>
+                                <label for="edit_id_inspeccion">No. de servicio</label>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="no_lote_agranel"
-                                    placeholder="Introduce el nombre del lote" name="no_lote_agranel"
+                                <input type="text" class="form-control" id="edit_no_lote_agranel"
+                                    placeholder="Introduce el nombre del lote" name="edit_no_lote_agranel"
                                     aria-label="Nombre del lote" />
-                                <label for="no_lote_agranel">No de lote granel:</label>
+                                <label for="edit_no_lote_agranel">No de lote granel:</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select class=" form-select select2" id="categoria" name="categoria" aria-label="categoria">
+                                <select class=" form-select select2" id="edit_categoria" name="edit_categoria" aria-label="categoria">
                                     <option value="" disabled selected>Elige uan categoria</option>
                                     @foreach ($categorias as $cate)
-                                    <option value="{{ $cate->categoria }}">{{ $cate->categoria }}</option>
+                                    <option value="{{ $cate->edit_categoria }}">{{ $cate->categoria }}</option>
                                     @endforeach
                                 </select>
-                                <label for="categoria">categoria</label>
+                                <label for="edit_categoria">Categoría</label>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="No de análisis de laboratorio:" id="no_analisis"
-                                    name="no_analisis" />
-                                <label for="no_analisis">No de análisis de laboratorio:</label>
+                                <input class="form-control" type="text" placeholder="No de análisis de laboratorio:" id="edit_no_analisis"
+                                    name="edit_no_analisis" />
+                                <label for="edit_no_analisis">No de análisis de laboratorio:</label>
                             </div>
                         </div>
                     </div>
@@ -54,23 +55,23 @@
 
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="number" step="0.01" placeholder="Contenido neto por botellas (ml/L):"
-                                    id="cont_neto" name="cont_neto" />
-                                <label for="cont_neto">Contenido neto por botellas (ml/L):</label>
+                                    id="edit_cont_neto" name="edit_cont_neto" />
+                                <label for="edit_cont_neto">Contenido neto por botellas (ml/L):</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select" id="unidad" name="unidad" aria-label="Unidad">
+                                <select class=" form-select" id="edit_unidad" name="edit_unidad" aria-label="Unidad">
                                     <option value="Litros">Litros</option>
                                     <option value="Mililitros">Mililitros</option>
                                     <option value="Centrilitros">Centrilitros</option>
                                 </select>
-                                <label for="unidad">Unidad</label>
+                                <label for="edit_unidad">Unidad</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class=" form-select" id="clase" name="clase" aria-label="Clase">
+                                <select class=" form-select" id="edit_clase" name="edit_clase" aria-label="Clase">
                                     <option value="Blanco o Joven">Blanco o Joven</option>
                                     <option value="Maduro en Vidrio">Maduro en Vidrio</option>
                                     <option value="Reposado">Reposado</option>
@@ -79,7 +80,7 @@
                                     <option value="Destilado con">Destilado con</option>
                                     <option value="No aplica">No aplica</option>
                                 </select>
-                                <label for="clase">Clase</label>
+                                <label for="edit_clase">Clase</label>
                             </div>
                         </div>
                     </div>
@@ -87,16 +88,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="Contenido Alcohólico:" id="contenido"
-                                    name="contenido" />
-                                <label for="contenido">Contenido Alcohólico:</label>
+                                <input class="form-control" type="text" placeholder="Contenido Alcohólico:" id="edit_contenido"
+                                    name="edit_contenido" />
+                                <label for="edit_contenido">Contenido Alcohólico:</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder=">No. de lote de envasado:" id="no_lote_envasado"
-                                    name="no_lote_envasado" />
-                                <label for="no_lote_envasado">No. de lote de envasado:</label>
+                                <input class="form-control" type="text" placeholder=">No. de lote de envasado:" id="edit_no_lote_envasado"
+                                    name="edit_no_lote_envasado" />
+                                <label for="edit_no_lote_envasado">No. de lote de envasado:</label>
                             </div>
                         </div>
   {{--                       <div class="col-md-4">
@@ -111,35 +112,34 @@
 
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="Tipo de agave" id="tipo_agave"
-                                    name="tipo_agave" />
-                                <label for="tipo_agave">Tipo de agave</label>
+                            <div class="form-floating form-floating-outline mb-5">
+                                <select class=" form-select select2" id="edit_id_tipo" name="edit_id_tipo" aria-label="categoria">
+                                    <option value="" disabled selected>Elige uan categoria</option>
+                                    @foreach ($tipos as $tipo)
+                                    <option value="{{ $tipo->edit_id_tipo }}">{{ $tipo->nombre }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="edit_id_tipo">Categoría</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="Lugar de producción:" id="lugar_produccion"
-                                    name="lugar_produccion" />
-                                <label for="lugar_produccion">Lugar de producción: </label>
+                                <input class="form-control" type="text" placeholder="Lugar de producción:" id="edit_lugar_produccion"
+                                    name="edit_lugar_produccion" />
+                                <label for="edit_lugar_produccion">Lugar de producción: </label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="text" step="0.01" placeholder="Lugar de envasado:"
-                                    id="lugar_envasado" name="lugar_envasado"  />
-                                <label for="lugar_envasado">Lugar de envasado:</label>
+                                    id="edit_lugar_envasado" name="edit_lugar_envasado"  />
+                                <label for="edit_lugar_envasado">Lugar de envasado:</label>
                             </div>
                         </div>
 
                     </div>
 
-                    <div class="col-md-12">
-                        <div class="form-floating form-floating-outline mb-5">
-                            <input class="form-control id_solicitudActivacion" type="number" id="id_solicitudActivacion" name="id_solicitudActivacion" placeholder="Número de hologramas solicitados"  readonly/>
-                            <label for="id_solicitudActivacion">Número de hologramas solicitados</label>
-                        </div>
-                    </div>
+                   
 
                     <div style="display: none;" id="mensaje" role="alert"></div>
 

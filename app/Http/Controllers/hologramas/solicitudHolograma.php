@@ -10,6 +10,8 @@ use App\Models\solicitudHolograma as ModelsSolicitudHolograma;
 use App\Models\direcciones;
 use App\Models\empresaNumCliente;
 use App\Models\inspecciones; 
+use App\Models\tipos; 
+
 use App\Models\categorias;
 use App\Models\Documentacion_url;
 use Illuminate\Http\Request;
@@ -25,6 +27,8 @@ class solicitudHolograma extends Controller
         $Empresa = empresa::where('tipo', '=', '2')->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
         $inspeccion = inspecciones::all();
         $categorias = categorias::all();
+        $tipos = tipos::all();
+
         $ModelsSolicitudHolograma = ModelsSolicitudHolograma::all();
         $userCount = $ModelsSolicitudHolograma->count();
         $verified = 5;
@@ -40,6 +44,7 @@ class solicitudHolograma extends Controller
             'ModelsSolicitudHolograma' => $ModelsSolicitudHolograma,     // Pasa la lista de marcas a la vista
             'inspeccion' => $inspeccion, // Pasa la lista de clientes a la vista
             'categorias' => $categorias, // Pasa la lista de clientes a la vista
+            'tipos' => $tipos, // Pasa la lista de clientes a la vista
 
 
 
@@ -516,7 +521,15 @@ public function update(Request $request)
     } 
      
 
-
+    public function editActivos($id)
+    {
+        try {
+            $loteEnvasado = activarHologramasModelo::findOrFail($id);
+            return response()->json($loteEnvasado);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener la guía'], 500);
+        }
+    }
 
 
 

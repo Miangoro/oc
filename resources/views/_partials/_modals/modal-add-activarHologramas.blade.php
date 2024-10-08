@@ -113,10 +113,14 @@
 
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="Tipo de agave" id="tipo_agave"
-                                    name="tipo_agave" />
-                                <label for="tipo_agave">Tipo de agave</label>
+                            <div class="form-floating form-floating-outline mb-5">
+                                <select class=" form-select select2" id="id_tipo" name="id_tipo" aria-label="categoria">
+                                    <option value="" disabled selected>Elige uan categoria</option>
+                                    @foreach ($tipos as $tipo)
+                                    <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_tipo">Categoría</label>
                             </div>
                         </div>
                         <div class="col-md-4">
