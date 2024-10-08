@@ -701,6 +701,7 @@ Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'u
 Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
 Route::post('/solicitud_holograma/editHolograma', [solicitudHolograma::class, 'editHolograma']);
 Route::post('/solicitud_holograma/storeActivar', [solicitudHolograma::class, 'storeActivar']);
+Route::get('/solicitud_holograma/editActivos/{id}', [solicitudHolograma::class, 'editActivos']);
 
 
 

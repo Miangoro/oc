@@ -22,7 +22,7 @@ class activarHologramasModelo extends Model
         'clase',
         'contenido',
         'no_lote_envasado',
-        'tipo_agave',
+        'id_tipo',
         'lugar_produccion',
         'lugar_envasado',
         'id_solicitudActivacion',

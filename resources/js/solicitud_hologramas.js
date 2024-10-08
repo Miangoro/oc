@@ -274,6 +274,7 @@ $(function () {
               // Asumiendo que este es el código que ya tienes configurado
 /*               `<a id="activar_holograma" data-id="${full['id_solicitud']}" href="javascript:;" class="dropdown-item activar_holograma"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +
  */              `<a id="activar_holograma" data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#activarHologramas" href="javascript:;" class="dropdown-item activar_holograma"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +
+              `<a id="activos_hologramas" data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#activosHologramas" href="javascript:;" class="dropdown-item activos_hologramas"><i class="ri-barcode-box-line ri-20px text-primary"></i> Activos</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addRecepcion" href="javascript:;" class="dropdown-item edit-recepcion"><i class="ri-article-fill ri-20px text-secondary"></i> Recepción hologramas</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addEnvio" href="javascript:;" class="dropdown-item edit-envio"><i class="ri-send-plane-fill ri-20px text-success"></i> Enviar</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#asignarHolograma" href="javascript:;" class="dropdown-item edit-signar"><i class="ri-qr-scan-fill ri-20px text-dark"></i> Asignar hologramas</a>` +
@@ -584,7 +585,6 @@ $(function () {
   });
 
 
-  // Editar registro
   // Editar registro
   $(document).on('click', '.edit-record', function () {
     var id_solicitud = $(this).data('id');
@@ -1129,6 +1129,51 @@ $(function () {
     $('#activarHologramas').modal('show');
 
   });  
+
+
+
+  $(document).on('click', '.activos_hologramas', function () {
+    var id_solicitud = $(this).data('id');
+
+    $('#id_solicitud').val(id_solicitud);
+    
+
+    // Mostrar el modal de edición
+    $('#activosHologramas').modal('show');
+
+  });  
+
+
+
+
+/*   $(document).on('click', '.activos_hologramas', function () {
+    var id = $(this).data('id');
+
+    $.get('/solicitud_holograma/edit/' + id, function (data) {
+
+
+      // Rellenar el formulario con los datos obtenidos
+      $('#edit_id').val(data.id);
+      $('#id_solicitud').val(data.id_solicitud);
+
+      // Mostrar el modal de edición
+      $('#activosHologramas').modal('show');
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error: ' + textStatus + ' - ' + errorThrown);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos de la solicitud de holograma',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    });
+  }); */
+
+
+
+  
 
 /*   $(document).on('click', '.activar_holograma', function () {
     var id_solicitud = $(this).data('id');
