@@ -21,6 +21,21 @@
             z-index: -1; 
         }
 
+        .watermark-cancelado {
+            font-family: Arial;
+            color: red;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg) scaleY(1.2);
+            opacity: 0.5;
+            /* Opacidad predeterminada */
+            letter-spacing: 3px;
+            font-size: 150px;
+            white-space: nowrap;
+            z-index:-1;
+        }
+
         .header img {
             float: left; 
             margin-left: -10px;
@@ -186,6 +201,13 @@
     </style>
 </head>
 <body>
+    
+    @if ($watermarkText)
+        <div class="watermark-cancelado">
+            Cancelado
+        </div>
+    @endif
+    
 <img src="{{ public_path('img_pdf/logo_fondo.png') }}" alt="Marca de Agua" class="watermark">
 
 <div class="header">
