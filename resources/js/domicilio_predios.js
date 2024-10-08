@@ -91,9 +91,21 @@ $(function () {
           data: 'estatus',
           searchable: false, orderable: false,
           render: function (data, type, row) {
-            return '<span class="badge rounded-pill bg-success">' + data + '</span>';
+            var estatusClass = '';
+
+            // Asignar clases según el estatus
+            if (data === 'Vigente') {
+              estatusClass = 'badge rounded-pill bg-success'; // Verde para 'Vigente'
+            } else if (data === 'Pendiente') {
+              estatusClass = 'badge rounded-pill bg-danger'; // Rojo para 'Pendiente'
+            } else if (data === 'Inspeccionado') {
+              estatusClass = 'badge rounded-pill bg-warning'; // Amarillo para 'Inspeccionado'
+            }
+
+            return '<span class="' + estatusClass + '">' + data + '</span>';
           }
         },
+        { data: '' },
         { data: '' },
         { data: '' },
         { data: 'action' },
@@ -119,23 +131,53 @@ $(function () {
             return `<span>${full.fake_id}</span>`;
           }
         },
+      // Pdf de pre-registro
         {
-          // Pdf de pre-registro
           targets: 11,
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
             var $id = full['id_guia'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_predio']}" data-registro="${full['id_empresa']} "></i>`;
+            if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
+              return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"
+                      data-bs-target="#mostrarPdf" data-bs-toggle="modal"
+                      data-bs-dismiss="modal" data-id="${full['id_predio']}"
+                      data-registro="${full['id_empresa']}"></i>`;
+            } else {
+              return '<i class="rri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
+            }
           }
         },
+        // Pdf de pre-registro (Dictamen)
         {
-          // Pdf de pre-registro
           targets: 12,
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_predio']}" data-registro="${full['id_empresa']} "></i>`;
+            if (full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
+              return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"
+                      data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal"
+                      data-bs-dismiss="modal" data-id="${full['id_predio']}"
+                      data-registro="${full['id_empresa']}"></i>`;
+            } else {
+              return '<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
+            }
+          }
+        },
+        // Pdf de pre-registro (Dictamen final)
+        {
+          targets: 13,
+          className: 'text-center',
+          searchable: false, orderable: false,
+          render: function (data, type, full, meta) {
+            if (full['estatus'] === 'Vigente') {
+              return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf3 cursor-pointer"
+                      data-bs-target="#mostrarPdfDictamenFinal" data-bs-toggle="modal"
+                      data-bs-dismiss="modal" data-id="${full['id_predio']}"
+                      data-registro="${full['id_empresa']}"></i>`;
+            } else {
+              return '<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Añadimos la clase icon-no-pdf
+            }
           }
         },
         {
@@ -178,6 +220,7 @@ $(function () {
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddPredioInspeccion" class="dropdown-item inspeccion-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar inspección</a>` +
+              `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalAddRegistroPredio" class="dropdown-item registro-record waves-effect text-primary"><i class="ri-add-circle-line ri-20px text-primary"></i> Registrar predio</a>` +
               `<a data-id="${full['id_predio']}" data-bs-toggle="modal" data-bs-target="#modalEditPredio" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar</a>` +
               `<a data-id="${full['id_predio']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
@@ -1444,6 +1487,31 @@ $(function () {
     });
 
 
+        // Reciben los datos del PDF
+        $(document).on('click', '.pdf3', function () {
+          var id = $(this).data('id');
+          var registro = $(this).data('registro');
+          var iframe = $('#pdfViewerDictamen');
+
+          // Mostrar el spinner y ocultar el iframe
+          $('#loading-spinner').show();
+          iframe.hide();
+
+          // Cargar el PDF
+          iframe.attr('src', '../Registro_de_Predios_Maguey_Agave/' + id);
+          $("#titulo_modal_Dictamen").text("F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.");
+          $("#subtitulo_modal_Dictamen").text(registro);
+
+          // Abrir el modal
+          $('#mostrarPdfDictamen').modal('show');
+        });
+
+        // Ocultar el spinner cuando el PDF esté completamente cargado
+        $('#pdfViewerDictamen').on('load', function () {
+          $('#loading-spinner').hide(); // Ocultar el spinner
+          $(this).show(); // Mostrar el iframe con el PDF
+        });
+
   $(document).ready(function () {
     // Función para agregar una nueva fila de características
     function addRow() {
@@ -1951,6 +2019,7 @@ $(function () {
           });
         }
       });
+
     });
     // Inicializar select2 y revalidar el campo cuando cambie
     $('#fecha_inspeccion, #tipoMaguey, #inspeccion_id_empresa, #tipoAgave, #estado').on('change', function () {
@@ -1968,6 +2037,100 @@ $(function () {
       } else {
         coordenadasDiv.addClass('d-none');
       }
+    });
+  });
+
+
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // Inicializar FormValidation para el formulario de agregar predio
+    const modalAddRegistroPredioForm = document.getElementById('modalAddRegistroPredioForm');
+    const fv = FormValidation.formValidation(modalAddRegistroPredioForm, {
+        fields: {
+            num_predio: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingrese el número de predio'
+                    }
+                }
+            },
+            fecha_emision: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingrese la fecha de emisión'
+                    }
+                }
+            },
+            fecha_vigencia: {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingrese la fecha de vigencia'
+                    }
+                }
+            },
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: function (field, ele) {
+                    return '.form-floating';
+                }
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+    }).on('core.form.valid', function (e) {
+        var formData = new FormData(modalAddRegistroPredioForm);
+        var predioId = $('#id_predio').val(); // ID del predio
+        $.ajax({
+            url: '/registro-Predio/' + predioId,
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                modalAddRegistroPredioForm.reset();
+                $('#modalAddRegistroPredio').modal('hide');
+                $('.datatables-users').DataTable().ajax.reload(); // Recargar la tabla de usuarios
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.message,
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                });
+            },
+            error: function (xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Error al agregar el predio',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
+        });
+    });
+
+    // Manejar el clic en el botón de editar
+    $(document).on('click', '.registro-record', function () {
+      var predioId = $(this).data('id'); // Obtener el ID del predio a editar
+      $('#id_predio').val(predioId); // Establecer el ID en el input correspondiente
+    });
+
+    // Revalidar campos de fechas cuando cambien
+    $('#fecha_vigencia, #fecha_emision').on('change', function () {
+      fv.revalidateField($(this).attr('name'));
     });
   });
 

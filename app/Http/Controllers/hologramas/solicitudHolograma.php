@@ -10,6 +10,8 @@ use App\Models\solicitudHolograma as ModelsSolicitudHolograma;
 use App\Models\direcciones;
 use App\Models\empresaNumCliente;
 use App\Models\inspecciones; 
+use App\Models\tipos; 
+
 use App\Models\categorias;
 use App\Models\Documentacion_url;
 use Illuminate\Http\Request;
@@ -25,6 +27,8 @@ class solicitudHolograma extends Controller
         $Empresa = empresa::where('tipo', '=', '2')->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
         $inspeccion = inspecciones::all();
         $categorias = categorias::all();
+        $tipos = tipos::all();
+
         $ModelsSolicitudHolograma = ModelsSolicitudHolograma::all();
         $userCount = $ModelsSolicitudHolograma->count();
         $verified = 5;
@@ -40,6 +44,7 @@ class solicitudHolograma extends Controller
             'ModelsSolicitudHolograma' => $ModelsSolicitudHolograma,     // Pasa la lista de marcas a la vista
             'inspeccion' => $inspeccion, // Pasa la lista de clientes a la vista
             'categorias' => $categorias, // Pasa la lista de clientes a la vista
+            'tipos' => $tipos, // Pasa la lista de clientes a la vista
 
 
 
@@ -465,7 +470,6 @@ public function update(Request $request)
         
         // Crear nuevo registro en la base de datos
         $loteEnvasado = new activarHologramasModelo();
-        $loteEnvasado->id_solicitud = $request->id_solicitud;
         $loteEnvasado->id_inspeccion = $request->id_inspeccion;
         $loteEnvasado->no_lote_agranel = $request->no_lote_agranel;
         $loteEnvasado->categoria = $request->categoria;
@@ -478,7 +482,13 @@ public function update(Request $request)
         $loteEnvasado->tipo_agave = $request->tipo_agave;
         $loteEnvasado->lugar_produccion = $request->lugar_produccion;
         $loteEnvasado->lugar_envasado = $request->lugar_envasado;
-        $loteEnvasado->id_solicitudActivacion = $request->id_solicitudActivacion;
+        $loteEnvasado->id_solicitud = $request->id_solicitudActivacion;
+
+        $loteEnvasado->folios = json_encode([
+            'folio_inicial' => $request->rango_inicial,
+            'folio_final' => $request->rango_final // Puedes agregar otros valores también
+        ]);
+        //$loteEnvasado->folio_final = $request->id_solicitudActivacion;
     
         // Guardar el nuevo lote en la base de datos
         $loteEnvasado->save();
@@ -495,21 +505,31 @@ public function update(Request $request)
         }
  */
 
-        if (isset($request->rango_inicial) && is_array($request->rango_inicial)) {
-            for ($i = 0; $i < count($request->rango_inicial); $i++) {
-                $testigo = new activarHologramasModelo();
-                $testigo->rango_inicial = $request->rango_inicial[$i];
-                $testigo->rango_final = $request->rango_final[$i];
-                $testigo->save();
-            }
-        }
+/* if (isset($request->rango_inicial) && is_array($request->rango_inicial)) {
+    for ($i = 0; $i < count($request->rango_inicial); $i++) {
+        // Crear una nueva instancia para el rango de hologramas (no sobrescribir loteEnvasado)
+        $rangoHolograma = new activarHologramasModelo();
+        $rangoHolograma->lote_envasado_id = $loteEnvasado->id;  // Relacionar con el lote envasado
+        $rangoHolograma->rango_inicial = $request->rango_inicial[$i];
+        $rangoHolograma->rango_final = $request->rango_final[$i];
+        $rangoHolograma->save();
+    }
+}*/
     
         // Retornar respuesta exitosa
         return response()->json(['message' => 'Hologramas activados exitosamente']);
     } 
      
 
-
+    public function editActivos($id)
+    {
+        try {
+            $loteEnvasado = activarHologramasModelo::findOrFail($id);
+            return response()->json($loteEnvasado);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener la guía'], 500);
+        }
+    }
 
 
 

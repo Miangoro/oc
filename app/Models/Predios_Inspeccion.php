@@ -50,7 +50,10 @@ class Predios_Inspeccion extends Model
         return $this->belongsTo(estados::class, 'id_estado');
     }
 
-
+    public function inspecciones()
+    {
+        return $this->belongsTo(inspecciones::class, 'id_inspeccion');
+    }
 
 
 
