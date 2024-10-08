@@ -17,6 +17,13 @@
     @vite(['resources/js/domicilio_predios.js'])
 @endsection
 
+<style>
+  .icon-no-pdf {
+  color: rgba(0, 0, 0, 0.3); /* Cambia el color a un tono más claro */
+  opacity: 0.5; /* Baja la opacidad para hacer que se vea más tenue */
+}
+
+</style>
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 

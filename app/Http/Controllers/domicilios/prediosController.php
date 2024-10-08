@@ -635,6 +635,7 @@ class PrediosController extends Controller
           // Manejo de errores si no se encuentra la inspección
           return response()->json(['error' => 'No se encontró la inspección para este predio.'], 404);
       }
+      $predio = Predios::with(['empresa', 'empresa.empresaNumClientes'])->find($id_predio);
 
       // Obtener la solicitud relacionada a partir del id_predio
       $solicitud = solicitudesModel::where('id_predio', $id_predio)->first();
@@ -651,6 +652,7 @@ class PrediosController extends Controller
           // Manejo de errores si no se encuentra la inspección
           return response()->json(['error' => 'No se encontró la inspección relacionada con la solicitud.'], 404);
       }
+      // Obtener el domicilio fiscal de la empresa
 
       // Obtener todas las coordenadas relacionadas con la inspección
       $coordenadas = PredioCoordenadas::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
@@ -665,7 +667,8 @@ class PrediosController extends Controller
           'coordenadas' => $coordenadas,
           'caracteristicas' => $caracteristicas,
           'plantacion' => $plantacion,
-      ]);
+          'predio' => $predio,
+              ]);
 
       // Generar y retornar el PDF
       return $pdf->stream('Registro de Predios Maguey Agave.pdf');
