@@ -144,7 +144,7 @@ $(function () {
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
                       data-registro="${full['id_empresa']}"></i>`;
             } else {
-              return '<i class="ri-file-history-fill ri-40px"></i>'; // Mostrar ícono si no cumple las condiciones
+              return '<i class="rri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
             }
           }
         },
@@ -160,7 +160,7 @@ $(function () {
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
                       data-registro="${full['id_empresa']}"></i>`;
             } else {
-              return '<i class="ri-file-history-fill ri-40px"></i>'; // Mostrar ícono si no cumple las condiciones
+              return '<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
             }
           }
         },
@@ -176,7 +176,7 @@ $(function () {
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
                       data-registro="${full['id_empresa']}"></i>`;
             } else {
-              return '<i class="ri-file-history-fill ri-40px"></i>'; // Mostrar ícono si no cumple las condiciones
+              return '<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Añadimos la clase icon-no-pdf
             }
           }
         },

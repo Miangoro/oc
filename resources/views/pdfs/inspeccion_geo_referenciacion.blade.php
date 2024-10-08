@@ -277,35 +277,43 @@
             <tr>
                 <td style="width: 60%;"> No. orden de servicio
                 </td>
-                <td> {{ $inspeccionData->num_servicio ?? 'N/A' }}
+                <td  style="font-weight: normal;"> {{ $inspeccionData->num_servicio ?? 'N/A' }}
                 </td>
             </tr>
             <tr>
                 <td style="height: 18px;"></td>
-                <td></td>
+                <td ></td>
             </tr>
             <tr>
                 <td>No. de Cliente</td>
-                <td> </td>
+                <td  style="font-weight: normal;"> {{ $predio->empresa->empresaNumClientes->first()->numero_cliente ?? 'N/A' }}
+                </td>
             </tr>
         </table>
         <br>
         <table class="datos">
             <tr>
                 <td style="width: 40%">Nombre del cliente</td>
-                <td style="background-color: #D9D9D9;"></td>
+                <td style="background-color: #D9D9D9; font-weight: normal;"> {{$predio->empresa->razon_social ?? 'N/A'}}</td>
             </tr>
             <tr>
                 <td>Tipo de agave</td>
-                <td></td>
+                <td  style="font-weight: normal;">
+                  @if ($plantacion->isNotEmpty())
+                  {{ $plantacion->first()->tipo->nombre }}
+              @else
+                  N/A
+              @endif
+
+                </td>
             </tr>
             <tr>
                 <td>Domicilio fiscal</td>
-                <td style="background-color: #D9D9D9;"></td>
+                <td style="background-color: #D9D9D9; font-weight: normal;">{{ $predio->empresa->domicilio_fiscal ?? 'N/A' }}</td>
             </tr>
             <tr>
                 <td>Teléfono</td>
-                <td></td>
+                <td  style="font-weight: normal; font-weight: normal;"> {{$predio->empresa->telefono ?? 'N/A'}}</td>
             </tr>
             <tr>
                 <td>Ubicacion del predio</td>
@@ -344,21 +352,6 @@
         <br>
         <p class="indice">III. &nbsp;&nbsp;&nbsp;&nbsp; Datos de geo-referenciación del predio</p>
         <br>
-        {{--         <table class="tabla-coordenadas">
-            <tr>
-                <td rowspan="2" style="width: 25%;">Grados decimales</td>
-                <td>Latitud</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Longitud</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td>Superficie</td>
-                <td colspan="2">{{$inspeccion->superficie}}</td>
-            </tr>
-        </table> --}}
         <table class="tabla-coordenadas">
             <tr>
                 <td rowspan="{{ max(count($coordenadas) * 2, 2) }}" style="width: 25%;">Grados decimales</td>
@@ -495,8 +488,8 @@
             </tr>
             @foreach ($plantacion as $plantacion)
             <tr>
-                <td style="font-weight: normal;">{{ $plantacion->id_tipo }}</td>
-                <td style="font-weight: normal;">{{ $plantacion->id_tipo }}</td>
+                <td style="font-weight: normal;">{{ $plantacion->tipo->nombre}}</td>
+                <td style="font-weight: normal;">{{ $plantacion->tipo->cientifico }}</td>
                 <td style="font-weight: normal;">{{ $plantacion->num_plantas }}</td>
                 <td style="font-weight: normal;">{{ $plantacion->anio_plantacion }}</td>
                 <td style="font-weight: normal;">{{ $plantacion->tipo_plantacion }}</td>
