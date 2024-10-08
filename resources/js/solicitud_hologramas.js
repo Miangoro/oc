@@ -1146,10 +1146,10 @@ $(function () {
 
 
 
-/*   $(document).on('click', '.activos_hologramas', function () {
-    var id = $(this).data('id');
+   $(document).on('click', '.activos_hologramas', function () {
+    var id_solicitud = $(this).data('id');
 
-    $.get('/solicitud_holograma/edit/' + id, function (data) {
+    $.get('/solicitud_holograma/editActivos/' + id_solicitud, function (data) {
 
 
       // Rellenar el formulario con los datos obtenidos
@@ -1169,7 +1169,7 @@ $(function () {
         }
       });
     });
-  }); */
+  }); 
 
 
 
