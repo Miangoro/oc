@@ -17,8 +17,10 @@ class solicitudesModel extends Model
         'id_empresa',
         'id_tipo',
         'folio',
+        'fecha_solicitud',
         'fecha_visita',
-        'id_instalacion'
+        'id_instalacion',
+        'id_predio'
     ];
 
     // Método para obtener el nombre del registro que sirve para la trazabilidad
@@ -58,5 +60,5 @@ class solicitudesModel extends Model
     }
 
 
-    
+
 }

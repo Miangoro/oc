@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>F-UV-21-02 Inspección para la geo-referenciación de los predios de maguey o agave Ed. 6 Vigente</title>
+    <title>F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.</title>
 
     <style>
         body {
