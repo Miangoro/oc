@@ -32,7 +32,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <select class=" form-select select2" id="edit_categoria" name="edit_categoria" aria-label="categoria">
-                                    <option value="" disabled selected>Elige uan categoria</option>
+                                    <option value="" disabled selected>Elige una categoria</option>
                                     @foreach ($categorias as $cate)
                                     <option value="{{ $cate->edit_categoria }}">{{ $cate->categoria }}</option>
                                     @endforeach
@@ -114,7 +114,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <select class=" form-select select2" id="edit_id_tipo" name="edit_id_tipo" aria-label="categoria">
-                                    <option value="" disabled selected>Elige uan categoria</option>
+                                    <option value="" disabled selected>Elige una categoria</option>
                                     @foreach ($tipos as $tipo)
                                     <option value="{{ $tipo->edit_id_tipo }}">{{ $tipo->nombre }}</option>
                                     @endforeach
@@ -147,25 +147,46 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th><button type="button" class="btn btn-primary add-row"> <i class="ri-add-line"></i>
-                                    </button></th>
+
+                                    <th>id</th>
+                                    <th>id_inspeccion</th>
+                                    <th>Numero lote agranel</th>
+                                    <th>Categorria</th>
+                                    <th>Análisis de laboratorio</th>
+                                    <th>Contenido neto</th>
+                                    <th>Unidad</th>
+                                    <th>Clase</th>
+                                    <th>Contenido Alcohólico</th>
+                                    <th>No. de lote de envasado</th>
+                                    <th>Categoría</th>
+                                    <th>Lugar de producción</th>
+                                    <th>Lugar de envasado</th>
                                 <th>Rango inicial</th>
                                 <th>Rango final</th>
                             </tr>
                         </thead>
-                        <tbody id="contenidoRango">
+                        <tbody id="edit_contenidoRango">
                             <tr>
-                                <th>
-                                    <button type="button" class="btn btn-danger remove-row" disabled> <i
-                                            class="ri-delete-bin-5-fill"></i> </button>
-                                </th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="rango_inicial[]"
-                                        id="folio_inicial">
+                                    <input type="text" class="form-control form-control-sm" name="rango_inicial[]"
+                                        id="folio_inicial" readonly>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="rango_final[]"
-                                        id="folio_final">
+                                    <input type="text" class="form-control form-control-sm" name="rango_final[]"
+                                        id="folio_final" readonly>
                                 </td>
                             </tr>
                         </tbody>
