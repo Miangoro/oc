@@ -521,10 +521,10 @@ public function update(Request $request)
     } 
      
 
-    public function editActivos($id_solicitud)
+    public function editActivos($id)
     {
         try {
-            $loteEnvasado = activarHologramasModelo::findOrFail($id_solicitud);
+            $loteEnvasado = activarHologramasModelo::findOrFail($id);
             return response()->json($loteEnvasado);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener la guía'], 500);

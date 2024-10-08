@@ -25,9 +25,9 @@ class activarHologramasModelo extends Model
         'id_tipo',
         'lugar_produccion',
         'lugar_envasado',
-        'id_solicitudActivacion',
-        'rango_inicial',
-        'rango_final',
+        'id_solicitud',
+        'folios',
+
 
 
     ];
