@@ -12,6 +12,9 @@ use App\Models\User;
 use App\Models\Revisor; 
 //Notificacion
 use App\Notifications\GeneralNotification;
+//Enviar Correo
+use App\Mail\CorreoCertificado;
+use Illuminate\Support\Facades\Mail; 
 
 class Certificado_InstalacionesController extends Controller
 {
@@ -333,6 +336,13 @@ class Certificado_InstalacionesController extends Controller
                 $user->notify(new GeneralNotification($data1));
             }
     
+            try {
+                Mail::to('carloszarco888@gmail.com')->send(new CorreoCertificado($data1));
+            } catch (\Exception $e) {
+                // Captura y muestra el error
+                dd('Error al enviar el correo: ' . $e->getMessage());
+            }
+            
             return response()->json([
                 'message' => $message ?? 'Revisor del OC asignado exitosamente',
             ]);
