@@ -275,6 +275,7 @@ $(function () {
 /*               `<a id="activar_holograma" data-id="${full['id_solicitud']}" href="javascript:;" class="dropdown-item activar_holograma"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +
  */              `<a id="activar_holograma" data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#activarHologramas" href="javascript:;" class="dropdown-item activar_holograma"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +
               `<a id="activos_hologramas" data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#activosHologramas" href="javascript:;" class="dropdown-item activos_hologramas"><i class="ri-barcode-box-line ri-20px text-primary"></i> Activos</a>` +
+              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#edit_activarHologramas" href="javascript:;" class="dropdown-item edit-activos"><i class="ri-barcode-box-line ri-20px text-primary"></i> Editar activos</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addRecepcion" href="javascript:;" class="dropdown-item edit-recepcion"><i class="ri-article-fill ri-20px text-secondary"></i> Recepción hologramas</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addEnvio" href="javascript:;" class="dropdown-item edit-envio"><i class="ri-send-plane-fill ri-20px text-success"></i> Enviar</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#asignarHolograma" href="javascript:;" class="dropdown-item edit-signar"><i class="ri-qr-scan-fill ri-20px text-dark"></i> Asignar hologramas</a>` +
@@ -1120,7 +1121,7 @@ $(function () {
 
 
   //Activar hologramas
-    $(document).on('click', '.activar_holograma', function () {
+  $(document).on('click', '.activar_holograma', function () {
     var id_solicitud = $(this).data('id');
 
     $('#id_solicitudActivacion').val(id_solicitud);
@@ -1128,7 +1129,7 @@ $(function () {
     // Mostrar el modal de edición
     $('#activarHologramas').modal('show');
 
-  });  
+  });
 
 
 
@@ -1136,15 +1137,15 @@ $(function () {
 
 
 
-   $(document).on('click', '.activos_hologramas', function () {
+  $(document).on('click', '.activos_hologramas', function () {
     var id = $(this).data('id');
 
     $.get('/solicitud_holograma/editActivos/' + id, function (data) {
 
       $('#tablita').empty();
-     
+
       // Rellenar el formulario con los datos obtenidos
-      data.forEach(function(item) {
+      data.forEach(function (item) {
         // Crear una nueva fila con los datos
         var fila = `
             <tr>
@@ -1152,7 +1153,7 @@ $(function () {
                 <td>${item.no_lote_agranel}</td>
                 <td>${item.categoria}</td>
                 <td>${item.no_analisis}</td>
-<td>${item.cont_neto}, ${item.unidad}</td>
+                <td>${item.cont_neto}, ${item.unidad}</td>
                 <td>${item.clase}</td>
                 <td>${item.contenido}</td>
                 <td>${item.no_lote_envasado}</td>
@@ -1166,8 +1167,8 @@ $(function () {
 
         // Añadir la fila a la tabla
         $('#tablita').append(fila);
-    });
-        
+      });
+
 
 
       // Mostrar el modal de edición
@@ -1183,55 +1184,27 @@ $(function () {
         }
       });
     });
-  }); 
+  });
+
+//EDITAR HOLOGRAMAS ACTIVOS
+  $(document).on('click', '.edit-activos', function () {
+    var id = $(this).data('id');
+
+    $.get('/solicitud_holograma/editActivos/' + id, function (data) {
 
 
-
-  
-
-/*   $(document).on('click', '.activar_holograma', function () {
-    var id_solicitud = $(this).data('id');
-  
-    // Realizar la solicitud AJAX para obtener los datos de la solicitud
-    $.get('/solicitud_holograma/editHolograma' + id_solicitud, function (data) {
-  
       // Rellenar el formulario con los datos obtenidos
-      $('#id_solicitudActivacion').val(data.id_solicitud);
-      $('#id_inspeccion').val(data.id_inspeccion).trigger('change'); // Usamos trigger para actualizar el select2
-      $('#no_lote_agranel').val(data.no_lote_agranel);
-      $('#categoria').val(data.categoria).trigger('change');
-      $('#no_analisis').val(data.no_analisis);
-      $('#cont_neto').val(data.cont_neto);
-      $('#unidad').val(data.unidad).trigger('change');
-      $('#clase').val(data.clase).trigger('change');
-      $('#contenido').val(data.contenido);
-      $('#no_lote_envasado').val(data.no_lote_envasado);
-      $('#tipo_agave').val(data.tipo_agave);
-      $('#lugar_produccion').val(data.lugar_produccion);
-      $('#lugar_envasado').val(data.lugar_envasado);
-      $('#cantidad_hologramas').val(data.cantidad_hologramas);
-  
-      // Limpiar las filas existentes en la tabla de rangos
-      $('#contenidoRango').empty();
-  
-      // Si existen rangos, los añadimos al formulario
-      if (data.rangos && data.rangos.length > 0) {
-        data.rangos.forEach(function (rango) {
-          var rowHtml = `
-            <tr>
-              <th>
-                <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
-              </th>
-              <td><input type="number" class="form-control form-control-sm" name="rango_inicial[]" value="${rango.folio_inicial}"></td>
-              <td><input type="number" class="form-control form-control-sm" name="rango_final[]" value="${rango.folio_final}"></td>
-            </tr>`;
-          $('#contenidoRango').append(rowHtml);
-        });
-      }
-  
+      $('#edit_id').val(id);
+      $('#edit_categoria').val(categoria);
+      $('#no_lote_agranel').val(no_lote_agranel);
+      $('#edit_id_inspeccion').val(id_inspeccion).trigger('change');
+
+      $('#edit_no_lote_agranel').val(no_lote_agranel);
+      $('#edit_cont_neto').val(cont_neto);
+
+
       // Mostrar el modal de edición
-      $('#activarHologramas').modal('show');
-  
+      $('#edit_activarHologramas').modal('show');
     }).fail(function (jqXHR, textStatus, errorThrown) {
       console.error('Error: ' + textStatus + ' - ' + errorThrown);
       Swal.fire({
@@ -1244,27 +1217,84 @@ $(function () {
       });
     });
   });
-  
-  // Agregar nueva fila para los rangos
-  $('.add-row').click(function () {
-    var newRow = `
-      <tr>
-        <th>
-          <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
-        </th>
-        <td><input type="number" class="form-control form-control-sm" name="rango_inicial[]"></td>
-        <td><input type="number" class="form-control form-control-sm" name="rango_final[]"></td>
-      </tr>`;
-    $('#contenidoRango').append(newRow);
-  });
-  
-  // Eliminar fila de rangos
-  $(document).on('click', '.remove-row', function () {
-    $(this).closest('tr').remove();
-  }); */
-  
 
- 
+
+  /*   $(document).on('click', '.activar_holograma', function () {
+      var id_solicitud = $(this).data('id');
+    
+      // Realizar la solicitud AJAX para obtener los datos de la solicitud
+      $.get('/solicitud_holograma/editHolograma' + id_solicitud, function (data) {
+    
+        // Rellenar el formulario con los datos obtenidos
+        $('#id_solicitudActivacion').val(data.id_solicitud);
+        $('#id_inspeccion').val(data.id_inspeccion).trigger('change'); // Usamos trigger para actualizar el select2
+        $('#no_lote_agranel').val(data.no_lote_agranel);
+        $('#categoria').val(data.categoria).trigger('change');
+        $('#no_analisis').val(data.no_analisis);
+        $('#cont_neto').val(data.cont_neto);
+        $('#unidad').val(data.unidad).trigger('change');
+        $('#clase').val(data.clase).trigger('change');
+        $('#contenido').val(data.contenido);
+        $('#no_lote_envasado').val(data.no_lote_envasado);
+        $('#tipo_agave').val(data.tipo_agave);
+        $('#lugar_produccion').val(data.lugar_produccion);
+        $('#lugar_envasado').val(data.lugar_envasado);
+        $('#cantidad_hologramas').val(data.cantidad_hologramas);
+    
+        // Limpiar las filas existentes en la tabla de rangos
+        $('#contenidoRango').empty();
+    
+        // Si existen rangos, los añadimos al formulario
+        if (data.rangos && data.rangos.length > 0) {
+          data.rangos.forEach(function (rango) {
+            var rowHtml = `
+              <tr>
+                <th>
+                  <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+                </th>
+                <td><input type="number" class="form-control form-control-sm" name="rango_inicial[]" value="${rango.folio_inicial}"></td>
+                <td><input type="number" class="form-control form-control-sm" name="rango_final[]" value="${rango.folio_final}"></td>
+              </tr>`;
+            $('#contenidoRango').append(rowHtml);
+          });
+        }
+    
+        // Mostrar el modal de edición
+        $('#activarHologramas').modal('show');
+    
+      }).fail(function (jqXHR, textStatus, errorThrown) {
+        console.error('Error: ' + textStatus + ' - ' + errorThrown);
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al obtener los datos de la solicitud de holograma',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      });
+    });
+    
+    // Agregar nueva fila para los rangos
+    $('.add-row').click(function () {
+      var newRow = `
+        <tr>
+          <th>
+            <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+          </th>
+          <td><input type="number" class="form-control form-control-sm" name="rango_inicial[]"></td>
+          <td><input type="number" class="form-control form-control-sm" name="rango_final[]"></td>
+        </tr>`;
+      $('#contenidoRango').append(newRow);
+    });
+    
+    // Eliminar fila de rangos
+    $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+    }); */
+
+
+
   $('#activarHologramasForm').submit(function (e) {
     e.preventDefault();
 
@@ -1304,7 +1334,7 @@ $(function () {
         });
       }
     });
-  }); 
+  });
 
   const addRecepcionForm = document.getElementById('addRecepcionForm');
 
