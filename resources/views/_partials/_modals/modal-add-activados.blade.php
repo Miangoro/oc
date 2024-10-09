@@ -19,20 +19,15 @@
                 
                 <form id="activosHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
-                        
-                   
 
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-    
                                         <th>id</th>
-                                        <th>id_inspeccion</th>
                                         <th>Numero lote agranel</th>
                                         <th>Categorria</th>
                                         <th>Análisis de laboratorio</th>
-                                        <th>Contenido neto</th>
-                                        <th>Unidad</th>
+                                        <th>Contenido neto y Unidad</th>
                                         <th>Clase</th>
                                         <th>Contenido Alcohólico</th>
                                         <th>No. de lote de envasado</th>
@@ -47,13 +42,9 @@
                             </tbody>
                         </table>
 
-
-
-
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                            aria-label="Close">Cerrar</button>
                     </div>
                 </form>
             </div>

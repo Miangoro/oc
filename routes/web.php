@@ -74,6 +74,8 @@ use App\Http\Controllers\pages\AccountSettingsConnections;
 use App\Http\Controllers\pages\Faq;
 use App\Http\Controllers\pages\Pricing as PagesPricing;
 use App\Http\Controllers\pages\MiscError;
+use App\Http\Controllers\pages\HologramasValidacion;
+
 use App\Http\Controllers\pages\MiscUnderMaintenance;
 use App\Http\Controllers\pages\MiscComingSoon;
 use App\Http\Controllers\pages\MiscNotAuthorized;
@@ -292,6 +294,8 @@ Route::get('/pages/account-settings-connections', [AccountSettingsConnections::c
 Route::get('/pages/faq', [Faq::class, 'index'])->name('pages-faq');
 Route::get('/pages/pricing', [PagesPricing::class, 'index'])->name('pages-pricing');
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
+Route::get('/pages/hologramas-validacion', [HologramasValidacion::class, 'index'])->name('pages-hologramas-validacion');
+
 Route::get('/pages/misc-under-maintenance', [MiscUnderMaintenance::class, 'index'])->name('pages-misc-under-maintenance');
 Route::get('/pages/misc-comingsoon', [MiscComingSoon::class, 'index'])->name('pages-misc-comingsoon');
 Route::get('/pages/misc-not-authorized', [MiscNotAuthorized::class, 'index'])->name('pages-misc-not-authorized');
