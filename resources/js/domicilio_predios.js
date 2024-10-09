@@ -20,29 +20,6 @@ $(function () {
     }
   });
 
-  $(document).ready(function () {
-    const tieneCoordenadasSelect = document.getElementById('tiene_coordenadas');
-    const coordenadasDiv = document.getElementById('coordenadas');
-    const latitudInputs = document.querySelectorAll('input[name="latitud[]"]');
-    const longitudInputs = document.querySelectorAll('input[name="longitud[]"]');
-
-    if (tieneCoordenadasSelect && coordenadasDiv) {
-      tieneCoordenadasSelect.addEventListener('change', function () {
-        if (tieneCoordenadasSelect.value === 'Si') {
-          coordenadasDiv.classList.remove('d-none');
-        } else {
-          coordenadasDiv.classList.add('d-none');
-          // Limpiar los valores de los inputs de latitud y longitud
-          latitudInputs.forEach(input => input.value = '');
-          longitudInputs.forEach(input => input.value = '');
-        }
-      });
-    }
-  });
-
-
-
-
   // Variable declaration for table
   var dt_user_table = $('.datatables-users');
   //DATE PICKER
@@ -92,7 +69,6 @@ $(function () {
           searchable: false, orderable: false,
           render: function (data, type, row) {
             var estatusClass = '';
-
             // Asignar clases según el estatus
             if (data === 'Vigente') {
               estatusClass = 'badge rounded-pill bg-success'; // Verde para 'Vigente'
@@ -101,10 +77,10 @@ $(function () {
             } else if (data === 'Inspeccionado') {
               estatusClass = 'badge rounded-pill bg-warning'; // Amarillo para 'Inspeccionado'
             }
-
             return '<span class="' + estatusClass + '">' + data + '</span>';
           }
         },
+        { data: '' },
         { data: '' },
         { data: '' },
         { data: '' },
@@ -131,16 +107,33 @@ $(function () {
             return `<span>${full.fake_id}</span>`;
           }
         },
-      // Pdf de pre-registro
-        {
+         // Pdf de pre-registro
+         {
           targets: 11,
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
             var $id = full['id_guia'];
             if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
+              return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdfSolicitud cursor-pointer"
+                      data-bs-target="#mostrarPdfDcitamen" data-bs-toggle="modal"
+                      data-bs-dismiss="modal" data-id="${full['id_predio']}"
+                      data-registro="${full['id_empresa']}"></i>`;
+            } else {
+              return '<i class="rri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
+            }
+          }
+        },
+      // Pdf de pre-registro
+        {
+          targets: 12,
+          className: 'text-center',
+          searchable: false, orderable: false,
+          render: function (data, type, full, meta) {
+            var $id = full['id_guia'];
+            if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"
-                      data-bs-target="#mostrarPdf" data-bs-toggle="modal"
+                      data-bs-target="#mostrarPdfDcitamen" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
                       data-registro="${full['id_empresa']}"></i>`;
             } else {
@@ -150,7 +143,7 @@ $(function () {
         },
         // Pdf de pre-registro (Dictamen)
         {
-          targets: 12,
+          targets: 13,
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
@@ -166,7 +159,7 @@ $(function () {
         },
         // Pdf de pre-registro (Dictamen final)
         {
-          targets: 13,
+          targets: 14,
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
@@ -465,7 +458,6 @@ $(function () {
                 '</tr>'
                 : '';
             }).join('');
-
             return data ? $('<table class="table"/><tbody />').append(data) : false;
           }
         }
@@ -919,12 +911,6 @@ $(function () {
           validators: {
             notEmpty: {
               message: 'Por favor adjunta el documento requerido'
-            },
-            file: {
-              extension: 'pdf', // Solo permite archivos PDF
-              type: 'application/pdf', // Tipo MIME para archivos PDF
-              maxSize: 2097152, // Tamaño máximo de 2MB (2 * 1024 * 1024 bytes)
-              message: 'El archivo debe ser un PDF y no debe superar los 2MB'
             }
           }
         },
@@ -976,7 +962,6 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     });
-
     // Manejo del envío del formulario
     fv.on('core.form.valid', function (e) {
       var formData = new FormData(addNewPredio);
@@ -1014,7 +999,6 @@ $(function () {
         }
       });
     });
-
     // Inicializar select2 y revalidar el campo cuando cambie
     $('#id_empresa, .tipo_agave').on('change', function () {
       fv.revalidateField($(this).attr('name'));
@@ -1109,11 +1093,6 @@ $(function () {
             notEmpty: {
               message: 'Por favor adjunta el documento o imagen requerido'
             },
-            file: {
-              extension: 'pdf,jpg,jpeg,png', // Permitir archivos PDF e imágenes
-              type: 'application/pdf,image/jpeg,image/png', // Asegurar que los tipos MIME sean correctos
-              message: 'El archivo debe ser un PDF o una imagen en formato JPG, JPEG o PNG'
-            }
           }
         }
       },
@@ -1453,13 +1432,24 @@ $(function () {
   $(document).on('click', '.pdf', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
-    var iframe = $('#pdfViewer');
+    var iframe = $('#pdfViewerDictamen');
+
+          // Mostrar el spinner y ocultar el iframe
+    $('#loading-spinner').show();
+    iframe.hide();
+
     iframe.attr('src', '../pre-registro_predios/' + id);
 
-    $("#titulo_modal").text("Pre-registro de predios de maguey o agave");
-    $("#subtitulo_modal").text(registro);
+    $("#titulo_modal_Dictamen").text("Pre-registro de predios de maguey o agave");
+    $("#subtitulo_modal_Dictamen").text(registro);
+      // Abrir el modal
+      $('#mostrarPdfDictamen').modal('show');
   });
-
+    // Ocultar el spinner cuando el PDF esté completamente cargado
+    $('#pdfViewerDictamen').on('load', function () {
+      $('#loading-spinner').hide(); // Ocultar el spinner
+      $(this).show(); // Mostrar el iframe con el PDF
+    });
 
     // Reciben los datos del PDF
     $(document).on('click', '.pdf2', function () {
@@ -2128,11 +2118,26 @@ $(function () {
       $('#id_predio').val(predioId); // Establecer el ID en el input correspondiente
     });
 
-    // Revalidar campos de fechas cuando cambien
-    $('#fecha_vigencia, #fecha_emision').on('change', function () {
-      fv.revalidateField($(this).attr('name'));
-    });
+    updateDatepickerValidation(fv);
+
   });
+
+    // Función para agregar 5 años a la fecha de emisión y actualizar la fecha de vigencia
+    function updateDatepickerValidation(fv) {
+      $('#fecha_emision').on('change', function() {
+          var fechaEmision = $(this).val();
+          if (fechaEmision) {
+              var fecha = moment(fechaEmision, 'YYYY-MM-DD'); // Asegurarse del formato
+              var fechaVencimiento = fecha.add(5, 'years').format('YYYY-MM-DD'); // Agregar 5 años
+              $('#fecha_vigencia').val(fechaVencimiento); // Actualizar el campo de vigencia
+
+              // Revalidar ambos campos de fechas
+              fv.revalidateField('fecha_emision');
+              fv.revalidateField('fecha_vigencia');
+          }
+      });
+    }
+
 
 
 });

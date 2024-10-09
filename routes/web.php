@@ -461,7 +461,7 @@ Route::get('/orden_trabajo_inspeccion_etiquetas', [CartaAsignacionController::cl
 Route::get('/lista_verificacion_nom051-mod20200327_solrev005', [CartaAsignacionController::class, 'ListaVerificacionNom051Mod20200327Solrev005'])->name('ListaVerificacionNom051Mod20200327Solrev005');
 
 
-Route::get('/registro_predios_maguey_o_agave', [CartaAsignacionController::class, 'RegistroPrediosMagueyAgave'])->name('RegistroPrediosMagueyAgave');
+
 
 
 //Etiquetas Etiqueta_Barrica
@@ -555,7 +555,6 @@ Route::get('/pre-registro_predios/{id_predio}', [prediosController::class, 'PdfP
 Route::get('/inspeccion_geo_referenciacion/{id_predio}', [prediosController::class, 'PDFInspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion');
 Route::get('/Registro_de_Predios_Maguey_Agave/{id_predio}', [prediosController::class, 'PDFRegistroPredios'])->name('PDF_Registro_Predios');
 Route::post('/registro-Predio/{id_predio}', [PrediosController::class, 'registroPredio'])->name('registro-predios.registroPredio');
-
 
 //Domicilio Destinos
 Route::get('/domicilios/destinos', [DestinosController::class, 'UserManagement'])->name('domicilio-destinos');

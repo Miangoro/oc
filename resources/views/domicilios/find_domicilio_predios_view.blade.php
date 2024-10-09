@@ -47,6 +47,7 @@
                         <th>Cuenta con Coordenadas</th>
                         <th>Superficie</th>
                         <th>estatus</th>
+                        <th>Solicitudes</th>
                         <th>Pre-registro</th>
                         <th>Registro</th>
                         <th>Registro</th>
@@ -55,7 +56,6 @@
                 </thead>
             </table>
         </div>
-
     </div>
     <!-- Modal -->
 

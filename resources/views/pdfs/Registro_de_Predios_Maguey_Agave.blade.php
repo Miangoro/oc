@@ -165,22 +165,22 @@
             <tr>
                 <td style="width: 25%;"><b> Nombre del productor </b><br>(<i>Name of producer</i>)
                 </td>
-                <td colspan="3">
+                <td colspan="3"> {{ $predio->nombre_productor }}</td>
                 </td>
             </tr>
             <tr>
                 <td style="height: 20px;"><b>Número de cliente</b> <br> (<i>client number)</i></td>
-                <td></td>
+                <td>{{ $predio->empresa->empresaNumClientes->first()->numero_cliente ?? 'N/A' }}</td>
                 <td style=" width: 20%;"><b>Número de teléfono</b> <br>(<i>phone number)</i></td>
-                <td></td>
+                <td>{{$predio->empresa->telefono ?? 'N/A'}}</td>
             </tr>
             <tr>
                 <td><b>Dirección fiscal</b> <br>
                     <i>(Fiscal address)</i></td>
-                <td></td>
+                <td>{{ $predio->empresa->domicilio_fiscal ?? 'N/A' }}</td>
                 <td><b>Correo electrónico </b><br>
                     (<i>email)</i></td>
-                <td></td>
+                <td>{{ $predio->empresa->correo ?? 'N/A' }}</td>
             </tr>
         </table>
         <br>
@@ -190,7 +190,7 @@
             <tr>
                 <td style="width: 30%;"><b>Número de servicio</b> <br>
                     <i>(Service number)</i></td>
-                <td></td>
+                <td>{{ $inspeccionData->num_servicio ?? 'N/A' }}</td>
                 <td><b>Fecha de servicio</b> <br>
                     <i>(Date of Service)</i></td>
                 <td></td>
@@ -198,15 +198,15 @@
             <tr>
                 <td><b>Vigencia </b><br>
                     <i>(validity)</i></td>
-                <td></td>
-                <td><b>Fecha de emisión</b> <br>
+                <td>{{$vigencia}}</td>
+                <td><b>Fecha de emisión</b><br>
                     (date of issue)</td>
-                <td></td>
+                <td>{{$emision}}</td>
             </tr>
             <tr>
                 <td><b>Nombre del Inspector </b><br>
                     <i>(Inspector name)</i></td>
-                <td colspan="3"></td>
+                <td colspan="3">{{ $inspeccionData->inspector->name ?? 'N/A' }}</td>
             </tr>
         </table>
         <br>
@@ -217,16 +217,16 @@
               <td style="width: 30%;"> <b>Nombre del predio </b><br>
                 (<i>Property name</i>)
               </td>
-              <td colspan="3">
+              <td colspan="3"> {{$inspeccion->predio->nombre_predio}}
               </td>
           </tr>
           <tr>
               <td><b>Ubicación del predio </b><br>
                 (<i>Name of producer</i>)</td>
-              <td></td>
+              <td>{{$inspeccion->ubicacion_predio}}</td>
               <td><b>Número de predio</b> <br>
                 (<i>Building number)</i></td>
-              <td><b>UVEM______</b></td>
+              <td><b>UVEM</b>{{$inspeccion->predio->num_predio}}</td>
           </tr>
       </table>
         <br>
