@@ -96,6 +96,11 @@
         background-color: #062e61 !important;
     }
 
+    .alert {
+        margin-bottom: 0 !important;
+        padding: 6px 6px 0px !important;
+        border-radius: 0 !important;
+    }
 
     .col-lg-8 {
         padding-bottom: 140px;

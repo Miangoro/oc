@@ -41,14 +41,14 @@
                 <div style=" border-radius: 40px !important; background-color: #062e6163  !important;"
                     class="panel panel-default">
                     <div id="trazabilidad" class="panel-heading">Trazabilidad</div>
-                    <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;">
+                    <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;"class="alert">
                         <strong>CERTIFICADO
                             VENTA
                             NACIONAL Y/O EXPORTACIÓN: <br>
                             CIDAM C-EXP-497/2024</strong>
                     </div>
 
-                    <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;">
+                    <div style=" border: 1px solid #fff;text-align: center; background-color: #062e61; color: white;font-size: 18px;" class="alert">
                         <strong>FOLIO
                             DE
                             HOLOGRAMA:
