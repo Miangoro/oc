@@ -280,31 +280,124 @@
         }
 
         img {
-    vertical-align: middle;
-    border: 0;
-}
+            vertical-align: middle;
+            border: 0;
+        }
 
 
-.imagen-holograma {
-    width: 50%; /* ajusta el ancho de la imagen */
-    height: auto; /* ajusta el alto de la imagen automáticamente */
-    margin: 20px auto; /* agrega un margen para centrar la imagen */
-}
+        .imagen-holograma {
+            width: 50%;
+            /* ajusta el ancho de la imagen */
+            height: auto;
+            /* ajusta el alto de la imagen automáticamente */
+            margin: 20px auto;
+            /* agrega un margen para centrar la imagen */
+        }
 
 
     }
 
     .imagen-holograma {
-    max-width: 100%; /* ajusta el ancho máximo de la imagen al ancho de la tabla */
-    height: auto; /* ajusta el alto de la imagen automáticamente */
-    margin: 20px auto; /* agrega un margen para centrar la imagen */
+        max-width: 100%;
+        /* ajusta el ancho máximo de la imagen al ancho de la tabla */
+        height: auto;
+        /* ajusta el alto de la imagen automáticamente */
+        margin: 20px auto;
+        /* agrega un margen para centrar la imagen */
+    }
+
+    @media (max-width: 768px) {
+        .imagen-holograma {
+            width: 100%;
+            /* ajusta el ancho de la imagen al ancho de la pantalla */
+            height: auto;
+            /* ajusta el alto de la imagen automáticamente */
+        }
+    }
+
+    .centrado {
+        color: red;
+        position: absolute;
+        top: 80%;
+        left: 23%;
+    }
+
+
+    @media only screen and (max-width: 900px) {
+        .centrado {
+            color: red;
+            position: absolute;
+            top: 80%;
+            left: 19%;
+        }
+    }
+
+
+    @media (max-width: 768px) {
+        .centrado {
+            color: red;
+            position: relative;
+            top: -30%;
+            left: 19%;
+        }
+    }
+
+
+    //estios para el pie
+    .panel-footer {
+    background: url('{{ asset('assets/img/illustrations/organismo_certificador_cidam.png') }}')no-repeat 50% ;
+    height: 160px;
+    background-color: #e9e9e9;
+    margin-top: 100px;
+    position: fixed;
+    left: 0;
+    bottom: 40;
+    width: 100%;
 }
 
-@media (max-width: 768px) {
-    .imagen-holograma {
-        width: 100%; /* ajusta el ancho de la imagen al ancho de la pantalla */
-        height: auto; /* ajusta el alto de la imagen automáticamente */
+.panel-footer {
+    background: url('{{ asset('assets/img/illustrations/organismo_certificador_cidam.png') }}')no-repeat 50% ;
+    height: 160px;
+    background-color: #e9e9e9;
+    margin-top: 100px;
+    position: fixed;
+    left: 0;
+    bottom: 40;
+    width: 100%;
+    padding: 10px 15px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+@media only screen and (max-width: 900px) {
+    .panel-footer {
+        background: url('{{ asset('assets/img/illustrations/organismo_certificador_cidam.png') }}')no-repeat 50% ;
+        height: 135px;
+        background-size: 100% 100%;
+        background-color: #e9e9e9;
     }
+}
+
+
+#footer {
+    margin-top: 20px;
+    font-size: 15px;
+    text-align: center;
+    height: 60px;
+    background-color: #2E2E2E;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+#footer {
+    padding: 7px 20px;
+    color: #FFFFFF;
+
+    z-index: 1000;
 }
 </style>
 
@@ -422,12 +515,19 @@
                 <div class="row">
                     <div class="col-sm-12 contenedor-imagenes">
                         <img src="{{ asset('assets/img/illustrations/holograma_cidam.png') }}"
-                        alt="Holograma de organismo certificador de cidam" id="holograma" class="imagen-holograma" />
+                            alt="Holograma de organismo certificador de cidam" id="holograma" class="imagen-holograma" />
+                        <div class="centrado"> 040CA000199 </div>
 
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="panel panel-footer"></div>
+<div id="footer">
+    <div>2024 © Todos los derechos reservados a <a style="color:#2adc9f;" href="https://cidam.org/sitio/">CIDAM</a></div>
+
+</div>
     </div>
 
 @endsection
