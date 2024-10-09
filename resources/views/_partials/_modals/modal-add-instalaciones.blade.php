@@ -12,7 +12,7 @@
                         @csrf
 
                         <div class="form-floating form-floating-outline mb-4">
-                            <select id="id_empresa" name="id_empresa" class="form-select select2" required>
+                            <select id="id_empresa" name="id_empresa" class="form-select select2 id_empresa_instalaciones" required>
                                 <option value="" disabled selected>Selecciona la empresa</option>
                                 @foreach ($empresas as $empresa)
                                     <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
@@ -116,7 +116,7 @@
                         </div>
 
                         <div class="d-flex justify-content-end mt-3">
-                            <button type="submit" class="btn btn-primary me-2">Registrar</button>
+                            <button id="btnRegistrarInstalacion" type="submit" class="btn btn-primary me-2">Registrar</button>
                             <button type="reset" class="btn btn-outline-secondary"
                                 data-bs-dismiss="modal">Cancelar</button>
                         </div>

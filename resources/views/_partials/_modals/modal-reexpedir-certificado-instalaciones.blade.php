@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="addReexpedirCertificadoInstalacionesForm" method="POST" action="{{ route('certificados.reexpedir') }}">
+                <form id="addReexpedirCertificadoInstalacionesForm" method="POST" action="{{ route('certificados.reexpedir') }}" novalidate>
                     @csrf
                     <div class="row mb-4">
                         <input type="hidden" id="reexpedir_id_certificado" name="id_certificado">
@@ -68,38 +68,36 @@
                             <input type="text" class="form-control" id="numero_certificado_rex" placeholder="No. de Certificado" name="num_certificado" aria-label="No. de Certificado">
                             <label for="numero_certificado_rex">No. de Certificado</label>
                         </div>
-<!-- Campos Opcionales -->
-<div id="campos_productor" style="display: none;">
-    <div class="form-floating form-floating-outline mb-3" id="maestroMezcaleroContainer">
-        <input type="text" class="form-control" id="maestro_mezcalero_rex" placeholder="Maestro Mezcalero" name="maestro_mezcalero" aria-label="Maestro Mezcalero">
-        <label for="maestro_mezcalero_rex">Maestro Mezcalero</label>
-    </div>
-    <div class="form-floating form-floating-outline mb-3" id="noAutorizacionContainer">
-        <input type="text" class="form-control" id="no_autorizacion_rex" placeholder="No. de Autorización" name="num_autorizacion" aria-label="No. de Autorización">
-        <label for="no_autorizacion_rex">No. de Autorización</label>
-    </div>
-</div>
+                        
+                        <!-- Campos Opcionales -->
+                        <div id="campos_productor" style="display: none;">
+                            <div class="form-floating form-floating-outline mb-3" id="maestroMezcaleroContainer">
+                                <input type="text" class="form-control" id="maestro_mezcalero_rex" placeholder="Maestro Mezcalero" name="maestro_mezcalero" aria-label="Maestro Mezcalero">
+                                <label for="maestro_mezcalero_rex">Maestro Mezcalero</label>
+                            </div>
+                            <div class="form-floating form-floating-outline mb-3" id="noAutorizacionContainer">
+                                <input type="text" class="form-control" id="no_autorizacion_rex" placeholder="No. de Autorización" name="num_autorizacion" aria-label="No. de Autorización">
+                                <label for="no_autorizacion_rex">No. de Autorización</label>
+                            </div>
+                        </div>
                     
-
                         <!-- Fechas -->
                         <div class="d-flex justify-content-between mb-3">
                             <div class="form-floating form-floating-outline flex-fill me-2">
-                                <input class="form-control datepicker" id="fecha_vigencia_rex" placeholder="yyyy-mm-dd" name="fecha_vigencia" aria-label="Fecha de Vigencia" autocomplete="off">
+                                <input class="form-control datepicker" id="fecha_vigencia_rex" placeholder="yyyy-mm-dd" name="fecha_vigencia" aria-label="Fecha de Vigencia" autocomplete="off" readonly>
                                 <label for="fecha_vigencia_rex">Fecha de Inicio Vigencia</label>
                             </div>
                             <div class="form-floating form-floating-outline flex-fill ms-2">
-                                <input class="form-control datepicker" id="fecha_vencimiento_rex" placeholder="yyyy-mm-dd" name="fecha_vencimiento" aria-label="Fecha de Vencimiento" autocomplete="off">
+                                <input class="form-control datepicker" id="fecha_vencimiento_rex" placeholder="yyyy-mm-dd" name="fecha_vencimiento" aria-label="Fecha de Vencimiento" autocomplete="off" readonly>
                                 <label for="fecha_vencimiento_rex">Fecha de Vencimiento</label>
                             </div>
                         </div>
-
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="observaciones_rex" class="form-label">Motivo de cancelación:</label>
-                        <textarea class="form-control" id="observaciones_rex" name="observaciones" rows="3" placeholder="Escribe el motivo de cancelación" required></textarea>
                     </div>
                     
+                     <div class="form-floating form-floating-outline mb-6">
+                        <textarea class="form-control h-px-75" id="observaciones_rex" name="observaciones" placeholder="Escribe el motivo de cancelación" rows="3" required></textarea>
+                        <label for="observaciones_rex">Motivo de cancelación</label>
+                      </div>
 
                     <div class="d-flex justify-content-end mt-3">
                         <button type="submit" class="btn btn-primary me-2">Registrar</button>

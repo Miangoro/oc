@@ -12,6 +12,9 @@ use App\Models\User;
 use App\Models\Revisor; 
 //Notificacion
 use App\Notifications\GeneralNotification;
+//Enviar Correo
+use App\Mail\CorreoCertificado;
+use Illuminate\Support\Facades\Mail; 
 
 class Certificado_InstalacionesController extends Controller
 {
@@ -192,10 +195,14 @@ class Certificado_InstalacionesController extends Controller
         $empresa = $datos->dictamen->inspeccione->solicitud->empresa;
         $numero_cliente = $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente;
     
+        $watermarkText = $datos->estatus === 1;
+
         $pdfData = [
             'datos' => $datos,'num_certificado' => $datos->num_certificado,'num_autorizacion' => $datos->num_autorizacion,'num_dictamen' => $datos->dictamen->num_dictamen,'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
             'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),'fecha_vencimiento' => Helpers::formatearFecha($datos->fecha_vencimiento),'domicilio_fiscal' => $empresa->domicilio_fiscal,'rfc' => $empresa->rfc,
-            'telefono' => $empresa->telefono,'correo' => $empresa->correo,'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa,
+            'telefono' => $empresa->telefono,'correo' => $empresa->correo,
+            'watermarkText' =>  $watermarkText,
+            'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa,
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------','numero_cliente' => $numero_cliente,'nombre_firmante' => $datos->firmante->name
         ];
         
@@ -210,11 +217,15 @@ class Certificado_InstalacionesController extends Controller
     
         $empresa = $datos->dictamen->inspeccione->solicitud->empresa;
         $numero_cliente = $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente;
+
+        $watermarkText = $datos->estatus === 1;
     
         $pdfData = [
             'datos' => $datos,'num_certificado' => $datos->num_certificado,'num_autorizacion' => $datos->num_autorizacion,'num_dictamen' => $datos->dictamen->num_dictamen,
             'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),'fecha_vencimiento' => Helpers::formatearFecha($datos->fecha_vencimiento),
-            'domicilio_fiscal' => $empresa->domicilio_fiscal,'rfc' => $empresa->rfc,'telefono' => $empresa->telefono,'correo' => $empresa->correo,'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa,
+            'domicilio_fiscal' => $empresa->domicilio_fiscal,'rfc' => $empresa->rfc,
+            'watermarkText' =>  $watermarkText,
+            'telefono' => $empresa->telefono,'correo' => $empresa->correo,'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa,
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------','numero_cliente' => $numero_cliente,'nombre_firmante' => $datos->firmante->name
         ];
     
@@ -229,10 +240,14 @@ class Certificado_InstalacionesController extends Controller
         $empresa = $datos->dictamen->inspeccione->solicitud->empresa;
         $numero_cliente = $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente;
 
+        $watermarkText = $datos->estatus === 1;
+
          $pdfData = [
             'datos' => $datos,'num_certificado' => $datos->num_certificado,'num_autorizacion' => $datos->num_autorizacion,'num_dictamen' => $datos->dictamen->num_dictamen,'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
             'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),'fecha_vencimiento' => Helpers::formatearFecha($datos->fecha_vencimiento),'domicilio_fiscal' => $empresa->domicilio_fiscal,'rfc' => $empresa->rfc,
-            'telefono' => $empresa->telefono,'correo' => $empresa->correo,'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa,'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
+            'telefono' => $empresa->telefono,'correo' => $empresa->correo,
+            'watermarkText' =>  $watermarkText,
+            'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa,'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
             'numero_cliente' => $numero_cliente,'nombre_firmante' => $datos->firmante->name ?? 'Nombre del firmante no disponible'
     ];
 
@@ -321,6 +336,13 @@ class Certificado_InstalacionesController extends Controller
                 $user->notify(new GeneralNotification($data1));
             }
     
+            try {
+                Mail::to('carloszarco888@gmail.com')->send(new CorreoCertificado($data1));
+            } catch (\Exception $e) {
+                // Captura y muestra el error
+                dd('Error al enviar el correo: ' . $e->getMessage());
+            }
+            
             return response()->json([
                 'message' => $message ?? 'Revisor del OC asignado exitosamente',
             ]);

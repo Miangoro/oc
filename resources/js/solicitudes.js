@@ -1004,6 +1004,49 @@ $(function () {
         $("#subtitulo_modal").text(registro);
   });
 
+  var openedFromFirstModal = false;
+
+ 
+
+  $('#abrirModalInstalaciones').on('click', function() {
+    var clienteSeleccionado = $('#id_empresa_solicitud').val();
+    
+    openedFromFirstModal = true;
+    $('#addSolicitudDictamen').modal('hide');
+    $('#id_empresa option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
+    $('#id_empresa').trigger('change');
+    $('#modalAddInstalacion').modal('show');
+ 
+    
+});
+
+   // Al cerrar el segundo modal
+   $('#modalAddInstalacion').on('hidden.bs.modal', function () {
+    if (openedFromFirstModal) {
+        openedFromFirstModal = false;
+        $('#addSolicitudDictamen').modal('show');
+    }
+});
+
+// Al registrar el segundo modal
+$('#btnRegistrarInstalacion').on('click', function () {
+  var clienteSeleccionado = $('#id_empresa').val();
+    if (openedFromFirstModal) {
+      openedFromFirstModal = false;
+     // $('#modalAddInstalacion').modal('hide');
+     alert(clienteSeleccionado);
+      $('#id_empresa_solicitud option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
+      obtenerInstalacion();
+     // $('#id_empresa_solicitud').trigger('change');
+      $('#addSolicitudDictamen').modal('show');
+      
+
+    }
+   
+});
+
+
+
   
   
   
