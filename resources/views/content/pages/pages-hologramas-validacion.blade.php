@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Hologramas - Validacion')
+@section('title', 'Verificar Autenticidad de Holograma')
 
 
 @section('page-style')
