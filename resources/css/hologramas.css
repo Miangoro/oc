@@ -146,6 +146,7 @@
 
 
     .tdd {
+        color: #3b4350 !important;
         border-color: inherit;
         border-style: none;
         border-width: 0;

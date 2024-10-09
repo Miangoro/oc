@@ -68,43 +68,43 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="td">CATEGORÍA</td>
+                                <td class="td"><b>CATEGORÍA</b></td>
                                 <td class="td">Mezcal Ancestral</td>
                             </tr>
                             <tr>
-                                <td class="td">CLASE</td>
+                                <td class="td"><b>CLASE</b></td>
                                 <td class="td">Blanco O Joven</td>
                             </tr>
                             <tr>
-                                <td class="td">MARCA</td>
+                                <td class="td"><b>MARCA</b></td>
                                 <td class="td">Envido 29
                                 </td>
                             </tr>
                             <tr>
-                                <td class="td">LOTE A GRANEL </td>
+                                <td class="td"><b>LOTE A GRANEL</b></td>
                                 <td class="td">ES-0224
                                 </td>
                             </tr>
                             <tr>
-                                <td class="td">LOTE ENVASADO </td>
+                                <td class="td"><b>LOTE ENVASADO</b></td>
                                 <td class="td">ES-0224
                                 </td>
                             </tr>
                             <tr>
-                                <td class="td">TIPO DE AGAVE </td>
+                                <td class="td"><b>TIPO DE AGAVE</b></td>
                                 <td class="td">Maguey Espadín (a. Angustifolia)
                                 </td>
                             </tr>
                             <tr>
-                                <td class="td">PRODUCIDO EN </td>
+                                <td class="td"><b>PRODUCIDO EN</b></td>
                                 <td class="td">Oaxaca</td>
                             </tr>
                             <tr>
-                                <td class="td">ENVASADO EN </td>
+                                <td class="td"><b>ENVASADO EN</b></td>
                                 <td class="td">Oaxaca</td>
                             </tr>
                             <tr>
-                                <td class="td">CONTENIDO ALCOHÓLICO </td>
+                                <td class="td"><b>CONTENIDO ALCOHÓLICO</b></td>
                                 <td class="td">50 % Alc. Vol</td>
                             </tr>
                         </tbody>
