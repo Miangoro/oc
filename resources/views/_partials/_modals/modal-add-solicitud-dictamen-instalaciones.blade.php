@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerInstalacion();" 
+                                <select id="id_empresa_solicitud" onchange="obtenerInstalacion();" 
                                     name="id_empresa" class="id_empresa select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -37,13 +37,14 @@
                         <div class="col-md-12">
                         
                            
-                            <div class="input-group form-floating form-floating-outline mb-6">
+                            <div class="form-floating form-floating-outline mb-6 input-group ">
                                 <select class=" form-select" id="id_instalacion" name="id_instalacion" aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
-                                <label for="id_instalacion">Domicilio para la inspección</label>
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAddInstalacion"><i class="ri-add-line"></i> Agregar nueva instalación</button>
+                               
+                                <button type="button" class="btn btn-primary" id="abrirModalInstalaciones"><i class="ri-add-line"></i> Agregar nueva instalación</button>
+                                
                             </div>
                        
                     </div>
