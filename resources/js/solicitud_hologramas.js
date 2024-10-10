@@ -1142,14 +1142,7 @@ $(function () {
 
     $.get('/solicitud_holograma/editActivos/' + id, function (data) {
 
-      $('#tablita').empty();
-
-<<<<<<< HEAD
-      
-     
-=======
->>>>>>> d11d71f9ed16130471df83712dee8ad61f5dc2f9
-      // Rellenar el formulario con los datos obtenidos
+      $('#tablita').empty(); // Rellenar el formulario con los datos obtenidos
       data.forEach(function (item) {
         // Crear una nueva fila con los datos
         var fila = `
