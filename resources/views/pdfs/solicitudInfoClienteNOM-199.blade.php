@@ -578,7 +578,7 @@
             
 
         <tr>
-            <th colspan="6" style="height: 48px; text-align: end; vertical-align: top; bordder-top: solid black 2px;">NOMBRE Y FIRMA DEL SOLICITANTE:</th>
+            <th colspan="6" style="height: 48px; text-align: end; vertical-align: top; border-top: solid black 2px;">NOMBRE Y FIRMA DEL SOLICITANTE:</th>
         </tr>
         <tr>
             <td colspan="6" style="font-size: 10px;">Para consulta del proceso de certificación, consultar la página <a href="http://www.cidam.org">www.cidam.org</a> que cuenta con el manual de certificación F7.1-03-01.</td>
