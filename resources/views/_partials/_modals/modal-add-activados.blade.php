@@ -36,6 +36,9 @@
                                         <th>Lugar de envasado</th>
                                     <th>Rango inicial</th>
                                     <th>Rango final</th>
+                                    <th>Acciones</th> <!-- Nueva columna para el botón de editar -->
+                                    
+
                                 </tr>
                             </thead>
                             <tbody id="tablita">

@@ -520,7 +520,25 @@ public function update(Request $request)
     
 
 
-
+    public function editActivados($id)
+    {
+        try {
+            // Obtener el registro
+            $activo = activarHologramasModelo::find($id);
+    
+            // Decodificar el JSON de los folios
+            $folios = json_decode($activo->folios, true);
+    
+            // Añadir los valores de folio inicial y folio final
+            $activo->folio_inicial = $folios['folio_inicial'] ?? null;
+            $activo->folio_final = $folios['folio_final'] ?? null;
+    
+            return response()->json($activo); // Devolver el registro con los datos decodificados
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener los hologramas activos'], 500);
+        }
+    }
+    
 
 
     public function verificarFolios(Request $request)
