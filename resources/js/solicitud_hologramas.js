@@ -275,8 +275,8 @@ $(function () {
 /*               `<a id="activar_holograma" data-id="${full['id_solicitud']}" href="javascript:;" class="dropdown-item activar_holograma"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +
  */              `<a id="activar_holograma" data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#activarHologramas" href="javascript:;" class="dropdown-item activar_holograma"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +
               `<a id="activos_hologramas" data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#activosHologramas" href="javascript:;" class="dropdown-item activos_hologramas"><i class="ri-barcode-box-line ri-20px text-primary"></i> Activos</a>` +
-              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#edit_activarHologramas" href="javascript:;" class="dropdown-item edit-activos"><i class="ri-barcode-box-line ri-20px text-primary"></i> Editar activos</a>` +
-              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addRecepcion" href="javascript:;" class="dropdown-item edit-recepcion"><i class="ri-article-fill ri-20px text-secondary"></i> Recepción hologramas</a>` +
+/*               `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#edit_activarHologramas" href="javascript:;" class="dropdown-item edit-activos"><i class="ri-barcode-box-line ri-20px text-primary"></i> Editar activos</a>` +
+ */              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addRecepcion" href="javascript:;" class="dropdown-item edit-recepcion"><i class="ri-article-fill ri-20px text-secondary"></i> Recepción hologramas</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addEnvio" href="javascript:;" class="dropdown-item edit-envio"><i class="ri-send-plane-fill ri-20px text-success"></i> Enviar</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#asignarHolograma" href="javascript:;" class="dropdown-item edit-signar"><i class="ri-qr-scan-fill ri-20px text-dark"></i> Asignar hologramas</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addPago" href="javascript:;" class="dropdown-item edit-pay"><i class="ri-bank-card-line ri-20px text-warning"></i> Adjuntar comprobante de pago</a>` +
@@ -1142,14 +1142,13 @@ $(function () {
 
     $.get('/solicitud_holograma/editActivos/' + id, function (data) {
 
+<<<<<<< HEAD
+      $('#tablita').empty(); // Rellenar el formulario con los datos obtenidos
+=======
       $('#tablita').empty();
 
-<<<<<<< HEAD
-      
-     
-=======
->>>>>>> d11d71f9ed16130471df83712dee8ad61f5dc2f9
       // Rellenar el formulario con los datos obtenidos
+>>>>>>> 77a8daab7db649a1a851a0162e6b51fa50224b6c
       data.forEach(function (item) {
         // Crear una nueva fila con los datos
         var fila = `
@@ -1162,11 +1161,27 @@ $(function () {
                 <td>${item.clase}</td>
                 <td>${item.contenido}</td>
                 <td>${item.no_lote_envasado}</td>
-                <td>${item.id_tipo}</td>
+              <td>${item.num_servicio}</td> <!-- Cambiado de id_inspeccion a num_servicio -->
                 <td>${item.lugar_produccion}</td>
                 <td>${item.lugar_envasado}</td>
-                <td>${item.folio_inicial}</td>
-                <td>${item.folio_final}</td>
+                <td>
+                <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">${item.folio_inicial}</a>
+                </td>
+                  <td>
+                    <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">
+                      ${item.folio_final}
+                    </a>
+                  </td>                
+                  <td>
+                <button type="button" class="btn btn-primary">
+                  <a href="javascript:;" class="edit-activos" style="color:#FFF" 
+                    data-id="${item.id}" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#edit_activarHologramas">
+                    Editar activo
+                  </a>
+                </button>
+            </td>
             </tr>
         `;
 
@@ -1191,37 +1206,88 @@ $(function () {
     });
   });
 
-//EDITAR HOLOGRAMAS ACTIVOS
-  $(document).on('click', '.edit-activos', function () {
-    var id = $(this).data('id');
 
-    $.get('/solicitud_holograma/editActivos/' + id, function (data) {
+// EDITAR HOLOGRAMAS ACTIVOS
+$(document).on('click', '.edit-activos', function () {
+  var id = $(this).data('id');
 
+  // Hacer la solicitud GET
+  $.get('/solicitud_holograma/editActivados/' + id, function (data) {
 
-      // Rellenar el formulario con los datos obtenidos
-      $('#edit_id').val(id);
-      $('#edit_categoria').val(categoria);
-      $('#no_lote_agranel').val(no_lote_agranel);
-      $('#edit_id_inspeccion').val(id_inspeccion).trigger('change');
+      // Asignar valores a los campos del formulario
+      $('#edit_id').val(data.id);
+      $('#edit_id_solicitud').val(data.id_solicitud);
+      $('#edit_id_inspeccion').val(data.id_inspeccion).trigger('change');
+      $('#edit_no_lote_agranel').val(data.no_lote_agranel);
+      $('#edit_categoria').val(data.categoria).trigger('change');
+      $('#edit_no_analisis').val(data.no_analisis);
+      $('#edit_cont_neto').val(data.cont_neto);
+      $('#edit_unidad').val(data.unidad);
+      $('#edit_clase').val(data.clase);
+      $('#edit_contenido').val(data.contenido);
+      $('#edit_no_lote_envasado').val(data.no_lote_envasado);
+      $('#edit_id_tipo').val(data.id_tipo).trigger('change');
+      $('#edit_lugar_produccion').val(data.lugar_produccion);
+      $('#edit_lugar_envasado').val(data.lugar_envasado);
 
-      $('#edit_no_lote_agranel').val(no_lote_agranel);
-      $('#edit_cont_neto').val(cont_neto);
+      // Limpiar el contenido previo de la tabla
+      $('#edit_contenidoRango').empty();
 
+      // Añadir el nuevo rango de folios a la tabla
+      var newRow = `
+          <tr>
+              <th>
+                  <button type="button" class="btn btn-danger remove-row">
+                      <i class="ri-delete-bin-5-fill"></i>
+                  </button>
+              </th>
+              <td>
+                  <input type="number" class="form-control form-control-sm" name="edit_folio_inicial[]" value="${data.folio_inicial || ''}" />
+              </td>
+              <td>
+                  <input type="number" class="form-control form-control-sm" name="edit_folio_final[]" value="${data.folio_final || ''}" />
+              </td>
+          </tr>
+      `;
+
+      $('#edit_contenidoRango').append(newRow);
 
       // Mostrar el modal de edición
       $('#edit_activarHologramas').modal('show');
-    }).fail(function (jqXHR, textStatus, errorThrown) {
+  }).fail(function (jqXHR, textStatus, errorThrown) {
       console.error('Error: ' + textStatus + ' - ' + errorThrown);
       Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al obtener los datos de la solicitud de holograma',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al obtener los datos del lote',
+          customClass: {
+              confirmButton: 'btn btn-danger'
+          }
       });
-    });
   });
+});
+
+
+/* data.activarHologramasModelo.forEach(function(testigo, index) {
+  var newRow = `
+  <tr>
+      <th>
+          <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
+              <i class="ri-delete-bin-5-fill"></i>
+          </button>
+      </th>
+      <td>
+          <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" value="${testigo.folio_inicial}" />
+      </td>
+      <td>
+          <input type="number" class="form-control form-control-sm" name="edit_rango_final[]" value="${testigo.folio_final}" />
+      </td>
+  </tr>
+`;
+  $('#edit_contenidoRango').append(newRow);
+}); */
+
+
 
 
   /*   $(document).on('click', '.activar_holograma', function () {

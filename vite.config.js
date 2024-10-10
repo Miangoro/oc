@@ -80,5 +80,5 @@ export default defineConfig({
       host: '10.1.30.224', // IP de la máquina del servidor
       port: 5173,
     },
-  },   */
+  }, */
 });

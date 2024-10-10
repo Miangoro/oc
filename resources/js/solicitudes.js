@@ -1034,10 +1034,12 @@ $('#btnRegistrarInstalacion').on('click', function () {
     if (openedFromFirstModal) {
       openedFromFirstModal = false;
      // $('#modalAddInstalacion').modal('hide');
-     alert(clienteSeleccionado);
+     
       $('#id_empresa_solicitud option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
+      $('#id_empresa_solicitud').trigger('change');
       obtenerInstalacion();
-     // $('#id_empresa_solicitud').trigger('change');
+      alert(clienteSeleccionado);
+     
       $('#addSolicitudDictamen').modal('show');
       
 

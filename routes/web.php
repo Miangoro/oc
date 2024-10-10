@@ -705,6 +705,8 @@ Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 
 Route::post('/solicitud_holograma/editHolograma', [solicitudHolograma::class, 'editHolograma']);
 Route::post('/solicitud_holograma/storeActivar', [solicitudHolograma::class, 'storeActivar']);
 Route::get('/solicitud_holograma/editActivos/{id}', [solicitudHolograma::class, 'editActivos']);
+Route::get('/solicitud_holograma/editActivados/{id}', [solicitudHolograma::class, 'editActivados']);
+
 
 
 
@@ -724,7 +726,6 @@ Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_Instal
 Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
 
 
-Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 
 //solicitud hologrammas
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
