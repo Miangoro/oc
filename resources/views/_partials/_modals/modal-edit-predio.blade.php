@@ -27,7 +27,7 @@
                        <div class="col-md-6">
                            <div class="form-floating form-floating-outline">
                                <input type="text" class="form-control" id="edit_nombre_productor" autocomplete="off"
-                                   name="nombre_productor" placeholder="Nombre del productor"> 
+                                   name="nombre_productor" placeholder="Nombre del productor">
                                <label for="nombre_productor">Nombre del Productor</label>
                            </div>
                        </div>
@@ -106,7 +106,7 @@
                                <label for="contrato_arrendamiento_o_escrituras">Adjuntar Contrato de arrendamiento del terreno o copias de escrituras</label>
                            </div>
                            <div id="archivo_url_contrato" class="mb-4"></div>
-                       </div>                                
+                       </div>
                    </div>
                    <div id="edit_coordenadas" class="d-none mb-4">
                     <div class="card">
@@ -178,14 +178,14 @@
                                        </tr>
                                        <tr>
                                            <td>
-                                               <b>Edad de la Plantación</b>
+                                               <b>Edad de la Plantación (años)</b>
                                            </td>
                                            <td>
                                                <div class="form-floating form-floating-outline">
                                                    <input type="number" class="form-control" autocomplete="off"
                                                        id="edit_edad_plantacion" name="edad_plantacion[]"
                                                        placeholder="Edad de la plantación (años)" step="1">
-                                                   <label for="edad_plantacion">Edad de la Plantación</label>
+                                                   <label for="edad_plantacion">Edad de la Plantación (años)</label>
                                                </div>
                                            </td>
                                        </tr>

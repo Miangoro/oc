@@ -223,7 +223,7 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Pre-certificado CIDAM C-GRA-210 2024.pdf');
     }
 
-    public function DictamenMezcalEnvasado() 
+    public function DictamenMezcalEnvasado()
     {
         $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_mezcal-envasado');
         return $pdf->stream('F-UV-04-17 Ver 6. Dictamen de Cumplimiento NOM de Mezcal Envasado.pdf');
@@ -236,7 +236,7 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('F7.1-03-17 Certificado de conformidad NOM-199-SCFI-2017.pdf');
     }
 
-/* 
+/*
     public function CertificadoConformidad199()
     {
         $pdf = Pdf::loadView('pdfs.CertificadoDeConformidadNOM-199');
@@ -273,12 +273,12 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('F7.1-04-07 Solicitud de servicios NMX-V-052-NORMEX-2016 Ed. 1, Vigente.pdf');
     }
 
-    public function ReporteTecnico () 
+    public function ReporteTecnico ()
     {
         $pdf = Pdf::loadView('pdfs.Reporte_Tecnico-cumplimiento');
         return $pdf->stream('F7.1-03-24 Reporte Técnico de cumplimiento NOM-199-SCFI-2017 Ed 9 VIGENTE.pdf');
     }
- 
+
     public function OrdenTrabajoInspeccionEtiquetas(){
         $pdf = Pdf::loadView('pdfs.orden_trabajo_inspeccion_etiquetas');
         return $pdf->stream('R-UNIIC-004 Orden de trabajo de inspección de etiquetas, tq CAFE.pdf');
@@ -289,7 +289,7 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('R-UNIIC-001 Solicitud y especificaciones del Servicio para emisión de Constancias de Conformidad JUAN RAMÓN.pdf');
 
     }
-    
+
     public function ListaVerificacionNom051Mod20200327Solrev005(){
         $pdf = Pdf::loadView('pdfs.lista_verificacion_nom051-mod20200327_solrev005');
         return $pdf->stream('R-UNIIC-005, Lista de Verificación  NOM-051-SCFI_SSA1-2010 y MOD 27.03.2020 SOL-REV-005.PDF');

@@ -25,17 +25,20 @@
                                 <tr>
                                         <th>id</th>
                                         <th>Numero lote agranel</th>
-                                        <th>Categorria</th>
+                                        <th>Categoría</th>
                                         <th>Análisis de laboratorio</th>
                                         <th>Contenido neto y Unidad</th>
                                         <th>Clase</th>
                                         <th>Contenido Alcohólico</th>
                                         <th>No. de lote de envasado</th>
-                                        <th>Categoría</th>
+                                        <th>No. DE servicio</th>
                                         <th>Lugar de producción</th>
                                         <th>Lugar de envasado</th>
                                     <th>Rango inicial</th>
                                     <th>Rango final</th>
+                                    <th>Acciones</th> <!-- Nueva columna para el botón de editar -->
+                                    
+
                                 </tr>
                             </thead>
                             <tbody id="tablita">

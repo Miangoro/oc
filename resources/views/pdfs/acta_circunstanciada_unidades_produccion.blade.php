@@ -411,7 +411,7 @@
                 <td>Nombre y firma del testigo</td>
                 <td style="width: 280px;">Domicilio</td>
             </tr>
-        
+
             @foreach ($datos->actas_inspeccion->actas_testigo AS $testigo)
                 <tr>
                     <td style="height: 28px;">{{ $testigo->id_acta_testigo ?? '- -' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
@@ -419,13 +419,13 @@
                     <td>{{ $testigo->domicilio ?? '- -' }}</td> <!-- Mostrar "vacío" si el domicilio es nulo -->
                 </tr>
             @endforeach
-        
+
         </table>
-        
+
     </div>
     <br>
     {{-- contenedor --}}
-    
+
     <div class="contenedor">
         <div class="texto">
             <p><strong>Parte I Unidad de producción de Agave.</strong></p>
@@ -442,7 +442,7 @@
                 <td>Cantidad de Plantas</td>
 {{--                 <td style="width: 90px;">Coordenadas</td>
  --}}            </tr>
-           
+
            @foreach ($datos->actas_inspeccion->actas_produccion AS $plantacion)
             <tr>
                 <td >{{$plantacion->predio_plantacion->predio->nombre_predio ?? '- -'}}</td>
@@ -453,7 +453,7 @@
                 <td >{{ $plantacion->predio_plantacion->num_plantas ?? '- -' }}</td> <!-- Mostrar "vacío" si el id es nulo -->
 
             </tr>
-        @endforeach 
+        @endforeach
         </table>
         <br>
         <div class="texto">
@@ -479,27 +479,27 @@
                 @php
                     $counter = 0; // Contador para las respuestas
                 @endphp
-        
+
                 @foreach ($datos->actas_inspeccion->acta_produccion_mezcal AS $area)
                     @if ($counter % 8 == 0) <!-- Si el contador es múltiplo de 8, empieza un nuevo <tr> -->
                         <tr>
                     @endif
-        
+
                     <td>{{ $area->respuesta ?? '- -' }}</td> <!-- Mostrar "vacío" si la respuesta es nula -->
-        
+
                     @php
                         $counter++; // Incrementar el contador
                     @endphp
-        
+
                     @if ($counter % 8 == 0) <!-- Si el contador es múltiplo de 8, cierra el <tr> -->
                         </tr>
                     @endif
                 @endforeach
-        
+
                 @if ($counter % 8 != 0) <!-- Si no hemos cerrado el último <tr>, ciérralo aquí -->
                     </tr>
                 @endif
-        
+
                 <!-- Si deseas agregar una fila adicional si hay respuestas restantes -->
                 @if ($counter % 8 != 0)
                     <tr>
@@ -510,7 +510,7 @@
                 @endif
             </tbody>
         </table>
-        
+
         <br>
         <div class="texto">
             <p>Se constató físicamente la existencia de los siguientes equipos: </p>
@@ -570,27 +570,27 @@
                 @php
                     $counter = 0; // Contador para las respuestas
                 @endphp
-        
+
                 @foreach ($datos->actas_inspeccion->actas_unidad_envasado AS $envasado)
                     @if ($counter % 7 == 0) <!-- Si el contador es múltiplo de 8, empieza un nuevo <tr> -->
                         <tr>
                     @endif
-        
+
                     <td>{{ $envasado->respuestas ?? '- -' }}</td> <!-- Mostrar "vacío" si la respuesta es nula -->
-        
+
                     @php
                         $counter++; // Incrementar el contador
                     @endphp
-        
+
                     @if ($counter % 7 == 0) <!-- Si el contador es múltiplo de 8, cierra el <tr> -->
                         </tr>
                     @endif
                 @endforeach
-        
+
                 @if ($counter % 7 != 0) <!-- Si no hemos cerrado el último <tr>, ciérralo aquí -->
                     </tr>
                 @endif
-        
+
                 <!-- Si deseas agregar una fila adicional si hay respuestas restantes -->
                 @if ($counter % 7 != 0)
                     <tr>
@@ -650,27 +650,27 @@
                 @php
                     $counter = 0; // Contador para las respuestas
                 @endphp
-        
+
                 @foreach ($datos->actas_inspeccion->actas_unidad_comercializacion AS $comercio)
                     @if ($counter % 5 == 0) <!-- Si el contador es múltiplo de 8, empieza un nuevo <tr> -->
                         <tr>
                     @endif
-        
+
                     <td>{{ $comercio->respuestas_comercio ?? '- -' }}</td> <!-- Mostrar "vacío" si la respuesta es nula -->
-        
+
                     @php
                         $counter++; // Incrementar el contador
                     @endphp
-        
+
                     @if ($counter % 5 == 0) <!-- Si el contador es múltiplo de 8, cierra el <tr> -->
                         </tr>
                     @endif
                 @endforeach
-        
+
                 @if ($counter % 5 != 0) <!-- Si no hemos cerrado el último <tr>, ciérralo aquí -->
                     </tr>
                 @endif
-        
+
                 <!-- Si deseas agregar una fila adicional si hay respuestas restantes -->
                 @if ($counter % 5 != 0)
                     <tr>

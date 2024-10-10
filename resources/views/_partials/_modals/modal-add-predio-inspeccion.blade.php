@@ -257,14 +257,14 @@
                                            </tr>
                                            <tr>
                                                <td>
-                                                   <b>Edad de la Plantación</b>
+                                                   <b>Edad de la Plantación (años)</b>
                                                </td>
                                                <td>
                                                    <div class="form-floating form-floating-outline">
                                                        <input type="number" class="form-control" autocomplete="off"
                                                            id="edit_edad_plantacion" name="edad_plantacion[]"
                                                            placeholder="Edad de la plantación (años)" step="1">
-                                                       <label for="edad_plantacion">Edad de la Plantación</label>
+                                                       <label for="edad_plantacion">Edad de la Plantación (años)</label>
                                                    </div>
                                                </td>
                                            </tr>

@@ -18,6 +18,7 @@ use App\Models\inspecciones;
 use App\Models\PrediosCaracteristicasMaguey;
 use App\Notifications\GeneralNotification;
 use App\Models\User;
+use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -639,20 +640,8 @@ class PrediosController extends Controller
 
       // Obtener la solicitud relacionada a partir del id_predio
       $solicitud = solicitudesModel::where('id_predio', $id_predio)->first();
-
-      if (!$solicitud) {
-          // Manejo de errores si no se encuentra la solicitud
-          return response()->json(['error' => 'No se encontró la solicitud.'], 404);
-      }
-
       // Obtener la inspección relacionada a partir del id_solicitud de la solicitud
       $inspeccionData = inspecciones::where('id_solicitud', $solicitud->id_solicitud)->first();
-
-      if (!$inspeccionData) {
-          // Manejo de errores si no se encuentra la inspección
-          return response()->json(['error' => 'No se encontró la inspección relacionada con la solicitud.'], 404);
-      }
-      // Obtener el domicilio fiscal de la empresa
 
       // Obtener todas las coordenadas relacionadas con la inspección
       $coordenadas = PredioCoordenadas::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
@@ -675,20 +664,32 @@ class PrediosController extends Controller
   }
 
 
-
-
-
     public function PDFRegistroPredios($id_predio) {
+      $inspeccion = Predios_Inspeccion::where('id_predio', $id_predio)->first();
+      $predio = Predios::with(['empresa', 'empresa.empresaNumClientes'])->find($id_predio);
+      $vigencia = Helpers::formatearFecha($inspeccion->predio->fecha_vigencia);
+      $emision = Helpers::formatearFecha($inspeccion->predio->fecha_emision);
+    // Obtener la solicitud relacionada a partir del id_predio
+    $solicitud = solicitudesModel::where('id_predio', $id_predio)->first();
+    // Obtener la inspección relacionada a partir del id_solicitud de la solicitud
+    $inspeccionData = inspecciones::where('id_solicitud', $solicitud->id_solicitud)->first();
 
-    /*  $inspeccion = Predios_Inspeccion::where('id_predio', $id_predio)->first(); */
-      // Cargar la vista PDF con la inspección y las coordenadas
-      $pdf = Pdf::loadView('pdfs.Registro_de_Predios_Maguey_Agave'/* , [
+    // Obtener todas las coordenadas relacionadas con la inspección
+    $coordenadas = PredioCoordenadas::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
+    $caracteristicas = PrediosCaracteristicasMaguey::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
+    $plantacion = predio_plantacion::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
+
+      $pdf = Pdf::loadView('pdfs.Registro_de_Predios_Maguey_Agave' , [
           'inspeccion' => $inspeccion,
+          'vigencia' => $vigencia,
+          'emision' => $emision,
+          'inspeccionData' => $inspeccionData, // Pasar la inspección relacionada
+          'predio' => $predio,
+          'solicitud' => $solicitud, // Pasar la solicitud
           'coordenadas' => $coordenadas,
           'caracteristicas' => $caracteristicas,
           'plantacion' => $plantacion,
-      ] */);
-      // Generar y retornar el PDF
+      ] );
       return $pdf->stream('F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.pdf');
     }
 

@@ -73,6 +73,7 @@
 @include('_partials/_modals/modal-pdfs-frames')
  @include('_partials/_modals/modal-add-solicitudHologramas')
  @include('_partials/_modals/modal-add-activarHologramas')
+ @include('_partials/_modals/modal-edit-activarHologramas')
  @include('_partials/_modals/modal-add-recepcionHologramas')
  @include('_partials/_modals/modal-add-solicitudPagoHologramas')
  @include('_partials/_modals/modal-add-asignarHologramas')

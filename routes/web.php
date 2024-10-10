@@ -465,7 +465,7 @@ Route::get('/orden_trabajo_inspeccion_etiquetas', [CartaAsignacionController::cl
 Route::get('/lista_verificacion_nom051-mod20200327_solrev005', [CartaAsignacionController::class, 'ListaVerificacionNom051Mod20200327Solrev005'])->name('ListaVerificacionNom051Mod20200327Solrev005');
 
 
-Route::get('/registro_predios_maguey_o_agave', [CartaAsignacionController::class, 'RegistroPrediosMagueyAgave'])->name('RegistroPrediosMagueyAgave');
+
 
 
 //Etiquetas Etiqueta_Barrica
@@ -559,7 +559,6 @@ Route::get('/pre-registro_predios/{id_predio}', [prediosController::class, 'PdfP
 Route::get('/inspeccion_geo_referenciacion/{id_predio}', [prediosController::class, 'PDFInspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion');
 Route::get('/Registro_de_Predios_Maguey_Agave/{id_predio}', [prediosController::class, 'PDFRegistroPredios'])->name('PDF_Registro_Predios');
 Route::post('/registro-Predio/{id_predio}', [PrediosController::class, 'registroPredio'])->name('registro-predios.registroPredio');
-
 
 //Domicilio Destinos
 Route::get('/domicilios/destinos', [DestinosController::class, 'UserManagement'])->name('domicilio-destinos');
@@ -706,6 +705,8 @@ Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 
 Route::post('/solicitud_holograma/editHolograma', [solicitudHolograma::class, 'editHolograma']);
 Route::post('/solicitud_holograma/storeActivar', [solicitudHolograma::class, 'storeActivar']);
 Route::get('/solicitud_holograma/editActivos/{id}', [solicitudHolograma::class, 'editActivos']);
+Route::get('/solicitud_holograma/editActivados/{id}', [solicitudHolograma::class, 'editActivados']);
+
 
 
 
@@ -725,7 +726,6 @@ Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_Instal
 Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
 
 
-Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
 
 //solicitud hologrammas
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
