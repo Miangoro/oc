@@ -226,7 +226,7 @@
               <td>{{$inspeccion->ubicacion_predio}}</td>
               <td><b>Número de predio</b> <br>
                 (<i>Building number)</i></td>
-              <td><b>UVEM</b>{{$inspeccion->predio->num_predio}}</td>
+              <td><b>UVEM </b>{{$inspeccion->predio->num_predio}}</td>
           </tr>
       </table>
         <br>
@@ -234,55 +234,41 @@
         <br>
         <table class="coordenadas">
             <tr>
-                <td rowspan="10" style="width: 25%; text-align: center;"><b>Coordenadas Geográficas</b>
-                  <i>(Geographic coordinates)</i></td>
-                <td><b>Latitud</b> <i>(latitude)</i></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><b>Longitud</b> <i>(Length) o (measuring
-                  length)</i></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><b>Latitud </b><i>(latitude)</i></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><b>Longitud </b><i>(Length) o (measuring
-                  length)</i></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><b>Latitud </b><i>(latitude)</i></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><b>Longitud</b> <i>(Length) o (measuring
-                  length)</i></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><b>Latitud</b> <i>(latitude)</i></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><b>Longitud</b> <i>(Length) o (measuring
-                  length)</i></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><b>Latitud </b><i>(latitude)</i></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><b>Longitud </b><i>(Length) o (measuring
-                  length)</i></td>
-                <td></td>
-            </tr>
+              <td rowspan="{{ max(count($coordenadas) * 2, 2) }}" style="width: 25%; text-align: center;"><b>Coordenadas Geográficas</b> <i>(Geographic coordinates)</i></td>
+              <td><b>Latitud</b> <i>(latitude)</i></td>
+              <td style="font-weight: normal;">
+                  @if ($coordenadas->isNotEmpty())
+                      {{ $coordenadas[0]->latitud }}
+                  @else
+                      N/A
+                  @endif
+              </td>
+          </tr>
+          <tr>
+              <td><b>Longitud</b> <i>(Length) o (measuring
+                length)</i></td>
+              <td style="font-weight: normal;">
+                  @if ($coordenadas->isNotEmpty())
+                      {{ $coordenadas[0]->longitud }}
+                  @else
+                      N/A
+                  @endif
+              </td>
+          </tr>
+          @foreach ($coordenadas->slice(1) as $coordenada)
+              <tr>
+                  <td><b>Latitud</b> <i>(latitude)</i></td>
+                  <td style="font-weight: normal;">{{ $coordenada->latitud }}</td>
+              </tr>
+              <tr>
+                  <td><b>Longitud</b> <i>(Length) o (measuring
+                    length)</i></td>
+                  <td style="font-weight: normal;">{{ $coordenada->longitud }}</td>
+              </tr>
+          @endforeach
             <tr>
                 <td><b>Superficie</b> <i>(area)</i></td>
-                <td colspan="2"></td>
+                <td colspan="2">{{ $inspeccion->superficie ?? 'N/A' }}</td>
             </tr>
         </table>
     </div>
@@ -298,20 +284,15 @@
                 <td><b>Edad</b> <i>(años) (Age (years)</i></td>
                 <td><b>Tipo de plantación </b><i>(Type of plantation)</i></td>
             </tr>
+            @foreach ($plantacion as $plantacion)
             <tr>
-                <td style="height: 15px;"></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td style="font-weight: normal;">{{ $plantacion->tipo->nombre}}</td>
+                <td style="font-weight: normal;">{{ $plantacion->tipo->cientifico }}</td>
+                <td style="font-weight: normal;">{{ $plantacion->num_plantas }}</td>
+                <td style="font-weight: normal;">{{ $plantacion->anio_plantacion }}</td>
+                <td style="font-weight: normal;">{{ $plantacion->tipo_plantacion }}</td>
             </tr>
-            <tr>
-              <td style="height: 15px;"></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-          </tr>
+            @endforeach
         </table>
         <br>
         <p style="margin: 0;" class="indice">VI. &nbsp;&nbsp;&nbsp;&nbsp;  Ubicación y georreferenciación del agave</p>

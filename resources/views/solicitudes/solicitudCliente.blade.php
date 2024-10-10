@@ -13,14 +13,11 @@
 
 <!-- Vendor Styles -->
 @section('vendor-style')
-    @vite(['resources/assets/vendor/libs/bs-stepper/bs-stepper.scss', 'resources/assets/vendor/fonts/personalizados/style.css'])
-
+    @vite(['resources/assets/vendor/libs/bs-stepper/bs-stepper.scss', 'resources/assets/vendor/fonts/personalizados/style.css', 'resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.scss', 'resources/assets/vendor/libs/select2/select2.scss', 'resources/assets/vendor/libs/@form-validation/form-validation.scss', 'resources/assets/vendor/libs/animate-css/animate.scss', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss', 'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss', 'resources/assets/vendor/libs/spinkit/spinkit.scss'])
 
     <!-- Vendor Scripts -->
 @section('vendor-script')
-    @vite(['resources/assets/vendor/libs/bs-stepper/bs-stepper.js'])
-
-
+    @vite(['resources/assets/vendor/libs/jquery/jquery.js', 'resources/assets/vendor/libs/bootstrap/bootstrap.js', 'resources/assets/vendor/libs/bs-stepper/bs-stepper.js', 'resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js'])
 @section('content')
 
     <style>
@@ -43,11 +40,12 @@
 
         /* Usando la variable de Bootstrap para el color primario */
         /*         .custom-option.active {
-            border: 1px solid var(--bs-primary);
-           } */
+                    border: 1px solid var(--bs-primary);
+                   } */
         .custom-option.active {
             border: 2px solid #8eb3ae;
         }
+
     </style>
     <div class="card">
         <img alt="Organismo de certificación" src="{{ asset('assets/img/branding/Banner solicitud_información.png') }}"
@@ -173,7 +171,7 @@
 
                     </div>
 
-                    <!-- Social Links -->
+                    <!-- Social Links Producto que se va a certificar-->
                     <div id="social-links" class="content">
                         <!-- 1. Delivery Type -->
                         <h6>Producto(s) que se va a certificar</h6>
@@ -226,6 +224,20 @@
                                     </label>
                                 </div>
                             </div>
+
+                            <div class="col-md">
+                                <div class="form-check custom-option custom-option-icon">
+                                    <label class="form-check-label custom-option-content" for="customRadioIcon5">
+                                        <span class="custom-option-body">
+                                            <i class="ri-goblet-2-fill"></i>
+                                            <small>Otras bebidas alcoholicas</small>
+                                        </span>
+                                        <input name="producto[]" value="5" class="form-check-input" type="checkbox"
+                                            value="" id="customRadioIcon5" />
+                                    </label>
+                                </div>
+                            </div>
+
                         </div>
                         <hr>
 
@@ -265,6 +277,19 @@
                                     </label>
                                 </div>
                             </div>
+                            <div class="col-md">
+                                <div class=" custom-option custom-option-icon">
+                                    <label class="form-check-label custom-option-content" for="customRadioIcon8">
+                                        <span class="custom-option-body">
+                                            <small>NOM-199-SCFI-2017</small>
+                                        </span>
+                                        <input name="norma[]" class="form-check-input" type="checkbox" value="4"
+                                            id="customRadioIcon8" />
+                                    </label>
+                                </div>
+                            </div>
+
+
                         </div>
                         <hr>
                         {{-- secciones ocultas --}}
@@ -323,7 +348,612 @@
                             <hr>
                         </div>
 
+                        {{-- secciones ocultas --}}
+                        <div id="nom199-section">
+                            <h6 class="my-4">Clasificación de Bebida(s) Alcohólica(s):</h6>
+                            <div class="row gy-3 align-items-start">
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon20">
+                                            <span class="custom-option-body">
+                                                <i class="ri-beer-fill"></i>
+                                                <small>Bebidas
+                                                    Alcohólicas
+                                                    Fermentadas
+                                                    (2% a 20% Alc.
+                                                    Vol.)</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="20" id="customRadioIcon20" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon21">
+                                            <span class="custom-option-body">
+                                                <i class="ri-goblet-fill"></i>
+                                                <small>Bebidas
+                                                    Alcohólicas
+                                                    Destiladas (32%
+                                                    a 55% Alc. Vol.)</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="21" id="customRadioIcon21" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon22">
+                                            <span class="custom-option-body">
+                                                <i class="ri-goblet-fill"></i>
+                                                <small>Licores o
+                                                    cremas (13.5%
+                                                    a 55% Alc. Vol.)</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="22" id="customRadioIcon22" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon23">
+                                            <span class="custom-option-body">
+                                                <i class="ri-goblet-2-fill"></i>
+                                                <small>Bebidas
+                                                    Alcohólicas
+                                                    Destiladas
+                                                    (32% a 55%
+                                                    Alc. Vol.)</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="23" id="customRadioIcon23" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon24">
+                                            <span class="custom-option-body">
+                                                <i class="ri-goblet-fill"></i>
+                                                <small>Cócteles (12%
+                                                    a 32% Alc.
+                                                    Vol.)
+                                                </small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="24" id="customRadioIcon24" />
+                                        </label>
+                                    </div>
+                                </div>
 
+                            </div>
+                            <hr>
+                        </div>
+
+
+                        {{-- Sección de Clasificación de Bebidas Alcohólicas --}}
+                        <div id="clasificacion-bebidas-section">
+                            <h6 class="my-4">Clasificación de Bebida(s) Alcohólica(s):</h6>
+                            <div class="row gy-3 align-items-start">
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon25">
+                                            <span class="custom-option-body">
+                                                <small>Cerveza</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="25" id="customRadioIcon25" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon26">
+                                            <span class="custom-option-body">
+
+                                                <small>_____Ale</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="26" id="customRadioIcon26" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon27">
+                                            <span class="custom-option-body">
+                                                <small>Pulque</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="27" id="customRadioIcon27" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon28">
+                                            <span class="custom-option-body">
+                                                <small>Sake</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="28" id="customRadioIcon28" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon29">
+                                            <span class="custom-option-body">
+
+                                                <small>Sidra</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="29" id="customRadioIcon29" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon30">
+                                            <span class="custom-option-body">
+                                                <small>Vino</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="30" id="customRadioIcon30" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon31">
+                                            <span class="custom-option-body">
+                                                <small>Otro (Especifique):</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="31" id="customRadioIcon31" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+
+
+                        {{-- Sección de Clasificación de Bebidas Alcohólicas --}}
+                        <div id="clasificacion-bebidas-section-2">
+                            <h6 class="my-4">Clasificación de Bebida(s) Alcohólica(s):</h6>
+                            <div class="row gy-3 align-items-start">
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon32">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Aguardiente</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="32" id="customRadioIcon32" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon33">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Armagnac</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="33" id="customRadioIcon33" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon34">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Bacanora</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="34" id="customRadioIcon34" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon35">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Brandy</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="35" id="customRadioIcon35" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon36">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Cachaca</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="36" id="customRadioIcon36" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon37">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Comiteco</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="37" id="customRadioIcon37" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon38">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Ginebra</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="38" id="customRadioIcon38" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+
+                        {{-- Sección de Clasificación de Bebidas Alcohólicas --}}
+                        <div id="clasificacion-bebidas-section-3">
+                            <h6 class="my-4">Clasificación de Bebida(s) Alcohólica(s):</h6>
+                            <div class="row gy-3 align-items-start">
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon39">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small><br>Anís <br></small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="39" id="customRadioIcon39" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon40">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small><br>Amaretto <br></small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="40" id="customRadioIcon40" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon41">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Crema o licor de cassis</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="41" id="customRadioIcon41" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon42">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Crema o licor de café</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="42" id="customRadioIcon42" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon43">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Crema o licor de cacao</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="43" id="customRadioIcon43" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon44">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Crema o licor de menta</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="44" id="customRadioIcon44" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon45">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small><br>Fernet <br></small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="45" id="customRadioIcon45" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon46">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small><br>Irish cream <br></small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="46" id="customRadioIcon46" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon47">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small><br>Licor amargo <br></small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="47" id="customRadioIcon47" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon48">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Licores de frutas</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="48" id="customRadioIcon48" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon49">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small><br>Sambuca <br></small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="49" id="customRadioIcon49" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon50">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small><br>Xtabentún <br></small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="50" id="customRadioIcon50" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon51">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Otro (Especifique):</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="51" id="customRadioIcon51" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+
+                        {{-- Sección de Clasificación de Bebidas Alcohólicas --}}
+                        <div id="clasificacion-bebidas-section-4">
+                            <h6 class="my-4">Clasificación de Bebida(s) Alcohólica(s):</h6>
+                            <div class="row gy-3 align-items-start">
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon52">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Habanero</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="52" id="customRadioIcon52" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon53">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Kirsch</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="53" id="customRadioIcon53" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon54">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Poire o Perry</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="54" id="customRadioIcon54" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon55">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Ron</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="55" id="customRadioIcon55" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon56">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Raicilla</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="56" id="customRadioIcon56" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon57">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Sambuca</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="57" id="customRadioIcon57" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon58">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Sotol</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="58" id="customRadioIcon58" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon59">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Vodka</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="59" id="customRadioIcon59" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon60">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Whisky o Whiskey</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="60" id="customRadioIcon60" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+
+
+                        {{-- Sección de Clasificación de Cócteles --}}
+                        <div id="clasificacion-cocteles-section">
+                            <h6 class="my-4">Clasificación de Cóctel(es):</h6>
+                            <div class="row gy-3 align-items-start">
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon61">
+                                            <span class="custom-option-body">
+                                                <i class="ri-cocktail-fill"></i>
+                                                <small>Cóctel de _______</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="61" id="customRadioIcon61" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon62">
+                                            <span class="custom-option-body">
+                                                <i class="ri-cocktail-fill"></i>
+                                                <small>Cóctel sabor de ___________</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="62" id="customRadioIcon62" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon63">
+                                            <span class="custom-option-body">
+                                                <i class="ri-cocktail-fill"></i>
+                                                <small>Cóctel de o al ____________</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="63" id="customRadioIcon63" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon64">
+                                            <span class="custom-option-body">
+                                                <i class="ri-cocktail-fill"></i>
+                                                <small>Cóctel con __________</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="64" id="customRadioIcon64" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
 
 
                         {{-- fin de la secciones ocultas --}}
@@ -356,7 +986,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <div class="form-floating form-floating-outline">
-                                    <select class="form-control custom-select" name="estado_fiscal" id="estado" required>
+                                    <select class="form-control select2" name="estado_fiscal" id="estado" required>
                                         <option disabled selected>selecciona un estado</option>
                                         @foreach ($estados as $estado)
                                             <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
@@ -391,14 +1021,13 @@
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
                                         <input type="text" class="form-control" id="localidad2" name="localidad2"
-                                             placeholder=" ">
+                                            placeholder=" ">
                                         <label for="localidad2">Domicilio completo</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado2" id="estado2"
-                                            >
+                                        <select class="form-control custom-select" name="estado2" id="estado2">
                                             <option disabled selected>selecciona un estado</option>
                                             @foreach ($estados as $estado)
                                                 <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
@@ -419,18 +1048,18 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="localidad3" name="domicilio_envasadora"
-                                             placeholder=" ">
+                                        <input type="text" class="form-control" id="localidad3"
+                                            name="domicilio_envasadora" placeholder=" ">
                                         <label for="localidad3">Domicilio completo</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado_envasadora" id="estado3"
-                                            >
+                                        <select class="form-control custom-select" name="estado_envasadora"
+                                            id="estado3">
                                             <option disabled selected>selecciona un estado</option>
                                             @foreach ($estados as $estado)
-                                            <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
+                                                <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
                                             @endforeach
                                         </select>
                                         <label for="estado3">Estado</label>
@@ -448,15 +1077,15 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="localidad4" name="domicilio_productora"
-                                             placeholder=" ">
+                                        <input type="text" class="form-control" id="localidad4"
+                                            name="domicilio_productora" placeholder=" ">
                                         <label for="localidad4">Domicilio completo</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado_productora" id="estado4"
-                                            >
+                                        <select class="form-control custom-select" name="estado_productora"
+                                            id="estado4">
                                             <option disabled selected>selecciona un estado</option>
                                             @foreach ($estados as $estado)
                                                 <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
@@ -476,15 +1105,15 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" id="localidad5" name="domicilio_comercializadora"
-                                             placeholder=" ">
+                                        <input type="text" class="form-control" id="localidad5"
+                                            name="domicilio_comercializadora" placeholder=" ">
                                         <label for="localidad5">Domicilio completo</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado_comercializadora" id="estado5"
-                                            >
+                                        <select class="form-control custom-select" name="estado_comercializadora"
+                                            id="estado5">
                                             <option disabled selected>selecciona un estado</option>
                                             @foreach ($estados as $estado)
                                                 <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
@@ -519,6 +1148,38 @@
                             <h6 class="mb-0">Información sobre los Procesos y productos a certificar por el cliente</h6>
                         </div>
                         <div class="row g-5">
+                            <div class="col-4">
+                                <div class="form-floating form-floating-outline">
+                                    <select class="form-control" id="certificacion" name="certificacion"
+                                        aria-label="¿Cuenta con una Certificación de Sistema de Gestión de Calidad?">
+                                        <option value="" disabled selected>¿Cuenta con una Certificación de Sistema
+                                            de Gestión de Calidad?</option>
+                                        <option value="si">Sí</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    <label for="certificacion">¿Cuenta con una Certificación de Sistema de Gestión de
+                                        Calidad?</label>
+                                </div>
+                            </div>
+
+                            <div class="col-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" class="form-control" id="¿Cual?" name="¿Cual?"
+                                        autocomplete="off" placeholder="¿Cual?">
+                                    <label for="¿Cual?">¿Cual?</label>
+                                </div>
+                            </div>
+
+                            <div class="col-4">
+                                <div class="form-floating form-floating-outline">
+                                    <input type="text" class="form-control" id="emiteCertificacion"
+                                        name="emiteCertificacion" autocomplete="off"
+                                        placeholder="¿Quién emite Certificación?">
+                                    <label for="¿Quién emite Certificación?">¿Quién emite Certificación?</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-5 mt-3">
                             <div class="col-12">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <textarea maxlength="2000" class="form-control h-px-100" id="certification-details" name="info_procesos" required

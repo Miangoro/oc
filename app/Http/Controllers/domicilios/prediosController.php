@@ -674,6 +674,11 @@ class PrediosController extends Controller
     // Obtener la inspección relacionada a partir del id_solicitud de la solicitud
     $inspeccionData = inspecciones::where('id_solicitud', $solicitud->id_solicitud)->first();
 
+    // Obtener todas las coordenadas relacionadas con la inspección
+    $coordenadas = PredioCoordenadas::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
+    $caracteristicas = PrediosCaracteristicasMaguey::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
+    $plantacion = predio_plantacion::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
+
       $pdf = Pdf::loadView('pdfs.Registro_de_Predios_Maguey_Agave' , [
           'inspeccion' => $inspeccion,
           'vigencia' => $vigencia,
@@ -681,6 +686,9 @@ class PrediosController extends Controller
           'inspeccionData' => $inspeccionData, // Pasar la inspección relacionada
           'predio' => $predio,
           'solicitud' => $solicitud, // Pasar la solicitud
+          'coordenadas' => $coordenadas,
+          'caracteristicas' => $caracteristicas,
+          'plantacion' => $plantacion,
       ] );
       return $pdf->stream('F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.pdf');
     }
