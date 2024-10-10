@@ -1163,12 +1163,14 @@ $(function () {
                 <td>${item.folio_inicial}</td>
                 <td>${item.folio_final}</td>
                 <td>
-                <a href="javascript:;" class="edit-activos" 
-                   data-id="${item.id}" 
-                   data-bs-toggle="modal" 
-                   data-bs-target="#edit_activarHologramas">
-                    <i class="ri-barcode-box-line ri-20px text-primary"></i> Editar activos
-                </a>
+                <button type="button" class="btn btn-primary">
+                  <a href="javascript:;" class="edit-activos" style="color:#FFF" 
+                    data-id="${item.id}" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#edit_activarHologramas">
+                    Editar activo
+                  </a>
+                </button>
             </td>
             </tr>
         `;
