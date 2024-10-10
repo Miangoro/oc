@@ -501,8 +501,11 @@ public function update(Request $request)
     public function editActivos($id)
     {
         try {
-            // Obtener los registros
-            $activaciones = activarHologramasModelo::where('id_solicitud', '=', $id)->get();
+            // Obtener los registros con un join para traer el num_servicio de inspecciones
+            $activaciones = activarHologramasModelo::where('activar_hologramas.id_solicitud', $id)
+                ->join('inspecciones', 'activar_hologramas.id_inspeccion', '=', 'inspecciones.id_inspeccion')
+                ->select('activar_hologramas.*', 'inspecciones.num_servicio')
+                ->get();
     
             // Decodificar el JSON de los folios en cada registro
             $activaciones->transform(function($item) {
@@ -517,6 +520,7 @@ public function update(Request $request)
             return response()->json(['error' => 'Error al obtener las activaciones'], 500);
         }
     }
+    
     
 
 

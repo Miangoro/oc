@@ -1157,12 +1157,18 @@ $(function () {
                 <td>${item.clase}</td>
                 <td>${item.contenido}</td>
                 <td>${item.no_lote_envasado}</td>
-                <td>${item.id_tipo}</td>
+              <td>${item.num_servicio}</td> <!-- Cambiado de id_inspeccion a num_servicio -->
                 <td>${item.lugar_produccion}</td>
                 <td>${item.lugar_envasado}</td>
-                <td>${item.folio_inicial}</td>
-                <td>${item.folio_final}</td>
                 <td>
+                <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">${item.folio_inicial}</a>
+                </td>
+                  <td>
+                    <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">
+                      ${item.folio_final}
+                    </a>
+                  </td>                
+                  <td>
                 <button type="button" class="btn btn-primary">
                   <a href="javascript:;" class="edit-activos" style="color:#FFF" 
                     data-id="${item.id}" 
