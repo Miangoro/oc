@@ -1238,10 +1238,10 @@ $(document).on('click', '.edit-activos', function () {
                   </button>
               </th>
               <td>
-                  <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" value="${data.folio_inicial || ''}" />
+                  <input type="number" class="form-control form-control-sm" name="edit_folio_inicial[]" value="${data.folio_inicial || ''}" />
               </td>
               <td>
-                  <input type="number" class="form-control form-control-sm" name="edit_rango_final[]" value="${data.folio_final || ''}" />
+                  <input type="number" class="form-control form-control-sm" name="edit_folio_final[]" value="${data.folio_final || ''}" />
               </td>
           </tr>
       `;

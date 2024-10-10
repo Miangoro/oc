@@ -155,11 +155,11 @@
                                             class="ri-delete-bin-5-fill"></i> </button>
                                 </th>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]"
+                                    <input type="number" class="form-control form-control-sm" name="edit_folio_inicial[]"
                                         id="folio_inicial">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="edit_rango_final[]"
+                                    <input type="number" class="form-control form-control-sm" name="edit_folio_final[]"
                                         id="folio_final">
                                 </td>
                             </tr>
