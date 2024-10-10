@@ -1142,13 +1142,9 @@ $(function () {
 
     $.get('/solicitud_holograma/editActivos/' + id, function (data) {
 
-<<<<<<< HEAD
-      $('#tablita').empty(); // Rellenar el formulario con los datos obtenidos
-=======
       $('#tablita').empty();
 
       // Rellenar el formulario con los datos obtenidos
->>>>>>> 77a8daab7db649a1a851a0162e6b51fa50224b6c
       data.forEach(function (item) {
         // Crear una nueva fila con los datos
         var fila = `
@@ -1207,12 +1203,13 @@ $(function () {
   });
 
 
-// EDITAR HOLOGRAMAS ACTIVOS
-$(document).on('click', '.edit-activos', function () {
-  var id = $(this).data('id');
+  // EDITAR HOLOGRAMAS ACTIVOS
+  $(document).on('click', '.edit-activos', function () {
+    var id = $(this).data('id');
 
-  // Hacer la solicitud GET
-  $.get('/solicitud_holograma/editActivados/' + id, function (data) {
+    // Hacer la solicitud GET
+    $.get('/solicitud_holograma/editActivados/' + id, function (data) {
+      console.log(data);
 
       // Asignar valores a los campos del formulario
       $('#edit_id').val(data.id);
@@ -1230,62 +1227,58 @@ $(document).on('click', '.edit-activos', function () {
       $('#edit_lugar_produccion').val(data.lugar_produccion);
       $('#edit_lugar_envasado').val(data.lugar_envasado);
 
-      // Limpiar el contenido previo de la tabla
       $('#edit_contenidoRango').empty();
 
-      // Añadir el nuevo rango de folios a la tabla
-      var newRow = `
+      data.folio_inicial.forEach(function (folioInicial, index) {
+
+        var folioFinal = data.folio_final[index];
+        var newRow = `
           <tr>
               <th>
                   <button type="button" class="btn btn-danger remove-row">
                       <i class="ri-delete-bin-5-fill"></i>
                   </button>
               </th>
-              <td>
-                  <input type="number" class="form-control form-control-sm" name="edit_folio_inicial[]" value="${data.folio_inicial || ''}" />
-              </td>
-              <td>
-                  <input type="number" class="form-control form-control-sm" name="edit_folio_final[]" value="${data.folio_final || ''}" />
-              </td>
-          </tr>
-      `;
+              <td><input type="number" class="form-control form-control-sm" name="rango_inicial[]" value="${folioInicial}"></td>
+              <td><input type="number" class="form-control form-control-sm" name="rango_final[]" value="${folioFinal}"></td>
+          </tr>`;
+        $('#edit_contenidoRango').append(newRow);
+      });
 
-      $('#edit_contenidoRango').append(newRow);
 
-      // Mostrar el modal de edición
       $('#edit_activarHologramas').modal('show');
-  }).fail(function (jqXHR, textStatus, errorThrown) {
+    }).fail(function (jqXHR, textStatus, errorThrown) {
       console.error('Error: ' + textStatus + ' - ' + errorThrown);
       Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al obtener los datos del lote',
-          customClass: {
-              confirmButton: 'btn btn-danger'
-          }
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos del lote',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
       });
+    });
   });
-});
 
 
-/* data.activarHologramasModelo.forEach(function(testigo, index) {
-  var newRow = `
-  <tr>
-      <th>
-          <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
-              <i class="ri-delete-bin-5-fill"></i>
-          </button>
-      </th>
-      <td>
-          <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" value="${testigo.folio_inicial}" />
-      </td>
-      <td>
-          <input type="number" class="form-control form-control-sm" name="edit_rango_final[]" value="${testigo.folio_final}" />
-      </td>
-  </tr>
-`;
-  $('#edit_contenidoRango').append(newRow);
-}); */
+  /* data.activarHologramasModelo.forEach(function(testigo, index) {
+    var newRow = `
+    <tr>
+        <th>
+            <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
+                <i class="ri-delete-bin-5-fill"></i>
+            </button>
+        </th>
+        <td>
+            <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" value="${testigo.folio_inicial}" />
+        </td>
+        <td>
+            <input type="number" class="form-control form-control-sm" name="edit_rango_final[]" value="${testigo.folio_final}" />
+        </td>
+    </tr>
+  `;
+    $('#edit_contenidoRango').append(newRow);
+  }); */
 
 
 
