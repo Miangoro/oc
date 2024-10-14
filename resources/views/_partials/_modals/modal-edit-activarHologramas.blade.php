@@ -11,8 +11,8 @@
                 <form id="edit_activarHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
 
-                        <input type="text"  id="edit_id" name="id">
-                        <input type="text" id="edit_id_solicitud" name="edit_id_solicitud">
+                        <input type="hidden"  id="edit_id" name="id">
+                        <input type="hidden" id="edit_id_solicitud" name="edit_id_solicitud">
 
 
                         <div class="form-floating form-floating-outline mb-6">

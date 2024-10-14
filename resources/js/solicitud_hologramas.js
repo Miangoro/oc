@@ -1174,7 +1174,7 @@ $(function () {
                     data-id="${item.id}" 
                     data-bs-toggle="modal" 
                     data-bs-target="#edit_activarHologramas">
-                    Editar activo
+                    Editar 
                   </a>
                 </button>
             </td>
@@ -1261,7 +1261,7 @@ $(function () {
   });
 
 
-  // Agregar fila a la tabla de rangos
+  // Agregar FILA A EDIT ACTIVADOS
 $(document).on('click', '.add-row', function () {
   var newRow = `
       <tr>
@@ -1570,7 +1570,7 @@ $(document).on('click', '.remove-row', function () {
 
 
 
-  //Agregar o eliminar tablas +
+  //Agregar o eliminar tablas en add activos
   $(document).ready(function () {
     $('.add-row').click(function () {
       // Añade una nueva fila
