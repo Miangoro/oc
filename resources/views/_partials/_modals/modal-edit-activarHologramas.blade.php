@@ -98,7 +98,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder=">No. de lote de envasado:" id="edit_no_lote_envasado"
+                                <input class="form-control" type="text" placeholder="No. de lote de envasado:" id="edit_no_lote_envasado"
                                     name="edit_no_lote_envasado" />
                                 <label for="edit_no_lote_envasado">No. de lote de envasado:</label>
                             </div>

@@ -1301,92 +1301,185 @@ $(document).on('click', '.remove-row', function () {
 
 
 
-  $('#edit_activarHologramasForm').submit(function (e) {
-    e.preventDefault();
+    // Validar el formulario y enviar los datos de envío
+    const edit_activarHologramasForm = document.getElementById('edit_activarHologramasForm');
 
-    var formData = new FormData(this);
-    console.log()
-
-    $.ajax({
-      url: '/solicitud_holograma/update/updateActivar',
-      type: 'POST',
-      data: formData,
-      contentType: false,
-      processData: false,
-      success: function (response) {
-        Swal.fire({
-          title: 'Éxito',
-          text: response.success,
-          icon: 'success',
-          buttonsStyling: false,
-          customClass: {
-            confirmButton: 'btn btn-success'
+    const fv4 = FormValidation.formValidation(edit_activarHologramasForm, {
+      fields: {
+        edit_id_inspeccion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una opcion'
+            }
           }
-        });
-        $('#edit_activarHologramas').modal('hide');
-        $('.datatables-users').DataTable().ajax.reload();
+        },
+        edit_no_lote_agranel: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el nombre del lote'
+            }
+          }
+        },
+        edit_categoria: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una categoria'
+            }
+          }
+        },
+        edit_no_analisis: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el numero de analisis del laboratorio'
+            }
+          }
+        },        
+        edit_cont_neto: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione el contenido'
+            }
+          }
+        },        
+        edit_unidad: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la unidad'
+            }
+          }
+        },        
+        edit_clase: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione la clase'
+            }
+          }
+        },        
+        edit_contenido: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el contenido'
+            }
+          }
+        },        
+        edit_no_lote_envasado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el numero de lote envasado'
+            }
+          }
+        },
+        edit_id_tipo: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione el tipo'
+            }
+          }
+        },
+        edit_lugar_produccion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el lugar de produccion'
+            }
+          }
+        },
+        edit_lugar_envasado: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el lugar de envasado'
+            }
+          }
+        },
       },
-      error: function (response) {
-        console.log(response);
-
-        Swal.fire({
-          title: 'Error',
-          text: 'Ocurrió un error al actualizar la guía.',
-          icon: 'error',
-          buttonsStyling: false,
-          customClass: {
-            confirmButton: 'btn btn-success'
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
           }
-        });
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
       }
+    }).on('core.form.valid', function (e) {
+      // Prevenir el comportamiento predeterminado
+  
+      var formData = new FormData(edit_activarHologramasForm);
+  
+      $.ajax({
+        url: '/solicitud_holograma/update/updateActivar', // URL de la acción de actualización
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          // Ocultar el modal al éxito
+          $('#edit_activarHologramas').modal('hide');
+          $('.datatables-users').DataTable().ajax.reload();
+  
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.success,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Ocurrió un error al actualizar la guía.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
     });
-  });
 
-
+//validacion en agregar activos
   const activarHologramasForm = document.getElementById('activarHologramasForm');
 
   // Validación del formulario
   const fv5 = FormValidation.formValidation(activarHologramasForm, {
     fields: {
-      folio: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor introduzca un folio'
-          }
-        }
-      },
       id_inspeccion: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione un cliente'
+            message: 'Por favor seleccione una opcion'
           }
         }
       },
       no_lote_agranel: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese una marca'
+            message: 'Por favor ingrese el nombre del lote'
           }
         }
       },
       categoria: {
         validators: {
           notEmpty: {
-            message: 'falta el ID del usuario'
+            message: 'Por favor seleccione una categoria'
           }
         }
       },
       no_analisis: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el numero de hologramas solicitados'
+            message: 'Por favor ingrese el numero de analisis del laboratorio'
           }
         }
       },
       cont_neto: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese un destino de lote'
+            message: 'Por favor seleccione el contenido'
           }
         }
       },
@@ -1394,49 +1487,49 @@ $(document).on('click', '.remove-row', function () {
       unidad: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese un destino de lote'
+            message: 'Por favor seleccione la unidad'
           }
         }
       },
       clase: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese un destino de lote'
+            message: 'Por favor seleccione la clase'
           }
         }
       },
       contenido: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese un destino de lote'
+            message: 'Por favor ingrese el contenido'
           }
         }
       },
       no_lote_envasado: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese un destino de lote'
+            message: 'Por favor ingrese el numero de lote envasado'
           }
         }
       },
       id_tipo: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese un destino de lote'
+            message: 'Por favor seleccione el tipo'
           }
         }
       },
       lugar_produccion: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese un destino de lote'
+            message: 'Por favor ingrese el lugar de produccion'
           }
         }
       },
       lugar_envasado: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese un destino de lote'
+            message: 'Por favor ingrese el lugar de envasado'
           }
         }
       }
