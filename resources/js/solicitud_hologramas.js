@@ -1261,6 +1261,44 @@ $(function () {
   });
 
 
+  // Agregar fila a la tabla de rangos
+$(document).on('click', '.add-row', function () {
+  var newRow = `
+      <tr>
+          <th>
+              <button type="button" class="btn btn-danger remove-row">
+                  <i class="ri-delete-bin-5-fill"></i>
+              </button>
+          </th>
+          <td>
+              <input type="number" class="form-control form-control-sm" name="rango_inicial[]" placeholder="Rango inicial">
+          </td>
+          <td>
+              <input type="number" class="form-control form-control-sm" name="rango_final[]" placeholder="Rango final">
+          </td>
+      </tr>`;
+  
+  $('#edit_contenidoRango').append(newRow);
+});
+
+// Eliminar fila de la tabla
+$(document).on('click', '.remove-row', function () {
+  // Asegúrate de que al menos una fila permanezca en la tabla
+  if ($('#edit_contenidoRango tr').length > 1) {
+      $(this).closest('tr').remove();
+  } else {
+      Swal.fire({
+          icon: 'warning',
+          title: '¡Advertencia!',
+          text: 'Debes tener al menos un rango.',
+          customClass: {
+              confirmButton: 'btn btn-warning'
+          }
+      });
+  }
+});
+
+
 
 
   $('#edit_activarHologramasForm').submit(function (e) {
