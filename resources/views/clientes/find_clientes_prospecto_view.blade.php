@@ -11,7 +11,8 @@
   'resources/assets/vendor/libs/select2/select2.scss',
   'resources/assets/vendor/libs/@form-validation/form-validation.scss',
   'resources/assets/vendor/libs/animate-css/animate.scss',
-  'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss'
+  'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
+   'resources\assets\vendor\libs\spinkit\spinkit.scss'
 ])
 @endsection
 
@@ -69,8 +70,8 @@
       <form class="add-new-user pt-0" id="addNewUserForm">
         <input type="hidden" name="id_empresa" id="empresa_id">
         <div class="row">
-         
-                    
+
+
                       <div class="col-md-12">
                             <div class="card mb-5">
                                 <div class="card-body">
@@ -132,16 +133,16 @@
                             </div>
                         </div>
                     </div>
-                        
+
                     <div class="form-floating form-floating-outline mb-6 mt-5">
                       <textarea name="comentarios" class="form-control h-px-100" id="exampleFormControlTextarea1" placeholder="Comentarios aquí..."></textarea>
                       <label for="exampleFormControlTextarea1">Comentarios</label>
                     </div>
-                        
-                   
-               
-        
-          
+
+
+
+
+
         </div>
         <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Valiar</button>
         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
@@ -153,6 +154,7 @@
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-aceptar-cliente')
+@include('_partials/_modals/modal-edit-cliente-prospecto')
 <!-- /Modal -->
 @endsection
 
@@ -170,10 +172,10 @@
             contenido = '<input value="'+response.normas[index].id_norma+'" type="hidden" name="id_norma[]"/><div class="col-12 col-md-12 col-sm-12"><div class="form-floating form-floating-outline"><input type="text" id="numero_cliente'+response.normas[index].id_norma+'" name="numero_cliente[]" class="form-control" placeholder="Introducir el número de cliente" /><label for="modalAddressFirstName">Número de cliente para la norma '+response.normas[index].norma+'</label></div></div><br>' + contenido;
             console.log(response.normas[index].norma);
           }
-           
+
 
             $('.contenido').html(contenido);
-           
+
             // Abrir el modal
             $('#aceptarCliente').modal('show');
         },

@@ -483,6 +483,9 @@ Route::get('/certificado_productor_mezcal', [CartaAsignacionController::class, '
 //Clientes prospecto y confirmado
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');
 Route::resource('/empresas-list', clientesProspectoController::class);
+Route::get('/clientes-list/{id}/edit', [clientesProspectoController::class, 'edit']);
+Route::post('/clientes/{id}/update', [clientesProspectoController::class, 'update'])->name('clientes.update');
+
 Route::post('/aceptar-cliente', [clientesProspectoController::class, 'aceptarCliente']);
 Route::get('/lista_empresas/{id}', [getFuncionesController::class, 'find_clientes_prospecto']);
 Route::get('/lista_inspetores', [getFuncionesController::class, 'usuariosInspectores']);
