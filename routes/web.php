@@ -196,7 +196,7 @@ use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\solicitudes\solicitudesController;
 use App\Http\Controllers\TrazabilidadController;
 use App\Http\Controllers\pdf_llenado\PdfController;
-
+use App\Http\Controllers\revision\RevisionPersonalController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -709,6 +709,7 @@ Route::post('/solicitud_holograma/editHolograma', [solicitudHolograma::class, 'e
 Route::post('/solicitud_holograma/storeActivar', [solicitudHolograma::class, 'storeActivar']);
 Route::get('/solicitud_holograma/editActivos/{id}', [solicitudHolograma::class, 'editActivos']);
 Route::get('/solicitud_holograma/editActivados/{id}', [solicitudHolograma::class, 'editActivados']);
+Route::post('/solicitud_holograma/update/updateActivar', [solicitudHolograma::class, 'updateActivar']);
 
 
 

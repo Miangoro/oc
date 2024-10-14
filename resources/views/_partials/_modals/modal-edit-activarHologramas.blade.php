@@ -11,8 +11,8 @@
                 <form id="edit_activarHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
 
-                        <input type="text"  id="edit_id" name="edit_id">
-                        <input type="text" id="edit_id_solicitud" name="edit_id_solicitud">
+                        <input type="hidden"  id="edit_id" name="id">
+                        <input type="hidden" id="edit_id_solicitud" name="edit_id_solicitud">
 
 
                         <div class="form-floating form-floating-outline mb-6">
@@ -98,7 +98,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder=">No. de lote de envasado:" id="edit_no_lote_envasado"
+                                <input class="form-control" type="text" placeholder="No. de lote de envasado:" id="edit_no_lote_envasado"
                                     name="edit_no_lote_envasado" />
                                 <label for="edit_no_lote_envasado">No. de lote de envasado:</label>
                             </div>
@@ -155,11 +155,11 @@
                                             class="ri-delete-bin-5-fill"></i> </button>
                                 </th>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="edit_folio_inicial[]"
+                                    <input type="number" class="form-control form-control-sm" name="rango_inicial[]"
                                         id="folio_inicial">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="edit_folio_final[]"
+                                    <input type="number" class="form-control form-control-sm" name="rango_final[]"
                                         id="folio_final">
                                 </td>
                             </tr>
