@@ -57,11 +57,26 @@
            orderable: false,
            render: function (data, type, full, meta) {
             return (
-                '<div class="d-flex align-items-center gap-50">' +
-                `<button class="btn btn-sm btn-icon cuest btn-text-secondary rounded-pill waves-effect" data-id="${full['id_revision']}" data-revisor-id="${full['id_revisor']}" data-bs-toggle="modal" data-bs-target="#fullscreenModal"><i class="ri-draft-fill"></i></button>` +
-                '</div>'
-            );
-                                                     
+              '<div class="d-flex align-items-center gap-50">' +
+              `<button class="btn btn-sm btn-icon cuest btn-text-secondary rounded-pill waves-effect" ` +
+              `data-id="${full['id_revision']}" ` +
+              `data-revisor-id="${full['id_revisor']}" ` +
+              `data-dictamen-id="${full['id_certificado']}" ` + // Asegúrate de que 'id_certificado' esté en el objeto 'full'
+              `data-num-certificado="${full['num_certificado']}" ` + // Agregar num_certificado
+              `data-num-dictamen="${full['num_dictamen']}" ` + // Agregar num_dictamen
+              `data-tipo-dictamen="${full['tipo_dictamen']}" ` +
+              `data-fecha-vigencia="${full['fecha_vigencia']}" ` + // Agregar fecha de vigencia
+              `data-fecha-vencimiento="${full['fecha_vencimiento']}" ` + // Agregar fecha de vencimiento
+              `data-bs-toggle="modal" ` +
+              `data-bs-target="#fullscreenModal">` +
+              `<i class="ri-draft-fill"></i></button>` +
+              '</div>'
+          );
+          
+            
+          
+          
+                                                           
            }
          }
        ],
@@ -230,14 +245,6 @@
              }
            ]
          },
-         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Certificado</span>',
-          className: 'add-new btn btn-primary waves-effect waves-light',
-          attr: {
-            'data-bs-toggle': 'modal',
-            'data-bs-target': '#addCertificadoModal'
-          }
-        }
        ],
         responsive: {
          details: {
@@ -274,26 +281,84 @@
      });
    } 
 
-  //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
+// FUNCIONES DEL FUNCIONAMIENTO DEL CRUD
+$(document).on('click', '.cuest', function () {
+  var id_revision = $(this).data('id');
+  var id_revisor = $(this).data('revisor-id');  
+  var id_certificado = $(this).data('dictamen-id');  
+  var num_certificado = $(this).data('num-certificado'); // Capturar num_certificado
+  var num_dictamen = $(this).data('num-dictamen'); // Capturar num_dictamen
+  var tipo_dictamen = $(this).data('tipo-dictamen'); // Capturar tipo_dictamen
+  var fecha_emision = $(this).data('fecha-emision'); // Capturar fecha de emisión
+  var fecha_vigencia = $(this).data('fecha-vigencia'); // Capturar fecha de vigencia
+  var fecha_vencimiento = $(this).data('fecha-vencimiento'); // Capturar fecha de vencimiento
 
+  // Imprimir en consola
+  console.log('ID de Revisión:', id_revision);
+  console.log('ID del Revisor correspondiente:', id_revisor);
+  console.log('ID del Certificado:', id_certificado);
+  console.log('Número de Certificado:', num_certificado); // Imprimir num_certificado
+  console.log('Número de Dictamen:', num_dictamen); // Imprimir num_dictamen
+  console.log('Tipo de Dictamen:', tipo_dictamen); // Imprimir el tipo de dictamen
+  console.log('Fecha de Vigencia:', fecha_vigencia); // Imprimir fecha de vigencia
+  console.log('Fecha de Vencimiento:', fecha_vencimiento); // Imprimir fecha de vencimiento
 
-  $(document).on('click', '.cuest', function () {
-    var id_revision = $(this).data('id');
-    var id_revisor = $(this).data('revisor-id'); // Obtener el ID del revisor
+  // Aquí puedes usar el id_revision en tu lógica o pasarlo a algún campo
+  $('#edit_id_revision').val(id_revision); 
 
-    // Imprimir en consola
-    console.log('ID de Revisión:', id_revision);
-    console.log('ID del Revisor correspondiente:', id_revisor);
+  // Mostrar el ID del revisor en el modal
+  $('#revisorName').text(`${id_revisor}`); 
 
-    // Aquí puedes usar el id_revision en tu lógica o pasarlo a algún campo
-    $('#edit_id_revision').val(id_revision);  // Si deseas llenar un campo oculto o algo similar
+  // Mostrar el número de certificado en el modal
+  $('#numCertificado').text(`${num_certificado}`); // Asegúrate de tener un elemento con este ID
 
-    // Mostrar el ID del revisor en el modal
-    $('#revisorName').text(`${id_revisor}`); // Establecer el ID del revisor en el modal
+  // Mostrar el número de dictamen en el modal
+  $('#numDictamen').text(`${num_dictamen}`); // Asegúrate de tener un elemento con este ID
 
-    // Mostrar el modal correspondiente
-    $('#fullscreenModal').modal('show');
+  // Mostrar las fechas de emisión y vigencia en el modal
+  $('#fechaVigencia').text(fecha_vigencia); // Asegúrate de tener un elemento con este ID
+  $('#fechaVencimiento').text(fecha_vencimiento); // Asegúrate de tener un elemento con este ID
+
+  // Mostrar el tipo de dictamen en el modal
+  var $colorDictamen, $nombreDictamen;
+  switch (tipo_dictamen) {
+    case 1:
+      $nombreDictamen = 'Productor';
+      $colorDictamen = 'primary'; // Azul
+      break;
+    case 2:
+      $nombreDictamen = 'Envasador';
+      $colorDictamen = 'success'; // Verde
+      break;
+    case 3:
+      $nombreDictamen = 'Comercializador';
+      $colorDictamen = 'info'; // Celeste
+      break;
+    case 4:
+      $nombreDictamen = 'Almacén y bodega';
+      $colorDictamen = 'danger'; // Rojo
+      break;
+    case 5:
+      $nombreDictamen = 'Área de maduración';
+      $colorDictamen = 'warning'; // Amarillo
+      break;
+    default:
+      $nombreDictamen = 'Desconocido';
+      $colorDictamen = 'secondary'; // Gris, color por defecto
+  }
+
+  // Agrega el badge al modal
+  $('#tipoCertificado').html(`<span class="badge rounded-pill bg-label-${$colorDictamen}">${$nombreDictamen}</span>`);
+
+  // Mostrar el modal correspondiente
+  $('#fullscreenModal').modal('show');
 });
+
+
+
+
+
+
 
 
 //end

@@ -100,13 +100,23 @@ class Certificado_InstalacionesController extends Controller
         ]);
     }
     
-    // Función para eliminar
+    // Funcion de eliminar
     public function destroy($id_certificado)
     {
-        $certificado = Certificados::findOrFail($id_certificado);
-        $certificado->delete();
-
-        return response()->json(['success' => 'Certificado eliminado correctamente']);
+        try {
+            // Buscar el certificado
+            $certificado = Certificados::findOrFail($id_certificado);
+    
+            // Eliminar todos los revisores asociados al certificado en la tabla certificados_revision
+            Revisor::where('id_certificado', $id_certificado)->delete();
+    
+            // Luego, eliminar el certificado
+            $certificado->delete();
+    
+            return response()->json(['success' => 'Certificado y revisores eliminados correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al eliminar el certificado y los revisores: ' . $e->getMessage()], 500);
+        }
     }
     
     // Funcion agregar
@@ -336,12 +346,12 @@ class Certificado_InstalacionesController extends Controller
                 $user->notify(new GeneralNotification($data1));
             }
     
-            try {
+/*             try {
                 Mail::to('carloszarco888@gmail.com')->send(new CorreoCertificado($data1));
             } catch (\Exception $e) {
                 // Captura y muestra el error
                 dd('Error al enviar el correo: ' . $e->getMessage());
-            }
+            } */
             
             return response()->json([
                 'message' => $message ?? 'Revisor del OC asignado exitosamente',
