@@ -334,7 +334,7 @@ $(function () {
               text: '<i class="ri-printer-line me-1" ></i>Print',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                 // prevent avatar to be print
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -372,7 +372,7 @@ $(function () {
               text: '<i class="ri-file-text-line me-1" ></i>Csv',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                 // prevent avatar to be print
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -397,7 +397,7 @@ $(function () {
               text: '<i class="ri-file-excel-line me-1"></i>Excel',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                 // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -422,7 +422,7 @@ $(function () {
               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7],                // prevent avatar to be display
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],                // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
                     if (inner.length <= 0) return inner;
@@ -446,7 +446,7 @@ $(function () {
               text: '<i class="ri-file-copy-line me-1"></i>Copy',
               className: 'dropdown-item',
               exportOptions: {
-                columns: [1, 2, 3, 4, 5, 6, 7],
+                columns: [1, 2, 3, 4, 5, 6, 7, 8, 9],
                 // prevent avatar to be copy
                 format: {
                   body: function (inner, coldex, rowdex) {
@@ -1174,9 +1174,10 @@ $(function () {
                     data-id="${item.id}" 
                     data-bs-toggle="modal" 
                     data-bs-target="#edit_activarHologramas">
-                    Editar 
+                    <i class="ri-edit-fill"></i> Editar
                   </a>
                 </button>
+
             </td>
             </tr>
         `;
@@ -1262,8 +1263,8 @@ $(function () {
 
 
   // Agregar FILA A EDIT ACTIVADOS
-$(document).on('click', '.add-row', function () {
-  var newRow = `
+  $(document).on('click', '.add-row', function () {
+    var newRow = `
       <tr>
           <th>
               <button type="button" class="btn btn-danger remove-row">
@@ -1277,172 +1278,172 @@ $(document).on('click', '.add-row', function () {
               <input type="number" class="form-control form-control-sm" name="rango_final[]" placeholder="Rango final">
           </td>
       </tr>`;
-  
-  $('#edit_contenidoRango').append(newRow);
-});
 
-// Eliminar fila de la tabla
-$(document).on('click', '.remove-row', function () {
-  // Asegúrate de que al menos una fila permanezca en la tabla
-  if ($('#edit_contenidoRango tr').length > 1) {
+    $('#edit_contenidoRango').append(newRow);
+  });
+
+  // Eliminar fila de la tabla
+  $(document).on('click', '.remove-row', function () {
+    // Asegúrate de que al menos una fila permanezca en la tabla
+    if ($('#edit_contenidoRango tr').length > 1) {
       $(this).closest('tr').remove();
-  } else {
+    } else {
       Swal.fire({
-          icon: 'warning',
-          title: '¡Advertencia!',
-          text: 'Debes tener al menos un rango.',
-          customClass: {
-              confirmButton: 'btn btn-warning'
-          }
-      });
-  }
-});
-
-
-
-
-    // Validar el formulario y enviar los datos de envío
-    const edit_activarHologramasForm = document.getElementById('edit_activarHologramasForm');
-
-    const fv4 = FormValidation.formValidation(edit_activarHologramasForm, {
-      fields: {
-        edit_id_inspeccion: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una opcion'
-            }
-          }
-        },
-        edit_no_lote_agranel: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el nombre del lote'
-            }
-          }
-        },
-        edit_categoria: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una categoria'
-            }
-          }
-        },
-        edit_no_analisis: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el numero de analisis del laboratorio'
-            }
-          }
-        },        
-        edit_cont_neto: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione el contenido'
-            }
-          }
-        },        
-        edit_unidad: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione la unidad'
-            }
-          }
-        },        
-        edit_clase: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione la clase'
-            }
-          }
-        },        
-        edit_contenido: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el contenido'
-            }
-          }
-        },        
-        edit_no_lote_envasado: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el numero de lote envasado'
-            }
-          }
-        },
-        edit_id_tipo: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione el tipo'
-            }
-          }
-        },
-        edit_lugar_produccion: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el lugar de produccion'
-            }
-          }
-        },
-        edit_lugar_envasado: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el lugar de envasado'
-            }
-          }
-        },
-      },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          rowSelector: function (field, ele) {
-            return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
-          }
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-      }
-    }).on('core.form.valid', function (e) {
-      // Prevenir el comportamiento predeterminado
-  
-      var formData = new FormData(edit_activarHologramasForm);
-  
-      $.ajax({
-        url: '/solicitud_holograma/update/updateActivar', // URL de la acción de actualización
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          // Ocultar el modal al éxito
-          $('#edit_activarHologramas').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload();
-  
-          // Mostrar alerta de éxito
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.success,
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-        },
-        error: function (xhr) {
-          // Mostrar alerta de error
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Ocurrió un error al actualizar la guía.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
+        icon: 'warning',
+        title: '¡Advertencia!',
+        text: 'Debes tener al menos un rango.',
+        customClass: {
+          confirmButton: 'btn btn-warning'
         }
       });
-    });
+    }
+  });
 
-//validacion en agregar activos
+
+
+
+  // Validar el formulario y enviar los datos de envío
+  const edit_activarHologramasForm = document.getElementById('edit_activarHologramasForm');
+
+  const fv4 = FormValidation.formValidation(edit_activarHologramasForm, {
+    fields: {
+      edit_id_inspeccion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una opcion'
+          }
+        }
+      },
+      edit_no_lote_agranel: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el nombre del lote'
+          }
+        }
+      },
+      edit_categoria: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una categoria'
+          }
+        }
+      },
+      edit_no_analisis: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el numero de analisis del laboratorio'
+          }
+        }
+      },
+      edit_cont_neto: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione el contenido'
+          }
+        }
+      },
+      edit_unidad: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione la unidad'
+          }
+        }
+      },
+      edit_clase: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione la clase'
+          }
+        }
+      },
+      edit_contenido: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el contenido'
+          }
+        }
+      },
+      edit_no_lote_envasado: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el numero de lote envasado'
+          }
+        }
+      },
+      edit_id_tipo: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione el tipo'
+          }
+        }
+      },
+      edit_lugar_produccion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el lugar de produccion'
+          }
+        }
+      },
+      edit_lugar_envasado: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el lugar de envasado'
+          }
+        }
+      },
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        rowSelector: function (field, ele) {
+          return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+        }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function (e) {
+    // Prevenir el comportamiento predeterminado
+
+    var formData = new FormData(edit_activarHologramasForm);
+
+    $.ajax({
+      url: '/solicitud_holograma/update/updateActivar', // URL de la acción de actualización
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // Ocultar el modal al éxito
+        $('#edit_activarHologramas').modal('hide');
+        $('.datatables-users').DataTable().ajax.reload();
+
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.success,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function (xhr) {
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Ocurrió un error al actualizar la guía.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+  });
+
+  //validacion en agregar activos
   const activarHologramasForm = document.getElementById('activarHologramasForm');
 
   // Validación del formulario
@@ -1533,8 +1534,8 @@ $(document).on('click', '.remove-row', function () {
           }
         }
       }
-  
-  
+
+
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -1550,7 +1551,7 @@ $(document).on('click', '.remove-row', function () {
   }).on('core.form.valid', function (e) {
     //e.preventDefault();
     var formData = new FormData(activarHologramasForm);
-  
+
     $.ajax({
       url: '/solicitud_holograma/storeActivar', // Actualiza con la URL correcta
       type: 'POST',
@@ -1560,7 +1561,7 @@ $(document).on('click', '.remove-row', function () {
       success: function (response) {
         $('#activarHologramas').modal('hide');
         $('.datatables-users').DataTable().ajax.reload();
-  
+
         // Mostrar alerta de éxito
         Swal.fire({
           icon: 'success',
