@@ -568,14 +568,10 @@ class solicitudHolograma extends Controller
             $loteEnvasado->lugar_envasado = $request->edit_lugar_envasado;
 
             // Actualizar los rangos de folios
-            $folios = [];
-            foreach ($request->rango_inicial as $key => $folio_inicial) {
-                $folios[] = [
-                    'folio_inicial' => $folio_inicial,
-                    'folio_final' => $request->rango_final[$key]
-                ];
-            }
-            $loteEnvasado->folios = json_encode($folios);
+            $loteEnvasado->folios = json_encode([
+                'folio_inicial' => $request->rango_inicial,
+                'folio_final' => $request->rango_final // Puedes agregar otros valores también
+            ]);
 
             // Guardar los cambios en la base de datos
             $loteEnvasado->save();
