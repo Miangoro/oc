@@ -1169,7 +1169,7 @@ $(function () {
                     </a>
                   </td>                
                   <td>
-                <button type="button" class="btn btn-primary">
+                <button type="button" class="btn btn-info">
                   <a href="javascript:;" class="edit-activos" style="color:#FFF" 
                     data-id="${item.id}" 
                     data-bs-toggle="modal" 
