@@ -483,9 +483,6 @@ Route::get('/certificado_productor_mezcal', [CartaAsignacionController::class, '
 //Clientes prospecto y confirmado
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');
 Route::resource('/empresas-list', clientesProspectoController::class);
-Route::get('/clientes-list/{id}/edit', [clientesProspectoController::class, 'edit']);
-Route::post('/clientes/{id}/update', [clientesProspectoController::class, 'update'])->name('clientes.update');
-
 Route::post('/aceptar-cliente', [clientesProspectoController::class, 'aceptarCliente']);
 Route::get('/lista_empresas/{id}', [getFuncionesController::class, 'find_clientes_prospecto']);
 Route::get('/lista_inspetores', [getFuncionesController::class, 'usuariosInspectores']);
@@ -705,11 +702,9 @@ Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2
 Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
 Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
 Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
-Route::post('/solicitud_holograma/editHolograma', [solicitudHolograma::class, 'editHolograma']);
 Route::post('/solicitud_holograma/storeActivar', [solicitudHolograma::class, 'storeActivar']);
 Route::get('/solicitud_holograma/editActivos/{id}', [solicitudHolograma::class, 'editActivos']);
 Route::get('/solicitud_holograma/editActivados/{id}', [solicitudHolograma::class, 'editActivados']);
-Route::post('/solicitud_holograma/update/updateActivar', [solicitudHolograma::class, 'updateActivar']);
 
 
 
@@ -790,3 +785,7 @@ Route::get('/Solicitud-Servicio-UNIIC', [CartaAsignacionController::class, 'Soli
 Route::get('/empresa_contrato/{id_empresa}', [clientesConfirmadosController::class, 'obtenerContratosPorEmpresa']);
 Route::get('/empresa_num_cliente/{id_empresa}', [clientesConfirmadosController::class, 'obtenerNumeroCliente']);
 Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'actualizarRegistros']);
+
+//Revisones
+Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManagement'])->name('revision-personal');
+Route::resource('/personal-list', RevisionPersonalController::class);
