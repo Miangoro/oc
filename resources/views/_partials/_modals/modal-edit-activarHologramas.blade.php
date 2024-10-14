@@ -11,7 +11,7 @@
                 <form id="edit_activarHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
 
-                        <input type="text"  id="edit_id" name="edit_id">
+                        <input type="text"  id="edit_id" name="id">
                         <input type="text" id="edit_id_solicitud" name="edit_id_solicitud">
 
 
@@ -155,11 +155,11 @@
                                             class="ri-delete-bin-5-fill"></i> </button>
                                 </th>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="edit_folio_inicial[]"
+                                    <input type="number" class="form-control form-control-sm" name="rango_inicial[]"
                                         id="folio_inicial">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="edit_folio_final[]"
+                                    <input type="number" class="form-control form-control-sm" name="rango_final[]"
                                         id="folio_final">
                                 </td>
                             </tr>

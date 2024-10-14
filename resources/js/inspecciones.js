@@ -1529,7 +1529,7 @@ $(function () {
         dropdownCssClass: 'select-dropdown'
       });
 
-      var select2Elements = $('.select-comercio');
+      var selectElements = $('.select-comercio');
       initializeSelect(selectElements);
 
     });

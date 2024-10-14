@@ -1261,112 +1261,16 @@ $(function () {
   });
 
 
-  /* data.activarHologramasModelo.forEach(function(testigo, index) {
-    var newRow = `
-    <tr>
-        <th>
-            <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
-                <i class="ri-delete-bin-5-fill"></i>
-            </button>
-        </th>
-        <td>
-            <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" value="${testigo.folio_inicial}" />
-        </td>
-        <td>
-            <input type="number" class="form-control form-control-sm" name="edit_rango_final[]" value="${testigo.folio_final}" />
-        </td>
-    </tr>
-  `;
-    $('#edit_contenidoRango').append(newRow);
-  }); */
 
 
-
-
-  /*   $(document).on('click', '.activar_holograma', function () {
-      var id_solicitud = $(this).data('id');
-    
-      // Realizar la solicitud AJAX para obtener los datos de la solicitud
-      $.get('/solicitud_holograma/editHolograma' + id_solicitud, function (data) {
-    
-        // Rellenar el formulario con los datos obtenidos
-        $('#id_solicitudActivacion').val(data.id_solicitud);
-        $('#id_inspeccion').val(data.id_inspeccion).trigger('change'); // Usamos trigger para actualizar el select2
-        $('#no_lote_agranel').val(data.no_lote_agranel);
-        $('#categoria').val(data.categoria).trigger('change');
-        $('#no_analisis').val(data.no_analisis);
-        $('#cont_neto').val(data.cont_neto);
-        $('#unidad').val(data.unidad).trigger('change');
-        $('#clase').val(data.clase).trigger('change');
-        $('#contenido').val(data.contenido);
-        $('#no_lote_envasado').val(data.no_lote_envasado);
-        $('#tipo_agave').val(data.tipo_agave);
-        $('#lugar_produccion').val(data.lugar_produccion);
-        $('#lugar_envasado').val(data.lugar_envasado);
-        $('#cantidad_hologramas').val(data.cantidad_hologramas);
-    
-        // Limpiar las filas existentes en la tabla de rangos
-        $('#contenidoRango').empty();
-    
-        // Si existen rangos, los añadimos al formulario
-        if (data.rangos && data.rangos.length > 0) {
-          data.rangos.forEach(function (rango) {
-            var rowHtml = `
-              <tr>
-                <th>
-                  <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
-                </th>
-                <td><input type="number" class="form-control form-control-sm" name="rango_inicial[]" value="${rango.folio_inicial}"></td>
-                <td><input type="number" class="form-control form-control-sm" name="rango_final[]" value="${rango.folio_final}"></td>
-              </tr>`;
-            $('#contenidoRango').append(rowHtml);
-          });
-        }
-    
-        // Mostrar el modal de edición
-        $('#activarHologramas').modal('show');
-    
-      }).fail(function (jqXHR, textStatus, errorThrown) {
-        console.error('Error: ' + textStatus + ' - ' + errorThrown);
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al obtener los datos de la solicitud de holograma',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      });
-    });
-    
-    // Agregar nueva fila para los rangos
-    $('.add-row').click(function () {
-      var newRow = `
-        <tr>
-          <th>
-            <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
-          </th>
-          <td><input type="number" class="form-control form-control-sm" name="rango_inicial[]"></td>
-          <td><input type="number" class="form-control form-control-sm" name="rango_final[]"></td>
-        </tr>`;
-      $('#contenidoRango').append(newRow);
-    });
-    
-    // Eliminar fila de rangos
-    $(document).on('click', '.remove-row', function () {
-      $(this).closest('tr').remove();
-    }); */
-
-
-
-  $('#activarHologramasForm').submit(function (e) {
+  $('#edit_activarHologramasForm').submit(function (e) {
     e.preventDefault();
 
     var formData = new FormData(this);
     console.log()
 
     $.ajax({
-      url: '/solicitud_holograma/storeActivar',
+      url: '/solicitud_holograma/update/updateActivar',
       type: 'POST',
       data: formData,
       contentType: false,
@@ -1381,7 +1285,7 @@ $(function () {
             confirmButton: 'btn btn-success'
           }
         });
-        $('#activarHologramas').modal('hide');
+        $('#edit_activarHologramas').modal('hide');
         $('.datatables-users').DataTable().ajax.reload();
       },
       error: function (response) {
@@ -1399,6 +1303,160 @@ $(function () {
       }
     });
   });
+
+
+  const activarHologramasForm = document.getElementById('activarHologramasForm');
+
+  // Validación del formulario
+  const fv5 = FormValidation.formValidation(activarHologramasForm, {
+    fields: {
+      folio: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor introduzca un folio'
+          }
+        }
+      },
+      id_inspeccion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un cliente'
+          }
+        }
+      },
+      no_lote_agranel: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese una marca'
+          }
+        }
+      },
+      categoria: {
+        validators: {
+          notEmpty: {
+            message: 'falta el ID del usuario'
+          }
+        }
+      },
+      no_analisis: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el numero de hologramas solicitados'
+          }
+        }
+      },
+      cont_neto: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese un destino de lote'
+          }
+        }
+      },
+
+      unidad: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese un destino de lote'
+          }
+        }
+      },
+      clase: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese un destino de lote'
+          }
+        }
+      },
+      contenido: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese un destino de lote'
+          }
+        }
+      },
+      no_lote_envasado: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese un destino de lote'
+          }
+        }
+      },
+      id_tipo: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese un destino de lote'
+          }
+        }
+      },
+      lugar_produccion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese un destino de lote'
+          }
+        }
+      },
+      lugar_envasado: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese un destino de lote'
+          }
+        }
+      }
+  
+  
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        rowSelector: function (field, ele) {
+          return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+        }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function (e) {
+    //e.preventDefault();
+    var formData = new FormData(activarHologramasForm);
+  
+    $.ajax({
+      url: '/solicitud_holograma/storeActivar', // Actualiza con la URL correcta
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        $('#activarHologramas').modal('hide');
+        $('.datatables-users').DataTable().ajax.reload();
+  
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.success,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function (xhr) {
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al registrar el lote envasado',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+  });
+
+
+
+
 
   const addRecepcionForm = document.getElementById('addRecepcionForm');
 
