@@ -426,45 +426,7 @@ public function update(Request $request)
         return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
     }
 
-    //metodo para activar hologramas
-/*     public function editHolograma(Request $request)
-{
-    try {
-        // Encuentra la solicitud de activación de hologramas por su ID
-        $solicitud = activarHologramasModelo::findOrFail($request->input('id_solicitud'));
-
-        // Actualiza los datos de la solicitud con los valores enviados desde el formulario
-        $solicitud->id_inspeccion = $request->input('id_inspeccion');
-        $solicitud->no_lote_agranel = $request->input('no_lote_agranel');
-        $solicitud->categoria = $request->input('categoria');
-        $solicitud->no_analisis = $request->input('no_analisis');
-        $solicitud->cont_neto = $request->input('cont_neto');
-        $solicitud->unidad = $request->input('unidad');
-        $solicitud->clase = $request->input('clase');
-        $solicitud->contenido = $request->input('contenido');
-        $solicitud->no_lote_envasado = $request->input('no_lote_envasado');
-        $solicitud->tipo_agave = $request->input('tipo_agave');
-        $solicitud->lugar_produccion = $request->input('lugar_produccion');
-        $solicitud->lugar_envasado = $request->input('lugar_envasado');
-        $solicitud->cantidad_hologramas = $request->input('cantidad_hologramas');
-
-        // Actualiza los rangos inicial y final de hologramas
-        $solicitud->rango_inicial = $request->input('rango_inicial');
-        $solicitud->rango_final = $request->input('rango_final');
-
-        // Guarda la solicitud actualizada en la base de datos
-        $solicitud->save();
-
-        // Retorna una respuesta exitosa
-        return response()->json(['success' => 'Solicitud de activación de hologramas actualizada correctamente']);
-    } catch (\Exception $e) {
-        // Maneja cualquier error que ocurra durante el proceso
-        return response()->json(['error' => 'Error al actualizar la solicitud de activación de hologramas'], 500);
-    }
-} */
-
-
- 
+    //metodo para activar hologramas 
      public function storeActivar(Request $request)
     {
         
