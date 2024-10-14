@@ -28,141 +28,21 @@
                                 <tbody>
                                     <tr>
                                         <td colspan="2">TIPO DE CERTIFICADO</td>
-                                        <td colspan="2" id="tipoCertificado">N/A</td> <!-- Asegúrate de que el ID coincida con el que usaste en JavaScript -->
+                                        <td colspan="2" id="tipoCertificado">N/A</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">NO. CERTIFICADO</td>
-                                        <td colspan="2" id="numCertificado"></td> <!-- Aquí puedes agregar el ID para el contenido -->
+                                        <td colspan="2" id="numCertificado"></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">NO. DICTAMEN</td>
-                                        <td colspan="2" id="numDictamen"></td> <!-- Aquí puedes agregar el ID para el contenido -->
+                                        <td colspan="2" id="numDictamen"></td>
                                     </tr>
                                     <tr>
                                         <td>FECHA DE VIGENCIA</td>
-                                        <td id="fechaVigencia"></td> <!-- Aquí puedes cambiar por la fecha de emisión -->
+                                        <td id="fechaVigencia"></td>
                                         <td>FECHA DE VENCIMIENTO</td>
-                                        <td id="fechaVencimiento"></td> <!-- Aquí puedes cambiar por la fecha de vigencia -->
-                                    </tr>
-                                </tbody>
-                            </table>
-                            
-                        </div>
-
-                        <!-- Segunda Tabla -->
-                        <div class="table-container" style="flex: 1; min-width: 250px;">
-                            <table class="table table-sm table-bordered table-hover table-striped" style="font-size: 11px;">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th colspan="2" scope="col" style="font-size: 11px; text-align: center;">Detalles Adicionales</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>---</td>
-                                        <td>---</td>
-                                    </tr>
-                                    <tr>
-                                        <td>---</td>
-                                        <td>---</td>
-                                    </tr>
-                                    <tr>
-                                        <td>---</td>
-                                        <td>---</td>
-                                    </tr>
-                                    <tr>
-                                        <td>---</td>
-                                        <td>---</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <!-- Primera Tabla -->
-                        <div class="table-container" style="flex: 1; min-width: 250px;">
-                            <table class="table table-sm table-bordered table-hover table-striped" style="font-size: 12px;">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th style="font-size: 11px;">#</th>
-                                        <th style="font-size: 11px;">DOCUMENTOS</th>
-                                        <th style="font-size: 11px;">Elige la respuesta</th>
-                                        <th style="font-size: 11px;">Observaciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Documento 1</td>
-                                        <td>
-                                            <select class="form-select" aria-label="Elige la respuesta">
-                                                <option selected>Selecciona</option>
-                                                <option value="1">Opción 1</option>
-                                                <option value="2">Opción 2</option>
-                                            </select>
-                                        </td>
-                                        <td>Observación 1</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Documento 2</td>
-                                        <td>
-                                            <select class="form-select" aria-label="Elige la respuesta">
-                                                <option selected>Selecciona</option>
-                                                <option value="1">Opción 1</option>
-                                                <option value="2">Opción 2</option>
-                                            </select>
-                                        </td>
-                                        <td>Observación 2</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Documento 3</td>
-                                        <td>
-                                            <select class="form-select" aria-label="Elige la respuesta">
-                                                <option selected>Selecciona</option>
-                                                <option value="1">Opción 1</option>
-                                                <option value="2">Opción 2</option>
-                                            </select>
-                                        </td>
-                                        <td>Observación 3</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Documento 4</td>
-                                        <td>
-                                            <select class="form-select" aria-label="Elige la respuesta">
-                                                <option selected>Selecciona</option>
-                                                <option value="1">Opción 1</option>
-                                                <option value="2">Opción 2</option>
-                                            </select>
-                                        </td>
-                                        <td>Observación 4</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>Documento 5</td>
-                                        <td>
-                                            <select class="form-select" aria-label="Elige la respuesta">
-                                                <option selected>Selecciona</option>
-                                                <option value="1">Opción 1</option>
-                                                <option value="2">Opción 2</option>
-                                            </select>
-                                        </td>
-                                        <td>Observación 5</td>
-                                    </tr>
-                                    <tr>
-                                        <td>6</td>
-                                        <td>Documento 6</td>
-                                        <td>
-                                            <select class="form-select" aria-label="Elige la respuesta">
-                                                <option selected>Selecciona</option>
-                                                <option value="1">Opción 1</option>
-                                                <option value="2">Opción 2</option>
-                                            </select>
-                                        </td>
-                                        <td>Observación 6</td>
+                                        <td id="fechaVencimiento"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -178,12 +58,16 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>---</td>
-                                        <td>---</td>
-                                    </tr>
-                                    <tr>
-                                        <td>---</td>
-                                        <td>---</td>
+                                        <td>CERTIFICADO INSTALACIONES</td>
+                                        <td>
+                                            <i class="ri-file-pdf-2-fill text-danger ri-30px pdf cursor-pointer" 
+                                               data-bs-target="#PdfDictamenIntalaciones" 
+                                               data-tipo="" 
+                                               data-id="" 
+                                               data-registro="" 
+                                               style="cursor: pointer;" 
+                                               id="pdfIcon"></i>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>---</td>
@@ -197,9 +81,52 @@
                             </table>
                         </div>
                     </div>
+
+                        <!-- Tercera Tabla -->
+                    <div style="border: 1px solid #8DA399; padding: 20px; border-radius: 5px;">
+                        <h5 style="font-size: 1.25rem; color: #2c3e50; font-weight: bold; margin: 20px 0;">
+                            REVISION POR PARTE DEL PERSONAL OC PARA LA DECISION DE LA CERTIFICACION
+                        </h5>
+    
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <!-- Primera Tabla -->
+                            <div class="table-container" style="flex: 1; min-width: 250px;">
+                                <table class="table table-sm table-bordered table-hover table-striped" style="font-size: 12px;">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th style="font-size: 11px;">#</th>
+                                            <th style="font-size: 11px;">DOCUMENTOS</th>
+                                            <th style="font-size: 11px;">Elige la respuesta</th>
+                                            <th style="font-size: 11px;">Observaciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>CERTIFICADO INSTALACIONES</td>
+                                            <td>
+                                                <select class="form-select form-select-sm" aria-label="Elige la respuesta">
+                                                    <option selected>Selecciona</option>
+                                                    <option value="1">C</option>
+                                                    <option value="2">NC</option>
+                                                    <option value="3">NA</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <div class="form-floating form-floating-outline">
+                                                    <input type="text" class="form-control" id="floatingInput" placeholder="John Doe" aria-describedby="floatingInputHelp" />
+                                                    <label for="floatingInput">Observaciones</label>
+                                                  </div>                                 
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>        
+                        </div>
+                    </div>
+
                 </div>
-            </div>
-                
+            </div>                
         </div>
     </div>
 </div>

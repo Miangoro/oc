@@ -58,6 +58,7 @@
 </div>
 
 @include('_partials/_modals/modal-cuest-certificados-personal')
+@include('_partials/_modals/modal-pdfs-certificados')
 @endsection
 
 
