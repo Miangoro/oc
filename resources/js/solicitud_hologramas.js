@@ -1248,8 +1248,7 @@ $(function () {
       data.folio_inicial.forEach(function (folioInicial, index) {
 
         var folioFinal = data.folio_final[index];
-        var mermasInicial = data.mermas_inicial[index];
-        var mermasFinal = data.mermas_final[index];
+
 
         var newRow = `
           <tr>
@@ -1260,10 +1259,30 @@ $(function () {
               </th>
               <td><input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]"  min="0" value="${folioInicial}"></td>
               <td><input type="number" class="form-control form-control-sm" name="edit_rango_final[]"  min="0"  value="${folioFinal}"></td>
-               <td><input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]"  min="0" value="${mermasInicial}"></td>
-              <td><input type="number" class="form-control form-control-sm" name="edit_mermas_final[]"  min="0" value="${mermasFinal}"></td>
+
           </tr>`;
         $('#edit_contenidoRango').append(newRow);
+      });
+
+
+      
+      $('#edit_contenidoMermas').empty();
+
+      data.mermas.forEach(function (mermasHolo) {
+
+
+
+        var newRow = `
+          <tr>
+              <th>
+                  <button type="button" class="btn btn-danger remove-row">
+                      <i class="ri-delete-bin-5-fill"></i>
+                  </button>
+              </th>
+              <td><input type="number" class="form-control form-control-sm" name="edit_mermas[]"  min="0" value="${mermasHolo}"></td>
+
+          </tr>`;
+        $('#edit_contenidoMermas').append(newRow);
       });
 
 
@@ -1296,13 +1315,7 @@ $(function () {
           </td>
           <td>
               <input type="number" class="form-control form-control-sm" name="edit_rango_final[]" min="0"  placeholder="Rango final">
-          </td>
-                    <td>
-              <input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]" min="0"  placeholder="Merma inicial">
-          </td>
-          <td>
-              <input type="number" class="form-control form-control-sm" name="edit_mermas_final[]" min="0"  placeholder="Merma final">
-          </td>
+</td>
       </tr>`;
 
     $('#edit_contenidoRango').append(newRow);
@@ -1313,6 +1326,32 @@ $(function () {
     $(this).closest('tr').remove();
 
   });
+
+
+
+    // Agregar FILA A EDIT ACTIVADOS
+    $(document).on('click', '.add-row-editMermas', function () {
+      var newRow = `
+        <tr>
+            <th>
+                <button type="button" class="btn btn-danger remove-row">
+                    <i class="ri-delete-bin-5-fill"></i>
+                </button>
+            </th>
+            <td>
+                <input type="number" class="form-control form-control-sm" name="edit_mermas[]" min="0"  placeholder="Rango inicial">
+            </td>
+
+        </tr>`;
+  
+      $('#edit_contenidoMermas').append(newRow);
+    });
+  
+    // Eliminar fila de la tabla
+    $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+  
+    });
 
 
 
@@ -1716,7 +1755,7 @@ $(function () {
                   <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
               </th>
               <td>
-                  <input type="number" class="form-control form-control-sm mermas" min="0" name="mermas[]"  placeholder="Rango inicial" />
+                  <input type="number" class="form-control form-control-sm " min="0" name="mermas[]"  placeholder="Rango inicial" />
               </td>
 
 

@@ -487,8 +487,10 @@ class solicitudHolograma extends Controller
                 $folios = json_decode($item->folios, true); // Decodifica el JSON
                 $item->folio_inicial = $folios['folio_inicial'] ?? null;
                 $item->folio_final = $folios['folio_final'] ?? null;
-                $item->mermas_inicial = $folios['mermas_inicial'] ?? null;
-                $item->mermas_final = $folios['mermas_final'] ?? null;
+                $mermas = json_decode($item->mermas, true); // Decodifica el JSON
+                $item->mermas = $mermas['mermas'] ?? null;
+
+
 
 
                 return $item;
@@ -557,8 +559,12 @@ class solicitudHolograma extends Controller
             $loteEnvasado->folios = json_encode([
                 'folio_inicial' => $request->edit_rango_inicial,
                 'folio_final' => $request->edit_rango_final, // Puedes agregar otros valores también
-                'mermas_inicial' => $request->edit_mermas_inicial, // Puedes agregar otros valores también
-                'mermas_final' => $request->edit_mermas_final, // Puedes agregar otros valores también
+
+            ]);
+
+            $loteEnvasado->mermas = json_encode([
+                'mermas' => $request->edit_mermas,
+
             ]);
 
             // Guardar los cambios en la base de datos
