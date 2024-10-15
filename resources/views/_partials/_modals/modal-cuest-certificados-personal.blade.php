@@ -1,3 +1,7 @@
+@php
+    use App\Helpers\Helpers;
+@endphp
+
 <!-- Modal -->
 <div class="modal fade" id="fullscreenModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen" role="document">
@@ -5,10 +9,18 @@
             <div style="border-bottom: 2px solid #E0E1E3; background-color: aliceblue;">
                 <div class="modal-header" style="margin-bottom: 20px;">
                     <h5 class="modal-title custom-title" id="modalFullTitle" style="font-weight: bold;">
-                        REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (INSTALACIONES) <br>
-                        <span style="font-weight: normal; margin-left: 10px; color: #D29F42; text-transform: uppercase; font-weight: bold;">{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->razon_social }}</span><br>
-                        <span id="revisorName" style="font-weight: normal; margin-left: 10px; color: #D29F42; text-transform: uppercase; font-weight: bold;"></span>
+                        REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (INSTALACIONES)
                     </h5>
+                    <span style="font-weight: normal; margin-left: 10px; color: #E3D94C; text-transform: uppercase; font-weight: bold;">
+                        {{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->razon_social }}
+                    </span>
+                    <span style="font-weight: normal; margin-left: 5px; color: #000000; text-transform: uppercase; font-weight: bold;">
+                        - <!-- Guion en negro -->
+                    </span>
+                    <span style="font-weight: normal; margin-left: 5px; color: #D29F42; text-transform: uppercase; font-weight: bold;">
+                        {{ $revisores[0]->user->name }} <!-- Asumiendo que el nombre del revisor está aquí -->
+                    </span>
+                    
                     
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -17,76 +29,6 @@
             <div class="modal-body d-flex" style="overflow-x: hidden;">
                 <!-- Contenido Principal -->
                 <div class="main-content" style="flex: 1; padding: 15px; height: 100vh; display: flex; flex-direction: column; gap: 10px; margin-top: -20px;">
-                    <!-- Contenedor para las tablas -->
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <!-- Primera Tabla -->
-                        <div class="table-container" style="flex: 1; min-width: 250px;">
-                            <table class="table table-sm table-bordered table-hover table-striped" style="font-size: 11px;">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th colspan="4" scope="col" style="font-size: 11px; text-align: center;">Información del Certificado</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="2">TIPO DE CERTIFICADO</td>
-                                        <td colspan="2" id="tipoCertificado">N/A</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">NO. CERTIFICADO</td>
-                                        <td colspan="2" id="numCertificado"></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">NO. DICTAMEN</td>
-                                        <td colspan="2" id="numDictamen"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>FECHA DE VIGENCIA</td>
-                                        <td id="fechaVigencia"></td>
-                                        <td>FECHA DE VENCIMIENTO</td>
-                                        <td id="fechaVencimiento"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Segunda Tabla -->
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="table-container" style="flex: 1; min-width: 250px;">
-                                    <table class="table table-sm table-bordered table-hover table-striped" style="font-size: 11px;">
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th colspan="2" scope="col" style="font-size: 11px; text-align: center;">Detalles Adicionales</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>CERTIFICADO INSTALACIONES</td>
-                                                <td>
-                                                    <i class="ri-file-pdf-2-fill text-danger ri-30px pdf cursor-pointer" 
-                                                    data-bs-target="#PdfDictamenIntalaciones" 
-                                                    data-tipo="" 
-                                                    data-id="" 
-                                                    data-registro="" 
-                                                    style="cursor: pointer;" 
-                                                    id="pdfIcon"></i>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>---</td>
-                                                <td>---</td>
-                                            </tr>
-                                            <tr>
-                                                <td>---</td>
-                                                <td>---</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="row">
                         <div class="col-md-8">
@@ -111,28 +53,41 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @php $contador = 1; @endphp <!-- Inicializa el contador -->
                                                 @foreach($preguntas as $pregunta)
                                                 <tr>
-                                                    <td>1</td>
+                                                    <td>{{ $contador++ }}</td> <!-- Muestra el contador y luego lo incrementa -->
                                                     <td>{{ $pregunta->pregunta }}</td>
-
-                                                   <!-- Columna de documento --> 
-                                                @if($pregunta->documentacion?->documentacionUrls)
-                                                    <td>
-                                                        <a target="_Blank" href="../files/{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente }}/{{ $revisores[0]->obtenerDocumentosClientes($pregunta->id_documento,$revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa); }}"><i class="ri-file-pdf-2-fill text-danger ri-30px cursor-pointer"></i></a>
-                                                    </td>
-                                                @elseif($pregunta->filtro=='direccion_fiscal')
-                                                    <td><b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal }}</b></td>
-                                                @elseif($pregunta->filtro=='num_certificado')
-                                                    <td><b>{{ $revisores[0]->certificado->num_certificado }}</b></td>
-                                                @elseif($pregunta->filtro=='nombre_empresa')
-                                                    <td><b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->razon_social }}</b></td>
-                                                @elseif($pregunta->filtro=='domicilio_insta')
-                                                    <td><b>{{ $revisores[0]->certificado->dictamen->instalaciones->direccion_completa }}</b></td>
-                                                @else
-                                                    <td>Sin datos</td>
-                                                @endif
-                                                
+                                            
+                                                    <!-- Columna de documento --> 
+                                                    @if($pregunta->documentacion?->documentacionUrls)
+                                                        <td>
+                                                            <a target="_Blank" href="../files/{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente }}/{{ $revisores[0]->obtenerDocumentosClientes($pregunta->id_documento,$revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa); }}">
+                                                                <i class="ri-file-pdf-2-fill text-danger ri-30px cursor-pointer"></i>
+                                                            </a>
+                                                        </td>
+                                                    @elseif($pregunta->filtro=='direccion_fiscal')
+                                                        <td><b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal }}</b></td>
+                                                    @elseif($pregunta->filtro=='num_certificado')
+                                                        <td><b>{{ $revisores[0]->certificado->num_certificado }}</b></td>
+                                                    @elseif($pregunta->filtro=='nombre_empresa')
+                                                        <td><b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->razon_social }}</b></td>
+                                                    @elseif($pregunta->filtro=='domicilio_insta')
+                                                        <td><b>{{ $revisores[0]->certificado->dictamen->instalaciones->direccion_completa }}</b></td>
+                                                    @elseif($pregunta->filtro=='correo')
+                                                        <td>
+                                                            <b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->correo }}</b><br>
+                                                            <b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->telefono }}</b>
+                                                        </td>
+                                                    @elseif($pregunta->filtro=='fechas')
+                                                        <td>
+                                                            <b>{{ Helpers::formatearFecha($revisores[0]->certificado->fecha_vigencia) }}</b><br>
+                                                            <b>{{ Helpers::formatearFecha($revisores[0]->certificado->fecha_vencimiento) }}</b>
+                                                        </td>
+                                                    @else
+                                                        <td>Sin datos</td>
+                                                    @endif
+                                                    
                                                     <td>
                                                         <select class="form-select form-select-sm" aria-label="Elige la respuesta">
                                                             <option selected>Selecciona</option>
@@ -142,19 +97,32 @@
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <textarea rows="1" name="" id="" class="form-control" placeholder="Introduce las observaciones" ></textarea>                               
+                                                        <textarea rows="1" name="" id="" class="form-control" placeholder="Introduce las observaciones"></textarea>                               
                                                     </td>
                                                 </tr>
                                                 @endforeach
-                                            </tbody>
+                                            </tbody>                                            
                                         </table>
                                     </div>        
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <iframe width="100%" height="100%" id="pdfViewerDictamenFrame" src="../certificado_productor_mezcal/{{ $revisores[0]->certificado->dictamen->id_dictamen }}" frameborder="0"></iframe>
+                            <!-- Visualización del PDF -->
+                            <iframe width="100%" height="60%" id="pdfViewerDictamenFrame" 
+                                    src="../certificado_productor_mezcal/{{ $revisores[0]->certificado->dictamen->id_dictamen }}#zoom=65" 
+                                    frameborder="0" 
+                                    style="border-radius: 10px; overflow: hidden;"></iframe>
+                        
+                            <!-- Botón para registrar -->
+                            <div class="mt-3 text-center">
+                                <button type="button" class="btn btn-primary" id="registrarRevision">
+                                    Registrar Revisión
+                                </button>
+                            </div>
                         </div>
+                        
+                        
                     </div>
 
 
