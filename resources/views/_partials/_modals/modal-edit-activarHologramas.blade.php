@@ -159,19 +159,19 @@
                                 </th>
                                 <td>
                                     <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]"
-                                        id="folio_inicial"  placeholder="Rango inicial">
+                                        id="folio_inicial"  placeholder="Rango inicial"  min="0">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control form-control-sm" name="edit_rango_final[]"
-                                        id="folio_final"  placeholder="Rango final">
+                                        id="folio_final"  placeholder="Rango final"  min="0">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]"
-                                        id="mermas_inicial"  placeholder="Merma inicial">
+                                        id="mermas_inicial"  placeholder="Merma inicial"  min="0">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control form-control-sm" name="edit_mermas_final[]"
-                                        id="mermas_final" placeholder="Merma final">
+                                        id="mermas_final" placeholder="Merma final"  min="0">
                                 </td>
                             </tr>
                         </tbody>
