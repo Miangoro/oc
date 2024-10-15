@@ -485,6 +485,7 @@ Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserMana
 Route::resource('/empresas-list', clientesProspectoController::class);
 Route::get('/clientes-list/{id}/edit', [clientesProspectoController::class, 'edit']);
 Route::post('/clientes/{id}/update', [clientesProspectoController::class, 'update'])->name('clientes.update');
+Route::get('/solicitudInfoClienteNOM-199/{id}', [clientesProspectoController::class, 'pdfNOM199']);
 
 Route::post('/aceptar-cliente', [clientesProspectoController::class, 'aceptarCliente']);
 Route::get('/lista_empresas/{id}', [getFuncionesController::class, 'find_clientes_prospecto']);
