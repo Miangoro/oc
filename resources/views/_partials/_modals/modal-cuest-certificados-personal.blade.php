@@ -106,7 +106,7 @@
                                                     <th style="font-size: 11px;">#</th>
                                                     <th style="font-size: 11px;">Pregunta</th>
                                                     <th style="font-size: 11px;">Documento</th>
-                                                    <th style="font-size: 11px;">Elige la respuesta</th>
+                                                    <th style="font-size: 11px;">Respuesta</th>
                                                     <th style="font-size: 11px;">Observaciones</th>
                                                 </tr>
                                             </thead>
@@ -115,6 +115,8 @@
                                                 <tr>
                                                     <td>1</td>
                                                     <td>{{ $pregunta->pregunta }}</td>
+
+                                                   <!-- Columna de documento --> 
                                                 @if($pregunta->documentacion?->documentacionUrls)
                                                     <td>
                                                         <a target="_Blank" href="../files/{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente }}/{{ $revisores[0]->obtenerDocumentosClientes($pregunta->id_documento,$revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa); }}"><i class="ri-file-pdf-2-fill text-danger ri-30px cursor-pointer"></i></a>
@@ -125,6 +127,8 @@
                                                     <td><b>{{ $revisores[0]->certificado->num_certificado }}</b></td>
                                                 @elseif($pregunta->filtro=='nombre_empresa')
                                                     <td><b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->razon_social }}</b></td>
+                                                @elseif($pregunta->filtro=='domicilio_insta')
+                                                    <td><b>{{ $revisores[0]->certificado->dictamen->instalaciones->direccion_completa }}</b></td>
                                                 @else
                                                     <td>Sin datos</td>
                                                 @endif

@@ -122,6 +122,7 @@ class RevisionPersonalController extends Controller
                 'tipo_revision' => $revisor->tipo_revision,
                 'num_certificado' => $revisor->certificado ? $revisor->certificado->num_certificado : null,
                 'id_certificado' => $revisor->certificado ? $revisor->certificado->id_certificado : null,
+               // 'cliente' => $revisor->certificado ? $revisor->certificado->dictamen-> : null,
                 'tipo_dictamen' => $tipoDictamen,
                 'num_dictamen' => $numDictamen,
                 'fecha_vigencia' => Helpers::formatearFecha($fechaVigencia),

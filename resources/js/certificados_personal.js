@@ -14,6 +14,13 @@
        columns: [
          { data: 'id_revision' },
          { data: 'id_revisor' },
+         { data: 'id_revisor' },
+         { data: 'id_revisor' },
+         { data: 'fecha_vigencia' },
+         { data: 'id_revisor' },
+         { data: 'id_revisor' },
+         { data: 'id_revisor' },
+         
          { data: 'actions'}
        ],
        columnDefs: [
@@ -46,7 +53,7 @@
             targets: 3,
             render: function (data, type, full, meta) {
               var $num_certificado = full['num_certificado'];
-              return '<span class="user-email">' + $num_certificado + '</span>';
+              return '<span class="badge bg-info">' + $num_certificado + '</span>';
             }
           },     
          {
@@ -76,7 +83,7 @@
                     `data-fecha-vencimiento="${full['fecha_vencimiento']}" ` +
                     `data-bs-toggle="modal" ` +
                     `data-bs-target="#fullscreenModal">` +
-                    '<i class="ri-eye-fill ri-20px text-info"></i> Revisar' +
+                    '<i class="ri-user-search-fill ri-20px text-info"></i> Revisar certificado' +
                   '</a>' +
                 '</div>' +
               '</div>'
