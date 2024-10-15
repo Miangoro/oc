@@ -441,7 +441,7 @@ class solicitudHolograma extends Controller
         $loteEnvasado->clase = $request->clase;
         $loteEnvasado->contenido = $request->contenido;
         $loteEnvasado->no_lote_envasado = $request->no_lote_envasado;
-        $loteEnvasado->tipo_agave = $request->tipo_agave;
+        $loteEnvasado->id_tipo = $request->id_tipo;
         $loteEnvasado->lugar_produccion = $request->lugar_produccion;
         $loteEnvasado->lugar_envasado = $request->lugar_envasado;
         $loteEnvasado->id_solicitud = $request->id_solicitudActivacion;

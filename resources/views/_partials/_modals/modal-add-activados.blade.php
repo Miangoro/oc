@@ -24,14 +24,14 @@
                             <thead>
                                 <tr>
                                         <th>id</th>
-                                        <th>Numero lote agranel</th>
+                                        <th>Lote agranel</th>
                                         <th>Categoría</th>
-                                        <th>Análisis de laboratorio</th>
-                                        <th>Contenido neto y Unidad</th>
+                                        <th>Análisis FQ</th>
+                                        <th>Contenido neto</th>
                                         <th>Clase</th>
                                         <th>Contenido Alcohólico</th>
                                         <th>No. de lote de envasado</th>
-                                        <th>No. DE servicio</th>
+                                        <th>No. de servicio</th>
                                         <th>Lugar de producción</th>
                                         <th>Lugar de envasado</th>
                                     <th>Rango inicial</th>

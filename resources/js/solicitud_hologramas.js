@@ -1153,11 +1153,11 @@ $(function () {
                 <td>${item.no_lote_agranel}</td>
                 <td>${item.categoria}</td>
                 <td>${item.no_analisis}</td>
-                <td>${item.cont_neto}, ${item.unidad}</td>
+                <td>${item.cont_neto} ${item.unidad}</td>
                 <td>${item.clase}</td>
                 <td>${item.contenido}</td>
                 <td>${item.no_lote_envasado}</td>
-              <td>${item.num_servicio}</td> <!-- Cambiado de id_inspeccion a num_servicio -->
+              <td>${item.num_servicio}</td>
                 <td>${item.lugar_produccion}</td>
                 <td>${item.lugar_envasado}</td>
                 <td>
@@ -1310,7 +1310,7 @@ $(function () {
       edit_id_inspeccion: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione una opcion'
+            message: 'Por favor seleccione una opción'
           }
         }
       },
@@ -1324,14 +1324,14 @@ $(function () {
       edit_categoria: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione una categoria'
+            message: 'Por favor seleccione una categoría'
           }
         }
       },
       edit_no_analisis: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el numero de analisis del laboratorio'
+            message: 'Por favor ingrese el número de análisis del laboratorio'
           }
         }
       },
@@ -1366,7 +1366,7 @@ $(function () {
       edit_no_lote_envasado: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el numero de lote envasado'
+            message: 'Por favor ingrese el número de lote envasado'
           }
         }
       },
@@ -1380,7 +1380,7 @@ $(function () {
       edit_lugar_produccion: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el lugar de produccion'
+            message: 'Por favor ingrese el lugar de producción'
           }
         }
       },
@@ -1452,7 +1452,7 @@ $(function () {
       id_inspeccion: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione una opcion'
+            message: 'Por favor seleccione una opción'
           }
         }
       },
@@ -1466,14 +1466,14 @@ $(function () {
       categoria: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione una categoria'
+            message: 'Por favor seleccione una categoría'
           }
         }
       },
       no_analisis: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el numero de analisis del laboratorio'
+            message: 'Por favor ingrese el número de análisis del laboratorio'
           }
         }
       },
@@ -1509,7 +1509,7 @@ $(function () {
       no_lote_envasado: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el numero de lote envasado'
+            message: 'Por favor ingrese el número de lote envasado'
           }
         }
       },
@@ -1523,7 +1523,7 @@ $(function () {
       lugar_produccion: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el lugar de produccion'
+            message: 'Por favor ingrese el lugar de producción'
           }
         }
       },
