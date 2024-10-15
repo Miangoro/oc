@@ -146,6 +146,9 @@
                                     </button></th>
                                 <th>Rango inicial</th>
                                 <th>Rango final</th>
+                                <th>Merma inicial</th>
+                                <th>Merma final</th>
+
                             </tr>
                         </thead>
                         <tbody id="edit_contenidoRango">
@@ -155,12 +158,20 @@
                                             class="ri-delete-bin-5-fill"></i> </button>
                                 </th>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="rango_inicial[]"
+                                    <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]"
                                         id="folio_inicial">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="rango_final[]"
+                                    <input type="number" class="form-control form-control-sm" name="edit_rango_final[]"
                                         id="folio_final">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]"
+                                        id="mermas_inicial">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm" name="edit_mermas_final[]"
+                                        id="mermas_final">
                                 </td>
                             </tr>
                         </tbody>

@@ -145,6 +145,9 @@
                                     </button></th>
                                 <th>Rango inicial</th>
                                 <th>Rango final</th>
+                                <th>Merma inicial</th>
+                                <th>Merma final</th>
+
                             </tr>
                         </thead>
                         <tbody id="contenidoRango">
@@ -160,6 +163,14 @@
                                 <td>
                                     <input type="number" class="form-control form-control-sm" name="rango_final[]"
                                         id="folio_final">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm" name="mermas_inicial[]"
+                                        id="mermas_inicial">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm" name="mermas_final[]"
+                                        id="mermas_final">
                                 </td>
                             </tr>
                         </tbody>

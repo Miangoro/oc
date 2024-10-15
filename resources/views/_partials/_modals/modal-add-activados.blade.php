@@ -1,9 +1,9 @@
 <!-- Add New Lote Envasado Modal -->
 <style>
     .modal-custom-size {
-        max-width: 90%;
+        max-width: 95%;
         /* Ajusta este valor para hacerlo más grande */
-        width: 90%;
+        width: 95%;
         /* Ajusta según tus necesidades */
     }
 </style>
@@ -36,6 +36,8 @@
                                     <th>Lugar de envasado</th>
                                     <th>Rango inicial</th>
                                     <th>Rango final</th>
+                                    <th>Mermas inicial</th>
+                                    <th>Mermas final</th>
                                     <th>Acciones</th> <!-- Nueva columna para el botón de editar -->
                                 </tr>
                             </thead>

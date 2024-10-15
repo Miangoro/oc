@@ -28,9 +28,9 @@ class solicitudHolograma extends Model
         'costo_envio',
         'no_guia',
 
- 
+
     ];
-    
+
     public function empresa()
     {
         return $this->belongsTo(empresa::class, 'id_empresa');
@@ -44,7 +44,7 @@ class solicitudHolograma extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class,'id_solicitante', 'id');
+        return $this->belongsTo(User::class, 'id_solicitante', 'id');
     }
 
 
@@ -53,12 +53,12 @@ class solicitudHolograma extends Model
         return $this->belongsTo(empresaNumCliente::class, 'id_empresa', 'id_empresa');
     }
 
-  
+
 
 
     public function cantidadActivados($id_solicitud)
     {
-            // Obtener los registros que coincidan con la solicitud
+        // Obtener los registros que coincidan con la solicitud
         $activaciones = activarHologramasModelo::where("id_solicitud", $id_solicitud)->get();
 
         $totalActivados = 0;
@@ -82,7 +82,30 @@ class solicitudHolograma extends Model
         return $totalActivados;
     }
 
-    
 
-    
+    public function cantidadMermas($id_solicitud)
+    {
+        // Obtener los registros que coincidan con la solicitud
+        $activaciones = activarHologramasModelo::where("id_solicitud", $id_solicitud)->get();
+
+        $totalMermas = 0;
+
+        foreach ($activaciones as $activacion) {
+            // Decodificar el JSON almacenado en la columna 'folios'
+            $folios = json_decode($activacion->folios, true);
+
+            // Asegurarse de que existen los arrays mermas_inicial y mermas_final
+            if (isset($folios['mermas_inicial']) && isset($folios['mermas_final'])) {
+                // Iterar sobre los valores de mermas_inicial y mermas_final
+                foreach ($folios['mermas_inicial'] as $key => $mermas_inicial) {
+                    $mermas_final = $folios['mermas_final'][$key] ?? 0;
+
+                    // Calcular el rango de mermas y sumar al total
+                    $totalMermas += ($mermas_final - $mermas_inicial) + 1; // +1 para incluir ambas mermas
+                }
+            }
+        }
+
+        return $totalMermas;
+    }
 }

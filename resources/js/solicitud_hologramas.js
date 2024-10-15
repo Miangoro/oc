@@ -156,7 +156,7 @@ $(function () {
         { data: 'id_marca' },
         { data: 'cantidad_hologramas' },
         { data: 'activados' },
-        { data: 'cantidad_hologramas' },
+        { data: 'mermas' },
         { data: 'restantes' },
         { data: 'id_direccion' },
         { data: 'folio_inicial' },
@@ -1154,6 +1154,10 @@ $(function () {
           return `<a href="http://localhost:8000/pages/hologramas-validacion/${folio}" target="_blank">${folio}</a>`;
       }).join('<br>');
         let folio_final = String(item.folio_final).replace(/,/g, '<br>');
+        let mermas_inicial = String(item.mermas_inicial).replace(/,/g, '<br>');
+        let mermas_final = String(item.mermas_final).replace(/,/g, '<br>');
+
+
         // Crear una nueva fila con los datos
         var fila = `
             <tr>
@@ -1175,7 +1179,15 @@ $(function () {
                     <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">
                       ${folio_final}
                     </a>
-                  </td>                
+                  </td> 
+                     <td>
+                     <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">
+                      ${mermas_inicial}
+                     </td>
+                      <td>
+                     <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">
+                      ${mermas_final}
+                     </td>               
                   <td>
                 <button type="button" class="btn btn-info">
                   <a href="javascript:;" class="edit-activos" style="color:#FFF" 
@@ -1241,6 +1253,9 @@ $(function () {
       data.folio_inicial.forEach(function (folioInicial, index) {
 
         var folioFinal = data.folio_final[index];
+        var mermasInicial = data.mermas_inicial[index];
+        var mermasFinal = data.mermas_final[index];
+
         var newRow = `
           <tr>
               <th>
@@ -1248,8 +1263,10 @@ $(function () {
                       <i class="ri-delete-bin-5-fill"></i>
                   </button>
               </th>
-              <td><input type="number" class="form-control form-control-sm" name="rango_inicial[]" value="${folioInicial}"></td>
-              <td><input type="number" class="form-control form-control-sm" name="rango_final[]" value="${folioFinal}"></td>
+              <td><input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" value="${folioInicial}"></td>
+              <td><input type="number" class="form-control form-control-sm" name="edit_rango_final[]" value="${folioFinal}"></td>
+               <td><input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]" value="${mermasInicial}"></td>
+              <td><input type="number" class="form-control form-control-sm" name="edit_mermas_final[]" value="${mermasFinal}"></td>
           </tr>`;
         $('#edit_contenidoRango').append(newRow);
       });
@@ -1280,10 +1297,16 @@ $(function () {
               </button>
           </th>
           <td>
-              <input type="number" class="form-control form-control-sm" name="rango_inicial[]" placeholder="Rango inicial">
+              <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" placeholder="Rango inicial">
           </td>
           <td>
-              <input type="number" class="form-control form-control-sm" name="rango_final[]" placeholder="Rango final">
+              <input type="number" class="form-control form-control-sm" name="edit_rango_final[]" placeholder="Rango final">
+          </td>
+                    <td>
+              <input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]" placeholder="Merma inicial">
+          </td>
+          <td>
+              <input type="number" class="form-control form-control-sm" name="edit_mermas_final[]" placeholder="Merma final">
           </td>
       </tr>`;
 
@@ -1687,6 +1710,13 @@ $(function () {
               <td>
                   <input type="number" class="form-control form-control-sm" name="rango_final[]">
               </td>
+               <td>
+                  <input type="number" class="form-control form-control-sm" name="mermas_inicial[]">
+              </td>
+                   <td>
+                  <input type="number" class="form-control form-control-sm" name="mermas_final[]">
+              </td>
+              
           </tr>`;
       $('#contenidoRango').append(newRow);
     });
