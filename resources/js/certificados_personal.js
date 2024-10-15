@@ -389,6 +389,7 @@ $(document).on('click', '.pdf', function () {
 
   $('#PdfDictamenIntalaciones').modal('show');
   $('#pdfViewerDictamen').attr('src', tipo_dictamen); 
+  $('#pdfViewerDictamenFrame').attr('src', tipo_dictamen); 
 });
 
 // Cuando el PDF se carga

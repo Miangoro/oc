@@ -115,13 +115,18 @@
                                                 <tr>
                                                     <td>1</td>
                                                     <td>{{ $pregunta->pregunta }}</td>
-                                                    @if($pregunta->documentacion?->documentacionUrls)
+                                                @if($pregunta->documentacion?->documentacionUrls)
                                                     <td>
-                                                      
                                                         <a target="_Blank" href="../files/{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente }}/{{ $revisores[0]->obtenerDocumentosClientes($pregunta->id_documento,$revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa); }}"><i class="ri-file-pdf-2-fill text-danger ri-30px cursor-pointer"></i></a>
                                                     </td>
+                                                @elseif($pregunta->filtro=='direccion_fiscal')
+                                                    <td><b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal }}</b></td>
+                                                @elseif($pregunta->filtro=='num_certificado')
+                                                    <td><b>{{ $revisores[0]->certificado->num_certificado }}</b></td>
+                                                @elseif($pregunta->filtro=='nombre_empresa')
+                                                    <td><b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->razon_social }}</b></td>
                                                 @else
-                                                    <td>No aplica {{ $revisores[0]->certificado->num_certificado }}</td> <!-- O mensaje alternativo -->
+                                                    <td>Sin datos</td>
                                                 @endif
                                                 
                                                     <td>
@@ -142,6 +147,9 @@
                                     </div>        
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-4">
+                            <iframe width="100%" height="100%" id="pdfViewerDictamenFrame" src="../certificado_productor_mezcal/{{ $revisores[0]->certificado->dictamen->id_dictamen }}" frameborder="0"></iframe>
                         </div>
                     </div>
 
