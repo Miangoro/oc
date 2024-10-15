@@ -173,7 +173,7 @@
 
 
                     <div class="text-center mb-6">
-                        <h4 class="address-title mb-2">Mermas</h4>
+                        <h4 class="address-title mb-2">Mermas (Opcional)</h4>
                         <p class="address-subtitle"></p>
                     </div>
                     <div style="display: none;" id="mensaje" role="alert"></div>
@@ -191,15 +191,7 @@
                         </thead>
                         <tbody id="contenidoMermas">
                             <tr>
-                                <th>
-                                    <button type="button" class="btn btn-danger remove-row" disabled> <i
-                                            class="ri-delete-bin-5-fill"></i> </button>
-                                </th>
 
-                                <td>
-                                    <input type="number" class="form-control form-control-sm" name="mermas[]"
-                                        id="mermas" min="0" placeholder="Mermas" >
-                                </td>
 
                             </tr>
                         </tbody>
