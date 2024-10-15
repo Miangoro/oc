@@ -1292,7 +1292,7 @@ $(function () {
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
-        text: 'Error al obtener los datos del lote',
+        text: 'Error al obtener los datos de los hologramas activados',
         customClass: {
           confirmButton: 'btn btn-danger'
         }
@@ -1488,7 +1488,7 @@ $(function () {
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: 'Ocurrió un error al actualizar la guía.',
+          text: 'Ocurrió un error al actualizar los hologramas activados.',
           customClass: {
             confirmButton: 'btn btn-danger'
           }
@@ -1631,7 +1631,7 @@ $(function () {
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: 'Error al registrar el lote envasado',
+          text: 'Error al activar los hologramas',
           customClass: {
             confirmButton: 'btn btn-danger'
           }

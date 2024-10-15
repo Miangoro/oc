@@ -135,7 +135,7 @@ class solicitudHolograma extends Controller
                     'folio_inicial' => $user->folio_inicial,
                     'folio_final' => $user->folio_final,
                     'activados' => $user->cantidadActivados($user->id_solicitud),
-                    'restantes' => ($user->cantidad_hologramas - $user->cantidadActivados($user->id_solicitud) - $user->cantidadMermas($user->id_solicitud)),
+                    'restantes' => max(0, ($user->cantidad_hologramas - $user->cantidadActivados($user->id_solicitud) - $user->cantidadMermas($user->id_solicitud))),
                     'mermas' => $user->cantidadMermas($user->id_solicitud),
 
 
@@ -472,6 +472,7 @@ class solicitudHolograma extends Controller
         return response()->json(['message' => 'Hologramas activados exitosamente']);
     }
 
+//funcion para la tabla
 
     public function editActivos($id)
     {
@@ -503,8 +504,7 @@ class solicitudHolograma extends Controller
     }
 
 
-
-//funcion para la tabla
+//editar activos
     public function editActivados($id)
     {
         try {
