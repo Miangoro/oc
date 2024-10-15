@@ -21,18 +21,21 @@ class clientesProspectoController extends Controller
     // dd('UserManagement');
     $usuarios = User::where("tipo",1)->get();
    // $userCount = $empresas->count();
+   $empresas = empresa::with('normas')->get();
+
     $verified = 5;
     $notVerified = 10;
    // $usersUnique = $empresas->unique(['estado']);
     $userDuplicates = 40;
-
     return view('clientes.find_clientes_prospecto_view', [
 
       'verified' => $verified,
       'notVerified' => $notVerified,
       'userDuplicates' => $userDuplicates,
       'usuarios' => $usuarios,
+      'empresas' => $empresas,
     ]);
+
   }
 
   public function aceptarCliente(Request $request){
@@ -131,7 +134,7 @@ class clientesProspectoController extends Controller
     $dir = $request->input('order.0.dir');
 
     if (empty($request->input('search.value'))) {
-      $users = empresa::where('tipo', 1)->offset($start)
+      $users = empresa::with('normas')->where('tipo', 1)->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
         ->get();
@@ -164,6 +167,8 @@ class clientesProspectoController extends Controller
         $nestedData['razon_social'] = $user->razon_social;
         $nestedData['domicilio_fiscal'] = $user->domicilio_fiscal;
         $nestedData['regimen'] = $user->regimen;
+        $nestedData['normas'] = $user->normas; // Agrega las normas a los datos
+
 
         $data[] = $nestedData;
       }
@@ -219,5 +224,12 @@ class clientesProspectoController extends Controller
           return response()->json(['error' => 'Error al actualizar el cliente'], 500);
       }
   }
+
+
+  public function pdfNOM199($id){
+      $pdf = Pdf::loadView('pdfs.solicitudInfoClienteNOM-199');
+      return $pdf->stream('solicitud_Info_ClienteNOM-199.pdf');
+  }
+
 
 }

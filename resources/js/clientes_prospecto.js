@@ -117,16 +117,25 @@ $(function () {
           }
         },
         {
-          // PDF
           targets: 5,
           className: 'text-center',
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            var $id = full['id_empresa'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_empresa']}" data-registro="${full['razon_social']} "></i>`;
+              var idEmpresa = full['id_empresa'];
+              var normas = full['normas'] || []; // Accediendo al array de normas
+              if (normas.length === 0) {
+                  return '<i class="ri-file-damage-fill ri-40px icon-no-pdf"></i>';
+              }
+              var tieneNorma4 = normas.some(norma => norma.id_norma == 4);
+              if (tieneNorma4) {
+                  return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${idEmpresa}" data-registro="${full['razon_social']}"></i>`;
+              } else {
+                  return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${idEmpresa}" data-registro="${full['razon_social']}"></i>`;
+              }
           }
-        },
+      },
+
         {
           // Actions
           targets: -1,
@@ -451,6 +460,30 @@ $(function () {
     $('#loading-spinner').hide(); // Ocultar el spinner
     $(this).show(); // Mostrar el iframe con el PDF
   });
+
+
+
+  $(document).on('click', '.pdf2', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+    var iframe = $('#pdfViewerDictamen');
+    // Mostrar el spinner y ocultar el iframe
+    $('#loading-spinner').show();
+    iframe.hide();
+
+    iframe.attr('src', '../solicitudInfoClienteNOM-199/' + id);
+
+    $("#titulo_modal_Dictamen").text("Solicitud de información del cliente");
+    $("#subtitulo_modal_Dictamen").text(registro);
+    $('#mostrarPdfDictamen').modal('show');
+  });
+
+  // Ocultar el spinner cuando el PDF esté completamente cargado
+  $('#pdfViewerDictamen').on('load', function () {
+    $('#loading-spinner').hide(); // Ocultar el spinner
+    $(this).show(); // Mostrar el iframe con el PDF
+  });
+
 
 
 

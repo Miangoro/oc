@@ -9,6 +9,7 @@ class empresa_norma extends Model
 {
     use HasFactory;
     protected $table = 'empresa_norma_certificar';
+    protected $primaryKey = 'id';
     protected $fillable = [
         'id_norma',
         'id_empresa',
