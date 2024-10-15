@@ -134,7 +134,10 @@
                     </div>
 
                    
-
+                    <div class="text-center mb-6">
+                        <h4 class="address-title mb-2">Activar</h4>
+                        <p class="address-subtitle"></p>
+                    </div>
                     <div style="display: none;" id="mensaje" role="alert"></div>
 
 
@@ -145,8 +148,6 @@
                                     </button></th>
                                 <th>Rango inicial</th>
                                 <th>Rango final</th>
-                                <th>Merma inicial</th>
-                                <th>Merma final</th>
 
                             </tr>
                         </thead>
@@ -164,17 +165,48 @@
                                     <input type="number" class="form-control form-control-sm" name="rango_final[]"
                                         id="folio_final" min="0" placeholder="Rango final" >
                                 </td>
-                                <td>
-                                    <input type="number" class="form-control form-control-sm" name="mermas_inicial[]"
-                                        id="mermas_inicial" min="0" placeholder="Merma inicial" >
-                                </td>
-                                <td>
-                                    <input type="number" class="form-control form-control-sm" name="mermas_final[]"
-                                        id="mermas_final" min="0" placeholder="Merma final" >
-                                </td>
+
                             </tr>
                         </tbody>
                     </table>
+
+
+
+                    <div class="text-center mb-6">
+                        <h4 class="address-title mb-2">Mermas</h4>
+                        <p class="address-subtitle"></p>
+                    </div>
+                    <div style="display: none;" id="mensaje" role="alert"></div>
+
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th><button type="button" class="btn btn-primary add-row-addmermas"> <i class="ri-add-line"></i>
+                                    </button></th>
+                                <th>Mermas</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody id="contenidoMermas">
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-danger remove-row" disabled> <i
+                                            class="ri-delete-bin-5-fill"></i> </button>
+                                </th>
+
+                                <td>
+                                    <input type="number" class="form-control form-control-sm" name="mermas[]"
+                                        id="mermas" min="0" placeholder="Mermas" >
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+
 
 
 

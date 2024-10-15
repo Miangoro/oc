@@ -134,7 +134,10 @@
 
                     </div>
 
-                   
+                    <div class="text-center mb-6">
+                        <h4 class="address-title mb-2">Activar</h4>
+                        <p class="address-subtitle"></p>
+                    </div>
 
                     <div style="display: none;" id="mensaje" role="alert"></div>
 

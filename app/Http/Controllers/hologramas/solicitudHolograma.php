@@ -430,7 +430,7 @@ class solicitudHolograma extends Controller
         return $pdf->stream('INV-4232024-Nazareth_Camacho_.pdf');
     }
 
- 
+ //agregar activos
      public function storeActivar(Request $request)
     {
 
@@ -453,8 +453,13 @@ class solicitudHolograma extends Controller
         $loteEnvasado->folios = json_encode([
             'folio_inicial' => $request->rango_inicial,
             'folio_final' => $request->rango_final, // Puedes agregar otros valores también
-            'mermas_inicial' => $request->mermas_inicial, // Puedes agregar otros valores también
-            'mermas_final' => $request->mermas_final, // Puedes agregar otros valores también
+           
+
+
+        ]);
+        $loteEnvasado->mermas = json_encode([
+            'mermas' => $request->mermas,
+           
 
 
         ]);
@@ -497,7 +502,7 @@ class solicitudHolograma extends Controller
 
 
 
-
+//funcion para la tabla
     public function editActivados($id)
     {
         try {
@@ -510,8 +515,12 @@ class solicitudHolograma extends Controller
             // Añadir los valores de folio inicial y folio final
             $activo->folio_inicial = $folios['folio_inicial'] ?? null;
             $activo->folio_final = $folios['folio_final'] ?? null;
-            $activo->mermas_inicial = $folios['mermas_inicial'] ?? null;
-            $activo->mermas_final = $folios['mermas_final'] ?? null;
+
+
+            $mermas = json_decode($activo->mermas, true);
+            $activo->mermas = $mermas['mermas'] ?? null;
+
+
 
 
             return response()->json($activo); // Devolver el registro con los datos decodificados

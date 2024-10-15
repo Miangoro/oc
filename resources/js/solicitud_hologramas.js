@@ -1154,8 +1154,7 @@ $(function () {
           return `<a href="http://localhost:8000/pages/hologramas-validacion/${folio}" target="_blank">${folio}</a>`;
       }).join('<br>');
         let folio_final = String(item.folio_final).replace(/,/g, '<br>');
-        let mermas_inicial = String(item.mermas_inicial).replace(/,/g, '<br>');
-        let mermas_final = String(item.mermas_final).replace(/,/g, '<br>');
+        let mermas = String(item.mermas).replace(/,/g, '<br>');
 
 
         // Crear una nueva fila con los datos
@@ -1181,13 +1180,9 @@ $(function () {
                     </a>
                   </td> 
                      <td>
-                     <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">
-                      ${mermas_inicial}
+                      ${mermas}
                      </td>
-                      <td>
-                     <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">
-                      ${mermas_final}
-                     </td>               
+            
                   <td>
                 <button type="button" class="btn btn-info">
                   <a href="javascript:;" class="edit-activos" style="color:#FFF" 
@@ -1699,15 +1694,35 @@ $(function () {
               <td>
                   <input type="number" class="form-control form-control-sm" min="0" name="rango_final[]"   placeholder="Rango final">
               </td>
-               <td>
-                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_inicial[]"  placeholder="Merma inicial">
-              </td>
-                   <td>
-                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_final[]"   placeholder="Merma final">
-              </td>
+
               
           </tr>`;
       $('#contenidoRango').append(newRow);
+    });
+
+    // Función para eliminar una fila
+    $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+    });
+  });
+  //mermas
+
+  $(document).ready(function () {
+    $('.add-row-addmermas').click(function () {
+      // Añade una nueva fila
+      var newRow = `
+          <tr>
+              <th>
+                  <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+              </th>
+              <td>
+                  <input type="number" class="form-control form-control-sm mermas" min="0" name="mermas[]"  placeholder="Rango inicial" />
+              </td>
+
+
+              
+          </tr>`;
+      $('#contenidoMermas').append(newRow);
     });
 
     // Función para eliminar una fila
