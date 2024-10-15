@@ -6,14 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Revisor;
 use App\Helpers\Helpers;
+use App\Models\preguntas_revision;
 
 class RevisionPersonalController extends Controller
 {
 
     public function userManagement()
     {
-        $revisores = Revisor::all();
-        return view('revision.revision_certificados-personal_view', compact('revisores'));
+        $revisores = Revisor::with('certificado')->get(); 
+        $preguntas = preguntas_revision::where('tipo_revisor','=','1')->orwhere('tipo_certificado','=','1')->get(); //Solo preguntas para miemros del personal y certificvado de instalaciones
+        return view('revision.revision_certificados-personal_view', compact('revisores','preguntas'));
     }   
 
     public function index(Request $request)

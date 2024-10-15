@@ -44,4 +44,14 @@ class Revisor extends Model
     {
         return $this->belongsTo(User::class, 'id_revisor2', 'id'); // id_revisor2 es la clave foránea en la tabla revisores
     }
+
+    public function obtenerDocumentosClientes($id_documento, $id_cliente)
+{
+    $documento = Documentacion_url::where("id_documento", "=", $id_documento)
+                                  ->where("id_empresa", "=", $id_cliente)
+                                  ->first(); // Devuelve el primer registro que coincida
+
+    return $documento ? $documento->url : null; // Devuelve solo el atributo `url` o `null` si no hay documento
+}
+
 }
