@@ -549,7 +549,7 @@ class solicitudHolograma extends Controller
                 'folio_inicial' => $request->edit_rango_inicial,
                 'folio_final' => $request->edit_rango_final, // Puedes agregar otros valores también
                 'mermas_inicial' => $request->edit_mermas_inicial, // Puedes agregar otros valores también
-            'mermas_final' => $request->edit_mermas_final, // Puedes agregar otros valores también
+                'mermas_final' => $request->edit_mermas_final, // Puedes agregar otros valores también
             ]);
 
             // Guardar los cambios en la base de datos

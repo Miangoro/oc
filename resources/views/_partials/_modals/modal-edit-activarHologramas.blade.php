@@ -142,7 +142,7 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th><button type="button" class="btn btn-primary add-row"> <i class="ri-add-line"></i>
+                                <th><button type="button" class="btn btn-primary add-row-edit"> <i class="ri-add-line"></i>
                                     </button></th>
                                 <th>Rango inicial</th>
                                 <th>Rango final</th>
@@ -159,19 +159,19 @@
                                 </th>
                                 <td>
                                     <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]"
-                                        id="folio_inicial" min="0">
+                                        id="folio_inicial" min="0" placeholder="Rango inicial">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control form-control-sm" name="edit_rango_final[]"
-                                        id="folio_final" min="0">
+                                        id="folio_final" min="0" placeholder="Rango final">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]"
-                                        id="mermas_inicial" min="0">
+                                        id="mermas_inicial" min="0" placeholder="Merma inicial">
                                 </td>
                                 <td>
                                     <input type="number" class="form-control form-control-sm" name="edit_mermas_final[]"
-                                        id="mermas_final" min="0">
+                                        id="mermas_final" min="0" placeholder="Merma final">
                                 </td>
                             </tr>
                         </tbody>

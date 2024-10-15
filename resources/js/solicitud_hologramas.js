@@ -1288,7 +1288,7 @@ $(function () {
 
 
   // Agregar FILA A EDIT ACTIVADOS
-  $(document).on('click', '.add-row', function () {
+  $(document).on('click', '.add-row-edit', function () {
     var newRow = `
       <tr>
           <th>
@@ -1705,16 +1705,16 @@ $(function () {
                   <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
               </th>
               <td>
-                  <input type="number" class="form-control form-control-sm rango_inicial" min="0" name="rango_inicial[]" />
+                  <input type="number" class="form-control form-control-sm rango_inicial" min="0" name="rango_inicial[]" placeholder="Rango inicial" />
               </td>
               <td>
-                  <input type="number" class="form-control form-control-sm" min="0" name="rango_final[]">
+                  <input type="number" class="form-control form-control-sm" min="0" name="rango_final[]" placeholder="Rango final">
               </td>
                <td>
-                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_inicial[]">
+                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_inicial[]" placeholder="Merma inicial">
               </td>
                    <td>
-                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_final[]">
+                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_final[]" placeholder="Merma final">
               </td>
               
           </tr>`;
