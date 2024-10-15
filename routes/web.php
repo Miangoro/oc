@@ -294,7 +294,7 @@ Route::get('/pages/account-settings-connections', [AccountSettingsConnections::c
 Route::get('/pages/faq', [Faq::class, 'index'])->name('pages-faq');
 Route::get('/pages/pricing', [PagesPricing::class, 'index'])->name('pages-pricing');
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
-Route::get('/pages/hologramas-validacion', [HologramasValidacion::class, 'index'])->name('pages-hologramas-validacion');
+Route::get('/pages/hologramas-validacion/{folio}', [HologramasValidacion::class, 'index'])->name('pages-hologramas-validacion');
 
 Route::get('/pages/misc-under-maintenance', [MiscUnderMaintenance::class, 'index'])->name('pages-misc-under-maintenance');
 Route::get('/pages/misc-comingsoon', [MiscComingSoon::class, 'index'])->name('pages-misc-comingsoon');
@@ -486,7 +486,6 @@ Route::resource('/empresas-list', clientesProspectoController::class);
 Route::get('/clientes-list/{id}/edit', [clientesProspectoController::class, 'edit']);
 Route::post('/clientes/{id}/update', [clientesProspectoController::class, 'update'])->name('clientes.update');
 Route::get('/solicitudInfoClienteNOM-199/{id}', [clientesProspectoController::class, 'pdfNOM199']);
-
 Route::post('/aceptar-cliente', [clientesProspectoController::class, 'aceptarCliente']);
 Route::get('/lista_empresas/{id}', [getFuncionesController::class, 'find_clientes_prospecto']);
 Route::get('/lista_inspetores', [getFuncionesController::class, 'usuariosInspectores']);
@@ -706,11 +705,9 @@ Route::post('/solicitud_holograma/update2', [solicitudHolograma::class, 'update2
 Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3']);
 Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
 Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
-Route::post('/solicitud_holograma/editHolograma', [solicitudHolograma::class, 'editHolograma']);
 Route::post('/solicitud_holograma/storeActivar', [solicitudHolograma::class, 'storeActivar']);
 Route::get('/solicitud_holograma/editActivos/{id}', [solicitudHolograma::class, 'editActivos']);
 Route::get('/solicitud_holograma/editActivados/{id}', [solicitudHolograma::class, 'editActivados']);
-Route::post('/solicitud_holograma/update/updateActivar', [solicitudHolograma::class, 'updateActivar']);
 
 
 
@@ -742,6 +739,7 @@ Route::post('/solicitud_holograma/update3', [solicitudHolograma::class, 'update3
 Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'updateAsignar']);
 Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
 Route::post('/verificar-folios', [solicitudHolograma::class, 'verificarFolios']);
+Route::post('/solicitud_holograma/update/updateActivar', [solicitudHolograma::class, 'updateActivar']);
 
 
 //Módulo de solicitudes
@@ -791,3 +789,7 @@ Route::get('/Solicitud-Servicio-UNIIC', [CartaAsignacionController::class, 'Soli
 Route::get('/empresa_contrato/{id_empresa}', [clientesConfirmadosController::class, 'obtenerContratosPorEmpresa']);
 Route::get('/empresa_num_cliente/{id_empresa}', [clientesConfirmadosController::class, 'obtenerNumeroCliente']);
 Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'actualizarRegistros']);
+
+//Revisones
+Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManagement'])->name('revision-personal');
+Route::resource('/personal-list', RevisionPersonalController::class);

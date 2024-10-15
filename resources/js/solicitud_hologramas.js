@@ -155,6 +155,9 @@ $(function () {
         { data: 'id_solicitante' },
         { data: 'id_marca' },
         { data: 'cantidad_hologramas' },
+        { data: 'activados' },
+        { data: 'mermas' },
+        { data: 'restantes' },
         { data: 'id_direccion' },
         { data: 'folio_inicial' },
         { data: 'folio_final' },
@@ -224,7 +227,7 @@ $(function () {
                 },  */
         {
           // email verify
-          targets: 10,
+          targets: 13,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $verified = full['estatus'];
@@ -253,7 +256,7 @@ $(function () {
 
         {
           // email verify
-          targets: 11,
+          targets: 14,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $id = full['id_solicitud'];
@@ -1146,6 +1149,15 @@ $(function () {
 
       // Rellenar el formulario con los datos obtenidos
       data.forEach(function (item) {
+       
+        let folio_inicial = String(item.folio_inicial).split(',').map(folio => {
+          return `<a href="http://localhost:8000/pages/hologramas-validacion/${folio}" target="_blank">${folio}</a>`;
+      }).join('<br>');
+        let folio_final = String(item.folio_final).replace(/,/g, '<br>');
+        let mermas_inicial = String(item.mermas_inicial).replace(/,/g, '<br>');
+        let mermas_final = String(item.mermas_final).replace(/,/g, '<br>');
+
+
         // Crear una nueva fila con los datos
         var fila = `
             <tr>
@@ -1153,21 +1165,29 @@ $(function () {
                 <td>${item.no_lote_agranel}</td>
                 <td>${item.categoria}</td>
                 <td>${item.no_analisis}</td>
-                <td>${item.cont_neto}, ${item.unidad}</td>
+                <td>${item.cont_neto} ${item.unidad}</td>
                 <td>${item.clase}</td>
                 <td>${item.contenido}</td>
                 <td>${item.no_lote_envasado}</td>
-              <td>${item.num_servicio}</td> <!-- Cambiado de id_inspeccion a num_servicio -->
+              <td>${item.num_servicio}</td>
                 <td>${item.lugar_produccion}</td>
                 <td>${item.lugar_envasado}</td>
                 <td>
-                <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">${item.folio_inicial}</a>
+                ${folio_inicial}
                 </td>
                   <td>
                     <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">
-                      ${item.folio_final}
+                      ${folio_final}
                     </a>
-                  </td>                
+                  </td> 
+                     <td>
+                     <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">
+                      ${mermas_inicial}
+                     </td>
+                      <td>
+                     <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">
+                      ${mermas_final}
+                     </td>               
                   <td>
                 <button type="button" class="btn btn-info">
                   <a href="javascript:;" class="edit-activos" style="color:#FFF" 
@@ -1233,6 +1253,9 @@ $(function () {
       data.folio_inicial.forEach(function (folioInicial, index) {
 
         var folioFinal = data.folio_final[index];
+        var mermasInicial = data.mermas_inicial[index];
+        var mermasFinal = data.mermas_final[index];
+
         var newRow = `
           <tr>
               <th>
@@ -1240,8 +1263,10 @@ $(function () {
                       <i class="ri-delete-bin-5-fill"></i>
                   </button>
               </th>
-              <td><input type="number" class="form-control form-control-sm" name="rango_inicial[]" value="${folioInicial}"></td>
-              <td><input type="number" class="form-control form-control-sm" name="rango_final[]" value="${folioFinal}"></td>
+              <td><input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" value="${folioInicial}"></td>
+              <td><input type="number" class="form-control form-control-sm" name="edit_rango_final[]" value="${folioFinal}"></td>
+               <td><input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]" value="${mermasInicial}"></td>
+              <td><input type="number" class="form-control form-control-sm" name="edit_mermas_final[]" value="${mermasFinal}"></td>
           </tr>`;
         $('#edit_contenidoRango').append(newRow);
       });
@@ -1263,7 +1288,7 @@ $(function () {
 
 
   // Agregar FILA A EDIT ACTIVADOS
-  $(document).on('click', '.add-row', function () {
+  $(document).on('click', '.add-row-edit', function () {
     var newRow = `
       <tr>
           <th>
@@ -1272,10 +1297,16 @@ $(function () {
               </button>
           </th>
           <td>
-              <input type="number" class="form-control form-control-sm" name="rango_inicial[]" placeholder="Rango inicial">
+              <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" min="0" placeholder="Rango inicial">
           </td>
           <td>
-              <input type="number" class="form-control form-control-sm" name="rango_final[]" placeholder="Rango final">
+              <input type="number" class="form-control form-control-sm" name="edit_rango_final[]" min="0" placeholder="Rango final">
+          </td>
+                    <td>
+              <input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]" min="0" placeholder="Merma inicial">
+          </td>
+          <td>
+              <input type="number" class="form-control form-control-sm" name="edit_mermas_final[]" min="0" placeholder="Merma final">
           </td>
       </tr>`;
 
@@ -1310,7 +1341,7 @@ $(function () {
       edit_id_inspeccion: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione una opcion'
+            message: 'Por favor seleccione una opción'
           }
         }
       },
@@ -1324,14 +1355,14 @@ $(function () {
       edit_categoria: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione una categoria'
+            message: 'Por favor seleccione una categoría'
           }
         }
       },
       edit_no_analisis: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el numero de analisis del laboratorio'
+            message: 'Por favor ingrese el número de análisis del laboratorio'
           }
         }
       },
@@ -1366,7 +1397,7 @@ $(function () {
       edit_no_lote_envasado: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el numero de lote envasado'
+            message: 'Por favor ingrese el número de lote envasado'
           }
         }
       },
@@ -1380,7 +1411,7 @@ $(function () {
       edit_lugar_produccion: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el lugar de produccion'
+            message: 'Por favor ingrese el lugar de producción'
           }
         }
       },
@@ -1452,7 +1483,7 @@ $(function () {
       id_inspeccion: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione una opcion'
+            message: 'Por favor seleccione una opción'
           }
         }
       },
@@ -1466,14 +1497,14 @@ $(function () {
       categoria: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione una categoria'
+            message: 'Por favor seleccione una categoría'
           }
         }
       },
       no_analisis: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el numero de analisis del laboratorio'
+            message: 'Por favor ingrese el número de análisis del laboratorio'
           }
         }
       },
@@ -1509,7 +1540,7 @@ $(function () {
       no_lote_envasado: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el numero de lote envasado'
+            message: 'Por favor ingrese el número de lote envasado'
           }
         }
       },
@@ -1523,7 +1554,7 @@ $(function () {
       lugar_produccion: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el lugar de produccion'
+            message: 'Por favor ingrese el lugar de producción'
           }
         }
       },
@@ -1674,11 +1705,18 @@ $(function () {
                   <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
               </th>
               <td>
-                  <input type="number" class="form-control form-control-sm rango_inicial" name="rango_inicial[]" />
+                  <input type="number" class="form-control form-control-sm rango_inicial" min="0" name="rango_inicial[]" placeholder="Rango inicial" />
               </td>
               <td>
-                  <input type="number" class="form-control form-control-sm" name="rango_final[]">
+                  <input type="number" class="form-control form-control-sm" min="0" name="rango_final[]" placeholder="Rango final">
               </td>
+               <td>
+                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_inicial[]" placeholder="Merma inicial">
+              </td>
+                   <td>
+                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_final[]" placeholder="Merma final">
+              </td>
+              
           </tr>`;
       $('#contenidoRango').append(newRow);
     });

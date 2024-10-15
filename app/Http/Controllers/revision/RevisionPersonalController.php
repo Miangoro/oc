@@ -5,14 +5,17 @@ namespace App\Http\Controllers\revision;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Revisor;
+use App\Helpers\Helpers;
+use App\Models\preguntas_revision;
 
 class RevisionPersonalController extends Controller
 {
 
     public function userManagement()
     {
-        $revisores = Revisor::all();
-        return view('revision.revision_certificados-personal_view', compact('revisores'));
+        $revisores = Revisor::with('certificado')->get(); 
+        $preguntas = preguntas_revision::where('tipo_revisor','=','1')->orwhere('tipo_certificado','=','1')->get(); //Solo preguntas para miemros del personal y certificvado de instalaciones
+        return view('revision.revision_certificados-personal_view', compact('revisores','preguntas'));
     }   
 
     public function index(Request $request)
@@ -22,12 +25,24 @@ class RevisionPersonalController extends Controller
             2 => 'id_revisor2',
             3 => 'observaciones',
             4 => 'tipo_revision',
-            5 => 'id_certificado', 
-            6 => 'num_certificado' // Asegúrate de tener esto
+            5 => 'id_certificado',
+            6 => 'num_certificado'
         ];
     
         $search = $request->input('search.value');
-        $totalData = Revisor::with(['certificado.dictamen'])->count();
+        $userId = auth()->id(); // Obtener el ID del usuario autenticado
+    
+        // Contar todos los registros, aplicando el filtro solo si el usuario no es el de ID 8
+        $totalData = Revisor::with(['certificado.dictamen']);
+        
+        // Si el usuario es el admin (ID 8), contar todos los registros
+        if ($userId == 8) {
+            $totalData = $totalData->count();
+        } else {
+            // De lo contrario, contar solo los registros del usuario
+            $totalData = $totalData->where('id_revisor', $userId)->count();
+        }
+    
         $totalFiltered = $totalData;
         $limit = $request->input('length');
         $start = $request->input('start');
@@ -37,30 +52,55 @@ class RevisionPersonalController extends Controller
         $order = $columns[$orderIndex] ?? 'id_revisor';
         $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
     
-        $query = Revisor::with(['certificado.dictamen'])
-            ->when($search, function ($q, $search) {
-                $q->where('id_revisor', 'LIKE', "%{$search}%")
-                  ->orWhereHas('certificado', function ($q) use ($search) {
-                      $q->where('num_certificado', 'LIKE', "%{$search}%");
-                  })
-                  ->orWhere('observaciones', 'LIKE', "%{$search}%")
-                  ->orWhere('tipo_revision', 'LIKE', "%{$search}%");
-            })
-            ->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir);
+        // Crear la consulta base
+        $query = Revisor::with(['certificado.dictamen']);
     
-        $revisores = $query->get();
+        // Aplicar filtro basado en el usuario
+        if ($userId != 8) {
+            $query->where('id_revisor', $userId);
+        }
     
-        if ($search) {
-            $totalFiltered = Revisor::with('certificado.dictamen')
-                ->where('id_revisor', 'LIKE', "%{$search}%")
+        // Aplicar búsqueda
+        $query->when($search, function ($q) use ($search) {
+            $q->where('id_revisor', 'LIKE', "%{$search}%")
                 ->orWhereHas('certificado', function ($q) use ($search) {
                     $q->where('num_certificado', 'LIKE', "%{$search}%");
                 })
                 ->orWhere('observaciones', 'LIKE', "%{$search}%")
-                ->orWhere('tipo_revision', 'LIKE', "%{$search}%")
-                ->count();
+                ->orWhere('tipo_revision', 'LIKE', "%{$search}%");
+        })
+        ->offset($start)
+        ->limit($limit)
+        ->orderBy($order, $dir);
+    
+        $revisores = $query->get();
+    
+        // Filtrar resultados de búsqueda
+        if ($search) {
+            $filteredQuery = Revisor::with('certificado.dictamen');
+    
+            if ($userId == 8) {
+                // Si el usuario es el admin, no aplicar filtro de ID
+                $totalFiltered = $filteredQuery->where('id_revisor', 'LIKE', "%{$search}%")
+                    ->orWhereHas('certificado', function ($q) use ($search) {
+                        $q->where('num_certificado', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('observaciones', 'LIKE', "%{$search}%")
+                    ->orWhere('tipo_revision', 'LIKE', "%{$search}%")
+                    ->count();
+            } else {
+                // Si el usuario no es admin, aplicar filtro de ID
+                $totalFiltered = $filteredQuery->where('id_revisor', $userId)
+                    ->where(function ($query) use ($search) {
+                        $query->where('id_revisor', 'LIKE', "%{$search}%")
+                              ->orWhereHas('certificado', function ($q) use ($search) {
+                                  $q->where('num_certificado', 'LIKE', "%{$search}%");
+                              })
+                              ->orWhere('observaciones', 'LIKE', "%{$search}%")
+                              ->orWhere('tipo_revision', 'LIKE', "%{$search}%");
+                    })
+                    ->count();
+            }
         }
     
         // Mapeando los resultados
@@ -68,10 +108,8 @@ class RevisionPersonalController extends Controller
             $nameRevisor = $revisor->user->name ?? null;
             $tipoDictamen = $revisor->certificado && $revisor->certificado->dictamen ? $revisor->certificado->dictamen->tipo_dictamen : null;
     
-            // Asegúrate de acceder correctamente a num_dictamen
             $numDictamen = $revisor->certificado && $revisor->certificado->dictamen ? $revisor->certificado->dictamen->num_dictamen : null;
     
-            // Agregar las fechas correctas
             $fechaVigencia = $revisor->certificado ? $revisor->certificado->fecha_vigencia : null;
             $fechaVencimiento = $revisor->certificado ? $revisor->certificado->fecha_vencimiento : null;
     
@@ -84,10 +122,11 @@ class RevisionPersonalController extends Controller
                 'tipo_revision' => $revisor->tipo_revision,
                 'num_certificado' => $revisor->certificado ? $revisor->certificado->num_certificado : null,
                 'id_certificado' => $revisor->certificado ? $revisor->certificado->id_certificado : null,
+               // 'cliente' => $revisor->certificado ? $revisor->certificado->dictamen-> : null,
                 'tipo_dictamen' => $tipoDictamen,
-                'num_dictamen' => $numDictamen, // Añadir num_dictamen al resultado
-                'fecha_vigencia' => $fechaVigencia, // Añadir fecha de vigencia
-                'fecha_vencimiento' => $fechaVencimiento, // Añadir fecha de vencimiento
+                'num_dictamen' => $numDictamen,
+                'fecha_vigencia' => Helpers::formatearFecha($fechaVigencia),
+                'fecha_vencimiento' => Helpers::formatearFecha($fechaVencimiento),
             ];
         })->filter(function ($item) {
             return $item['id_revisor'] !== null;
@@ -100,6 +139,8 @@ class RevisionPersonalController extends Controller
             'data' => $data,
         ]);
     }
+    
+    
     
     
     

@@ -17,7 +17,7 @@
 
                         <div class="form-floating form-floating-outline mb-6">
                             <select id="edit_id_inspeccion" name="edit_id_inspeccion" class="form-select select2" aria-label="Default select example">
-                                <option value="" disabled selected>Elige un numero de inspeccion</option>
+                                <option value="" disabled selected>Elige un numero de inspección</option>
                                     @foreach ($inspeccion as $insp)
                                     <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option>
                                     @endforeach
@@ -34,8 +34,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select class=" form-select select2" id="edit_categoria" name="edit_categoria" aria-label="categoria">
-                                    <option value="" disabled selected>Elige una categoria</option>
+                                <select class=" form-select select2" id="edit_categoria" name="edit_categoria" aria-label="categoría">
+                                    <option value="" disabled selected>Elige una categoría</option>
                                     @foreach ($categorias as $cate)
                                     <option value="{{ $cate->categoria }}">{{ $cate->categoria }}</option>
                                     @endforeach
@@ -67,7 +67,7 @@
                                 <select class=" form-select" id="edit_unidad" name="edit_unidad" aria-label="Unidad">
                                     <option value="Litros">Litros</option>
                                     <option value="Mililitros">Mililitros</option>
-                                    <option value="Centrilitros">Centrilitros</option>
+                                    <option value="Centilitros">Centilitros</option>
                                 </select>
                                 <label for="edit_unidad">Unidad</label>
                             </div>
@@ -108,8 +108,8 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select class=" form-select select2" id="edit_id_tipo" name="edit_id_tipo" aria-label="categoria">
-                                    <option value="" disabled selected>Elige una categoria</option>
+                                <select class=" form-select select2" id="edit_id_tipo" name="edit_id_tipo" aria-label="categoría">
+                                    <option value="" disabled selected>Elige una categoría</option>
                                     @foreach ($tipos as $tipo)
                                     <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
                                     @endforeach
@@ -142,10 +142,13 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th><button type="button" class="btn btn-primary add-row"> <i class="ri-add-line"></i>
+                                <th><button type="button" class="btn btn-primary add-row-edit"> <i class="ri-add-line"></i>
                                     </button></th>
                                 <th>Rango inicial</th>
                                 <th>Rango final</th>
+                                <th>Merma inicial</th>
+                                <th>Merma final</th>
+
                             </tr>
                         </thead>
                         <tbody id="edit_contenidoRango">
@@ -155,12 +158,20 @@
                                             class="ri-delete-bin-5-fill"></i> </button>
                                 </th>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="rango_inicial[]"
-                                        id="folio_inicial">
+                                    <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]"
+                                        id="folio_inicial" min="0" placeholder="Rango inicial">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="rango_final[]"
-                                        id="folio_final">
+                                    <input type="number" class="form-control form-control-sm" name="edit_rango_final[]"
+                                        id="folio_final" min="0" placeholder="Rango final">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]"
+                                        id="mermas_inicial" min="0" placeholder="Merma inicial">
+                                </td>
+                                <td>
+                                    <input type="number" class="form-control form-control-sm" name="edit_mermas_final[]"
+                                        id="mermas_final" min="0" placeholder="Merma final">
                                 </td>
                             </tr>
                         </tbody>

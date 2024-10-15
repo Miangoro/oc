@@ -17,4 +17,6 @@ class Documentacion extends Model
     {
         return $this->hasMany(Documentacion_url::class, 'id_documento');
     }
+
+    
 }
