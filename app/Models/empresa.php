@@ -32,7 +32,7 @@ class empresa extends Model
         return $this->hasMany(Instalaciones::class, 'id_empresa');
     }
 
-    
+
     public function guiasEmpresa()
     {
         return $this->hasMany(Guias::class, 'id_empresa');
@@ -89,10 +89,16 @@ class empresa extends Model
     {
         return $this->hasMany(solicitudesModel::class, 'id_empresa','id_empresa');
     }
-    
+
     public function contratos()
     {
         return $this->hasMany(empresaContrato::class, 'id_empresa', 'id_empresa');
     }
+
+    public function normas()
+    {
+        return $this->belongsToMany(normas_catalo::class, 'empresa_norma_certificar', 'id_empresa', 'id_norma');
+    }
+
 
 }

@@ -28,9 +28,9 @@ class solicitudHolograma extends Model
         'costo_envio',
         'no_guia',
 
- 
+
     ];
-    
+
     public function empresa()
     {
         return $this->belongsTo(empresa::class, 'id_empresa');
@@ -44,7 +44,7 @@ class solicitudHolograma extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class,'id_solicitante', 'id');
+        return $this->belongsTo(User::class, 'id_solicitante', 'id');
     }
 
 
@@ -53,12 +53,12 @@ class solicitudHolograma extends Model
         return $this->belongsTo(empresaNumCliente::class, 'id_empresa', 'id_empresa');
     }
 
-  
+
 
 
     public function cantidadActivados($id_solicitud)
     {
-            // Obtener los registros que coincidan con la solicitud
+        // Obtener los registros que coincidan con la solicitud
         $activaciones = activarHologramasModelo::where("id_solicitud", $id_solicitud)->get();
 
         $totalActivados = 0;
@@ -82,7 +82,32 @@ class solicitudHolograma extends Model
         return $totalActivados;
     }
 
-    
 
+    public function cantidadMermas($id_solicitud)
+    {
+        // Obtener los registros que coincidan con la solicitud
+        $activaciones = activarHologramasModelo::where("id_solicitud", $id_solicitud)->get();
+        
+        $totalMermas = 0;
+    
+        foreach ($activaciones as $activacion) {
+            // Decodificar el JSON almacenado en la columna 'mermas'
+            $mermas = json_decode($activacion->mermas, true);
+    
+            // Asegurarse de que mermas es un array
+            if (is_array($mermas) && isset($mermas['mermas'])) {
+                // Sumar los valores de mermas
+                foreach ($mermas['mermas'] as $merma) {
+                    // Verificar si el valor de mermas es un número y no es nulo
+                    if (is_numeric($merma)) {
+                        $totalMermas += $merma;
+                    }
+                }
+            }
+        }
+    
+        return $totalMermas;
+    }
+    
     
 }

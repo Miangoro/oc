@@ -134,7 +134,10 @@
 
                     </div>
 
-                   
+                    <div class="text-center mb-6">
+                        <h4 class="address-title mb-2">Activar</h4>
+                        <p class="address-subtitle"></p>
+                    </div>
 
                     <div style="display: none;" id="mensaje" role="alert"></div>
 
@@ -142,10 +145,12 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th><button type="button" class="btn btn-primary add-row"> <i class="ri-add-line"></i>
+                                <th><button type="button" class="btn btn-primary add-row-edit"> <i class="ri-add-line"></i>
                                     </button></th>
                                 <th>Rango inicial</th>
                                 <th>Rango final</th>
+
+
                             </tr>
                         </thead>
                         <tbody id="edit_contenidoRango">
@@ -155,13 +160,48 @@
                                             class="ri-delete-bin-5-fill"></i> </button>
                                 </th>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="rango_inicial[]"
-                                        id="folio_inicial">
+                                    <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]"
+                                        id="folio_inicial"  placeholder="Rango inicial"  min="0">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="rango_final[]"
-                                        id="folio_final">
+                                    <input type="number" class="form-control form-control-sm" name="edit_rango_final[]"
+                                        id="folio_final"  placeholder="Rango final"  min="0">
                                 </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                    <div class="text-center mb-6">
+                        <h4 class="address-title mb-2">Mermas (Opcional)</h4>
+                        <p class="address-subtitle"></p>
+                    </div>
+                    <div style="display: none;" id="mensaje" role="alert"></div>
+
+                    
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th><button type="button" class="btn btn-primary add-row-editMermas"> <i class="ri-add-line"></i>
+                                    </button></th>
+                                <th>Mermas</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody id="edit_contenidoMermas">
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-danger remove-row" disabled> <i
+                                            class="ri-delete-bin-5-fill"></i> </button>
+                                </th>
+
+                                <td>
+                                    <input type="number" class="form-control form-control-sm" name="edit_mermas[]"
+                                        id="mermas" min="0" placeholder="Mermas" >
+                                </td>
+
                             </tr>
                         </tbody>
                     </table>

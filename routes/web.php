@@ -483,6 +483,9 @@ Route::get('/certificado_productor_mezcal', [CartaAsignacionController::class, '
 //Clientes prospecto y confirmado
 Route::get('/clientes/prospecto', [clientesProspectoController::class, 'UserManagement'])->name('clientes-prospecto');
 Route::resource('/empresas-list', clientesProspectoController::class);
+Route::get('/clientes-list/{id}/edit', [clientesProspectoController::class, 'edit']);
+Route::post('/clientes/{id}/update', [clientesProspectoController::class, 'update'])->name('clientes.update');
+Route::get('/solicitudInfoClienteNOM-199/{id}', [clientesProspectoController::class, 'pdfNOM199']);
 Route::post('/aceptar-cliente', [clientesProspectoController::class, 'aceptarCliente']);
 Route::get('/lista_empresas/{id}', [getFuncionesController::class, 'find_clientes_prospecto']);
 Route::get('/lista_inspetores', [getFuncionesController::class, 'usuariosInspectores']);
@@ -790,5 +793,3 @@ Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'act
 //Revisones
 Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManagement'])->name('revision-personal');
 Route::resource('/personal-list', RevisionPersonalController::class);
-Route::post('/revisor/registrar-preguntas', [RevisionPersonalController::class, 'registrarPreguntas'])->name('registrar.preguntas');
-
