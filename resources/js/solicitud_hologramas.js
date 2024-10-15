@@ -1339,7 +1339,7 @@ $(function () {
                 </button>
             </th>
             <td>
-                <input type="number" class="form-control form-control-sm" name="edit_mermas[]" min="0"  placeholder="Rango inicial">
+                <input type="number" class="form-control form-control-sm" name="edit_mermas[]" min="0"  placeholder="Mermas">
             </td>
 
         </tr>`;
@@ -1755,7 +1755,7 @@ $(function () {
                   <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
               </th>
               <td>
-                  <input type="number" class="form-control form-control-sm " min="0" name="mermas[]"  placeholder="Rango inicial" />
+                  <input type="number" class="form-control form-control-sm " min="0" name="mermas[]"  placeholder="Mermas" />
               </td>
 
 
