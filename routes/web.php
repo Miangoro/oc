@@ -793,3 +793,4 @@ Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'act
 //Revisones
 Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManagement'])->name('revision-personal');
 Route::resource('/personal-list', RevisionPersonalController::class);
+Route::post('/revisor/registrar-preguntas', [RevisionPersonalController::class, 'registrarPreguntas'])->name('registrar.preguntas');
