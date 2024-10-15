@@ -135,7 +135,7 @@ class solicitudHolograma extends Controller
                     'folio_inicial' => $user->folio_inicial,
                     'folio_final' => $user->folio_final,
                     'activados' => $user->cantidadActivados($user->id_solicitud),
-'restantes' => ($user->cantidad_hologramas - $user->cantidadActivados($user->id_solicitud) - $user->cantidadMermas($user->id_solicitud)),
+                    'restantes' => ($user->cantidad_hologramas - $user->cantidadActivados($user->id_solicitud) - $user->cantidadMermas($user->id_solicitud)),
                     'mermas' => $user->cantidadMermas($user->id_solicitud),
 
 

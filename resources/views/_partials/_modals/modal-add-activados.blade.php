@@ -20,30 +20,32 @@
                 <form id="activosHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
 
-                        <table class="table table-bordered">
-                            <thead>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                              <thead>
                                 <tr>
-                                    <th>id</th>
-                                    <th>Lote agranel</th>
-                                    <th>Categoría</th>
-                                    <th>Análisis FQ</th>
-                                    <th>Contenido neto</th>
-                                    <th>Clase</th>
-                                    <th>Contenido Alcohólico</th>
-                                    <th>No. de lote de envasado</th>
-                                    <th>No. de servicio</th>
-                                    <th>Lugar de producción</th>
-                                    <th>Lugar de envasado</th>
-                                    <th>Rango inicial</th>
-                                    <th>Rango final</th>
-                                    <th>Mermas inicial</th>
-                                    <th>Mermas final</th>
-                                    <th>Acciones</th> <!-- Nueva columna para el botón de editar -->
+                                  <th>id</th>
+                                  <th>Lote agranel</th>
+                                  <th>Categoría</th>
+                                  <th>Análisis FQ</th>
+                                  <th>Contenido neto</th>
+                                  <th>Clase</th>
+                                  <th>Contenido Alcohólico</th>
+                                  <th>No. de lote de envasado</th>
+                                  <th>No. de servicio</th>
+                                  <th>Lugar de producción</th>
+                                  <th>Lugar de envasado</th>
+                                  <th>Rango inicial</th>
+                                  <th>Rango final</th>
+                                  <th>Mermas inicial</th>
+                                  <th>Mermas final</th>
+                                  <th>Acciones</th> <!-- Nueva columna para el botón de editar -->
                                 </tr>
-                            </thead>
-                            <tbody id="tablita">
-                            </tbody>
-                        </table>
+                              </thead>
+                              <tbody id="tablita">
+                              </tbody>
+                            </table>
+                          </div>
 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
