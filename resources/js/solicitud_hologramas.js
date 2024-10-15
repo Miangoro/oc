@@ -1297,16 +1297,16 @@ $(function () {
               </button>
           </th>
           <td>
-              <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" placeholder="Rango inicial">
+              <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" min="0" placeholder="Rango inicial">
           </td>
           <td>
-              <input type="number" class="form-control form-control-sm" name="edit_rango_final[]" placeholder="Rango final">
+              <input type="number" class="form-control form-control-sm" name="edit_rango_final[]" min="0" placeholder="Rango final">
           </td>
                     <td>
-              <input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]" placeholder="Merma inicial">
+              <input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]" min="0" placeholder="Merma inicial">
           </td>
           <td>
-              <input type="number" class="form-control form-control-sm" name="edit_mermas_final[]" placeholder="Merma final">
+              <input type="number" class="form-control form-control-sm" name="edit_mermas_final[]" min="0" placeholder="Merma final">
           </td>
       </tr>`;
 
@@ -1705,16 +1705,16 @@ $(function () {
                   <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
               </th>
               <td>
-                  <input type="number" class="form-control form-control-sm rango_inicial" name="rango_inicial[]" />
+                  <input type="number" class="form-control form-control-sm rango_inicial" min="0" name="rango_inicial[]" />
               </td>
               <td>
-                  <input type="number" class="form-control form-control-sm" name="rango_final[]">
+                  <input type="number" class="form-control form-control-sm" min="0" name="rango_final[]">
               </td>
                <td>
-                  <input type="number" class="form-control form-control-sm" name="mermas_inicial[]">
+                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_inicial[]">
               </td>
                    <td>
-                  <input type="number" class="form-control form-control-sm" name="mermas_final[]">
+                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_final[]">
               </td>
               
           </tr>`;
