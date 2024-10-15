@@ -1297,16 +1297,16 @@ $(function () {
               </button>
           </th>
           <td>
-              <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" min="0" placeholder="Rango inicial">
+              <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" min="0" value="0" placeholder="Rango inicial">
           </td>
           <td>
-              <input type="number" class="form-control form-control-sm" name="edit_rango_final[]" min="0" placeholder="Rango final">
+              <input type="number" class="form-control form-control-sm" name="edit_rango_final[]" min="0" value="0" placeholder="Rango final">
           </td>
                     <td>
-              <input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]" min="0" placeholder="Merma inicial">
+              <input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]" min="0" value="0" placeholder="Merma inicial">
           </td>
           <td>
-              <input type="number" class="form-control form-control-sm" name="edit_mermas_final[]" min="0" placeholder="Merma final">
+              <input type="number" class="form-control form-control-sm" name="edit_mermas_final[]" min="0" value="0" placeholder="Merma final">
           </td>
       </tr>`;
 
@@ -1315,19 +1315,8 @@ $(function () {
 
   // Eliminar fila de la tabla
   $(document).on('click', '.remove-row', function () {
-    // Asegúrate de que al menos una fila permanezca en la tabla
-    if ($('#edit_contenidoRango tr').length > 1) {
-      $(this).closest('tr').remove();
-    } else {
-      Swal.fire({
-        icon: 'warning',
-        title: '¡Advertencia!',
-        text: 'Debes tener al menos un rango.',
-        customClass: {
-          confirmButton: 'btn btn-warning'
-        }
-      });
-    }
+    $(this).closest('tr').remove();
+
   });
 
 
@@ -1697,7 +1686,7 @@ $(function () {
 
   //Agregar o eliminar tablas en add activos
   $(document).ready(function () {
-    $('.add-row').click(function () {
+    $('.add-row-add').click(function () {
       // Añade una nueva fila
       var newRow = `
           <tr>
@@ -1705,16 +1694,16 @@ $(function () {
                   <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
               </th>
               <td>
-                  <input type="number" class="form-control form-control-sm rango_inicial" min="0" name="rango_inicial[]" placeholder="Rango inicial" />
+                  <input type="number" class="form-control form-control-sm rango_inicial" min="0" name="rango_inicial[]" value="0" placeholder="Rango inicial" />
               </td>
               <td>
-                  <input type="number" class="form-control form-control-sm" min="0" name="rango_final[]" placeholder="Rango final">
+                  <input type="number" class="form-control form-control-sm" min="0" name="rango_final[]"  value="0" placeholder="Rango final">
               </td>
                <td>
-                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_inicial[]" placeholder="Merma inicial">
+                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_inicial[]"  value="0" placeholder="Merma inicial">
               </td>
                    <td>
-                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_final[]" placeholder="Merma final">
+                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_final[]"  value="0" placeholder="Merma final">
               </td>
               
           </tr>`;
