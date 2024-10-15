@@ -303,7 +303,7 @@
                 <td style="color: #17365D; font-weight: bold;" rowspan="2">Dirección</td>
                 <td rowspan="2">
                    <b>Domicilio fiscal:</b>  {{ $data->empresa->domicilio_fiscal }}<br>
-                   
+
                     <b>Domicilio de instalaciones:</b> {{ $data->inspeccion->solicitud->instalacion->direccion_completa }}
 
                 </td>

@@ -27,7 +27,7 @@ class clientesProspectoController extends Controller
     $userDuplicates = 40;
 
     return view('clientes.find_clientes_prospecto_view', [
-      
+
       'verified' => $verified,
       'notVerified' => $notVerified,
       'userDuplicates' => $userDuplicates,
@@ -37,14 +37,14 @@ class clientesProspectoController extends Controller
 
   public function aceptarCliente(Request $request){
 
-       for ($i=0; $i < count($request->numero_cliente); $i++) { 
+       for ($i=0; $i < count($request->numero_cliente); $i++) {
           $cliente = new empresaNumCliente();
           $cliente->id_empresa = $request->id_empresa;
           $cliente->numero_cliente = $request->numero_cliente[$i];
           $cliente->id_norma = $request->id_norma[$i];
           $cliente->save();
        }
-       
+
 
         $contrato = new empresaContrato();
         $contrato->id_empresa = $request->id_empresa;
@@ -70,10 +70,10 @@ class clientesProspectoController extends Controller
   }
 
   public function info($id)
-    {   
+    {
       $res = DB::select('SELECT p.id_producto, n.id_norma, a.id_actividad, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono
-      FROM empresa e 
-      JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
+      FROM empresa e
+      JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
       JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
       JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
       JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
@@ -94,8 +94,8 @@ class clientesProspectoController extends Controller
 
   public function store(Request $request)
   {
- 
-   
+
+
       $solicitud = solicitud_informacion::where('id_empresa', $request->id_empresa)->first();
       $solicitud->medios = $request->medios;
       $solicitud->competencia = $request->competencia;
@@ -106,8 +106,8 @@ class clientesProspectoController extends Controller
 
         // user created
         return response()->json('Validada');
-      
-    
+
+
   }
 
   public function index(Request $request)
@@ -185,4 +185,39 @@ class clientesProspectoController extends Controller
       ]);
     }
   }
+
+
+  public function edit($id)
+  {
+      try {
+          $prospectos = empresa::findOrFail($id);
+          return response()->json($prospectos);
+      } catch (\Exception $e) {
+          return response()->json(['error' => 'Error al obtener el cliente'], 500);
+      }
+  }
+
+  public function update(Request $request, $id)
+  {
+      // Validar los datos del formulario
+      $request->validate([
+          'nombre_cliente' => 'required|string|max:255',
+          'regimen' => 'required|string',
+          'domicilio_fiscal' => 'required|string|max:255',
+      ]);
+      try {
+          // Buscar el cliente por ID
+          $empresa = empresa::findOrFail($id);
+          // Actualizar los datos del cliente
+          $empresa->razon_social = $request->nombre_cliente;
+          $empresa->regimen = $request->regimen;
+          $empresa->domicilio_fiscal = $request->domicilio_fiscal;
+          // Guardar los cambios
+          $empresa->save();
+          return response()->json(['message' => 'Cliente actualizado con éxito']);
+      } catch (\Exception $e) {
+          return response()->json(['error' => 'Error al actualizar el cliente'], 500);
+      }
+  }
+
 }

@@ -37,15 +37,10 @@
         .light-style .bs-stepper.wizard-icons .bs-stepper-header .bs-stepper-label {
             color: white;
         }
-
-        /* Usando la variable de Bootstrap para el color primario */
-        /*         .custom-option.active {
-                    border: 1px solid var(--bs-primary);
-                   } */
         .custom-option.active {
             border: 2px solid #8eb3ae;
+            /* El color del borde usa la variable definida */
         }
-
     </style>
     <div class="card">
         <img alt="Organismo de certificación" src="{{ asset('assets/img/branding/Banner solicitud_información.png') }}"
@@ -227,13 +222,13 @@
 
                             <div class="col-md">
                                 <div class="form-check custom-option custom-option-icon">
-                                    <label class="form-check-label custom-option-content" for="customRadioIcon5">
+                                    <label class="form-check-label custom-option-content" for="customRadioIcon65">
                                         <span class="custom-option-body">
                                             <i class="ri-goblet-2-fill"></i>
                                             <small>Otras bebidas alcoholicas</small>
                                         </span>
-                                        <input name="producto[]" value="5" class="form-check-input" type="checkbox"
-                                            value="" id="customRadioIcon5" />
+                                        <input name="producto[]" value="65" class="form-check-input" type="checkbox"
+                                            value="" id="customRadioIcon65" />
                                     </label>
                                 </div>
                             </div>
@@ -279,12 +274,12 @@
                             </div>
                             <div class="col-md">
                                 <div class=" custom-option custom-option-icon">
-                                    <label class="form-check-label custom-option-content" for="customRadioIcon8">
+                                    <label class="form-check-label custom-option-content" for="customRadioIcon68">
                                         <span class="custom-option-body">
                                             <small>NOM-199-SCFI-2017</small>
                                         </span>
-                                        <input name="norma[]" class="form-check-input" type="checkbox" value="4"
-                                            id="customRadioIcon8" />
+                                        <input name="norma[]" class="form-check-input" type="checkbox" value="64"
+                                            id="customRadioIcon68" />
                                     </label>
                                 </div>
                             </div>
@@ -349,7 +344,7 @@
                         </div>
 
                         {{-- secciones ocultas --}}
-                        <div id="nom199-section">
+                        <div id="nom199-section" class="d-none">
                             <h6 class="my-4">Clasificación de Bebida(s) Alcohólica(s):</h6>
                             <div class="row gy-3 align-items-start">
                                 <div class="col-md">
@@ -429,32 +424,34 @@
                                     </div>
                                 </div>
 
-                            </div>
-                            <hr>
-                        </div>
-
-
-                        {{-- Sección de Clasificación de Bebidas Alcohólicas --}}
-                        <div id="clasificacion-bebidas-section">
-                            <h6 class="my-4">Clasificación de Bebida(s) Alcohólica(s):</h6>
-                            <div class="row gy-3 align-items-start">
                                 <div class="col-md">
                                     <div class="form-check custom-option custom-option-icon">
                                         <label class="form-check-label custom-option-content" for="customRadioIcon25">
                                             <span class="custom-option-body">
-                                                <small>Cerveza</small>
+                                                <i class="ri-goblet-fill"></i>
+                                                <small>Bebidas alcohólicas preparadas (2% a 12% Alc. Vol.)
+                                                </small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="25" id="customRadioIcon25" />
                                         </label>
                                     </div>
                                 </div>
+
+                            </div>
+                            <hr>
+                        </div>
+
+
+                        {{-- Sección de Clasificación de Bebidas Alcohólicas --}}
+                        <div id="clasificacion-bebidas-section" class="d-none">
+                            <h6 class="my-4">Bebidas Alcohólicas Fermentadas (2% a 20% Alc. Vol.)</h6>
+                            <div class="row gy-3 align-items-start">
                                 <div class="col-md">
                                     <div class="form-check custom-option custom-option-icon">
                                         <label class="form-check-label custom-option-content" for="customRadioIcon26">
                                             <span class="custom-option-body">
-
-                                                <small>_____Ale</small>
+                                                <small>Cerveza</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="26" id="customRadioIcon26" />
@@ -465,7 +462,7 @@
                                     <div class="form-check custom-option custom-option-icon">
                                         <label class="form-check-label custom-option-content" for="customRadioIcon27">
                                             <span class="custom-option-body">
-                                                <small>Pulque</small>
+                                                <small>_____Ale</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="27" id="customRadioIcon27" />
@@ -476,7 +473,7 @@
                                     <div class="form-check custom-option custom-option-icon">
                                         <label class="form-check-label custom-option-content" for="customRadioIcon28">
                                             <span class="custom-option-body">
-                                                <small>Sake</small>
+                                                <small>Pulque</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="28" id="customRadioIcon28" />
@@ -487,8 +484,7 @@
                                     <div class="form-check custom-option custom-option-icon">
                                         <label class="form-check-label custom-option-content" for="customRadioIcon29">
                                             <span class="custom-option-body">
-
-                                                <small>Sidra</small>
+                                                <small>Sake</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="29" id="customRadioIcon29" />
@@ -499,7 +495,7 @@
                                     <div class="form-check custom-option custom-option-icon">
                                         <label class="form-check-label custom-option-content" for="customRadioIcon30">
                                             <span class="custom-option-body">
-                                                <small>Vino</small>
+                                                <small>Sidra</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="30" id="customRadioIcon30" />
@@ -510,10 +506,21 @@
                                     <div class="form-check custom-option custom-option-icon">
                                         <label class="form-check-label custom-option-content" for="customRadioIcon31">
                                             <span class="custom-option-body">
-                                                <small>Otro (Especifique):</small>
+                                                <small>Vino</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="31" id="customRadioIcon31" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon32">
+                                            <span class="custom-option-body">
+                                                <small>Otro (Especifique):</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="32" id="customRadioIcon32" />
                                         </label>
                                     </div>
                                 </div>
@@ -524,27 +531,15 @@
 
 
                         {{-- Sección de Clasificación de Bebidas Alcohólicas --}}
-                        <div id="clasificacion-bebidas-section-2">
-                            <h6 class="my-4">Clasificación de Bebida(s) Alcohólica(s):</h6>
+                        <div id="clasificacion-bebidas-section-2" class="d-none">
+                            <h6 class="my-4">Bebidas Alcohólicas Destiladas (32% a 55% Alc. Vol.)</h6>
                             <div class="row gy-3 align-items-start">
-                                <div class="col-md">
-                                    <div class="form-check custom-option custom-option-icon">
-                                        <label class="form-check-label custom-option-content" for="customRadioIcon32">
-                                            <span class="custom-option-body">
-                                                <i class="ri-wine-fill"></i>
-                                                <small>Aguardiente</small>
-                                            </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="32" id="customRadioIcon32" />
-                                        </label>
-                                    </div>
-                                </div>
                                 <div class="col-md">
                                     <div class="form-check custom-option custom-option-icon">
                                         <label class="form-check-label custom-option-content" for="customRadioIcon33">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small>Armagnac</small>
+                                                <small>Aguardiente</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="33" id="customRadioIcon33" />
@@ -556,7 +551,7 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon34">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small>Bacanora</small>
+                                                <small>Armagnac</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="34" id="customRadioIcon34" />
@@ -568,7 +563,7 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon35">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small>Brandy</small>
+                                                <small>Bacanora</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="35" id="customRadioIcon35" />
@@ -580,7 +575,7 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon36">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small>Cachaca</small>
+                                                <small>Brandy</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="36" id="customRadioIcon36" />
@@ -592,7 +587,7 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon37">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small>Comiteco</small>
+                                                <small>Cachaca</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="37" id="customRadioIcon37" />
@@ -604,10 +599,22 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon38">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small>Ginebra</small>
+                                                <small>Comiteco</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="38" id="customRadioIcon38" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon39">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Ginebra</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="39" id="customRadioIcon39" />
                                         </label>
                                     </div>
                                 </div>
@@ -615,29 +622,16 @@
                             <hr>
                         </div>
 
-
                         {{-- Sección de Clasificación de Bebidas Alcohólicas --}}
-                        <div id="clasificacion-bebidas-section-3">
-                            <h6 class="my-4">Clasificación de Bebida(s) Alcohólica(s):</h6>
+                        <div id="clasificacion-bebidas-section-3" class="d-none">
+                            <h6 class="my-4">Licores o cremas (13.5% a 55% Alc. Vol.)</h6>
                             <div class="row gy-3 align-items-start">
-                                <div class="col-md">
-                                    <div class="form-check custom-option custom-option-icon">
-                                        <label class="form-check-label custom-option-content" for="customRadioIcon39">
-                                            <span class="custom-option-body">
-                                                <i class="ri-wine-fill"></i>
-                                                <small><br>Anís <br></small>
-                                            </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="39" id="customRadioIcon39" />
-                                        </label>
-                                    </div>
-                                </div>
                                 <div class="col-md">
                                     <div class="form-check custom-option custom-option-icon">
                                         <label class="form-check-label custom-option-content" for="customRadioIcon40">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small><br>Amaretto <br></small>
+                                                <small>Anís</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="40" id="customRadioIcon40" />
@@ -649,7 +643,7 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon41">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small>Crema o licor de cassis</small>
+                                                <small>Amaretto</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="41" id="customRadioIcon41" />
@@ -661,7 +655,7 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon42">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small>Crema o licor de café</small>
+                                                <small>Crema o licor de cassis</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="42" id="customRadioIcon42" />
@@ -673,7 +667,7 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon43">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small>Crema o licor de cacao</small>
+                                                <small>Crema o licor de café</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="43" id="customRadioIcon43" />
@@ -685,7 +679,7 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon44">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small>Crema o licor de menta</small>
+                                                <small>Crema o licor de cacao</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="44" id="customRadioIcon44" />
@@ -697,7 +691,7 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon45">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small><br>Fernet <br></small>
+                                                <small>Crema o licor de menta</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="45" id="customRadioIcon45" />
@@ -709,7 +703,7 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon46">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small><br>Irish cream <br></small>
+                                                <small>Fernet</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="46" id="customRadioIcon46" />
@@ -721,7 +715,7 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon47">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small><br>Licor amargo <br></small>
+                                                <small>Irish cream</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="47" id="customRadioIcon47" />
@@ -733,7 +727,7 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon48">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small>Licores de frutas</small>
+                                                <small>Licor amargo</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="48" id="customRadioIcon48" />
@@ -745,7 +739,7 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon49">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small><br>Sambuca <br></small>
+                                                <small>Licores de frutas</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="49" id="customRadioIcon49" />
@@ -757,7 +751,7 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon50">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small><br>Xtabentún <br></small>
+                                                <small>Sambuca</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="50" id="customRadioIcon50" />
@@ -769,10 +763,22 @@
                                         <label class="form-check-label custom-option-content" for="customRadioIcon51">
                                             <span class="custom-option-body">
                                                 <i class="ri-wine-fill"></i>
-                                                <small>Otro (Especifique):</small>
+                                                <small>Xtabentún</small>
                                             </span>
                                             <input name="actividad[]" class="form-check-input" type="checkbox"
                                                 value="51" id="customRadioIcon51" />
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-check custom-option custom-option-icon">
+                                        <label class="form-check-label custom-option-content" for="customRadioIcon52">
+                                            <span class="custom-option-body">
+                                                <i class="ri-wine-fill"></i>
+                                                <small>Otro (Especifique):</small>
+                                            </span>
+                                            <input name="actividad[]" class="form-check-input" type="checkbox"
+                                                value="52" id="customRadioIcon52" />
                                         </label>
                                     </div>
                                 </div>
@@ -781,22 +787,11 @@
                         </div>
 
 
+
                         {{-- Sección de Clasificación de Bebidas Alcohólicas --}}
-                        <div id="clasificacion-bebidas-section-4">
-                            <h6 class="my-4">Clasificación de Bebida(s) Alcohólica(s):</h6>
+                        <div id="clasificacion-bebidas-section-4" class="d-none">
+                            <h6 class="my-4">Bebidas Alcohólicas Destiladas (32% a 55% Alc. Vol.)</h6>
                             <div class="row gy-3 align-items-start">
-                                <div class="col-md">
-                                    <div class="form-check custom-option custom-option-icon">
-                                        <label class="form-check-label custom-option-content" for="customRadioIcon52">
-                                            <span class="custom-option-body">
-                                                <i class="ri-wine-fill"></i>
-                                                <small>Habanero</small>
-                                            </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="52" id="customRadioIcon52" />
-                                        </label>
-                                    </div>
-                                </div>
                                 <div class="col-md">
                                     <div class="form-check custom-option custom-option-icon">
                                         <label class="form-check-label custom-option-content" for="customRadioIcon53">
@@ -898,56 +893,83 @@
                         </div>
 
 
-
                         {{-- Sección de Clasificación de Cócteles --}}
-                        <div id="clasificacion-cocteles-section">
-                            <h6 class="my-4">Clasificación de Cóctel(es):</h6>
+                        <div id="clasificacion-cocteles-section-5" class="d-none">
+                            <h6 class="my-4">Cócteles (12% a 32% Alc. Vol.)</h6>
                             <div class="row gy-3 align-items-start">
                                 <div class="col-md">
-                                    <div class="form-check custom-option custom-option-icon">
-                                        <label class="form-check-label custom-option-content" for="customRadioIcon61">
-                                            <span class="custom-option-body">
-                                                <i class="ri-cocktail-fill"></i>
-                                                <small>Cóctel de _______</small>
-                                            </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="61" id="customRadioIcon61" />
+                                    <div class="form-floating form-floating-outline">
+                                        <input name="coctel_de" class="form-control" type="text" id="inputCoctel61"
+                                            placeholder="Cóctel de" />
+                                        <label for="inputCoctel61"><small>Cóctel de</small></label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-floating form-floating-outline">
+                                        <input name="coctel_sabor_de" class="form-control" type="text"
+                                            id="inputCoctel62" placeholder="Cóctel sabor de" />
+                                        <label for="inputCoctel62"><small>Cóctel sabor de</small></label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-floating form-floating-outline">
+                                        <input name="coctel_de_o_al" class="form-control" type="text"
+                                            id="inputCoctel63" placeholder="Cóctel de o al" />
+                                        <label for="inputCoctel63"><small>Cóctel de o al</small></label>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div class="form-floating form-floating-outline">
+                                        <input name="coctel_con" class="form-control" type="text" id="inputCoctel64"
+                                            placeholder="Cóctel con" />
+                                        <label for="inputCoctel64"><small>Cóctel con</small></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+                        {{-- Sección de Clasificación de Bebidas Alcohólicas Preparadas --}}
+                        <div id="clasificacion-bebidas-section-6" class="d-none">
+                            <h6 class="my-4">Bebidas alcohólicas preparadas (2% a 12% Alc. Vol.)</h6>
+                            <div class="row gy-3 align-items-start">
+                                <div class="col-md">
+                                    <div class="form-floating form-floating-outline">
+
+                                        <input name="bebida_alcoholica_preparada_de" class="form-control" type="text"
+                                            id="inputBebida65" placeholder="Bebida alcohólica preparada de" />
+                                        <label for="inputBebida65" class="custom-option-body"><small>Bebida alcohólica
+                                                preparada de</small></label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md">
+                                    <div class="form-floating form-floating-outline">
+                                        <input name="bebida_alcoholica_preparada_de_o_al" class="form-control"
+                                            type="text" id="inputBebida66"
+                                            placeholder="Bebida alcohólica preparada de o al" />
+                                        <label for="inputBebida66">
+                                            <small>Bebida alcohólica preparada de o al</small>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md">
+                                    <div class="form-floating form-floating-outline">
+                                        <input name="bebida_alcoholica_preparada_sabor_de" class="form-control"
+                                            type="text" id="inputBebida67"
+                                            placeholder="Bebida alcohólica preparada sabor de" />
+                                        <label for="inputBebida67">
+                                            <small>Bebida alcohólica preparada sabor de</small>
                                         </label>
                                     </div>
                                 </div>
                                 <div class="col-md">
-                                    <div class="form-check custom-option custom-option-icon">
-                                        <label class="form-check-label custom-option-content" for="customRadioIcon62">
-                                            <span class="custom-option-body">
-                                                <i class="ri-cocktail-fill"></i>
-                                                <small>Cóctel sabor de ___________</small>
-                                            </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="62" id="customRadioIcon62" />
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md">
-                                    <div class="form-check custom-option custom-option-icon">
-                                        <label class="form-check-label custom-option-content" for="customRadioIcon63">
-                                            <span class="custom-option-body">
-                                                <i class="ri-cocktail-fill"></i>
-                                                <small>Cóctel de o al ____________</small>
-                                            </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="63" id="customRadioIcon63" />
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md">
-                                    <div class="form-check custom-option custom-option-icon">
-                                        <label class="form-check-label custom-option-content" for="customRadioIcon64">
-                                            <span class="custom-option-body">
-                                                <i class="ri-cocktail-fill"></i>
-                                                <small>Cóctel con __________</small>
-                                            </span>
-                                            <input name="actividad[]" class="form-check-input" type="checkbox"
-                                                value="64" id="customRadioIcon64" />
+                                    <div class="form-floating form-floating-outline">
+                                        <input name="bebida_alcoholica_preparada_con" class="form-control" type="text"
+                                            id="inputBebida68" placeholder="Bebida alcohólica preparada con" />
+                                        <label for="inputBebida68">
+                                            <small>Bebida alcohólica preparada con</small>
                                         </label>
                                     </div>
                                 </div>
