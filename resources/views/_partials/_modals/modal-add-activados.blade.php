@@ -23,22 +23,20 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                        <th>id</th>
-                                        <th>Lote agranel</th>
-                                        <th>Categoría</th>
-                                        <th>Análisis FQ</th>
-                                        <th>Contenido neto</th>
-                                        <th>Clase</th>
-                                        <th>Contenido Alcohólico</th>
-                                        <th>No. de lote de envasado</th>
-                                        <th>No. de servicio</th>
-                                        <th>Lugar de producción</th>
-                                        <th>Lugar de envasado</th>
+                                    <th>id</th>
+                                    <th>Lote agranel</th>
+                                    <th>Categoría</th>
+                                    <th>Análisis FQ</th>
+                                    <th>Contenido neto</th>
+                                    <th>Clase</th>
+                                    <th>Contenido Alcohólico</th>
+                                    <th>No. de lote de envasado</th>
+                                    <th>No. de servicio</th>
+                                    <th>Lugar de producción</th>
+                                    <th>Lugar de envasado</th>
                                     <th>Rango inicial</th>
                                     <th>Rango final</th>
                                     <th>Acciones</th> <!-- Nueva columna para el botón de editar -->
-                                    
-
                                 </tr>
                             </thead>
                             <tbody id="tablita">

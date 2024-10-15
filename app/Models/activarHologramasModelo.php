@@ -31,4 +31,9 @@ class activarHologramasModelo extends Model
 
 
     ];
+
+    public function inspeccion()
+    {
+        return $this->belongsTo(inspecciones::class, 'id_inspeccion');
+    }
 }

@@ -54,7 +54,10 @@
           <th>empresa</th>
           <th>Solicitante</th>
           <th>Marca</th>
-          <th>cantidad hologramas</th>
+          <th>Cantidad hologramas solicitados</th>
+          <th>Activados</th>
+          <th>Mermas</th>
+          <th>Restantes</th>
           <th>dirección</th>
           <th>inicial</th>
           <th>final</th>

@@ -134,6 +134,9 @@ class solicitudHolograma extends Controller
                     'estatus' => $user->estatus,
                     'folio_inicial' => $user->folio_inicial,
                     'folio_final' => $user->folio_final,
+                    'activados' => $user->cantidadActivados($user->id_solicitud),
+                    'restantes' => ($user->cantidad_hologramas - $user->cantidadActivados($user->id_solicitud)),
+    
 
 
 

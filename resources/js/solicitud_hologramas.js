@@ -155,6 +155,9 @@ $(function () {
         { data: 'id_solicitante' },
         { data: 'id_marca' },
         { data: 'cantidad_hologramas' },
+        { data: 'activados' },
+        { data: 'cantidad_hologramas' },
+        { data: 'restantes' },
         { data: 'id_direccion' },
         { data: 'folio_inicial' },
         { data: 'folio_final' },
@@ -224,7 +227,7 @@ $(function () {
                 },  */
         {
           // email verify
-          targets: 10,
+          targets: 13,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $verified = full['estatus'];
@@ -253,7 +256,7 @@ $(function () {
 
         {
           // email verify
-          targets: 11,
+          targets: 14,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $id = full['id_solicitud'];
@@ -1146,6 +1149,11 @@ $(function () {
 
       // Rellenar el formulario con los datos obtenidos
       data.forEach(function (item) {
+       
+        let folio_inicial = String(item.folio_inicial).split(',').map(folio => {
+          return `<a href="http://localhost:8000/pages/hologramas-validacion/${folio}" target="_blank">${folio}</a>`;
+      }).join('<br>');
+        let folio_final = String(item.folio_final).replace(/,/g, '<br>');
         // Crear una nueva fila con los datos
         var fila = `
             <tr>
@@ -1161,11 +1169,11 @@ $(function () {
                 <td>${item.lugar_produccion}</td>
                 <td>${item.lugar_envasado}</td>
                 <td>
-                <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">${item.folio_inicial}</a>
+                ${folio_inicial}
                 </td>
                   <td>
                     <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">
-                      ${item.folio_final}
+                      ${folio_final}
                     </a>
                   </td>                
                   <td>

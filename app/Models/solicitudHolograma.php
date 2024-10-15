@@ -53,8 +53,36 @@ class solicitudHolograma extends Model
         return $this->belongsTo(empresaNumCliente::class, 'id_empresa', 'id_empresa');
     }
 
+  
 
 
+    public function cantidadActivados($id_solicitud)
+    {
+            // Obtener los registros que coincidan con la solicitud
+        $activaciones = activarHologramasModelo::where("id_solicitud", $id_solicitud)->get();
+
+        $totalActivados = 0;
+
+        foreach ($activaciones as $activacion) {
+            // Decodificar el JSON almacenado en la columna 'folios'
+            $folios = json_decode($activacion->folios, true);
+
+            // Asegurarse de que existen los arrays folio_inicial y folio_final
+            if (isset($folios['folio_inicial']) && isset($folios['folio_final'])) {
+                // Iterar sobre los valores de folio_inicial y folio_final
+                foreach ($folios['folio_inicial'] as $key => $folio_inicial) {
+                    $folio_final = $folios['folio_final'][$key] ?? 0;
+
+                    // Calcular el rango activado y sumar al total
+                    $totalActivados += ($folio_final - $folio_inicial) + 1; // +1 para incluir ambos folios
+                }
+            }
+        }
+
+        return $totalActivados;
+    }
+
+    
 
     
 }
