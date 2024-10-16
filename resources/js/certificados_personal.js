@@ -358,29 +358,34 @@ function cargarRespuestas(id_revision) {
       url: `/revisor/obtener-preguntas/${id_revision}`,
       type: 'GET',
       success: function(response) {
-          const respuestasGuardadas = response.respuestas; 
+          const respuestasGuardadas = response.respuestas || {}; 
           const rows = $('#fullscreenModal .table-container table tbody tr');
 
-          // Itera sobre las filas de la tabla
           rows.each(function(index) {
               const respuestaKey = `pregunta${index + 1}`;
-              const respuestaGuardada = respuestasGuardadas[respuestaKey]?.respuesta || ''; 
-              const observacionGuardada = respuestasGuardadas[respuestaKey]?.observacion || ''; 
+              
+              if (respuestasGuardadas[respuestaKey]) {
+                  const respuestaGuardada = respuestasGuardadas[respuestaKey]?.respuesta || ''; 
+                  const observacionGuardada = respuestasGuardadas[respuestaKey]?.observacion || ''; 
 
-              let respuestaSelect = ''; 
-              if (respuestaGuardada === 'C') {
-                  respuestaSelect = '1'; 
-              } else if (respuestaGuardada === 'NC') {
-                  respuestaSelect = '2'; 
-              } else if (respuestaGuardada === 'NA') {
-                  respuestaSelect = '3';
+                  let respuestaSelect = ''; 
+                  if (respuestaGuardada === 'C') {
+                      respuestaSelect = '1'; 
+                  } else if (respuestaGuardada === 'NC') {
+                      respuestaSelect = '2'; 
+                  } else if (respuestaGuardada === 'NA') {
+                      respuestaSelect = '3';
+                  }
+
+                  if (respuestaSelect) {
+                      $(this).find('select').val(respuestaSelect);
+                  }
+
+                  $(this).find('textarea').val(observacionGuardada);
+              } else {
+                  $(this).find('select').val('');
+                  $(this).find('textarea').val(''); 
               }
-
-              if (respuestaSelect) {
-                  $(this).find('select').val(respuestaSelect);
-              }
-
-              $(this).find('textarea').val(observacionGuardada);
           });
       },
       error: function(xhr) {
@@ -389,12 +394,21 @@ function cargarRespuestas(id_revision) {
   });
 }
 
+// Evento que limpia los campos al cerrar el modal
+$('#fullscreenModal').on('hidden.bs.modal', function () {
+  const rows = $('#fullscreenModal .table-container table tbody tr');
+
+  rows.each(function() {
+      $(this).find('select').val(''); 
+      $(this).find('textarea').val(''); 
+  });
+});
+
 $(document).on('click', '.cuest', function () {
   const id_revision = $(this).data('id'); 
   cargarRespuestas(id_revision);
 });
 
-//Registrar respuestas
 let id_revision; 
 $(document).on('click', '.cuest', function () {
   id_revision = $(this).data('id'); 

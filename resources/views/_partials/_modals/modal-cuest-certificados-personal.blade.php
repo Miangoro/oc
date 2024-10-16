@@ -90,11 +90,11 @@
                                                     
                                                     <td>
                                                         <select class="form-select form-select-sm" aria-label="Elige la respuesta">
-                                                            <option selected>Selecciona</option>
+                                                            <option value="" selected>Selecciona</option> <!-- Añadir value="" -->
                                                             <option value="1">C</option>
                                                             <option value="2">NC</option>
                                                             <option value="3">NA</option>
-                                                        </select>
+                                                        </select>                                                        
                                                     </td>
                                                     <td>
                                                         <textarea rows="1" name="" id="" class="form-control" placeholder="Introduce las observaciones"></textarea>                               
