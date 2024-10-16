@@ -632,10 +632,10 @@ class PrediosController extends Controller
       // Obtener la primera (y única) inspección relacionada con el predio
       $inspeccion = Predios_Inspeccion::where('id_predio', $id_predio)->first();
 
-      if (!$inspeccion) {
+/*       if (!$inspeccion) {
           // Manejo de errores si no se encuentra la inspección
           return response()->json(['error' => 'No se encontró la inspección para este predio.'], 404);
-      }
+      } */
       $predio = Predios::with(['empresa', 'empresa.empresaNumClientes'])->find($id_predio);
 
       // Obtener la solicitud relacionada a partir del id_predio

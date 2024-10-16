@@ -15,6 +15,7 @@
 <!-- Page Scripts -->
 @section('page-script')
     @vite(['resources/js/domicilio_predios.js'])
+    @vite(['resources/js/solicitudes.js'])
 @endsection
 
 <style>
@@ -47,9 +48,9 @@
                         <th>Cuenta con Coordenadas</th>
                         <th>Superficie</th>
                         <th>estatus</th>
-                        <th>Solicitudes</th>
+                        <th>Solicitud</th>
                         <th>Pre-registro</th>
-                        <th>Registro</th>
+                        <th>Inspección</th>
                         <th>Registro</th>
                         <th>Acciones</th>
                     </tr>
@@ -64,5 +65,6 @@
     @include('_partials/_modals/modal-edit-predio')
     @include('_partials/_modals/modal-add-predio-inspeccion')
     @include('_partials/_modals/modal-add-registro-predio')
+    @include('_partials/_modals/modal-add-solicitud-georeferenciacion')
     <!-- /Modal -->
 @endsection

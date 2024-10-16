@@ -426,6 +426,14 @@ $(function () {
             'data-bs-toggle': 'modal',
             'data-bs-target': '#modalAddPredio'
           }
+        },
+        {
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">GEOREFERENCIACION</span>',
+          className: 'add-new btn btn-primary waves-effect waves-light ms-2',
+          attr: {
+            'data-bs-toggle': 'modal',
+            'data-bs-target': '#addSolicitudGeoreferenciacion'
+          }
         }
       ],
 
@@ -983,9 +991,14 @@ $(function () {
             customClass: {
               confirmButton: 'btn btn-success'
             }
+          }).then(function() {
+            // Esta función se ejecutará cuando el usuario cierre la alerta de éxito
+            // Limpiar el contenido del modal (si es necesario)
+            limpiarModal();
+
+            // Abrir el modal de georeferenciación después de que se cierre la alerta
+            $('#addSolicitudGeoreferenciacion').modal('show');
           });
-          // Limpiar el contenido del modal (si es necesario)
-          limpiarModal();
         },
         error: function (xhr) {
           Swal.fire({
@@ -1395,9 +1408,7 @@ $(function () {
                   notEmpty: {
                     message: 'Este campo es requerido'
                   },
-                  numeric: {
-                    message: 'Por favor ingresa un valor numérico válido'
-                  }
+
                 }
               });
             });
@@ -1980,9 +1991,6 @@ $(function () {
                   notEmpty: {
                     message: 'Este campo es requerido'
                   },
-                  numeric: {
-                    message: 'Por favor ingresa un valor numérico válido'
-                  }
                 }
               });
             });
