@@ -146,54 +146,42 @@ class lotesEnvasadoController extends Controller
 
 //Metodo para egistrar
     public function store(Request $request)
-    {
-        // Valida los datos
-        $validated = $request->validate([
-            'id_empresa' => 'required|exists:empresa,id_empresa',
-            'nombre_lote' => 'required|string|max:100',
-            'tipo_lote' => 'required|integer',
-            'sku' => 'required|string|max:60',
-            'id_marca' => 'required|exists:marcas,id_marca',
-            'destino_lote' => 'required|string|max:120',
-            'cant_botellas' => 'required|integer',
-            'presentacion' => 'required|integer',
-            'unidad' => 'required|string|max:50',
-            'volumen_total' => 'required|numeric',
-            'lugar_envasado' => 'required|exists:instalaciones,id_instalacion',
-            'id_lote_granel.*' => 'nullable',
-            'volumen_parcial.*' => 'nullable',
-        ]);
-    
-        // Crea un nuevo registro en la base de datos
-        try {
-            lotes_envasado::create($validated);
+{
+    try {
+        // Crear un nuevo registro en la tabla `lotes_envasado`
+        $lotes = new lotes_envasado();
+        $lotes->id_empresa = $request->id_empresa;
+        $lotes->nombre_lote = $request->nombre_lote;
+        $lotes->tipo_lote = $request->tipo_lote;
+        $lotes->sku = $request->sku;
+        $lotes->id_marca = $request->id_marca;
+        $lotes->destino_lote = $request->destino_lote;
+        $lotes->cant_botellas = $request->cant_botellas;
+        $lotes->presentacion = $request->presentacion;
+        $lotes->unidad = $request->unidad;
+        $lotes->volumen_total = $request->volumen_total;
+        $lotes->lugar_envasado = $request->lugar_envasado;
+        $lotes->save();
 
-            $ultimoLote = lotes_envasado::latest()->first();
-
-            
-
+        // Verificar si existen los arrays antes de procesarlos
+        if ($request->has('id_lote_granel') && is_array($request->id_lote_granel) && $request->has('volumen_parcial') && is_array($request->volumen_parcial)) {
             for ($i = 0; $i < count($request->id_lote_granel); $i++) {
-
-                if(empty($request->volumen_total)){
-                    $volumen_parcial =  $request->volumen_parcial[$i];
-                }else{
-                    $volumen_parcial = $request->volumen_total;
+                // Verificar que ambos arrays tengan el mismo tamaño
+                if (isset($request->id_lote_granel[$i]) && isset($request->volumen_parcial[$i])) {
+                    $envasado = new lotes_envasado_granel();
+                    $envasado->id_lote_envasado = $lotes->id_lote_envasado;  // Relacionar con el lote envasado creado
+                    $envasado->id_lote_granel = $request->id_lote_granel[$i];
+                    $envasado->volumen_parcial = $request->volumen_parcial[$i];
+                    $envasado->save();
                 }
-               
-                $envasado_granel = new lotes_envasado_granel();
-                $envasado_granel->id_lote_envasado = $ultimoLote->id_lote_envasado;
-                $envasado_granel->id_lote_granel = $request->id_lote_granel[$i];
-                $envasado_granel->volumen_parcial = $volumen_parcial;
-                $envasado_granel->save();
-              }
-          
-
-            return response()->json(['success' => 'Lote registrado exitosamente.']);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            }
         }
-    }
 
+        return response()->json(['success' => 'Lote envasado registrado exitosamente.']);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    }
+}
 
     //mostrar lotes envasados registrados
     public function edit($id)
@@ -212,11 +200,48 @@ class lotesEnvasadoController extends Controller
     //editar lotes envasados
     public function update(Request $request, $id)
     {
-        $loteEnvasado = lotes_envasado::find($id);
-        $loteEnvasado->update($request->all());
-
-        return response()->json(['success' => true]);
+        try {
+            // Buscar el lote existente
+            $lotes = lotes_envasado::findOrFail($id);
+    
+            // Actualizar los campos del lote envasado
+            $lotes->id_empresa = $request->id_empresa;
+            $lotes->nombre_lote = $request->nombre_lote;
+            $lotes->tipo_lote = $request->tipo_lote;
+            $lotes->sku = $request->sku;
+            $lotes->id_marca = $request->id_marca;
+            $lotes->destino_lote = $request->destino_lote;
+            $lotes->cant_botellas = $request->cant_botellas;
+            $lotes->presentacion = $request->presentacion;
+            $lotes->unidad = $request->unidad;
+            $lotes->volumen_total = $request->volumen_total;
+            $lotes->lugar_envasado = $request->lugar_envasado;
+            $lotes->save();
+    
+            // Eliminar los registros de `lotes_envasado_granel` relacionados con este lote
+            lotes_envasado_granel::where('id_lote_envasado', $lotes->id_lote_envasado)->delete();
+    
+            // Guardar los testigos relacionados si existen
+            if ($request->has('id_lote_granel') && is_array($request->id_lote_granel) && $request->has('volumen_parcial') && is_array($request->volumen_parcial)) {
+                for ($i = 0; $i < count($request->id_lote_granel); $i++) {
+                    // Verificar que ambos arrays tengan el mismo tamaño
+                    if (isset($request->id_lote_granel[$i]) && isset($request->volumen_parcial[$i])) {
+                        $envasado = new lotes_envasado_granel();
+                        $envasado->id_lote_envasado = $lotes->id_lote_envasado;  // Relacionar con el lote envasado
+                        $envasado->id_lote_granel = $request->id_lote_granel[$i];
+                        $envasado->volumen_parcial = $request->volumen_parcial[$i];
+                        $envasado->save();
+                    }
+                }
+            }
+    
+            return response()->json(['success' => 'Lote envasado actualizado exitosamente.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
+    
+    
     
 
 }

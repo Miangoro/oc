@@ -10,7 +10,7 @@
                 </div>
                 <form id="editLoteEnvasadoForm">
 
-                    <input type="hidden" id="edit_id_lote_envasado" name="id">
+                    <input type="text" id="edit_id_lote_envasado" name="id">
                     <div class="row">
                         <div class="col-6">
                             <div class="form-floating form-floating-outline mb-4">
@@ -28,8 +28,8 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select id="edit_tipo_lote" name="tipo_lote" class="form-select" required onchange="mostrarLotes()">
-                                    <option value="1">Por un solo lote a granel</option>
-                                    <option value="2">Por más de un lote a granel</option>
+                                    <option value="Por un solo lote a granel">Por un solo lote a granel</option>
+                                    <option value="Por más de un lote a granel">Por más de un lote a granel</option>
                                 </select>
                                 <label for="edit_tipo_lote">Conformado por</label>
                             </div>

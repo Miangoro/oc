@@ -44,4 +44,6 @@ class lotes_envasado extends Model
     }
     
 
+    
+
 }

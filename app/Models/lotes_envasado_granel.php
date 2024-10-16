@@ -26,5 +26,11 @@ class lotes_envasado_granel extends Model
         return $this->belongsToMany(LotesGranel::class, 'lotes_envasado_granel', 'id_lote_envasado', 'id_lote_granel');
     }
 
+
+
+    public function lotes_envasado()
+    {
+        return $this->belongsTo(lotes_envasado::class,'id_lote_envasado', 'id_lote_envasado');
+    }
     
 }
