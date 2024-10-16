@@ -114,7 +114,7 @@ $(function () {
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
             var $id = full['id_guia'];
-            if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
+            if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Completado') {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdfSolicitud cursor-pointer"
                       data-bs-target="#mostrarPdfDcitamen" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
@@ -131,7 +131,7 @@ $(function () {
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
             var $id = full['id_guia'];
-            if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
+            if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Completado') {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"
                       data-bs-target="#mostrarPdfDcitamen" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
@@ -147,7 +147,7 @@ $(function () {
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
-            if (full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
+            if (full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Completado') {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"
                       data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
@@ -163,7 +163,7 @@ $(function () {
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
-            if (full['estatus'] === 'Vigente') {
+            if (full['estatus'] === 'Completado') {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf3 cursor-pointer"
                       data-bs-target="#mostrarPdfDictamenFinal" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
