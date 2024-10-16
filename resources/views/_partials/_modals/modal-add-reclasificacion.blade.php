@@ -17,9 +17,7 @@
                                 <select onchange="edit_obtenerDirecciones(); edit_obtenerMarcas(); edit_obtenerGraneles();"
                                     id="edit_cliente" name="id_empresa" class="select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
-                                    @foreach ($clientes as $cliente)
-                                        <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
-                                    @endforeach
+
                                 </select>
                                 <label for="edit_cliente">Cliente</label>
                             </div>
@@ -40,7 +38,7 @@
                                         <button type="button" class="btn btn-danger remove-row" > <i class="ri-delete-bin-5-fill"></i> </button>
                                     </th>
                                     <td>
-                                        <select class="edit_lote_granel form-control select2" name="id_lote_granel[]" >
+                                        <select class="edit_lote_granel form-control select2" name="id_lote_granel[]" id="id_lote_granel" >
                                             <!-- Opciones -->
                                         </select>
                                     </td>
