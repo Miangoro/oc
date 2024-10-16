@@ -350,9 +350,90 @@
      });
    } 
 
-// FUNCIONES DEL FUNCIONAMIENTO DEL CRUD
+   // FUNCIONES DEL FUNCIONAMIENTO DEL CRUD
 
-// Función para cargar las respuestas y observaciones en el modal
+   //Registrar Respuesta
+   let id_revision; 
+   $(document).on('click', '.cuest', function () {
+       id_revision = $(this).data('id'); 
+       console.log('ID de Revisión:', id_revision); 
+       cargarRespuestas(id_revision); 
+   });
+   
+   $(document).on('click', '#registrarRevision', function() {
+    if (typeof id_revision === 'undefined') {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'El ID de revisión no está definido.',
+            customClass: {
+                confirmButton: 'btn btn-danger'
+            }
+        });
+        return;
+    }
+
+    const respuestas = {};
+    const observaciones = {};
+    const rows = $('#fullscreenModal .table-container table tbody tr');
+
+    rows.each(function(index) {
+        let respuesta = $(this).find('select').val();
+        const observacion = $(this).find('textarea').val();
+
+        if (respuesta === '1') {
+            respuesta = 'C';
+        } else if (respuesta === '2') {
+            respuesta = 'NC';
+        } else if (respuesta === '3') {
+            respuesta = 'NA';
+        } else {
+            respuesta = null; 
+        }
+
+        respuestas[`pregunta${index + 1}`] = respuesta;
+        observaciones[`pregunta${index + 1}`] = observacion || null;
+    });
+
+    $.ajax({
+        url: '/revisor/registrar-preguntas',
+        type: 'POST',
+        contentType: 'application/json',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: JSON.stringify({
+            id_revision: id_revision,
+            respuestas: respuestas,
+            observaciones: observaciones
+        }),
+        success: function(response) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.message,
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
+
+            $('#fullscreenModal').modal('hide');
+            $('.datatables-users').DataTable().ajax.reload();
+        },
+        error: function(xhr) {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al registrar las respuestas: ' + xhr.responseJSON.message,
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+        }
+    });
+});
+
+//Cargar respuestas en el modal
 function cargarRespuestas(id_revision) {
   $.ajax({
       url: `/revisor/obtener-preguntas/${id_revision}`,
@@ -363,29 +444,20 @@ function cargarRespuestas(id_revision) {
 
           rows.each(function(index) {
               const respuestaKey = `pregunta${index + 1}`;
-              
-              if (respuestasGuardadas[respuestaKey]) {
-                  const respuestaGuardada = respuestasGuardadas[respuestaKey]?.respuesta || ''; 
-                  const observacionGuardada = respuestasGuardadas[respuestaKey]?.observacion || ''; 
+              const respuestaGuardada = respuestasGuardadas[respuestaKey]?.respuesta || ''; 
+              const observacionGuardada = respuestasGuardadas[respuestaKey]?.observacion || ''; 
 
-                  let respuestaSelect = ''; 
-                  if (respuestaGuardada === 'C') {
-                      respuestaSelect = '1'; 
-                  } else if (respuestaGuardada === 'NC') {
-                      respuestaSelect = '2'; 
-                  } else if (respuestaGuardada === 'NA') {
-                      respuestaSelect = '3';
-                  }
-
-                  if (respuestaSelect) {
-                      $(this).find('select').val(respuestaSelect);
-                  }
-
-                  $(this).find('textarea').val(observacionGuardada);
-              } else {
-                  $(this).find('select').val('');
-                  $(this).find('textarea').val(''); 
+              let respuestaSelect = '';
+              if (respuestaGuardada === 'C') {
+                  respuestaSelect = '1';
+              } else if (respuestaGuardada === 'NC') {
+                  respuestaSelect = '2';
+              } else if (respuestaGuardada === 'NA') {
+                  respuestaSelect = '3';
               }
+
+              $(this).find('select').val(respuestaSelect || ''); 
+              $(this).find('textarea').val(observacionGuardada);
           });
       },
       error: function(xhr) {
@@ -393,107 +465,6 @@ function cargarRespuestas(id_revision) {
       }
   });
 }
-
-// Evento que limpia los campos al cerrar el modal
-$('#fullscreenModal').on('hidden.bs.modal', function () {
-  const rows = $('#fullscreenModal .table-container table tbody tr');
-
-  rows.each(function() {
-      $(this).find('select').val(''); 
-      $(this).find('textarea').val(''); 
-  });
-});
-
-$(document).on('click', '.cuest', function () {
-  const id_revision = $(this).data('id'); 
-  cargarRespuestas(id_revision);
-});
-
-let id_revision; 
-$(document).on('click', '.cuest', function () {
-  id_revision = $(this).data('id'); 
-  console.log('ID de Revisión:', id_revision); 
-});
-
-$(document).on('click', '#registrarRevision', function() {
-  if (typeof id_revision === 'undefined') {
-      Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'El ID de revisión no está definido.',
-          customClass: {
-              confirmButton: 'btn btn-danger'
-          }
-      });
-      return; 
-  }
-
-  const respuestas = {};
-  const observaciones = {};
-
-  const rows = $('#fullscreenModal .table-container table tbody tr');
-
-  rows.each(function(index) {
-      let respuesta = $(this).find('select').val();
-      const observacion = $(this).find('textarea').val();
-
-      if (respuesta === '1') {
-          respuesta = 'C';
-      } else if (respuesta === '2') {
-          respuesta = 'NC';
-      } else if (respuesta === '3') {
-          respuesta = 'NA';
-      } else {
-          respuesta = null;
-      }
-
-      if (respuesta) {
-          respuestas[`pregunta${index + 1}`] = respuesta; 
-      }
-
-      if (observacion) {
-          observaciones[`pregunta${index + 1}`] = observacion;
-      }
-  });
-
-  $.ajax({
-      url: '/revisor/registrar-preguntas',
-      type: 'POST',
-      contentType: 'application/json',
-      headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      data: JSON.stringify({ 
-          id_revision: id_revision,
-          respuestas: respuestas,
-          observaciones: observaciones
-      }),
-      success: function(response) {
-          Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: response.message,
-              customClass: {
-                  confirmButton: 'btn btn-success'
-              }
-          });
-
-          $('#fullscreenModal').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload();
-      },
-      error: function(xhr) {
-          Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al registrar las respuestas: ' + xhr.responseJSON.message,
-              customClass: {
-                  confirmButton: 'btn btn-danger'
-              }
-          });
-      }
-  });
-});
-
 
 //end
 });
