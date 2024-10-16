@@ -194,6 +194,8 @@ class lotesEnvasadoController extends Controller
         }
     }
 
+
+    //mostrar lotes envasados registrados
     public function edit($id)
     {
         try {
@@ -206,6 +208,8 @@ class lotesEnvasadoController extends Controller
         }
     }
 
+
+    //editar lotes envasados
     public function update(Request $request, $id)
     {
         $loteEnvasado = lotes_envasado::find($id);

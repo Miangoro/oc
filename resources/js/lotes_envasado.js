@@ -610,7 +610,7 @@ $(function () {
                 var newRow = `
                 <tr>
                     <th>
-                        <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
+                        <button type="button" class="btn btn-danger remove-row" ${index === 0 ? '' : ''}>
                             <i class="ri-delete-bin-5-fill"></i>
                         </button>
                     </th>
@@ -809,7 +809,6 @@ $(document).ready(function () {
                 </th>
                 <td>
                     <select class="id_lote_granel form-control select2-nuevo" name="id_lote_granel[]">
-                        <!-- Opciones -->
                     </select>
                 </td>
                 <td>
@@ -837,6 +836,35 @@ $(document).ready(function () {
         $(this).closest('tr').remove();
     });
 });
+
+
+//agregar tabal a editar:
+$(document).on('click', '.add-row-edit', function () {
+    var newRow = `
+      <tr>
+          <th>
+              <button type="button" class="btn btn-danger remove-row">
+                  <i class="ri-delete-bin-5-fill"></i>
+              </button>
+          </th>
+                <td>
+                    <select class="id_lote_granel form-control select2-nuevo" name="id_lote_granel[]">
+                    </select>
+                </td>
+                <td>
+                    <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
+                </td>
+      </tr>`;
+
+    $('#edit_contenidoGraneles').append(newRow);
+  });
+
+  // Eliminar fila de la tabla
+  $(document).on('click', '.remove-row', function () {
+    $(this).closest('tr').remove();
+
+  });
+
 
 
 
