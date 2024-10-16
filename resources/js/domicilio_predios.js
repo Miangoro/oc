@@ -70,7 +70,7 @@ $(function () {
           render: function (data, type, row) {
             var estatusClass = '';
             // Asignar clases según el estatus
-            if (data === 'Vigente') {
+            if (data === 'Completado') {
               estatusClass = 'badge rounded-pill bg-success'; // Verde para 'Vigente'
             } else if (data === 'Pendiente') {
               estatusClass = 'badge rounded-pill bg-danger'; // Rojo para 'Pendiente'
