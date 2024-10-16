@@ -529,6 +529,11 @@ class PrediosController extends Controller
             'altura' => 'nullable|array',
             'diametro' => 'nullable|array',
             'numero_hojas' => 'nullable|array',
+
+            'id_empresa' => 'required|exists:empresa,id_empresa', // Asegúrate de validar id_empresa
+            'titulo_foto.*' => 'required|string|max:255', // Títulos de las fotos
+            'fotografias_inspeccion' => 'sometimes|array', // Para las fotos, si existen
+            'fotografias_inspeccion.*' => 'image|mimes:jpeg,png,jpg,gif' // Validación de imágenes
         ]);
 
         // Crear una nueva instancia del modelo Predios_Inspeccion
@@ -606,6 +611,67 @@ class PrediosController extends Controller
                 }
             }
         }
+
+// Obtener el número del cliente
+$empresaNumCliente = DB::table('empresa_num_cliente')
+    ->where('id_empresa', $validatedData['id_empresa'])
+    ->value('numero_cliente');
+
+if (!$empresaNumCliente) {
+    return response()->json([
+        'success' => false,
+        'message' => 'Número de cliente no encontrado para el ID de empresa proporcionado.',
+    ], 404);
+}
+
+// Obtener el nombre del documento donde id_documento es 70
+$nombreDocumento = DB::table('documentacion')
+    ->where('id_documento', 70)
+    ->value('nombre');
+
+if (!$nombreDocumento) {
+    return response()->json([
+        'success' => false,
+        'message' => 'Nombre del documento no encontrado para el ID de documento 70.',
+    ], 404);
+}
+
+// Almacenar archivos si se envían
+if ($request->hasFile('fotografias_inspeccion')) {
+    foreach ($request->file('fotografias_inspeccion') as $index => $file) {
+        if ($file->isValid()) {
+            // Generar un nombre único para el archivo
+            $uniqueId = uniqid();
+            $filename = $validatedData['titulo_foto'][$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+
+            // Crear una carpeta con el número de cliente
+            $directory = $empresaNumCliente; // Utiliza el número de cliente
+            $path = storage_path('app/public/uploads/inspecciones/' . $directory);
+
+            // Verificar si la carpeta existe, si no, crearla
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+
+            // Guardar el archivo en la carpeta correspondiente
+            $filePath = $file->storeAs('uploads/inspecciones/' . $directory, $filename, 'public');
+
+            // Crear una nueva instancia del modelo para guardar la ruta del archivo
+            $documentacion_url = new Documentacion_url();
+            $documentacion_url->id_empresa = $validatedData['id_empresa']; // Asegúrate de que este campo esté en tu validación
+            $documentacion_url->url = $validatedData['titulo_foto'][$index]; // Almacena el título de la foto como el nombre
+            $documentacion_url->id_relacion = $inspeccion->id_inspeccion; // Relacionar con la inspección
+            $documentacion_url->nombre_documento = $nombreDocumento; // Usar el nombre del documento obtenido
+
+            // Asignar el id_documento como 70
+            $documentacion_url->id_documento = 70; // Agrega esta línea
+
+            // Guardar el registro
+            $documentacion_url->save();
+        }
+    }
+}
+
 
         // Notificación y retorno de respuesta
         $predio = Predios::find($id_predio);

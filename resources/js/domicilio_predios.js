@@ -1122,6 +1122,38 @@ $(function () {
     });
   });
 
+  $(document).ready(function() {
+    var contador = 1; // Contador para identificar cada sección
+
+    // Al hacer clic en el botón de agregar sección
+    $('#agregar-seccion').on('click', function() {
+        contador++; // Incrementar el contador para cada nueva sección
+
+        // Crear una nueva fila de la tabla
+        var nuevaSeccion = `
+            <tr class="seccion-foto">
+                <td>
+                    <button type="button" class="btn btn-danger eliminar-seccion"><i class="ri-delete-bin-5-fill"></i></button>
+                </td>
+                <td>
+                    <input type="text" class="form-control" name="titulo_foto[]" placeholder="Título o descripción de la foto">
+                </td>
+                <td>
+                    <input type="file" class="form-control" name="fotografias_inspeccion[]" accept="image/*">
+                </td>
+            </tr>`;
+
+        // Agregar la nueva fila a la tabla
+        $('#contenedor-secciones').append(nuevaSeccion);
+    });
+
+    // Eliminar la fila correspondiente cuando se hace clic en el botón "Eliminar"
+    $(document).on('click', '.eliminar-seccion', function() {
+        $(this).closest('tr').remove(); // Eliminar la fila más cercana
+    });
+});
+
+
 
 
   function limpiarModal() {
@@ -1132,7 +1164,6 @@ $(function () {
     $('.select2').val('').trigger('change');
     // Reiniciar otros elementos o plugins que uses dentro del modal
   }
-
 
 
   $(function () {
@@ -1931,7 +1962,7 @@ $(function () {
             /* console.log(data) */
 
             // Rellenar el formulario con los datos del predio
-            $('#inspeccion_id_empresa').val(predio.id_empresa).trigger('change');
+            $('#inspeccion_id_empresa').val(predio.id_empresa);
             $('#inspeccion_ubicacion_predio').val(predio.ubicacion_predio);
             $('#inspeccion_tiene_coordenadas').val(predio.cuenta_con_coordenadas);
             $('#inspeccion_superficie').val(predio.superficie);

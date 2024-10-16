@@ -11,6 +11,7 @@
                    <form id="addAddPredioInspeccionForm">
                        @csrf
                        <input type="hidden" id="inspeccion_id_predio" name="id_predio" value="">
+                       <input type="" id="inspeccion_id_empresa" name="id_empresa">
                        {{--  --}}
                        <!-- Datos del Predio -->
                        <div class="mb-4 p-3 border rounded">
@@ -78,6 +79,49 @@
                                    </div>
                                </div>
                            </div>
+
+                           <div class="row mb-4">
+                               <div class="col-md-12">
+                                   <table class="table table-bordered">
+                                       <thead>
+                                           <tr>
+                                            <th>
+                                               <button type="button" class="btn btn-primary" id="agregar-seccion"><i class="ri-add-line"></i></button>
+                                               </th>
+                                               <th colspan="2" class="text-center">Adjuntar Fotografías de la
+                                                   Inspección</th>
+                                           </tr>
+
+                                           <tr>
+                                               <th>Eliminar</th>
+                                               <th>Título o Descripción</th>
+                                               <th>Archivo</th>
+                                           </tr>
+                                       </thead>
+                                       <tbody id="contenedor-secciones">
+                                           <!-- Primera fila de ejemplo -->
+                                           <tr class="seccion-foto">
+                                               <td>
+                                                   <button type="button" class="btn btn-danger eliminar-seccion" disabled><i
+                                                           class="ri-delete-bin-5-fill" ></i></button>
+                                               </td>
+                                               <td>
+                                                   <input type="text" class="form-control" name="titulo_foto[]"
+                                                       placeholder="Título o descripción de la foto">
+                                               </td>
+                                               <td>
+                                                   <input type="file" class="form-control"
+                                                       name="fotografias_inspeccion[]" accept="image/*">
+                                               </td>
+                                           </tr>
+                                       </tbody>
+                                   </table>
+                               </div>
+                           </div>
+
+
+
+
                        </div>
 
                        <div class="mb-4 p-3 border rounded">
@@ -264,7 +308,8 @@
                                                        <input type="number" class="form-control" autocomplete="off"
                                                            id="edit_edad_plantacion" name="edad_plantacion[]"
                                                            placeholder="Edad de la plantación (años)" step="1">
-                                                       <label for="edad_plantacion">Edad de la Plantación (años)</label>
+                                                       <label for="edad_plantacion">Edad de la Plantación
+                                                           (años)</label>
                                                    </div>
                                                </td>
                                            </tr>
