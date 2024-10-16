@@ -154,6 +154,13 @@ class lotesEnvasadoController extends Controller
         $lotes->nombre_lote = $request->nombre_lote;
         $lotes->tipo_lote = $request->tipo_lote;
         $lotes->sku = $request->sku;
+
+        $lotes->sku = json_encode([
+            'folio_inicial' => $request->sku,
+           
+
+
+        ]);
         $lotes->id_marca = $request->id_marca;
         $lotes->destino_lote = $request->destino_lote;
         $lotes->cant_botellas = $request->cant_botellas;
@@ -242,6 +249,34 @@ class lotesEnvasadoController extends Controller
     }
     
     
+
+    public function updateSKU(Request $request)
+    {
+        try {
+            // Encuentra la solicitud de hologramas por su ID
+
+            $holograma = lotes_envasado::findOrFail($request->input('id'));
+            $holograma->sku = json_encode([
+                'sku_nuevo' => $request->sku_nuevo,
+                'motivo' => $request->motivo,
+                'cantidad_botellas' => $request->sku_nuevo,
+
+               
+    
+    
+            ]);
+
+
+            $holograma->save();
+            //metodo para guardar pdf
+
+            // Retorna una respuesta exitosa
+            return response()->json(['success' => 'Solicitud de envio actualizada correctamente']);
+        } catch (\Exception $e) {
+            // Maneja cualquier error que ocurra durante el proceso
+            return response()->json(['error' => 'Error al actualizar la solicitud de envio'], 500);
+        }
+    }
     
 
 }

@@ -297,8 +297,8 @@ $(function () {
                             '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lote envasado</a>` +
-                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit"><i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación FQ</a>` +
-                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit-record"><i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>` +
+                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit-pay"><i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación FQ</a>` +
+                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit"><i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>` +
                             `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lote envasado</a>` +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             '<a href="' +
@@ -659,45 +659,7 @@ $(function () {
       
         console.log("Cargado");
         var id_lote_envasado = $(this).data('id');
-        // Abrir el modal y cargar datos para editar
 
-
-        /*
-        $('.datatables-users').on('click', '.edit-record', function () {
-            console.log("editar")
-            var id_lote_envasado = $(this).data('id');
-
-            // Realizar la solicitud AJAX para obtener los datos del lote envasado
-            $.get('/lotes-envasado/' + id_lote_envasado + '/edit', function (data) {
-                // Rellenar el formulario con los datos obtenidos
-                $('#edit_id_lote_envasado').val(data.id_lote_envasado);
-                $('#select2-edit_cliente-container').val(data.id_empresa).trigger('change');
-       $('#edit_lote_granel').val(data.id_empresa).trigger('change');
-                $('#edit_nombre_lote').val(data.nombre_lote);
-                $('#edit_tipo_lote').val(data.tipo_lote);
-                $('#edit_sku').val(data.sku);
-                $('#edit_marca').val(data.id_marca).trigger('change');
-                $('#edit_destino_lote').val(data.destino_lote);
-                $('#edit_cant_botellas').val(data.cant_botellas);
-                $('#edit_presentacion').val(data.presentacion);
-                $('#edit_unidad').val(data.unidad);
-                $('#edit_volumen_total').val(data.volumen_total);
-                $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
-
-                // Mostrar el modal de edición
-                $('#editLoteEnvasado').modal('show');
-            }).fail(function () {
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: 'Error al obtener los datos del lote envasado',
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
-            });
-        });
-*/
         obtenerGraneles();
         obtenerMarcas();
 
@@ -743,6 +705,69 @@ $(function () {
 
 });
 
+
+$(document).on('click', '.edit-pay', function () {
+    var id_lote_envasado = $(this).data('id');
+
+    $.get('/lotes-envasado/edit/'  + id_lote_envasado, function (data) {
+        // Rellenar el formulario con los datos obtenidos
+      $('#id_lote_envasado').val(data.id_lote_envasado);
+
+      // Mostrar el modal de edición
+      $('#reclasificacion').modal('show');
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error: ' + textStatus + ' - ' + errorThrown);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos de la solicitud de holograma',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    });
+  });
+
+$('#reclasificacionForm').submit(function (e) {
+    e.preventDefault();
+
+    var formData = new FormData(this);
+    console.log()
+
+    $.ajax({
+      url: '/lotes-envasado/updateSKU/',
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        Swal.fire({
+          title: 'Éxito',
+          text: response.success,
+          icon: 'success',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+        $('#reclasificacion').modal('hide');
+        $('.datatables-users').DataTable().ajax.reload();
+      },
+      error: function (response) {
+        console.log(response);
+
+        Swal.fire({
+          title: 'Error',
+          text: 'Ocurrió un error al actualizar la guía.',
+          icon: 'error',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      }
+    });
+  });
 
 
 
