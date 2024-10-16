@@ -12,15 +12,13 @@
         url: '/personal-list',
     },    
        columns: [
-         { data: 'id_revision' },
+         { data: 'fake_id' },
          { data: 'id_revisor' },
-         { data: 'id_revisor' },
-         { data: 'id_revisor' },
-         { data: 'fecha_vigencia' },
-         { data: 'id_revisor' },
-         { data: 'id_revisor' },
-         { data: 'id_revisor' },
-         
+         { data: 'num_certificado' },
+         { data: 'created_at' },
+         { data: 'updated_at' },
+         { data: 'tipo_dictamen' },
+         { data: 'PDF' },
          { data: 'actions'}
        ],
        columnDefs: [
@@ -53,12 +51,72 @@
             targets: 3,
             render: function (data, type, full, meta) {
               var $num_certificado = full['num_certificado'];
-              return '<span class="badge bg-info">' + $num_certificado + '</span>';
+              return '<span class="user-email"><strong>' + $num_certificado + '</strong></span>';
+            }
+          },      
+          {
+            targets: 4,
+            render: function (data, type, full, meta) {
+              var $created_at = full['created_at'];
+              return '<span class="user-email">' + $created_at + '</span>';
             }
           },     
+          {
+            targets: 5,
+            render: function (data, type, full, meta) {
+              var $updated_at = full['updated_at'];
+              return '<span class="user-email">' + $updated_at + '</span>';
+            }
+          }, 
+          {
+            targets: 6,
+            responsivePriority: 4,
+            render: function (data, type, full, meta) {
+              var $tipoDictamen = full['tipo_dictamen'];
+              var $colorDictamen;
+              var $nombreDictamen;
+          
+              switch ($tipoDictamen) {
+                case 1:
+                  $nombreDictamen = 'Productor';
+                  $colorDictamen = 'primary'; // Azul
+                  break;
+                case 2:
+                  $nombreDictamen = 'Envasador';
+                  $colorDictamen = 'success'; // Verde
+                  break;
+                case 3:
+                  $nombreDictamen = 'Comercializador';
+                  $colorDictamen = 'info'; // Celeste
+                  break;
+                case 4:
+                  $nombreDictamen = 'Almacén y bodega';
+                  $colorDictamen = 'danger'; // Rojo
+                  break;
+                case 5:
+                  $nombreDictamen = 'Área de maduración';
+                  $colorDictamen = 'warning'; // Amarillo
+                  break;
+                default:
+                  $nombreDictamen = 'Desconocido';
+                  $colorDictamen = 'secondary'; // Gris, color por defecto
+              }
+          
+              // Retorna el badge con el texto y color apropiado
+              return `<span class="badge rounded-pill bg-label-${$colorDictamen}">${$nombreDictamen}</span>`;
+            }     
+          },     
+          {
+            // Abre el pdf del certificado
+            targets: 7,
+            className: 'text-center',
+            render: function (data, type, full, meta) {
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
+            }
+          },
          {
            // Actions
-           targets: 4,
+           targets: 8,
            title: 'Acciones',
            searchable: false,
            orderable: false,
@@ -83,7 +141,7 @@
                     `data-fecha-vencimiento="${full['fecha_vencimiento']}" ` +
                     `data-bs-toggle="modal" ` +
                     `data-bs-target="#fullscreenModal">` +
-                    '<i class="ri-user-search-fill ri-20px text-info"></i> Revisar certificado' +
+                    '<i class="ri-eye-fill ri-20px text-info"></i> Revisar' +
                   '</a>' +
                 '</div>' +
               '</div>'
@@ -294,121 +352,99 @@
 
    // FUNCIONES DEL FUNCIONAMIENTO DEL CRUD
    
-   $(document).on('click', '.cuest', function () {
-    var id_revision = $(this).data('id');
-    var id_revisor = $(this).data('revisor-id');  
-    var id_certificado = $(this).data('dictamen-id');  
-    var num_certificado = $(this).data('num-certificado'); 
-    var num_dictamen = $(this).data('num-dictamen'); 
-    var tipo_dictamen = $(this).data('tipo-dictamen'); 
-    var fecha_vigencia = $(this).data('fecha-vigencia'); 
-    var fecha_vencimiento = $(this).data('fecha-vencimiento'); 
-    var pdf_url = $(this).data('pdf-url');
+// Manejar el evento de clic en el botón de "Registrar Revisión"
+$('#registrarRevision').on('click', function(e) {
+  e.preventDefault();
 
-    // Imprimir en consola
-    console.log('ID de Revisión:', id_revision);
-    console.log('ID del Revisor correspondiente:', id_revisor);
-    console.log('ID del Certificado:', id_certificado);
-    console.log('Número de Certificado:', num_certificado); 
-    console.log('Número de Dictamen:', num_dictamen);
-    console.log('Tipo de Dictamen:', tipo_dictamen); 
-    console.log('Fecha de Vigencia:', fecha_vigencia); 
-    console.log('Fecha de Vencimiento:', fecha_vencimiento); 
+  var respuestas = [];
+  var rows = $('table tbody tr'); // Seleccionar todas las filas de la tabla
 
-    //Cargar datos a la Vista
-    $('#edit_id_revision').val(id_revision); 
-    $('#revisorName').text(`${id_revisor}`); 
-    $('#numCertificado').text(`${num_certificado}`); 
-    $('#numDictamen').text(`${num_dictamen}`); 
-    $('#fechaVigencia').text(fecha_vigencia); 
-    $('#fechaVencimiento').text(fecha_vencimiento); 
+  // Recorrer cada fila de la tabla para obtener los valores de respuesta y observación
+  rows.each(function() {
+      var selectElement = $(this).find('select.form-select'); // Seleccionar el dropdown
+      var textareaElement = $(this).find('textarea'); // Seleccionar el campo de observación
 
-    // Mostrar el tipo de dictamen en el modal
-    var $colorDictamen, $nombreDictamen;
-    switch (tipo_dictamen) {
-        case 1:
-            $nombreDictamen = 'Productor';
-            $colorDictamen = 'primary'; 
-            break;
-        case 2:
-            $nombreDictamen = 'Envasador';
-            $colorDictamen = 'success'; 
-            break;
-        case 3:
-            $nombreDictamen = 'Comercializador';
-            $colorDictamen = 'info'; 
-            break;
-        case 4:
-            $nombreDictamen = 'Almacén y bodega';
-            $colorDictamen = 'danger'; 
-            break;
-        case 5:
-            $nombreDictamen = 'Área de maduración';
-            $colorDictamen = 'warning'; 
-            break;
-        default:
-            $nombreDictamen = 'Desconocido';
-            $colorDictamen = 'secondary'; 
-    }
+      // Verificar si el elemento select y textarea existen
+      if (selectElement.length && textareaElement.length) {
+          var respuesta = selectElement.val(); // Obtener la respuesta seleccionada
+          var observacion = textareaElement.val(); // Obtener el valor del textarea
+          var idPregunta = $(this).find('td:first').text().trim(); // Obtener el ID de la pregunta (el número de la fila)
 
-    $('#tipoCertificado').html(`<span class="badge rounded-pill bg-label-${$colorDictamen}">${$nombreDictamen}</span>`);
-    // Cargar el PDF en el iframe dentro de la tabla
-    $('#pdfViewer').attr('src', pdf_url).removeAttr('hidden'); 
-    $('#pdfIcon')
-        .attr('data-id', id_certificado) 
-        .attr('data-tipo', tipo_dictamen)
-        .attr('data-registro', num_certificado) 
-        .show(); 
+          // Verificar si hay respuesta u observación válida antes de registrar
+          if ((respuesta && respuesta !== 'Selecciona') || (observacion && observacion.trim() !== '')) {
+              respuestas.push({
+                  id_pregunta: idPregunta,
+                  respuesta: respuesta !== 'Selecciona' ? respuesta : null, // Si no hay respuesta válida, guardamos null
+                  observacion: observacion ? observacion.trim() : null // Si no hay observación, guardamos null
+              });
+          }
+      }
+  });
 
-    // Mostrar el modal correspondiente
-    $('#fullscreenModal').modal('show');
-});
-
-$(document).on('click', '.pdf', function () {
-  var id = $(this).data('id'); 
-  var registro = $(this).data('registro');
-  var tipo = $(this).data('tipo'); 
-
-  var tipo_dictamen = '';
-  var titulo = '';
-
-  // Establecer el título según el tipo de dictamen
-  if (tipo == 1 || tipo == 5) { // Productor
-      tipo_dictamen = '../certificado_productor_mezcal/' + id;
-      titulo = "Certificado de productor";
-  } else if (tipo == 2) { // Envasador
-      tipo_dictamen = '../certificado_envasador_mezcal/' + id;
-      titulo = "Certificado de envasador";
-  } else if (tipo == 3 || tipo == 4) { // Comercializador
-      tipo_dictamen = '../certificado_comercializador/' + id;
-      titulo = "Certificado de comercializador";
+  // Si no hay respuestas válidas, mostrar un error
+  if (respuestas.length === 0) {
+      Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se ha proporcionado ninguna respuesta ni observación.'
+      });
+      return;
   }
 
-  $('#loading-spinner').show();
-  $('#pdfViewerDictamen').hide();
+  var id_revision = $('.cuest').data('id'); // Obtener el ID de la revisión
 
-  $('#titulo_modal_Dictamen').text(titulo);
-  $('#subtitulo_modal_Dictamen').text(registro);
+  // Crear el objeto de datos a enviar
+  var formData = {
+      respuestas: respuestas,
+      id_revision: id_revision,
+  };
 
-  var openPdfBtn = $('#openPdfBtnDictamen');
-  openPdfBtn.attr('href', tipo_dictamen);
-  openPdfBtn.show();
+  // Mostrar en consola los datos que se van a enviar (para depuración)
+  console.log("Datos enviados:", formData);
 
-  $('#PdfDictamenIntalaciones').modal('show');
-  $('#pdfViewerDictamen').attr('src', tipo_dictamen); 
-  $('#pdfViewerDictamenFrame').attr('src', tipo_dictamen); 
+  // Realizar la solicitud AJAX al servidor
+  $.ajax({
+      url: '/revisor/registrar-respuestas', // URL del controlador en el servidor
+      type: 'POST',
+      data: JSON.stringify(formData),
+      contentType: 'application/json',
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF Token para proteger la solicitud
+      },
+      success: function(response) {
+          // Cerrar el modal al completar la operación
+          $('#fullscreenModal').modal('hide');
+
+          // Mostrar mensaje de éxito
+          Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.message,
+              customClass: {
+                  confirmButton: 'btn btn-success'
+              }
+          });
+
+          // Recargar la tabla si es necesario
+          $('.datatables-revision').DataTable().ajax.reload();
+      },
+      error: function(xhr) {
+          // Manejar el error en caso de que falle el registro
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al registrar las respuestas y observaciones.',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      }
+  });
+
 });
 
-// Cuando el PDF se carga
-$('#pdfViewerDictamen').on('load', function () {
-  $('#loading-spinner').hide();
-  $('#pdfViewerDictamen').show();
-});
 
-$('#fullscreenModal').draggable({
-  handle: ".modal-header", // Permitir arrastrar solo desde el encabezado
-  containment: "window" // Restringir el movimiento a la ventana
-});
+
 
 
 //end

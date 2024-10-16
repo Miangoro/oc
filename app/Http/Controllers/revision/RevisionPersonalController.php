@@ -26,7 +26,8 @@ class RevisionPersonalController extends Controller
             3 => 'observaciones',
             4 => 'tipo_revision',
             5 => 'id_certificado',
-            6 => 'num_certificado'
+            6 => 'num_certificado',
+            7 => 'created_at'
         ];
     
         $search = $request->input('search.value');
@@ -34,7 +35,7 @@ class RevisionPersonalController extends Controller
     
         // Contar todos los registros, aplicando el filtro solo si el usuario no es el de ID 8
         $totalData = Revisor::with(['certificado.dictamen']);
-        
+    
         // Si el usuario es el admin (ID 8), contar todos los registros
         if ($userId == 8) {
             $totalData = $totalData->count();
@@ -112,6 +113,8 @@ class RevisionPersonalController extends Controller
     
             $fechaVigencia = $revisor->certificado ? $revisor->certificado->fecha_vigencia : null;
             $fechaVencimiento = $revisor->certificado ? $revisor->certificado->fecha_vencimiento : null;
+            $fechaCreacion = $revisor->created_at; // Obtener la fecha de creación
+            $fechaActualizacion = $revisor->updated_at; // Obtener la fecha de creación
     
             return [
                 'id_revision' => $revisor->id_revision,
@@ -122,11 +125,13 @@ class RevisionPersonalController extends Controller
                 'tipo_revision' => $revisor->tipo_revision,
                 'num_certificado' => $revisor->certificado ? $revisor->certificado->num_certificado : null,
                 'id_certificado' => $revisor->certificado ? $revisor->certificado->id_certificado : null,
-               // 'cliente' => $revisor->certificado ? $revisor->certificado->dictamen-> : null,
                 'tipo_dictamen' => $tipoDictamen,
                 'num_dictamen' => $numDictamen,
                 'fecha_vigencia' => Helpers::formatearFecha($fechaVigencia),
                 'fecha_vencimiento' => Helpers::formatearFecha($fechaVencimiento),
+                'fecha_creacion' => Helpers::formatearFecha($fechaCreacion), // Formatear la fecha de creación
+                'created_at' => Helpers::formatearFecha($revisor->created_at), // Formatear la fecha de creación
+                'updated_at' => Helpers::formatearFecha($revisor->updated_at), // Formatear la fecha de creación
             ];
         })->filter(function ($item) {
             return $item['id_revisor'] !== null;
@@ -139,6 +144,36 @@ class RevisionPersonalController extends Controller
             'data' => $data,
         ]);
     }
+
+    public function registrarPreguntas(Request $request)
+    {
+        // Validar los datos recibidos
+        $validatedData = $request->validate([
+            'preguntas' => 'required|array', // Asegurar que las preguntas sean un array
+            'preguntas.*.pregunta' => 'required|string', // Validar cada pregunta como string
+            'preguntas.*.respuesta' => 'required|string', // Asegurar que cada respuesta sea un string
+            'preguntas.*.observaciones' => 'nullable|string', // Observaciones pueden ser nulas
+            'id_revision' => 'required|integer|exists:certificados_revision,id_revision', // Validar el id_revision
+        ]);
+    
+        // Obtener el registro del revisor por id_revision
+        $revisor = Revisor::findOrFail($validatedData['id_revision']);
+    
+        // Iterar sobre cada pregunta y guardar la respuesta en el modelo Revisor
+        foreach ($validatedData['preguntas'] as $respuesta) {
+            $revisor->pregunta = $respuesta['pregunta']; // Guardar la pregunta
+            $revisor->respuesta = $respuesta['respuesta']; // Guardar la respuesta
+            $revisor->observaciones = $respuesta['observaciones'] ?? null; // Guardar observaciones si están presentes
+            $revisor->save(); // Guardar el revisor con las nuevas preguntas
+        }
+    
+        return response()->json([
+            'message' => 'Preguntas registradas con éxito.',
+        ]);
+    }
+    
+    
+    
     
     
     

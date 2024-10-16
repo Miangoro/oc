@@ -1154,8 +1154,7 @@ $(function () {
           return `<a href="http://localhost:8000/pages/hologramas-validacion/${folio}" target="_blank">${folio}</a>`;
       }).join('<br>');
         let folio_final = String(item.folio_final).replace(/,/g, '<br>');
-        let mermas_inicial = String(item.mermas_inicial).replace(/,/g, '<br>');
-        let mermas_final = String(item.mermas_final).replace(/,/g, '<br>');
+        let mermas = String(item.mermas).replace(/,/g, '<br>');
 
 
         // Crear una nueva fila con los datos
@@ -1181,13 +1180,9 @@ $(function () {
                     </a>
                   </td> 
                      <td>
-                     <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">
-                      ${mermas_inicial}
+                      ${mermas}
                      </td>
-                      <td>
-                     <a href="http://localhost:8000/pages/hologramas-validacion" target="_blank">
-                      ${mermas_final}
-                     </td>               
+            
                   <td>
                 <button type="button" class="btn btn-info">
                   <a href="javascript:;" class="edit-activos" style="color:#FFF" 
@@ -1253,8 +1248,7 @@ $(function () {
       data.folio_inicial.forEach(function (folioInicial, index) {
 
         var folioFinal = data.folio_final[index];
-        var mermasInicial = data.mermas_inicial[index];
-        var mermasFinal = data.mermas_final[index];
+
 
         var newRow = `
           <tr>
@@ -1263,12 +1257,32 @@ $(function () {
                       <i class="ri-delete-bin-5-fill"></i>
                   </button>
               </th>
-              <td><input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" value="${folioInicial}"></td>
-              <td><input type="number" class="form-control form-control-sm" name="edit_rango_final[]" value="${folioFinal}"></td>
-               <td><input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]" value="${mermasInicial}"></td>
-              <td><input type="number" class="form-control form-control-sm" name="edit_mermas_final[]" value="${mermasFinal}"></td>
+              <td><input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]"  min="0" value="${folioInicial}"></td>
+              <td><input type="number" class="form-control form-control-sm" name="edit_rango_final[]"  min="0"  value="${folioFinal}"></td>
+
           </tr>`;
         $('#edit_contenidoRango').append(newRow);
+      });
+
+
+      
+      $('#edit_contenidoMermas').empty();
+
+      data.mermas.forEach(function (mermasHolo) {
+
+
+
+        var newRow = `
+          <tr>
+              <th>
+                  <button type="button" class="btn btn-danger remove-row">
+                      <i class="ri-delete-bin-5-fill"></i>
+                  </button>
+              </th>
+              <td><input type="number" class="form-control form-control-sm" name="edit_mermas[]"  min="0" value="${mermasHolo}"></td>
+
+          </tr>`;
+        $('#edit_contenidoMermas').append(newRow);
       });
 
 
@@ -1278,7 +1292,7 @@ $(function () {
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
-        text: 'Error al obtener los datos del lote',
+        text: 'Error al obtener los datos de los hologramas activados',
         customClass: {
           confirmButton: 'btn btn-danger'
         }
@@ -1297,17 +1311,11 @@ $(function () {
               </button>
           </th>
           <td>
-              <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" min="0" placeholder="Rango inicial">
+              <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]" min="0"  placeholder="Rango inicial">
           </td>
           <td>
-              <input type="number" class="form-control form-control-sm" name="edit_rango_final[]" min="0" placeholder="Rango final">
-          </td>
-                    <td>
-              <input type="number" class="form-control form-control-sm" name="edit_mermas_inicial[]" min="0" placeholder="Merma inicial">
-          </td>
-          <td>
-              <input type="number" class="form-control form-control-sm" name="edit_mermas_final[]" min="0" placeholder="Merma final">
-          </td>
+              <input type="number" class="form-control form-control-sm" name="edit_rango_final[]" min="0"  placeholder="Rango final">
+</td>
       </tr>`;
 
     $('#edit_contenidoRango').append(newRow);
@@ -1315,20 +1323,35 @@ $(function () {
 
   // Eliminar fila de la tabla
   $(document).on('click', '.remove-row', function () {
-    // Asegúrate de que al menos una fila permanezca en la tabla
-    if ($('#edit_contenidoRango tr').length > 1) {
-      $(this).closest('tr').remove();
-    } else {
-      Swal.fire({
-        icon: 'warning',
-        title: '¡Advertencia!',
-        text: 'Debes tener al menos un rango.',
-        customClass: {
-          confirmButton: 'btn btn-warning'
-        }
-      });
-    }
+    $(this).closest('tr').remove();
+
   });
+
+
+
+    // Agregar FILA A EDIT ACTIVADOS
+    $(document).on('click', '.add-row-editMermas', function () {
+      var newRow = `
+        <tr>
+            <th>
+                <button type="button" class="btn btn-danger remove-row">
+                    <i class="ri-delete-bin-5-fill"></i>
+                </button>
+            </th>
+            <td>
+                <input type="number" class="form-control form-control-sm" name="edit_mermas[]" min="0"  placeholder="Mermas">
+            </td>
+
+        </tr>`;
+  
+      $('#edit_contenidoMermas').append(newRow);
+    });
+  
+    // Eliminar fila de la tabla
+    $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+  
+    });
 
 
 
@@ -1465,7 +1488,7 @@ $(function () {
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: 'Ocurrió un error al actualizar la guía.',
+          text: 'Ocurrió un error al actualizar los hologramas activados.',
           customClass: {
             confirmButton: 'btn btn-danger'
           }
@@ -1608,7 +1631,7 @@ $(function () {
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: 'Error al registrar el lote envasado',
+          text: 'Error al activar los hologramas',
           customClass: {
             confirmButton: 'btn btn-danger'
           }
@@ -1697,7 +1720,7 @@ $(function () {
 
   //Agregar o eliminar tablas en add activos
   $(document).ready(function () {
-    $('.add-row').click(function () {
+    $('.add-row-add').click(function () {
       // Añade una nueva fila
       var newRow = `
           <tr>
@@ -1705,20 +1728,40 @@ $(function () {
                   <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
               </th>
               <td>
-                  <input type="number" class="form-control form-control-sm rango_inicial" min="0" name="rango_inicial[]" placeholder="Rango inicial" />
+                  <input type="number" class="form-control form-control-sm rango_inicial" min="0" name="rango_inicial[]"  placeholder="Rango inicial" />
               </td>
               <td>
-                  <input type="number" class="form-control form-control-sm" min="0" name="rango_final[]" placeholder="Rango final">
+                  <input type="number" class="form-control form-control-sm" min="0" name="rango_final[]"   placeholder="Rango final">
               </td>
-               <td>
-                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_inicial[]" placeholder="Merma inicial">
-              </td>
-                   <td>
-                  <input type="number" class="form-control form-control-sm" min="0" name="mermas_final[]" placeholder="Merma final">
-              </td>
+
               
           </tr>`;
       $('#contenidoRango').append(newRow);
+    });
+
+    // Función para eliminar una fila
+    $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+    });
+  });
+  //mermas
+
+  $(document).ready(function () {
+    $('.add-row-addmermas').click(function () {
+      // Añade una nueva fila
+      var newRow = `
+          <tr>
+              <th>
+                  <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+              </th>
+              <td>
+                  <input type="number" class="form-control form-control-sm " min="0" name="mermas[]"  placeholder="Mermas" />
+              </td>
+
+
+              
+          </tr>`;
+      $('#contenidoMermas').append(newRow);
     });
 
     // Función para eliminar una fila

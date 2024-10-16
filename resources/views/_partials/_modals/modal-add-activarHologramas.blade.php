@@ -134,19 +134,20 @@
                     </div>
 
                    
-
+                    <div class="text-center mb-6">
+                        <h4 class="address-title mb-2">Activar</h4>
+                        <p class="address-subtitle"></p>
+                    </div>
                     <div style="display: none;" id="mensaje" role="alert"></div>
 
 
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th><button type="button" class="btn btn-primary add-row"> <i class="ri-add-line"></i>
+                                <th><button type="button" class="btn btn-primary add-row-add"> <i class="ri-add-line"></i>
                                     </button></th>
                                 <th>Rango inicial</th>
                                 <th>Rango final</th>
-                                <th>Merma inicial</th>
-                                <th>Merma final</th>
 
                             </tr>
                         </thead>
@@ -158,23 +159,46 @@
                                 </th>
                                 <td>
                                     <input type="number" class="form-control form-control-sm" name="rango_inicial[]"
-                                        id="folio_inicial" min="0" placeholder="Rango inicial">
+                                        id="folio_inicial" min="0" placeholder="Rango inicial"  >
                                 </td>
                                 <td>
                                     <input type="number" class="form-control form-control-sm" name="rango_final[]"
-                                        id="folio_final" min="0" placeholder="Rango final">
+                                        id="folio_final" min="0" placeholder="Rango final" >
                                 </td>
-                                <td>
-                                    <input type="number" class="form-control form-control-sm" name="mermas_inicial[]"
-                                        id="mermas_inicial" min="0" placeholder="Merma inicial">
-                                </td>
-                                <td>
-                                    <input type="number" class="form-control form-control-sm" name="mermas_final[]"
-                                        id="mermas_final" min="0" placeholder="Merma final">
-                                </td>
+
                             </tr>
                         </tbody>
                     </table>
+
+
+
+                    <div class="text-center mb-6">
+                        <h4 class="address-title mb-2">Mermas (Opcional)</h4>
+                        <p class="address-subtitle"></p>
+                    </div>
+                    <div style="display: none;" id="mensaje" role="alert"></div>
+
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th><button type="button" class="btn btn-primary add-row-addmermas"> <i class="ri-add-line"></i>
+                                    </button></th>
+                                <th>Mermas</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody id="contenidoMermas">
+                            <tr>
+
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+
 
 
 
