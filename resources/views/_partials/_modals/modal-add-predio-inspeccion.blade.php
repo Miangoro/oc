@@ -11,7 +11,7 @@
                    <form id="addAddPredioInspeccionForm">
                        @csrf
                        <input type="hidden" id="inspeccion_id_predio" name="id_predio" value="">
-                       <input type="" id="inspeccion_id_empresa" name="id_empresa">
+                       <input type="hidden" id="inspeccion_id_empresa" name="id_empresa">
                        {{--  --}}
                        <!-- Datos del Predio -->
                        <div class="mb-4 p-3 border rounded">
