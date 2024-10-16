@@ -86,7 +86,7 @@
                     <input type="text" class="form-control" id="edit_categoria" placeholder="Nombre de la Categoría" name="categoria" aria-label="Categoría" required>
                     <label for="edit_categoria">Nombre de la Categoría</label>
                 </div>
-                <button type="submit" class="btn btn-primary me-sm-3 me-1">Guardar Cambios</button>
+                <button type="submit" class="btn btn-primary me-sm-3 me-1">Actualizar</button>
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
             </form>
         </div>
