@@ -196,8 +196,14 @@ class lotesEnvasadoController extends Controller
 
     public function edit($id)
     {
-        $loteEnvasado = lotes_envasado::find($id);
-        return response()->json($loteEnvasado);
+        try {
+            // Aquí obtienes el acta de inspección junto con sus testigos
+            $envasado_granel = lotes_envasado::with('lotes_envasado_granel')->findOrFail($id);
+    
+            return response()->json($envasado_granel);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener el acta por ID'], 500);
+        }
     }
 
     public function update(Request $request, $id)

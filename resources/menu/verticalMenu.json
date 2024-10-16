@@ -208,7 +208,7 @@
     },
     {
       "name": "Revisión de certificados",
-      "icon": "menu-icon ri-qr-code-fill",
+      "icon": "menu-icon ri-file-chart-fill",
       "slug": "revision",
       "submenu": [
         {

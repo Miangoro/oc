@@ -38,4 +38,10 @@ class lotes_envasado extends Model
     }
     
 
+    public function lotes_envasado_granel()
+    {
+        return $this->hasMany(lotes_envasado_granel::class,'id_lote_envasado', 'id_lote_envasado');
+    }
+    
+
 }

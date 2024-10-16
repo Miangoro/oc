@@ -149,7 +149,7 @@
                                     <th>Volumen parcial</th>
                                 </tr>
                             </thead>
-                            <tbody id="contenidoGraneles">
+                            <tbody id="edit_contenidoGraneles">
                                 <tr>
                                     <th>
                                         <button type="button" class="btn btn-danger remove-row" disabled> <i class="ri-delete-bin-5-fill"></i> </button>

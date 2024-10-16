@@ -586,10 +586,8 @@ $(function () {
     $(document).on('click', '.edit-record', function () {
         
         var id_lote_envasado = $(this).data('id');
-    
-
         // Realizar la solicitud AJAX para obtener los datos del lote envasado
-        $.get('/lotes-envasado/' + id_lote_envasado + '/edit', function (data) {
+            $.get('/lotes-envasado/edit/'  + id_lote_envasado, function (data) {
             // Rellenar el formulario con los datos obtenidos
             $('#edit_id_lote_envasado').val(data.id_lote_envasado);
             $('#edit_cliente').val(data.id_empresa).trigger('change');
@@ -597,15 +595,6 @@ $(function () {
             $('#edit_nombre_lote').val(data.nombre_lote);
             $('#edit_tipo_lote').val(data.tipo_lote);
             $('#edit_sku').val(data.sku);
-           // $('#edit_marca').val(data.id_marca).trigger('change');
-           
-           //$('#edit_marca').val(data.id_marca).change(); 
-        
-          // $('#edit_marca option[value="107"]').prop('selected', true).change();
-         
-           
-         
-
             $('#edit_destino_lote').val(data.destino_lote);
             $('#edit_cant_botellas').val(data.cant_botellas);
             $('#edit_presentacion').val(data.presentacion);
@@ -613,6 +602,28 @@ $(function () {
             $('#edit_volumen_total').val(data.volumen_total);
             $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
 
+            // EDIT TESTIGOS
+            $('#edit_contenidoGraneles').empty();
+
+            // Iterar sobre los testigos y agregar filas a la tabla
+            data.lotes_envasado_granel.forEach(function(lote, index) {
+                var newRow = `
+                <tr>
+                    <th>
+                        <button type="button" class="btn btn-danger remove-row" ${index === 0 ? 'disabled' : ''}>
+                            <i class="ri-delete-bin-5-fill"></i>
+                        </button>
+                    </th>
+                    <td>
+                        <input type="text" class="form-control form-control-sm" name="id_lote_granel[]" value="${lote.id_lote_granel}" />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control form-control-sm" name="volumen_parcial[]" value="${lote.volumen_parcial}" />
+                    </td>
+                </tr>
+            `;
+                $('#edit_contenidoGraneles').append(newRow);
+            });
             // Mostrar el modal de edición
             $('#editLoteEnvasado').modal('show');
             $('#edit_marca option[value="'+data.id_marca+'').attr('selected', 'selected');
