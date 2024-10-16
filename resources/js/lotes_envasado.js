@@ -297,6 +297,8 @@ $(function () {
                             '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lote envasado</a>` +
+                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit"><i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación FQ</a>` +
+                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit-record"><i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>` +
                             `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lote envasado</a>` +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             '<a href="' +
@@ -739,24 +741,12 @@ $(function () {
         });
     });
 
-
-
-
-
-
-
-
-
-
 });
 
 
 
 
-
 function mostrarLotes() {
-
-
 
     var tipoLote = document.getElementById('edit_tipo_lote').value;
 
@@ -884,10 +874,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         var tipoLote = document.getElementById('tipo_lote').value;
-        if (tipoLote == '1') {
+        if (tipoLote == 'Por un solo lote a granel') {
             document.getElementById('datosOpcion1').style.display = 'block';
             document.getElementById('datosOpcion2').style.display = 'none';
-        } else if (tipoLote == '2') {
+        } else if (tipoLote == 'Por más de un lote a granel') {
             document.getElementById('datosOpcion1').style.display = 'none';
             document.getElementById('datosOpcion2').style.display = 'block';
         } else {
@@ -905,10 +895,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const datosOpcion2 = document.getElementById('datosOpcion2');
 
         function toggleFields() {
-            if (tipoLoteSelect.value === '1') {
+            if (tipoLoteSelect.value === 'Por un solo lote a granel') {
                 datosOpcion1.style.display = 'block'; // Muestra el campo
                 datosOpcion2.style.display = 'none';  // Oculta la opción 2
-            } else if (tipoLoteSelect.value === '2') {
+            } else if (tipoLoteSelect.value === 'Por más de un lote a granel') {
                 datosOpcion1.style.display = 'none';  // Oculta el campo
                 datosOpcion2.style.display = 'block'; // Muestra la opción 2
             } else {

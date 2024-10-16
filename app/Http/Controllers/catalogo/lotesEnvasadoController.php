@@ -151,7 +151,7 @@ class lotesEnvasadoController extends Controller
         $validated = $request->validate([
             'id_empresa' => 'required|exists:empresa,id_empresa',
             'nombre_lote' => 'required|string|max:100',
-            'tipo_lote' => 'required|integer',
+            'tipo_lote' => 'required|string|max:120',
             'sku' => 'required|string|max:60',
             'id_marca' => 'required|exists:marcas,id_marca',
             'destino_lote' => 'required|string|max:120',
@@ -212,11 +212,54 @@ class lotesEnvasadoController extends Controller
     //editar lotes envasados
     public function update(Request $request, $id)
     {
-        $loteEnvasado = lotes_envasado::find($id);
-        $loteEnvasado->update($request->all());
-
-        return response()->json(['success' => true]);
+        // Valida los datos
+        $validated = $request->validate([
+            'id_empresa' => 'required|exists:empresa,id_empresa',
+            'nombre_lote' => 'required|string|max:100',
+            'tipo_lote' => 'required|string|max:120',
+            'sku' => 'required|string|max:60',
+            'id_marca' => 'required|exists:marcas,id_marca',
+            'destino_lote' => 'required|string|max:120',
+            'cant_botellas' => 'required|integer',
+            'presentacion' => 'required|integer',
+            'unidad' => 'required|string|max:50',
+            'volumen_total' => 'required|numeric',
+            'lugar_envasado' => 'required|exists:instalaciones,id_instalacion',
+            'id_lote_granel.*' => 'nullable',
+            'volumen_parcial.*' => 'nullable',
+        ]);
+    
+        // Busca el lote que se quiere actualizar
+        try {
+            $lote = lotes_envasado::findOrFail($id);
+    
+            // Actualiza el registro principal en la tabla 'lotes_envasado'
+            $lote->update($validated);
+    
+            // Elimina los registros anteriores relacionados en 'lotes_envasado_granel'
+            lotes_envasado_granel::where('id_lote_envasado', $lote->id_lote_envasado)->delete();
+    
+            // Inserta los nuevos registros en 'lotes_envasado_granel'
+            for ($i = 0; $i < count($request->id_lote_granel); $i++) {
+                if (empty($request->volumen_total)) {
+                    $volumen_parcial = $request->volumen_parcial[$i];
+                } else {
+                    $volumen_parcial = $request->volumen_total;
+                }
+    
+                $envasado_granel = new lotes_envasado_granel();
+                $envasado_granel->id_lote_envasado = $lote->id_lote_envasado;
+                $envasado_granel->id_lote_granel = $request->id_lote_granel[$i];
+                $envasado_granel->volumen_parcial = $volumen_parcial;
+                $envasado_granel->save();
+            }
+    
+            return response()->json(['success' => 'Lote actualizado exitosamente.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
+    
     
 
 }

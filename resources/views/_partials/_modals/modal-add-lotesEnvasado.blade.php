@@ -27,8 +27,8 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <select id="tipo_lote" name="tipo_lote" class="form-select" required
                                     onchange="toggleFields()">
-                                    <option value="1">Por un solo lote a granel</option>
-                                    <option value="2">Por más de un lote a granel</option>
+                                    <option value="Por un solo lote a granel">Por un solo lote a granel</option>
+                                    <option value="Por más de un lote a granel">Por más de un lote a granel</option>
                                 </select>
                                 <label for="tipo_lote">Conformado por</label>
                             </div>
