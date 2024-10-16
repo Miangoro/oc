@@ -107,6 +107,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-4">
                             <!-- Visualización del PDF -->
                             <iframe width="100%" height="60%" id="pdfViewerDictamenFrame" 
@@ -121,10 +122,7 @@
                                 </button>
                             </div>
                         </div>
-                        
-                        
                     </div>
-
 
                 </div>
             </div>                
