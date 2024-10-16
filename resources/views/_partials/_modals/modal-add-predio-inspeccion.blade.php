@@ -91,12 +91,6 @@
                                                <th colspan="2" class="text-center">Adjuntar Fotografías de la
                                                    Inspección</th>
                                            </tr>
-
-                                           <tr>
-                                               <th>Eliminar</th>
-                                               <th>Título o Descripción</th>
-                                               <th>Archivo</th>
-                                           </tr>
                                        </thead>
                                        <tbody id="contenedor-secciones">
                                            <!-- Primera fila de ejemplo -->
