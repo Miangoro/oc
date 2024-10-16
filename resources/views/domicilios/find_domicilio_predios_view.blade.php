@@ -15,7 +15,6 @@
 <!-- Page Scripts -->
 @section('page-script')
     @vite(['resources/js/domicilio_predios.js'])
-    @vite(['resources/js/solicitudes.js'])
 @endsection
 
 <style>

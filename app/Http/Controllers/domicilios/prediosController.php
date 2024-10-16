@@ -710,12 +710,12 @@ class PrediosController extends Controller
               'num_predio' => $validated['num_predio'],
               'fecha_emision' => $validated['fecha_emision'],
               'fecha_vigencia' => $validated['fecha_vigencia'],
-              'estatus' => 'Vigente'
+              'estatus' => 'Completado'
           ]);
 
           return response()->json([
               'success' => true,
-              'message' => 'Predio actualizado exitosamente',
+              'message' => 'Predio registrado exitosamente',
           ]);
       } catch (\Exception $e) {
           return response()->json([
@@ -723,7 +723,83 @@ class PrediosController extends Controller
               'message' => 'Error al actualizar el predio: ' . $e->getMessage(),
           ], 500);
       }
+
   }
+
+
+
+  public function pdf_solicitud_servicios_070($id_predio)
+  {
+      // Busca la solicitud que tiene el id_predio proporcionado
+    $datos = solicitudesModel::where('id_predio', $id_predio)->first();
+       // Inicializa las variables con un valor vacío
+    $muestreo_agave = '------------';
+    $vigilancia_produccion = '------------';
+    $muestreo_granel= '------------';
+    $vigilancia_traslado= '------------';
+    $inspeccion_envasado= '------------';
+    $muestreo_envasado= '------------';
+    $ingreso_barrica= '------------';
+    $liberacion= '------------';
+    $liberacion_barrica= '------------';
+    $geo= '------------';
+    $exportacion= '------------';
+    $certificado_granel= '------------';
+    $certificado_nacional= '------------';
+    $dictaminacion = '------------';
+    $renovacion_dictaminacion = '------------';
+    // Verificar el valor de id_tipo y marcar la opción correspondiente
+    if ($datos->id_tipo == 1) {
+        $muestreo_agave = 'X';
+    }
+    if ($datos->id_tipo == 2) {
+        $vigilancia_produccion = 'X';
+    }
+    if ($datos->id_tipo == 3) {
+        $muestreo_granel= 'X';
+    }
+    if ($datos->id_tipo == 4) {
+        $vigilancia_traslado= 'X';
+    }
+    if ($datos->id_tipo == 5) {
+        $inspeccion_envasado= 'X';
+    }
+    if ($datos->id_tipo == 6) {
+        $muestreo_envasado= 'X';
+    }
+    if ($datos->id_tipo == 7) {
+        $ingreso_barrica= 'X';
+    }
+    if ($datos->id_tipo == 8) {
+        $liberacion= 'X';
+    }
+    if ($datos->id_tipo == 9) {
+        $liberacion_barrica= 'X';
+    }
+    if ($datos->id_tipo == 10) {
+        $geo= 'X';
+    }
+    if ($datos->id_tipo == 11) {
+        $exportacion= 'X';
+    }
+    if ($datos->id_tipo == 12) {
+        $certificado_granel= 'X';
+    }
+    if ($datos->id_tipo == 13) {
+        $certificado_nacional= 'X';
+    }
+    if ($datos->id_tipo == 14) {
+        $dictaminacion = 'X';
+    }
+    if ($datos->id_tipo == 15) {
+        $renovacion_dictaminacion = 'X';
+    }
+        $pdf = Pdf::loadView('pdfs.SolicitudDeServicio', compact('datos','muestreo_agave','vigilancia_produccion','dictaminacion','muestreo_granel',
+        'vigilancia_traslado','inspeccion_envasado','muestreo_envasado','ingreso_barrica','liberacion','liberacion_barrica','geo','exportacion','certificado_granel','certificado_nacional','dictaminacion','renovacion_dictaminacion'))
+        ->setPaper([0, 0, 640, 830]); ;
+        return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
+    }
+
 
 
 
