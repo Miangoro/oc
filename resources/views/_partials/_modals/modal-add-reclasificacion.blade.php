@@ -10,7 +10,7 @@
                 </div>
                 <form id="reclasificacionForm">
 
-                    <input type="hidden" id="edit_id_lote_envasado" name="id">
+{{--                     <input type="text" id="id_lote_envasado " name="id_lote_envasado ">
                     <div class="row">
                         <div class="col-6">
                             <div class="form-floating form-floating-outline mb-4">
@@ -21,33 +21,10 @@
                                 </select>
                                 <label for="edit_cliente">Cliente</label>
                             </div>
-                        </div>
+                        </div> --}}
 
                         
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th><button type="button" class="btn btn-primary add-row-edit"> <i class="ri-add-line"></i> </button></th>
-                                    <th>Lote a granel</th>
-                                    <th>Volumen parcial</th>
-                                </tr>
-                            </thead>
-                            <tbody id="edit_contenidoGraneles">
-                                <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-danger remove-row" > <i class="ri-delete-bin-5-fill"></i> </button>
-                                    </th>
-                                    <td>
-                                        <select class="edit_lote_granel form-control select2" name="id_lote_granel[]" id="id_lote_granel" >
-                                            <!-- Opciones -->
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                       
                         
 
 
