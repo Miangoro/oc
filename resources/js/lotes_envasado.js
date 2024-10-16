@@ -294,8 +294,10 @@ $(function () {
                     render: function (data, type, full, meta) {
                         return (
                             '<div class="d-flex align-items-center gap-50">' +
-                            `<button id="btn_edit-record" class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-                            `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_lote_envasado']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` +
+                            '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
+                            '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lote envasado</a>` +
+                            `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lote envasado</a>` +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             '<a href="' +
                             userView +
@@ -584,10 +586,8 @@ $(function () {
     $(document).on('click', '.edit-record', function () {
         
         var id_lote_envasado = $(this).data('id');
-    
-
         // Realizar la solicitud AJAX para obtener los datos del lote envasado
-        $.get('/lotes-envasado/' + id_lote_envasado + '/edit', function (data) {
+            $.get('/lotes-envasado/edit/'  + id_lote_envasado, function (data) {
             // Rellenar el formulario con los datos obtenidos
             $('#edit_id_lote_envasado').val(data.id_lote_envasado);
             $('#edit_cliente').val(data.id_empresa).trigger('change');
@@ -595,15 +595,6 @@ $(function () {
             $('#edit_nombre_lote').val(data.nombre_lote);
             $('#edit_tipo_lote').val(data.tipo_lote);
             $('#edit_sku').val(data.sku);
-           // $('#edit_marca').val(data.id_marca).trigger('change');
-           
-           //$('#edit_marca').val(data.id_marca).change(); 
-        
-          // $('#edit_marca option[value="107"]').prop('selected', true).change();
-         
-           
-         
-
             $('#edit_destino_lote').val(data.destino_lote);
             $('#edit_cant_botellas').val(data.cant_botellas);
             $('#edit_presentacion').val(data.presentacion);
@@ -611,6 +602,28 @@ $(function () {
             $('#edit_volumen_total').val(data.volumen_total);
             $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
 
+            // EDIT TESTIGOS
+            $('#edit_contenidoGraneles').empty();
+
+            // Iterar sobre los testigos y agregar filas a la tabla
+            data.lotes_envasado_granel.forEach(function(lote, index) {
+                var newRow = `
+                <tr>
+                    <th>
+                        <button type="button" class="btn btn-danger remove-row" ${index === 0 ? '' : ''}>
+                            <i class="ri-delete-bin-5-fill"></i>
+                        </button>
+                    </th>
+                    <td>
+                        <input type="text" class="form-control form-control-sm" name="id_lote_granel[]" value="${lote.id_lote_granel}" />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control form-control-sm" name="volumen_parcial[]" value="${lote.volumen_parcial}" />
+                    </td>
+                </tr>
+            `;
+                $('#edit_contenidoGraneles').append(newRow);
+            });
             // Mostrar el modal de edición
             $('#editLoteEnvasado').modal('show');
             $('#edit_marca option[value="'+data.id_marca+'').attr('selected', 'selected');
@@ -796,7 +809,6 @@ $(document).ready(function () {
                 </th>
                 <td>
                     <select class="id_lote_granel form-control select2-nuevo" name="id_lote_granel[]">
-                        <!-- Opciones -->
                     </select>
                 </td>
                 <td>
@@ -824,6 +836,35 @@ $(document).ready(function () {
         $(this).closest('tr').remove();
     });
 });
+
+
+//agregar tabal a editar:
+$(document).on('click', '.add-row-edit', function () {
+    var newRow = `
+      <tr>
+          <th>
+              <button type="button" class="btn btn-danger remove-row">
+                  <i class="ri-delete-bin-5-fill"></i>
+              </button>
+          </th>
+                <td>
+                    <select class="id_lote_granel form-control select2-nuevo" name="id_lote_granel[]">
+                    </select>
+                </td>
+                <td>
+                    <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
+                </td>
+      </tr>`;
+
+    $('#edit_contenidoGraneles').append(newRow);
+  });
+
+  // Eliminar fila de la tabla
+  $(document).on('click', '.remove-row', function () {
+    $(this).closest('tr').remove();
+
+  });
+
 
 
 
