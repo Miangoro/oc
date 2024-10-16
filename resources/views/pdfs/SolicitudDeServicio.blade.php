@@ -456,7 +456,10 @@
         </tr>
         <tr>
             <td class="con-negra" colspan="3" rowspan="3">INFORMACIÓN ADICIONAL SOBRE LA <br> ACTIVIDAD:</td>
-            <td class="td-margins" colspan="6">{{ $datos->info_adicional }}</td>
+            <td class="td-margins" colspan="6">
+                {{ $datos->info_adicional }}
+                
+            </td>
         </tr>
         <tr>
             <td class="td-margins" colspan="6">&nbsp;</td>

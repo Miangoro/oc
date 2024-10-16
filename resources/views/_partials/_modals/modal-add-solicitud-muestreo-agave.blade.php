@@ -33,20 +33,18 @@
                     </div>
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
-                            <select class="select2 form-select id_predio" name="id_predio" aria-label="id_predio"
-                                required>
-                                <option value="" selected>Lista de predios</option>
+                            <select class="select2 form-select" id="id_instalacion" name="id_instalacion" aria-label="id_instalacion" required>
+                                <option value="" selected>Lista de instalaciones</option>
                             </select>
-                            <label for="id_predio">Domicilio del predio a inspeccionar</label>
+                            <label for="id_predio">Domicilio de la instalación de producción</label>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="Dirección del punto de reunión" class="form-control" type="text"
-                                    name="punto_reunion" />
-                                <label for="num_anterior">Dirección del punto de reunión</label>
-                            </div>
+                        <div class="form-floating form-floating-outline mb-5">
+                            <select multiple class="select2 form-select" id="id_instalacion" name="id_instalacion" aria-label="id_instalacion" required>
+                                <option value="" selected>Lista de guías de agave</option>
+                            </select>
+                            <label for="id_predio">Guías de agave expedidas por OC CIDAM</label>
                         </div>
                     </div>
                     <div class="row">
