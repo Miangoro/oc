@@ -108,22 +108,46 @@ $(function () {
           }
         },
         // Pdf de solicitud
+        // Pdf de solicitud
         {
           targets: 11,
           className: 'text-center',
-          searchable: false, orderable: false,
+          searchable: false,
+          orderable: false,
           render: function (data, type, full, meta) {
-            var $id = full['id_guia'];
-            if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Completado') {
+            var hasSolicitud = false;
+
+            // Realiza una llamada AJAX para verificar si existe una solicitud
+            $.ajax({
+              url: '/verificar-solicitud', // Cambia esta URL según tu ruta de verificación
+              type: 'GET',
+              data: { id_predio: full['id_predio'] },
+              async: false, // Permite esperar la respuesta antes de continuar
+              success: function (response) {
+                hasSolicitud = response.hasSolicitud; // Asegúrate de que el servidor responda con este campo
+              },
+              error: function () {
+                console.error('Error al verificar la solicitud'); // Manejo de errores
+              }
+            });
+
+            // Si hay una solicitud asociada al id_predio, muestra el ícono PDF, de lo contrario, muestra el ícono de sin PDF
+            if (hasSolicitud) {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdfSolicitud cursor-pointer"
-                      data-bs-target="#mostrarPdfDcitamen" data-bs-toggle="modal"
-                      data-bs-dismiss="modal" data-id="${full['id_predio']}"
-                      data-registro="${full['id_empresa']}"></i>`;
+              data-bs-target="#mostrarPdfDcitamen" data-bs-toggle="modal"
+              data-bs-dismiss="modal" data-id="${full['id_predio']}"
+              data-registro="${full['id_empresa']}"></i>`;
             } else {
-              return '<i class="rri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
+              // Mostrar ícono si no hay solicitud con un tooltip
+              return `<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"
+                  data-bs-toggle="tooltip"
+                  title="Necesita hacer la solicitud"
+                  data-bs-placement="top"></i>`;
             }
           }
         },
+
+
         // Pdf de pre-registro
         {
           targets: 12,
@@ -137,7 +161,7 @@ $(function () {
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
                       data-registro="${full['id_empresa']}"></i>`;
             } else {
-              return '<i class="rri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
+              return '<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
             }
           }
         },
@@ -1091,7 +1115,7 @@ $(function () {
     });
 
     // Llama a la función al abrir el modal de georreferenciación
-    $('#addSolicitudGeoreferenciacion').on('show.bs.modal', function() {
+    $('#addSolicitudGeoreferenciacion').on('show.bs.modal', function () {
       if (typeof inicializarGeoreferenciacion === 'function') {
         inicializarGeoreferenciacion(); // Llama a la función de solicitudes.js
       }
@@ -1595,29 +1619,29 @@ $(function () {
   });
 
 
-    // Reciben los datos del PDF
-    $(document).on('click', '.pdfSolicitud', function () {
-      var id = $(this).data('id');
-      var registro = $(this).data('registro');
-      var iframe = $('#pdfViewerDictamen');
+  // Reciben los datos del PDF
+  $(document).on('click', '.pdfSolicitud', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+    var iframe = $('#pdfViewerDictamen');
 
-      // Mostrar el spinner y ocultar el iframe
-      $('#loading-spinner').show();
-      iframe.hide();
+    // Mostrar el spinner y ocultar el iframe
+    $('#loading-spinner').show();
+    iframe.hide();
 
-      // Cargar el PDF
-      iframe.attr('src', '../solicitudServicio/' + id);
-      $("#titulo_modal_Dictamen").text("Inspección para la geo-referenciación de los predios de maguey o agave");
-      $("#subtitulo_modal_Dictamen").text(registro);
-      // Abrir el modal
-      $('#mostrarPdfDictamen').modal('show');
-    });
+    // Cargar el PDF
+    iframe.attr('src', '../solicitudServicio/' + id);
+    $("#titulo_modal_Dictamen").text("Inspección para la geo-referenciación de los predios de maguey o agave");
+    $("#subtitulo_modal_Dictamen").text(registro);
+    // Abrir el modal
+    $('#mostrarPdfDictamen').modal('show');
+  });
 
-    // Ocultar el spinner cuando el PDF esté completamente cargado
-    $('#pdfViewerDictamen').on('load', function () {
-      $('#loading-spinner').hide(); // Ocultar el spinner
-      $(this).show(); // Mostrar el iframe con el PDF
-    });
+  // Ocultar el spinner cuando el PDF esté completamente cargado
+  $('#pdfViewerDictamen').on('load', function () {
+    $('#loading-spinner').hide(); // Ocultar el spinner
+    $(this).show(); // Mostrar el iframe con el PDF
+  });
 
   $(document).ready(function () {
     // Función para agregar una nueva fila de características
