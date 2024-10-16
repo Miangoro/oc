@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerPredios2(this.value);" 
+                                <select onchange="obtenerPredios();"
                                     name="id_empresa" class="select2 form-select id_empresa" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -51,7 +51,7 @@
                     </div>
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-150 info_adicional" id="info" placeholder="Información adicional sobre la actividad..."></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-150" id="comentarios" placeholder="Información adicional sobre la actividad..."></textarea>
                             <label for="comentarios">Información adicional sobre la actividad</label>
                         </div>
                     </div>
@@ -69,9 +69,8 @@
 
 
 <script>
-    function obtenerPredios2(empresa) {  
-       
-       
+    function obtenerPredios() {
+        var empresa = $(".id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
@@ -90,10 +89,6 @@
                     contenido = '<option value="">Sin predios registrados</option>';
                 }
                 $('.id_predio').html(contenido);
-                var info_adicional = 'Predio: '+response.predios[0].nombre_predio;
-                $('.info_adicional').val(info_adicional);
-               
-                
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');

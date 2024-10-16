@@ -486,6 +486,7 @@ Route::resource('/empresas-list', clientesProspectoController::class);
 Route::get('/clientes-list/{id}/edit', [clientesProspectoController::class, 'edit']);
 Route::post('/clientes/{id}/update', [clientesProspectoController::class, 'update'])->name('clientes.update');
 Route::get('/solicitudInfoClienteNOM-199/{id}', [clientesProspectoController::class, 'pdfNOM199']);
+
 Route::post('/aceptar-cliente', [clientesProspectoController::class, 'aceptarCliente']);
 Route::get('/lista_empresas/{id}', [getFuncionesController::class, 'find_clientes_prospecto']);
 Route::get('/lista_inspetores', [getFuncionesController::class, 'usuariosInspectores']);
@@ -562,6 +563,7 @@ Route::get('/pre-registro_predios/{id_predio}', [prediosController::class, 'PdfP
 Route::get('/inspeccion_geo_referenciacion/{id_predio}', [prediosController::class, 'PDFInspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion');
 Route::get('/Registro_de_Predios_Maguey_Agave/{id_predio}', [prediosController::class, 'PDFRegistroPredios'])->name('PDF_Registro_Predios');
 Route::post('/registro-Predio/{id_predio}', [PrediosController::class, 'registroPredio'])->name('registro-predios.registroPredio');
+Route::get('/solicitudServicio/{id_predio}', [PrediosController::class, 'pdf_solicitud_servicios_070']);
 
 //Domicilio Destinos
 Route::get('/domicilios/destinos', [DestinosController::class, 'UserManagement'])->name('domicilio-destinos');
@@ -748,7 +750,7 @@ Route::resource('/solicitudes-list', solicitudesController::class);
 Route::get('/solicitud_de_servicio/{id_solicitud}', [solicitudesController::class, 'pdf_solicitud_servicios_070'])->name('solicitudservi');
 Route::post('/registrar-solicitud-georeferenciacion', [solicitudesController::class, 'registrarSolicitudGeoreferenciacion'])->name('registrarSolicitudGeoreferenciacion');
 Route::post('/registrar-solicitud-muestreo-agave', [solicitudesController::class, 'registrarSolicitudMuestreoAgave'])->name('registrarSolicitudMuestreoAgave');
-
+Route::get('/verificar-solicitud', [solicitudesController::class, 'verificarSolicitud'])->name('verificarSolicitud');
 
 
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');

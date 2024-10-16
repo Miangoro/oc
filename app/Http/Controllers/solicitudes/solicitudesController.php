@@ -23,7 +23,7 @@ class solicitudesController extends Controller
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = estados::all(); // Obtener todos los estados
         $organismos = organismos::all(); // Obtener todos los estados
-     
+
         $inspectores = User::where('tipo','=','2')->get(); // Obtener todos los organismos
         return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores','solicitudesTipos','organismos'));
     }
@@ -41,7 +41,7 @@ class solicitudesController extends Controller
             8 => 'inspector',
             9 => 'fecha_servicio',
             10 => 'fecha_visita',
-      
+
             11 => 'estatus'
         ];
 
@@ -56,10 +56,10 @@ class solicitudesController extends Controller
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
 
-       
+
 
         if (empty($request->input('search.value'))) {
-           
+
 
                 $solicitudes = solicitudesModel::with('tipo_solicitud','empresa','inspeccion','inspector', 'instalacion')
                 ->offset($start)
@@ -70,8 +70,8 @@ class solicitudesController extends Controller
         } else {
             $search = $request->input('search.value');
 
-          
-            
+
+
 
             $solicitudes = solicitudesModel::with('tipo_solicitud','empresa','inspeccion','inspector', 'instalacion')
                 ->where(function ($query) use ($search) {
@@ -109,7 +109,7 @@ class solicitudesController extends Controller
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</apan>'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['foto_inspector'] = $solicitud->inspector->profile_photo_path ?? ''; // Maneja el caso donde el organismo sea nulo
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</apan>';
-                
+
                 $nestedData['estatus'] = $solicitud->estatus ?? 'Vacío';
 
 
@@ -130,8 +130,8 @@ class solicitudesController extends Controller
 
     public function store(Request $request)
     {
-        
-    
+
+
         // Validar los datos recibidos del formulario
      /*   $request->validate([
             'folio' => 'required|string|max:255',
@@ -141,15 +141,15 @@ class solicitudesController extends Controller
             'id_direccion' => 'required|integer',
             'comentarios' => 'nullable|string|max:1000',
         ]);*/
-    
-   
+
+
 
         $solicitud = new solicitudesModel();
         $solicitud->folio = Helpers::generarFolioSolicitud();
         $solicitud->id_empresa = $request->id_empresa;
         $solicitud->id_tipo = 14;
         $solicitud->fecha_visita = $request->fecha_visita;
-        //Auth::user()->id; 
+        //Auth::user()->id;
         $solicitud->id_instalacion = $request->id_instalacion;
         $solicitud->info_adicional = $request->info_adicional;
         // Guardar el nuevo registro en la base de datos
@@ -170,13 +170,13 @@ class solicitudesController extends Controller
             $user->notify(new GeneralNotification($data1));
         }
 
-    
+
         // Retornar una respuesta JSON indicando éxito
         return response()->json(['success' => 'Solicitud registrada correctamente']);
     }
 
     public function pdf_solicitud_servicios_070($id_solicitud)
-    {   
+    {
         $datos = solicitudesModel::find($id_solicitud);
 
          // Inicializa las variables con un valor vacío
@@ -195,7 +195,7 @@ class solicitudesController extends Controller
     $certificado_nacional= '------------';
     $dictaminacion = '------------';
     $renovacion_dictaminacion = '------------';
-   
+
 
     // Verificar el valor de id_tipo y marcar la opción correspondiente
     if ($datos->id_tipo == 1) {
@@ -266,7 +266,17 @@ class solicitudesController extends Controller
     }
 
 
-    
+    public function verificarSolicitud(Request $request)
+{
+    $id_predio = $request->input('id_predio');
+
+    // Verifica si existe una solicitud asociada al id_predio
+    $exists = solicitudesModel::where('id_predio', $id_predio)->exists();
+
+    return response()->json(['hasSolicitud' => $exists]);
+}
+
+
     public function registrarSolicitudGeoreferenciacion(Request $request)
     {
 
@@ -275,9 +285,9 @@ class solicitudesController extends Controller
         $solicitud->id_empresa = $request->id_empresa;
         $solicitud->id_tipo = 10;
         $solicitud->fecha_visita = $request->fecha_visita;
-        //Auth::user()->id; 
+        //Auth::user()->id;
         $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
-        $solicitud->id_predio = $request->id_predio; 
+        $solicitud->id_predio = $request->id_predio;
         $solicitud->info_adicional = $request->info_adicional;
         // Guardar el nuevo registro en la base de datos
         $solicitud->save();
