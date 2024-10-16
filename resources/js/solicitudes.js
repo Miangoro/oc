@@ -411,8 +411,8 @@ $(function () {
       });
 
       
-       // Inicializar FormValidation para la solicitud de muestreo de agave
-       const form3 = document.getElementById('addRegistrarSolicitudGeoreferenciacion');
+       // Inicializar FormValidation para la solicitud de muestreo de agave ***********************************************************************************************************************************
+       const form3 = document.getElementById('addRegistrarSolicitudMuestreoAgave');
        const fv3 = FormValidation.formValidation(form3, {
          fields: {
            'id_empresa': {

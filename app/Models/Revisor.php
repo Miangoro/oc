@@ -22,6 +22,7 @@ class Revisor extends Model
         'numero_revision',
         'es_correccion',
         'observaciones',
+        'pregunta',
     ];
 
     public function getLogName2(): string

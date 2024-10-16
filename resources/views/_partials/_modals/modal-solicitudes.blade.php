@@ -70,8 +70,8 @@
                         <div class="tab-content" id="myTabContent">
                           <!-- Pestaña Mezcal -->
                           <div class="tab-pane fade show active" id="tab-mezcal" role="tabpanel">
-                            <h5 class="card-title">Mezcal</h5>
-                            <p class="card-text">Información sobre mezcal y opciones relacionadas.</p>
+                            <h5 class="card-title">Solicitudes para mezcal</h5>
+                            <p class="card-text">Seleccione la solicitud que desea realizar.</p>
                             <div class="row g-6 mb-6" id="tab-mezcal-content">
                               <!-- Mensaje de carga -->
                               <div class="col-md-12 text-center" id="loading-message">

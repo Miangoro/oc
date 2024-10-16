@@ -11,7 +11,7 @@ class SolicitudesTipoController extends Controller
 {
     public function UserManagement()
     {
-        $solicitudesTipos = solicitudTipo::all();
+        $solicitudesTipos = solicitudTipo::orderBy('orden', 'asc')->get();
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         return view('solicitudes.solicitudes-tipo_view', compact('solicitudesTipos','empresas'));
     }
@@ -19,7 +19,7 @@ class SolicitudesTipoController extends Controller
     public function getSolicitudesTipos()
     {
         try {
-            $solicitudesTipos = solicitudTipo::all();
+            $solicitudesTipos = solicitudTipo::orderBy('orden', 'asc')->get();
             return response()->json($solicitudesTipos);
         } catch (\Exception $e) {
             \Log::error('Error al obtener tipos de solicitud: ' . $e->getMessage());

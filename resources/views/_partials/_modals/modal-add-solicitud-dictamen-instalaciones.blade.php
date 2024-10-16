@@ -35,8 +35,6 @@
 
                     <div class="row">
                         <div class="col-md-12">
-                        
-                           
                             <div class="form-floating form-floating-outline mb-6 input-group ">
                                 <select class=" form-select" id="id_instalacion" name="id_instalacion" aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
@@ -46,7 +44,6 @@
                                 <button type="button" class="btn btn-primary" id="abrirModalInstalaciones"><i class="ri-add-line"></i> Agregar nueva instalación</button>
                                 
                             </div>
-                       
                     </div>
                     </div>
                     
