@@ -70,7 +70,7 @@ $(function () {
           render: function (data, type, row) {
             var estatusClass = '';
             // Asignar clases según el estatus
-            if (data === 'Vigente') {
+            if (data === 'Completado') {
               estatusClass = 'badge rounded-pill bg-success'; // Verde para 'Vigente'
             } else if (data === 'Pendiente') {
               estatusClass = 'badge rounded-pill bg-danger'; // Rojo para 'Pendiente'
@@ -107,37 +107,61 @@ $(function () {
             return `<span>${full.fake_id}</span>`;
           }
         },
-         // Pdf de pre-registro
-         {
+        // Pdf de solicitud
+        // Pdf de solicitud
+        {
           targets: 11,
           className: 'text-center',
-          searchable: false, orderable: false,
+          searchable: false,
+          orderable: false,
           render: function (data, type, full, meta) {
-            var $id = full['id_guia'];
-            if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
+            var hasSolicitud = false;
+
+            // Realiza una llamada AJAX para verificar si existe una solicitud
+            $.ajax({
+              url: '/verificar-solicitud', // Cambia esta URL según tu ruta de verificación
+              type: 'GET',
+              data: { id_predio: full['id_predio'] },
+              async: false, // Permite esperar la respuesta antes de continuar
+              success: function (response) {
+                hasSolicitud = response.hasSolicitud; // Asegúrate de que el servidor responda con este campo
+              },
+              error: function () {
+                console.error('Error al verificar la solicitud'); // Manejo de errores
+              }
+            });
+
+            // Si hay una solicitud asociada al id_predio, muestra el ícono PDF, de lo contrario, muestra el ícono de sin PDF
+            if (hasSolicitud) {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdfSolicitud cursor-pointer"
-                      data-bs-target="#mostrarPdfDcitamen" data-bs-toggle="modal"
-                      data-bs-dismiss="modal" data-id="${full['id_predio']}"
-                      data-registro="${full['id_empresa']}"></i>`;
+              data-bs-target="#mostrarPdfDcitamen" data-bs-toggle="modal"
+              data-bs-dismiss="modal" data-id="${full['id_predio']}"
+              data-registro="${full['id_empresa']}"></i>`;
             } else {
-              return '<i class="rri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
+              // Mostrar ícono si no hay solicitud con un tooltip
+              return `<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"
+                  data-bs-toggle="tooltip"
+                  title="Necesita hacer la solicitud"
+                  data-bs-placement="top"></i>`;
             }
           }
         },
-      // Pdf de pre-registro
+
+
+        // Pdf de pre-registro
         {
           targets: 12,
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
             var $id = full['id_guia'];
-            if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
+            if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Completado') {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"
                       data-bs-target="#mostrarPdfDcitamen" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
                       data-registro="${full['id_empresa']}"></i>`;
             } else {
-              return '<i class="rri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
+              return '<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"></i>'; // Mostrar ícono si no cumple las condiciones
             }
           }
         },
@@ -147,7 +171,7 @@ $(function () {
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
-            if (full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
+            if (full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Completado') {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"
                       data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
@@ -163,7 +187,7 @@ $(function () {
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
-            if (full['estatus'] === 'Vigente') {
+            if (full['estatus'] === 'Completado') {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf3 cursor-pointer"
                       data-bs-target="#mostrarPdfDictamenFinal" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
@@ -428,8 +452,6 @@ $(function () {
           }
         }
       ],
-
-
       // For responsive popup
       responsive: {
         details: {
@@ -464,7 +486,6 @@ $(function () {
       }
     });
   }
-
 
   var dt_user_table = $('.datatables-users'),
     select2Elements = $('.select2'),
@@ -983,9 +1004,13 @@ $(function () {
             customClass: {
               confirmButton: 'btn btn-success'
             }
+          }).then(function () {
+            limpiarModal();
+            // Abre el modal de georreferenciación
+            $('#addSolicitudGeoreferenciacion').modal('show');
+            // Inicializa el modal de georreferenciación
+            inicializarGeoreferenciacion();
           });
-          // Limpiar el contenido del modal (si es necesario)
-          limpiarModal();
         },
         error: function (xhr) {
           Swal.fire({
@@ -999,11 +1024,136 @@ $(function () {
         }
       });
     });
+
     // Inicializar select2 y revalidar el campo cuando cambie
     $('#id_empresa, .tipo_agave').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
   });
+
+
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation para la solicitud de georreferenciación
+    const addRegistrarSolicitudGeoreferenciacion = document.getElementById('addRegistrarSolicitudGeoreferenciacion');
+    const fvGeoreferenciacion = FormValidation.formValidation(addRegistrarSolicitudGeoreferenciacion, {
+      fields: {
+        'id_empresa': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el cliente.'
+            }
+          }
+        },
+        'fecha_visita': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la fecha sugerida para la inspección.'
+            }
+          }
+        },
+        'punto_reunion': {
+          validators: {
+            notEmpty: {
+              message: 'Introduce la dirección para el punto de reunión.'
+            }
+          }
+        },
+        // Agrega otros campos necesarios para la validación aquí
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      // Validar el formulario
+      var formData = new FormData(addRegistrarSolicitudGeoreferenciacion);
+
+      $.ajax({
+        url: '/registrar-solicitud-georeferenciacion', // Cambia esta URL según tu endpoint
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#addSolicitudGeoreferenciacion').modal('hide');
+          addRegistrarSolicitudGeoreferenciacion.reset(); // Resetea el formulario
+          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla si es necesario
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar la solicitud de georreferenciación',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+
+    // Llama a la función al abrir el modal de georreferenciación
+    $('#addSolicitudGeoreferenciacion').on('show.bs.modal', function () {
+      if (typeof inicializarGeoreferenciacion === 'function') {
+        inicializarGeoreferenciacion(); // Llama a la función de solicitudes.js
+      }
+    });
+  });
+
+  $(document).ready(function() {
+    var contador = 1; // Contador para identificar cada sección
+
+    // Al hacer clic en el botón de agregar sección
+    $('#agregar-seccion').on('click', function() {
+        contador++; // Incrementar el contador para cada nueva sección
+
+        // Crear una nueva fila de la tabla
+        var nuevaSeccion = `
+            <tr class="seccion-foto">
+                <td>
+                    <button type="button" class="btn btn-danger eliminar-seccion"><i class="ri-delete-bin-5-fill"></i></button>
+                </td>
+                <td>
+                    <input type="text" class="form-control" name="titulo_foto[]" placeholder="Título o descripción de la foto">
+                </td>
+                <td>
+                    <input type="file" class="form-control" name="fotografias_inspeccion[]" accept="image/*">
+                </td>
+            </tr>`;
+
+        // Agregar la nueva fila a la tabla
+        $('#contenedor-secciones').append(nuevaSeccion);
+    });
+
+    // Eliminar la fila correspondiente cuando se hace clic en el botón "Eliminar"
+    $(document).on('click', '.eliminar-seccion', function() {
+        $(this).closest('tr').remove(); // Eliminar la fila más cercana
+    });
+});
+
+
 
 
   function limpiarModal() {
@@ -1014,7 +1164,6 @@ $(function () {
     $('.select2').val('').trigger('change');
     // Reiniciar otros elementos o plugins que uses dentro del modal
   }
-
 
 
   $(function () {
@@ -1395,9 +1544,7 @@ $(function () {
                   notEmpty: {
                     message: 'Este campo es requerido'
                   },
-                  numeric: {
-                    message: 'Por favor ingresa un valor numérico válido'
-                  }
+
                 }
               });
             });
@@ -1434,7 +1581,7 @@ $(function () {
     var registro = $(this).data('registro');
     var iframe = $('#pdfViewerDictamen');
 
-          // Mostrar el spinner y ocultar el iframe
+    // Mostrar el spinner y ocultar el iframe
     $('#loading-spinner').show();
     iframe.hide();
 
@@ -1442,65 +1589,90 @@ $(function () {
 
     $("#titulo_modal_Dictamen").text("Pre-registro de predios de maguey o agave");
     $("#subtitulo_modal_Dictamen").text(registro);
-      // Abrir el modal
-      $('#mostrarPdfDictamen').modal('show');
+    // Abrir el modal
+    $('#mostrarPdfDictamen').modal('show');
   });
-    // Ocultar el spinner cuando el PDF esté completamente cargado
-    $('#pdfViewerDictamen').on('load', function () {
-      $('#loading-spinner').hide(); // Ocultar el spinner
-      $(this).show(); // Mostrar el iframe con el PDF
-    });
+  // Ocultar el spinner cuando el PDF esté completamente cargado
+  $('#pdfViewerDictamen').on('load', function () {
+    $('#loading-spinner').hide(); // Ocultar el spinner
+    $(this).show(); // Mostrar el iframe con el PDF
+  });
 
-    // Reciben los datos del PDF
-    $(document).on('click', '.pdf2', function () {
-      var id = $(this).data('id');
-      var registro = $(this).data('registro');
-      var iframe = $('#pdfViewerDictamen');
+  // Reciben los datos del PDF
+  $(document).on('click', '.pdf2', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+    var iframe = $('#pdfViewerDictamen');
 
-      // Mostrar el spinner y ocultar el iframe
-      $('#loading-spinner').show();
-      iframe.hide();
+    // Mostrar el spinner y ocultar el iframe
+    $('#loading-spinner').show();
+    iframe.hide();
 
-      // Cargar el PDF
-      iframe.attr('src', '../inspeccion_geo_referenciacion/' + id);
-      $("#titulo_modal_Dictamen").text("Inspección para la geo-referenciación de los predios de maguey o agave");
-      $("#subtitulo_modal_Dictamen").text(registro);
+    // Cargar el PDF
+    iframe.attr('src', '../inspeccion_geo_referenciacion/' + id);
+    $("#titulo_modal_Dictamen").text("Inspección para la geo-referenciación de los predios de maguey o agave");
+    $("#subtitulo_modal_Dictamen").text(registro);
 
-      // Abrir el modal
-      $('#mostrarPdfDictamen').modal('show');
-    });
+    // Abrir el modal
+    $('#mostrarPdfDictamen').modal('show');
+  });
 
-    // Ocultar el spinner cuando el PDF esté completamente cargado
-    $('#pdfViewerDictamen').on('load', function () {
-      $('#loading-spinner').hide(); // Ocultar el spinner
-      $(this).show(); // Mostrar el iframe con el PDF
-    });
+  // Ocultar el spinner cuando el PDF esté completamente cargado
+  $('#pdfViewerDictamen').on('load', function () {
+    $('#loading-spinner').hide(); // Ocultar el spinner
+    $(this).show(); // Mostrar el iframe con el PDF
+  });
 
 
-        // Reciben los datos del PDF
-        $(document).on('click', '.pdf3', function () {
-          var id = $(this).data('id');
-          var registro = $(this).data('registro');
-          var iframe = $('#pdfViewerDictamen');
+  // Reciben los datos del PDF
+  $(document).on('click', '.pdf3', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+    var iframe = $('#pdfViewerDictamen');
 
-          // Mostrar el spinner y ocultar el iframe
-          $('#loading-spinner').show();
-          iframe.hide();
+    // Mostrar el spinner y ocultar el iframe
+    $('#loading-spinner').show();
+    iframe.hide();
 
-          // Cargar el PDF
-          iframe.attr('src', '../Registro_de_Predios_Maguey_Agave/' + id);
-          $("#titulo_modal_Dictamen").text("F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.");
-          $("#subtitulo_modal_Dictamen").text(registro);
+    // Cargar el PDF
+    iframe.attr('src', '../Registro_de_Predios_Maguey_Agave/' + id);
+    $("#titulo_modal_Dictamen").text("F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.");
+    $("#subtitulo_modal_Dictamen").text(registro);
 
-          // Abrir el modal
-          $('#mostrarPdfDictamen').modal('show');
-        });
+    // Abrir el modal
+    $('#mostrarPdfDictamen').modal('show');
+  });
 
-        // Ocultar el spinner cuando el PDF esté completamente cargado
-        $('#pdfViewerDictamen').on('load', function () {
-          $('#loading-spinner').hide(); // Ocultar el spinner
-          $(this).show(); // Mostrar el iframe con el PDF
-        });
+  // Ocultar el spinner cuando el PDF esté completamente cargado
+  $('#pdfViewerDictamen').on('load', function () {
+    $('#loading-spinner').hide(); // Ocultar el spinner
+    $(this).show(); // Mostrar el iframe con el PDF
+  });
+
+
+  // Reciben los datos del PDF
+  $(document).on('click', '.pdfSolicitud', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+    var iframe = $('#pdfViewerDictamen');
+
+    // Mostrar el spinner y ocultar el iframe
+    $('#loading-spinner').show();
+    iframe.hide();
+
+    // Cargar el PDF
+    iframe.attr('src', '../solicitudServicio/' + id);
+    $("#titulo_modal_Dictamen").text("Inspección para la geo-referenciación de los predios de maguey o agave");
+    $("#subtitulo_modal_Dictamen").text(registro);
+    // Abrir el modal
+    $('#mostrarPdfDictamen').modal('show');
+  });
+
+  // Ocultar el spinner cuando el PDF esté completamente cargado
+  $('#pdfViewerDictamen').on('load', function () {
+    $('#loading-spinner').hide(); // Ocultar el spinner
+    $(this).show(); // Mostrar el iframe con el PDF
+  });
 
   $(document).ready(function () {
     // Función para agregar una nueva fila de características
@@ -1790,7 +1962,7 @@ $(function () {
             /* console.log(data) */
 
             // Rellenar el formulario con los datos del predio
-            $('#inspeccion_id_empresa').val(predio.id_empresa).trigger('change');
+            $('#inspeccion_id_empresa').val(predio.id_empresa);
             $('#inspeccion_ubicacion_predio').val(predio.ubicacion_predio);
             $('#inspeccion_tiene_coordenadas').val(predio.cuenta_con_coordenadas);
             $('#inspeccion_superficie').val(predio.superficie);
@@ -1980,9 +2152,6 @@ $(function () {
                   notEmpty: {
                     message: 'Este campo es requerido'
                   },
-                  numeric: {
-                    message: 'Por favor ingresa un valor numérico válido'
-                  }
                 }
               });
             });
@@ -2034,82 +2203,82 @@ $(function () {
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
     });
 
     // Inicializar FormValidation para el formulario de agregar predio
     const modalAddRegistroPredioForm = document.getElementById('modalAddRegistroPredioForm');
     const fv = FormValidation.formValidation(modalAddRegistroPredioForm, {
-        fields: {
-            num_predio: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingrese el número de predio'
-                    }
-                }
-            },
-            fecha_emision: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingrese la fecha de emisión'
-                    }
-                }
-            },
-            fecha_vigencia: {
-                validators: {
-                    notEmpty: {
-                        message: 'Por favor ingrese la fecha de vigencia'
-                    }
-                }
-            },
-        },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: function (field, ele) {
-                    return '.form-floating';
-                }
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-    }).on('core.form.valid', function (e) {
-        var formData = new FormData(modalAddRegistroPredioForm);
-        var predioId = $('#id_predio').val(); // ID del predio
-        $.ajax({
-            url: '/registro-Predio/' + predioId,
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function (response) {
-                modalAddRegistroPredioForm.reset();
-                $('#modalAddRegistroPredio').modal('hide');
-                $('.datatables-users').DataTable().ajax.reload(); // Recargar la tabla de usuarios
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.message,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
-            },
-            error: function (xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: 'Error al agregar el predio',
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
+      fields: {
+        num_predio: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el número de predio'
             }
-        });
+          }
+        },
+        fecha_emision: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha de emisión'
+            }
+          }
+        },
+        fecha_vigencia: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha de vigencia'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: function (field, ele) {
+            return '.form-floating';
+          }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      var formData = new FormData(modalAddRegistroPredioForm);
+      var predioId = $('#id_predio').val(); // ID del predio
+      $.ajax({
+        url: '/registro-Predio/' + predioId,
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+          modalAddRegistroPredioForm.reset();
+          $('#modalAddRegistroPredio').modal('hide');
+          $('.datatables-users').DataTable().ajax.reload(); // Recargar la tabla de usuarios
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al agregar el predio',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
     });
 
     // Manejar el clic en el botón de editar
@@ -2122,21 +2291,21 @@ $(function () {
 
   });
 
-    // Función para agregar 5 años a la fecha de emisión y actualizar la fecha de vigencia
-    function updateDatepickerValidation(fv) {
-      $('#fecha_emision').on('change', function() {
-          var fechaEmision = $(this).val();
-          if (fechaEmision) {
-              var fecha = moment(fechaEmision, 'YYYY-MM-DD'); // Asegurarse del formato
-              var fechaVencimiento = fecha.add(5, 'years').format('YYYY-MM-DD'); // Agregar 5 años
-              $('#fecha_vigencia').val(fechaVencimiento); // Actualizar el campo de vigencia
+  // Función para agregar 5 años a la fecha de emisión y actualizar la fecha de vigencia
+  function updateDatepickerValidation(fv) {
+    $('#fecha_emision').on('change', function () {
+      var fechaEmision = $(this).val();
+      if (fechaEmision) {
+        var fecha = moment(fechaEmision, 'YYYY-MM-DD'); // Asegurarse del formato
+        var fechaVencimiento = fecha.add(5, 'years').format('YYYY-MM-DD'); // Agregar 5 años
+        $('#fecha_vigencia').val(fechaVencimiento); // Actualizar el campo de vigencia
 
-              // Revalidar ambos campos de fechas
-              fv.revalidateField('fecha_emision');
-              fv.revalidateField('fecha_vigencia');
-          }
-      });
-    }
+        // Revalidar ambos campos de fechas
+        fv.revalidateField('fecha_emision');
+        fv.revalidateField('fecha_vigencia');
+      }
+    });
+  }
 
 
 

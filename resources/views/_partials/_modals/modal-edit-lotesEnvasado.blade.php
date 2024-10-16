@@ -10,7 +10,7 @@
                 </div>
                 <form id="editLoteEnvasadoForm">
 
-                    <input type="hidden" id="edit_id_lote_envasado" name="id">
+                    <input type="text" id="edit_id_lote_envasado" name="id">
                     <div class="row">
                         <div class="col-6">
                             <div class="form-floating form-floating-outline mb-4">
@@ -28,8 +28,8 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select id="edit_tipo_lote" name="tipo_lote" class="form-select" required onchange="mostrarLotes()">
-                                    <option value="1">Por un solo lote a granel</option>
-                                    <option value="2">Por más de un lote a granel</option>
+                                    <option value="Por un solo lote a granel">Por un solo lote a granel</option>
+                                    <option value="Por más de un lote a granel">Por más de un lote a granel</option>
                                 </select>
                                 <label for="edit_tipo_lote">Conformado por</label>
                             </div>
@@ -144,15 +144,15 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th><button type="button" class="btn btn-primary add-row"> <i class="ri-add-line"></i> </button></th>
+                                    <th><button type="button" class="btn btn-primary add-row-edit"> <i class="ri-add-line"></i> </button></th>
                                     <th>Lote a granel</th>
                                     <th>Volumen parcial</th>
                                 </tr>
                             </thead>
-                            <tbody id="contenidoGraneles">
+                            <tbody id="edit_contenidoGraneles">
                                 <tr>
                                     <th>
-                                        <button type="button" class="btn btn-danger remove-row" disabled> <i class="ri-delete-bin-5-fill"></i> </button>
+                                        <button type="button" class="btn btn-danger remove-row" > <i class="ri-delete-bin-5-fill"></i> </button>
                                     </th>
                                     <td>
                                         <select class="edit_lote_granel form-control select2" name="id_lote_granel[]" >

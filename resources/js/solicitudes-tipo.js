@@ -11,33 +11,33 @@ function obtenerIcono(id_tipo) {
     console.log('ID recibido:', id_tipoStr); 
     switch (id_tipoStr) {
         case '1': 
-            return 'assets/img/icons/brands/asana.png';
+            return 'assets/img/solicitudes/muestreo_agave.png'; 
         case '2': 
-            return 'assets/img/icons/brands/behance.png'; 
+            return 'assets/img/solicitudes/vigilancia_producción.png'; 
         case '3': 
             return 'assets/img/icons/brands/cent.png'; 
         case '4': 
-            return 'assets/img/icons/brands/chrome.png'; 
+            return 'assets/img/solicitudes/traslado.png'; 
         case '5': 
-            return 'assets/img/icons/brands/edge.png'; 
+            return 'assets/img/solicitudes/envasado.png'; 
         case '6': 
-            return 'assets/img/icons/brands/facebook.png'; 
+            return 'assets/img/solicitudes/muestreo_envasado.png'; 
         case '7': 
             return 'assets/img/icons/brands/github.png'; 
         case '8': 
-            return 'assets/img/icons/brands/google.png'; 
+            return 'assets/img/solicitudes/terminado.png';  
         case '9': 
             return 'assets/img/icons/brands/mac.png'; 
         case '10': 
-            return 'assets/img/icons/brands/opera.png'; 
+            return 'assets/img/solicitudes/georeferenciación.png'; 
         case '11': 
-            return 'assets/img/icons/brands/python.png'; 
+            return 'assets/img/solicitudes/exportación.png'; 
         case '12': 
-            return 'assets/img/icons/brands/slack.png'; 
+            return 'assets/img/solicitudes/certificado_granel.png'; 
         case '13': 
-            return 'assets/img/icons/brands/windows.png'; 
+            return 'assets/img/solicitudes/certificado_granel.png'; 
         case '14': 
-            return 'assets/img/icons/brands/safari.png'; 
+        return 'assets/img/solicitudes/dictaminación.png'; 
         case '15': 
             return 'assets/img/icons/brands/vue.png'; 
         default:
@@ -69,22 +69,34 @@ function obtenerIcono(id_tipo) {
                 
                 
                 if (Array.isArray(data) && data.length > 0) {
-                    data.forEach(item => {
+                    data.forEach((item, index) => {
                         const solicitud = solicitudesMap[item.id_tipo] || "#defaultSolicitud";
                         const icono = obtenerIcono(item.id_tipo); 
                         console.log('Ícono asignado:', icono);
+                    
+                        // Crear la tarjeta
                         const card = document.createElement('div');
                         card.className = 'col-sm-12 col-md-6 col-lg-4 col-xl-3';
                         card.innerHTML = ` 
-                            <div data-bs-target="${solicitud}" data-bs-toggle="modal" data-bs-dismiss="modal"  class="card card-hover shadow-sm border-light">
+                            <div data-bs-target="${solicitud}" data-bs-toggle="modal" data-bs-dismiss="modal" class="card card-hover shadow-sm border-light">
                                 <div class="card-body text-center d-flex flex-column align-items-center">
                                     <img src="${icono}" alt="Icono" class="img-fluid mb-3" style="max-width: 50px;"/>
-                                    <h5 class="card-title mb-4">${item.tipo || 'Tipo no disponible'}</h5> <!-- Manejo de casos donde tipo puede ser undefined -->
+                                    <h5 class="card-title mb-4">${item.tipo || 'Tipo no disponible'}</h5>
                                 </div>
                             </div>
                         `;
+                    
+                        // Agregar la tarjeta al contenedor
                         contentContainer.appendChild(card);
+                    
+                        // Agregar un "salto de línea" después de las primeras dos tarjetas
+                        if (index === 1) { // Después de la segunda tarjeta
+                            const clearfix = document.createElement('div');
+                            clearfix.className = 'w-100 d-md-none'; // w-100 rompe la fila, d-md-none lo oculta en pantallas medianas y más grandes
+                            contentContainer.appendChild(clearfix);
+                        }
                     });
+                    
                 } else {
                     contentContainer.innerHTML = '<p>No se encontraron datos.</p>';
                 }

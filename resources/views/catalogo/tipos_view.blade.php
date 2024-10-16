@@ -75,7 +75,7 @@
                 </div>
                 <div class="form-floating form-floating-outline mb-5">
                     <input type="text" class="form-control" id="ciencitico" placeholder="cientifico" name="cientifico" aria-label="Nombre" required>
-                    <label for="cientifico">Nombre 100</label>
+                    <label for="cientifico">Nombre del cientifico</label>
                 </div>
                 <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
                 <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>

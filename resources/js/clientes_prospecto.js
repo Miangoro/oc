@@ -37,6 +37,7 @@ $(function () {
         { data: 'regimen' },
         { data: 'regimen' },
         { data: 'id_empresa' },
+        { data: '' },
         { data: 'action' }
       ],
       columnDefs: [
@@ -69,9 +70,6 @@ $(function () {
             var stateNum = Math.floor(Math.random() * 6);
             var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
             var $state = states[stateNum];
-
-
-
             // Creates full output for row
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center user-name">' +
@@ -99,6 +97,8 @@ $(function () {
             return '<span class="user-email">' + $email + '</span>';
           }
         },
+
+
         {
           // email verify
           targets: 4,
@@ -117,7 +117,27 @@ $(function () {
           }
         },
         {
-          targets: 5,
+          targets: 5,  // Aquí es donde se mostrará la información de las normas
+          searchable: false,
+          orderable: false,
+          render: function (data, type, full, meta) {
+            var normas = full['normas'] || []; // Accedemos al array de normas
+
+            // Verificar si no hay normas
+            if (normas.length === 0) {
+              return '<span class="no-normas">N/A</span>'; // Si no hay normas, mostrar N/A o un icono
+            }
+
+            // Si hay normas, crear una cadena con las normas asociadas (sin el ID)
+            var normasHtml = normas.map(function (norma) {
+              return '<div>' + norma.norma + '</div>'; // Solo mostrar el nombre de la norma
+            }).join('');
+
+            return normasHtml; // Devolvemos las normas para mostrarlas en la tabla
+          }
+        },
+        {
+          targets: 6,
           className: 'text-center',
           searchable: false,
           orderable: false,
@@ -135,7 +155,6 @@ $(function () {
               }
           }
       },
-
         {
           // Actions
           targets: -1,

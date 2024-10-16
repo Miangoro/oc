@@ -1,10 +1,10 @@
 $(function () {
     // Definir la URL base
     var baseUrl = window.location.origin + '/';
-  
+
     // Inicializar DataTable
     var dt_instalaciones_table = $('.datatables-solicitudes').DataTable({
-  
+
       processing: true,
       serverSide: true,
       ajax: {
@@ -38,9 +38,9 @@ $(function () {
         { data: '' },
         { data: 'estatus' },
         { data: 'action' }
-   
-        
-   
+
+
+
 
       ],
       columnDefs: [
@@ -72,7 +72,7 @@ $(function () {
             var foto_inspector = full['foto_inspector'];
 
             // For Avatar badge
-     
+
             var $output;
             if(foto_inspector !=''){
               $output = '<div class="avatar-wrapper"><div class="avatar avatar-sm me-3"> <div class="avatar "><img src="storage/'+foto_inspector+'" alt class="rounded-circle"></div></div></div>';
@@ -94,14 +94,14 @@ $(function () {
           }
         },
         {
-      
+
           targets: 11,
           className: 'text-center',
           render: function (data, type, full, meta) {
-  
-         
+
+
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['id_solicitud']}"></i>`;
-          
+
           }
         },
         {
@@ -111,18 +111,18 @@ $(function () {
             searchable: false,
             orderable: false,
             render: function (data, type, full, meta) {
-              
-           
+
+
               return (
                 '<div class="d-flex align-items-center gap-50">' +
-               
+
                 '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
                 '<div class="dropdown-menu dropdown-menu-end m-0">' +
-  
+
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Trazabilidad</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']})" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Validar solicitud</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
-                
+
                 '</div>' +
                 '</div>'
               );
@@ -285,6 +285,14 @@ $(function () {
              'data-bs-dismiss': 'modal',
              'data-bs-target': '#verSolicitudes'
             }
+          },
+          {
+            text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">GEOREFERENCIACION</span>',
+            className: 'add-new btn btn-primary waves-effect waves-light ms-2',
+            attr: {
+              'data-bs-toggle': 'modal',
+              'data-bs-target': '#addSolicitudGeoreferenciacion'
+            }
           }
       ],
             // For responsive popup
@@ -315,13 +323,13 @@ $(function () {
                       '</tr>'
                       : '';
                   }).join('');
-  
+
                   return data ? $('<table class="table"/><tbody />').append(data) : false;
                 }
               }
             }
     });
-  
+
     var dt_user_table = $('.datatables-solicitudes'),
     select2Elements = $('.select2')
 
@@ -336,18 +344,18 @@ $(function () {
       });
     }
     initializeSelect2(select2Elements);
-  
+
     // Configuración CSRF para Laravel
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-  
+
     // Eliminar registro
     $(document).on('click', '.delete-record', function () {
       var id_instalacion = $(this).data('id');
-  
+
       // Confirmación con SweetAlert
       Swal.fire({
         title: '¿Está seguro?',
@@ -368,7 +376,7 @@ $(function () {
             url: `${baseUrl}instalaciones/${id_instalacion}`, // Ajusta la URL aquí
             success: function () {
               dt_instalaciones_table.ajax.reload();
-  
+
               // Mostrar mensaje de éxito
               Swal.fire({
                 icon: 'success',
@@ -400,8 +408,8 @@ $(function () {
         }
       });
     });
-  
-  
+
+
     $(function () {
       // Configuración CSRF para Laravel
       $.ajaxSetup({
@@ -410,9 +418,8 @@ $(function () {
         }
       });
 
-      
        // Inicializar FormValidation para la solicitud de muestreo de agave
-       const form3 = document.getElementById('addRegistrarSolicitudGeoreferenciacion');
+       const form3 = document.getElementById('addRegistrarSolicitudMuestreoAgave');
        const fv3 = FormValidation.formValidation(form3, {
          fields: {
            'id_empresa': {
@@ -447,11 +454,11 @@ $(function () {
            submitButton: new FormValidation.plugins.SubmitButton(),
            autoFocus: new FormValidation.plugins.AutoFocus()
          }
-   
+
        }).on('core.form.valid', function (e) {
          // Validar el formulario
          var formData = new FormData(form3);
-   
+
          $.ajax({
            url: '/registrar-solicitud-muestreo-agave',
            type: 'POST',
@@ -464,7 +471,7 @@ $(function () {
              $('.select2').val(null).trigger('change');
              $('.datatables-solicitudes').DataTable().ajax.reload();
              console.log(response);
-   
+
              Swal.fire({
                icon: 'success',
                title: '¡Éxito!',
@@ -476,7 +483,7 @@ $(function () {
            },
            error: function (xhr) {
              console.log('Error:', xhr.responseText);
-   
+
              Swal.fire({
                icon: 'error',
                title: '¡Error!',
@@ -488,8 +495,8 @@ $(function () {
            }
          });
        });
- 
-  
+
+
       // Inicializar FormValidation para la solicitud de dictaminación de instalaciones
       const form = document.getElementById('addRegistrarSolicitud');
       const fv = FormValidation.formValidation(form, {
@@ -519,11 +526,11 @@ $(function () {
           submitButton: new FormValidation.plugins.SubmitButton(),
           autoFocus: new FormValidation.plugins.AutoFocus()
         }
-  
+
       }).on('core.form.valid', function (e) {
         // Validar el formulario
         var formData = new FormData(form);
-  
+
         $.ajax({
           url: '/solicitudes-list',
           type: 'POST',
@@ -536,7 +543,7 @@ $(function () {
             $('.select2').val(null).trigger('change');
             $('.datatables-solicitudes').DataTable().ajax.reload();
             console.log(response);
-  
+
             Swal.fire({
               icon: 'success',
               title: '¡Éxito!',
@@ -548,7 +555,7 @@ $(function () {
           },
           error: function (xhr) {
             console.log('Error:', xhr.responseText);
-  
+
             Swal.fire({
               icon: 'error',
               title: '¡Error!',
@@ -560,7 +567,7 @@ $(function () {
           }
         });
       });
-  
+
        // Inicializar FormValidation para la solicitud de georeferenciacion
        const form2 = document.getElementById('addRegistrarSolicitudGeoreferenciacion');
        const fv2 = FormValidation.formValidation(form2, {
@@ -597,11 +604,11 @@ $(function () {
            submitButton: new FormValidation.plugins.SubmitButton(),
            autoFocus: new FormValidation.plugins.AutoFocus()
          }
-   
+
        }).on('core.form.valid', function (e) {
          // Validar el formulario
          var formData = new FormData(form2);
-   
+
          $.ajax({
            url: '/registrar-solicitud-georeferenciacion',
            type: 'POST',
@@ -614,7 +621,7 @@ $(function () {
              $('.select2').val(null).trigger('change');
              $('.datatables-solicitudes').DataTable().ajax.reload();
              console.log(response);
-   
+
              Swal.fire({
                icon: 'success',
                title: '¡Éxito!',
@@ -626,7 +633,7 @@ $(function () {
            },
            error: function (xhr) {
              console.log('Error:', xhr.responseText);
-   
+
              Swal.fire({
                icon: 'error',
                title: '¡Error!',
@@ -638,8 +645,9 @@ $(function () {
            }
          });
        });
+
     });
-  
+
   //new new
     $(function () {
       // Configuración CSRF para Laravel
@@ -648,7 +656,7 @@ $(function () {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
           }
       });
-  
+
       // Inicializar FormValidation
       const form = document.getElementById('editInstalacionForm');
       const fv = FormValidation.formValidation(form, {
@@ -702,7 +710,7 @@ $(function () {
       }).on('core.form.valid', function (e) {
           // Validar el formulario
           var formData = new FormData(form);
-  
+
           $.ajax({
               url: baseUrl + 'instalaciones/' + $('#editInstalacionForm').data('id'),
               type: 'POST',
@@ -717,7 +725,7 @@ $(function () {
                   $('#modalEditInstalacion').modal('hide');
                   $('#editInstalacionForm')[0].reset();
                   $('.select2').val(null).trigger('change');
-  
+
                   Swal.fire({
                       icon: 'success',
                       title: '¡Éxito!',
@@ -729,7 +737,7 @@ $(function () {
               },
               error: function (xhr) {
                   console.log('Error:', xhr.responseText);
-  
+
                   Swal.fire({
                       icon: 'error',
                       title: '¡Error!',
@@ -741,12 +749,12 @@ $(function () {
               }
           });
       });
-  
+
       // Mostrar u ocultar campos adicionales según el tipo de certificación
       $('#edit_certificacion').on('change', function () {
           if ($(this).val() === 'otro_organismo') {
               $('#edit_certificado_otros').removeClass('d-none');
-  
+
               // Agregar la validación a los campos adicionales
               fv.addField('url[]', {
                   validators: {
@@ -761,7 +769,7 @@ $(function () {
                       }
                   }
               });
-  
+
               fv.addField('folio', {
                   validators: {
                       notEmpty: {
@@ -769,7 +777,7 @@ $(function () {
                       }
                   }
               });
-  
+
               fv.addField('id_organismo', {
                   validators: {
                       notEmpty: {
@@ -777,7 +785,7 @@ $(function () {
                       }
                   }
               });
-  
+
               fv.addField('fecha_emision', {
                   validators: {
                       notEmpty: {
@@ -789,7 +797,7 @@ $(function () {
                       }
                   }
               });
-  
+
               fv.addField('fecha_vigencia', {
                   validators: {
                       notEmpty: {
@@ -801,10 +809,10 @@ $(function () {
                       }
                   }
               });
-  
+
           } else {
               $('#edit_certificado_otros').addClass('d-none');
-  
+
               // Quitar la validación de los campos adicionales
               fv.removeField('url[]');
               fv.removeField('folio');
@@ -814,38 +822,38 @@ $(function () {
           }
       });
   });
-  
+
     //new
     $(document).on('click', '.edit-record', function () {
       var id_instalacion = $(this).data('id');
       var url = baseUrl + 'domicilios/edit/' + id_instalacion;
-  
+
       // Solicitud para obtener los datos de la instalación
       $.get(url, function (data) {
           if (data.success) {
               var instalacion = data.instalacion;
-  
+
               // Asignar valores a los campos
               $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
               $('#edit_tipo').val(instalacion.tipo).trigger('change');
               $('#edit_estado').val(instalacion.estado).trigger('change');
               $('#edit_direccion').val(instalacion.direccion_completa);
-  
+
               // Verificar si hay valores en los campos adicionales
               var tieneCertificadoOtroOrganismo = instalacion.folio || instalacion.id_organismo ||
                   (instalacion.fecha_emision && instalacion.fecha_emision !== 'N/A') ||
                   (instalacion.fecha_vigencia && instalacion.fecha_vigencia !== 'N/A') ||
                   data.archivo_url;
-  
+
               if (tieneCertificadoOtroOrganismo) {
                   $('#edit_certificacion').val('otro_organismo').trigger('change');
                   $('#edit_certificado_otros').removeClass('d-none');
-  
+
                   $('#edit_folio').val(instalacion.folio || '');
                   $('#edit_id_organismo').val(instalacion.id_organismo || '').trigger('change');
                   $('#edit_fecha_emision').val(instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '');
                   $('#edit_fecha_vigencia').val(instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '');
-  
+
                   // Mostrar URL del archivo debajo del campo de archivo
                   var archivoUrl = data.archivo_url || '';
                   var numCliente = data.numeroCliente;
@@ -864,7 +872,7 @@ $(function () {
                   $('#edit_certificado_otros').addClass('d-none');
                   $('#archivo_url_display').html('No hay archivo disponible.');
               }
-  
+
               // Mostrar el modal
               $('#modalEditInstalacion').modal('show');
           } else {
@@ -879,7 +887,7 @@ $(function () {
           }
       }).fail(function(jqXHR, textStatus, errorThrown) {
           console.error('Error en la solicitud:', textStatus, errorThrown);
-  
+
           Swal.fire({
               icon: 'error',
               title: 'Error',
@@ -890,12 +898,12 @@ $(function () {
           });
       });
   });
-  
+
   // Limpiar los campos del formulario cuando el modal se oculta
   $('#modalEditInstalacion').on('hidden.bs.modal', function () {
       $('#edit_certificado_otros').addClass('d-none');
       $('#archivo_url_display').html('No hay archivo disponible.');
-  
+
       // Limpiar campos individuales
       $('#edit_id_empresa').val('').trigger('change');
       $('#edit_tipo').val('').trigger('change');
@@ -907,15 +915,15 @@ $(function () {
       $('#edit_fecha_emision').val('');
       $('#edit_fecha_vigencia').val('');
   });
-  
-  
+
+
   // Manejar el cambio en el tipo de instalación
   $(document).on('change', '#edit_tipo', function () {
       var tipo = $(this).val();
       var hiddenIdDocumento = $('#edit_certificado_otros').find('input[name="id_documento[]"]');
       var hiddenNombreDocumento = $('#edit_certificado_otros').find('input[name="nombre_documento[]"]');
       var fileCertificado = $('#edit_certificado_otros').find('input[type="file"]');
-  
+
       switch (tipo) {
           case 'productora':
               hiddenIdDocumento.val('127');
@@ -939,23 +947,23 @@ $(function () {
               break;
       }
   });
-  
+
   $(document).ready(function() {
       $('#modalEditInstalacion').on('show.bs.modal', function (event) {
           var button = $(event.relatedTarget);
           var id_instalacion = button.data('id');
           var modal = $(this);
-  
+
           modal.find('#editInstalacionForm').data('id', id_instalacion);
       });
-  
+
       $('#editInstalacionForm').submit(function (e) {
           e.preventDefault();
-  
+
           var id_instalacion = $(this).data('id');
           var form = $(this)[0];
           var formData = new FormData(form);
-  
+
           $.ajax({
               url: baseUrl + 'instalaciones/' + id_instalacion,
               type: 'POST',
@@ -968,7 +976,7 @@ $(function () {
               success: function (response) {
                   dt_instalaciones_table.ajax.reload();
                   $('#modalEditInstalacion').modal('hide');
-  
+
                   Swal.fire({
                       icon: 'success',
                       title: '¡Éxito!',
@@ -980,7 +988,7 @@ $(function () {
               },
               error: function (xhr) {
                   console.error('Error en la solicitud AJAX:', xhr.responseJSON);
-  
+
                   Swal.fire({
                       icon: 'error',
                       title: 'Error',
@@ -991,33 +999,33 @@ $(function () {
           });
       });
   });
-  
-  
+
+
   $(document).on('click', '.pdf2', function () {
     var url = $(this).data('url');
         var registro = $(this).data('registro');
         var id_solicitud = $(this).data('id');
         var iframe = $('#pdfViewer');
         iframe.attr('src', 'solicitud_de_servicio/'+id_solicitud);
-  
+
         $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
         $("#subtitulo_modal").text(registro);
   });
 
   var openedFromFirstModal = false;
 
- 
+
 
   $('#abrirModalInstalaciones').on('click', function() {
     var clienteSeleccionado = $('#id_empresa_solicitud').val();
-    
+
     openedFromFirstModal = true;
     $('#addSolicitudDictamen').modal('hide');
     $('#id_empresa option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
     $('#id_empresa').trigger('change');
     $('#modalAddInstalacion').modal('show');
- 
-    
+
+
 });
 
    // Al cerrar el segundo modal
@@ -1034,25 +1042,22 @@ $('#btnRegistrarInstalacion').on('click', function () {
     if (openedFromFirstModal) {
       openedFromFirstModal = false;
      // $('#modalAddInstalacion').modal('hide');
-     
+
       $('#id_empresa_solicitud option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
       $('#id_empresa_solicitud').trigger('change');
       obtenerInstalacion();
       alert(clienteSeleccionado);
-     
+
       $('#addSolicitudDictamen').modal('show');
-      
+
 
     }
-   
+
 });
 
 
 
-  
-  
-  
   //end
   });
-  
+
 

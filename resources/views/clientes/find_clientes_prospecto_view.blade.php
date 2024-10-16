@@ -53,6 +53,7 @@
           <th>Cliente</th>
           <th>Domicilio fiscal</th>
           <th>Régimen</th>
+          <th>Norma</th>
           <th>Formato de solicitud</th>
           <th>Acciones</th>
         </tr>

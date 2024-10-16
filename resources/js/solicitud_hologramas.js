@@ -1329,7 +1329,7 @@ $(function () {
 
 
 
-    // Agregar FILA A EDIT ACTIVADOS
+    // Agregar FILA A EDIT ACTIVADOS mermas
     $(document).on('click', '.add-row-editMermas', function () {
       var newRow = `
         <tr>

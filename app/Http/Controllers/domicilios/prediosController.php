@@ -529,6 +529,11 @@ class PrediosController extends Controller
             'altura' => 'nullable|array',
             'diametro' => 'nullable|array',
             'numero_hojas' => 'nullable|array',
+
+            'id_empresa' => 'required|exists:empresa,id_empresa', // Asegúrate de validar id_empresa
+            'titulo_foto.*' => 'required|string|max:255', // Títulos de las fotos
+            'fotografias_inspeccion' => 'sometimes|array', // Para las fotos, si existen
+            'fotografias_inspeccion.*' => 'image|mimes:jpeg,png,jpg,gif' // Validación de imágenes
         ]);
 
         // Crear una nueva instancia del modelo Predios_Inspeccion
@@ -607,6 +612,67 @@ class PrediosController extends Controller
             }
         }
 
+// Obtener el número del cliente
+$empresaNumCliente = DB::table('empresa_num_cliente')
+    ->where('id_empresa', $validatedData['id_empresa'])
+    ->value('numero_cliente');
+
+if (!$empresaNumCliente) {
+    return response()->json([
+        'success' => false,
+        'message' => 'Número de cliente no encontrado para el ID de empresa proporcionado.',
+    ], 404);
+}
+
+// Obtener el nombre del documento donde id_documento es 70
+$nombreDocumento = DB::table('documentacion')
+    ->where('id_documento', 70)
+    ->value('nombre');
+
+if (!$nombreDocumento) {
+    return response()->json([
+        'success' => false,
+        'message' => 'Nombre del documento no encontrado para el ID de documento 70.',
+    ], 404);
+}
+
+// Almacenar archivos si se envían
+if ($request->hasFile('fotografias_inspeccion')) {
+    foreach ($request->file('fotografias_inspeccion') as $index => $file) {
+        if ($file->isValid()) {
+            // Generar un nombre único para el archivo
+            $uniqueId = uniqid();
+            $filename = $validatedData['titulo_foto'][$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+
+            // Crear una carpeta con el número de cliente
+            $directory = $empresaNumCliente; // Utiliza el número de cliente
+            $path = storage_path('app/public/uploads/inspecciones/' . $directory);
+
+            // Verificar si la carpeta existe, si no, crearla
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+
+            // Guardar el archivo en la carpeta correspondiente
+            $filePath = $file->storeAs('uploads/inspecciones/' . $directory, $filename, 'public');
+
+            // Crear una nueva instancia del modelo para guardar la ruta del archivo
+            $documentacion_url = new Documentacion_url();
+            $documentacion_url->id_empresa = $validatedData['id_empresa']; // Asegúrate de que este campo esté en tu validación
+            $documentacion_url->url = $validatedData['titulo_foto'][$index]; // Almacena el título de la foto como el nombre
+            $documentacion_url->id_relacion = $inspeccion->id_inspeccion; // Relacionar con la inspección
+            $documentacion_url->nombre_documento = $nombreDocumento; // Usar el nombre del documento obtenido
+
+            // Asignar el id_documento como 70
+            $documentacion_url->id_documento = 70; // Agrega esta línea
+
+            // Guardar el registro
+            $documentacion_url->save();
+        }
+    }
+}
+
+
         // Notificación y retorno de respuesta
         $predio = Predios::find($id_predio);
         $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
@@ -632,10 +698,10 @@ class PrediosController extends Controller
       // Obtener la primera (y única) inspección relacionada con el predio
       $inspeccion = Predios_Inspeccion::where('id_predio', $id_predio)->first();
 
-      if (!$inspeccion) {
+/*       if (!$inspeccion) {
           // Manejo de errores si no se encuentra la inspección
           return response()->json(['error' => 'No se encontró la inspección para este predio.'], 404);
-      }
+      } */
       $predio = Predios::with(['empresa', 'empresa.empresaNumClientes'])->find($id_predio);
 
       // Obtener la solicitud relacionada a partir del id_predio
@@ -710,12 +776,12 @@ class PrediosController extends Controller
               'num_predio' => $validated['num_predio'],
               'fecha_emision' => $validated['fecha_emision'],
               'fecha_vigencia' => $validated['fecha_vigencia'],
-              'estatus' => 'Vigente'
+              'estatus' => 'Completado'
           ]);
 
           return response()->json([
               'success' => true,
-              'message' => 'Predio actualizado exitosamente',
+              'message' => 'Predio registrado exitosamente',
           ]);
       } catch (\Exception $e) {
           return response()->json([
@@ -723,7 +789,83 @@ class PrediosController extends Controller
               'message' => 'Error al actualizar el predio: ' . $e->getMessage(),
           ], 500);
       }
+
   }
+
+
+
+  public function pdf_solicitud_servicios_070($id_predio)
+  {
+      // Busca la solicitud que tiene el id_predio proporcionado
+    $datos = solicitudesModel::where('id_predio', $id_predio)->first();
+       // Inicializa las variables con un valor vacío
+    $muestreo_agave = '------------';
+    $vigilancia_produccion = '------------';
+    $muestreo_granel= '------------';
+    $vigilancia_traslado= '------------';
+    $inspeccion_envasado= '------------';
+    $muestreo_envasado= '------------';
+    $ingreso_barrica= '------------';
+    $liberacion= '------------';
+    $liberacion_barrica= '------------';
+    $geo= '------------';
+    $exportacion= '------------';
+    $certificado_granel= '------------';
+    $certificado_nacional= '------------';
+    $dictaminacion = '------------';
+    $renovacion_dictaminacion = '------------';
+    // Verificar el valor de id_tipo y marcar la opción correspondiente
+    if ($datos->id_tipo == 1) {
+        $muestreo_agave = 'X';
+    }
+    if ($datos->id_tipo == 2) {
+        $vigilancia_produccion = 'X';
+    }
+    if ($datos->id_tipo == 3) {
+        $muestreo_granel= 'X';
+    }
+    if ($datos->id_tipo == 4) {
+        $vigilancia_traslado= 'X';
+    }
+    if ($datos->id_tipo == 5) {
+        $inspeccion_envasado= 'X';
+    }
+    if ($datos->id_tipo == 6) {
+        $muestreo_envasado= 'X';
+    }
+    if ($datos->id_tipo == 7) {
+        $ingreso_barrica= 'X';
+    }
+    if ($datos->id_tipo == 8) {
+        $liberacion= 'X';
+    }
+    if ($datos->id_tipo == 9) {
+        $liberacion_barrica= 'X';
+    }
+    if ($datos->id_tipo == 10) {
+        $geo= 'X';
+    }
+    if ($datos->id_tipo == 11) {
+        $exportacion= 'X';
+    }
+    if ($datos->id_tipo == 12) {
+        $certificado_granel= 'X';
+    }
+    if ($datos->id_tipo == 13) {
+        $certificado_nacional= 'X';
+    }
+    if ($datos->id_tipo == 14) {
+        $dictaminacion = 'X';
+    }
+    if ($datos->id_tipo == 15) {
+        $renovacion_dictaminacion = 'X';
+    }
+        $pdf = Pdf::loadView('pdfs.SolicitudDeServicio', compact('datos','muestreo_agave','vigilancia_produccion','dictaminacion','muestreo_granel',
+        'vigilancia_traslado','inspeccion_envasado','muestreo_envasado','ingreso_barrica','liberacion','liberacion_barrica','geo','exportacion','certificado_granel','certificado_nacional','dictaminacion','renovacion_dictaminacion'))
+        ->setPaper([0, 0, 640, 830]); ;
+        return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
+    }
+
 
 
 
