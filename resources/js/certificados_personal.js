@@ -111,7 +111,7 @@
             targets: 7,
             className: 'text-center',
             render: function (data, type, full, meta) {
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal"  data-id="${full['id_revision']}"></i>`;
             }
           },
          {
@@ -465,6 +465,34 @@ function cargarRespuestas(id_revision) {
       }
   });
 }
+
+
+$(document).on('click', '.pdf', function () {
+  var id = $(this).data('id');
+  var registro = $(this).data('registro');
+
+  var tipo_dictamen = '../certificado_productor_mezcal/' + id;
+  var titulo = "Certificado de productor";
+
+  $('#loading-spinner').show();
+  $('#pdfViewerDictamen').hide();
+
+  $('#titulo_modal_Dictamen').text(titulo);
+  $('#subtitulo_modal_Dictamen').text(registro);
+
+  var openPdfBtn = $('#openPdfBtnDictamen');
+  openPdfBtn.attr('href', tipo_dictamen);
+  openPdfBtn.show();
+
+  $('#PdfDictamenIntalaciones').modal('show');
+  $('#pdfViewerDictamen').attr('src', tipo_dictamen);
+});
+
+$('#pdfViewerDictamen').on('load', function () {
+  $('#loading-spinner').hide();
+  $('#pdfViewerDictamen').show();
+});
+
 
 //end
 });
