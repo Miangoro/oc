@@ -171,7 +171,7 @@
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
-            <td colspan="7"></td>
+            <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($muestreo_agave === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
@@ -184,7 +184,7 @@
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Fecha y hora de visita propuesta
             </td>
-            <td colspan="7"></td>
+            <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($vigilancia_produccion === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
 
         </tr>
         <tr>
@@ -197,7 +197,7 @@
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Fecha y hora de visita propuesta
             </td>
-            <td colspan="7"></td>
+            <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($muestreo_granel === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
@@ -211,7 +211,7 @@
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
-            <td colspan="7"></td>
+            <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($vigilancia_traslado === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
@@ -223,7 +223,7 @@
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
-            <td colspan="7"></td>
+            <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($inspeccion_envasado === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
@@ -236,7 +236,7 @@
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
-            <td colspan="7"></td>
+            <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($muestreo_envasado === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
@@ -250,7 +250,7 @@
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
-            <td colspan="7"></td>
+            <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($ingreso_barrica === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
@@ -264,7 +264,7 @@
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
-            <td colspan="7"></td>
+            <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($liberacion === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
@@ -278,7 +278,7 @@
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
-            <td colspan="7"></td>
+            <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($liberacion_barrica === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
@@ -291,7 +291,7 @@
             <td colspan="2" class=" td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
-            <td colspan="7"></td>
+            <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($geo === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
@@ -304,7 +304,7 @@
             <td colspan="2" class=" td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha y hora de visita
                 propuesta</td>
-            <td colspan="7"></td>
+            <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($exportacion === 'X') {{ $fecha_visita }}   @else ------------------------ @endif</span></td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
@@ -318,7 +318,7 @@
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha de emisión propuesta:
             </td>
-            <td colspan="7"></td>
+            <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($certificado_granel === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
         </tr>
 
         <tr>
@@ -333,7 +333,7 @@
             <td colspan="2" class="td-no-margins letra_td"
                 style="font-weight: bold;padding-top: 0;padding-bottom: 0;">Fecha de emisión propuesta:
             </td>
-            <td colspan="7"></td>
+            <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($certificado_nacional === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
@@ -359,7 +359,7 @@
             <td class="td-barra" colspan="4"></td>
             <td colspan="2" class="td-no-margins" style="text-align: right" style="font-weight: bold">Fecha y
                 hora de visita propuesta:</td>
-            <td colspan="7"></td>
+            <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($dictaminacion === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
         </tr>
 
         <tr>
@@ -386,7 +386,7 @@
             <td class="td-barra" colspan="4" style="padding-top: 0;padding-bottom: 0;"></td>
             <td colspan="2" class="td-no-margins" style="text-align: right" style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Fecha y
                 hora de visita propuesta:</td>
-            <td colspan="7" style="padding-top: 0;padding-bottom: 0;"></td>
+            <td colspan="7" style="padding-top: 0;padding-bottom: 0;"><span style="font-size: 14px" class="con-negra">@if($renovacion_dictaminacion === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
         </tr>
 
         <tr>
@@ -458,6 +458,8 @@
             <td class="con-negra" colspan="3" rowspan="3">INFORMACIÓN ADICIONAL SOBRE LA <br> ACTIVIDAD:</td>
             <td class="td-margins" colspan="6">
                 {{ $datos->info_adicional }}
+
+                {!! $datos->punto_reunion ? "<br><span class='con-negra'>Punto de reunión: </span> {$datos->punto_reunion}" : "" !!}
                 
             </td>
         </tr>

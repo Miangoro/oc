@@ -33,7 +33,7 @@
                     </div>
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
-                            <select class="select2 form-select id_predio" name="id_predio" aria-label="id_predio"
+                            <select onchange="obtenerDatosPredios(this.value);" class="select2 form-select id_predio" name="id_predio" aria-label="id_predio"
                                 required>
                                 <option value="" selected>Lista de predios</option>
                             </select>
@@ -70,9 +70,6 @@
 
 <script>
     function obtenerPredios2(empresa) {  
-       
-       
-        // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
@@ -84,22 +81,42 @@
                     contenido = '<option value="' + response.predios[index].id_predio + '">' + response
                         .predios[index].nombre_predio + ' | ' +  response
                         .predios[index].ubicacion_predio + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
                 }
                 if (response.predios.length == 0) {
                     contenido = '<option value="">Sin predios registrados</option>';
                 }
-                $('.id_predio').html(contenido);
-                var info_adicional = 'Predio: '+response.predios[0].nombre_predio;
-                $('.info_adicional').val(info_adicional);
-               
+                    $('.id_predio').html(contenido);
+                if (response.predios.length != 0) {
+                    obtenerDatosPredios($(".id_predio").val());
+                }else{
+                    $('.info_adicional').val("");
+                }
                 
+               
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');
             }
         });
     }
+
+    function obtenerDatosPredios(id_predio) {  
+       $.ajax({
+           url: '/domicilios-predios/' + id_predio+'/edit',
+           method: 'GET',
+           success: function(response) {
+               console.log(response);
+               var info_adicional = 
+                        'Predio: '+response.predio.nombre_predio + '. '+
+                        'Punto de referencia: '+response.predio.puntos_referencia + '. '+
+                        'Superficie: '+response.predio.superficie + 'H';
+               $('.info_adicional').val(info_adicional);
+           },
+           error: function() {
+              
+           }
+       });
+   }
 
 
 </script>

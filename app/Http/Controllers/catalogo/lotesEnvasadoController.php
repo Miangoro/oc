@@ -123,7 +123,6 @@ class lotesEnvasadoController extends Controller
                     'sku' => $user->sku, // Deja el JSON completo aquí si lo necesitas
                     'inicial' => $inicial, // Agrega la parte 'inicial' del JSON decodificado
                     'cantt_botellas' => $cantt_botellas, // Agrega la parte 'inicial' del JSON decodificado
-
                     'estatus' => $user->estatus,
                 ];
                 

@@ -5,9 +5,11 @@ namespace App\Http\Controllers\revision;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Revisor;
+use App\Models\Certificados;
 use App\Helpers\Helpers;
 use App\Models\preguntas_revision;
 use Illuminate\Support\Facades\Schema;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class RevisionPersonalController extends Controller
 {
@@ -230,5 +232,46 @@ class RevisionPersonalController extends Controller
         }
     }
     
+    public function bitacora_revicionPersonalOCCIDAM($id)
+    {
+        // Encuentra el certificado correspondiente
+        $datos_revisor = Certificados::findOrFail($id);
+        
+        // Obtener el id_dictamen
+        $id_dictamen = $datos_revisor->dictamen->id_dictamen; // Asegúrate de que esta relación esté definida
+    
+        // Determina el tipo de certificado según el id_dictamen
+        $tipo_certificado = '';
+        if ($id_dictamen == 1) {
+            $tipo_certificado = 'Productor';
+        } elseif ($id_dictamen == 2) {
+            $tipo_certificado = 'Envasador';
+        } elseif ($id_dictamen == 3) {
+            $tipo_certificado = 'Comercializador';
+        } elseif ($id_dictamen == 4) {
+            $tipo_certificado = 'Almacén y bodega';
+        } elseif ($id_dictamen == 5) {
+            $tipo_certificado = 'Área de maduración';
+        } else {
+            $tipo_certificado = 'Desconocido';
+        }
+    
+        // Obtener las respuestas del revisor de la tabla certificados_revision
+        $respuestas = Revisor::where('id_certificado', $id)->pluck('respuestas')->first();
+    
+        // Decodificar las respuestas JSON si es necesario
+        $respuestas_decoded = json_decode($respuestas, true);
+    
+        // Prepara los datos para el PDF
+        $pdfData = [
+            'num_certificado' => $datos_revisor->num_certificado,
+            'tipo_certificado' => $tipo_certificado, // Agrega el tipo de certificado a los datos del PDF
+            'respuestas' => $respuestas_decoded // Agrega las respuestas decodificadas
+        ];
+    
+        // Carga la vista del PDF
+        $pdf = Pdf::loadView('pdfs.bitacora_revicionPersonalOCCIDAM', $pdfData);
+        return $pdf->stream('Bitácora de revisión documental.pdf');
+    }
 //end
 }

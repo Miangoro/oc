@@ -180,7 +180,7 @@ $(function () {
                 { data: 'nombre_lote' },
                 { data: 'id_marca' },
                 { data: 'cant_botellas' },
-                { data: 'cantt_botellas' }, //restantes
+                { data: 'cantt_botellas' },
 
                 {
                     data: function (row, type, set) {
@@ -192,11 +192,11 @@ $(function () {
                         return row.volumen_total + ' Litros';
                     }
                 },
-                { data: 'inicial' }, //volumen restante
+                { data: 'volumen_total' }, //volumen restante
 
                 { data: 'destino_lote' },
                 { data: 'lugar_envasado' },
-                { data: 'sku' },
+                { data: 'inicial' },
                 { data: 'estatus' },//status
                 { data: 'action' }
             ],
@@ -264,7 +264,7 @@ $(function () {
 
                 {
                     // email verify
-                    targets: 13,
+                    targets: 15,
                     className: 'text-center',
                     render: function (data, type, full, meta) {
                       var $verified = full['estatus'];
@@ -497,7 +497,7 @@ $(function () {
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function (row) {
                             var data = row.data();
-                            return 'Detalles de ' + data['folio'];
+                            return 'Detalles de ' + data['id_empresa'];
                         }
                     }),
                     type: 'column',

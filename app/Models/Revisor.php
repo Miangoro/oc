@@ -22,7 +22,7 @@ class Revisor extends Model
         'numero_revision',
         'es_correccion',
         'observaciones',
-        'pregunta',
+        'respuestas',
     ];
 
     public function getLogName2(): string
@@ -47,12 +47,12 @@ class Revisor extends Model
     }
 
     public function obtenerDocumentosClientes($id_documento, $id_cliente)
-{
+    {
     $documento = Documentacion_url::where("id_documento", "=", $id_documento)
                                   ->where("id_empresa", "=", $id_cliente)
                                   ->first(); // Devuelve el primer registro que coincida
 
     return $documento ? $documento->url : null; // Devuelve solo el atributo `url` o `null` si no hay documento
-}
+    }
 
 }

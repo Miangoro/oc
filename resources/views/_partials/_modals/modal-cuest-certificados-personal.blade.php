@@ -33,9 +33,9 @@
                         <div class="col-md-8">
                             <!-- Tercera Tabla -->
                             <div style="border: 1px solid #8DA399; padding: 20px; border-radius: 5px; margin-bottom: 30px;">
-                                <h5 style="font-size: 1.25rem; color: #2c3e50; font-weight: bold; margin: 20px 0;">
+{{--                                 <h5 style="font-size: 1.25rem; color: #2c3e50; font-weight: bold; margin: 20px 0;">
                                     REVISIÓN DOCUMENTAL PARA LA TOMA DE DECISIÓN PARA LA CERTIFICACIÓN DE INSTALACIONES.
-                                </h5>
+                                </h5> --}}
             
                                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                                     <!-- Primera Tabla -->
