@@ -204,11 +204,11 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('NOM-070-SCFI-2016 Ed. 5.pdf');
     }
 
-    public function botacora_revicionPersonalOCCIDAM()
+/*     public function botacora_revicionPersonalOCCIDAM()
     {
         $pdf = Pdf::loadView('pdfs.botacora_revicionPersonalOCCIDAM');
         return $pdf->stream('NOM-070-SCFI-2016 Ed. 5.pdf');
-    }
+    } */
 
     //Plan de auditoria
     public function PlanDeAuditoria()

@@ -201,7 +201,12 @@
       "submenu": [
         {
           "url": "/hologramas/solicitud",
-          "name": "Solicitud de hologramas",
+          "name": "Solicitudes",
+          "slug": "hologramas-solicitud"
+        },
+        {
+          "url": "/hologramas/solicitud",
+          "name": "chelop",
           "slug": "hologramas-solicitud"
         }
       ]

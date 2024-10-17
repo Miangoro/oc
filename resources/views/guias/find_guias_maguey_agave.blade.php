@@ -52,10 +52,9 @@
         <tr>
           <th></th>
           <th>Id</th>
-          <th>Número de cliente</th>
-          <th>Nombre cliente</th>
+          <th>Datos del cliente</th>
           <th>Folio</th>
-          <th>run Folio</th>
+          <th>Run Folio</th>
           <th>Predio</th>
           <th>Plantas actuales</th>
           <th>No. anterior</th>

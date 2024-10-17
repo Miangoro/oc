@@ -50,8 +50,7 @@
         <tr>
           <th></th>
           <th>Id</th>
-          <th>No. de Cliente</th>
-          <th>Nombre del Cliente</th>
+          <th>Datos del cliente</th>
           <th>Tipo de lote</th>
           <th>Nombre lote</th>
           <th>Marca</th>

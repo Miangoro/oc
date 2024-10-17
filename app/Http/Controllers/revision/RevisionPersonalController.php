@@ -5,9 +5,11 @@ namespace App\Http\Controllers\revision;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Revisor;
+use App\Models\Certificados;
 use App\Helpers\Helpers;
 use App\Models\preguntas_revision;
 use Illuminate\Support\Facades\Schema;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class RevisionPersonalController extends Controller
 {
@@ -146,7 +148,7 @@ class RevisionPersonalController extends Controller
         ]);
     }
 
-    public function registrarPreguntas(Request $request)
+    public function registrarRespuestas(Request $request)
     {
         try {
             $request->validate([
@@ -185,7 +187,7 @@ class RevisionPersonalController extends Controller
         }
     }    
     
-    public function obtenerPreguntas($id_revision)
+    public function obtenerRespuestas($id_revision)
     {
         try {
             $revisor = Revisor::where('id_revision', $id_revision)->first();
@@ -214,11 +216,11 @@ class RevisionPersonalController extends Controller
         if ($revisor && $revisor->certificado) {
             $certificadoUrl = '';
     
-            if ($tipo == 1 || $tipo == 5) { // Productor
+            if ($tipo == 1 || $tipo == 5) { 
                 $certificadoUrl = "../certificado_productor_mezcal/{$revisor->certificado->id_certificado}";
-            } elseif ($tipo == 2) { // Envasador
+            } elseif ($tipo == 2) { 
                 $certificadoUrl = "../certificado_envasador_mezcal/{$revisor->certificado->id_certificado}";
-            } elseif ($tipo == 3 || $tipo == 4) { // Comercializador
+            } elseif ($tipo == 3 || $tipo == 4) { 
                 $certificadoUrl = "../certificado_comercializador/{$revisor->certificado->id_certificado}";
             } else {
                 return response()->json(['certificado_url' => null]);
@@ -230,5 +232,37 @@ class RevisionPersonalController extends Controller
         }
     }
     
+    public function bitacora_revicionPersonalOCCIDAM($id)
+    {
+        $datos_revisor = Certificados::findOrFail($id);
+        $id_dictamen = $datos_revisor->dictamen->id_dictamen; 
+    
+        $tipo_certificado = '';
+        if ($id_dictamen == 1) {
+            $tipo_certificado = 'Productor';
+        } elseif ($id_dictamen == 2) {
+            $tipo_certificado = 'Envasador';
+        } elseif ($id_dictamen == 3) {
+            $tipo_certificado = 'Comercializador';
+        } elseif ($id_dictamen == 4) {
+            $tipo_certificado = 'Almacén y bodega';
+        } elseif ($id_dictamen == 5) {
+            $tipo_certificado = 'Área de maduración';
+        } else {
+            $tipo_certificado = 'Desconocido';
+        }
+    
+        $respuestas = Revisor::where('id_certificado', $id)->pluck('respuestas')->first();
+        $respuestas_decoded = json_decode($respuestas, true);
+    
+        $pdfData = [
+            'num_certificado' => $datos_revisor->num_certificado,
+            'tipo_certificado' => $tipo_certificado, 
+            'respuestas' => $respuestas_decoded 
+        ];
+    
+        $pdf = Pdf::loadView('pdfs.bitacora_revicionPersonalOCCIDAM', $pdfData);
+        return $pdf->stream('Bitácora de revisión documental.pdf');
+    }
 //end
 }
