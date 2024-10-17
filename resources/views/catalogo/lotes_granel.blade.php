@@ -26,29 +26,22 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <div class="card-header pb-0">
-            <h3 class="card-title mb-0">Lotes a granel</h3>
+            <h3 class="card-title mb-0 fw-bold">Lotes a granel</h3>
         </div>
         <div class="card-datatable table-responsive">
             <table class="datatables-users table">
                 <thead class="table-dark">
                     <tr>
                         <th></th>
-                        <th>ID</th>
-                        <th>no. clientes</th>
-                        <th>Nombre de lote</th>
+                        <th>#</th>
+                        <th>Cliente</th>
+                        <th>No. de lote</th>
                         <th>tipo lote</th>
-                        <th>folio</th>
-                        <th>volumen de lote</th>
-                        <th>Contenido alcoholico</th>
-                        <th>Categoría</th>
-                        <th>Clase</th>
-                        <th>Tipo de maguey</th>
-                        <th>ingredientes</th>
-                        <th>edad</th>
-                        <th>folio certificado</th>
-                        <th>organismo</th>
-                        <th>fecha emisión</th>
-                        <th>fecha vigencia</th>
+                        <th>Características</th>
+                        <th>FQs</th>
+                        <th>%Alc. Vol.</th>
+                        <th>Volumen restante</th>
+                        <th>Certificado</th>
                         <th>estatus</th>
                         <th>Acciones</th>
                     </tr>
