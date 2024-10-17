@@ -544,7 +544,7 @@ $(function () {
             Swal.fire({
               icon: 'success',
               title: '¡Eliminado!',
-              text: '¡el predio ha sido eliminado correctamente!',
+              text: '¡El predio ha sido eliminado correctamente!',
               customClass: {
                 confirmButton: 'btn btn-success'
               }
@@ -826,6 +826,19 @@ $(function () {
         }
       });
     }
+    else {
+      // Quitar validaciones antes de limpiar los campos
+      $(coordenadasBody).find('input[name="latitud[]"]').each(function() {
+          fv.removeField($(this).attr('name'));
+      });
+      $(coordenadasBody).find('input[name="longitud[]"]').each(function() {
+          fv.removeField($(this).attr('name'));
+      });
+
+      coordenadasDiv.classList.add('d-none');
+      coordenadasBody.innerHTML = ''; // Limpiar todos los campos
+    }
+
 
     // Manejo de eventos para añadir y eliminar filas de coordenadas en la vista principal
     $(document).on('click', '.add-row-cordenadas', function () {
@@ -1011,6 +1024,7 @@ $(function () {
             // Inicializa el modal de georreferenciación
             inicializarGeoreferenciacion();
           });
+
         },
         error: function (xhr) {
           Swal.fire({
@@ -1031,7 +1045,7 @@ $(function () {
     });
   });
 
-
+/* traje la funcion de agregar solicitud de georeferenciacion en predios */
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -1091,10 +1105,11 @@ $(function () {
           $('#addSolicitudGeoreferenciacion').modal('hide');
           addRegistrarSolicitudGeoreferenciacion.reset(); // Resetea el formulario
           $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla si es necesario
+          $('.datatables-users').DataTable().ajax.reload();
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
-            text: response.message,
+            text: 'Solicitud registrada correctamente.',
             customClass: {
               confirmButton: 'btn btn-success'
             }
@@ -1522,20 +1537,6 @@ $(function () {
 
             // Mostrar el modal
             $('#modalEditPredio').modal('show');
-
-            // Aplicar validaciones a las coordenadas dinámicas
-            $('#edit_coordenadas input').each(function () {
-              fv.addField($(this).attr('name'), {
-                validators: {
-                  notEmpty: {
-                    message: 'Este campo es requerido'
-                  },
-                  numeric: {
-                    message: 'Por favor ingresa un valor numérico válido'
-                  }
-                }
-              });
-            });
 
             // Aplicar validaciones a las plantaciones dinámicas
             $('.edit_ContenidoPlantacion input').each(function () {
@@ -2130,20 +2131,6 @@ $(function () {
 
             // Mostrar el modal
             $('#modalAddPredioInspeccion').modal('show');
-
-            // Aplicar validaciones a las coordenadas dinámicas
-            $('#edit_coordenadas input').each(function () {
-              fv.addField($(this).attr('name'), {
-                validators: {
-                  notEmpty: {
-                    message: 'Este campo es requerido'
-                  },
-                  numeric: {
-                    message: 'Por favor ingresa un valor numérico válido'
-                  }
-                }
-              });
-            });
 
             // Aplicar validaciones a las plantaciones dinámicas
             $('.inspeccion_ContenidoPlantacion input').each(function () {

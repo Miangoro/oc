@@ -11,16 +11,15 @@
                     <h5 class="modal-title custom-title" id="modalFullTitle" style="font-weight: bold;">
                         REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (INSTALACIONES)
                     </h5>
-                    <span style="font-weight: normal; margin-left: 10px; color: #E3D94C; text-transform: uppercase; font-weight: bold;">
+                    <span style="font-weight: normal; margin-left: 10px; color: #3498db; text-transform: uppercase; font-weight: bold;">
                         {{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->razon_social }}
                     </span>
                     <span style="font-weight: normal; margin-left: 5px; color: #000000; text-transform: uppercase; font-weight: bold;">
-                        - <!-- Guion en negro -->
+                        / <!-- Guion en negro -->
                     </span>
-                    <span style="font-weight: normal; margin-left: 5px; color: #D29F42; text-transform: uppercase; font-weight: bold;">
+                    <span style="font-weight: normal; margin-left: 5px; color: #e74c3c; text-transform: uppercase; font-weight: bold;">
                         {{ $revisores[0]->user->name }} <!-- Asumiendo que el nombre del revisor está aquí -->
                     </span>
-                    
                     
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -32,11 +31,10 @@
 
                     <div class="row">
                         <div class="col-md-8">
-                        <!-- Tercera Tabla -->
-                            <div style="border: 1px solid #8DA399; padding: 20px; border-radius: 5px;">
+                            <!-- Tercera Tabla -->
+                            <div style="border: 1px solid #8DA399; padding: 20px; border-radius: 5px; margin-bottom: 30px;">
                                 <h5 style="font-size: 1.25rem; color: #2c3e50; font-weight: bold; margin: 20px 0;">
                                     REVISIÓN DOCUMENTAL PARA LA TOMA DE DECISIÓN PARA LA CERTIFICACIÓN DE INSTALACIONES.
-                                    
                                 </h5>
             
                                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -94,7 +92,7 @@
                                                             <option value="1">C</option>
                                                             <option value="2">NC</option>
                                                             <option value="3">NA</option>
-                                                        </select>                                                        
+                                                        </select>                                                         
                                                     </td>
                                                     <td>
                                                         <textarea rows="1" name="" id="" class="form-control" placeholder="Introduce las observaciones"></textarea>                               
@@ -102,27 +100,51 @@
                                                 </tr>
                                                 @endforeach
                                             </tbody>                                            
+
                                         </table>
                                     </div>        
                                 </div>
+                                
+                    <!-- Botón para registrar al final -->
+                    <div class="text-center mt-3">
+                        <button type="button" class="btn btn-primary" id="registrarRevision">
+                            Registrar Revisión
+                        </button>
+                    </div>
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <!-- Visualización del PDF -->
-                            <iframe width="100%" height="60%" id="pdfViewerDictamenFrame" 
-                                    src="../certificado_productor_mezcal/{{ $revisores[0]->certificado->dictamen->id_dictamen }}#zoom=65" 
-                                    frameborder="0" 
-                                    style="border-radius: 10px; overflow: hidden;"></iframe>
-                        
-                            <!-- Botón para registrar -->
-                            <div class="mt-3 text-center">
-                                <button type="button" class="btn btn-primary" id="registrarRevision">
-                                    Registrar Revisión
-                                </button>
+                        <div class="col-md-4 position-relative" style="height: 60%;">
+                            <div id="modal-loading-spinner" class="text-center" style="display: none; 
+                                 position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 10;
+                                 display: flex; justify-content: center; align-items: center;">
+                                <div class="sk-circle-fade sk-primary" style="width: 4rem; height: 4rem;">
+                                    <div class="sk-circle-fade-dot"></div>
+                                    <div class="sk-circle-fade-dot"></div>
+                                    <div class="sk-circle-fade-dot"></div>
+                                    <div class="sk-circle-fade-dot"></div>
+                                    <div class="sk-circle-fade-dot"></div>
+                                    <div class="sk-circle-fade-dot"></div>
+                                    <div class="sk-circle-fade-dot"></div>
+                                    <div class="sk-circle-fade-dot"></div>
+                                    <div class="sk-circle-fade-dot"></div>
+                                    <div class="sk-circle-fade-dot"></div>
+                                    <div class="sk-circle-fade-dot"></div>
+                                    <div class="sk-circle-fade-dot"></div>
+                                </div>
                             </div>
+                        
+                            <!-- Visualización del PDF -->
+                            <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" 
+                                    src="" 
+                                    frameborder="0" 
+                                    style="border-radius: 10px; overflow: hidden;">
+                            </iframe>
                         </div>
+                        
+
                     </div>
+
 
                 </div>
             </div>                
