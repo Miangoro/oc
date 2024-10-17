@@ -79,15 +79,15 @@ $(function () {
             edad =  '<br><span class="fw-bold text-dark small">Edad:</span><span class="small"> '+ row.edad+'</span>';
           }
 
-          return '<span class="fw-bold text-dark small">Volumen inicial:</span> <span class="small"> ' + row.volumen + 
+          return '<span class="fw-bold text-dark small">Volumen inicial:</span> <span class="small"> ' + row.volumen +
           ' L</span><br><span class="fw-bold text-dark small">Categoría:</span><span class="small"> ' + row.id_categoria +
-          '</span><br><span class="fw-bold text-dark small">Clase:</span><span class="small"> ' + row.id_clase + 
+          '</span><br><span class="fw-bold text-dark small">Clase:</span><span class="small"> ' + row.id_clase +
           '</span><br><span class="fw-bold text-dark small">Tipo:</span><span class="small"> '+ row.id_tipo+'</span>' + ingredientes + edad;
         }
       },
       { data: 'folio_fq' },
       { data: 'cont_alc' },
-      { data: 'volumen_restante', 
+      { data: 'volumen_restante',
         render: function (data, type, row) {
             return data + ' L';
         }
@@ -98,9 +98,9 @@ $(function () {
         render: function (data, type, row) {
 
           if(row.folio_certificado!= 'N/A'){
-            return '<span class="fw-bold text-dark small">Organismo:</span> <span class="small"> ' + row.id_organismo + 
+            return '<span class="fw-bold text-dark small">Organismo:</span> <span class="small"> ' + row.id_organismo +
             '</span><br><span class="fw-bold text-dark small">Certificado:</span><span class="small"> ' + row.folio_certificado +
-            '</span><br><span class="fw-bold text-dark small">Fecha de emisión:</span><span class="small"> ' + row.fecha_emision + 
+            '</span><br><span class="fw-bold text-dark small">Fecha de emisión:</span><span class="small"> ' + row.fecha_emision +
             '</span><br><span class="fw-bold text-dark small">Fecha de vigencia:</span><span class="small"> '+ row.fecha_vigencia+'</span>';
           }else{
             return '<span class="badge rounded-pill bg-danger">Sin certificado</span>';
@@ -194,7 +194,7 @@ $(function () {
             text: '<i class="ri-printer-line me-1"></i>Print',
             className: 'dropdown-item',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
               format: {
                 body: function (inner, rowIndex, columnIndex) {
                   if (columnIndex === 5) {
@@ -223,7 +223,7 @@ $(function () {
             text: '<i class="ri-file-text-line me-1"></i>CSV',
             className: 'dropdown-item',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
               format: {
                 body: function (inner, rowIndex, columnIndex) {
                   if (columnIndex === 5) {
@@ -240,7 +240,7 @@ $(function () {
             text: '<i class="ri-file-excel-line me-1"></i>Excel',
             className: 'dropdown-item',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
               format: {
                 body: function (inner, rowIndex, columnIndex) {
                   if (columnIndex === 5) {
@@ -257,7 +257,7 @@ $(function () {
             text: '<i class="ri-file-pdf-line me-1"></i>PDF',
             className: 'dropdown-item',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
               format: {
                 body: function (inner, rowIndex, columnIndex) {
                   if (columnIndex === 5) {
@@ -273,7 +273,7 @@ $(function () {
             text: '<i class="ri-file-copy-line me-1"></i>Copy',
             className: 'dropdown-item',
             exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16],
+              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
               format: {
                 body: function (inner, rowIndex, columnIndex) {
                   if (columnIndex === 5) {
@@ -865,6 +865,8 @@ $(function () {
   });
 
 
+
+
   $(function () {
     const addNewLote = document.getElementById('loteForm');
     const fv = FormValidation.formValidation(addNewLote, {
@@ -909,8 +911,5 @@ $(function () {
         fv.revalidateField('lote_original_id');
     });
 });
-
-
-
 
 });
