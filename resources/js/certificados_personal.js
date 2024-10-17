@@ -111,7 +111,7 @@
             targets: 7,
             className: 'text-center',
             render: function (data, type, full, meta) {
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal"  data-tipo="${full['tipo_dictamen']}"  data-id="${full['id_revision']}"></i>`;
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-num-certificado="${full['num_certificado']}" data-tipo="${full['tipo_dictamen']}"  data-id="${full['id_revision']}"></i>`;
             }
           },
          {
@@ -426,7 +426,7 @@ $(document).on('click', '#registrarRevision', function() {
     });
 
     $.ajax({
-        url: '/revisor/registrar-preguntas',
+        url: '/revisor/registrar-respuestas',
         type: 'POST',
         contentType: 'application/json',
         headers: {
@@ -466,7 +466,7 @@ $(document).on('click', '#registrarRevision', function() {
 //Cargar respuestas en el modal
 function cargarRespuestas(id_revision) {
   $.ajax({
-      url: `/revisor/obtener-preguntas/${id_revision}`,
+      url: `/revisor/obtener-respuestas/${id_revision}`,
       type: 'GET',
       success: function(response) {
           const respuestasGuardadas = response.respuestas || {}; 
@@ -497,29 +497,33 @@ function cargarRespuestas(id_revision) {
 }
 
 $(document).on('click', '.pdf', function () {
-  var id = $(this).data('id');
-  var registro = $(this).data('registro');
+  var id_revisor = $(this).data('id'); // Obtén el ID del revisor
+  var url_pdf = '../bitacora_revicionPersonalOCCIDAM/' + id_revisor; // URL que incluye el ID del revisor
+  console.log('URL del PDF:', url_pdf);
 
-  var tipo_dictamen = '../certificado_productor_mezcal/' + id;
-  var titulo = "Certificado de productor";
+  var num_certificado = $(this).data('num-certificado'); 
+  console.log('Número de Certificado:', num_certificado);
 
-  $('#loading-spinner').show();
-  $('#pdfViewerDictamen').hide();
+  // Establece el título y subtítulo en el modal
+  $('#titulo_modal_Dictamen').text("Bitácora de revisión documental");
+  $('#subtitulo_modal_Dictamen').text(num_certificado);
 
-  $('#titulo_modal_Dictamen').text(titulo);
-  $('#subtitulo_modal_Dictamen').text(registro);
-
+  // Configura el botón para abrir el PDF en una nueva pestaña
   var openPdfBtn = $('#openPdfBtnDictamen');
-  openPdfBtn.attr('href', tipo_dictamen);
-  openPdfBtn.show();
+  openPdfBtn.attr('href', url_pdf);
+  openPdfBtn.show(); 
 
+  // Muestra el modal
   $('#PdfDictamenIntalaciones').modal('show');
-  $('#pdfViewerDictamen').attr('src', tipo_dictamen);
+
+  // Carga el PDF en el visor
+  $('#pdfViewerDictamen').attr('src', url_pdf);
 });
 
+// Oculta el spinner y muestra el visor una vez que el PDF ha cargado
 $('#pdfViewerDictamen').on('load', function () {
-  $('#loading-spinner').hide();
-  $('#pdfViewerDictamen').show();
+  $('#loading-spinner').hide(); 
+  $('#pdfViewerDictamen').show(); 
 });
 
 

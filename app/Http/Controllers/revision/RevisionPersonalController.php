@@ -148,7 +148,7 @@ class RevisionPersonalController extends Controller
         ]);
     }
 
-    public function registrarPreguntas(Request $request)
+    public function registrarRespuestas(Request $request)
     {
         try {
             $request->validate([
@@ -187,7 +187,7 @@ class RevisionPersonalController extends Controller
         }
     }    
     
-    public function obtenerPreguntas($id_revision)
+    public function obtenerRespuestas($id_revision)
     {
         try {
             $revisor = Revisor::where('id_revision', $id_revision)->first();
@@ -216,11 +216,11 @@ class RevisionPersonalController extends Controller
         if ($revisor && $revisor->certificado) {
             $certificadoUrl = '';
     
-            if ($tipo == 1 || $tipo == 5) { // Productor
+            if ($tipo == 1 || $tipo == 5) { 
                 $certificadoUrl = "../certificado_productor_mezcal/{$revisor->certificado->id_certificado}";
-            } elseif ($tipo == 2) { // Envasador
+            } elseif ($tipo == 2) { 
                 $certificadoUrl = "../certificado_envasador_mezcal/{$revisor->certificado->id_certificado}";
-            } elseif ($tipo == 3 || $tipo == 4) { // Comercializador
+            } elseif ($tipo == 3 || $tipo == 4) { 
                 $certificadoUrl = "../certificado_comercializador/{$revisor->certificado->id_certificado}";
             } else {
                 return response()->json(['certificado_url' => null]);
@@ -234,13 +234,9 @@ class RevisionPersonalController extends Controller
     
     public function bitacora_revicionPersonalOCCIDAM($id)
     {
-        // Encuentra el certificado correspondiente
         $datos_revisor = Certificados::findOrFail($id);
-        
-        // Obtener el id_dictamen
-        $id_dictamen = $datos_revisor->dictamen->id_dictamen; // Asegúrate de que esta relación esté definida
+        $id_dictamen = $datos_revisor->dictamen->id_dictamen; 
     
-        // Determina el tipo de certificado según el id_dictamen
         $tipo_certificado = '';
         if ($id_dictamen == 1) {
             $tipo_certificado = 'Productor';
@@ -256,20 +252,15 @@ class RevisionPersonalController extends Controller
             $tipo_certificado = 'Desconocido';
         }
     
-        // Obtener las respuestas del revisor de la tabla certificados_revision
         $respuestas = Revisor::where('id_certificado', $id)->pluck('respuestas')->first();
-    
-        // Decodificar las respuestas JSON si es necesario
         $respuestas_decoded = json_decode($respuestas, true);
     
-        // Prepara los datos para el PDF
         $pdfData = [
             'num_certificado' => $datos_revisor->num_certificado,
-            'tipo_certificado' => $tipo_certificado, // Agrega el tipo de certificado a los datos del PDF
-            'respuestas' => $respuestas_decoded // Agrega las respuestas decodificadas
+            'tipo_certificado' => $tipo_certificado, 
+            'respuestas' => $respuestas_decoded 
         ];
     
-        // Carga la vista del PDF
         $pdf = Pdf::loadView('pdfs.bitacora_revicionPersonalOCCIDAM', $pdfData);
         return $pdf->stream('Bitácora de revisión documental.pdf');
     }
