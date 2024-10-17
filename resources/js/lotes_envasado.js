@@ -180,6 +180,8 @@ $(function () {
                 { data: 'nombre_lote' },
                 { data: 'id_marca' },
                 { data: 'cant_botellas' },
+                { data: 'cant_botellas' },
+
                 {
                     data: function (row, type, set) {
                         return row.presentacion + ' ' + row.unidad;
@@ -190,6 +192,8 @@ $(function () {
                         return row.volumen_total + ' Litros';
                     }
                 },
+                { data: 'cant_botellas' },
+
                 { data: 'destino_lote' },
                 { data: 'lugar_envasado' },
                 { data: 'sku' },
@@ -660,8 +664,8 @@ $(function () {
         console.log("Cargado");
         var id_lote_envasado = $(this).data('id');
 
-        obtenerGraneles();
-        obtenerMarcas();
+/*         obtenerGraneles();
+        obtenerMarcas(); */
 
         // Manejar el envío del formulario de edición
         $('#editLoteEnvasadoForm').on('submit', function (e) {

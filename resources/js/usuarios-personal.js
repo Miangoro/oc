@@ -128,12 +128,9 @@ $(function () {
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center gap-50">' +
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-              '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar personal OC</a>` +
-              `<a data-id="${full['id']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar personal OC</a>` +
-/*               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="text-info ri-edit-box-line ri-20px"></i></button>` +
-              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id']}"><i class="text-danger ri-delete-bin-7-line ri-20px"></i></button>` + */
+
+               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser"><i class="text-info ri-edit-box-line ri-20px"></i></button>` +
+              `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id']}"><i class="text-danger ri-delete-bin-7-line ri-20px"></i></button>` + 
              
               '</div>'
             );

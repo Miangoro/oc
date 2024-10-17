@@ -55,9 +55,11 @@
           <th>Tipo de lote</th>
           <th>Nombre lote</th>
           <th>Marca</th>
-          <th>cantidad botellas</th>
+          <th>cantidad de botellas inicial</th>
+          <th>cantidad de botellas restante</th>
           <th>Presentacion</th>
-          <th>Volumen total</th>
+          <th>Volumen inicial</th>
+          <th>Volumen restante</th>
           <th>Destino lote</th>
           <th>Lugar de envasado</th>
           <th>No. de pedido/SKU</th>
