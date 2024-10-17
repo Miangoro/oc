@@ -586,7 +586,7 @@ Route::get('/usuarios/inspectores', [UsuariosInspectoresController::class, 'insp
 Route::resource('/inspectores-list', UsuariosInspectoresController::class);
 
 Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal'])->name('usuarios-personal');
-Route::resource('/personal-list', UsuariosPersonalController::class);
+Route::resource('/personal-list2', UsuariosPersonalController::class);
 
 //Consejo usuarios
 Route::get('/usuarios/consejo', [UsuariosConsejoController::class, 'consejo'])->name('usuarios-consejo');

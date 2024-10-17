@@ -54,19 +54,59 @@ $(function () {
       { data: 'id_lote_granel' },
       { data: 'id_empresa' },
       { data: 'nombre_lote' },
-      { data: 'tipo_lote' },
+      {
+        data: null,
+        searchable: true, orderable: false,
+        render: function (data, type, row) {
+
+          if(row.tipo_lote== 1){
+            return '<span class="fw-bold text-dark">Certificado por OC CIDAM</span>';
+          }else{
+            return '<span class="fw-bold text-info">Certificado por otro organismo</span>';
+          }
+       }
+      },
+      {
+        data: null,
+        searchable: true, orderable: false,
+        render: function (data, type, row) {
+          var ingredientes = '';
+          var edad = '';
+          if(row.ingredientes != 'N/A'){
+            ingredientes =  '<br><span class="fw-bold text-dark small">Ingrediente:</span><span class="small"> '+ row.ingredientes+'</span>';
+          }
+          if(row.edad != 'N/A'){
+            edad =  '<br><span class="fw-bold text-dark small">Edad:</span><span class="small"> '+ row.edad+'</span>';
+          }
+
+          return '<span class="fw-bold text-dark small">Volumen inicial:</span> <span class="small"> ' + row.volumen + 
+          ' L</span><br><span class="fw-bold text-dark small">Categoría:</span><span class="small"> ' + row.id_categoria +
+          '</span><br><span class="fw-bold text-dark small">Clase:</span><span class="small"> ' + row.id_clase + 
+          '</span><br><span class="fw-bold text-dark small">Tipo:</span><span class="small"> '+ row.id_tipo+'</span>' + ingredientes + edad;
+        }
+      },
       { data: 'folio_fq' },
-      { data: 'volumen' },
       { data: 'cont_alc' },
-      { data: 'id_categoria' },
-      { data: 'id_clase' },
-      { data: 'id_tipo' },
-      { data: 'ingredientes' },
-      { data: 'edad' },
-      { data: 'folio_certificado' },
-      { data: 'id_organismo' },
-      { data: 'fecha_emision' },
-      { data: 'fecha_vigencia', orderable: false, searchable: false },
+      { data: 'volumen_restante', 
+        render: function (data, type, row) {
+            return data + ' L';
+        }
+      },
+      {
+        data: null,
+        searchable: true, orderable: false,
+        render: function (data, type, row) {
+
+          if(row.folio_certificado!= 'N/A'){
+            return '<span class="fw-bold text-dark small">Organismo:</span> <span class="small"> ' + row.id_organismo + 
+            '</span><br><span class="fw-bold text-dark small">Certificado:</span><span class="small"> ' + row.folio_certificado +
+            '</span><br><span class="fw-bold text-dark small">Fecha de emisión:</span><span class="small"> ' + row.fecha_emision + 
+            '</span><br><span class="fw-bold text-dark small">Fecha de vigencia:</span><span class="small"> '+ row.fecha_vigencia+'</span>';
+          }else{
+            return '<span class="badge rounded-pill bg-danger">Sin certificado</span>';
+          }
+       }
+      },
       {
         data: 'estatus',
         searchable: false, orderable: false,
