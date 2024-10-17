@@ -713,6 +713,10 @@ $(document).on('click', '.edit-pay', function () {
         // Rellenar el formulario con los datos obtenidos
       $('#id_lote_envasado').val(data.id_lote_envasado);
       $('#edictt_sku').val(data.inicial);
+      $('#observaciones').val(data.observaciones);
+      $('#nuevo').val(data.nuevo);
+      $('#cant_botellas').val(data.cant_botellas);
+
 
       // Mostrar el modal de edición
       $('#reclasificacion').modal('show');

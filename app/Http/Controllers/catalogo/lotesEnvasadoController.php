@@ -265,6 +265,10 @@ class lotesEnvasadoController extends Controller
 
             // Añadir los valores de folio inicial y folio final
             $edicionsku->inicial = $sku['inicial'] ?? null;
+            $edicionsku->observaciones = $sku['observaciones'] ?? null;
+            $edicionsku->nuevo = $sku['nuevo'] ?? null;
+            $edicionsku->cant_botellas = $sku['cant_botellas'] ?? null;
+
             return response()->json($edicionsku);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener el sku'], 500);

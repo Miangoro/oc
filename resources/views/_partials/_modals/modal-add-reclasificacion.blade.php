@@ -12,7 +12,7 @@
 
 
                     <input type="text" id="id_lote_envasado" name="id">
-                    <input type="text" id="edictt_sku" name="edictt_sku">
+                    <input type="text" id="edictt_sku" name="f">
 
                     <div class="form-floating form-floating-outline mb-5">
                         <textarea name="observaciones" class="form-control h-px-100" id="observaciones" placeholder="Observaciones..."></textarea>
