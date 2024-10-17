@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Revisor;
 use App\Helpers\Helpers;
 use App\Models\preguntas_revision;
+use Illuminate\Support\Facades\Schema;
 
 class RevisionPersonalController extends Controller
 {
@@ -113,8 +114,8 @@ class RevisionPersonalController extends Controller
     
             $fechaVigencia = $revisor->certificado ? $revisor->certificado->fecha_vigencia : null;
             $fechaVencimiento = $revisor->certificado ? $revisor->certificado->fecha_vencimiento : null;
-            $fechaCreacion = $revisor->created_at; // Obtener la fecha de creación
-            $fechaActualizacion = $revisor->updated_at; // Obtener la fecha de creación
+            $fechaCreacion = $revisor->created_at; 
+            $fechaActualizacion = $revisor->updated_at;
     
             return [
                 'id_revision' => $revisor->id_revision,
@@ -129,9 +130,9 @@ class RevisionPersonalController extends Controller
                 'num_dictamen' => $numDictamen,
                 'fecha_vigencia' => Helpers::formatearFecha($fechaVigencia),
                 'fecha_vencimiento' => Helpers::formatearFecha($fechaVencimiento),
-                'fecha_creacion' => Helpers::formatearFecha($fechaCreacion), // Formatear la fecha de creación
-                'created_at' => Helpers::formatearFecha($revisor->created_at), // Formatear la fecha de creación
-                'updated_at' => Helpers::formatearFecha($revisor->updated_at), // Formatear la fecha de creación
+                'fecha_creacion' => Helpers::formatearFecha($fechaCreacion),
+                'created_at' => Helpers::formatearFecha($revisor->created_at), 
+                'updated_at' => Helpers::formatearFecha($revisor->updated_at),
             ];
         })->filter(function ($item) {
             return $item['id_revisor'] !== null;
@@ -147,39 +148,85 @@ class RevisionPersonalController extends Controller
 
     public function registrarPreguntas(Request $request)
     {
-        // Validar los datos recibidos
-        $validatedData = $request->validate([
-            'preguntas' => 'required|array', // Asegurar que las preguntas sean un array
-            'preguntas.*.pregunta' => 'required|string', // Validar cada pregunta como string
-            'preguntas.*.respuesta' => 'required|string', // Asegurar que cada respuesta sea un string
-            'preguntas.*.observaciones' => 'nullable|string', // Observaciones pueden ser nulas
-            'id_revision' => 'required|integer|exists:certificados_revision,id_revision', // Validar el id_revision
-        ]);
+        try {
+            $request->validate([
+                'id_revision' => 'required|integer',
+                'respuestas' => 'nullable|array',
+                'observaciones' => 'nullable|array',
+            ]);
     
-        // Obtener el registro del revisor por id_revision
-        $revisor = Revisor::findOrFail($validatedData['id_revision']);
+            // Busca el registro con id_revision
+            $revisor = Revisor::where('id_revision', $request->id_revision)->first();
+            if (!$revisor) {
+                return response()->json(['message' => 'El registro no fue encontrado.'], 404);
+            }
     
-        // Iterar sobre cada pregunta y guardar la respuesta en el modelo Revisor
-        foreach ($validatedData['preguntas'] as $respuesta) {
-            $revisor->pregunta = $respuesta['pregunta']; // Guardar la pregunta
-            $revisor->respuesta = $respuesta['respuesta']; // Guardar la respuesta
-            $revisor->observaciones = $respuesta['observaciones'] ?? null; // Guardar observaciones si están presentes
-            $revisor->save(); // Guardar el revisor con las nuevas preguntas
+            // Decodifica las respuestas
+            $respuestasGuardadas = json_decode($revisor->respuestas, true) ?? []; // Cambié 'pregunta' a 'respuestas'
+    
+            // Itera sobre las nuevas respuestas y observaciones
+            foreach ($request->respuestas as $key => $nuevaRespuesta) {
+                $nuevaObservacion = $request->observaciones[$key] ?? null;
+    
+                // Si ya existe una respuesta guardada y la nueva respuesta está vacía, no actualiza
+                if (isset($respuestasGuardadas[$key]['respuesta']) && !empty($respuestasGuardadas[$key]['respuesta']) && empty($nuevaRespuesta)) {
+                    continue; // No actualizar si ya hay una respuesta y no hay cambios
+                }
+    
+                // Actualiza 
+                $respuestasGuardadas[$key] = [
+                    'respuesta' => $nuevaRespuesta,
+                    'observacion' => $nuevaObservacion,
+                ];
+            }
+    
+            // Guarda el campo 'respuestas' 
+            $revisor->respuestas = json_encode($respuestasGuardadas); // Cambié 'pregunta' a 'respuestas'
+            $revisor->save();
+    
+            // Retorna mensaje 
+            if (empty($revisor->respuestas)) { // Cambié 'pregunta' a 'respuestas'
+                return response()->json([
+                    'message' => 'Respuestas registradas exitosamente por primera vez.',
+                    'revisor' => $revisor,
+                ], 201);  
+            } else {
+                return response()->json([
+                    'message' => 'Respuestas actualizadas exitosamente.',
+                    'revisor' => $revisor,
+                ], 200);
+            }
+    
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ocurrió un error al registrar las respuestas: ' . $e->getMessage(),
+            ], 500);
         }
-    
-        return response()->json([
-            'message' => 'Preguntas registradas con éxito.',
-        ]);
     }
     
+    public function obtenerPreguntas($id_revision)
+    {
+        try {
+            // Busca el registro con id_revision
+            $revisor = Revisor::where('id_revision', $id_revision)->first();
     
+            if (!$revisor) {
+                return response()->json(['message' => 'El registro no fue encontrado.'], 404);
+            }
     
+            // Decodifica las respuestas almacenadas en la base de datos
+            $respuestas = json_decode($revisor->respuestas, true); // Cambié 'pregunta' a 'respuestas'
     
-    
-    
-    
-    
-    
-
+            return response()->json([
+                'message' => 'Datos recuperados exitosamente.',
+                'respuestas' => $respuestas, // Cambié 'preguntas' a 'respuestas'
+            ], 200);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ocurrió un error al cargar las respuestas: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
     
 }

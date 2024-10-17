@@ -111,7 +111,7 @@
             targets: 7,
             className: 'text-center',
             render: function (data, type, full, meta) {
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal"  data-id="${full['id_revision']}"></i>`;
             }
           },
          {
@@ -351,100 +351,147 @@
    } 
 
    // FUNCIONES DEL FUNCIONAMIENTO DEL CRUD
+
+   //Registrar Respuesta
+   let id_revision; 
+   $(document).on('click', '.cuest', function () {
+       id_revision = $(this).data('id'); 
+       console.log('ID de Revisión:', id_revision); 
+       cargarRespuestas(id_revision); 
+   });
    
-// Manejar el evento de clic en el botón de "Registrar Revisión"
-$('#registrarRevision').on('click', function(e) {
-  e.preventDefault();
+   $(document).on('click', '#registrarRevision', function() {
+    if (typeof id_revision === 'undefined') {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'El ID de revisión no está definido.',
+            customClass: {
+                confirmButton: 'btn btn-danger'
+            }
+        });
+        return;
+    }
 
-  var respuestas = [];
-  var rows = $('table tbody tr'); // Seleccionar todas las filas de la tabla
+    const respuestas = {};
+    const observaciones = {};
+    const rows = $('#fullscreenModal .table-container table tbody tr');
 
-  // Recorrer cada fila de la tabla para obtener los valores de respuesta y observación
-  rows.each(function() {
-      var selectElement = $(this).find('select.form-select'); // Seleccionar el dropdown
-      var textareaElement = $(this).find('textarea'); // Seleccionar el campo de observación
+    rows.each(function(index) {
+        let respuesta = $(this).find('select').val();
+        const observacion = $(this).find('textarea').val();
 
-      // Verificar si el elemento select y textarea existen
-      if (selectElement.length && textareaElement.length) {
-          var respuesta = selectElement.val(); // Obtener la respuesta seleccionada
-          var observacion = textareaElement.val(); // Obtener el valor del textarea
-          var idPregunta = $(this).find('td:first').text().trim(); // Obtener el ID de la pregunta (el número de la fila)
+        if (respuesta === '1') {
+            respuesta = 'C';
+        } else if (respuesta === '2') {
+            respuesta = 'NC';
+        } else if (respuesta === '3') {
+            respuesta = 'NA';
+        } else {
+            respuesta = null; 
+        }
 
-          // Verificar si hay respuesta u observación válida antes de registrar
-          if ((respuesta && respuesta !== 'Selecciona') || (observacion && observacion.trim() !== '')) {
-              respuestas.push({
-                  id_pregunta: idPregunta,
-                  respuesta: respuesta !== 'Selecciona' ? respuesta : null, // Si no hay respuesta válida, guardamos null
-                  observacion: observacion ? observacion.trim() : null // Si no hay observación, guardamos null
-              });
-          }
-      }
-  });
+        respuestas[`pregunta${index + 1}`] = respuesta;
+        observaciones[`pregunta${index + 1}`] = observacion || null;
+    });
 
-  // Si no hay respuestas válidas, mostrar un error
-  if (respuestas.length === 0) {
-      Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se ha proporcionado ninguna respuesta ni observación.'
-      });
-      return;
-  }
+    $.ajax({
+        url: '/revisor/registrar-preguntas',
+        type: 'POST',
+        contentType: 'application/json',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: JSON.stringify({
+            id_revision: id_revision,
+            respuestas: respuestas,
+            observaciones: observaciones
+        }),
+        success: function(response) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.message,
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
 
-  var id_revision = $('.cuest').data('id'); // Obtener el ID de la revisión
-
-  // Crear el objeto de datos a enviar
-  var formData = {
-      respuestas: respuestas,
-      id_revision: id_revision,
-  };
-
-  // Mostrar en consola los datos que se van a enviar (para depuración)
-  console.log("Datos enviados:", formData);
-
-  // Realizar la solicitud AJAX al servidor
-  $.ajax({
-      url: '/revisor/registrar-respuestas', // URL del controlador en el servidor
-      type: 'POST',
-      data: JSON.stringify(formData),
-      contentType: 'application/json',
-      headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF Token para proteger la solicitud
-      },
-      success: function(response) {
-          // Cerrar el modal al completar la operación
-          $('#fullscreenModal').modal('hide');
-
-          // Mostrar mensaje de éxito
-          Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: response.message,
-              customClass: {
-                  confirmButton: 'btn btn-success'
-              }
-          });
-
-          // Recargar la tabla si es necesario
-          $('.datatables-revision').DataTable().ajax.reload();
-      },
-      error: function(xhr) {
-          // Manejar el error en caso de que falle el registro
-          Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al registrar las respuestas y observaciones.',
-              customClass: {
-                  confirmButton: 'btn btn-danger'
-              }
-          });
-      }
-  });
-
+            $('#fullscreenModal').modal('hide');
+            $('.datatables-users').DataTable().ajax.reload();
+        },
+        error: function(xhr) {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al registrar las respuestas: ' + xhr.responseJSON.message,
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+        }
+    });
 });
 
+//Cargar respuestas en el modal
+function cargarRespuestas(id_revision) {
+  $.ajax({
+      url: `/revisor/obtener-preguntas/${id_revision}`,
+      type: 'GET',
+      success: function(response) {
+          const respuestasGuardadas = response.respuestas || {}; 
+          const rows = $('#fullscreenModal .table-container table tbody tr');
+
+          rows.each(function(index) {
+              const respuestaKey = `pregunta${index + 1}`;
+              const respuestaGuardada = respuestasGuardadas[respuestaKey]?.respuesta || ''; 
+              const observacionGuardada = respuestasGuardadas[respuestaKey]?.observacion || ''; 
+
+              let respuestaSelect = '';
+              if (respuestaGuardada === 'C') {
+                  respuestaSelect = '1';
+              } else if (respuestaGuardada === 'NC') {
+                  respuestaSelect = '2';
+              } else if (respuestaGuardada === 'NA') {
+                  respuestaSelect = '3';
+              }
+
+              $(this).find('select').val(respuestaSelect || ''); 
+              $(this).find('textarea').val(observacionGuardada);
+          });
+      },
+      error: function(xhr) {
+          console.error('Error al cargar las respuestas:', xhr);
+      }
+  });
+}
 
 
+$(document).on('click', '.pdf', function () {
+  var id = $(this).data('id');
+  var registro = $(this).data('registro');
+
+  var tipo_dictamen = '../certificado_productor_mezcal/' + id;
+  var titulo = "Certificado de productor";
+
+  $('#loading-spinner').show();
+  $('#pdfViewerDictamen').hide();
+
+  $('#titulo_modal_Dictamen').text(titulo);
+  $('#subtitulo_modal_Dictamen').text(registro);
+
+  var openPdfBtn = $('#openPdfBtnDictamen');
+  openPdfBtn.attr('href', tipo_dictamen);
+  openPdfBtn.show();
+
+  $('#PdfDictamenIntalaciones').modal('show');
+  $('#pdfViewerDictamen').attr('src', tipo_dictamen);
+});
+
+$('#pdfViewerDictamen').on('load', function () {
+  $('#loading-spinner').hide();
+  $('#pdfViewerDictamen').show();
+});
 
 
 //end

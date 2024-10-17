@@ -146,54 +146,49 @@ class lotesEnvasadoController extends Controller
 
 //Metodo para egistrar
     public function store(Request $request)
-    {
-        // Valida los datos
-        $validated = $request->validate([
-            'id_empresa' => 'required|exists:empresa,id_empresa',
-            'nombre_lote' => 'required|string|max:100',
-            'tipo_lote' => 'required|integer',
-            'sku' => 'required|string|max:60',
-            'id_marca' => 'required|exists:marcas,id_marca',
-            'destino_lote' => 'required|string|max:120',
-            'cant_botellas' => 'required|integer',
-            'presentacion' => 'required|integer',
-            'unidad' => 'required|string|max:50',
-            'volumen_total' => 'required|numeric',
-            'lugar_envasado' => 'required|exists:instalaciones,id_instalacion',
-            'id_lote_granel.*' => 'nullable',
-            'volumen_parcial.*' => 'nullable',
+{
+    try {
+        // Crear un nuevo registro en la tabla `lotes_envasado`
+        $lotes = new lotes_envasado();
+        $lotes->id_empresa = $request->id_empresa;
+        $lotes->nombre_lote = $request->nombre_lote;
+        $lotes->tipo_lote = $request->tipo_lote;
+        $lotes->sku = $request->sku;
+
+        $lotes->sku = json_encode([
+            'inicial' => $request->sku,
+           
+
+
         ]);
-    
-        // Crea un nuevo registro en la base de datos
-        try {
-            lotes_envasado::create($validated);
+        $lotes->id_marca = $request->id_marca;
+        $lotes->destino_lote = $request->destino_lote;
+        $lotes->cant_botellas = $request->cant_botellas;
+        $lotes->presentacion = $request->presentacion;
+        $lotes->unidad = $request->unidad;
+        $lotes->volumen_total = $request->volumen_total;
+        $lotes->lugar_envasado = $request->lugar_envasado;
+        $lotes->save();
 
-            $ultimoLote = lotes_envasado::latest()->first();
-
-            
-
+        // Verificar si existen los arrays antes de procesarlos
+        if ($request->has('id_lote_granel') && is_array($request->id_lote_granel) && $request->has('volumen_parcial') && is_array($request->volumen_parcial)) {
             for ($i = 0; $i < count($request->id_lote_granel); $i++) {
-
-                if(empty($request->volumen_total)){
-                    $volumen_parcial =  $request->volumen_parcial[$i];
-                }else{
-                    $volumen_parcial = $request->volumen_total;
+                // Verificar que ambos arrays tengan el mismo tamaño
+                if (isset($request->id_lote_granel[$i]) && isset($request->volumen_parcial[$i])) {
+                    $envasado = new lotes_envasado_granel();
+                    $envasado->id_lote_envasado = $lotes->id_lote_envasado;  // Relacionar con el lote envasado creado
+                    $envasado->id_lote_granel = $request->id_lote_granel[$i];
+                    $envasado->volumen_parcial = $request->volumen_parcial[$i];
+                    $envasado->save();
                 }
-               
-                $envasado_granel = new lotes_envasado_granel();
-                $envasado_granel->id_lote_envasado = $ultimoLote->id_lote_envasado;
-                $envasado_granel->id_lote_granel = $request->id_lote_granel[$i];
-                $envasado_granel->volumen_parcial = $volumen_parcial;
-                $envasado_granel->save();
-              }
-          
-
-            return response()->json(['success' => 'Lote registrado exitosamente.']);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            }
         }
-    }
 
+        return response()->json(['success' => 'Lote envasado registrado exitosamente.']);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+    }
+}
 
     //mostrar lotes envasados registrados
     public function edit($id)
@@ -201,10 +196,13 @@ class lotesEnvasadoController extends Controller
         try {
             // Aquí obtienes el acta de inspección junto con sus testigos
             $envasado_granel = lotes_envasado::with('lotes_envasado_granel')->findOrFail($id);
-    
+            $sku = json_decode($envasado_granel->sku, true);
+
+            // Añadir los valores de folio inicial y folio final
+            $envasado_granel->inicial = $sku['inicial'] ?? null;
             return response()->json($envasado_granel);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener el acta por ID'], 500);
+            return response()->json(['error' => 'Error al obtener el lote envasado'], 500);
         }
     }
 
@@ -212,11 +210,96 @@ class lotesEnvasadoController extends Controller
     //editar lotes envasados
     public function update(Request $request, $id)
     {
-        $loteEnvasado = lotes_envasado::find($id);
-        $loteEnvasado->update($request->all());
+        try {
+            // Buscar el lote existente
+            $lotes = lotes_envasado::findOrFail($id);
+    
+            // Actualizar los campos del lote envasado
+            $lotes->id_empresa = $request->id_empresa;
+            $lotes->nombre_lote = $request->nombre_lote;
+            $lotes->tipo_lote = $request->tipo_lote;
+            $lotes->sku = json_encode([
+                'inicial' => $request->sku,
 
-        return response()->json(['success' => true]);
+            ]);
+            $lotes->id_marca = $request->id_marca;
+            $lotes->destino_lote = $request->destino_lote;
+            $lotes->cant_botellas = $request->cant_botellas;
+            $lotes->presentacion = $request->presentacion;
+            $lotes->unidad = $request->unidad;
+            $lotes->volumen_total = $request->volumen_total;
+            $lotes->lugar_envasado = $request->lugar_envasado;
+            $lotes->save();
+    
+            // Eliminar los registros de `lotes_envasado_granel` relacionados con este lote
+            lotes_envasado_granel::where('id_lote_envasado', $lotes->id_lote_envasado)->delete();
+    
+            // Guardar los testigos relacionados si existen
+            if ($request->has('id_lote_granel') && is_array($request->id_lote_granel) && $request->has('volumen_parcial') && is_array($request->volumen_parcial)) {
+                for ($i = 0; $i < count($request->id_lote_granel); $i++) {
+                    // Verificar que ambos arrays tengan el mismo tamaño
+                    if (isset($request->id_lote_granel[$i]) && isset($request->volumen_parcial[$i])) {
+                        $envasado = new lotes_envasado_granel();
+                        $envasado->id_lote_envasado = $lotes->id_lote_envasado;  // Relacionar con el lote envasado
+                        $envasado->id_lote_granel = $request->id_lote_granel[$i];
+                        $envasado->volumen_parcial = $request->volumen_parcial[$i];
+                        $envasado->save();
+                    }
+                }
+            }
+    
+            return response()->json(['success' => 'Lote envasado actualizado exitosamente.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
+
+
+
+    public function editSKU($id)
+    {
+        try {
+            // Aquí obtienes el acta de inspección junto con sus testigos
+            $edicionsku = lotes_envasado::findOrFail($id);
+            $sku = json_decode($edicionsku->sku, true);
+
+            // Añadir los valores de folio inicial y folio final
+            $edicionsku->inicial = $sku['inicial'] ?? null;
+            return response()->json($edicionsku);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener el sku'], 500);
+        }
+    }
+    
+    
+
+    public function updateSKU(Request $request)
+    {
+        try {
+            // Encuentra la solicitud de hologramas por su ID
+            $sku_nuevo = lotes_envasado::findOrFail($request->input('id'));
+
+            $sku_nuevo->sku = json_encode([
+                'inicial' => $request->edictt_sku,
+                'observaciones' => $request->observaciones,
+                'nuevo' => $request->nuevo, // Puedes agregar otros valores también
+                'cant_botellas' => $request->cant_botellas, // Puedes agregar otros valores también
+
+
+            ]);
+            $sku_nuevo->save();
+
+
+            // Retorna una respuesta exitosa
+            return response()->json(['success' => 'Solicitud de envio actualizada correctamente']);
+        } catch (\Exception $e) {
+            // Maneja cualquier error que ocurra durante el proceso
+            return response()->json(['error' => 'Error al actualizar la solicitud de envio'], 500);
+        }
+    } 
+
+
+
     
 
 }

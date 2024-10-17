@@ -539,6 +539,10 @@ Route::resource('/lotes-list', LotesEnvasadoController::class);
 Route::post('/lotes-envasado', [LotesEnvasadoController::class, 'store']);
 Route::get('/lotes-envasado/edit/{id}', [lotesEnvasadoController::class, 'edit']);
 Route::put('/lotes-envasado/{id}', [lotesEnvasadoController::class, 'update']);
+Route::get('/lotes-envasado/editSKU/{id}', [lotesEnvasadoController::class, 'editSKU']);
+Route::post('/lotes-envasado/updateSKU/', [lotesEnvasadoController::class, 'updateSKU']);
+ 
+
 
 //Domicilios fiscal
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
@@ -750,7 +754,7 @@ Route::resource('/solicitudes-list', solicitudesController::class);
 Route::get('/solicitud_de_servicio/{id_solicitud}', [solicitudesController::class, 'pdf_solicitud_servicios_070'])->name('solicitudservi');
 Route::post('/registrar-solicitud-georeferenciacion', [solicitudesController::class, 'registrarSolicitudGeoreferenciacion'])->name('registrarSolicitudGeoreferenciacion');
 Route::post('/registrar-solicitud-muestreo-agave', [solicitudesController::class, 'registrarSolicitudMuestreoAgave'])->name('registrarSolicitudMuestreoAgave');
-
+Route::get('/verificar-solicitud', [solicitudesController::class, 'verificarSolicitud'])->name('verificarSolicitud');
 
 
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
@@ -796,3 +800,5 @@ Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'act
 //Revisones
 Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManagement'])->name('revision-personal');
 Route::resource('/personal-list', RevisionPersonalController::class);
+Route::post('/revisor/registrar-preguntas', [RevisionPersonalController::class, 'registrarPreguntas'])->name('registrar.preguntas');
+Route::get('/revisor/obtener-preguntas/{id_revision}', [RevisionPersonalController::class, 'obtenerPreguntas']);
