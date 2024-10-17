@@ -154,6 +154,13 @@ class lotesEnvasadoController extends Controller
         $lotes->nombre_lote = $request->nombre_lote;
         $lotes->tipo_lote = $request->tipo_lote;
         $lotes->sku = $request->sku;
+
+        $lotes->sku = json_encode([
+            'inicial' => $request->sku,
+           
+
+
+        ]);
         $lotes->id_marca = $request->id_marca;
         $lotes->destino_lote = $request->destino_lote;
         $lotes->cant_botellas = $request->cant_botellas;
@@ -189,10 +196,13 @@ class lotesEnvasadoController extends Controller
         try {
             // Aquí obtienes el acta de inspección junto con sus testigos
             $envasado_granel = lotes_envasado::with('lotes_envasado_granel')->findOrFail($id);
-    
+            $sku = json_decode($envasado_granel->sku, true);
+
+            // Añadir los valores de folio inicial y folio final
+            $envasado_granel->inicial = $sku['inicial'] ?? null;
             return response()->json($envasado_granel);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener el acta por ID'], 500);
+            return response()->json(['error' => 'Error al obtener el lote envasado'], 500);
         }
     }
 
@@ -208,7 +218,10 @@ class lotesEnvasadoController extends Controller
             $lotes->id_empresa = $request->id_empresa;
             $lotes->nombre_lote = $request->nombre_lote;
             $lotes->tipo_lote = $request->tipo_lote;
-            $lotes->sku = $request->sku;
+            $lotes->sku = json_encode([
+                'inicial' => $request->sku,
+
+            ]);
             $lotes->id_marca = $request->id_marca;
             $lotes->destino_lote = $request->destino_lote;
             $lotes->cant_botellas = $request->cant_botellas;
@@ -240,8 +253,57 @@ class lotesEnvasadoController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
+
+
+
+    public function editSKU($id)
+    {
+        try {
+            // Aquí obtienes el acta de inspección junto con sus testigos
+            $edicionsku = lotes_envasado::findOrFail($id);
+            $sku = json_decode($edicionsku->sku, true);
+
+            // Añadir los valores de folio inicial y folio final
+            $edicionsku->inicial = $sku['inicial'] ?? null;
+            $edicionsku->observaciones = $sku['observaciones'] ?? null;
+            $edicionsku->nuevo = $sku['nuevo'] ?? null;
+            $edicionsku->cant_botellas = $sku['cant_botellas'] ?? null;
+
+            return response()->json($edicionsku);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener el sku'], 500);
+        }
+    }
     
     
+
+    public function updateSKU(Request $request)
+    {
+        try {
+            // Encuentra la solicitud de hologramas por su ID
+            $sku_nuevo = lotes_envasado::findOrFail($request->input('id'));
+
+            $sku_nuevo->sku = json_encode([
+                'inicial' => $request->edictt_sku,
+                'observaciones' => $request->observaciones,
+                'nuevo' => $request->nuevo, // Puedes agregar otros valores también
+                'cant_botellas' => $request->cant_botellas, // Puedes agregar otros valores también
+
+
+            ]);
+            $sku_nuevo->save();
+
+
+            // Retorna una respuesta exitosa
+            return response()->json(['success' => 'Solicitud de envio actualizada correctamente']);
+        } catch (\Exception $e) {
+            // Maneja cualquier error que ocurra durante el proceso
+            return response()->json(['error' => 'Error al actualizar la solicitud de envio'], 500);
+        }
+    } 
+
+
+
     
 
 }

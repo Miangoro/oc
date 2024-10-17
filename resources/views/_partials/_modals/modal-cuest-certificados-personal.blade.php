@@ -90,11 +90,11 @@
                                                     
                                                     <td>
                                                         <select class="form-select form-select-sm" aria-label="Elige la respuesta">
-                                                            <option selected>Selecciona</option>
+                                                            <option value="" selected>Selecciona</option> <!-- Añadir value="" -->
                                                             <option value="1">C</option>
                                                             <option value="2">NC</option>
                                                             <option value="3">NA</option>
-                                                        </select>
+                                                        </select>                                                        
                                                     </td>
                                                     <td>
                                                         <textarea rows="1" name="" id="" class="form-control" placeholder="Introduce las observaciones"></textarea>                               
@@ -107,6 +107,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-4">
                             <!-- Visualización del PDF -->
                             <iframe width="100%" height="60%" id="pdfViewerDictamenFrame" 
@@ -121,10 +122,7 @@
                                 </button>
                             </div>
                         </div>
-                        
-                        
                     </div>
-
 
                 </div>
             </div>                

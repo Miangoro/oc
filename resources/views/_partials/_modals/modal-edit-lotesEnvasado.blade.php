@@ -10,7 +10,7 @@
                 </div>
                 <form id="editLoteEnvasadoForm">
 
-                    <input type="text" id="edit_id_lote_envasado" name="id">
+                    <input type="hidden" id="edit_id_lote_envasado" name="id">
                     <div class="row">
                         <div class="col-6">
                             <div class="form-floating form-floating-outline mb-4">

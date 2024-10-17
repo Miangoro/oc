@@ -166,7 +166,6 @@
         @include('_partials._modals.modal-add-resultados-inspeccion')
         @include('_partials._modals.modal-acta-unidades-produccion')
         @include('_partials._modals.modal-acta-edit-unidades')
-        @include('_partials._modals.modal-add-reclasificacion')
 
         
         <!-- /Modal -->

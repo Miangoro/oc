@@ -539,6 +539,10 @@ Route::resource('/lotes-list', LotesEnvasadoController::class);
 Route::post('/lotes-envasado', [LotesEnvasadoController::class, 'store']);
 Route::get('/lotes-envasado/edit/{id}', [lotesEnvasadoController::class, 'edit']);
 Route::put('/lotes-envasado/{id}', [lotesEnvasadoController::class, 'update']);
+Route::get('/lotes-envasado/editSKU/{id}', [lotesEnvasadoController::class, 'editSKU']);
+Route::post('/lotes-envasado/updateSKU/', [lotesEnvasadoController::class, 'updateSKU']);
+ 
+
 
 //Domicilios fiscal
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
@@ -796,3 +800,5 @@ Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'act
 //Revisones
 Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManagement'])->name('revision-personal');
 Route::resource('/personal-list', RevisionPersonalController::class);
+Route::post('/revisor/registrar-preguntas', [RevisionPersonalController::class, 'registrarPreguntas'])->name('registrar.preguntas');
+Route::get('/revisor/obtener-preguntas/{id_revision}', [RevisionPersonalController::class, 'obtenerPreguntas']);
