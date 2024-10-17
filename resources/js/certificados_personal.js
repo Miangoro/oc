@@ -501,7 +501,7 @@ $(document).on('click', '.pdf', function () {
   var url_pdf = '../bitacora_revicionPersonalOCCIDAM/' + id_revisor; // URL que incluye el ID del revisor
   console.log('URL del PDF:', url_pdf);
 
-  var num_certificado = $(this).data('num-certificado'); 
+  var num_certificado = $(this).data('num-certificado');
   console.log('Número de Certificado:', num_certificado);
 
   // Establece el título y subtítulo en el modal
@@ -511,10 +511,14 @@ $(document).on('click', '.pdf', function () {
   // Configura el botón para abrir el PDF en una nueva pestaña
   var openPdfBtn = $('#openPdfBtnDictamen');
   openPdfBtn.attr('href', url_pdf);
-  openPdfBtn.show(); 
+  openPdfBtn.show();
 
   // Muestra el modal
   $('#PdfDictamenIntalaciones').modal('show');
+
+  // Muestra el spinner y oculta el PDF antes de que se cargue
+  $('#loading-spinner').show();
+  $('#pdfViewerDictamen').hide();
 
   // Carga el PDF en el visor
   $('#pdfViewerDictamen').attr('src', url_pdf);
@@ -522,9 +526,10 @@ $(document).on('click', '.pdf', function () {
 
 // Oculta el spinner y muestra el visor una vez que el PDF ha cargado
 $('#pdfViewerDictamen').on('load', function () {
-  $('#loading-spinner').hide(); 
-  $('#pdfViewerDictamen').show(); 
+  $('#loading-spinner').hide(); // Oculta el spinner
+  $('#pdfViewerDictamen').show(); // Muestra el PDF
 });
+
 
 
 //end
