@@ -260,7 +260,7 @@ $(function () {
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $id = full['id_solicitud'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_solicitud']}" data-registro="${full['razon_social']} "></i>`;
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_solicitud']}" data-registro="${full['razon_social']} "></i>`;
           }
         },
         {
@@ -579,14 +579,23 @@ $(function () {
   $(document).on('click', '.pdf', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
-    var iframe = $('#pdfViewer');
+    var iframe = $('#pdfViewerDictamen');
+    $('#loading-spinner').show();//se el agrega esto
+    iframe.hide();//se el agrega esto
     iframe.attr('src', '../solicitud_de_holograma/' + id);
 
-    $("#titulo_modal").text("Solicitud de entrega de hologramas");
-    $("#subtitulo_modal").text(registro);
+    $("#titulo_modal_Dictamen").text("Solicitud de entrega de hologramas");
+    $("#subtitulo_modal_Dictamen").text(registro);
+    $('#mostrarPdfDictamen').modal('show');
 
 
   });
+   // Ocultar el spinner cuando el PDF esté completamente cargado
+   $('#pdfViewerDictamen').on('load', function () {
+    $('#loading-spinner').hide(); // Ocultar el spinner
+    $(this).show(); // Mostrar el iframe con el PDF
+    });
+
 
 
   // Editar registro

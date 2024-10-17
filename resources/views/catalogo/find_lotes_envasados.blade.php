@@ -50,19 +50,20 @@
         <tr>
           <th></th>
           <th>Id</th>
-          <th>No. de CLiente</th>
+          <th>No. de Cliente</th>
           <th>Nombre del Cliente</th>
           <th>Tipo de lote</th>
           <th>Nombre lote</th>
           <th>Marca</th>
-          <th>cantidad de botellas inicial</th>
-          <th>cantidad de botellas restante</th>
-          <th>Presentacion</th>
+          <th>Cantidad de botellas inicial</th>
+          <th>Cantidad de botellas restante</th>
+          <th>Presentación</th>
           <th>Volumen inicial</th>
           <th>Volumen restante</th>
           <th>Destino lote</th>
           <th>Lugar de envasado</th>
           <th>No. de pedido/SKU</th>
+          <th>Estatus</th>
           <th>Acciones</th>
         </tr>
       </thead>

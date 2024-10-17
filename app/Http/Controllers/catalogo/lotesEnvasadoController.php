@@ -101,11 +101,16 @@ class lotesEnvasadoController extends Controller
                 // Obtener la marca de la tabla marcas mediante el id_marca
                 $marca = \App\Models\Marcas::where('id_marca', $user->id_marca)->value('marca');
         
+                $sku = json_decode($user->sku, true); // Decodifica el JSON en un array
+
+                $inicial = isset($sku['inicial']) ? $sku['inicial'] : 'Valor por defecto'; // Obtén el valor de 'inicial' del JSON
+                $cantt_botellas = isset($sku['cantt_botellas']) ? $sku['cantt_botellas'] : 'Valor por defecto'; // Obtén el valor de 'inicial' del JSON
+
                 $nestedData = [
                     'id_lote_envasado' => $user->id_lote_envasado,
                     'fake_id' => ++$ids,
-                    'id_empresa' => $numero_cliente, // Asignar numero_cliente a id_empresa
-                    'id_marca' => $marca, // Asignar el nombre de la marca a id_marca
+                    'id_empresa' => $numero_cliente,
+                    'id_marca' => $marca,
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
                     'tipo_lote' => $user->tipo_lote,
                     'nombre_lote' => $user->nombre_lote,
@@ -114,11 +119,15 @@ class lotesEnvasadoController extends Controller
                     'unidad' => $user->unidad,
                     'destino_lote' => $user->destino_lote,
                     'volumen_total' => $user->volumen_total,
-                    'lugar_envasado' => $direccion_completa, // Asignar direccion_completa a lugar_envasado
-                    'sku' => $user->sku,
+                    'lugar_envasado' => $direccion_completa,
+                    'sku' => $user->sku, // Deja el JSON completo aquí si lo necesitas
+                    'inicial' => $inicial, // Agrega la parte 'inicial' del JSON decodificado
+                    'cantt_botellas' => $cantt_botellas, // Agrega la parte 'inicial' del JSON decodificado
+                    'estatus' => $user->estatus,
                 ];
-        
-                $data[] = $nestedData;
+                
+                $data[] = $nestedData; // Agrega el array a $data
+                
             }
         }
         
@@ -218,10 +227,16 @@ class lotesEnvasadoController extends Controller
             $lotes->id_empresa = $request->id_empresa;
             $lotes->nombre_lote = $request->nombre_lote;
             $lotes->tipo_lote = $request->tipo_lote;
-            $lotes->sku = json_encode([
-                'inicial' => $request->sku,
+            
+            // Decodificar el JSON existente
+            $skuData = json_decode($lotes->sku, true) ?: [];
+            // Actualizar solo el campo 'inicial' con el nuevo valor del request
+            $skuData['inicial'] = $request->sku;
+            // Re-codificar el array a JSON y guardarlo en el campo 'sku'
+            $lotes->sku = json_encode($skuData);
+            // Guardar los cambios en la base de datos
+            $lotes->save();
 
-            ]);
             $lotes->id_marca = $request->id_marca;
             $lotes->destino_lote = $request->destino_lote;
             $lotes->cant_botellas = $request->cant_botellas;
@@ -267,7 +282,7 @@ class lotesEnvasadoController extends Controller
             $edicionsku->inicial = $sku['inicial'] ?? null;
             $edicionsku->observaciones = $sku['observaciones'] ?? null;
             $edicionsku->nuevo = $sku['nuevo'] ?? null;
-            $edicionsku->cant_botellas = $sku['cant_botellas'] ?? null;
+            $edicionsku->cantt_botellas = $sku['cantt_botellas'] ?? null;
 
             return response()->json($edicionsku);
         } catch (\Exception $e) {
@@ -287,7 +302,7 @@ class lotesEnvasadoController extends Controller
                 'inicial' => $request->edictt_sku,
                 'observaciones' => $request->observaciones,
                 'nuevo' => $request->nuevo, // Puedes agregar otros valores también
-                'cant_botellas' => $request->cant_botellas, // Puedes agregar otros valores también
+                'cantt_botellas' => $request->cantt_botellas, // Puedes agregar otros valores también
 
 
             ]);
