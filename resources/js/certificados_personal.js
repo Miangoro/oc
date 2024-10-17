@@ -111,7 +111,7 @@
             targets: 7,
             className: 'text-center',
             render: function (data, type, full, meta) {
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal"  data-id="${full['id_revision']}"></i>`;
             }
           },
          {
@@ -350,36 +350,113 @@
      });
    } 
 
-// FUNCIONES DEL FUNCIONAMIENTO DEL CRUD
+   // FUNCIONES DEL FUNCIONAMIENTO DEL CRUD
 
-// Función para cargar las respuestas y observaciones en el modal
+   //Registrar Respuesta
+   let id_revision; 
+   $(document).on('click', '.cuest', function () {
+       id_revision = $(this).data('id'); 
+       console.log('ID de Revisión:', id_revision); 
+       cargarRespuestas(id_revision); 
+   });
+   
+   $(document).on('click', '#registrarRevision', function() {
+    if (typeof id_revision === 'undefined') {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'El ID de revisión no está definido.',
+            customClass: {
+                confirmButton: 'btn btn-danger'
+            }
+        });
+        return;
+    }
+
+    const respuestas = {};
+    const observaciones = {};
+    const rows = $('#fullscreenModal .table-container table tbody tr');
+
+    rows.each(function(index) {
+        let respuesta = $(this).find('select').val();
+        const observacion = $(this).find('textarea').val();
+
+        if (respuesta === '1') {
+            respuesta = 'C';
+        } else if (respuesta === '2') {
+            respuesta = 'NC';
+        } else if (respuesta === '3') {
+            respuesta = 'NA';
+        } else {
+            respuesta = null; 
+        }
+
+        respuestas[`pregunta${index + 1}`] = respuesta;
+        observaciones[`pregunta${index + 1}`] = observacion || null;
+    });
+
+    $.ajax({
+        url: '/revisor/registrar-preguntas',
+        type: 'POST',
+        contentType: 'application/json',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: JSON.stringify({
+            id_revision: id_revision,
+            respuestas: respuestas,
+            observaciones: observaciones
+        }),
+        success: function(response) {
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.message,
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
+
+            $('#fullscreenModal').modal('hide');
+            $('.datatables-users').DataTable().ajax.reload();
+        },
+        error: function(xhr) {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al registrar las respuestas: ' + xhr.responseJSON.message,
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+        }
+    });
+});
+
+//Cargar respuestas en el modal
 function cargarRespuestas(id_revision) {
   $.ajax({
       url: `/revisor/obtener-preguntas/${id_revision}`,
       type: 'GET',
       success: function(response) {
-          const respuestasGuardadas = response.respuestas; 
+          const respuestasGuardadas = response.respuestas || {}; 
           const rows = $('#fullscreenModal .table-container table tbody tr');
 
-          // Itera sobre las filas de la tabla
           rows.each(function(index) {
               const respuestaKey = `pregunta${index + 1}`;
               const respuestaGuardada = respuestasGuardadas[respuestaKey]?.respuesta || ''; 
               const observacionGuardada = respuestasGuardadas[respuestaKey]?.observacion || ''; 
 
-              let respuestaSelect = ''; 
+              let respuestaSelect = '';
               if (respuestaGuardada === 'C') {
-                  respuestaSelect = '1'; 
+                  respuestaSelect = '1';
               } else if (respuestaGuardada === 'NC') {
-                  respuestaSelect = '2'; 
+                  respuestaSelect = '2';
               } else if (respuestaGuardada === 'NA') {
                   respuestaSelect = '3';
               }
 
-              if (respuestaSelect) {
-                  $(this).find('select').val(respuestaSelect);
-              }
-
+              $(this).find('select').val(respuestaSelect || ''); 
               $(this).find('textarea').val(observacionGuardada);
           });
       },
@@ -389,95 +466,31 @@ function cargarRespuestas(id_revision) {
   });
 }
 
-$(document).on('click', '.cuest', function () {
-  const id_revision = $(this).data('id'); 
-  cargarRespuestas(id_revision);
+
+$(document).on('click', '.pdf', function () {
+  var id = $(this).data('id');
+  var registro = $(this).data('registro');
+
+  var tipo_dictamen = '../certificado_productor_mezcal/' + id;
+  var titulo = "Certificado de productor";
+
+  $('#loading-spinner').show();
+  $('#pdfViewerDictamen').hide();
+
+  $('#titulo_modal_Dictamen').text(titulo);
+  $('#subtitulo_modal_Dictamen').text(registro);
+
+  var openPdfBtn = $('#openPdfBtnDictamen');
+  openPdfBtn.attr('href', tipo_dictamen);
+  openPdfBtn.show();
+
+  $('#PdfDictamenIntalaciones').modal('show');
+  $('#pdfViewerDictamen').attr('src', tipo_dictamen);
 });
 
-//Registrar respuestas
-let id_revision; 
-$(document).on('click', '.cuest', function () {
-  id_revision = $(this).data('id'); 
-  console.log('ID de Revisión:', id_revision); 
-});
-
-$(document).on('click', '#registrarRevision', function() {
-  if (typeof id_revision === 'undefined') {
-      Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'El ID de revisión no está definido.',
-          customClass: {
-              confirmButton: 'btn btn-danger'
-          }
-      });
-      return; 
-  }
-
-  const respuestas = {};
-  const observaciones = {};
-
-  const rows = $('#fullscreenModal .table-container table tbody tr');
-
-  rows.each(function(index) {
-      let respuesta = $(this).find('select').val();
-      const observacion = $(this).find('textarea').val();
-
-      if (respuesta === '1') {
-          respuesta = 'C';
-      } else if (respuesta === '2') {
-          respuesta = 'NC';
-      } else if (respuesta === '3') {
-          respuesta = 'NA';
-      } else {
-          respuesta = null;
-      }
-
-      if (respuesta) {
-          respuestas[`pregunta${index + 1}`] = respuesta; 
-      }
-
-      if (observacion) {
-          observaciones[`pregunta${index + 1}`] = observacion;
-      }
-  });
-
-  $.ajax({
-      url: '/revisor/registrar-preguntas',
-      type: 'POST',
-      contentType: 'application/json',
-      headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      data: JSON.stringify({ 
-          id_revision: id_revision,
-          respuestas: respuestas,
-          observaciones: observaciones
-      }),
-      success: function(response) {
-          Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: response.message,
-              customClass: {
-                  confirmButton: 'btn btn-success'
-              }
-          });
-
-          $('#fullscreenModal').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload();
-      },
-      error: function(xhr) {
-          Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al registrar las respuestas: ' + xhr.responseJSON.message,
-              customClass: {
-                  confirmButton: 'btn btn-danger'
-              }
-          });
-      }
-  });
+$('#pdfViewerDictamen').on('load', function () {
+  $('#loading-spinner').hide();
+  $('#pdfViewerDictamen').show();
 });
 
 
