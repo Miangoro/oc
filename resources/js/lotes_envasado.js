@@ -180,6 +180,8 @@ $(function () {
                 { data: 'nombre_lote' },
                 { data: 'id_marca' },
                 { data: 'cant_botellas' },
+                { data: 'cant_botellas' },
+
                 {
                     data: function (row, type, set) {
                         return row.presentacion + ' ' + row.unidad;
@@ -190,6 +192,8 @@ $(function () {
                         return row.volumen_total + ' Litros';
                     }
                 },
+                { data: 'cant_botellas' },
+
                 { data: 'destino_lote' },
                 { data: 'lugar_envasado' },
                 { data: 'sku' },
@@ -596,7 +600,7 @@ $(function () {
             $('#edit_lote_granel').val(data.id_empresa).trigger('change');
             $('#edit_nombre_lote').val(data.nombre_lote);
             $('#edit_tipo_lote').val(data.tipo_lote);
-            $('#edit_sku').val(data.sku);
+            $('#edit_sku').val(data.inicial);
             $('#edit_destino_lote').val(data.destino_lote);
             $('#edit_cant_botellas').val(data.cant_botellas);
             $('#edit_presentacion').val(data.presentacion);
@@ -660,8 +664,8 @@ $(function () {
         console.log("Cargado");
         var id_lote_envasado = $(this).data('id');
 
-        obtenerGraneles();
-        obtenerMarcas();
+/*         obtenerGraneles();
+        obtenerMarcas(); */
 
         // Manejar el envío del formulario de edición
         $('#editLoteEnvasadoForm').on('submit', function (e) {
@@ -709,9 +713,14 @@ $(function () {
 $(document).on('click', '.edit-pay', function () {
     var id_lote_envasado = $(this).data('id');
 
-    $.get('/lotes-envasado/edit/'  + id_lote_envasado, function (data) {
+    $.get('/lotes-envasado/editSKU/'  + id_lote_envasado, function (data) {
         // Rellenar el formulario con los datos obtenidos
       $('#id_lote_envasado').val(data.id_lote_envasado);
+      $('#edictt_sku').val(data.inicial);
+      $('#observaciones').val(data.observaciones);
+      $('#nuevo').val(data.nuevo);
+      $('#cant_botellas').val(data.cant_botellas);
+
 
       // Mostrar el modal de edición
       $('#reclasificacion').modal('show');
@@ -728,7 +737,7 @@ $(document).on('click', '.edit-pay', function () {
     });
   });
 
-$('#reclasificacionForm').submit(function (e) {
+/* $('#reclasificacionForm').submit(function (e) {
     e.preventDefault();
 
     var formData = new FormData(this);
@@ -767,7 +776,7 @@ $('#reclasificacionForm').submit(function (e) {
         });
       }
     });
-  });
+  }); */
 
 
 
@@ -950,5 +959,55 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Inicializar campos por defecto
     toggleFields();
+
+
+
+
+
+
+
+
+
+
+    $('#reclasificacionForm').submit(function (e) {
+        e.preventDefault();
+    
+        var formData = new FormData(this);
+        console.log()
+    
+        $.ajax({
+          url: '/lotes-envasado/updateSKU/',
+          type: 'POST',
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function (response) {
+            Swal.fire({
+              title: 'Éxito',
+              text: response.success,
+              icon: 'success',
+              buttonsStyling: false,
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+            });
+            $('#reclasificacion').modal('hide');
+            $('.datatables-users').DataTable().ajax.reload();
+          },
+          error: function (response) {
+            console.log(response);
+    
+            Swal.fire({
+              title: 'Error',
+              text: 'Ocurrió un error al actualizar la guía.',
+              icon: 'error',
+              buttonsStyling: false,
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+            });
+          }
+        });
+      }); 
 
 });
