@@ -497,7 +497,7 @@ $(function () {
                     display: $.fn.dataTable.Responsive.display.modal({
                         header: function (row) {
                             var data = row.data();
-                            return 'Detalles de ' + data['folio'];
+                            return 'Detalles de ' + data['id_empresa'];
                         }
                     }),
                     type: 'column',
