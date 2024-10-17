@@ -25,9 +25,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="number" id="cant_botellas" class="form-control"
-                                    placeholder="No. de pedido/SKU" aria-label="No. de pedido/SKU" name="cant_botellas" />
-                                <label for="cant_botellas">Cantidad de botellas</label>
+                                <input type="number" id="cantt_botellas" class="form-control"
+                                    placeholder="No. de pedido/SKU" aria-label="No. de pedido/SKU" name="cantt_botellas" />
+                                <label for="cantt_botellas">Cantidad de botellas</label>
                             </div>
                         </div>
                     </div>

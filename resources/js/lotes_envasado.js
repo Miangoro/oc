@@ -180,7 +180,7 @@ $(function () {
                 { data: 'nombre_lote' },
                 { data: 'id_marca' },
                 { data: 'cant_botellas' },
-                { data: 'cant_botellas' }, //restantes
+                { data: 'cantt_botellas' }, //restantes
 
                 {
                     data: function (row, type, set) {
@@ -192,13 +192,12 @@ $(function () {
                         return row.volumen_total + ' Litros';
                     }
                 },
-                { data: 'cant_botellas' }, //volumen restante
+                { data: 'inicial' }, //volumen restante
 
                 { data: 'destino_lote' },
                 { data: 'lugar_envasado' },
                 { data: 'sku' },
-                { data: 'sku' },//status
-
+                { data: 'estatus' },//status
                 { data: 'action' }
             ],
             columnDefs: [
@@ -263,33 +262,28 @@ $(function () {
                     }
                 },
 
-                /*{
-                  // email verify
-                  targets: 4,
-                  className: 'text-center',
-                  render: function (data, type, full, meta) {
-                    var $verified = full['regimen'];
-                    if($verified=='Persona física'){
-                      var $colorRegimen = 'info';
-                    }else{
-                      var $colorRegimen = 'warning';
+                {
+                    // email verify
+                    targets: 13,
+                    className: 'text-center',
+                    render: function (data, type, full, meta) {
+                      var $verified = full['estatus'];
+                      var $colorRegimen;
+          
+                      if ($verified == 'Pendiente') {
+                        $colorRegimen = 'danger'; // Azulnja
+/*                       } else if ($verified == 'Pendiente') {
+                        $colorRegimen = 'danger';  */
+                      } else {
+                        $colorRegimen = 'secondary'; // Color por defecto si no coincide con ninguno
+                      }
+          
+                      return `${$verified
+                        ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+                        : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+                        }`;
                     }
-                    return `${
-                      $verified
-                        ? '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-                        : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-                    }`;
-                  }
-                },*/
-                /*{
-                   // email verify
-                   targets: 5,
-                   className: 'text-center',
-                   render: function (data, type, full, meta) {
-                     var $id = full['id_marca'];
-                     return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_marca']}" data-registro="${full['folio']} "></i>`;
-                   }
-                 },*/
+                  },
 
                 {
                     // Actions
@@ -303,7 +297,7 @@ $(function () {
                             '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lote envasado</a>` +
-                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit-pay"><i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación FQ</a>` +
+                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit-pay"><i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación FKU</a>` +
                             `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit"><i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>` +
                             `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lote envasado</a>` +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
@@ -721,7 +715,7 @@ $(document).on('click', '.edit-pay', function () {
       $('#edictt_sku').val(data.inicial);
       $('#observaciones').val(data.observaciones);
       $('#nuevo').val(data.nuevo);
-      $('#cant_botellas').val(data.cant_botellas);
+      $('#cantt_botellas').val(data.cantt_botellas);
 
 
       // Mostrar el modal de edición
