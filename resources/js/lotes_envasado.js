@@ -180,7 +180,7 @@ $(function () {
                 { data: 'nombre_lote' },
                 { data: 'id_marca' },
                 { data: 'cant_botellas' },
-                { data: 'cantt_botellas' }, //restantes
+                { data: 'cantt_botellas' },
 
                 {
                     data: function (row, type, set) {
@@ -264,7 +264,7 @@ $(function () {
 
                 {
                     // email verify
-                    targets: 13,
+                    targets: 15,
                     className: 'text-center',
                     render: function (data, type, full, meta) {
                       var $verified = full['estatus'];
