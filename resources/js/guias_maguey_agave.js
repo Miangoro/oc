@@ -82,7 +82,7 @@ const fv = FormValidation.formValidation(addGuiaForm, {
           Swal.fire({
               icon: 'error',
               title: '¡Error!',
-              text: 'Error al registrar el lote envasado',
+              text: 'Error al registrar la guía dde traslado',
               customClass: {
                   confirmButton: 'btn btn-danger'
               }
@@ -636,7 +636,7 @@ $(document).on('click', '.pdf', function () {
         Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al obtener los datos de la guía',
+            text: 'Error al obtener los datos de la guía de traslado',
             customClass: {
                 confirmButton: 'btn btn-danger'
             }
@@ -729,7 +729,7 @@ const fv2 = FormValidation.formValidation(editGuiaForm, {
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
-        text: 'Error al registrar el lote envasado',
+        text: 'Error al registrar la guía de traslado',
         customClass: {
           confirmButton: 'btn btn-danger'
         }
