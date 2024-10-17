@@ -19,10 +19,14 @@ class lotes_envasado extends Model
         'id_marca',
         'destino_lote',
         'cant_botellas',
+        'cant_bot_restante',
         'presentacion',
         'unidad',
         'volumen_total',
+        'vol_restante',
         'lugar_envasado',
+        'estatus',
+
     ];
 
     public function empresa()

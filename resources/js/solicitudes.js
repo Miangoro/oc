@@ -120,7 +120,7 @@ $(function () {
                 '<div class="dropdown-menu dropdown-menu-end m-0">' +
 
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Trazabilidad</a>` +
-                `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']})" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Validar solicitud</a>` +
+                `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalValidarSolicitud(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Validar solicitud</a>` +
                 `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
 
                 '</div>' +

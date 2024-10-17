@@ -85,14 +85,14 @@
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <input class="form-control" type="number" placeholder="Ingrese un valor"
-                                        id="cantidad_botellas" name="cant_botellas" />
+                                        id="cantidad_botellas" name="cant_botellas" min="0" />
                                     <label for="cantidad_botellas">Cantidad de botellas</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <input class="form-control" type="number" placeholder="Presentación de la botella"
-                                        id="presentacion" name="presentacion" />
+                                        id="presentacion" name="presentacion" min="0"/>
                                     <label for="presentacion">Presentación de la botella</label>
                                 </div>
                             </div>
@@ -111,7 +111,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <input class="form-control" type="text" step="0.01"
+                                    <input class="form-control" type="number" step="0.01"
                                         placeholder="Volumen total" id="volumen_total" name="volumen_total"
                                         readonly />
                                     <label for="volumen_total">Volumen total en Litros</label>
