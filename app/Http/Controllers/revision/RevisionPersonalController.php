@@ -176,24 +176,14 @@ class RevisionPersonalController extends Controller
             $revisor->respuestas = json_encode($respuestasGuardadas); 
             $revisor->save();
     
-            if (empty($revisor->respuestas)) {
-                return response()->json([
-                    'message' => 'Respuestas registradas exitosamente por primera vez.',
-                    'revisor' => $revisor,
-                ], 201);  
-            } else {
-                return response()->json([
-                    'message' => 'Respuestas actualizadas exitosamente.',
-                    'revisor' => $revisor,
-                ], 200);
-            }
-    
+            return response()->json(['message' => 'Respuestas registradas exitosamente.'], 201);
+            
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Ocurrió un error al registrar las respuestas: ' . $e->getMessage(),
             ], 500);
         }
-    }
+    }    
     
     public function obtenerPreguntas($id_revision)
     {
