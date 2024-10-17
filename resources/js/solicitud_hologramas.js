@@ -279,7 +279,7 @@ $(function () {
  */              `<a id="activar_holograma" data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#activarHologramas" href="javascript:;" class="dropdown-item activar_holograma"><i class="ri-qr-scan-2-line ri-20px text-primary"></i> Activar hologramas</a>` +
               `<a id="activos_hologramas" data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#activosHologramas" href="javascript:;" class="dropdown-item activos_hologramas"><i class="ri-barcode-box-line ri-20px text-primary"></i> Activos</a>` +
 /*               `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#edit_activarHologramas" href="javascript:;" class="dropdown-item edit-activos"><i class="ri-barcode-box-line ri-20px text-primary"></i> Editar activos</a>` +
- */              `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addRecepcion" href="javascript:;" class="dropdown-item edit-recepcion"><i class="ri-article-fill ri-20px text-secondary"></i> Recepción hologramas</a>` +
+ */              /* `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addRecepcion" href="javascript:;" class="dropdown-item edit-recepcion"><i class="ri-article-fill ri-20px text-secondary"></i> Recepción hologramas</a>` + */
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addEnvio" href="javascript:;" class="dropdown-item edit-envio"><i class="ri-send-plane-fill ri-20px text-success"></i> Enviar</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#asignarHolograma" href="javascript:;" class="dropdown-item edit-signar"><i class="ri-qr-scan-fill ri-20px text-dark"></i> Asignar hologramas</a>` +
               `<a data-id="${full['id_solicitud']}" data-bs-toggle="modal" data-bs-target="#addPago" href="javascript:;" class="dropdown-item edit-pay"><i class="ri-bank-card-line ri-20px text-warning"></i> Adjuntar comprobante de pago</a>` +
@@ -683,7 +683,6 @@ $(function () {
     }
   }).on('core.form.valid', function () {
     var formData = new FormData(editHologramasForm);
-    var id_solicitud = $('#edit_id_solicitud').val(); // Obtiene el ID de la solicitud
 
     $.ajax({
       url: '/solicitud_holograma/update/', // URL de la ruta de actualización
@@ -727,7 +726,7 @@ $(function () {
 
     $.get('/solicitud_holograma/edit/' + id_solicitud, function (data) {
       // Rellenar el formulario con los datos obtenidos
-      $('#edit_id_solicitud').val(data.id_solicitud);
+      $('#pago_id_solicitud').val(data.id_solicitud);
 
       $('#tipo_pago').val(data.tipo_pago);
       $('#empresa').val(data.id_empresa);
