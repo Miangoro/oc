@@ -111,7 +111,7 @@
             targets: 7,
             className: 'text-center',
             render: function (data, type, full, meta) {
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal"  data-id="${full['id_revision']}"></i>`;
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal"  data-tipo="${full['tipo_dictamen']}"  data-id="${full['id_revision']}"></i>`;
             }
           },
          {
@@ -139,6 +139,7 @@
                     `data-tipo-dictamen="${full['tipo_dictamen']}" ` +
                     `data-fecha-vigencia="${full['fecha_vigencia']}" ` +
                     `data-fecha-vencimiento="${full['fecha_vencimiento']}" ` +
+                    `data-tipo="${full['tipo_dictamen']}"` +
                     `data-bs-toggle="modal" ` +
                     `data-bs-target="#fullscreenModal">` +
                     '<i class="ri-eye-fill ri-20px text-info"></i> Revisar' +
@@ -350,17 +351,46 @@
      });
    } 
 
-   // FUNCIONES DEL FUNCIONAMIENTO DEL CRUD
+// FUNCIONES DEL FUNCIONAMIENTO DEL CRUD
 
-   //Registrar Respuesta
-   let id_revision; 
-   $(document).on('click', '.cuest', function () {
-       id_revision = $(this).data('id'); 
-       console.log('ID de Revisión:', id_revision); 
-       cargarRespuestas(id_revision); 
-   });
-   
-   $(document).on('click', '#registrarRevision', function() {
+// Registrar Respuesta y mostrar PDF correspondiente
+let id_revision;
+$(document).on('click', '.cuest', function () {
+    id_revision = $(this).data('id'); 
+    let tipo = $(this).data('tipo');
+
+    console.log('ID de Revisión:', id_revision);
+    console.log('Tipo:', tipo); 
+
+    $('#modal-loading-spinner').show(); 
+    $('#pdfViewerDictamenFrame').hide(); 
+
+    let url = '/get-certificado-url/' + id_revision + '/' + tipo;
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function(response) {
+            if(response.certificado_url) {
+                $('#pdfViewerDictamenFrame').attr('src', response.certificado_url + '#zoom=65');
+                console.log('PDF cargado: ' + response.certificado_url);
+            } else {
+                console.log('No se encontró el certificado para la revisión ' + id_revision);
+            }
+        },
+        error: function(xhr) {
+            console.error('Error al obtener la URL del certificado: ', xhr.responseText);
+        },
+        complete: function() {
+            $('#pdfViewerDictamenFrame').on('load', function() {
+                $('#modal-loading-spinner').hide();
+                $(this).show();
+            });
+        }
+    });
+    cargarRespuestas(id_revision); 
+});
+
+$(document).on('click', '#registrarRevision', function() {
     if (typeof id_revision === 'undefined') {
         Swal.fire({
             icon: 'error',
@@ -465,7 +495,6 @@ function cargarRespuestas(id_revision) {
       }
   });
 }
-
 
 $(document).on('click', '.pdf', function () {
   var id = $(this).data('id');

@@ -800,3 +800,4 @@ Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManage
 Route::resource('/personal-list', RevisionPersonalController::class);
 Route::post('/revisor/registrar-preguntas', [RevisionPersonalController::class, 'registrarPreguntas'])->name('registrar.preguntas');
 Route::get('/revisor/obtener-preguntas/{id_revision}', [RevisionPersonalController::class, 'obtenerPreguntas']);
+Route::get('/get-certificado-url/{id_revision}/{tipo}', [RevisionPersonalController::class, 'getCertificadoUrl']);
