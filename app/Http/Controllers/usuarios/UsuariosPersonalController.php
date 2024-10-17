@@ -75,7 +75,7 @@ class UsuariosPersonalController extends Controller
         ->get();
 
       $totalFiltered = User::where('id', 'LIKE', "%{$search}%")
-        ->where("tipo", 3)
+        ->where("tipo", 1)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
 

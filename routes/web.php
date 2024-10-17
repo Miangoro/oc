@@ -586,7 +586,7 @@ Route::get('/usuarios/inspectores', [UsuariosInspectoresController::class, 'insp
 Route::resource('/inspectores-list', UsuariosInspectoresController::class);
 
 Route::get('/usuarios/personal', [UsuariosPersonalController::class, 'personal'])->name('usuarios-personal');
-Route::resource('/personal-list', UsuariosPersonalController::class);
+Route::resource('/personal-list2', UsuariosPersonalController::class);
 
 //Consejo usuarios
 Route::get('/usuarios/consejo', [UsuariosConsejoController::class, 'consejo'])->name('usuarios-consejo');
@@ -802,3 +802,4 @@ Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManage
 Route::resource('/personal-list', RevisionPersonalController::class);
 Route::post('/revisor/registrar-preguntas', [RevisionPersonalController::class, 'registrarPreguntas'])->name('registrar.preguntas');
 Route::get('/revisor/obtener-preguntas/{id_revision}', [RevisionPersonalController::class, 'obtenerPreguntas']);
+Route::get('/get-certificado-url/{id_revision}/{tipo}', [RevisionPersonalController::class, 'getCertificadoUrl']);

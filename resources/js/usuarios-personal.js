@@ -34,7 +34,7 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: baseUrl + 'personal-list'
+        url: baseUrl + 'personal-list2'
       },
       columns: [
         // columns according to JSON

@@ -155,71 +155,49 @@ class RevisionPersonalController extends Controller
                 'observaciones' => 'nullable|array',
             ]);
     
-            // Busca el registro con id_revision
             $revisor = Revisor::where('id_revision', $request->id_revision)->first();
             if (!$revisor) {
                 return response()->json(['message' => 'El registro no fue encontrado.'], 404);
             }
     
-            // Decodifica las respuestas
-            $respuestasGuardadas = json_decode($revisor->respuestas, true) ?? []; // Cambié 'pregunta' a 'respuestas'
-    
-            // Itera sobre las nuevas respuestas y observaciones
+            $respuestasGuardadas = json_decode($revisor->respuestas, true) ?? []; 
             foreach ($request->respuestas as $key => $nuevaRespuesta) {
                 $nuevaObservacion = $request->observaciones[$key] ?? null;
-    
-                // Si ya existe una respuesta guardada y la nueva respuesta está vacía, no actualiza
                 if (isset($respuestasGuardadas[$key]['respuesta']) && !empty($respuestasGuardadas[$key]['respuesta']) && empty($nuevaRespuesta)) {
-                    continue; // No actualizar si ya hay una respuesta y no hay cambios
+                    continue; 
                 }
     
-                // Actualiza 
                 $respuestasGuardadas[$key] = [
                     'respuesta' => $nuevaRespuesta,
                     'observacion' => $nuevaObservacion,
                 ];
             }
     
-            // Guarda el campo 'respuestas' 
-            $revisor->respuestas = json_encode($respuestasGuardadas); // Cambié 'pregunta' a 'respuestas'
+            $revisor->respuestas = json_encode($respuestasGuardadas); 
             $revisor->save();
     
-            // Retorna mensaje 
-            if (empty($revisor->respuestas)) { // Cambié 'pregunta' a 'respuestas'
-                return response()->json([
-                    'message' => 'Respuestas registradas exitosamente por primera vez.',
-                    'revisor' => $revisor,
-                ], 201);  
-            } else {
-                return response()->json([
-                    'message' => 'Respuestas actualizadas exitosamente.',
-                    'revisor' => $revisor,
-                ], 200);
-            }
-    
+            return response()->json(['message' => 'Respuestas registradas exitosamente.'], 201);
+            
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Ocurrió un error al registrar las respuestas: ' . $e->getMessage(),
             ], 500);
         }
-    }
+    }    
     
     public function obtenerPreguntas($id_revision)
     {
         try {
-            // Busca el registro con id_revision
             $revisor = Revisor::where('id_revision', $id_revision)->first();
     
             if (!$revisor) {
                 return response()->json(['message' => 'El registro no fue encontrado.'], 404);
             }
-    
-            // Decodifica las respuestas almacenadas en la base de datos
-            $respuestas = json_decode($revisor->respuestas, true); // Cambié 'pregunta' a 'respuestas'
+                $respuestas = json_decode($revisor->respuestas, true); 
     
             return response()->json([
                 'message' => 'Datos recuperados exitosamente.',
-                'respuestas' => $respuestas, // Cambié 'preguntas' a 'respuestas'
+                'respuestas' => $respuestas, 
             ], 200);
             
         } catch (\Exception $e) {
@@ -228,5 +206,29 @@ class RevisionPersonalController extends Controller
             ], 500);
         }
     }
+ 
+    public function getCertificadoUrl($id_revision, $tipo)
+    {
+        $revisor = Revisor::with('certificado')->where('id_revision', $id_revision)->first();
     
+        if ($revisor && $revisor->certificado) {
+            $certificadoUrl = '';
+    
+            if ($tipo == 1 || $tipo == 5) { // Productor
+                $certificadoUrl = "../certificado_productor_mezcal/{$revisor->certificado->id_certificado}";
+            } elseif ($tipo == 2) { // Envasador
+                $certificadoUrl = "../certificado_envasador_mezcal/{$revisor->certificado->id_certificado}";
+            } elseif ($tipo == 3 || $tipo == 4) { // Comercializador
+                $certificadoUrl = "../certificado_comercializador/{$revisor->certificado->id_certificado}";
+            } else {
+                return response()->json(['certificado_url' => null]);
+            }
+    
+            return response()->json(['certificado_url' => $certificadoUrl]);
+        } else {
+            return response()->json(['certificado_url' => null]);
+        }
+    }
+    
+//end
 }
