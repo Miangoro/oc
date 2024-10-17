@@ -299,11 +299,11 @@
         </tr>
         <tr>
             <td class="letra-fondo negrita" style="text-align: right; padding-top: 0; padding-bottom: 0">NO. DE CERTIFICADO:</td>
-            <td class="negrita" style="padding-top: 0; padding-bottom: 0">CIDAM C-INS-092/2024</td>
+            <td class="negrita" style="padding-top: 0; padding-bottom: 0">{{ $num_certificado }}</td>
         </tr>
         <tr>
             <td class="letra-fondo negrita " style="text-align: right; padding-top: 0; padding-bottom: 0">TIPO DE CERTIFICADO:</td>
-            <td class="negrita" style="padding-top: 0; padding-bottom: 0">Emisión certificado comercializador</td>
+            <td class="negrita" style="padding-top: 0; padding-bottom: 0">{{ $tipo_certificado }}</td>
         </tr>
     </table>
     <br>
@@ -325,7 +325,7 @@
         <tr>
             <td class="letra-fondoOPcional" style="font-size: 7.5px;">DOCUMENTO</td>
             <td class="letra-fondoOPcional" style="font-size: 7.5px;">C</td>
-            <td class="letra-fondoOPcional" style="font-size: 7.5px;">N/A</td>
+            <td class="letra-fondoOPcional" style="font-size: 7.5px;">N/C</td>
             <td class="letra-fondoOPcional" style="font-size: 7.5px;">N/A</td>
         </tr>
         <tr>
