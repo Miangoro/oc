@@ -445,7 +445,6 @@ Route::get('/solicitud_Info_ClienteNOM-199', [CartaAsignacionController::class, 
 Route::get('/inspeccion_geo_referenciacion', [CartaAsignacionController::class, 'InspeccionGeoReferenciacion'])->name('inspeccion_geo_referenciacion');
 Route::get('/dictamen_cumplimiento_mezcal_granel', [CartaAsignacionController::class, 'dictamenDeCumplimientoGranel'])->name('dictamen-cumplimiento-granel');
 Route::get('/bitacora_revision_SCFI2016', [CartaAsignacionController::class, 'bitacora_revision_SCFI2016'])->name('bitacora_revision_SCFI2016');
-Route::get('/bitacora_revision_OCCIDAM', [CartaAsignacionController::class, 'botacora_revicionPersonalOCCIDAM'])->name('botacora_revicionPersonalOCCIDAM');
 Route::get('/plan_de_auditoria', [CartaAsignacionController::class, 'PlanDeAuditoria'])->name('PlanDeAuditoria');
 Route::get('/generate-pdf', [PdfController::class, 'generatePdf']);
 Route::get('/certificado_de_conformidad', [CartaAsignacionController::class, 'CertificadoConformidad199'])->name('CertificadoConformidad199');
@@ -800,6 +799,7 @@ Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'act
 //Revisones
 Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManagement'])->name('revision-personal');
 Route::resource('/personal-list', RevisionPersonalController::class);
-Route::post('/revisor/registrar-preguntas', [RevisionPersonalController::class, 'registrarPreguntas'])->name('registrar.preguntas');
-Route::get('/revisor/obtener-preguntas/{id_revision}', [RevisionPersonalController::class, 'obtenerPreguntas']);
+Route::post('/revisor/registrar-respuestas', [RevisionPersonalController::class, 'registrarRespuestas'])->name('registrar.respuestas');
+Route::get('/revisor/obtener-respuestas/{id_revision}', [RevisionPersonalController::class, 'obtenerRespuestas']);
 Route::get('/get-certificado-url/{id_revision}/{tipo}', [RevisionPersonalController::class, 'getCertificadoUrl']);
+Route::get('/bitacora_revicionPersonalOCCIDAM/{id}', [RevisionPersonalController::class, 'bitacora_revicionPersonalOCCIDAM']);

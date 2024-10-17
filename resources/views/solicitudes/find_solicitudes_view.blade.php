@@ -165,7 +165,7 @@
 <!-- Users List Table -->
 <div class="card">
     <div class="card-header pb-0">
-        <h3 class="card-title mb-0">Solicitudes</h3>
+        <h3 class="card-title mb-0 fw-bold">Solicitudes de servicio</h3>
     </div>
     <div class="card-datatable table-responsive">
         <table class="datatables-solicitudes table">
@@ -199,6 +199,7 @@
     @include('_partials._modals.modal-solicitudes')
     @include('_partials._modals.modal-expediente-servicio')
     @include('_partials._modals.modal-trazabilidad')
+    @include('_partials._modals.modal-validad-solicitud')
     @include('_partials._modals.modal-add-solicitud-dictamen-instalaciones')
     @include('_partials._modals.modal-add-solicitud-georeferenciacion')
     @include('_partials._modals.modal-add-solicitud-muestreo-agave')
@@ -237,6 +238,32 @@
     $('.solicitud').text(tipo);
     $('.nombre_empresa').text(nombre_empresa);
     $('#expedienteServicio').modal('show');
+
+  }
+
+  function abrirModalValidarSolicitud(id_solicitud,tipo ,nombre_empresa) {
+   
+   /* $.ajax({
+        url: '/lista_empresas/' + id_empresa,
+        method: 'GET',
+        success: function(response) {
+            // Cargar los detalles en el modal
+            var contenido = "";
+
+          for (let index = 0; index < response.normas.length; index++) {
+            contenido = '<input value="'+response.normas[index].id_norma+'" type="hidden" name="id_norma[]"/><div class="col-12 col-md-12 col-sm-12"><div class="form-floating form-floating-outline"><input type="text" id="numero_cliente'+response.normas[index].id_norma+'" name="numero_cliente[]" class="form-control" placeholder="Introducir el número de cliente" /><label for="modalAddressFirstName">Número de cliente para la norma '+response.normas[index].norma+'</label></div></div><br>' + contenido;
+            console.log(response.normas[index].norma);
+          }
+           
+            $('#expedienteServicio').modal('show');
+        },
+        error: function() {
+            alert('Error al cargar los detalles de la empresa.');
+        }
+    });*/
+    $('.solicitud').text(tipo);
+    $('.nombre_empresa').text(nombre_empresa);
+    $('#addSolicitudValidar').modal('show');
 
   }
 

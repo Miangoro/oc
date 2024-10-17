@@ -13,65 +13,58 @@
                     @csrf
                     <!-- Nombre del lote -->
                     <div class="form-section mb-4 p-3 border rounded">
-                        <h6 class="mb-3">Información del Lote</h6>
+                      <h6 class="mb-3">Información del Lote</h6>
+                      <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input type="text" id="nombre_lote" name="nombre_lote" class="form-control"
+                                    autocomplete="off" placeholder="Nombre del lote"
+                                    data-error-message="por favor selecciona el lote" />
+                                <label for="nombre_lote">Nombre del Lote</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-floating form-floating-outline mb-4">
+                              <select onchange="obtenerDatosEmpresa()" id="id_empresa" name="id_empresa" class="select2 form-select" data-error-message="por favor selecciona la empresa">
+                                  <option value="" disabled selected>Selecciona la empresa</option>
+                                  @foreach ($empresas as $empresa)
+                                      <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
+                                  @endforeach
+                              </select>
+                              <label for="id_empresa" class="form-label">Selecciona la empresa</label>
+                          </div>
+                      </div>
+                    </div>
                         <!-- Campo para seleccionar lote original -->
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline mb-4">
-                                    <select id="es_creado_a_partir" name="es_creado_a_partir" class="form-select">
-                                        <option value=""disabled selected>¿Creado a partir de otro lote?</option>
-                                        <option value="no">No</option>
-                                        <option value="si">Si</option>
-                                    </select>
-                                    <label for="es_creado_a_partir" class="form-label">¿Creado a partir de otro
-                                        lote?</label>
-                                </div>
+                          <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select id="es_creado_a_partir" name="es_creado_a_partir" class="form-select">
+                                    <option value="" disabled selected>¿Creado a partir de otro lote?</option>
+                                    <option value="no">No</option>
+                                    <option value="si">Sí</option>
+                                </select>
+                                <label for="es_creado_a_partir" class="form-label">¿Creado a partir de otro lote?</label>
                             </div>
+                        </div>
                             <div class="col-md-6">
-                                <div class="form-floating form-floating-outline mb-4">
-                                    <select id="lote_original_id" name="lote_original_id" class="select2 form-select"
-                                        disabled>
-                                        <option value="" disabled selected>Selecciona lote a granel</option>
-                                        @foreach ($lotes as $lote)
-                                            <option value="{{ $lote->id_lote_granel }}">{{ $lote->nombre_lote }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <label for="lote_original_id" class="form-label">Lote Original</label>
-                                </div>
-                            </div>
+                              <div class="form-floating form-floating-outline mb-4">
+                                  <select id="lote_original_id" name="lote_original_id" class="select2 form-select" disabled>
+                                      <option value="" disabled selected>Selecciona lote a granel</option>
+                                      @foreach ($lotes as $lote)
+                                          <option value="{{ $lote->id_lote_granel }}">{{ $lote->nombre_lote }}</option>
+                                      @endforeach
+                                  </select>
+                                  <label for="lote_original_id" class="form-label">Lote Original</label>
+                              </div>
+                          </div>
                         </div>
                     </div>
                     <div class="form-section mb-4 p-3 border rounded">
                         <!-- Sección para información del lote -->
                         <h6 class="mb-3">Detalles del Lote</h6>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline mb-4">
-                                    <input type="text" id="nombre_lote" name="nombre_lote" class="form-control"
-                                        autocomplete="off" placeholder="Nombre del lote"
-                                        data-error-message="por favor selecciona el lote" />
-                                    <label for="nombre_lote">Nombre del Lote</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline mb-4">
-                                    <select onchange="obtenerGuias()" id="id_empresa" name="id_empresa"
-                                        class="select2 form-select"
-                                        data-error-message="por favor selecciona la empresa">
-                                        <option value="" disabled selected>Selecciona la empresa</option>
-                                        @foreach ($empresas as $empresa)
-                                            <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-
-                                </div>
-                            </div>
-                        </div>
                         <!-- Empresa y Tipo de Lote -->
                         <div class="row">
-
                             <div class="col-md-12">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="tipo_lote" name="tipo_lote" class=" form-select"
@@ -309,36 +302,55 @@
 </div>
 
 <script>
-    function obtenerGuias() {
-        var empresa = $("#id_empresa").val();
-        // Verifica si el valor de empresa es válido
-        if (!empresa) {
-            /* console.error('El valor de la empresa es inválido.'); */
-            return; // No hacer la petición si el valor es inválido
-        }
-        // Hacer una petición AJAX para obtener los detalles de la empresa
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                // Limpiar el contenido previo del select
-                var $select = $('#id_guia');
-                $select.empty();
+   function obtenerDatosEmpresa() {
+    var empresa = $("#id_empresa").val();
 
-                if (response.guias.length > 0) {
-                    // Recorrer las guías y añadirlas al select
-                    response.guias.forEach(function(guia) {
-                        $select.append(`<option value="${guia.id_guia}">${guia.folio}</option>`);
-                    });
-                } else {
-                    // Mostrar opción "Sin guías registradas" si no hay guías
-                    $select.append('<option value="" disabled selected>Sin guías registradas</option>');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error al cargar las guías:', error);
-                alert('Error al cargar las guías. Por favor, intenta nuevamente.');
-            }
-        });
+    // Verifica si el valor de empresa es válido
+    if (!empresa) {
+        return; // No hacer la petición si el valor es inválido
     }
+
+    // Hacer una petición AJAX para obtener los detalles de la empresa
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            // Limpiar el contenido previo del select de guías
+            var $selectGuias = $('#id_guia');
+            $selectGuias.empty();
+
+            if (response.guias.length > 0) {
+                // Recorrer las guías y añadirlas al select
+                response.guias.forEach(function(guia) {
+                    $selectGuias.append(`<option value="${guia.id_guia}">${guia.folio}</option>`);
+                });
+            } else {
+                // Mostrar opción "Sin guías registradas" si no hay guías
+                $selectGuias.append('<option value="" disabled selected>Sin guías registradas</option>');
+            }
+
+            // Limpiar el contenido previo del select de lotes
+            var $selectLotes = $('#lote_original_id');
+            $selectLotes.empty();
+
+            if (response.lotes_granel.length > 0) {
+                // Recorrer los lotes y añadirlos al select
+                response.lotes_granel.forEach(function(lotes_granel) {
+                    $selectLotes.append(`<option value="${lotes_granel.id_lote_granel}">${lotes_granel.nombre_lote}</option>`);
+                });
+            } else {
+                // Mostrar opción "Sin lotes registrados" si no hay lotes
+                $selectLotes.append('<option value="" disabled selected>Sin lotes registrados</option>');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error al cargar los datos de la empresa:', error);
+            alert('Error al cargar los datos. Por favor, intenta nuevamente.');
+        }
+    });
+}
+
+
+
+
 </script>

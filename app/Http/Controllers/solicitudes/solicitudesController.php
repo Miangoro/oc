@@ -175,6 +175,32 @@ class solicitudesController extends Controller
         return response()->json(['success' => 'Solicitud registrada correctamente']);
     }
 
+    public function registrarSolicitudGeoreferenciacion(Request $request)
+    {
+
+        $solicitud = new solicitudesModel();
+        $solicitud->folio = Helpers::generarFolioSolicitud();
+        $solicitud->id_empresa = $request->id_empresa;
+        $solicitud->id_tipo = 10;
+        $solicitud->fecha_visita = $request->fecha_visita;
+        $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
+        $solicitud->id_predio = $request->id_predio;
+        $solicitud->info_adicional = $request->info_adicional;
+        $solicitud->punto_reunion = $request->punto_reunion;
+        $solicitud->save();
+
+        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+        $data1 = [
+            'title' => 'Nuevo registro de solicitud',
+            'message' => $solicitud->folio." ".$solicitud->tipo_solicitud->tipo,
+            'url' => 'solicitudes-historial',
+        ];
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
+        return response()->json(['success' => 'Solicitud registrada correctamente']);
+    }
+
     public function pdf_solicitud_servicios_070($id_solicitud)
     {
         $datos = solicitudesModel::find($id_solicitud);
@@ -259,9 +285,11 @@ class solicitudesController extends Controller
         $renovacion_dictaminacion = 'X';
     }
 
+    $fecha_visita = Helpers::formatearFechaHora($datos->fecha_visita);
+
         $pdf = Pdf::loadView('pdfs.SolicitudDeServicio', compact('datos','muestreo_agave','vigilancia_produccion','dictaminacion','muestreo_granel',
-        'vigilancia_traslado','inspeccion_envasado','muestreo_envasado','ingreso_barrica','liberacion','liberacion_barrica','geo','exportacion','certificado_granel','certificado_nacional','dictaminacion','renovacion_dictaminacion'))
-        ->setPaper([0, 0, 640, 830]); ;
+        'vigilancia_traslado','inspeccion_envasado','muestreo_envasado','ingreso_barrica','liberacion','liberacion_barrica','geo','exportacion','certificado_granel','certificado_nacional','dictaminacion','renovacion_dictaminacion','fecha_visita'))
+        ->setPaper([0, 0, 640, 880]); ;
         return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
     }
 
@@ -277,36 +305,5 @@ class solicitudesController extends Controller
 }
 
 
-    public function registrarSolicitudGeoreferenciacion(Request $request)
-    {
-
-        $solicitud = new solicitudesModel();
-        $solicitud->folio = Helpers::generarFolioSolicitud();
-        $solicitud->id_empresa = $request->id_empresa;
-        $solicitud->id_tipo = 10;
-        $solicitud->fecha_visita = $request->fecha_visita;
-        //Auth::user()->id;
-        $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
-        $solicitud->id_predio = $request->id_predio;
-        $solicitud->info_adicional = $request->info_adicional;
-        // Guardar el nuevo registro en la base de datos
-        $solicitud->save();
-
-        // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
-
-        // Notificación 1
-        $data1 = [
-            'title' => 'Nuevo registro de solicitud',
-            'message' => $solicitud->folio." ".$solicitud->tipo_solicitud->tipo,
-            'url' => 'solicitudes-historial',
-        ];
-
-        // Iterar sobre cada usuario y enviar la notificación
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
-        }
-        // Retornar una respuesta JSON indicando éxito
-        return response()->json(['success' => 'Solicitud registrada correctamente']);
-    }
+    
 }
