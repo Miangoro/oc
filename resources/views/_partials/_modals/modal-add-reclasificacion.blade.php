@@ -11,13 +11,10 @@
                     <form id="reclasificacionForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
 
 
-                    <input type="text" id="id_lote_envasado" name="id">
-                    <input type="text" id="edictt_sku" name="edictt_sku">
+                    <input type="hidden" id="id_lote_envasado" name="id">
+                    <input type="hidden" id="edictt_sku" name="edictt_sku">
 
-                    <div class="form-floating form-floating-outline mb-5">
-                        <textarea name="observaciones" class="form-control h-px-100" id="observaciones" placeholder="Observaciones..."></textarea>
-                        <label for="observaciones">Observaciones</label>
-                    </div>
+                   
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
@@ -28,12 +25,15 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" id="cant_botellas" class="form-control"
+                                <input type="number" id="cant_botellas" class="form-control"
                                     placeholder="No. de pedido/SKU" aria-label="No. de pedido/SKU" name="cant_botellas" />
                                 <label for="cant_botellas">Cantidad de botellas</label>
                             </div>
                         </div>
-
+                    </div>
+                    <div class="form-floating form-floating-outline mb-5">
+                        <textarea name="observaciones" class="form-control h-px-100" id="observaciones" placeholder="Observaciones..."></textarea>
+                        <label for="observaciones">Observaciones</label>
                     </div>
 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">

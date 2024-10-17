@@ -180,7 +180,7 @@ $(function () {
                 { data: 'nombre_lote' },
                 { data: 'id_marca' },
                 { data: 'cant_botellas' },
-                { data: 'cant_botellas' },
+                { data: 'cant_botellas' }, //restantes
 
                 {
                     data: function (row, type, set) {
@@ -192,11 +192,13 @@ $(function () {
                         return row.volumen_total + ' Litros';
                     }
                 },
-                { data: 'cant_botellas' },
+                { data: 'cant_botellas' }, //volumen restante
 
                 { data: 'destino_lote' },
                 { data: 'lugar_envasado' },
                 { data: 'sku' },
+                { data: 'sku' },//status
+
                 { data: 'action' }
             ],
             columnDefs: [
@@ -872,8 +874,9 @@ $(document).on('click', '.add-row-edit', function () {
               </button>
           </th>
                 <td>
-                    <select class="id_lote_granel form-control select2-nuevo" name="id_lote_granel[]">
+                    <select class="id_lote_granel form-control select2-edit" name="id_lote_granel[]">
                     </select>
+                    
                 </td>
                 <td>
                     <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
@@ -881,6 +884,11 @@ $(document).on('click', '.add-row-edit', function () {
       </tr>`;
 
     $('#edit_contenidoGraneles').append(newRow);
+    $('#edit_contenidoGraneles').find('.select2-edit').select2({
+        dropdownParent: $('#editLoteEnvasado'), // Asegúrate de que #myModal sea el id de tu modal
+        width: '100%',
+        dropdownCssClass: 'select2-dropdown'
+    });
   });
 
   // Eliminar fila de la tabla
