@@ -59,6 +59,7 @@ class GuiasController  extends Controller
             17 => 'no_cliente',
             18 => 'fecha_ingreso',
             19 => 'domicilio',
+            20 => 'run_folio'
 
 
         ];
@@ -71,7 +72,8 @@ class GuiasController  extends Controller
 
         $searchValue = $request->input('search.value');
 
-        $query = Guias::with(['empresa', 'predios']);
+        $query = Guias::with(['empresa', 'predios'])
+              ->groupBy('run_folio');
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
@@ -81,7 +83,7 @@ class GuiasController  extends Controller
             });
         }
 
-        $totalData = guias::count();
+        $totalData =$query->get()->count();
         $totalFiltered = $query->count();
 
         $users = $query->offset($start)

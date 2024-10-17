@@ -174,8 +174,25 @@ $(function () {
             columns: [
                 { data: '' },
                 { data: 'id_lote_envasado' },
-                { data: 'id_empresa' },
-                { data: 'razon_social' },
+                {
+                    data: null,
+                    searchable: true, orderable: false,
+                    render: function (data, type, row) {
+                        var empresa = '';
+                        var razonSocial = '';
+                
+                        if(row.id_empresa != 'N/A'){
+                            empresa = '<br><span class="fw-bold text-dark small">Número del cliente:</span><span class="small"> ' + row.id_empresa + '</span>';
+                        }
+                        if(row.razon_social != 'N/A'){
+                            razonSocial = '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' + row.razon_social + '</span>';
+                        }
+                
+                        return '<span class="fw-bold text-dark small">Número del cliente:</span> <span class="small"> ' + row.id_empresa + 
+                        '</span><br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' + row.razon_social  
+                        ;
+                    }
+                },
                 { data: 'tipo_lote' },
                 { data: 'nombre_lote' },
                 { data: 'id_marca' },
@@ -255,7 +272,7 @@ $(function () {
                 },
                 {
                     // User email
-                    targets: 3,
+                    targets: 2,
                     render: function (data, type, full, meta) {
                         var $email = full['razon_social'];
                         return '<span class="user-email">' + $email + '</span>';
@@ -264,7 +281,7 @@ $(function () {
 
                 {
                     // email verify
-                    targets: 15,
+                    targets: 14,
                     className: 'text-center',
                     render: function (data, type, full, meta) {
                       var $verified = full['estatus'];
