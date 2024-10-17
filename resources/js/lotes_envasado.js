@@ -192,11 +192,11 @@ $(function () {
                         return row.volumen_total + ' Litros';
                     }
                 },
-                { data: 'inicial' }, //volumen restante
+                { data: 'volumen_total' }, //volumen restante
 
                 { data: 'destino_lote' },
                 { data: 'lugar_envasado' },
-                { data: 'sku' },
+                { data: 'inicial' },
                 { data: 'estatus' },//status
                 { data: 'action' }
             ],
