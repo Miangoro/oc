@@ -27,7 +27,7 @@
   'resources/assets/vendor/libs/@form-validation/auto-focus.js',
   'resources/assets/vendor/libs/cleavejs/cleave.js',
   'resources/assets/vendor/libs/cleavejs/cleave-phone.js',
-  'resources/assets/vendor/libs/sweetalert2/sweetalert2.js'
+  'resources/assets/vendor/libs/sweetalert2/sweetalert2.js' 
 ])
 @endsection
 
