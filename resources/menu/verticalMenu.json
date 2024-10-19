@@ -205,8 +205,13 @@
           "slug": "hologramas-solicitud"
         },
         {
-          "url": "/hologramas/solicitud",
-          "name": "chelop",
+          "url": "/hologramas/",
+          "name": "Inventario CIDAM",
+          "slug": "hologramas-solicitud"
+        },
+        {
+          "url": "/hologramas/",
+          "name": "Inventario clientes",
           "slug": "hologramas-solicitud"
         }
       ]

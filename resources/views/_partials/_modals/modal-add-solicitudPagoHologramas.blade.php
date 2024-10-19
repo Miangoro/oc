@@ -9,7 +9,7 @@
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="addPagoForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
-                    <input type="hidden" id="edit_id_solicitud" name="id_solicitud">                   
+                    <input type="text" id="pago_id_solicitud" name="id_solicitud">                   
                     <input type="hidden" id="empresa" name="empresa">
            
                     @csrf
