@@ -30,7 +30,7 @@
                 <div class="main-content" style="flex: 1; padding: 15px; height: 100vh; display: flex; flex-direction: column; gap: 10px; margin-top: -20px;">
 
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-7">
                             <!-- Tercera Tabla -->
                             <div style="border: 1px solid #8DA399; padding: 20px; border-radius: 5px; margin-bottom: 30px;">
 {{--                                 <h5 style="font-size: 1.25rem; color: #2c3e50; font-weight: bold; margin: 20px 0;">
@@ -114,7 +114,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4 position-relative" style="height: 60%;">
+                        <div class="col-md-5 position-relative" style="height: 80%;">
                             <div id="modal-loading-spinner" class="text-center" style="display: none; 
                                  position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 10;
                                  display: flex; justify-content: center; align-items: center;">
