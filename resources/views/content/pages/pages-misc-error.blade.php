@@ -78,6 +78,45 @@
         z-index: 2;
         /* Ensure content is above the glass effect */
     }
+
+    /* Para pantallas pequeñas de 576px en adelante */
+@media (min-width: 576px) {
+    .col-sm-12 {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+}
+
+/* Para pantallas de 900px o menos */
+@media only screen and (max-width: 900px) {
+    .contenedor-imagenes {
+        display: flex;
+        margin-bottom: 200px; /* Ajuste de margen para pantallas más pequeñas */
+        position: relative;
+    }
+    
+    .contenedor-imagenes #holograma {
+        width: 100%;
+        height: 100%; /* Imagen dentro del contenedor se adapta al 100% */
+    }
+}
+
+/* Estilo general del contenedor para pantallas más grandes */
+.contenedor-imagenes {
+    display: flex;
+    margin-bottom: 300px;
+    position: relative;
+    justify-content: center; /* Centra las imágenes dentro del contenedor */
+}
+
+/* Para pantallas de 768px o menos */
+@media (max-width: 768px) {
+    .imagen-holograma {
+        width: 100%; /* Ajusta el ancho de la imagen al ancho de la pantalla */
+        height: auto; /* Ajusta el alto automáticamente para mantener la proporción */
+    }
+}
+
 </style>
 
 @section('content')
@@ -89,7 +128,7 @@
             <p class="mb-1 mx-2 text-center">No se puedo encontrar la página que estas buscando, intenta con otra...</p>
             <div class="d-flex justify-content-center">
                 <img src="{{ asset('assets/img/illustrations/logo_cidam_texto.png') }}" alt="misc-error"
-                    class="img-fluid misc-object d-none d-lg-inline-block" width="160">
+                    class="img-fluid misc-object" width="160">
                 <div class="d-flex flex-column align-items-center">
                     <img src="{{ asset('assets/img/illustrations/logo_error.png') }}" alt="misc-error"
                         class="img-fluid z-1" width="500">

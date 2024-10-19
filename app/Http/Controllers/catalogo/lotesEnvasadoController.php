@@ -104,7 +104,7 @@ class lotesEnvasadoController extends Controller
                 $sku = json_decode($user->sku, true); // Decodifica el JSON en un array
 
                 $inicial = isset($sku['inicial']) ? $sku['inicial'] : 'Valor por defecto'; // Obtén el valor de 'inicial' del JSON
-                $cantt_botellas = isset($sku['cantt_botellas']) ? $sku['cantt_botellas'] : 'Valor por defecto'; // Obtén el valor de 'inicial' del JSON
+                $cantt_botellas = isset($sku['cantt_botellas']) ? $sku['cantt_botellas'] : $user->cant_botellas;
 
                 $nestedData = [
                     'id_lote_envasado' => $user->id_lote_envasado,
