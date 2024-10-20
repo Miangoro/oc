@@ -103,7 +103,7 @@ class lotesEnvasadoController extends Controller
         
                 $sku = json_decode($user->sku, true); // Decodifica el JSON en un array
 
-                $inicial = isset($sku['inicial']) ? $sku['inicial'] : 'Valor por defecto'; // Obtén el valor de 'inicial' del JSON
+                $inicial = isset($sku['inicial']) ? $sku['inicial'] : 0; // Obtén el valor de 'inicial' del JSON
                 $cantt_botellas = isset($sku['cantt_botellas']) ? $sku['cantt_botellas'] : $user->cant_botellas;
 
                 $nestedData = [
@@ -217,33 +217,34 @@ class lotesEnvasadoController extends Controller
 
 
     //editar lotes envasados
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         try {
             // Buscar el lote existente
-            $lotes = lotes_envasado::findOrFail($id);
+            $lotes = lotes_envasado::findOrFail($request->input('id'));
+
     
             // Actualizar los campos del lote envasado
-            $lotes->id_empresa = $request->id_empresa;
-            $lotes->nombre_lote = $request->nombre_lote;
-            $lotes->tipo_lote = $request->tipo_lote;
+            $lotes->id_empresa = $request->edit_cliente;
+            $lotes->nombre_lote = $request->edit_nombre_lote;
+            $lotes->tipo_lote = $request->edit_tipo_lote;
             
             // Decodificar el JSON existente
             $skuData = json_decode($lotes->sku, true) ?: [];
             // Actualizar solo el campo 'inicial' con el nuevo valor del request
-            $skuData['inicial'] = $request->sku;
+            $skuData['inicial'] = $request->edit_sku;
             // Re-codificar el array a JSON y guardarlo en el campo 'sku'
             $lotes->sku = json_encode($skuData);
             // Guardar los cambios en la base de datos
             $lotes->save();
 
-            $lotes->id_marca = $request->id_marca;
-            $lotes->destino_lote = $request->destino_lote;
-            $lotes->cant_botellas = $request->cant_botellas;
-            $lotes->presentacion = $request->presentacion;
-            $lotes->unidad = $request->unidad;
-            $lotes->volumen_total = $request->volumen_total;
-            $lotes->lugar_envasado = $request->lugar_envasado;
+            $lotes->id_marca = $request->edit_marca;
+            $lotes->destino_lote = $request->edit_destino_lote;
+            $lotes->cant_botellas = $request->edit_cant_botellas;
+            $lotes->presentacion = $request->edit_presentacion;
+            $lotes->unidad = $request->edit_unidad;
+            $lotes->volumen_total = $request->edit_volumen_total;
+            $lotes->lugar_envasado = $request->edit_Instalaciones;
             $lotes->save();
     
             // Eliminar los registros de `lotes_envasado_granel` relacionados con este lote

@@ -537,7 +537,7 @@ Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement']
 Route::resource('/lotes-list', LotesEnvasadoController::class);
 Route::post('/lotes-envasado', [LotesEnvasadoController::class, 'store']);
 Route::get('/lotes-envasado/edit/{id}', [lotesEnvasadoController::class, 'edit']);
-Route::put('/lotes-envasado/{id}', [lotesEnvasadoController::class, 'update']);
+Route::post('/lotes-envasado/update/', [lotesEnvasadoController::class, 'update']);
 Route::get('/lotes-envasado/editSKU/{id}', [lotesEnvasadoController::class, 'editSKU']);
 Route::post('/lotes-envasado/updateSKU/', [lotesEnvasadoController::class, 'updateSKU']);
  
