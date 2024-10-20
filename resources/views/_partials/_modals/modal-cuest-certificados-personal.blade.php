@@ -3,10 +3,10 @@
 @endphp
 
 <!-- Modal -->
-<div class="modal fade" id="fullscreenModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="fullscreenModal" tabindex="-1">
     <div class="modal-dialog modal-fullscreen" role="document">
         <div class="modal-content">
-            <div style="border-bottom: 2px solid #E0E1E3; background-color: aliceblue;">
+            <div style="border-bottom: 2px solid #E0E1E3; background-color: #F2F3F4;">
                 <div class="modal-header" style="margin-bottom: 20px;">
                     <h5 class="modal-title custom-title" id="modalFullTitle" style="font-weight: bold;">
                         REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (INSTALACIONES)
@@ -95,7 +95,7 @@
                                                         </select>                                                         
                                                     </td>
                                                     <td>
-                                                        <textarea rows="1" name="" id="" class="form-control" placeholder="Introduce las observaciones"></textarea>                               
+                                                        <textarea rows="1" name="" id="" class="form-control" placeholder="Observaciones"></textarea>                               
                                                     </td>
                                                 </tr>
                                                 @endforeach
@@ -104,13 +104,13 @@
                                         </table>
                                     </div>        
                                 </div>
-                                
-                    <!-- Botón para registrar al final -->
-                    <div class="text-center mt-3">
-                        <button type="button" class="btn btn-primary" id="registrarRevision">
-                            Registrar Revisión
-                        </button>
-                    </div>
+                                <hr>
+                                <!-- Botón para registrar al final -->
+                                <div class="text-center mt-3">
+                                    <button type="button" class="btn btn-primary" id="registrarRevision">
+                                        Registrar Revisión
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -141,11 +141,7 @@
                                     style="border-radius: 10px; overflow: hidden;">
                             </iframe>
                         </div>
-                        
-
                     </div>
-
-
                 </div>
             </div>                
         </div>

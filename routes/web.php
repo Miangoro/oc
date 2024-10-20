@@ -796,7 +796,7 @@ Route::get('/empresa_contrato/{id_empresa}', [clientesConfirmadosController::cla
 Route::get('/empresa_num_cliente/{id_empresa}', [clientesConfirmadosController::class, 'obtenerNumeroCliente']);
 Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'actualizarRegistros']);
 
-//Revisones
+//Revision Personal
 Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManagement'])->name('revision-personal');
 Route::resource('/personal-list', RevisionPersonalController::class);
 Route::post('/revisor/registrar-respuestas', [RevisionPersonalController::class, 'registrarRespuestas'])->name('registrar.respuestas');

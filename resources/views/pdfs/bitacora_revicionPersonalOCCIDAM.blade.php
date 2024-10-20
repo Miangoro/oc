@@ -375,32 +375,57 @@
         </tr>
     </table>
     <br>
+
+    <!-- Tabla Desicion -->
     <table style="width: 340px">
         <tr>
-            <td class="letra-fondo negrita" style="font-size: 10.5px; padding-top: 0" colspan="2">TOMA DE DECISIÓN PARA LA CERTIFICACIÓN POR PARTE DEL
-                PERSONAL DEL OC CIDAM</td>
+            <td class="letra-fondo negrita" style="font-size: 10.5px; padding-top: 0" colspan="2">
+                TOMA DE DECISIÓN PARA LA CERTIFICACIÓN POR PARTE DEL PERSONAL DEL OC CIDAM
+            </td>
         </tr>
         <tr>
-            <td colspan="2" style="font-size: 8px; padding: 0">Derivado de la revisión minuciosa y con la documentación completa entregada de manera
-                digital y/o fisica por el cliente, el personal del OC CIDAM determina que:</td>
+            <td colspan="2" style="font-size: 8px; padding: 0">
+                Derivado de la revisión minuciosa y con la documentación completa entregada de manera digital y/o física por el cliente, el personal del OC CIDAM determina que:
+            </td>
         </tr>
         <tr>
-            <td style="background-color: #b6d7a7; font-size: 10px;padding-top: 0; vertical-align: top">SI</td>
-            <td style="font-size: 10px; padding-top: 0;vertical-align: top">NO</td>
+            <td style="background-color: {{ $desicion == 'si' ? '#b6d7a7' : 'white' }}; font-size: 10px; padding-top: 0; vertical-align: top; width: 50%; text-align: center;">
+                SI
+            </td>
+            <td style="background-color: {{ $desicion == 'no' ? '#b6d7a7' : 'white' }}; font-size: 10px; padding-top: 0; vertical-align: top; width: 50%; text-align: center;">
+                NO
+            </td>
         </tr>
         <tr>
-            <td class="leftLetter" style="background-color: #b6d7a7; font-size: 7px; padding-top: 0; padding-bottom: 0">Cumple con cada uno de los requisitos
-                mencionados en este documento para poder
-                turnarse a uno de los miembros del Consejo
-                para la decisión de la Certificación y decidan
-                otorgar o denegar la certificación de
-                (producto Y/O instalaciones, según
-                corresponda) y así emir el certificado
-                correspondiente.</td>
-            <td style="color: red; width: 150px">- -</td>
+            @if($desicion == 'si')
+                <!-- Si la decisión es "SI", la celda de "SI" tiene contenido y la de "NO" está vacía -->
+                <td class="leftLetter" style="background-color: #b6d7a7; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: justify;">
+                    Cumple con cada uno de los requisitos mencionados en este documento para poder
+                    turnarse a uno de los miembros del Consejo para la decisión de la Certificación y decidan
+                    otorgar o denegar la certificación de (producto Y/O instalaciones, según corresponda) y así
+                    emitir el certificado correspondiente.
+                </td>
+                <td style="color: red; background-color: white; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: center;">
+                    ---
+                </td>
+            @else
+                <!-- Si la decisión es "NO", la celda de "NO" tiene contenido y la de "SI" está vacía -->
+                <td class="leftLetter" style="background-color: white; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: center;">
+                    ---
+                </td>
+                <td style="color: red; background-color: #b6d7a7; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: justify;">
+                    No cumple con cada uno de los requisitos mencionados en este documento para poder
+                    turnarse a uno de los miembros del Consejo para la decisión de la Certificación y decidan
+                    otorgar o denegar la certificación de (producto Y/O instalaciones, según corresponda) y así
+                    emitir el certificado correspondiente.
+                </td>
+            @endif
         </tr>
     </table>
+    <!-- end -->
+
     <br>
+    
     <table style="width: 340px">
         <tr>
             <td class="letra-fondo negrita" colspan="2" style="font-size: 10.5px; padding-top: 0; vertical-align: top"> FIRMAS DE LAS PERSONAS RESPONSABLES DE LA TOMA DE
@@ -414,7 +439,7 @@
                 Revisión realizada el 08 de Agosto del <br>
                 2024 el Certificado Revisión por el <br>
                 personal OC Positiva <div style="padding-top: 25px"></div>
-                </td>
+            </td>
         </tr>
         <tr>
             <td class="letra-fondo negrita" style="font-size:10px; padding-top: 0; vertical-align: top; padding-left: 0">NOMBRE, FIRMA , FECHA Y CARGO <br>
@@ -423,10 +448,9 @@
                 Gerente Técnico del Organismo <br>
                 Certificador de CIDAM <br>
                  08 de Agosto del 2024 <div style="padding-top: 20px"></div>
-                </td>
+            </td>
         </tr>
     </table>
 
 </body>
-
 </html>
