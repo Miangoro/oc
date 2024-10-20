@@ -46,12 +46,11 @@
                         </div>
                     </div>
 
-                    <div class="opcion-datos">
                         <div class="form-floating form-floating-outline mb-5">
-                            <input type="text" class="form-control" id="name"
+                            <input type="text" class="form-control" id="nombre_lote"
                                 placeholder="Introduce el nombre del lote" name="nombre_lote"
                                 aria-label="Nombre del lote" />
-                            <label for="name">Nombre del lote</label>
+                            <label for="nombre_lote">Nombre del lote</label>
                         </div>
 
                         <div class="row">
@@ -130,7 +129,7 @@
 
                         </div>
                         
-                    </div>
+
 
                     <div id="datosOpcion2">
                         <table class="table table-bordered">

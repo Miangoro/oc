@@ -37,7 +37,7 @@
                     </div>
                     <div id="edit_datosOpcion1" div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select edit_lote_granel" id="edit_lote_granel"
+                            <select class="select2 form-select edit_lote_granel"
                                 name="edit_lote_granel" aria-label="Default select example">
                                 <option value="" selected>Lote Granel</option>
                                 @foreach ($lotes_granel as $lotesGra)
@@ -49,7 +49,6 @@
                     </div>
 
 
-                    <div class="opcion-datos">
                         <!-- Datos a mostrar para la opción 1 -->
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control" id="edit_nombre_lote"
@@ -138,7 +137,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
                     <div id="edit_datosOpcion2">
                         <table class="table table-bordered">
@@ -155,8 +153,9 @@
                                         <button type="button" class="btn btn-danger remove-row" > <i class="ri-delete-bin-5-fill"></i> </button>
                                     </th>
                                     <td>
-                                        <select class="edit_lote_granel form-control select2" name="edit_id_lote_granel[]" >
+                                        <select class="edit_lote_granel form-control select2" name="edit_lote_granel[]" id="edit_lote_granel">
                                             <!-- Opciones -->
+                                            
                                         </select>
                                     </td>
                                     <td>

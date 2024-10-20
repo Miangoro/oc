@@ -68,8 +68,8 @@ const fv = FormValidation.formValidation(addNewLoteForm, {
                 }
             }
         },
-        
-        
+
+
     },
     plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -180,24 +180,24 @@ $(function () {
                     render: function (data, type, row) {
                         var empresa = '';
                         var razonSocial = '';
-                
-                        if(row.id_empresa != 'N/A'){
+
+                        if (row.id_empresa != 'N/A') {
                             empresa = '<br><span class="fw-bold text-dark small">Número del cliente:</span><span class="small"> ' + row.id_empresa + '</span>';
                         }
-                        if(row.razon_social != 'N/A'){
+                        if (row.razon_social != 'N/A') {
                             razonSocial = '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' + row.razon_social + '</span>';
                         }
-                
-                        return '<span class="fw-bold text-dark small">Número del cliente:</span> <span class="small"> ' + row.id_empresa + 
-                        '</span><br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' + row.razon_social  
-                        ;
+
+                        return '<span class="fw-bold text-dark small">Número del cliente:</span> <span class="small"> ' + row.id_empresa +
+                            '</span><br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' + row.razon_social
+                            ;
                     }
                 },
                 { data: 'tipo_lote' },
                 { data: 'nombre_lote' },
                 { data: 'id_marca' },
                 { data: 'cant_botellas' },
-                { data: 'cantt_botellas' },
+                { data: 'cantt_botellas' },//cantidad botellas restantes
 
                 {
                     data: function (row, type, set) {
@@ -209,8 +209,11 @@ $(function () {
                         return row.volumen_total + ' Litros';
                     }
                 },
-                { data: 'volumen_total' }, //volumen restante
-
+                {
+                    data: function (row, type, set) {
+                        return row.volumen_total + ' Litros';//volumen restante
+                    }
+                }, 
                 { data: 'destino_lote' },
                 { data: 'lugar_envasado' },
                 { data: 'inicial' },
@@ -284,23 +287,23 @@ $(function () {
                     targets: 14,
                     className: 'text-center',
                     render: function (data, type, full, meta) {
-                      var $verified = full['estatus'];
-                      var $colorRegimen;
-          
-                      if ($verified == 'Pendiente') {
-                        $colorRegimen = 'danger'; // Azulnja
-/*                       } else if ($verified == 'Pendiente') {
-                        $colorRegimen = 'danger';  */
-                      } else {
-                        $colorRegimen = 'secondary'; // Color por defecto si no coincide con ninguno
-                      }
-          
-                      return `${$verified
-                        ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                        : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                        }`;
+                        var $verified = full['estatus'];
+                        var $colorRegimen;
+
+                        if ($verified == 'Pendiente') {
+                            $colorRegimen = 'danger'; // Azulnja
+                            /*                       } else if ($verified == 'Pendiente') {
+                                                    $colorRegimen = 'danger';  */
+                        } else {
+                            $colorRegimen = 'secondary'; // Color por defecto si no coincide con ninguno
+                        }
+
+                        return `${$verified
+                            ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+                            : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+                            }`;
                     }
-                  },
+                },
 
                 {
                     // Actions
@@ -603,10 +606,10 @@ $(function () {
 
 
     $(document).on('click', '.edit-record', function () {
-        
+
         var id_lote_envasado = $(this).data('id');
         // Realizar la solicitud AJAX para obtener los datos del lote envasado
-            $.get('/lotes-envasado/edit/'  + id_lote_envasado, function (data) {
+        $.get('/lotes-envasado/edit/' + id_lote_envasado, function (data) {
             // Rellenar el formulario con los datos obtenidos
             $('#edit_id_lote_envasado').val(data.id_lote_envasado);
             $('#edit_cliente').val(data.id_empresa).trigger('change');
@@ -625,7 +628,7 @@ $(function () {
             $('#edit_contenidoGraneles').empty();
 
             // Iterar sobre los testigos y agregar filas a la tabla
-            data.lotes_envasado_granel.forEach(function(lote, index) {
+            data.lotes_envasado_granel.forEach(function (lote, index) {
                 var newRow = `
                 <tr>
                     <th>
@@ -639,14 +642,15 @@ $(function () {
                     <td>
                         <input type="text" class="form-control form-control-sm" name="volumen_parcial[]" value="${lote.volumen_parcial}" />
                     </td>
+                    
                 </tr>
             `;
                 $('#edit_contenidoGraneles').append(newRow);
             });
             // Mostrar el modal de edición
             $('#editLoteEnvasado').modal('show');
-            $('#edit_marca option[value="'+data.id_marca+'').attr('selected', 'selected');
-           
+            $('#edit_marca option[value="' + data.id_marca + '').attr('selected', 'selected');
+
         }).fail(function () {
             Swal.fire({
                 icon: 'error',
@@ -725,7 +729,7 @@ const fv2 = FormValidation.formValidation(editLoteEnvasadoForm, {
         edit_destino_lote: {
             validators: {
                 notEmpty: {
-                     message: 'Por favor ingrese un destino de lote'
+                    message: 'Por favor ingrese un destino de lote'
                 }
             }
         },
@@ -743,7 +747,7 @@ const fv2 = FormValidation.formValidation(editLoteEnvasadoForm, {
                 }
             }
         },
-        
+
         edit_unidad: {
             validators: {
                 notEmpty: {
@@ -751,7 +755,7 @@ const fv2 = FormValidation.formValidation(editLoteEnvasadoForm, {
                 }
             }
         },
-        
+
         edit_volumen_total: {
             validators: {
                 notEmpty: {
@@ -759,7 +763,7 @@ const fv2 = FormValidation.formValidation(editLoteEnvasadoForm, {
                 }
             }
         },
-         
+
     },
     plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -814,29 +818,29 @@ const fv2 = FormValidation.formValidation(editLoteEnvasadoForm, {
 $(document).on('click', '.edit-reclasificacion', function () {
     var id_lote_envasado = $(this).data('id');
 
-    $.get('/lotes-envasado/editSKU/'  + id_lote_envasado, function (data) {
+    $.get('/lotes-envasado/editSKU/' + id_lote_envasado, function (data) {
         // Rellenar el formulario con los datos obtenidos
-      $('#id_lote_envasado').val(data.id_lote_envasado);
-      $('#edictt_sku').val(data.inicial);
-      $('#observaciones').val(data.observaciones);
-      $('#nuevo').val(data.nuevo);
-      $('#cantt_botellas').val(data.cantt_botellas);
+        $('#id_lote_envasado').val(data.id_lote_envasado);
+        $('#edictt_sku').val(data.inicial);
+        $('#observaciones').val(data.observaciones);
+        $('#nuevo').val(data.nuevo);
+        $('#cantt_botellas').val(data.cantt_botellas);
 
 
-      // Mostrar el modal de edición
-      $('#reclasificacion').modal('show');
+        // Mostrar el modal de edición
+        $('#reclasificacion').modal('show');
     }).fail(function (jqXHR, textStatus, errorThrown) {
-      console.error('Error: ' + textStatus + ' - ' + errorThrown);
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al obtener los datos de la solicitud de holograma',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
+        console.error('Error: ' + textStatus + ' - ' + errorThrown);
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al obtener los datos de la solicitud de holograma',
+            customClass: {
+                confirmButton: 'btn btn-danger'
+            }
+        });
     });
-  });
+});
 
 /* $('#reclasificacionForm').submit(function (e) {
     e.preventDefault();
@@ -880,28 +884,59 @@ $(document).on('click', '.edit-reclasificacion', function () {
   }); */
 
 
+//FUNCION MOSTRAR Y OCULTAR EN EDIT
+document.addEventListener('DOMContentLoaded', function () {
+    // Evento para el cambio en el select de tipo de lote
+    document.getElementById('edit_tipo_lote').addEventListener('change', function () {
+        mostrarLotes();
+    });
+    function mostrarLotes() {
 
-function mostrarLotes() {
+        var tipoLote = document.getElementById('edit_tipo_lote').value;
 
-    var tipoLote = document.getElementById('edit_tipo_lote').value;
+        if (tipoLote == 'Por un solo lote a granel') {
+            document.getElementById('edit_datosOpcion1').style.display = 'block';
+            document.getElementById('edit_datosOpcion2').style.display = 'none';
+        } else if (tipoLote == 'Por más de un lote a granel') {
+            document.getElementById('edit_datosOpcion1').style.display = 'none';
+            document.getElementById('edit_datosOpcion2').style.display = 'block';
+        } else {
+            document.getElementById('edit_datosOpcion1').style.display = 'none';
+            document.getElementById('edit_datosOpcion2').style.display = 'none';
+        }
 
-    if (tipoLote == '1') {
-        document.getElementById('edit_datosOpcion1').style.display = 'block';
-        document.getElementById('edit_datosOpcion2').style.display = 'none';
-    } else if (tipoLote == '2') {
-        document.getElementById('edit_datosOpcion1').style.display = 'none';
-        document.getElementById('edit_datosOpcion2').style.display = 'block';
-    } else {
-        document.getElementById('edit_datosOpcion1').style.display = 'none';
-        document.getElementById('edit_datosOpcion2').style.display = 'none';
-    }
+    };
 
-};
+    //Ocultar select
+    document.addEventListener('DOMContentLoaded', function () {
+        const edittipoLoteSelect = document.getElementById('edit_tipo_lote');
+        const edit_datosOpcion1 = document.getElementById('edit_datosOpcion1');
+        const edit_datosOpcion2 = document.getElementById('edit_datosOpcion2');
 
+        function toggleFields() {
+            if (edittipoLoteSelect.value === 'Por un solo lote a granel') {
+                edit_datosOpcion1.style.display = 'block'; // Muestra el campo
+                edit_datosOpcion2.style.display = 'none';  // Oculta la opción 2
+            } else if (edittipoLoteSelect.value === 'Por más de un lote a granel') {
+                edit_datosOpcion1.style.display = 'none';  // Oculta el campo
+                edit_datosOpcion2.style.display = 'block'; // Muestra la opción 2
+            } else {
+                edit_datosOpcion1.style.display = 'none';  // Oculta el campo
+                edit_datosOpcion2.style.display = 'none';  // Oculta la opción 2
+            }
+        }
 
-document.getElementById('edit_tipo_lote').addEventListener('change', function () {
-    mostrarLotes();
+        // Llama a toggleFields cuando se carga la página
+        toggleFields();
+
+        // Llama a toggleFields cada vez que cambia el valor del select
+        edittipoLoteSelect.addEventListener('change', toggleFields);
+
+        
+    });
+
 });
+
 
 
 //Añadir row
@@ -969,7 +1004,7 @@ $(document).on('click', '.add-row-edit', function () {
               </button>
           </th>
                 <td>
-                    <select class="id_lote_granel form-control select2-edit" name="id_lote_granel[]">
+                    <select class="id_lote_granel form-control select2-edit edit_lote_granel" name="id_lote_granel[]">
                     </select>
                     
                 </td>
@@ -984,14 +1019,13 @@ $(document).on('click', '.add-row-edit', function () {
         width: '100%',
         dropdownCssClass: 'select2-dropdown'
     });
-  });
+});
 
-  // Eliminar fila de la tabla
-  $(document).on('click', '.remove-row', function () {
+// Eliminar fila de la tabla
+$(document).on('click', '.remove-row', function () {
     $(this).closest('tr').remove();
 
-  });
-
+});
 
 
 
@@ -1002,13 +1036,8 @@ document.addEventListener('DOMContentLoaded', function () {
         toggleFields();
     });
 
-
-
     // Función para mostrar u ocultar campos dependiendo de la opción seleccionada
     function toggleFields() {
-
-
-
 
         var tipoLote = document.getElementById('tipo_lote').value;
         if (tipoLote == 'Por un solo lote a granel') {
@@ -1060,49 +1089,47 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Inicializar campos por defecto
     toggleFields();
+});
+//validaicon undate sku
+$('#reclasificacionForm').submit(function (e) {
+    e.preventDefault();
 
+    var formData = new FormData(this);
+    console.log()
 
-
-//validaicon unpdate sku
-    $('#reclasificacionForm').submit(function (e) {
-        e.preventDefault();
-    
-        var formData = new FormData(this);
-        console.log()
-    
-        $.ajax({
-          url: '/lotes-envasado/updateSKU/',
-          type: 'POST',
-          data: formData,
-          contentType: false,
-          processData: false,
-          success: function (response) {
+    $.ajax({
+        url: '/lotes-envasado/updateSKU/',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
             Swal.fire({
-              title: 'Éxito',
-              text: response.success,
-              icon: 'success',
-              buttonsStyling: false,
-              customClass: {
-                confirmButton: 'btn btn-success'
-              }
+                title: 'Éxito',
+                text: response.success,
+                icon: 'success',
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
             });
             $('#reclasificacion').modal('hide');
             $('.datatables-users').DataTable().ajax.reload();
-          },
-          error: function (response) {
+        },
+        error: function (response) {
             console.log(response);
-    
-            Swal.fire({
-              title: 'Error',
-              text: 'Ocurrió un error al actualizar la guía.',
-              icon: 'error',
-              buttonsStyling: false,
-              customClass: {
-                confirmButton: 'btn btn-success'
-              }
-            });
-          }
-        });
-      }); 
 
+            Swal.fire({
+                title: 'Error',
+                text: 'Ocurrió un error al actualizar la guía.',
+                icon: 'error',
+                buttonsStyling: false,
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
+        }
+    });
 });
+
+
