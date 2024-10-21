@@ -128,8 +128,8 @@
 
 
                         </div>
-                        
 
+                    </div>
 
                     <div id="datosOpcion2">
                         <table class="table table-bordered">
