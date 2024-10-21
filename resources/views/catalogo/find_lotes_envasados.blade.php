@@ -55,8 +55,7 @@
           <th>Marca</th>
           <th>Numero de botellas</th>
           <th>Presentación</th>
-          <th>Volumen inicial</th>
-          <th>Volumen restante</th>
+          <th>Volumen</th>
           <th>Destino lote</th>
           <th>Lugar de envasado</th>
           <th>No. de pedido/SKU</th>

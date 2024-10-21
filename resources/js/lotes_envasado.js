@@ -200,7 +200,6 @@ $(function () {
                             ;
                     }
                 },
-
                 {
                     data: null,
                     searchable: true, orderable: false,
@@ -247,16 +246,28 @@ $(function () {
                         return row.presentacion + ' ' + row.unidad;
                     }
                 },
+
+
                 {
-                    data: function (row, type, set) {
-                        return row.volumen_total + ' Litros';
+                    data: null,
+                    searchable: true, orderable: false,
+                    render: function (data, type, row) {
+                        var volumen_total = '';
+                        var volumen_total = '';
+
+                        if (row.id_empresa != 'N/A') {
+                            volumen_total = '<br><span class="fw-bold text-dark small">Volumen inicial:</span><span class="small"> ' + row.volumen_total + ' </span>';
+                        }
+                        if (row.razon_social != 'N/A') {
+                            volumen_total = '<br><span class="fw-bold text-dark small">Volumen restante:</span><span class="small"> ' + row.volumen_total + ' </span>';
+                        }
+
+                        return '<span class="fw-bold text-dark small">Volumen inicial:</span> <span class="small"> ' + row.volumen_total + ' Litros' +
+                            '</span><br><span class="fw-bold text-dark small">Volumen restante:</span><span class="small"> ' + row.volumen_total + ' Litros'
+                            ;
                     }
                 },
-                {
-                    data: function (row, type, set) {
-                        return row.volumen_total + ' Litros';//volumen restante
-                    }
-                }, 
+
                 { data: 'destino_lote' },
                 { data: 'lugar_envasado' },
                 {
