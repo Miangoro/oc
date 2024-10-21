@@ -10,7 +10,7 @@
                 </div>
                 <form id="addNewLoteForm">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select onchange="obtenerGraneles(); obtenerMarcas(); obtenerDirecciones();"
                                     id="id_empresa" name="id_empresa" class="select2 form-select">

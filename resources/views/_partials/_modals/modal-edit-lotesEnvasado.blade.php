@@ -12,7 +12,7 @@
 
                     <input type="hidden" id="edit_id_lote_envasado" name="id">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select onchange="edit_obtenerDirecciones(); edit_obtenerMarcas(); edit_obtenerGraneles();"
                                     id="edit_cliente" name="edit_cliente" class="select2 form-select" required>
