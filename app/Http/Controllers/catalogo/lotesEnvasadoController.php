@@ -106,7 +106,9 @@ class lotesEnvasadoController extends Controller
                 $inicial = isset($sku['inicial']) ? $sku['inicial'] : 0; // Obtén el valor de 'inicial' del JSON
                 $nuevo = isset($sku['nuevo']) ? $sku['nuevo'] : 0; // Obtén el valor de 'inicial' del JSON
                 $cantt_botellas = isset($sku['cantt_botellas']) ? $sku['cantt_botellas'] : $user->cant_botellas;
-                $lotes_granel = \App\Models\LotesGranel::where('id_empresa', $user->id_empresa)->value('nombre_lote');
+                $lotes_granel = \App\Models\LotesGranel::where('id_empresa', $user->id_empresa)->get(['nombre_lote']);
+                $nombres_lotes = $lotes_granel->pluck('nombre_lote')->implode(', ');
+
 
                 $nestedData = [
                     'id_lote_envasado' => $user->id_lote_envasado,
@@ -114,7 +116,7 @@ class lotesEnvasadoController extends Controller
                     'id_empresa' => $numero_cliente,
                     'id_marca' => $marca,
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
-                    'lotes_granel' => $lotes_granel,
+                    'nombres_lotes' => $nombres_lotes,
                     //nada
                     'nombre_lote' => $user->nombre_lote,
                     'cant_botellas' => $user->cant_botellas,

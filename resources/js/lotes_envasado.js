@@ -204,18 +204,18 @@ $(function () {
                     data: null,
                     searchable: true, orderable: false,
                     render: function (data, type, row) {
-                        var lotes_granel = '';
+                        var nombres_lotes = '';
                         var nombre_lote = '';
 
                         if (row.id_empresa != 'N/A') {
-                            lotes_granel = '<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ' + row.lotes_granel + '</span>';
+                            nombres_lotes = '<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ' + row.nombres_lotes + '</span>';
                         }
                         if (row.razon_social != 'N/A') {
                             nombre_lote = '<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ' + row.nombre_lote + '</span>';
                         }
 
-                        return '<span class="fw-bold text-dark small">Lote agranel:</span> <span class="small"> ' + row.lotes_granel +
-                            '</span><br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ' + row.nombre_lote
+                        return '<span class="fw-bold text-dark small">Agranel:</span> <span class="small"> ' + row.nombres_lotes +
+                            '</span><br><span class="fw-bold text-dark small">Envasado:</span><span class="small"> ' + row.nombre_lote
                             ;
                     }
                 },
@@ -235,8 +235,8 @@ $(function () {
                             razonSocial = '<br><span class="fw-bold text-dark small">Cantidad de botellas restantes:</span><span class="small"> ' + row.cantt_botellas + '</span>';
                         }
 
-                        return '<span class="fw-bold text-dark small">Cantidad de botellas:</span> <span class="small"> ' + row.cant_botellas +
-                            '</span><br><span class="fw-bold text-dark small">Cantidad de botellas restantes:</span><span class="small"> ' + row.cantt_botellas
+                        return '<span class="fw-bold text-dark small">Inicial:</span> <span class="small"> ' + row.cant_botellas +
+                            '</span><br><span class="fw-bold text-dark small">Restantes:</span><span class="small"> ' + row.cantt_botellas
                             ;
                     }
                 },
@@ -262,8 +262,8 @@ $(function () {
                             volumen_total = '<br><span class="fw-bold text-dark small">Volumen restante:</span><span class="small"> ' + row.volumen_total + ' </span>';
                         }
 
-                        return '<span class="fw-bold text-dark small">Volumen inicial:</span> <span class="small"> ' + row.volumen_total + ' Litros' +
-                            '</span><br><span class="fw-bold text-dark small">Volumen restante:</span><span class="small"> ' + row.volumen_total + ' Litros'
+                        return '<span class="fw-bold text-dark small">Inicial:</span> <span class="small"> ' + row.volumen_total + ' Litros' +
+                            '</span><br><span class="fw-bold text-dark small">Restante:</span><span class="small"> ' + row.volumen_total + ' Litros'
                             ;
                     }
                 },
@@ -284,8 +284,8 @@ $(function () {
                             razonSocial = '<br><span class="fw-bold text-dark small">SKU nuevo:</span><span class="small"> ' + row.nuevo + '</span>';
                         }
 
-                        return '<span class="fw-bold text-dark small">SKU inicial:</span> <span class="small"> ' + row.inicial +
-                            '</span><br><span class="fw-bold text-dark small">SKU nuevo:</span><span class="small"> ' + row.nuevo
+                        return '<span class="fw-bold text-dark small">Inicial:</span> <span class="small"> ' + row.inicial +
+                            '</span><br><span class="fw-bold text-dark small">Nuevo:</span><span class="small"> ' + row.nuevo
                             ;
                     }
                 },
@@ -388,9 +388,9 @@ $(function () {
                             '<div class="d-flex align-items-center gap-50">' +
                             '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes envasado</a>` +
-                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" class="dropdown-item edit-reclasificacion waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Reclasificación SKU</a>` +
-                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#" class="dropdown-item edit waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Trazabilidad</a>` +
+                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" class="dropdown-item edit-record waves-effect "><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes envasado</a>` +
+                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" class="dropdown-item edit-reclasificacion waves-effect "><i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación SKU</a>` +
+                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#" class="dropdown-item edit waves-effect "><i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>` +
                             `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasados</a>` +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             '<a class="dropdown-item">Suspend</a>' +
