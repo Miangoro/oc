@@ -317,7 +317,7 @@ $(function () {
                             '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes envasado</a>` +
-                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit-reclasificacion"><i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación FKU</a>` +
+                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit-reclasificacion"><i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación SKU</a>` +
 /*                             `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit"><i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>` +
                             `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasado</a>` + */
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +

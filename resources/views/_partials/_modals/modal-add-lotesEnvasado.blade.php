@@ -23,7 +23,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                       {{--  <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select id="tipo_lote" name="tipo_lote" class="form-select" required
                                     onchange="toggleFields()">
@@ -32,10 +32,10 @@
                                 </select>
                                 <label for="tipo_lote">Conformado por</label>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
 
-                    <div id="datosOpcion1" class="col-md-12">
+{{--                     <div id="datosOpcion1" class="col-md-12">
                         <div class="form-floating form-floating-outline mb-6">
                             <select class="select2 form-select id_lote_granel" name="id_lote_granel[]"
                                 aria-label="Default select example">
@@ -44,7 +44,7 @@
                             </select>
                             <label for="id_lote_granel">No de lote granel:</label>
                         </div>
-                    </div>
+                    </div> --}}
 
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control" id="nombre_lote"

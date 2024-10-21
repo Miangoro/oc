@@ -25,7 +25,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+{{--                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select id="edit_tipo_lote" name="edit_tipo_lote" class="form-select" required onchange="mostrarLotes()">
                                     <option value="Por un solo lote a granel">Por un solo lote a granel</option>
@@ -33,9 +33,9 @@
                                 </select>
                                 <label for="edit_tipo_lote">Conformado por</label>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
-                    <div id="edit_datosOpcion1" div class="col-md-12">
+{{--                     <div id="edit_datosOpcion1" div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-6">
                             <select class="select2 form-select edit_lote_granel"
                                 name="edit_lote_granel" aria-label="Default select example">
@@ -46,7 +46,7 @@
                             </select>
                             <label for="edit_lote_granel">No de lote granel:</label>
                         </div>
-                    </div>
+                    </div> --}}
 
 
                         <!-- Datos a mostrar para la opción 1 -->
