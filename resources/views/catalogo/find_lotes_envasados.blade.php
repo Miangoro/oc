@@ -56,6 +56,7 @@
           <th>Numero de botellas</th>
           <th>Presentación</th>
           <th>Volumen</th>
+          <th>Destino lote</th>
           <th>Lugar de envasado</th>
           <th>No. de pedido/SKU</th>
           <th>Estatus</th>
