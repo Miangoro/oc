@@ -137,7 +137,6 @@ function initializeSelect2($elements) {
             }
         },
 
-        { data: 'destino_lote' },
         { data: 'lugar_envasado' },
         {
             data: null,
@@ -197,6 +196,29 @@ function initializeSelect2($elements) {
              return '<span class="user-email">' + $email + '</span>';
            }
          }, 
+         
+         {
+            // email verify
+            targets: 10,
+            className: 'text-center',
+            render: function (data, type, full, meta) {
+                var $verified = full['estatus'];
+                var $colorRegimen;
+
+                if ($verified == 'Pendiente') {
+                    $colorRegimen = 'danger'; // Azulnja
+                    /*                       } else if ($verified == 'Pendiente') {
+                                            $colorRegimen = 'danger';  */
+                } else {
+                    $colorRegimen = 'secondary'; // Color por defecto si no coincide con ninguno
+                }
+
+                return `${$verified
+                    ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+                    : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+                    }`;
+            }
+        },
  
          {
            // Actions
