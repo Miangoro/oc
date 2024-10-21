@@ -17,12 +17,13 @@ class Revisor extends Model
     protected $fillable = [
         'tipo_revision',
         'id_revisor',
-        'id_revisor2', // Agregar esta línea
+        'id_revisor2', 
         'id_certificado',
         'numero_revision',
         'es_correccion',
         'observaciones',
         'respuestas',
+        'desicion'
     ];
 
     public function getLogName2(): string

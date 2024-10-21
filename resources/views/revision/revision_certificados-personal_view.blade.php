@@ -48,12 +48,13 @@
                 <tr>
                     <th>#</th>
                     <th>ID</th>
+                    <th>Tipo Certificado</th>
                     <th>Revisor</th>
                     <th>Certificado</th>
                     <th>Fecha Emisión</th>
                     <th>Fecha Revisión</th>
-                    <th>Tipo Certificado</th>
                     <th>Bitacora</th>
+                    <th>Estatus</th>
                     <th>Acciones</th>
                 </tr>
             </thead>

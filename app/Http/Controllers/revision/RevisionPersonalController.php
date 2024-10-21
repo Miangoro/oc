@@ -30,20 +30,19 @@ class RevisionPersonalController extends Controller
             4 => 'tipo_revision',
             5 => 'id_certificado',
             6 => 'num_certificado',
-            7 => 'created_at'
+            7 => 'created_at',
+            8 => 'desicion'
         ];
     
         $search = $request->input('search.value');
-        $userId = auth()->id(); // Obtener el ID del usuario autenticado
+        $userId = auth()->id();
     
-        // Contar todos los registros, aplicando el filtro solo si el usuario no es el de ID 8
         $totalData = Revisor::with(['certificado.dictamen']);
     
         // Si el usuario es el admin (ID 8), contar todos los registros
         if ($userId == 8) {
             $totalData = $totalData->count();
         } else {
-            // De lo contrario, contar solo los registros del usuario
             $totalData = $totalData->where('id_revisor', $userId)->count();
         }
     
@@ -56,15 +55,12 @@ class RevisionPersonalController extends Controller
         $order = $columns[$orderIndex] ?? 'id_revisor';
         $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
     
-        // Crear la consulta base
         $query = Revisor::with(['certificado.dictamen']);
     
-        // Aplicar filtro basado en el usuario
         if ($userId != 8) {
             $query->where('id_revisor', $userId);
         }
     
-        // Aplicar búsqueda
         $query->when($search, function ($q) use ($search) {
             $q->where('id_revisor', 'LIKE', "%{$search}%")
                 ->orWhereHas('certificado', function ($q) use ($search) {
@@ -79,12 +75,10 @@ class RevisionPersonalController extends Controller
     
         $revisores = $query->get();
     
-        // Filtrar resultados de búsqueda
         if ($search) {
             $filteredQuery = Revisor::with('certificado.dictamen');
     
             if ($userId == 8) {
-                // Si el usuario es el admin, no aplicar filtro de ID
                 $totalFiltered = $filteredQuery->where('id_revisor', 'LIKE', "%{$search}%")
                     ->orWhereHas('certificado', function ($q) use ($search) {
                         $q->where('num_certificado', 'LIKE', "%{$search}%");
@@ -93,7 +87,6 @@ class RevisionPersonalController extends Controller
                     ->orWhere('tipo_revision', 'LIKE', "%{$search}%")
                     ->count();
             } else {
-                // Si el usuario no es admin, aplicar filtro de ID
                 $totalFiltered = $filteredQuery->where('id_revisor', $userId)
                     ->where(function ($query) use ($search) {
                         $query->where('id_revisor', 'LIKE', "%{$search}%")
@@ -135,6 +128,7 @@ class RevisionPersonalController extends Controller
                 'fecha_creacion' => Helpers::formatearFecha($fechaCreacion),
                 'created_at' => Helpers::formatearFecha($revisor->created_at), 
                 'updated_at' => Helpers::formatearFecha($revisor->updated_at),
+                'desicion' => $revisor->desicion,
             ];
         })->filter(function ($item) {
             return $item['id_revisor'] !== null;
@@ -155,6 +149,7 @@ class RevisionPersonalController extends Controller
                 'id_revision' => 'required|integer',
                 'respuestas' => 'nullable|array',
                 'observaciones' => 'nullable|array',
+                'desicion' => 'nullable|string', 
             ]);
     
             $revisor = Revisor::where('id_revision', $request->id_revision)->first();
@@ -162,11 +157,18 @@ class RevisionPersonalController extends Controller
                 return response()->json(['message' => 'El registro no fue encontrado.'], 404);
             }
     
-            $respuestasGuardadas = json_decode($revisor->respuestas, true) ?? []; 
+            $respuestasGuardadas = json_decode($revisor->respuestas, true) ?? [];
+            $todasLasRespuestasSonC = true; 
+    
             foreach ($request->respuestas as $key => $nuevaRespuesta) {
                 $nuevaObservacion = $request->observaciones[$key] ?? null;
+    
+                if ($nuevaRespuesta !== 'C') {
+                    $todasLasRespuestasSonC = false;
+                }
+    
                 if (isset($respuestasGuardadas[$key]['respuesta']) && !empty($respuestasGuardadas[$key]['respuesta']) && empty($nuevaRespuesta)) {
-                    continue; 
+                    continue;
                 }
     
                 $respuestasGuardadas[$key] = [
@@ -175,17 +177,23 @@ class RevisionPersonalController extends Controller
                 ];
             }
     
-            $revisor->respuestas = json_encode($respuestasGuardadas); 
-            $revisor->save();
+            $revisor->respuestas = json_encode($respuestasGuardadas);
     
-            return response()->json(['message' => 'Respuestas registradas exitosamente.'], 201);
+            if ($todasLasRespuestasSonC) {
+                $revisor->desicion = 'positiva';
+            } else {
+                $revisor->desicion = 'negativa';
+            }
+    
+            $revisor->save();
+            return response()->json(['message' => 'Respuestas y decisión registradas exitosamente.'], 201);
             
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Ocurrió un error al registrar las respuestas: ' . $e->getMessage(),
             ], 500);
         }
-    }    
+    }
     
     public function obtenerRespuestas($id_revision)
     {
@@ -195,11 +203,14 @@ class RevisionPersonalController extends Controller
             if (!$revisor) {
                 return response()->json(['message' => 'El registro no fue encontrado.'], 404);
             }
-                $respuestas = json_decode($revisor->respuestas, true); 
+    
+            $respuestas = json_decode($revisor->respuestas, true);    
+            $desicion = $revisor->desicion;
     
             return response()->json([
                 'message' => 'Datos recuperados exitosamente.',
-                'respuestas' => $respuestas, 
+                'respuestas' => $respuestas,
+                'desicion' => $desicion, 
             ], 200);
             
         } catch (\Exception $e) {
@@ -207,7 +218,7 @@ class RevisionPersonalController extends Controller
                 'message' => 'Ocurrió un error al cargar las respuestas: ' . $e->getMessage(),
             ], 500);
         }
-    }
+    }    
  
     public function getCertificadoUrl($id_revision, $tipo)
     {
@@ -252,17 +263,29 @@ class RevisionPersonalController extends Controller
             $tipo_certificado = 'Desconocido';
         }
     
-        $respuestas = Revisor::where('id_certificado', $id)->pluck('respuestas')->first();
-        $respuestas_decoded = json_decode($respuestas, true);
+        $revisor = Revisor::where('id_certificado', $id)->first();
+    
+        $respuestas = json_decode($revisor->respuestas, true);
+        $desicion = $revisor->desicion; 
+        $nameRevisor = $revisor->user->name ?? null;
+        $fecha = $revisor->updated_at;
+        $desicion = $revisor->desicion;
     
         $pdfData = [
             'num_certificado' => $datos_revisor->num_certificado,
-            'tipo_certificado' => $tipo_certificado, 
-            'respuestas' => $respuestas_decoded 
+            'tipo_certificado' => $tipo_certificado,
+            'respuestas' => $respuestas,
+            'desicion' => $desicion,
+            'id_revisor' => $nameRevisor,
+            'id_revisor2' => $nameRevisor,
+            'fecha' => Helpers::formatearFecha($fecha),
+            'desicion' => $desicion
         ];
     
         $pdf = Pdf::loadView('pdfs.bitacora_revicionPersonalOCCIDAM', $pdfData);
         return $pdf->stream('Bitácora de revisión documental.pdf');
     }
+    
+    
 //end
 }
