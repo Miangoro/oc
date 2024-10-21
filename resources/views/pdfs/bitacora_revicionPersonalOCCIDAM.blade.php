@@ -291,11 +291,11 @@
     <table>
         <tr>
             <td class="letra-fondo negrita " style="text-align: right; padding-top: 0; padding-bottom: 0">RAZON SOCIAL O NOMBRE DEL CLIENTE:</td>
-            <td class="negrita" style="padding-top: 0; padding-bottom: 0">ZEUS RODRIGUEZ MIRANDA</td>
+            <td class="negrita" style="padding-top: 0; padding-bottom: 0">{{ $razon_social }}</td>
         </tr>
         <tr>
             <td class="letra-fondo negrita " style="text-align: right; padding-top: 0; padding-bottom: 0">NO. CLIENTE:</td>
-            <td class="negrita" style="padding-top: 0; padding-bottom: 0">NOM-070-044C</td>
+            <td class="negrita" style="padding-top: 0; padding-bottom: 0">{{ $numero_cliente }}</td>
         </tr>
         <tr>
             <td class="letra-fondo negrita" style="text-align: right; padding-top: 0; padding-bottom: 0">NO. DE CERTIFICADO:</td>
