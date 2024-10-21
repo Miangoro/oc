@@ -158,7 +158,7 @@ function initializeSelect2($elements) {
             }
         },
         { data: 'estatus' },//status
-        { data: 'action' }
+        { data: 'action' },
     ],
        columnDefs: [
          {
