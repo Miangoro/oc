@@ -123,12 +123,12 @@ $(function () {
             var $nombreDesicion;
 
             switch ($desicion) {
-              case "si":
+              case "positiva":
                 $nombreDesicion = 'Revision Positiva';
                 $colorDesicion = 'primary';
               break; 
 
-              case "no":
+              case "negativa":
                 $nombreDesicion = 'Revision Negativa';
                 $colorDesicion = 'danger';
               break;
@@ -455,7 +455,7 @@ $(document).on('click', '#registrarRevision', function () {
   });
 
   // Determinar la decisión automáticamente
-  const desicion = todasLasRespuestasSonC ? 'si' : 'no';
+  const desicion = todasLasRespuestasSonC ? 'positiva' : 'negativa';
 
   $.ajax({
     url: '/revisor/registrar-respuestas',
@@ -531,7 +531,6 @@ function cargarRespuestas(id_revision) {
     }
   });
 }
-
 
 //Abrir PDF Bitacora
   $(document).on('click', '.pdf', function () {

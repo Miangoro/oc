@@ -180,9 +180,9 @@ class RevisionPersonalController extends Controller
             $revisor->respuestas = json_encode($respuestasGuardadas);
     
             if ($todasLasRespuestasSonC) {
-                $revisor->desicion = 'si';
+                $revisor->desicion = 'positiva';
             } else {
-                $revisor->desicion = 'no';
+                $revisor->desicion = 'negativa';
             }
     
             $revisor->save();
@@ -264,19 +264,28 @@ class RevisionPersonalController extends Controller
         }
     
         $revisor = Revisor::where('id_certificado', $id)->first();
+    
         $respuestas = json_decode($revisor->respuestas, true);
         $desicion = $revisor->desicion; 
+        $nameRevisor = $revisor->user->name ?? null;
+        $fecha = $revisor->updated_at;
+        $desicion = $revisor->desicion;
     
         $pdfData = [
             'num_certificado' => $datos_revisor->num_certificado,
             'tipo_certificado' => $tipo_certificado,
             'respuestas' => $respuestas,
-            'desicion' => $desicion 
+            'desicion' => $desicion,
+            'id_revisor' => $nameRevisor,
+            'id_revisor2' => $nameRevisor,
+            'fecha' => Helpers::formatearFecha($fecha),
+            'desicion' => $desicion
         ];
     
         $pdf = Pdf::loadView('pdfs.bitacora_revicionPersonalOCCIDAM', $pdfData);
         return $pdf->stream('Bitácora de revisión documental.pdf');
     }
+    
     
 //end
 }

@@ -389,15 +389,15 @@
             </td>
         </tr>
         <tr>
-            <td style="background-color: {{ $desicion == 'si' ? '#b6d7a7' : 'white' }}; font-size: 10px; padding-top: 0; vertical-align: top; width: 50%; text-align: center;">
+            <td style="background-color: {{ $desicion == 'positiva' ? '#b6d7a7' : 'white' }}; font-size: 10px; padding-top: 0; vertical-align: top; width: 50%; text-align: center;">
                 SI
             </td>
-            <td style="background-color: {{ $desicion == 'no' ? '#b6d7a7' : 'white' }}; font-size: 10px; padding-top: 0; vertical-align: top; width: 50%; text-align: center;">
+            <td style="background-color: {{ $desicion == 'negativa' ? '#b6d7a7' : 'white' }}; font-size: 10px; padding-top: 0; vertical-align: top; width: 50%; text-align: center;">
                 NO
             </td>
         </tr>
         <tr>
-            @if($desicion == 'si')
+            @if($desicion == 'positiva')
                 <!-- Si la decisión es "SI", la celda de "SI" tiene contenido y la de "NO" está vacía -->
                 <td class="leftLetter" style="background-color: #b6d7a7; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: justify;">
                     Cumple con cada uno de los requisitos mencionados en este documento para poder
@@ -435,16 +435,16 @@
             <td class="letra-fondo negrita" style="font-size: 10px; padding-top: 0; vertical-align: top;padding-left: 0; width: 175px">NOMBRE, FIRMA , FECHA Y CARGO <br>
                 DE QUIEN HACE LA REVISIÓN
                 </td>
-            <td class="leftLetter" style="font-size: 8px;padding-top: 0">Karen Yunuen Pérez Pérez <br>
-                Revisión realizada el 08 de Agosto del <br>
-                2024 el Certificado Revisión por el <br>
-                personal OC Positiva <div style="padding-top: 25px"></div>
+            <td class="leftLetter" style="font-size: 8px;padding-top: 0">{{ $id_revisor }} <br>
+                Revisión realizada {{ $fecha }} 
+                el Certificado Revisión por el <br>
+                personal OC {{ ucfirst($desicion) }} <div style="padding-top: 25px"></div>
             </td>
         </tr>
         <tr>
             <td class="letra-fondo negrita" style="font-size:10px; padding-top: 0; vertical-align: top; padding-left: 0">NOMBRE, FIRMA , FECHA Y CARGO <br>
                 DE QUIEN TOMA LA APROBACIÓN</td>
-            <td class="leftLetter" style="font-size: 8px;padding-top: 0">Mayra Gutierrez Romero <br>
+            <td class="leftLetter" style="font-size: 8px;padding-top: 0">{{ $id_revisor2 }}<br>
                 Gerente Técnico del Organismo <br>
                 Certificador de CIDAM <br>
                  08 de Agosto del 2024 <div style="padding-top: 20px"></div>
