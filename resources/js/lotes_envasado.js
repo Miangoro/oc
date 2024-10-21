@@ -356,7 +356,7 @@ $(function () {
 
                 {
                     // email verify
-                    targets: 12,
+                    targets: 11,
                     className: 'text-center',
                     render: function (data, type, full, meta) {
                         var $verified = full['estatus'];
@@ -437,7 +437,7 @@ $(function () {
                             text: '<i class="ri-printer-line me-1" ></i>Print',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11],
                                 // prevent avatar to be print
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -475,7 +475,7 @@ $(function () {
                             text: '<i class="ri-file-text-line me-1" ></i>Csv',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11],
                                 // prevent avatar to be print
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -500,7 +500,7 @@ $(function () {
                             text: '<i class="ri-file-excel-line me-1"></i>Excel',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11],
                                 // prevent avatar to be display
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -525,7 +525,7 @@ $(function () {
                             text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11],
                                 // prevent avatar to be display
                                 format: {
                                     body: function (inner, coldex, rowdex) {
@@ -550,7 +550,7 @@ $(function () {
                             text: '<i class="ri-file-copy-line me-1"></i>Copy',
                             className: 'dropdown-item',
                             exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12],
+                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11],
                                 // prevent avatar to be copy
                                 format: {
                                     body: function (inner, coldex, rowdex) {
