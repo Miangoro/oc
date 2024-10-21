@@ -46,7 +46,6 @@ function initializeSelect2($elements) {
        ajax: {
         url: baseUrl + 'lotes-list'
     },
-    scrollX: true, // Scroll horizontal
     columns: [
         { data: '' },
         { data: 'id_lote_envasado' },
@@ -236,7 +235,8 @@ function initializeSelect2($elements) {
                 `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" class="dropdown-item edit-reclasificacion waves-effect "><i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación SKU</a>` +
                 `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#" class="dropdown-item edit waves-effect "><i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>` +
                 `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasados</a>` +
-
+                '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
                 '</div>' +
                 '</div>'
               );
