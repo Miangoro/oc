@@ -318,8 +318,8 @@ $(function () {
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes envasado</a>` +
                             `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit-reclasificacion"><i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación FKU</a>` +
-                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit"><i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>` +
-                            `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasado</a>` +
+/*                             `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit"><i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>` +
+                            `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasado</a>` + */
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                             '<a href="' +
                             userView +
@@ -964,7 +964,7 @@ $(document).ready(function () {
                     <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
                 </th>
                 <td>
-                    <select class="id_lote_granel form-control select2-nuevo" name="id_lote_granel[]">
+                    <select class="id_lote_granel form-control select2-nuevo id_lote_granel" name="id_lote_granel[]">
                     </select>
                 </td>
                 <td>
@@ -1019,6 +1019,11 @@ $(document).on('click', '.add-row-edit', function () {
         width: '100%',
         dropdownCssClass: 'select2-dropdown'
     });
+    $('.select2-dropdown').css('z-index', 9999);
+
+    // Copiar opciones del primer select al nuevo select
+    var options = $('#edit_contenidoGraneles tr:first-child .edit_lote_granel').html();
+    $('#edit_contenidoGraneles tr:last-child .edit_lote_granel').html(options);
 });
 
 // Eliminar fila de la tabla
