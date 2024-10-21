@@ -376,53 +376,61 @@
     </table>
     <br>
 
-    <!-- Tabla Desicion -->
-    <table style="width: 340px">
-        <tr>
-            <td class="letra-fondo negrita" style="font-size: 10.5px; padding-top: 0" colspan="2">
-                TOMA DE DECISIÓN PARA LA CERTIFICACIÓN POR PARTE DEL PERSONAL DEL OC CIDAM
+<!-- Tabla Desicion -->
+<table style="width: 340px">
+    <tr>
+        <td class="letra-fondo negrita" style="font-size: 10.5px; padding-top: 0" colspan="2">
+            TOMA DE DECISIÓN PARA LA CERTIFICACIÓN POR PARTE DEL PERSONAL DEL OC CIDAM
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="font-size: 8px; padding: 0">
+            Derivado de la revisión minuciosa y con la documentación completa entregada de manera digital y/o física por el cliente, el personal del OC CIDAM determina que:
+        </td>
+    </tr>
+    <tr>
+        <td style="background-color: {{ $desicion == 'positiva' ? '#b6d7a7' : 'white' }}; font-size: 10px; padding-top: 0; vertical-align: top; width: 50%; text-align: center;">
+            SI
+        </td>
+        <td style="background-color: {{ $desicion == 'negativa' ? '#b6d7a7' : 'white' }}; font-size: 10px; padding-top: 0; vertical-align: top; width: 50%; text-align: center;">
+            NO
+        </td>
+    </tr>
+    <tr>
+        @if($desicion === 'positiva')
+            <!-- Si la decisión es "SI", la celda de "SI" tiene contenido y la de "NO" está vacía -->
+            <td class="leftLetter" style="background-color: #b6d7a7; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: justify;">
+                Cumple con cada uno de los requisitos mencionados en este documento para poder
+                turnarse a uno de los miembros del Consejo para la decisión de la Certificación y decidan
+                otorgar o denegar la certificación de (producto Y/O instalaciones, según corresponda) y así
+                emitir el certificado correspondiente.
             </td>
-        </tr>
-        <tr>
-            <td colspan="2" style="font-size: 8px; padding: 0">
-                Derivado de la revisión minuciosa y con la documentación completa entregada de manera digital y/o física por el cliente, el personal del OC CIDAM determina que:
+            <td style="color: red; background-color: white; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: center;">
+                ---
             </td>
-        </tr>
-        <tr>
-            <td style="background-color: {{ $desicion == 'positiva' ? '#b6d7a7' : 'white' }}; font-size: 10px; padding-top: 0; vertical-align: top; width: 50%; text-align: center;">
-                SI
+        @elseif($desicion === 'negativa')
+            <!-- Si la decisión es "NO", la celda de "NO" tiene contenido y la de "SI" está vacía -->
+            <td class="leftLetter" style="background-color: white; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: center;">
+                ---
             </td>
-            <td style="background-color: {{ $desicion == 'negativa' ? '#b6d7a7' : 'white' }}; font-size: 10px; padding-top: 0; vertical-align: top; width: 50%; text-align: center;">
-                NO
+            <td style="color: red; background-color: #b6d7a7; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: justify;">
+                No cumple con cada uno de los requisitos mencionados en este documento para poder
+                turnarse a uno de los miembros del Consejo para la decisión de la Certificación y decidan
+                otorgar o denegar la certificación de (producto Y/O instalaciones, según corresponda) y así
+                emitir el certificado correspondiente.
             </td>
-        </tr>
-        <tr>
-            @if($desicion == 'positiva')
-                <!-- Si la decisión es "SI", la celda de "SI" tiene contenido y la de "NO" está vacía -->
-                <td class="leftLetter" style="background-color: #b6d7a7; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: justify;">
-                    Cumple con cada uno de los requisitos mencionados en este documento para poder
-                    turnarse a uno de los miembros del Consejo para la decisión de la Certificación y decidan
-                    otorgar o denegar la certificación de (producto Y/O instalaciones, según corresponda) y así
-                    emitir el certificado correspondiente.
-                </td>
-                <td style="color: red; background-color: white; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: center;">
-                    ---
-                </td>
-            @else
-                <!-- Si la decisión es "NO", la celda de "NO" tiene contenido y la de "SI" está vacía -->
-                <td class="leftLetter" style="background-color: white; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: center;">
-                    ---
-                </td>
-                <td style="color: red; background-color: #b6d7a7; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: justify;">
-                    No cumple con cada uno de los requisitos mencionados en este documento para poder
-                    turnarse a uno de los miembros del Consejo para la decisión de la Certificación y decidan
-                    otorgar o denegar la certificación de (producto Y/O instalaciones, según corresponda) y así
-                    emitir el certificado correspondiente.
-                </td>
-            @endif
-        </tr>
-    </table>
-    <!-- end -->
+        @else
+            <!-- Si no hay decisión, dejar ambas celdas con "---" -->
+            <td class="leftLetter" style="background-color: white; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: center; height: 100px;">
+                ---
+            </td>
+            <td style="color: red; background-color: white; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: center;">
+                ---
+            </td>
+        @endif
+    </tr>
+</table>
+<!-- end -->
 
     <br>
     
