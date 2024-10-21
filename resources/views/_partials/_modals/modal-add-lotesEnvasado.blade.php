@@ -118,11 +118,11 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select id_instalacion" id="id_instalacion"
+                                    <select class="select2 form-select id_instalacion" id="lugar_envasado"
                                         name="lugar_envasado" aria-label="Default select example">
 
                                     </select>
-                                    <label for="id_instalacion">Lugar de envasado</label>
+                                    <label for="lugar_envasado">Lugar de envasado</label>
                                 </div>
                             </div>
 

@@ -68,6 +68,13 @@ const fv = FormValidation.formValidation(addNewLoteForm, {
                 }
             }
         },
+        lugar_envasado: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor seleccione un lugar de envasado'
+                }
+            }
+        },
 
 
     },
