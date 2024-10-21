@@ -200,11 +200,47 @@ $(function () {
                             ;
                     }
                 },
-                { data: 'tipo_lote' },
-                { data: 'nombre_lote' },
+
+                {
+                    data: null,
+                    searchable: true, orderable: false,
+                    render: function (data, type, row) {
+                        var lotes_granel = '';
+                        var nombre_lote = '';
+
+                        if (row.id_empresa != 'N/A') {
+                            lotes_granel = '<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ' + row.lotes_granel + '</span>';
+                        }
+                        if (row.razon_social != 'N/A') {
+                            nombre_lote = '<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ' + row.nombre_lote + '</span>';
+                        }
+
+                        return '<span class="fw-bold text-dark small">Lote agranel:</span> <span class="small"> ' + row.lotes_granel +
+                            '</span><br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ' + row.nombre_lote
+                            ;
+                    }
+                },
                 { data: 'id_marca' },
-                { data: 'cant_botellas' },
-                { data: 'cantt_botellas' },//cantidad botellas restantes
+
+                                {
+                    data: null,
+                    searchable: true, orderable: false,
+                    render: function (data, type, row) {
+                        var empresa = '';
+                        var razonSocial = '';
+
+                        if (row.id_empresa != 'N/A') {
+                            empresa = '<br><span class="fw-bold text-dark small">Cantidad de botellas:</span><span class="small"> ' + row.cant_botellas + '</span>';
+                        }
+                        if (row.razon_social != 'N/A') {
+                            razonSocial = '<br><span class="fw-bold text-dark small">Cantidad de botellas restantes:</span><span class="small"> ' + row.cantt_botellas + '</span>';
+                        }
+
+                        return '<span class="fw-bold text-dark small">Cantidad de botellas:</span> <span class="small"> ' + row.cant_botellas +
+                            '</span><br><span class="fw-bold text-dark small">Cantidad de botellas restantes:</span><span class="small"> ' + row.cantt_botellas
+                            ;
+                    }
+                },
 
                 {
                     data: function (row, type, set) {
@@ -223,7 +259,25 @@ $(function () {
                 }, 
                 { data: 'destino_lote' },
                 { data: 'lugar_envasado' },
-                { data: 'inicial' },
+                {
+                    data: null,
+                    searchable: true, orderable: false,
+                    render: function (data, type, row) {
+                        var empresa = '';
+                        var razonSocial = '';
+
+                        if (row.id_empresa != 'N/A') {
+                            empresa = '<br><span class="fw-bold text-dark small">SKU inicial:</span><span class="small"> ' + row.inicial + '</span>';
+                        }
+                        if (row.razon_social != 'N/A') {
+                            razonSocial = '<br><span class="fw-bold text-dark small">SKU nuevo:</span><span class="small"> ' + row.nuevo + '</span>';
+                        }
+
+                        return '<span class="fw-bold text-dark small">SKU inicial:</span> <span class="small"> ' + row.inicial +
+                            '</span><br><span class="fw-bold text-dark small">SKU nuevo:</span><span class="small"> ' + row.nuevo
+                            ;
+                    }
+                },
                 { data: 'estatus' },//status
                 { data: 'action' }
             ],
@@ -291,7 +345,7 @@ $(function () {
 
                 {
                     // email verify
-                    targets: 14,
+                    targets: 12,
                     className: 'text-center',
                     render: function (data, type, full, meta) {
                         var $verified = full['estatus'];
@@ -323,21 +377,19 @@ $(function () {
                             '<div class="d-flex align-items-center gap-50">' +
                             '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes envasado</a>` +
-                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit-reclasificacion"><i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación SKU</a>` +
-/*                             `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit"><i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>` +
-                            `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasado</a>` + */
+                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" class="dropdown-item edit-record waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes envasado</a>` +
+                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" class="dropdown-item edit-reclasificacion waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Reclasificación SKU</a>` +
+                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#" class="dropdown-item edit waves-effect text-info"><i class="ri-edit-box-line ri-20px text-info"></i> Trazabilidad</a>` +
+                            `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasados</a>` +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                            '<a href="' +
-                            userView +
-                            '" class="dropdown-item">View</a>' +
-                            '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+                            '<a class="dropdown-item">Suspend</a>' +
                             '</div>' +
                             '</div>'
                         );
                     }
                 }
             ],
+
             order: [[2, 'desc']],
             dom:
                 '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
@@ -1102,46 +1154,94 @@ document.addEventListener('DOMContentLoaded', function () {
     // Inicializar campos por defecto
     toggleFields();
 });
-//validaicon undate sku
-$('#reclasificacionForm').submit(function (e) {
-    e.preventDefault();
 
-    var formData = new FormData(this);
-    console.log()
+
+
+
+
+
+//validaicon undate sku
+
+
+
+
+
+
+
+//update valiacion: en editar
+const reclasificacionForm = document.getElementById('reclasificacionForm');
+
+// Validación del formulario
+const fv3 = FormValidation.formValidation(reclasificacionForm, {
+    fields: {
+        nuevo: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor seleccione SKU'
+                }
+            }
+        },
+        cantt_botellas: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor introduzca una cantidad'
+                }
+            }
+        },
+        observaciones: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese observaciones'
+                }
+            }
+        },
+
+    },
+    plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+            eleValidClass: '',
+            rowSelector: function (field, ele) {
+                return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+            }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+}).on('core.form.valid', function (e) {
+    //e.preventDefault();
+    var formData = new FormData(reclasificacionForm);
 
     $.ajax({
-        url: '/lotes-envasado/updateSKU/',
+        url: '/lotes-envasado/updateSKU/', // Actualiza con la URL correcta
         type: 'POST',
         data: formData,
-        contentType: false,
         processData: false,
+        contentType: false,
         success: function (response) {
+            $('#reclasificacion').modal('hide');
+            $('.datatables-users').DataTable().ajax.reload();
+
+            // Mostrar alerta de éxito
             Swal.fire({
-                title: 'Éxito',
-                text: response.success,
                 icon: 'success',
-                buttonsStyling: false,
+                title: '¡Éxito!',
+                text: response.success,
                 customClass: {
                     confirmButton: 'btn btn-success'
                 }
             });
-            $('#reclasificacion').modal('hide');
-            $('.datatables-users').DataTable().ajax.reload();
         },
-        error: function (response) {
-            console.log(response);
-
+        error: function (xhr) {
+            // Mostrar alerta de error
             Swal.fire({
-                title: 'Error',
-                text: 'Ocurrió un error al actualizar la guía.',
                 icon: 'error',
-                buttonsStyling: false,
+                title: '¡Error!',
+                text: 'Error al registrar el lote envasado',
                 customClass: {
-                    confirmButton: 'btn btn-success'
+                    confirmButton: 'btn btn-danger'
                 }
             });
         }
     });
 });
-
-

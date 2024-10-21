@@ -51,11 +51,9 @@
           <th></th>
           <th>Id</th>
           <th>Datos del cliente</th>
-          <th>Lote agranel</th>
-          <th>Lote envasado</th>
+          <th>Lotes</th>
           <th>Marca</th>
-          <th>Cantidad de botellas inicial</th>
-          <th>Cantidad de botellas restante</th>
+          <th>Numero de botellas</th>
           <th>Presentación</th>
           <th>Volumen inicial</th>
           <th>Volumen restante</th>

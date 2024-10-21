@@ -104,7 +104,9 @@ class lotesEnvasadoController extends Controller
                 $sku = json_decode($user->sku, true); // Decodifica el JSON en un array
 
                 $inicial = isset($sku['inicial']) ? $sku['inicial'] : 0; // Obtén el valor de 'inicial' del JSON
+                $nuevo = isset($sku['nuevo']) ? $sku['nuevo'] : 0; // Obtén el valor de 'inicial' del JSON
                 $cantt_botellas = isset($sku['cantt_botellas']) ? $sku['cantt_botellas'] : $user->cant_botellas;
+                $lotes_granel = \App\Models\LotesGranel::where('id_empresa', $user->id_empresa)->value('nombre_lote');
 
                 $nestedData = [
                     'id_lote_envasado' => $user->id_lote_envasado,
@@ -112,7 +114,8 @@ class lotesEnvasadoController extends Controller
                     'id_empresa' => $numero_cliente,
                     'id_marca' => $marca,
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
-                    'tipo_lote' => $user->tipo_lote,
+                    'lotes_granel' => $lotes_granel,
+                    //nada
                     'nombre_lote' => $user->nombre_lote,
                     'cant_botellas' => $user->cant_botellas,
                     'presentacion' => $user->presentacion,
@@ -122,6 +125,7 @@ class lotesEnvasadoController extends Controller
                     'lugar_envasado' => $direccion_completa,
                     'sku' => $user->sku, // Deja el JSON completo aquí si lo necesitas
                     'inicial' => $inicial, // Agrega la parte 'inicial' del JSON decodificado
+                    'nuevo' => $nuevo, // Agrega la parte 'inicial' del JSON decodificado
                     'cantt_botellas' => $cantt_botellas, // Agrega la parte 'inicial' del JSON decodificado
                     'estatus' => $user->estatus,
                 ];
