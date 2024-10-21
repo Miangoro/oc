@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Revisor;
 use App\Models\Certificados;
+use App\Models\empresa;
+use App\Models\empresaNumCliente;
 use App\Helpers\Helpers;
 use App\Models\preguntas_revision;
 use Illuminate\Support\Facades\Schema;
@@ -264,12 +266,16 @@ class RevisionPersonalController extends Controller
         }
     
         $revisor = Revisor::where('id_certificado', $id)->first();
+        if (!$revisor) {
+            return response()->json(['error' => 'Revisor not found'], 404);
+        }
     
         $respuestas = json_decode($revisor->respuestas, true);
         $desicion = $revisor->desicion; 
         $nameRevisor = $revisor->user->name ?? null;
         $fecha = $revisor->updated_at;
-        $desicion = $revisor->desicion;
+        $razonSocial = $revisor->empresa()->razon_social ?? 'Sin asignar'; 
+        $numero_cliente = $datos_revisor->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar';
     
         $pdfData = [
             'num_certificado' => $datos_revisor->num_certificado,
@@ -278,14 +284,14 @@ class RevisionPersonalController extends Controller
             'desicion' => $desicion,
             'id_revisor' => $nameRevisor,
             'id_revisor2' => $nameRevisor,
+            'razon_social' => $razonSocial, // Añadir razón social
             'fecha' => Helpers::formatearFecha($fecha),
-            'desicion' => $desicion
+            'numero_cliente' => $numero_cliente,
         ];
     
         $pdf = Pdf::loadView('pdfs.bitacora_revicionPersonalOCCIDAM', $pdfData);
         return $pdf->stream('Bitácora de revisión documental.pdf');
     }
-    
     
 //end
 }
