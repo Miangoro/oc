@@ -10,7 +10,7 @@
                 </div>
                 <form id="addNewLoteForm">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select onchange="obtenerGraneles(); obtenerMarcas(); obtenerDirecciones();"
                                     id="id_empresa" name="id_empresa" class="select2 form-select">
@@ -23,7 +23,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                       {{--  <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select id="tipo_lote" name="tipo_lote" class="form-select" required
                                     onchange="toggleFields()">
@@ -32,10 +32,10 @@
                                 </select>
                                 <label for="tipo_lote">Conformado por</label>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
 
-                    <div id="datosOpcion1" class="col-md-12">
+{{--                     <div id="datosOpcion1" class="col-md-12">
                         <div class="form-floating form-floating-outline mb-6">
                             <select class="select2 form-select id_lote_granel" name="id_lote_granel[]"
                                 aria-label="Default select example">
@@ -44,14 +44,13 @@
                             </select>
                             <label for="id_lote_granel">No de lote granel:</label>
                         </div>
-                    </div>
+                    </div> --}}
 
-                    <div class="opcion-datos">
                         <div class="form-floating form-floating-outline mb-5">
-                            <input type="text" class="form-control" id="name"
+                            <input type="text" class="form-control" id="nombre_lote"
                                 placeholder="Introduce el nombre del lote" name="nombre_lote"
                                 aria-label="Nombre del lote" />
-                            <label for="name">Nombre del lote</label>
+                            <label for="nombre_lote">Nombre del lote</label>
                         </div>
 
                         <div class="row">
@@ -119,18 +118,18 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select id_instalacion" id="id_instalacion"
+                                    <select class="select2 form-select id_instalacion" id="lugar_envasado"
                                         name="lugar_envasado" aria-label="Default select example">
 
                                     </select>
-                                    <label for="id_instalacion">Lugar de envasado</label>
+                                    <label for="lugar_envasado">Lugar de envasado</label>
                                 </div>
                             </div>
 
 
                         </div>
                         
-                    </div>
+
 
                     <div id="datosOpcion2">
                         <table class="table table-bordered">

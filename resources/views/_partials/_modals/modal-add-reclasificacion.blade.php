@@ -5,7 +5,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Reclasificacion FKU</h4>
+                    <h4 class="address-title mb-2">Reclasificación FKU</h4>
                     <p class="address-subtitle"></p>
                 </div>
                     <form id="reclasificacionForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
@@ -26,7 +26,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="number" id="cantt_botellas" class="form-control"
-                                    placeholder="No. de pedido/SKU" aria-label="No. de pedido/SKU" name="cantt_botellas" />
+                                    placeholder="No. de pedido/SKU" aria-label="No. de pedido/SKU" name="cantt_botellas" min="0"/>
                                 <label for="cantt_botellas">Cantidad de botellas</label>
                             </div>
                         </div>

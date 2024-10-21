@@ -51,14 +51,11 @@
           <th></th>
           <th>Id</th>
           <th>Datos del cliente</th>
-          <th>Tipo de lote</th>
-          <th>Nombre lote</th>
+          <th>Lotes</th>
           <th>Marca</th>
-          <th>Cantidad de botellas inicial</th>
-          <th>Cantidad de botellas restante</th>
+          <th>Numero de botellas</th>
           <th>Presentación</th>
-          <th>Volumen inicial</th>
-          <th>Volumen restante</th>
+          <th>Volumen</th>
           <th>Destino lote</th>
           <th>Lugar de envasado</th>
           <th>No. de pedido/SKU</th>

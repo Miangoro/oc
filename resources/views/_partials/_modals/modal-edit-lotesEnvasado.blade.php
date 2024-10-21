@@ -8,14 +8,14 @@
                     <h4 class="address-title mb-2">Editar lote envasado</h4>
                     <p class="address-subtitle"></p>
                 </div>
-                <form id="editLoteEnvasadoForm">
+                <form id="editLoteEnvasadoForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
 
                     <input type="hidden" id="edit_id_lote_envasado" name="id">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select onchange="edit_obtenerDirecciones(); edit_obtenerMarcas(); edit_obtenerGraneles();"
-                                    id="edit_cliente" name="id_empresa" class="select2 form-select" required>
+                                    id="edit_cliente" name="edit_cliente" class="select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($clientes as $cliente)
                                         <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
@@ -25,20 +25,20 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+{{--                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select id="edit_tipo_lote" name="tipo_lote" class="form-select" required onchange="mostrarLotes()">
+                                <select id="edit_tipo_lote" name="edit_tipo_lote" class="form-select" required onchange="mostrarLotes()">
                                     <option value="Por un solo lote a granel">Por un solo lote a granel</option>
                                     <option value="Por más de un lote a granel">Por más de un lote a granel</option>
                                 </select>
                                 <label for="edit_tipo_lote">Conformado por</label>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
-                    <div id="edit_datosOpcion1" div class="col-md-12">
+{{--                     <div id="edit_datosOpcion1" div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select edit_lote_granel" id="edit_lote_granel"
-                                name="id_lote_granel" aria-label="Default select example">
+                            <select class="select2 form-select edit_lote_granel"
+                                name="edit_lote_granel" aria-label="Default select example">
                                 <option value="" selected>Lote Granel</option>
                                 @foreach ($lotes_granel as $lotesGra)
                                     <option value="{{ $lotesGra->id_empresa }}">{{ $lotesGra->nombre_lote }}</option>
@@ -46,14 +46,13 @@
                             </select>
                             <label for="edit_lote_granel">No de lote granel:</label>
                         </div>
-                    </div>
+                    </div> --}}
 
 
-                    <div class="opcion-datos">
                         <!-- Datos a mostrar para la opción 1 -->
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control" id="edit_nombre_lote"
-                                placeholder="Introduce el nombre del lote" name="nombre_lote"
+                                placeholder="Introduce el nombre del lote" name="edit_nombre_lote"
                                 aria-label="Nombre del lote" required />
                             <label for="name">Nombre del lote</label>
                         </div>
@@ -62,13 +61,13 @@
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-5">
                                     <input type="text" id="edit_sku" class="form-control"
-                                        placeholder="No. de pedido/SKU" aria-label="No. de pedido/SKU" name="sku" />
-                                    <label for="sku">No. de pedido/SKU</label>
+                                        placeholder="No. de pedido/SKU" aria-label="No. de pedido/SKU" name="edit_sku" />
+                                    <label for="edit_sku">No. de pedido/SKU</label>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select " id="edit_marca" name="id_marca"
+                                    <select class="select2 form-select " id="edit_marca" name="edit_marca"
                                         aria-label="Marca">
                                         <option value="" selected>Selecciona una marca</option>
                                         @foreach ($marcas as $marca)
@@ -82,8 +81,8 @@
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <input class="form-control" type="text" placeholder="Destino lote"
-                                        id="edit_destino_lote" name="destino_lote" />
-                                    <label for="destino_lote">Destino lote</label>
+                                        id="edit_destino_lote" name="edit_destino_lote" />
+                                    <label for="edit_destino_lote">Destino lote</label>
                                 </div>
                             </div>
                         </div>
@@ -92,15 +91,15 @@
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <input class="form-control" type="number" placeholder="Ingrese un valor"
-                                        id="edit_cant_botellas" name="cant_botellas" min="0" />
+                                        id="edit_cant_botellas" name="edit_cant_botellas" min="0" />
                                     <label for="cantidad_botellas">Cantidad de botellas</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <input class="form-control" type="number" placeholder="Presentación de la botella"
-                                        id="edit_presentacion" name="presentacion" min="0" />
-                                    <label for="presentacion">Presentación de la botella</label>
+                                        id="edit_presentacion" name="edit_presentacion" min="0" />
+                                    <label for="edit_presentacion">Presentación de la botella</label>
                                 </div>
                             </div>
                         </div>
@@ -108,7 +107,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <select class=" form-select" id="edit_unidad" name="unidad"
+                                    <select class=" form-select" id="edit_unidad" name="edit_unidad"
                                         aria-label="Unidad">
                                         <option value="Litros">Litros</option>
                                         <option value="Mililitros">Mililitros</option>
@@ -120,14 +119,14 @@
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <input class="form-control" type="number" step="0.01"
-                                        placeholder="Volumen total" id="edit_volumen_total" name="volumen_total" readonly/>
-                                    <label for="volumen_total">Volumen total</label>
+                                        placeholder="Volumen total" id="edit_volumen_total" name="edit_volumen_total" readonly/>
+                                    <label for="edit_volumen_total">Volumen total</label>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <select class="select2 form-select edit_Instalaciones" id="edit_Instalaciones"
-                                        name="lugar_envasado" aria-label="Default select example">
+                                        name="edit_Instalaciones" aria-label="Default select example">
                                         <option value="" selected>Lote Granel</option>
                                         @foreach ($Instalaciones as $Instalacion)
                                             <option value="{{ $Instalacion->id_instalacion }}">
@@ -138,7 +137,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
                     <div id="edit_datosOpcion2">
                         <table class="table table-bordered">
@@ -155,8 +153,9 @@
                                         <button type="button" class="btn btn-danger remove-row" > <i class="ri-delete-bin-5-fill"></i> </button>
                                     </th>
                                     <td>
-                                        <select class="edit_lote_granel form-control select2" name="edit_id_lote_granel[]" >
+                                        <select class="edit_lote_granel form-control select2" name="edit_lote_granel[]" id="edit_lote_granel">
                                             <!-- Opciones -->
+                                            
                                         </select>
                                     </td>
                                     <td>
