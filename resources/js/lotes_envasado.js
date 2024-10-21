@@ -185,14 +185,14 @@ $(function () {
                     data: null,
                     searchable: true, orderable: false,
                     render: function (data, type, row) {
-                        var empresa = '';
-                        var razonSocial = '';
+                        var id_empresa = '';
+                        var razon_social = '';
 
                         if (row.id_empresa != 'N/A') {
-                            empresa = '<br><span class="fw-bold text-dark small">Número del cliente:</span><span class="small"> ' + row.id_empresa + '</span>';
+                            id_empresa = '<br><span class="fw-bold text-dark small">Número del cliente:</span><span class="small"> ' + row.id_empresa + '</span>';
                         }
                         if (row.razon_social != 'N/A') {
-                            razonSocial = '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' + row.razon_social + '</span>';
+                            razon_social = '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' + row.razon_social + '</span>';
                         }
 
                         return '<span class="fw-bold text-dark small">Número del cliente:</span> <span class="small"> ' + row.id_empresa +
@@ -204,17 +204,17 @@ $(function () {
                     data: null,
                     searchable: true, orderable: false,
                     render: function (data, type, row) {
-                        var nombres_lotes = '';
+                        var id_lote_granel = '';
                         var nombre_lote = '';
 
-                        if (row.id_empresa != 'N/A') {
-                            nombres_lotes = '<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ' + row.nombres_lotes + '</span>';
+                        if (row.id_lote_granel != 'N/A') {
+                            id_lote_granel = '<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ' + row.id_lote_granel + '</span>';
                         }
-                        if (row.razon_social != 'N/A') {
+                        if (row.nombre_lote != 'N/A') {
                             nombre_lote = '<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ' + row.nombre_lote + '</span>';
                         }
 
-                        return '<span class="fw-bold text-dark small">Agranel:</span> <span class="small"> ' + row.nombres_lotes +
+                        return '<span class="fw-bold text-dark small">Agranel:</span> <span class="small"> ' + row.id_lote_granel +
                             '</span><br><span class="fw-bold text-dark small">Envasado:</span><span class="small"> ' + row.nombre_lote
                             ;
                     }
@@ -225,14 +225,14 @@ $(function () {
                     data: null,
                     searchable: true, orderable: false,
                     render: function (data, type, row) {
-                        var empresa = '';
-                        var razonSocial = '';
+                        var cant_botellas = '';
+                        var cantt_botellas = '';
 
-                        if (row.id_empresa != 'N/A') {
-                            empresa = '<br><span class="fw-bold text-dark small">Cantidad de botellas:</span><span class="small"> ' + row.cant_botellas + '</span>';
+                        if (row.cant_botellas != 'N/A') {
+                            cant_botellas = '<br><span class="fw-bold text-dark small">Cantidad de botellas:</span><span class="small"> ' + row.cant_botellas + '</span>';
                         }
-                        if (row.razon_social != 'N/A') {
-                            razonSocial = '<br><span class="fw-bold text-dark small">Cantidad de botellas restantes:</span><span class="small"> ' + row.cantt_botellas + '</span>';
+                        if (row.cantt_botellas != 'N/A') {
+                            cantt_botellas = '<br><span class="fw-bold text-dark small">Cantidad de botellas restantes:</span><span class="small"> ' + row.cantt_botellas + '</span>';
                         }
 
                         return '<span class="fw-bold text-dark small">Inicial:</span> <span class="small"> ' + row.cant_botellas +
@@ -255,10 +255,10 @@ $(function () {
                         var volumen_total = '';
                         var volumen_total = '';
 
-                        if (row.id_empresa != 'N/A') {
+                        if (row.volumen_total != 'N/A') {
                             volumen_total = '<br><span class="fw-bold text-dark small">Volumen inicial:</span><span class="small"> ' + row.volumen_total + ' </span>';
                         }
-                        if (row.razon_social != 'N/A') {
+                        if (row.volumen_total != 'N/A') {
                             volumen_total = '<br><span class="fw-bold text-dark small">Volumen restante:</span><span class="small"> ' + row.volumen_total + ' </span>';
                         }
 
@@ -274,14 +274,14 @@ $(function () {
                     data: null,
                     searchable: true, orderable: false,
                     render: function (data, type, row) {
-                        var empresa = '';
-                        var razonSocial = '';
+                        var inicial = '';
+                        var nuevo = '';
 
-                        if (row.id_empresa != 'N/A') {
-                            empresa = '<br><span class="fw-bold text-dark small">SKU inicial:</span><span class="small"> ' + row.inicial + '</span>';
+                        if (row.inicial != 'N/A') {
+                            inicial = '<br><span class="fw-bold text-dark small">SKU inicial:</span><span class="small"> ' + row.inicial + '</span>';
                         }
-                        if (row.razon_social != 'N/A') {
-                            razonSocial = '<br><span class="fw-bold text-dark small">SKU nuevo:</span><span class="small"> ' + row.nuevo + '</span>';
+                        if (row.nuevo != 'N/A') {
+                            nuevo = '<br><span class="fw-bold text-dark small">SKU nuevo:</span><span class="small"> ' + row.nuevo + '</span>';
                         }
 
                         return '<span class="fw-bold text-dark small">Inicial:</span> <span class="small"> ' + row.inicial +
@@ -378,27 +378,27 @@ $(function () {
                 },
 
                 {
-                    // Actions
+                    // Actions botones de eliminar y actualizar(editar)
                     targets: -1,
                     title: 'Acciones',
                     searchable: false,
                     orderable: false,
                     render: function (data, type, full, meta) {
-                        return (
-                            '<div class="d-flex align-items-center gap-50">' +
-                            '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-                            '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" class="dropdown-item edit-record waves-effect "><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes envasado</a>` +
-                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" class="dropdown-item edit-reclasificacion waves-effect "><i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación SKU</a>` +
-                            `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#" class="dropdown-item edit waves-effect "><i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>` +
-                            `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasados</a>` +
-                            '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                            '<a class="dropdown-item">Suspend</a>' +
-                            '</div>' +
-                            '</div>'
-                        );
+                      return (
+                        '<div class="d-flex align-items-center gap-50">' +
+                        '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
+                        '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                        `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" class="dropdown-item edit-record waves-effect"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes envasado</a>` +
+                        `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" class="dropdown-item edit-reclasificacion waves-effect "><i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación SKU</a>` +
+                        `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#" class="dropdown-item edit waves-effect "><i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>` +
+                        `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasados</a>` +
+                        '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                        '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+                        '</div>' +
+                        '</div>'
+                      );
                     }
-                }
+                  }
             ],
 
             order: [[2, 'desc']],
