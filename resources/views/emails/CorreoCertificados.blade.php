@@ -1,3 +1,25 @@
+<?php
+switch ($tipo_certificado) {
+    case 1:
+        $tipoCertificadoTexto = "Productor";
+        break;
+    case 2:
+        $tipoCertificadoTexto = "Envasador";
+        break;
+    case 3:
+        $tipoCertificadoTexto = "Comercializador";
+        break;
+    case 4:
+        $tipoCertificadoTexto = "Almacén y bodega";
+        break;
+    case 5:
+        $tipoCertificadoTexto = "Área de maduración";
+        break;
+    default:
+        $tipoCertificadoTexto = "Desconocido"; 
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -16,12 +38,29 @@
     </div>
     
     <div style="padding: 20px; text-align: center;">
-        <h2 style="color: #333333;"></h2>
-        <p style="color: #555555; margin-bottom: 10px;">Estimado(a) <strong>{{ $nombreRevisor }}</strong>, 
-            se le ha asignado la revisión del certificado número <strong>{{ $num_certificado }}</strong>. 
-            Agradecemos su pronta atención a esta tarea.</p>
+        <h2 style="color: #333333;">REVISIÓN DE CERTIFICADO</h2>
+<p style="color: #555555; margin-bottom: 10px;">
+    Estimado(a) <strong>{{ $nombreRevisor }}</strong>,
+</p>
+
+<p style="color: #555555; margin-bottom: 10px;">
+    Se le ha asignado la revisión del certificado <strong>{{ $num_certificado }}</strong>. A continuación, algunos detalles relevantes:
+</p>
+
+<ul style="color: #555555; margin-bottom: 10px; text-align:left;">
+    <li><strong>Fecha de vigencia:</strong> {{ $fecha_vigencia }}</li>
+    <li><strong>Fecha de vencimiento:</strong> {{ $fecha_vencimiento }}</li>
+    <li><strong>Razón social:</strong> {{ $razon_social }}</li>
+    <li><strong>Número de cliente:</strong> {{ $numero_cliente }}</li>
+    <li><strong>Tipo de certificado:</strong> <?php echo $tipoCertificadoTexto; ?></li>
+</ul>
+
+<p style="color: #555555; margin-bottom: 10px;">
+    Agradecemos su pronta atención y le recordamos que puede consultar el historial de este certificado en el apartado (Revisión de Certificados), utilizando su cuenta personal.
+</p>
+        </p>
         <p style="color: #555555; margin-bottom: 10px;"></p>
-        <a href="https://oc.erpcidam.com" style="display: block; width: 200px; height: 50px; background-color: #0C1444; color: #ffffff; text-align: center; line-height: 50px; text-decoration: none; border-radius: 25px; margin: 20px auto;">Click aquí</a>
+        <a href="http://localhost:8000/revision/personal" style="display: block; width: 200px; height: 50px; background-color: #0C1444; color: #ffffff; text-align: center; line-height: 50px; text-decoration: none; border-radius: 25px; margin: 20px auto;">Click aquí</a>
     </div>
     
     <div style="background-color: #17905E; padding: 20px; text-align: center; font-size: 12px; color: #ffffff; border-radius: 0 0 10px 10px;">
