@@ -179,46 +179,7 @@ function initializeSelect2($elements) {
              return `<span>${full.fake_id}</span>`;
            }
          },
-         {
-           // Tabla 2 Nombre
-           targets: 2,
-           responsivePriority: 4,
-           render: function (data, type, full, meta) {
-             var $name = full['nombre'];
-             return $name;
-           }
-         },
-          {
-           // Tabla 3 Cientifico
-           targets: 3,
-           render: function (data, type, full, meta) {
-             var $email = full['cientifico'];
-             return '<span class="user-email">' + $email + '</span>';
-           }
-         }, 
          
-         {
-            // email verify
-            targets: 11,
-            className: 'text-center',
-            render: function (data, type, full, meta) {
-                var $verified = full['estatus'];
-                var $colorRegimen;
-
-                if ($verified == 'Pendiente') {
-                    $colorRegimen = 'danger'; // Azulnja
-                    /*                       } else if ($verified == 'Pendiente') {
-                                            $colorRegimen = 'danger';  */
-                } else {
-                    $colorRegimen = 'secondary'; // Color por defecto si no coincide con ninguno
-                }
-
-                return `${$verified
-                    ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                    : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                    }`;
-            }
-        },
  
          {
            // Actions
@@ -672,7 +633,6 @@ $(document).on('click', '.edit-record', function () {
         $('#edit_cliente').val(data.id_empresa).trigger('change');
         $('#edit_lote_granel').val(data.id_empresa).trigger('change');
         $('#edit_nombre_lote').val(data.nombre_lote);
-        $('#edit_tipo_lote').val(data.tipo_lote);
         $('#edit_sku').val(data.inicial);
         $('#edit_destino_lote').val(data.destino_lote);
         $('#edit_cant_botellas').val(data.cant_botellas);
@@ -734,13 +694,7 @@ const fv2 = FormValidation.formValidation(editLoteEnvasadoForm, {
                 }
             }
         },
-        edit_tipo_lote: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor introduzca el nombre del lote'
-                }
-            }
-        },
+
         edit_lote_granel: {
             validators: {
                 notEmpty: {

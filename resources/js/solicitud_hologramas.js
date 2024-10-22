@@ -3,6 +3,14 @@
  */
 
 'use strict';
+$(document).ready(function () {
+  $('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true,
+    language: 'es' // Configura el idioma a español
+  });
+});
 
 // Agregar nuevo registro
 // validating form and updating user's data

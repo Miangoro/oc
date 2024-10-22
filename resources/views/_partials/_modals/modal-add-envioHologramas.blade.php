@@ -21,8 +21,8 @@
                 <div class="row">
                     <div class="col-md-6 mb-5">
                         <div class="form-floating form-floating-outline">
-                            <input type="date" class="form-control" id="fecha_envio" name="fecha_envio"
-                                aria-label="Fecha de Emisión">
+                            <input type="date" class="form-control datepicker" id="fecha_envio" name="fecha_envio"
+                                aria-label="Fecha de Emisión" readonly>
                             <label for="fecha_envio">Fecha de Envio</label>
                         </div>
                     </div>
