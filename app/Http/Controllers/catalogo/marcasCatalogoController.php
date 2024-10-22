@@ -8,6 +8,7 @@ use App\Models\Documentacion;
 use App\Models\Documentacion_url;
 use App\Models\marcas;
 use App\Models\empresa;
+use App\Models\catalogo_norma_certificar;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Storage;
@@ -32,6 +33,7 @@ class marcasCatalogoController extends Controller
 
         // Otros datos que puedas querer pasar a la vista
         $marcas = marcas::all();
+        $catalogo_norma_certificar = catalogo_norma_certificar::all();
         $userCount = $marcas->count();
         $verified = 5;
         $notVerified = 10;
@@ -44,6 +46,7 @@ class marcasCatalogoController extends Controller
             'userDuplicates' => $userDuplicates,
             'clientes' => $clientes, // Pasa la lista de clientes a la vista
             'documentos' => $documentos,
+            'catalogo_norma_certificar' => $catalogo_norma_certificar,
         ]);
     }
 
@@ -54,6 +57,7 @@ class marcasCatalogoController extends Controller
             2 => 'folio',
             3 => 'marca',
             4 => 'id_empresa',
+            5 => 'id_norma',
         ];
 
         $search = [];
@@ -98,11 +102,14 @@ class marcasCatalogoController extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
+                $id_norma = \App\Models\catalogo_norma_certificar::where('id_norma', $user->id_norma)->value('norma');
+
                 $nestedData['id_marca'] = $user->id_marca;
                 $nestedData['fake_id'] = ++$ids;
                 $nestedData['folio'] = $user->folio;
                 $nestedData['marca'] = $user->marca;
                 $nestedData['id_empresa'] = $user->id_empresa;
+                $nestedData['id_norma'] = $id_norma;
                 $nestedData['razon_social'] = $user->empresa ? $user->empresa->razon_social : ''; // Obtiene la razón social
 
                 $data[] = $nestedData;
@@ -136,6 +143,7 @@ class marcasCatalogoController extends Controller
             $marca = marcas::findOrFail($request->id);
             $marca->id_empresa = $request->cliente;
             $marca->marca = $request->marca;
+            $marca->id_norma = $request->id_norma;
             $marca->folio = Helpers::generarFolioMarca($request->cliente);
             $marca->save();
     
@@ -190,6 +198,7 @@ class marcasCatalogoController extends Controller
             $marca = new marcas();
             $marca->id_empresa = $request->cliente;
             $marca->marca = $request->marca;
+            $marca->id_norma = $request->id_norma;
             $marca->folio = Helpers::generarFolioMarca($request->cliente);
             $marca->save();
     
@@ -252,6 +261,7 @@ class marcasCatalogoController extends Controller
             $marca = marcas::findOrFail($request->input('id_marca'));
             $marca->marca = $request->marca;
             $marca->id_empresa = $request->cliente;
+            $marca->id_norma = $request->id_norma;
             $marca->save();
 
             return response()->json(['success' => 'Marca actualizada correctamente']);

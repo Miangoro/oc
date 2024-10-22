@@ -5,19 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class marcas extends Model
+class catalogo_norma_certificar extends Model
 {
 
       use HasFactory;
   
-      protected $table = 'marcas';
-      protected $primaryKey = 'id_marca';
+      protected $table = 'catalogo_norma_certificar';
+      protected $primaryKey = 'id_norma ';
       protected $fillable = [
-          'id_marca',
-          'folio',
-          'marca',
-          'id_empresa',
-          'id_norma'
+          'id_norma',
+          'norma',
+
       ];
   
       public function empresa()
@@ -27,12 +25,6 @@ class marcas extends Model
       public function documentacion_url()
       {
           return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_marca');
-      }
-
-
-      public function catalogo_norma_certificar()
-      {
-          return $this->hasMany(catalogo_norma_certificar::class, 'id_norma', 'id_norma');
       }
       
 }
