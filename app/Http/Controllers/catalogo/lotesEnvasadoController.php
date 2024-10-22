@@ -93,7 +93,7 @@ class lotesEnvasadoController extends Controller
             foreach ($users as $user) {
                 // Obtener la dirección completa de la instalación mediante el id_empresa
                 $instalacion = Instalaciones::where('id_instalacion', $user->lugar_envasado)->first();
-        $direccion_completa = $instalacion ? $instalacion->direccion_completa : '';
+                $direccion_completa = $instalacion ? $instalacion->direccion_completa : '';
         
                 // Obtener el numero_cliente de la tabla empresa_num_cliente
                 $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
@@ -108,7 +108,7 @@ class lotesEnvasadoController extends Controller
                 $cantt_botellas = isset($sku['cantt_botellas']) ? $sku['cantt_botellas'] : $user->cant_botellas;
                 $lotes_granel = \App\Models\LotesGranel::where('id_empresa', $user->id_empresa)->value('nombre_lote');
                 
-                $id_lote_granel = \App\Models\lotes_envasado_granel::where('id_lote_envasado', $user->id_lote_envasado)->pluck('id_lote_granel');
+                //$id_lote_granel = \App\Models\lotes_envasado_granel::where('id_lote_envasado', $user->id_lote_envasado)->pluck('id_lote_granel');
 
 
                 $nestedData = [
@@ -131,9 +131,12 @@ class lotesEnvasadoController extends Controller
                     'nuevo' => $nuevo, // Agrega la parte 'inicial' del JSON decodificado
                     'cantt_botellas' => $cantt_botellas, // Agrega la parte 'inicial' del JSON decodificado
                     'estatus' => $user->estatus,
-                    'id_lote_granel' => $id_lote_granel,
+                    'id_lote_granel' => $user->lotes_envasado_granel[0],
+
 
                 ];
+
+             
                 
                 $data[] = $nestedData; // Agrega el array a $data
                 

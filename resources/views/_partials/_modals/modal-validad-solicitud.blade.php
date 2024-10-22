@@ -1,4 +1,4 @@
-<!-- Add New Lote Envasado Modal -->
+
 <div class="modal fade" id="addSolicitudValidar" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple">
         <div class="modal-content">
@@ -7,13 +7,33 @@
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Validación de la solicitud de servicio</h4>
                     <p class="solicitud badge bg-primary"></p>
+                    <div class="datos-importantes">
+                        <table style="font-size: 11px;" class="table table-bordered table-sm">
+                            <tbody>
+                                <tr>
+                                    <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Número de Solicitud:</th>
+                                    <td id="numeroSolicitud">12345</td>
+                                    <td  class="text-dark fw-bold" style="font-size: 11px;" scope="row" rowspan="4">Datos de la solicitud</td>
+                                    <td rowspan="4">aqui los datos</td>
+                                </tr>
+                                <tr>
+                                    <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Cliente:</th>
+                                    <td id="clienteNombre">Nombre del Cliente</td>
+                                </tr>
+                                <tr>
+                                    <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Fecha de Solicitud:</th>
+                                    <td id="fechaSolicitud">21/10/2024</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <form id="addRegistrarSolicitudValidar">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="card mb-5">
                                 <div class="card-body">
-                                    <span class="card-title">Se cuenta con todos los medios para realizar todas las actividades de evaluación para la Certificación:</span>
+                                    <span class="fs-6 fw-bold text-dark">Se cuenta con todos los medios para realizar todas las actividades de evaluación para la Certificación:</span>
                                     <p>
                                         <label>
                                             <input name="medios" type="radio" value="Si" />
@@ -29,12 +49,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="card mb-5">
                                 <div class="card-body">
-                                    <span class="card-title">El organismo de Certificación tiene la competencia para realizar la Certificación:</span>
+                                    <span class="fs-6 fw-bold text-dark">El organismo de Certificación tiene la competencia para realizar la Certificación:</span>
                                     <p>
                                         <label>
                                             <input name="competencia" type="radio" value="Si" />
@@ -52,10 +70,10 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="card mb-5">
                                 <div class="card-body">
-                                    <span class="card-title">El organismo de Certificación tiene la capacidad para llevar a cabo las actividades certificación:</span>
+                                    <span class="fs-6 fw-bold text-dark">El organismo de Certificación tiene la capacidad para llevar a cabo las actividades certificación:</span>
                                     <p>
                                         <label>
                                             <input name="capacidad" type="radio" value="Si" />
@@ -71,12 +89,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="card mb-5">
                                 <div class="card-body">
-                                    <span class="card-title">¿La solicitud está completa?:</span>
+                                    <span class="fs-6 fw-bold text-dark">¿La solicitud está completa?:</span>
                                     <p>
                                         <label>
                                             <input name="completa" type="radio" value="Si" />
