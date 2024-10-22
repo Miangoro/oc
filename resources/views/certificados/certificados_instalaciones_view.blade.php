@@ -46,9 +46,9 @@
         <table class="datatables-users table">
             <thead class="table-dark">
                 <tr>
-                  <th></th>
+                    <th>#</th>
                     <th>ID</th>
-                    <th>Tipo de Certificado</th>
+                    <th>Instalaciones de</th>
                     <th>No. Dictamen</th>
                     <th>No. Certificado</th>
                     <th>Maestro Mezcalero</th>

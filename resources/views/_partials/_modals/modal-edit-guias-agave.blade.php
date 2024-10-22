@@ -173,8 +173,8 @@
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="date" class="form-control" id="edit_fecha_ingreso" placeholder="fecha_ingreso"
-                                    name="fecha_ingreso" aria-label="fecha_ingreso">
+                                <input type="date" class="form-control datepicker" id="edit_fecha_ingreso" placeholder="fecha_ingreso"
+                                    name="fecha_ingreso" aria-label="fecha_ingreso" readonly>
                                 <label for="edit_fecha_ingreso">Fecha de ingreso</label>
                                 
                             </div>

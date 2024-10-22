@@ -686,12 +686,30 @@ $(function () {
                         var volumen_total = '';
                         var volumen_total = '';
 
+<<<<<<< HEAD
                         if (row.volumen_total != 'N/A') {
                             volumen_total = '<br><span class="fw-bold text-dark small">Volumen inicial:</span><span class="small"> ' + row.volumen_total + ' </span>';
                         }
                         if (row.volumen_total != 'N/A') {
                             volumen_total = '<br><span class="fw-bold text-dark small">Volumen restante:</span><span class="small"> ' + row.volumen_total + ' </span>';
                         }
+=======
+    var id_lote_envasado = $(this).data('id');
+    // Realizar la solicitud AJAX para obtener los datos del lote envasado
+    $.get('/lotes-envasado/edit/' + id_lote_envasado, function (data) {
+        // Rellenar el formulario con los datos obtenidos
+        $('#edit_id_lote_envasado').val(data.id_lote_envasado);
+        $('#edit_cliente').val(data.id_empresa).trigger('change');
+        $('#edit_lote_granel').val(data.id_empresa).trigger('change');
+        $('#edit_nombre_lote').val(data.nombre_lote);
+        $('#edit_sku').val(data.inicial);
+        $('#edit_destino_lote').val(data.destino_lote);
+        $('#edit_cant_botellas').val(data.cant_botellas);
+        $('#edit_presentacion').val(data.presentacion);
+        $('#edit_unidad').val(data.unidad);
+        $('#edit_volumen_total').val(data.volumen_total);
+        $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
+>>>>>>> a8f0b7e53d5661992133b6c4f0c3dc9b9a82c268
 
                         return '<span class="fw-bold text-dark small">Inicial:</span> <span class="small"> ' + row.volumen_total + ' Litros' +
                             '</span><br><span class="fw-bold text-dark small">Restante:</span><span class="small"> ' + row.volumen_total + ' Litros'
@@ -1192,13 +1210,7 @@ const fv2 = FormValidation.formValidation(editLoteEnvasadoForm, {
                 }
             }
         },
-        edit_tipo_lote: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor introduzca el nombre del lote'
-                }
-            }
-        },
+
         edit_lote_granel: {
             validators: {
                 notEmpty: {

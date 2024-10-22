@@ -41,7 +41,7 @@
                         <th>Folio</th>
                         <th>Marca</th>
                         <th>Clientes</th>
-
+                        <th>Norma</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -55,6 +55,8 @@
     @include('_partials/_modals/modal-pdfs-frames')
     @include('_partials/_modals/modal-add-marca')
     @include('_partials/_modals/modal-edit-marca')
+    @include('_partials/_modals/modal-add-etiqueta')
+
 
     <!-- /Modal -->
 @endsection

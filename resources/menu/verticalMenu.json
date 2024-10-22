@@ -85,11 +85,6 @@
       "slug": "solicitudes",
       "submenu": [
         {
-          "url": "/solicitudes",
-          "name": "Nueva solicitud",
-          "slug": "solicitudes-tipo"
-        },
-        {
           "url": "solicitudes-historial",
           "name": "Historial",
           "slug": "solicitudes-historial"
@@ -178,7 +173,7 @@
         },
         {
           "url": "/documentos",
-          "name": "Documentacion",
+         "name": "Documentación",
           "slug": "catalogo-documentos"
         },
         {

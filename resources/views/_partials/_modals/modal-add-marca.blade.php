@@ -20,6 +20,17 @@
                             <label for="cliente">Cliente</label>
                         </div>
                     </div>
+                    <div class="col-12">
+                        <div class="form-floating form-floating-outline mb-5">
+                            <select id="id_norma" name="id_norma" class="select2 form-select" required>
+                                <option value="">Selecciona uan norma</option>
+                                @foreach ($catalogo_norma_certificar as $normas)
+                                    <option value="{{ $normas->id_norma }}">{{ $normas->norma }}</option>
+                                @endforeach
+                            </select>
+                            <label for="id_norma">Normas</label>
+                        </div>
+                    </div>
                     <div class="col-12 col-md-12 col-sm-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <input id="marca" type="text" name="marca" class="form-control" placeholder="Introduce el nombre de la marca" />
@@ -56,19 +67,5 @@
 <!--/ Add New Address Modal -->
 
 <script>
-$(document).ready(function() {
-    $('#addMarca').on('hidden.bs.modal', function () {
-        // Limpiar todas las entradas dentro del formulario
-        $('#addNewMarca')[0].reset();
-        
-        // Resetear el select2 para que muestre el placeholder
-        $('#cliente').val('').trigger('change');
-        
-        // Limpiar todos los inputs de tipo file
-        $('#addNewMarca input[type="file"]').val('');
-        
-        // Opcional: Limpiar cualquier error de validación mostrado
-        $('#addNewMarca .is-invalid').removeClass('is-invalid');
-    });
-});
+
 </script>
