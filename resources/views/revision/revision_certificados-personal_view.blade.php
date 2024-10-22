@@ -48,7 +48,7 @@
                 <tr>
                     <th>#</th>
                     <th>ID</th>
-                    <th>Tipo Certificado</th>
+                    <th>Instalaciones de</th>
                     <th>Revisor</th>
                     <th>Certificado</th>
                     <th>Fecha Emisión</th>
