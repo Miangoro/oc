@@ -6,10 +6,11 @@ $(document).ready(function () {
   $('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
     autoclose: true,
-    todayHighlight: true
+    todayHighlight: true,
+    language: 'es' // Configura el idioma a español
   });
-
 });
+
 // Agregar nuevo registro
 // Validando formulario y actualizando datos del usuario
 const addNewGuia = document.getElementById('addGuiaForm');
