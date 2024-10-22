@@ -1,5 +1,5 @@
 <!-- Modal para editar un lote -->
-<div class="modal fade" id="offcanvasEditLote" tabindex="-1" aria-labelledby="offcanvasEditLoteLabel" aria-hidden="true">
+<div class="modal fade" id="offcanvasEditLote" tabindex="-1" aria-labelledby="offcanvasEditLoteLabel">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -23,8 +23,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select onchange="obtenerGuias1()" id="edit_id_empresa" name="id_empresa"
-                                        class="select2 form-select">
+                                    <select onchange="obtenerGuias1(); obtenerLotesEdit();" id="edit_id_empresa"
+                                        name="id_empresa" class="select2 form-select">
                                         <option value="" disabled selected>Selecciona la empresa</option>
                                         @foreach ($empresas as $empresa)
                                             <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="edit_tipo_lote" name="tipo_lote" class="form-select">
                                         <option value="" disabled selected>Selecciona el tipo de lote</option>
@@ -46,7 +46,39 @@
                                     <label for="tipo_lote">Tipo de Lote</label>
                                 </div>
                             </div>
+
+                            <!-- Campo para seleccionar lote original -->
+                            <div class="col-md-6" id="editarLotes">
+                                <div class="form-floating form-floating-outline mb-4">
+                                    <select id="edit_es_creado_a_partir" name="edit_es_creado_a_partir"
+                                        class="form-select">
+                                        <option value="" disabled selected>¿Creado a partir de otro lote?
+                                        </option>
+                                        <option value="no">No</option>
+                                        <option value="si">Sí</option>
+                                    </select>
+                                    <label for="edit_es_creado_a_partir" class="form-label">¿Creado a partir de otro
+                                        lote?</label>
+                                </div>
+                            </div>
                         </div>
+
+                        <div id="editLotesGranel" class="d-none">
+                            <table class="table table-bordered shadow-lg">
+                                <thead>
+                                    <tr>
+                                        <th><button type="button" class="btn btn-primary add-row-lotes-edit"> <i
+                                                    class="ri-add-line"></i> </button></th>
+                                        <th>Lote a granel</th>
+                                        <th>Volumen parcial</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contenidoGranelesEdit">
+                                    <!-- Las filas dinámicas se generarán aquí -->
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
 
                     <!-- Sección de Información Adicional -->
@@ -342,4 +374,48 @@
             }
         });
     }
+
+    function obtenerLotesEdit() {
+        var empresa = $("#edit_id_empresa").val();
+
+        // Verifica si el valor de empresa es válido
+        if (!empresa) {
+            return; // No hacer la petición si el valor es inválido
+        }
+
+        // Hacer una petición AJAX para obtener los detalles de la empresa
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var $selectLotesEdit = $('.id_lote_granel');
+
+                // Limpiar completamente el select antes de agregar las nuevas opciones
+                $selectLotesEdit.each(function() {
+                    $(this).empty(); // Vaciar las opciones actuales
+
+                    if (response.lotes_granel.length > 0) {
+                        // Añadir nuevas opciones con los lotes obtenidos
+                        response.lotes_granel.forEach(function(lote) {
+                            $(this).append(new Option(lote.nombre_lote, lote
+                                .id_lote_granel));
+                        }, this); // Usar 'this' para referirse al select actual
+                    } else {
+                        // Mostrar opción "Sin lotes registrados" si no hay lotes
+                        $(this).append(
+                            '<option value="" disabled selected>Sin lotes registrados</option>');
+                    }
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error al cargar los lotes:', error);
+                alert('Error al cargar los lotes. Por favor, intenta nuevamente.');
+            }
+        });
+    }
+
+    // Llamar a obtenerLotesEdit cuando se selecciona la empresa en el modal de edición
+    $('#edit_id_empresa').change(function() {
+        obtenerLotesEdit();
+    });
 </script>

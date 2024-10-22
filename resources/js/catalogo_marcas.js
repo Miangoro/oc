@@ -17,6 +17,13 @@ const fv = FormValidation.formValidation(addNewMarca, {
         }
       }
     },
+    id_norma: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione una norma'
+        }
+      }
+    },
     marca: {
       validators: {
         notEmpty: {
@@ -36,12 +43,9 @@ const fv = FormValidation.formValidation(addNewMarca, {
       }
     }),
     submitButton: new FormValidation.plugins.SubmitButton(),
-    // Submit the form when all fields are valid
-    // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
     autoFocus: new FormValidation.plugins.AutoFocus()
   }
 }).on('core.form.valid', function (e) {
-  // e.preventDefault();
   var formData = new FormData(addNewMarca);
 
   $.ajax({
@@ -51,7 +55,14 @@ const fv = FormValidation.formValidation(addNewMarca, {
     processData: false, // Evita la conversión automática de datos a cadena
     contentType: false, // Evita que se establezca el tipo de contenido
     success: function (response) {
+      // Reinicializar el select2 para cliente e id_norma
+      $('#cliente').val(null).trigger('change'); // Limpiar el select2 de cliente
+      $('#id_norma').val(null).trigger('change'); // Limpiar el select2 de id_norma
+
+      // Ocultar el modal después de enviar el formulario
       $('#addMarca').modal('hide');
+      
+      // Recargar la tabla de DataTables
       $('.datatables-users').DataTable().ajax.reload();
 
       // Mostrar alerta de éxito
@@ -78,6 +89,23 @@ const fv = FormValidation.formValidation(addNewMarca, {
   });
 });
 
+// Inicializar select2 y revalidar los campos cuando cambien
+$('#cliente').select2({
+  placeholder: 'Seleccione un cliente',
+  allowClear: true
+}).on('change', function () {
+  fv.revalidateField('cliente'); // Revalidar el campo select cuando cambie
+});
+
+$('#id_norma').select2({
+  placeholder: 'Seleccione una norma',
+  allowClear: true
+}).on('change', function () {
+  fv.revalidateField('id_norma'); // Revalidar el campo select cuando cambie
+});
+
+
+
 
 
 //DATE PICKER
@@ -85,9 +113,11 @@ const fv = FormValidation.formValidation(addNewMarca, {
 
 $(document).ready(function () {
   $('.datepicker').datepicker({
-    format: 'yyyy-mm-dd'
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true,
+    language: 'es' // Configura el idioma a español
   });
-
 });
 
 $(function () {
@@ -242,7 +272,7 @@ $(function () {
               /*               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#editMarca"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
                             `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` + */
               `<a data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#editMarca" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar marca</a>` +
-              `<a data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#editMarca" href="javascript:;" class="dropdown-item edit"><i class="ri-price-tag-2-line ri-20px text-success"></i> Subir/Ver etiquetas</a>` +
+              `<a data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#etiquetas" href="javascript:;" class="dropdown-item edit-chelo"><i class="ri-price-tag-2-line ri-20px text-success"></i> Subir/Ver etiquetas</a>` +
               `<a data-id="${full['id_marca']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar marca</a>` +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
@@ -563,7 +593,7 @@ $(function () {
         $('#edit_marca_id').val(marca.id_marca);
         $('#edit_marca_nombre').val(marca.marca);
         $('#edit_cliente').val(marca.id_empresa).trigger('change');
-        $('#id_norma').val(marca.id_norma).trigger('change');
+        $('#edit_id_norma').val(marca.id_norma).trigger('change');
 
 
         // Mostrar archivos existentes en los mismos espacios de entrada de archivo
@@ -634,97 +664,34 @@ $(function () {
     });
 
 
+//envio metodo
+$(document).on('click', '.edit-chelo', function () {
+  var id_marca = $(this).data('id');
+  console.log(id_marca)
+  // Realizar la solicitud AJAX para obtener los datos de la marca
+  $.get('/marcas-list/' + id_marca + '/edit', function (data) {
+    var marca = data.marca;
 
-    /*// Seleccionar el formulario de edición de marca VALIDACION MARCAS CORREGIR
-    // Seleccionar el formulario de edición de marca VALIDACION MARCAS CORREGIR
-const editMarcaForm = document.getElementById('editMarcaForm');
+    // Rellenar el campo con el ID de la marca obtenida
+    $('#etiqueta_marca').val(marca.id_marca);
 
-const fv3 = FormValidation.formValidation(editMarcaForm, {
-  fields: {
-    cliente: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione un cliente'
-        }
+    // Mostrar el modal de edición de etiquetas
+    $('#etiquetas').modal('show');
+  }).fail(function (jqXHR, textStatus, errorThrown) {
+    console.error('Error: ' + textStatus + ' - ' + errorThrown);
+    Swal.fire({
+      icon: 'error',
+      title: '¡Error!',
+      text: 'Error al obtener los datos de la solicitud de holograma',
+      customClass: {
+        confirmButton: 'btn btn-danger'
       }
-    },
-    marca: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor introduzca el nombre de la marca'
-        }
-      }
-    },
-    'url[]': {
-      validators: {
-        notEmpty: {
-          message: 'Por favor adjunte un documento'
-        },
-        file: {
-          extension: 'pdf,doc,docx,jpg,jpeg,png',
-          type: 'application/pdf,application/msword,image/jpeg,image/png',
-          maxSize: 5242880, // 5 MB
-          message: 'El archivo adjunto debe ser un documento válido (PDF, DOC, JPG, PNG) y no mayor de 5MB'
-        }
-      }
-    },
-    'fecha_vigencia[]': {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione una fecha de vigencia'
-        },
-        date: {
-          format: 'YYYY-MM-DD',
-          message: 'Por favor introduzca una fecha válida'
-        }
-      }
-    }
-  },
-  plugins: {
-    trigger: new FormValidation.plugins.Trigger(),
-    bootstrap5: new FormValidation.plugins.Bootstrap5({
-      eleValidClass: '',
-      rowSelector: '.mb-4, .mb-5, .mb-6' // Ajusta según las clases de tus elementos
-    }),
-    submitButton: new FormValidation.plugins.SubmitButton(),
-    autoFocus: new FormValidation.plugins.AutoFocus()
-  }
-}).on('core.form.valid', function (e) {
-  // Prevenir el comportamiento predeterminado
-  var formData = new FormData(editMarcaForm);
-
-  $.ajax({
-    url: '/marcas-list',
-    type: 'POST',
-    data: formData,
-    processData: false,
-    contentType: false,
-    success: function (response) {
-      // Mostrar alerta de éxito
-      Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: response.success,
-        customClass: {
-          confirmButton: 'btn btn-success'
-        }
-      });
-            // Ocultar el modal al éxito
-            $('#editMarca').modal('hide');
-            $('.datatables-users').DataTable().ajax.reload();
-      
-    },
-    error: function (xhr) {
-      // Mostrar alerta de error
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Ocurrió un error al actualizar la marca.',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    }
+    });
   });
-});*/
+});
+
+
+
+
+
 });
