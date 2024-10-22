@@ -17,6 +17,13 @@ const fv = FormValidation.formValidation(addNewMarca, {
         }
       }
     },
+    id_norma: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione una norma'
+        }
+      }
+    },
     marca: {
       validators: {
         notEmpty: {
@@ -36,12 +43,9 @@ const fv = FormValidation.formValidation(addNewMarca, {
       }
     }),
     submitButton: new FormValidation.plugins.SubmitButton(),
-    // Submit the form when all fields are valid
-    // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
     autoFocus: new FormValidation.plugins.AutoFocus()
   }
 }).on('core.form.valid', function (e) {
-  // e.preventDefault();
   var formData = new FormData(addNewMarca);
 
   $.ajax({
@@ -51,7 +55,14 @@ const fv = FormValidation.formValidation(addNewMarca, {
     processData: false, // Evita la conversión automática de datos a cadena
     contentType: false, // Evita que se establezca el tipo de contenido
     success: function (response) {
+      // Reinicializar el select2 para cliente e id_norma
+      $('#cliente').val(null).trigger('change'); // Limpiar el select2 de cliente
+      $('#id_norma').val(null).trigger('change'); // Limpiar el select2 de id_norma
+
+      // Ocultar el modal después de enviar el formulario
       $('#addMarca').modal('hide');
+      
+      // Recargar la tabla de DataTables
       $('.datatables-users').DataTable().ajax.reload();
 
       // Mostrar alerta de éxito
@@ -78,6 +89,23 @@ const fv = FormValidation.formValidation(addNewMarca, {
   });
 });
 
+// Inicializar select2 y revalidar los campos cuando cambien
+$('#cliente').select2({
+  placeholder: 'Seleccione un cliente',
+  allowClear: true
+}).on('change', function () {
+  fv.revalidateField('cliente'); // Revalidar el campo select cuando cambie
+});
+
+$('#id_norma').select2({
+  placeholder: 'Seleccione una norma',
+  allowClear: true
+}).on('change', function () {
+  fv.revalidateField('id_norma'); // Revalidar el campo select cuando cambie
+});
+
+
+
 
 
 //DATE PICKER
@@ -85,9 +113,11 @@ const fv = FormValidation.formValidation(addNewMarca, {
 
 $(document).ready(function () {
   $('.datepicker').datepicker({
-    format: 'yyyy-mm-dd'
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true,
+    language: 'es' // Configura el idioma a español
   });
-
 });
 
 $(function () {
@@ -643,7 +673,7 @@ $(document).on('click', '.edit-chelo', function () {
     var marca = data.marca;
 
     // Rellenar el campo con el ID de la marca obtenida
-    $('#edit_marca_id').val(marca.id_marca);
+    $('#etiqueta_marca').val(marca.id_marca);
 
     // Mostrar el modal de edición de etiquetas
     $('#etiquetas').modal('show');

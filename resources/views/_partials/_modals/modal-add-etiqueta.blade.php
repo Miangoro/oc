@@ -10,10 +10,69 @@
                 </div>
                 <form id="etiquetasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
-                        <input type="text" id="edit_marca_id" name="id">
+                        <input type="text" id="etiqueta_marca" name="etiqueta_marca">
 
 
-
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th><button type="button" class="btn btn-primary add-row-add"> <i class="ri-add-line"></i>
+                                        </button></th>
+                                    <th>SKU</th>
+                                    <th>Tipo Maguey</th>
+                                    <th>Presentación</th>
+                                    <th>Clase</th>
+                                    <th>Categoria</th>
+                                    <th>Etiqueta</th>
+                                    <th>Corrugado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contenidoRango">
+                                <tr>
+                                    <th>
+                                        <button type="button" class="btn btn-danger remove-row" disabled> <i
+                                                class="ri-delete-bin-5-fill"></i> </button>
+                                    </th>
+                                    <td>
+                                        <select class="id_lote_granel form-control select2" name="id_lote_granel[]" id="id_lote_granel">
+                                            <!-- Opciones -->
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="id_lote_granel form-control select2" name="id_lote_granel[]" id="id_lote_granel">
+                                            <!-- Opciones -->
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select class="id_lote_granel form-control select2" name="id_lote_granel[]" id="id_lote_granel">
+                                            <!-- Opciones -->
+                                        </select>
+                                    </td>                                    <td>
+                                        <select class="id_lote_granel form-control select2" name="id_lote_granel[]" id="id_lote_granel">
+                                            <!-- Opciones -->
+                                        </select>
+                                    </td>                                    <td>
+                                        <select class="id_lote_granel form-control select2" name="id_lote_granel[]" id="id_lote_granel">
+                                            <!-- Opciones -->
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control form-control-sm" type="file" name="url[]">
+                                        <input value="51" class="form-control" type="hidden" name="id_documento[]">
+                                        <input value="Comprobante de pago" class="form-control" type="hidden"
+                                            name="nombre_documento[]">
+                                        <label for="Comprobante de pago">Adjuntar Etiqueta</label>
+                                    </td>
+                                    <td>
+                                        <input class="form-control form-control-sm" type="file" name="url[]">
+                                        <input value="51" class="form-control" type="hidden" name="id_documento[]">
+                                        <input value="Comprobante de pago" class="form-control" type="hidden"
+                                            name="nombre_documento[]">
+                                        <label for="Comprobante de pago">Adjuntar Etiqueta</label>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
 
 
