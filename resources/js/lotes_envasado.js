@@ -5,7 +5,439 @@
 
 
 
+<<<<<<< HEAD
 // Agregar nuevo registro
+=======
+
+
+
+// Función para inicializar Select2 en elementos específicos
+function initializeSelect2($elements) {
+   $elements.each(function () {
+       var $this = $(this);
+       select2Focus($this);
+       $this.wrap('<div class="position-relative"></div>').select2({
+           placeholder: 'Selecciona cliente',
+           dropdownParent: $this.parent()
+       });
+   });
+}    initializeSelect2(select2Elements);
+
+ 
+   // ajax setup
+   $.ajaxSetup({
+     headers: {
+       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+     }
+   });
+ 
+ 
+   //FUNCIONALIDAD DE LA VISTA datatable
+   if (dt_user_table.length) {
+     var dt_user = dt_user_table.DataTable({
+       processing: true,
+       serverSide: true,
+       ajax: {
+        url: baseUrl + 'lotes-list'
+    },
+    columns: [
+        { data: '' },
+        { data: 'id_lote_envasado' },
+        {
+            data: null,
+            searchable: true, orderable: false,
+            render: function (data, type, row) {
+                var id_empresa = '';
+                var razon_social = '';
+
+                if (row.id_empresa != 'N/A') {
+                    id_empresa = '<br><span class="fw-bold text-dark small">Número del cliente:</span><span class="small"> ' + row.id_empresa + '</span>';
+                }
+                if (row.razon_social != 'N/A') {
+                    razon_social = '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' + row.razon_social + '</span>';
+                }
+
+                return '<span class="fw-bold text-dark small">Número del cliente:</span> <span class="small"> ' + row.id_empresa +
+                    '</span><br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' + row.razon_social
+                    ;
+            }
+        },
+        {
+            data: null,
+            searchable: true, orderable: false,
+            render: function (data, type, row) {
+                var id_lote_granel = '';
+                var nombre_lote = '';
+
+                if (row.id_lote_granel != 'N/A') {
+                    id_lote_granel = '<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ' + row.id_lote_granel + '</span>';
+                }
+                if (row.nombre_lote != 'N/A') {
+                    nombre_lote = '<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ' + row.nombre_lote + '</span>';
+                }
+
+                return '<span class="fw-bold text-dark small">Agranel:</span> <span class="small"> ' + row.id_lote_granel +
+                    '</span><br><span class="fw-bold text-dark small">Envasado:</span><span class="small"> ' + row.nombre_lote
+                    ;
+            }
+        },
+        { data: 'id_marca' },
+
+                        {
+            data: null,
+            searchable: true, orderable: false,
+            render: function (data, type, row) {
+                var cant_botellas = '';
+                var cantt_botellas = '';
+
+                if (row.cant_botellas != 'N/A') {
+                    cant_botellas = '<br><span class="fw-bold text-dark small">Cantidad de botellas:</span><span class="small"> ' + row.cant_botellas + '</span>';
+                }
+                if (row.cantt_botellas != 'N/A') {
+                    cantt_botellas = '<br><span class="fw-bold text-dark small">Cantidad de botellas restantes:</span><span class="small"> ' + row.cantt_botellas + '</span>';
+                }
+
+                return '<span class="fw-bold text-dark small">Inicial:</span> <span class="small"> ' + row.cant_botellas +
+                    '</span><br><span class="fw-bold text-dark small">Restantes:</span><span class="small"> ' + row.cantt_botellas
+                    ;
+            }
+        },
+
+        {
+            data: function (row, type, set) {
+                return row.presentacion + ' ' + row.unidad;
+            }
+        },
+
+
+        {
+            data: null,
+            searchable: true, orderable: false,
+            render: function (data, type, row) {
+                var volumen_total = '';
+                var volumen_total = '';
+
+                if (row.volumen_total != 'N/A') {
+                    volumen_total = '<br><span class="fw-bold text-dark small">Volumen inicial:</span><span class="small"> ' + row.volumen_total + ' </span>';
+                }
+                if (row.volumen_total != 'N/A') {
+                    volumen_total = '<br><span class="fw-bold text-dark small">Volumen restante:</span><span class="small"> ' + row.volumen_total + ' </span>';
+                }
+
+                return '<span class="fw-bold text-dark small">Inicial:</span> <span class="small"> ' + row.volumen_total + ' Litros' +
+                    '</span><br><span class="fw-bold text-dark small">Restante:</span><span class="small"> ' + row.volumen_total + ' Litros'
+                    ;
+            }
+        },
+        { data: 'destino_lote' },
+
+        { data: 'lugar_envasado' },
+        {
+            data: null,
+            searchable: true, orderable: false,
+            render: function (data, type, row) {
+                var inicial = '';
+                var nuevo = '';
+
+                if (row.inicial != 'N/A') {
+                    inicial = '<br><span class="fw-bold text-dark small">SKU inicial:</span><span class="small"> ' + row.inicial + '</span>';
+                }
+                if (row.nuevo != 'N/A') {
+                    nuevo = '<br><span class="fw-bold text-dark small">SKU nuevo:</span><span class="small"> ' + row.nuevo + '</span>';
+                }
+
+                return '<span class="fw-bold text-dark small">Inicial:</span> <span class="small"> ' + row.inicial +
+                    '</span><br><span class="fw-bold text-dark small">Nuevo:</span><span class="small"> ' + row.nuevo
+                    ;
+            }
+        },
+        { data: 'estatus' },//status
+        { data: 'action' },
+    ],
+       columnDefs: [
+         {
+           className: 'control',
+           searchable: false,
+           orderable: false,
+           responsivePriority: 2,
+           targets: 0,
+           render: function (data, type, full, meta) {
+             return '';
+           }
+         },
+         {//Tabla 1
+           searchable: false,
+           orderable: false,
+           targets: 1,
+           render: function (data, type, full, meta) {
+             return `<span>${full.fake_id}</span>`;
+           }
+         },
+         
+ 
+         {
+           // Actions
+           targets: -1,
+           title: 'Acciones',
+           searchable: false,
+           orderable: false,
+           render: function (data, type, full, meta) {
+            return (
+                '<div class="d-flex align-items-center gap-50">' +
+                    // Botón de Opciones
+                    '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">' +
+                    '<i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>' +
+                    '</button>' +
+                    // Menú desplegable
+                    '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                        // Opción Editar lotes envasado
+                        '<a data-id="' + full['id_lote_envasado'] + '" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" class="dropdown-item edit-record waves-effect">' +
+                        '<i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes envasado</a>' +
+                        
+                        // Opción Reclasificación SKU
+                        '<a data-id="' + full['id_lote_envasado'] + '" data-bs-toggle="modal" data-bs-target="#reclasificacion" class="dropdown-item edit-reclasificacion waves-effect">' +
+                        '<i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación SKU</a>' +
+                
+                        // Opción Trazabilidad
+                        '<a data-id="' + full['id_lote_envasado'] + '" data-bs-toggle="modal" data-bs-target="#" class="dropdown-item edit waves-effect">' +
+                        '<i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>' +
+                
+                        // Opción Eliminar lotes envasados
+                        '<a data-id="' + full['id_lote_envasado'] + '" class="dropdown-item delete-record waves-effect text-danger">' +
+                        '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasados</a>' +
+                    '</div>' +
+                '</div>'
+            );
+            
+           }
+         }
+       ],
+ 
+       order: [[2, 'desc']],
+       dom:
+         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
+         '<"me-5 ms-n2"f>' +
+         '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
+         '>t' +
+         '<"row mx-1"' +
+         '<"col-sm-12 col-md-6"i>' +
+         '<"col-sm-12 col-md-6"p>' +
+         '>',
+       lengthMenu: [10, 20, 50, 70, 100], //for length of menu
+       language: {
+         sLengthMenu: '_MENU_',
+         search: '',
+         searchPlaceholder: 'Buscar',
+         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
+         paginate: {
+                 "sFirst":    "Primero",
+                 "sLast":     "Último",
+                 "sNext":     "Siguiente",
+                 "sPrevious": "Anterior"
+               }
+       },
+ 
+       // Opciones Exportar Documentos
+       buttons: [
+         {
+           extend: 'collection',
+           className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
+           text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
+           buttons: [
+             {
+               extend: 'print',
+               title: 'Categorías de Agave',
+               text: '<i class="ri-printer-line me-1" ></i>Print',
+               className: 'dropdown-item',
+               exportOptions: {
+                 columns: [1, 2, 3],
+                 // prevent avatar to be print
+                 format: {
+                   body: function (inner, coldex, rowdex) {
+                     if (inner.length <= 0) return inner;
+                     var el = $.parseHTML(inner);
+                     var result = '';
+                     $.each(el, function (index, item) {
+                       if (item.classList !== undefined && item.classList.contains('user-name')) {
+                         result = result + item.lastChild.firstChild.textContent;
+                       } else if (item.innerText === undefined) {
+                         result = result + item.textContent;
+                       } else result = result + item.innerText;
+                     });
+                     return result;
+                   }
+                 }
+               },
+               customize: function (win) {
+                 //customize print view for dark
+                 $(win.document.body)
+                   .css('color', config.colors.headingColor)
+                   .css('border-color', config.colors.borderColor)
+                   .css('background-color', config.colors.body);
+                 $(win.document.body)
+                   .find('table')
+                   .addClass('compact')
+                   .css('color', 'inherit')
+                   .css('border-color', 'inherit')
+                   .css('background-color', 'inherit');
+               }
+             },
+             {
+               extend: 'csv',
+               title: 'Users',
+               text: '<i class="ri-file-text-line me-1" ></i>Csv',
+               className: 'dropdown-item',
+               exportOptions: {
+                 columns: [1, 2, 3],
+                 // prevent avatar to be print
+                 format: {
+                   body: function (inner, coldex, rowdex) {
+                     if (inner.length <= 0) return inner;
+                     var el = $.parseHTML(inner);
+                     var result = '';
+                     $.each(el, function (index, item) {
+                       if (item.classList !== undefined && item.classList.contains('user-name')) {
+                         result = result + item.lastChild.firstChild.textContent;
+                       } else if (item.innerText === undefined) {
+                         result = result + item.textContent;
+                       } else result = result + item.innerText;
+                     });
+                     return result;
+                   }
+                 }
+               }
+             },
+             {
+               extend: 'excel',
+               title: 'Categorías de Agave',
+               text: '<i class="ri-file-excel-line me-1"></i>Excel',
+               className: 'dropdown-item',
+               exportOptions: {
+                 columns: [1, 2, 3],
+                 // prevent avatar to be display
+                 format: {
+                   body: function (inner, coldex, rowdex) {
+                     if (inner.length <= 0) return inner;
+                     var el = $.parseHTML(inner);
+                     var result = '';
+                     $.each(el, function (index, item) {
+                       if (item.classList !== undefined && item.classList.contains('user-name')) {
+                         result = result + item.lastChild.firstChild.textContent;
+                       } else if (item.innerText === undefined) {
+                         result = result + item.textContent;
+                       } else result = result + item.innerText;
+                     });
+                     return result;
+                   }
+                 }
+               }
+             },
+             {
+               extend: 'pdf',
+               title: 'Categorías de Agave',
+               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
+               className: 'dropdown-item',
+               exportOptions: {
+                 columns: [1, 2, 3],
+                 // prevent avatar to be display
+                 format: {
+                   body: function (inner, coldex, rowdex) {
+                     if (inner.length <= 0) return inner;
+                     var el = $.parseHTML(inner);
+                     var result = '';
+                     $.each(el, function (index, item) {
+                       if (item.classList !== undefined && item.classList.contains('user-name')) {
+                         result = result + item.lastChild.firstChild.textContent;
+                       } else if (item.innerText === undefined) {
+                         result = result + item.textContent;
+                       } else result = result + item.innerText;
+                     });
+                     return result;
+                   }
+                 }
+               }
+             },
+             {
+               extend: 'copy',
+               title: 'Categorías de Agave',
+               text: '<i class="ri-file-copy-line me-1"></i>Copy',
+               className: 'dropdown-item',
+               exportOptions: {
+                 columns: [1, 2, 3],
+                 // prevent avatar to be copy
+                 format: {
+                   body: function (inner, coldex, rowdex) {
+                     if (inner.length <= 0) return inner;
+                     var el = $.parseHTML(inner);
+                     var result = '';
+                     $.each(el, function (index, item) {
+                       if (item.classList !== undefined && item.classList.contains('user-name')) {
+                         result = result + item.lastChild.firstChild.textContent;
+                       } else if (item.innerText === undefined) {
+                         result = result + item.textContent;
+                       } else result = result + item.innerText;
+                     });
+                     return result;
+                   }
+                 }
+               }
+             }
+           ]
+         },
+         {
+           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo tipo de maguey/agave</span>',
+           className: 'add-new btn btn-primary waves-effect waves-light',
+           attr: {
+            
+             'data-bs-toggle': 'modal',
+             'data-bs-target': '#addlostesEnvasado'
+           }
+         }
+       ],
+ 
+ ///PAGINA RESPONSIVA
+       responsive: {
+         details: {
+           display: $.fn.dataTable.Responsive.display.modal({
+             header: function (row) {
+               var data = row.data();
+               return 'Detalles de ' + data['nombre'];
+             }
+           }),
+           type: 'column',
+           renderer: function (api, rowIdx, columns) {
+             var data = $.map(columns, function (col, i) {
+               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
+                 ? '<tr data-dt-row="' +
+                     col.rowIndex +
+                     '" data-dt-column="' +
+                     col.columnIndex +
+                     '">' +
+                     '<td>' +
+                     col.title +
+                     ':' +
+                     '</td> ' +
+                     '<td>' +
+                     col.data +
+                     '</td>' +
+                     '</tr>'
+                 : '';
+             }).join('');
+ 
+             return data ? $('<table class="table"/><tbody />').append(data) : false;
+           }
+         }
+       }
+ 
+     });
+ 
+   } 
+ 
+ 
+ 
+ 
+   // Eliminar registro
+>>>>>>> ebe3a7db6199da30230a67597eb283291277f031
 // validating form and updating user's data
 const addNewLoteForm = document.getElementById('addNewLoteForm');
 

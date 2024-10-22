@@ -64,6 +64,8 @@
                                                                 <i class="ri-file-pdf-2-fill text-danger ri-30px cursor-pointer"></i>
                                                             </a>
                                                         </td>
+                                                        @elseif($pregunta->filtro=='cliente')
+                                                        <td><b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar' }}</b></td>
                                                     @elseif($pregunta->filtro=='direccion_fiscal')
                                                         <td><b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal }}</b></td>
                                                     @elseif($pregunta->filtro=='num_certificado')
@@ -82,6 +84,8 @@
                                                             <b>{{ Helpers::formatearFecha($revisores[0]->certificado->fecha_vigencia) }}</b><br>
                                                             <b>{{ Helpers::formatearFecha($revisores[0]->certificado->fecha_vencimiento) }}</b>
                                                         </td>
+                                                    @elseif($pregunta->filtro=='cliente')
+                                                        <td><b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar' }}</b></td>
                                                     @else
                                                         <td>Sin datos</td>
                                                     @endif
@@ -100,7 +104,6 @@
                                                 </tr>
                                                 @endforeach
                                             </tbody>                                            
-
                                         </table>
                                     </div>        
                                 </div>
