@@ -17,11 +17,39 @@ class RevisionPersonalController extends Controller
 {
     public function userManagement()
     {
-        $revisores = Revisor::with('certificado')->get(); 
-        $preguntas = preguntas_revision::where('tipo_revisor','=','1')->orwhere('tipo_certificado','=','1')->get(); //Solo preguntas para miemros del personal y certificvado de instalaciones
-        return view('revision.revision_certificados-personal_view', compact('revisores','preguntas'));
-    }   
-
+        // Certificados de la persona que inició sesión
+        $userId = auth()->id();
+        $totalCertificados = Revisor::where('id_revisor', $userId)->count();
+    
+        // Total certificados globales
+        $totalCertificadosGlobal = Revisor::count();
+        $porcentaje = $totalCertificadosGlobal > 0 ? ($totalCertificados / $totalCertificadosGlobal) * 100 : 0;
+    
+        // Contar certificados pendientes
+        $certificadosPendientes = Revisor::where('id_revisor', $userId)->where(function ($query) {
+                $query->where('desicion', null)
+                      ->orWhere('desicion', ''); 
+            })
+        ->count();
+    
+        // Calcular porcentaje de certificados pendientes
+        $porcentajePendientes = $totalCertificados > 0 ? ($certificadosPendientes / $totalCertificados) * 100 : 0;
+    
+        // Contar certificados revisados (donde hay una decisión)
+        $certificadosRevisados = Revisor::where('id_revisor', $userId)
+            ->whereNotNull('desicion')
+            ->count();
+    
+        // Calcular porcentaje de certificados revisados
+        $porcentajeRevisados = $totalCertificados > 0 ? ($certificadosRevisados / $totalCertificados) * 100 : 0;
+    
+        // Obtener todos los revisores
+        $revisores = Revisor::with('certificado')->get();
+        $preguntas = preguntas_revision::where('tipo_revisor', '1')->orWhere('tipo_certificado', '1')->get();
+    
+        return view('revision.revision_certificados-personal_view', compact('revisores', 'preguntas', 'porcentaje', 'totalCertificados', 'certificadosPendientes', 'porcentajePendientes', 'certificadosRevisados', 'porcentajeRevisados'));
+    }
+    
     public function index(Request $request)
     {
         $columns = [
