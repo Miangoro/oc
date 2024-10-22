@@ -124,10 +124,11 @@
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="date" class="form-control" id="edit_fecha_corte" placeholder="fecha_corte"
-                                    name="fecha_corte" aria-label="fechacorte">
+                                <input type="date" class="form-control datepicker" id="edit_fecha_corte" placeholder="fecha_corte"
+                                    name="fecha_corte" aria-label="fechacorte" readonly>
                                 <label for="edit_fecha_corte">Fecha de corte</label>
                             </div>
+                            
                         </div>
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="observaciones" class="form-control h-px-100" id="edit_id_observaciones" placeholder="Observaciones..."></textarea>
