@@ -179,46 +179,7 @@ function initializeSelect2($elements) {
              return `<span>${full.fake_id}</span>`;
            }
          },
-         {
-           // Tabla 2 Nombre
-           targets: 2,
-           responsivePriority: 4,
-           render: function (data, type, full, meta) {
-             var $name = full['nombre'];
-             return $name;
-           }
-         },
-          {
-           // Tabla 3 Cientifico
-           targets: 3,
-           render: function (data, type, full, meta) {
-             var $email = full['cientifico'];
-             return '<span class="user-email">' + $email + '</span>';
-           }
-         }, 
          
-         {
-            // email verify
-            targets: 11,
-            className: 'text-center',
-            render: function (data, type, full, meta) {
-                var $verified = full['estatus'];
-                var $colorRegimen;
-
-                if ($verified == 'Pendiente') {
-                    $colorRegimen = 'danger'; // Azulnja
-                    /*                       } else if ($verified == 'Pendiente') {
-                                            $colorRegimen = 'danger';  */
-                } else {
-                    $colorRegimen = 'secondary'; // Color por defecto si no coincide con ninguno
-                }
-
-                return `${$verified
-                    ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                    : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                    }`;
-            }
-        },
  
          {
            // Actions
