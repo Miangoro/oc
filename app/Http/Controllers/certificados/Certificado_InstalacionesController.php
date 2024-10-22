@@ -298,13 +298,17 @@ class Certificado_InstalacionesController extends Controller
             }
 
             $revisor = Revisor::where('id_certificado', $validatedData['id_certificado'])->first();
+            $message = ''; // Inicializar el mensaje
 
             if ($revisor) {
+                // Actualizar el revisor existente
                 if ($validatedData['tipoRevisor'] == '1') {
                     if ($revisor->id_revisor == $validatedData['nombreRevisor']) {
-                        return response()->json(['message' => 'El revisor ya está asignado.'], 400);
+                        $message = 'Revisor reasignado.'; 
+                    } else {
+                        $revisor->id_revisor = $validatedData['nombreRevisor'];
+                        $message = 'Revisor asignado exitosamente.';
                     }
-                    $revisor->id_revisor = $validatedData['nombreRevisor'];
                 } else {
                     if ($revisor->id_revisor2 == $validatedData['nombreRevisor']) {
                         $message = 'Revisor reasignado.';
@@ -314,38 +318,47 @@ class Certificado_InstalacionesController extends Controller
                     }
                 }
             } else {
+                // Crear un nuevo revisor
                 $revisor = new Revisor();
                 $revisor->id_certificado = $validatedData['id_certificado'];
                 $revisor->tipo_revision = $validatedData['tipoRevisor'];
 
                 if ($validatedData['tipoRevisor'] == '1') {
                     $revisor->id_revisor = $validatedData['nombreRevisor'];
+                    $message = 'Revisor asignado exitosamente.';
                 } else {
                     $revisor->id_revisor2 = $validatedData['nombreRevisor'];
                     $message = 'Revisor Miembro del consejo asignado exitosamente.';
                 }
             }
 
+            // Guardar los datos del revisor
             $revisor->numero_revision = $validatedData['numeroRevision'];
             $revisor->es_correccion = $validatedData['esCorreccion'] ?? 'no';
             $revisor->observaciones = $validatedData['observaciones'] ?? '';
             $revisor->save();
 
+            // Preparar datos para el correo
             $data1 = [
                 'title' => 'Nuevo registro de solicitud',
-                'message' => 'Se ha asignado el revisor (' . $user->name . ') al certificado ' . $certificado->num_certificado, 
+                'message' => 'Se ha asignado el revisor (' . $user->name . ') al certificado número ' . $certificado->num_certificado, 
                 'url' => 'solicitudes-historial',
                 'nombreRevisor' => $user->name,
                 'emailRevisor' => $user->email,
                 'num_certificado' => $certificado->num_certificado,
+                'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+                'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento), 
+                'razon_social' => $certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar',
+                'numero_cliente' => $certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar',
+                'tipo_certificado' => $certificado->id_dictamen
             ];
 
-            // Notificacion Local
+            // Notificación Local
             $users = User::whereIn('id', [18, 19, 20])->get();
             foreach ($users as $notifiedUser) {
                 $notifiedUser->notify(new GeneralNotification($data1));
             }
-/* 
+
             // Correo a Revisores
             try {
                 info('Enviando correo a: ' . $user->email);
@@ -355,10 +368,11 @@ class Certificado_InstalacionesController extends Controller
                 }
 
                 Mail::to($user->email)->send(new CorreoCertificado($data1)); 
+                info('Correo enviado a: ' . $user->email);
             } catch (\Exception $e) {
                 Log::error('Error al enviar el correo: ' . $e->getMessage()); 
                 return response()->json(['message' => 'Error al enviar el correo: ' . $e->getMessage()], 500);
-            } */
+            }
 
             return response()->json([
                 'message' => $message ?? 'Revisor del OC asignado exitosamente',
