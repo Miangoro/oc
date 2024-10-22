@@ -136,6 +136,7 @@ $(function () {
         { data: 'folio' },
         { data: 'marca' },
         { data: 'razon_social' }, // Nueva columna para la razón social
+        { data: 'id_norma' },
         { data: 'action' }
       ],
       columnDefs: [
@@ -241,6 +242,7 @@ $(function () {
               /*               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#editMarca"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
                             `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` + */
               `<a data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#editMarca" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar marca</a>` +
+              `<a data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#editMarca" href="javascript:;" class="dropdown-item edit"><i class="ri-price-tag-2-line ri-20px text-success"></i> Subir/Ver etiquetas</a>` +
               `<a data-id="${full['id_marca']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar marca</a>` +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
@@ -561,6 +563,8 @@ $(function () {
         $('#edit_marca_id').val(marca.id_marca);
         $('#edit_marca_nombre').val(marca.marca);
         $('#edit_cliente').val(marca.id_empresa).trigger('change');
+        $('#id_norma').val(marca.id_norma).trigger('change');
+
 
         // Mostrar archivos existentes en los mismos espacios de entrada de archivo
         documentacion_urls.forEach(function (doc) {

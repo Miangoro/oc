@@ -22,6 +22,17 @@
                             <label for="edit_cliente">Cliente</label>
                         </div>
                     </div>
+                    <div class="col-12">
+                        <div class="form-floating form-floating-outline mb-5">
+                            <select id="edit_id_norma" name="id_norma" class="select2 form-select" required>
+                                <option value="">Selecciona uan norma</option>
+                                @foreach ($catalogo_norma_certificar as $normas)
+                                    <option value="{{ $normas->id_norma }}">{{ $normas->norma }}</option>
+                                @endforeach
+                            </select>
+                            <label for="edit_id_norma">Normas</label>
+                        </div>
+                    </div>
                     <div class="col-12 col-md-12 col-sm-12">
                         <div class="form-floating form-floating-outline">
                             <input id="edit_marca_nombre" type="text" name="marca" class="form-control" placeholder="Introduce el nombre de la marca" />
