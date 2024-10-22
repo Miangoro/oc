@@ -66,7 +66,7 @@
                             <tbody id="contenidoGraneles">
                                 <tr>
                                     <th>
-                                        <button type="button" class="btn btn-danger remove-row-lotes" disabled> <i
+                                        <button type="button" class="btn btn-danger" disabled> <i
                                                 class="ri-delete-bin-5-fill"></i> </button>
                                     </th>
                                     <td>

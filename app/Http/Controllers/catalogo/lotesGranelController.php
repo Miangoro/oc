@@ -372,14 +372,38 @@ class LotesGranelController extends Controller
             // Obtener la URL del archivo para "otro organismo"
             $archivoUrlOtroOrganismo = $lote->tipo_lote == '2' ? $lote->url_certificado : '';
 
+
+          // Decodificar el campo JSON solo si no es nulo o vacío
+          $lote_original_data = $lote->lote_original_id ? json_decode($lote->lote_original_id, true) : null;
+
+          if ($lote_original_data && isset($lote_original_data['lotes']) && is_array($lote_original_data['lotes'])) {
+              $lotes = $lote_original_data['lotes'];
+              $volumenes = $lote_original_data['volumenes'];
+
+              // Obtener los nombres de los lotes basados en los IDs
+              $nombreLotes = [];
+              foreach ($lotes as $idLote) {
+                  $nombreLote = LotesGranel::find($idLote);
+                  $nombreLotes[$idLote] = $nombreLote ? $nombreLote->nombre_lote : 'Lote no encontrado';
+              }
+          } else {
+              // Si no hay datos en lote_original_id o no es un formato válido
+              $lotes = [];
+              $volumenes = [];
+              $nombreLotes = [];
+          }
             return response()->json([
                 'success' => true,
                 'lote' => $lote,
                 'guias' => $guias, // Devuelve tanto los IDs como los folios
                 'documentos' => $documentosConUrl,
                 'numeroCliente' => $numeroCliente,
-                'archivo_url_otro_organismo' => $archivoUrlOtroOrganismo
+                'archivo_url_otro_organismo' => $archivoUrlOtroOrganismo,
+                'lotes' => $lotes,
+                'volumenes' => $volumenes,
+                'nombreLotes' => $nombreLotes
             ]);
+
         } catch (ModelNotFoundException $e) {
             return response()->json(['success' => false], 404);
         }
