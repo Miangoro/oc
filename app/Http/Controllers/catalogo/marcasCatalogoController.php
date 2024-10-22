@@ -129,10 +129,7 @@ class marcasCatalogoController extends Controller
     /*Metodo para actualizar*/
     public function store(Request $request)
     {
-        $request->validate([
-            'marca' => 'required|string|max:60',
-            'cliente' => 'required|integer|exists:empresa,id_empresa',
-        ]);
+
     
        
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->cliente)->first();
@@ -261,7 +258,7 @@ class marcasCatalogoController extends Controller
             $marca = marcas::findOrFail($request->input('id_marca'));
             $marca->marca = $request->marca;
             $marca->id_empresa = $request->cliente;
-            $marca->id_norma = $request->id_norma;
+            $marca->id_norma = $request->edit_id_norma;
             $marca->save();
 
             return response()->json(['success' => 'Marca actualizada correctamente']);
@@ -288,6 +285,40 @@ class marcasCatalogoController extends Controller
 
         return response()->json(['success' => 'Clase eliminada correctamente']);
     }
+
+
+
+
+    public function storeEtiquetas(Request $request)
+    {
+
+        // Crear nuevo registro en la base de datos
+        $loteEnvasado = new marcas();
+        $loteEnvasado->id_inspeccion = $request->id_inspeccion;
+
+
+        $loteEnvasado->folios = json_encode([
+            'folio_inicial' => $request->rango_inicial,
+            'folio_final' => $request->rango_final, // Puedes agregar otros valores también
+           
+
+
+        ]);
+        $loteEnvasado->mermas = json_encode([
+            'mermas' => $request->mermas,
+           
+
+
+        ]);
+        //$loteEnvasado->folio_final = $request->id_solicitudActivacion;
+
+        // Guardar el nuevo lote en la base de datos
+        $loteEnvasado->save();
+
+        // Retornar respuesta exitosa
+        return response()->json(['message' => 'Hologramas activados exitosamente']);
+    }
+
 
 
 

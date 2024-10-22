@@ -67,19 +67,5 @@
 <!--/ Add New Address Modal -->
 
 <script>
-$(document).ready(function() {
-    $('#addMarca').on('hidden.bs.modal', function () {
-        // Limpiar todas las entradas dentro del formulario
-        $('#addNewMarca')[0].reset();
-        
-        // Resetear el select2 para que muestre el placeholder
-        $('#cliente').val('').trigger('change');
-        
-        // Limpiar todos los inputs de tipo file
-        $('#addNewMarca input[type="file"]').val('');
-        
-        // Opcional: Limpiar cualquier error de validación mostrado
-        $('#addNewMarca .is-invalid').removeClass('is-invalid');
-    });
-});
+
 </script>
