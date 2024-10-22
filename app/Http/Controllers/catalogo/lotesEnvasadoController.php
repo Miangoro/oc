@@ -48,15 +48,14 @@ class lotesEnvasadoController extends Controller
             1 => 'id_lote_envasado',
             2 => 'id_empresa',
             3 => 'nombre_lote',
-            4 => 'tipo_lote',
-            5 => 'sku',
-            6 => 'id_marca',
-            7 => 'destino_lote',
-            8 => 'cant_botellas',
-            9 => 'presentacion',
-            10 => 'unidad',
-            11 => 'volumen_total',
-            12 => 'lugar_envasado',
+            4 => 'sku',
+            5 => 'id_marca',
+            6 => 'destino_lote',
+            7 => 'cant_botellas',
+            8 => 'presentacion',
+            9 => 'unidad',
+            10 => 'volumen_total',
+            11 => 'lugar_envasado',
 
         ];
 
@@ -170,7 +169,6 @@ class lotesEnvasadoController extends Controller
         $lotes = new lotes_envasado();
         $lotes->id_empresa = $request->id_empresa;
         $lotes->nombre_lote = $request->nombre_lote;
-        $lotes->tipo_lote = $request->tipo_lote;
         $lotes->sku = $request->sku;
 
         $lotes->sku = json_encode([
@@ -236,7 +234,6 @@ class lotesEnvasadoController extends Controller
             // Actualizar los campos del lote envasado
             $lotes->id_empresa = $request->edit_cliente;
             $lotes->nombre_lote = $request->edit_nombre_lote;
-            $lotes->tipo_lote = $request->edit_tipo_lote;
             
             // Decodificar el JSON existente
             $skuData = json_decode($lotes->sku, true) ?: [];

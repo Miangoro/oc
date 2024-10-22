@@ -633,7 +633,6 @@ $(document).on('click', '.edit-record', function () {
         $('#edit_cliente').val(data.id_empresa).trigger('change');
         $('#edit_lote_granel').val(data.id_empresa).trigger('change');
         $('#edit_nombre_lote').val(data.nombre_lote);
-        $('#edit_tipo_lote').val(data.tipo_lote);
         $('#edit_sku').val(data.inicial);
         $('#edit_destino_lote').val(data.destino_lote);
         $('#edit_cant_botellas').val(data.cant_botellas);
@@ -695,13 +694,7 @@ const fv2 = FormValidation.formValidation(editLoteEnvasadoForm, {
                 }
             }
         },
-        edit_tipo_lote: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor introduzca el nombre del lote'
-                }
-            }
-        },
+
         edit_lote_granel: {
             validators: {
                 notEmpty: {
