@@ -380,39 +380,41 @@ $(function () {
 // Registrar Respuesta y mostrar PDF correspondiente
 let id_revision;
 $(document).on('click', '.cuest', function () {
-  id_revision = $(this).data('id');
-  let tipo = $(this).data('tipo');
+    id_revision = $(this).data('id');
+    let tipo = $(this).data('tipo');
+    console.log('ID de Revisión:', id_revision);
+    console.log('Tipo:', tipo);
+    $('#modal-loading-spinner').show();
+    $('#pdfViewerDictamenFrame').hide();
 
-  console.log('ID de Revisión:', id_revision);
-  console.log('Tipo:', tipo);
+    // Genera un parámetro único para evitar el caché
+    let timestamp = new Date().getTime();
+    let url = '/get-certificado-url/' + id_revision + '/' + tipo + '?t=' + timestamp;
+    
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (response) {
+            if (response.certificado_url) {
+                let uniqueUrl = response.certificado_url + '?t=' + timestamp;
+                $('#pdfViewerDictamenFrame').attr('src', uniqueUrl + '#zoom=80');
+                console.log('PDF cargado: ' + uniqueUrl);
+            } else {
+                console.log('No se encontró el certificado para la revisión ' + id_revision);
+            }
+        },
+        error: function (xhr) {
+            console.error('Error al obtener la URL del certificado: ', xhr.responseText);
+        },
+        complete: function () {
+            $('#pdfViewerDictamenFrame').on('load', function () {
+                $('#modal-loading-spinner').hide();
+                $(this).show();
+            });
+        }
+    });
 
-  $('#modal-loading-spinner').show();
-  $('#pdfViewerDictamenFrame').hide();
-
-  let url = '/get-certificado-url/' + id_revision + '/' + tipo;
-  $.ajax({
-    url: url,
-    type: 'GET',
-    success: function (response) {
-      if (response.certificado_url) {
-        $('#pdfViewerDictamenFrame').attr('src', response.certificado_url + '#zoom=80');
-        console.log('PDF cargado: ' + response.certificado_url);
-      } else {
-        console.log('No se encontró el certificado para la revisión ' + id_revision);
-      }
-    },
-    error: function (xhr) {
-      console.error('Error al obtener la URL del certificado: ', xhr.responseText);
-    },
-    complete: function () {
-      $('#pdfViewerDictamenFrame').on('load', function () {
-        $('#modal-loading-spinner').hide();
-        $(this).show();
-      });
-    }
-  });
-
-  cargarRespuestas(id_revision);
+    cargarRespuestas(id_revision);
 });
 
 $(document).on('click', '#registrarRevision', function () {
