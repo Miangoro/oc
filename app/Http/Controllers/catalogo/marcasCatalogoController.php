@@ -9,6 +9,10 @@ use App\Models\Documentacion_url;
 use App\Models\marcas;
 use App\Models\empresa;
 use App\Models\catalogo_norma_certificar;
+use App\Models\tipos;
+use App\Models\clases;
+use App\Models\categorias;
+
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Storage;
@@ -34,6 +38,9 @@ class marcasCatalogoController extends Controller
         // Otros datos que puedas querer pasar a la vista
         $marcas = marcas::all();
         $catalogo_norma_certificar = catalogo_norma_certificar::all();
+        $tipos = tipos::all();
+        $clases = clases::all();
+        $categorias = categorias::all();
         $userCount = $marcas->count();
         $verified = 5;
         $notVerified = 10;
@@ -47,6 +54,12 @@ class marcasCatalogoController extends Controller
             'clientes' => $clientes, // Pasa la lista de clientes a la vista
             'documentos' => $documentos,
             'catalogo_norma_certificar' => $catalogo_norma_certificar,
+            'tipos' => $tipos,
+            'clases' => $clases,
+            'categorias' => $categorias,
+
+
+
         ]);
     }
 
@@ -289,34 +302,49 @@ class marcasCatalogoController extends Controller
 
 
 
-    public function storeEtiquetas(Request $request)
+    public function updateEtiquetas(Request $request)
     {
-
+        try {
         // Crear nuevo registro en la base de datos
-        $loteEnvasado = new marcas();
-        $loteEnvasado->id_inspeccion = $request->id_inspeccion;
-
-
-        $loteEnvasado->folios = json_encode([
-            'folio_inicial' => $request->rango_inicial,
-            'folio_final' => $request->rango_final, // Puedes agregar otros valores también
-           
-
-
-        ]);
-        $loteEnvasado->mermas = json_encode([
-            'mermas' => $request->mermas,
-           
+        $loteEnvasado = marcas::findOrFail($request->input('id_marca'));
+        $loteEnvasado->etiquetado = json_encode([
+            'sku' => $request->sku,
+            'id_tipo' => $request->id_tipo,
+            'presentacion' => $request->presentacion, // Puedes agregar otros valores también
+           'clase' => $request->clase,
+           'categoria' => $request->categoria,
 
 
         ]);
-        //$loteEnvasado->folio_final = $request->id_solicitudActivacion;
-
-        // Guardar el nuevo lote en la base de datos
         $loteEnvasado->save();
 
+        //metodo para guardar pdf
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+
+        foreach ($request->id_documento as $index => $id_documento) {
+            // Agregar nuevo documento si no existe
+            if ($request->hasFile('url') && isset($request->file('url')[$index])) {
+                $file = $request->file('url')[$index];
+                $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+
+                $documentacion_url = new Documentacion_url();
+                $documentacion_url->id_marca = $loteEnvasado->id_marca;
+                $documentacion_url->id_documento = $id_documento;
+                $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+                $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+                $documentacion_url->id_empresa = $request->empresa;
+                $documentacion_url->save();
+            }
+        }
+
         // Retornar respuesta exitosa
-        return response()->json(['message' => 'Hologramas activados exitosamente']);
+
+        return response()->json(['success' => 'Marca actualizada correctamente']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al actualizar la marca'], 500);
+    }
     }
 
 
