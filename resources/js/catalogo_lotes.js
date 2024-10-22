@@ -36,11 +36,7 @@ $(function () {
       format: 'yyyy-mm-dd',
       autoclose: true,
       todayHighlight: true,
-<<<<<<< HEAD
-      language: 'es' // Configura el idioma a español
-=======
       language: 'es'
->>>>>>> ad469c8 (fix: se corrigue el agregar en lotes granel un lote apartir de otro y sin otro lote)
     });
   });
 
