@@ -56,8 +56,4 @@ class Revisor extends Model
     return $documento ? $documento->url : null; // Devuelve solo el atributo `url` o `null` si no hay documento
     }
 
-    public function empresa() {
-        return $this->certificado->dictamen->inspeccione->solicitud->empresa ?? null; // Ajusta según tu estructura de relaciones
-    }
-    
 }

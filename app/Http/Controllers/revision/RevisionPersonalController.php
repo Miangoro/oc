@@ -15,7 +15,6 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class RevisionPersonalController extends Controller
 {
-
     public function userManagement()
     {
         $revisores = Revisor::with('certificado')->get(); 
@@ -244,7 +243,7 @@ class RevisionPersonalController extends Controller
             return response()->json(['certificado_url' => null]);
         }
     }
-    
+
     public function bitacora_revicionPersonalOCCIDAM($id)
     {
         $datos_revisor = Certificados::findOrFail($id);
@@ -274,7 +273,8 @@ class RevisionPersonalController extends Controller
         $desicion = $revisor->desicion; 
         $nameRevisor = $revisor->user->name ?? null;
         $fecha = $revisor->updated_at;
-        $razonSocial = $revisor->empresa()->razon_social ?? 'Sin asignar'; 
+    
+        $razonSocial = $datos_revisor->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar';
         $numero_cliente = $datos_revisor->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar';
     
         $pdfData = [
@@ -283,8 +283,7 @@ class RevisionPersonalController extends Controller
             'respuestas' => $respuestas,
             'desicion' => $desicion,
             'id_revisor' => $nameRevisor,
-            'id_revisor2' => $nameRevisor,
-            'razon_social' => $razonSocial, // Añadir razón social
+            'razon_social' => $razonSocial,
             'fecha' => Helpers::formatearFecha($fecha),
             'numero_cliente' => $numero_cliente,
         ];

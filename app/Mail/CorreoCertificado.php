@@ -21,7 +21,12 @@ class CorreoCertificado extends Mailable
 
     public function build()
     {
-        return $this->subject($this->details['title'])
-                    ->view('emails.CorreoCertificados'); // Asegúrate de que esta vista exista
+        return $this->subject('Notificación de Asignación de Revisor') // Puedes personalizar el asunto
+                    ->view('emails.CorreoCertificados')
+                    ->with([
+                        'nombreRevisor' => $this->details['nombreRevisor'], // Nombre del revisor
+                        'num_certificado' => $this->details['num_certificado'], // Agrega num_certificado aquí
+                    ]);
     }
+    
 }
