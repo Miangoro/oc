@@ -795,6 +795,8 @@ Route::get('/Solicitud-Servicio-UNIIC', [CartaAsignacionController::class, 'Soli
 Route::get('/empresa_contrato/{id_empresa}', [clientesConfirmadosController::class, 'obtenerContratosPorEmpresa']);
 Route::get('/empresa_num_cliente/{id_empresa}', [clientesConfirmadosController::class, 'obtenerNumeroCliente']);
 Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'actualizarRegistros']);
+Route::post('/registrar-clientes', [ClientesConfirmadosController::class, 'registrarClientes'])->name('clientes.registrar');
+
 
 //Revision Personal
 Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManagement'])->name('revision-personal');

@@ -61,40 +61,40 @@ $(function () {
           }
         },
         {
-            // User email
-            targets: 2,
-            render: function (data, type, full, meta) {
-                var numero_cliente = full['numero_cliente'];
-               
-               
-               
-                 
-                var array = numero_cliente.split("<br>");
-                var $row_output = "";
-                array.forEach(function(numero1) {
-                    
-                var numero = numero1.split(",");
-    
-                // Creates full output for row
-              
-                $row_output +=  '<div class="d-flex justify-content-start align-items-center user-name">' +
-                  '<div class="avatar-wrapper">' +
-                  '<div class="avatar avatar-sm me-3">' +
-                  
-                  '</div>' +
-                  '</div>' +
-                  '<div class="d-flex flex-column">' +
-                  '<a data-pdf="'+numero[1]+'" id="pdf" data-bs-target="#mostrarPdf" href="javascript:;" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="'+numero[0]+'" data-registro="'+numero[0]+'" class="text-truncate text-heading"><span class="fw-medium">' +
-                  numero[0] +
-                  '</span></a>' +
-                  '</div>' +
-                  '</div>';
-                
+          // User email
+          targets: 2,
+          render: function (data, type, full, meta) {
+            var numero_cliente = full['numero_cliente'];
 
-                });
-                return $row_output;
-              }
-          },
+
+
+
+            var array = numero_cliente.split("<br>");
+            var $row_output = "";
+            array.forEach(function (numero1) {
+
+              var numero = numero1.split(",");
+
+              // Creates full output for row
+
+              $row_output += '<div class="d-flex justify-content-start align-items-center user-name">' +
+                '<div class="avatar-wrapper">' +
+                '<div class="avatar avatar-sm me-3">' +
+
+                '</div>' +
+                '</div>' +
+                '<div class="d-flex flex-column">' +
+                '<a data-pdf="' + numero[1] + '" id="pdf" data-bs-target="#mostrarPdf" href="javascript:;" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="' + numero[0] + '" data-registro="' + numero[0] + '" class="text-truncate text-heading"><span class="fw-medium">' +
+                numero[0] +
+                '</span></a>' +
+                '</div>' +
+                '</div>';
+
+
+            });
+            return $row_output;
+          }
+        },
         {
           // Es la razón social
           targets: 3,
@@ -106,15 +106,15 @@ $(function () {
             var stateNum = Math.floor(Math.random() * 6);
             var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
             var $state = states[stateNum];
-             
-          
+
+
 
             // Creates full output for row
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center user-name">' +
               '<div class="avatar-wrapper">' +
               '<div class="avatar avatar-sm me-3">' +
-              
+
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
@@ -142,16 +142,15 @@ $(function () {
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $verified = full['regimen'];
-            if($verified=='Persona física'){
+            if ($verified == 'Persona física') {
               var $colorRegimen = 'info';
-            }else{
+            } else {
               var $colorRegimen = 'warning';
             }
-            return `${
-              $verified
-                ? '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-                : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-            }`;
+            return `${$verified
+                ? '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+                : '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+              }`;
           }
         },
         {
@@ -172,13 +171,13 @@ $(function () {
           render: function (data, type, full, meta) {
             return (
               '<div class="d-flex align-items-center gap-50">' +
-             
+
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
 
               `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editCliente"   onclick="abrirModal(${full['id_empresa']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-edit-fill"></i>Editar</a>` +
               `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-search-eye-line"></i>Otra opción</a>` +
-              
+
               '</div>' +
               '</div>'
             );
@@ -202,11 +201,11 @@ $(function () {
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
         paginate: {
-                "sFirst":    "Primero",
-                "sLast":     "Último",
-                "sNext":     "Siguiente",
-                "sPrevious": "Anterior"
-              }
+          "sFirst": "Primero",
+          "sLast": "Último",
+          "sNext": "Siguiente",
+          "sPrevious": "Anterior"
+        }
       },
       // Buttons with Dropdown
       buttons: [
@@ -359,8 +358,8 @@ $(function () {
           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo prospecto</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
-            'data-bs-toggle': 'offcanvas',
-            'data-bs-target': '#offcanvasAddUser'
+            'data-bs-toggle': 'modal',
+            'data-bs-target': '#AddClientesConfirmados'
           }
         }
       ],
@@ -378,31 +377,51 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
             return data ? $('<table class="table"/><tbody />').append(data) : false;
           }
         }
-        
+
       }
-      
+
     });
 
-    
+
   }
+
+  $(document).ready(function() {
+    var dt_user_table = $('.datatables-users'),
+    select2Elements = $('.select2'),
+    userView = baseUrl + 'app/user/view/account';
+
+    // Inicializar Select2 en los elementos especificados
+    initializeSelect2(select2Elements);
+});
+
+// Función para inicializar Select2
+function initializeSelect2($elements) {
+    $elements.each(function () {
+        var $this = $(this);
+        select2Focus($this); // Asegúrate de que select2Focus esté definida o sea necesaria
+        $this.wrap('<div class="position-relative"></div>').select2({
+            dropdownParent: $this.parent()
+        });
+    });
+}
 
 
 
@@ -467,50 +486,50 @@ $(function () {
 
 
   $(document).on('click', '#pdf2', function () {
-        var id = $(this).data('id');
-        var regimen = $(this).data('regimen');
-        var registro = $(this).data('registro');
-      
-            var iframe = $('#pdfViewer');
-            if(regimen=='Persona física'){
-              var pdf = "../prestacion_servicio_fisica/";
-            }
+    var id = $(this).data('id');
+    var regimen = $(this).data('regimen');
+    var registro = $(this).data('registro');
 
-            if(regimen=='Persona moral'){
-              var pdf = "../prestacion_servicio_moral/";
-            }
+    var iframe = $('#pdfViewer');
+    if (regimen == 'Persona física') {
+      var pdf = "../prestacion_servicio_fisica/";
+    }
 
-          
-            iframe.attr('src', pdf+id);
+    if (regimen == 'Persona moral') {
+      var pdf = "../prestacion_servicio_moral/";
+    }
 
-            $("#titulo_modal").text("Contrato");
-            $("#subtitulo_modal").text(registro);
-            
-          
+
+    iframe.attr('src', pdf + id);
+
+    $("#titulo_modal").text("Contrato");
+    $("#subtitulo_modal").text(registro);
+
+
   });
 
-    $(document).on('click', '#pdf', function () {
-        var id = $(this).data('id');
-        var tipo_pdf = $(this).data('pdf');
-        var registro = $(this).data('registro');
-            var iframe = $('#pdfViewer');
-            if(tipo_pdf==1){
-              var pdf = "../carta_asignacion/";
-            }
+  $(document).on('click', '#pdf', function () {
+    var id = $(this).data('id');
+    var tipo_pdf = $(this).data('pdf');
+    var registro = $(this).data('registro');
+    var iframe = $('#pdfViewer');
+    if (tipo_pdf == 1) {
+      var pdf = "../carta_asignacion/";
+    }
 
-            if(tipo_pdf==2){
-              var pdf = "../carta_asignacion052/";
-            }
-            iframe.attr('src', pdf+id);
+    if (tipo_pdf == 2) {
+      var pdf = "../carta_asignacion052/";
+    }
+    iframe.attr('src', pdf + id);
 
-            $("#titulo_modal").text("Carta de asignación de número de cliente");
-            $("#subtitulo_modal").text(registro);
-            
-          
+    $("#titulo_modal").text("Carta de asignación de número de cliente");
+    $("#subtitulo_modal").text(registro);
+
+
   });
 
   // edit record
-  $(document).on('click', '.edit-record', function () { 
+  $(document).on('click', '.edit-record', function () {
     var id_empresa = $(this).data('id_empresa'),
       dtrModal = $('.dtr-bs-modal.show');
 
@@ -530,29 +549,29 @@ $(function () {
     });
   });
 
-    // Validar solicitud
-    $(document).on('click', '.validar-solicitud', function () { 
-      var id_empresa = $(this).data('id'),
-        dtrModal = $('.dtr-bs-modal.show');
-        
-      // hide responsive modal in small screen
-      if (dtrModal.length) {
-        dtrModal.modal('hide');
-      }
-  
-      // changing the title of offcanvas
-    //  $('#offcanvasAddUserLabel').html('Edit User');
-  
-      $('#empresa_id').val(id_empresa);
-    });
+  // Validar solicitud
+  $(document).on('click', '.validar-solicitud', function () {
+    var id_empresa = $(this).data('id'),
+      dtrModal = $('.dtr-bs-modal.show');
 
-        // aceptar cliente
-        $(document).on('click', '.validar-solicitud2', function () {  
-          var id_empresa = $(this).data('id');
- 
-      
-          $('#empresaID').val(id_empresa);
-        });
+    // hide responsive modal in small screen
+    if (dtrModal.length) {
+      dtrModal.modal('hide');
+    }
+
+    // changing the title of offcanvas
+    //  $('#offcanvasAddUserLabel').html('Edit User');
+
+    $('#empresa_id').val(id_empresa);
+  });
+
+  // aceptar cliente
+  $(document).on('click', '.validar-solicitud2', function () {
+    var id_empresa = $(this).data('id');
+
+
+    $('#empresaID').val(id_empresa);
+  });
 
   // changing the title
   $('.add-new').on('click', function () {
@@ -566,25 +585,25 @@ $(function () {
   // Validación del formulario de Validación de solicitud
   const fv = FormValidation.formValidation(addNewUserForm, {
     fields: {
-        medios: {
-          validators: {
-              notEmpty: {
-                  message: 'Por favor selecciona una opción.'
-              }
-          }
-      },competencia: {
+      medios: {
         validators: {
-            notEmpty: {
-                message: 'Por favor selecciona una opción.'
-            }
-        }
-    },capacidad: {
-      validators: {
           notEmpty: {
-              message: 'Por favor selecciona una opción.'
+            message: 'Por favor selecciona una opción.'
           }
+        }
+      }, competencia: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor selecciona una opción.'
+          }
+        }
+      }, capacidad: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor selecciona una opción.'
+          }
+        }
       }
-  }
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -622,7 +641,7 @@ $(function () {
         });
       },
       error: function (err) {
-        
+
         offCanvasForm.offcanvas('hide');
         Swal.fire({
           title: 'Duplicate Entry!',
@@ -635,84 +654,84 @@ $(function () {
       }
     });
   });
-
-
-
-  // validating form and updating user's data
-  const addNewCliente = document.getElementById('addNewCliente');
-
-  // Validación del formulario de aceptar cliente
-  const fv2 = FormValidation.formValidation(addNewCliente, {
-    fields: {
-        'numero_cliente[]': {
+  /* 
+  
+  
+    // validating form and updating user's data
+    const addNewCliente = document.getElementById('addNewCliente');
+  
+    // Validación del formulario de aceptar cliente
+    const fv2 = FormValidation.formValidation(addNewCliente, {
+      fields: {
+          'numero_cliente[]': {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor introduzca el número de cliente.'
+                }
+            }
+        },fecha_cedula: {
           validators: {
               notEmpty: {
-                  message: 'Por favor introduzca el número de cliente.'
+                  message: 'Por favor introduzca la fecha de cédula de identificación fiscal.'
               }
           }
-      },fecha_cedula: {
+      },idcif: {
         validators: {
             notEmpty: {
-                message: 'Por favor introduzca la fecha de cédula de identificación fiscal.'
+                message: 'Por favor introduzca el idCIF del Servicio deAdministración Tributaria.'
             }
         }
-    },idcif: {
-      validators: {
-          notEmpty: {
-              message: 'Por favor introduzca el idCIF del Servicio deAdministración Tributaria.'
-          }
-      }
-  }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        // Use this for enabling/changing valid/invalid class
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          // field is the field name & ele is the field element
-          return '.col-sm-12';
-        }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      // Submit the form when all fields are valid
-      // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
     }
-  }).on('core.form.valid', function () {
-    // adding or updating user when form successfully validate
-    $.ajax({
-      data: $('#addNewCliente').serialize(),
-      url: `${baseUrl}aceptar-cliente`,
-      type: 'POST',
-      success: function (status) {
-        dt_user.draw();
-        offCanvasForm.offcanvas('hide');
-
-        // sweetalert
-        Swal.fire({
-          icon: 'success',
-          title: `${status} Exitosamente`,
-          text: `Solicitud ${status} Exitosamente.`,
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
       },
-      error: function (err) {
-        
-        offCanvasForm.offcanvas('hide');
-        Swal.fire({
-          title: 'Duplicate Entry!',
-          text: 'Your email should be unique.',
-          icon: 'error',
-          customClass: {
-            confirmButton: 'btn btn-success'
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          // Use this for enabling/changing valid/invalid class
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            // field is the field name & ele is the field element
+            return '.col-sm-12';
           }
-        });
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        // Submit the form when all fields are valid
+        // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
       }
-    });
-  });
+    }).on('core.form.valid', function () {
+      // adding or updating user when form successfully validate
+      $.ajax({
+        data: $('#addNewCliente').serialize(),
+        url: `${baseUrl}aceptar-cliente`,
+        type: 'POST',
+        success: function (status) {
+          dt_user.draw();
+          offCanvasForm.offcanvas('hide');
+  
+          // sweetalert
+          Swal.fire({
+            icon: 'success',
+            title: `${status} Exitosamente`,
+            text: `Solicitud ${status} Exitosamente.`,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (err) {
+  
+          offCanvasForm.offcanvas('hide');
+          Swal.fire({
+            title: 'Duplicate Entry!',
+            text: 'Your email should be unique.',
+            icon: 'error',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        }
+      });
+    }); */
 
   // clearing form data when offcanvas hidden
   offCanvasForm.on('hidden.bs.offcanvas', function () {
@@ -731,79 +750,228 @@ $(function () {
     });
   }
   //AQUI termina
-  
 
-// FUNCION PARA EDITAR un registro
-$(document).ready(function() {
-   // Abrir el modal y cargar datos para editar
-   $(document).on('click', '.edit-record', function () { 
-    var id = $(this).data('id');
 
-   
-    // Realizar la solicitud AJAX para obtener los datos de la clase
-    $.get('/cliente_confirmado/' + id + '/edit', function (data) {
-      $('#edit_id').val(data.id);
-      $('#edit_id_empresa').val(data.id_empresa);
-      $('#edit_num_cliente').val(data.num_cliente);
-      $('#edit_id_norma').val(data.id_norma);
+  // FUNCION PARA EDITAR un registro
+  $(document).ready(function () {
+    // Abrir el modal y cargar datos para editar
+    $(document).on('click', '.edit-record', function () {
+      var id = $(this).data('id');
 
-      
-          // Mostrar el modal de edición
-          $('#editCliente').offcanvas('show');
-      }).fail(function() {
-          Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al obtener los datos',
-              customClass: {
-                  confirmButton: 'btn btn-danger'
-              }
-          });
+
+      // Realizar la solicitud AJAX para obtener los datos de la clase
+      $.get('/cliente_confirmado/' + id + '/edit', function (data) {
+        $('#edit_id').val(data.id);
+        $('#edit_id_empresa').val(data.id_empresa);
+        $('#edit_num_cliente').val(data.num_cliente);
+        $('#edit_id_norma').val(data.id_norma);
+
+
+        // Mostrar el modal de edición
+        $('#editCliente').offcanvas('show');
+      }).fail(function () {
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al obtener los datos',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
       });
-  });
+    });
 
-  // Manejar el envío del formulario de edición
-  $('#editClienteForm').on('submit', function(e) {
+    // Manejar el envío del formulario de edición
+    $('#editClienteForm').on('submit', function (e) {
       e.preventDefault();
 
       var formData = $(this).serialize();
       var id = $('#edit_id').val(); // Obtener el ID de la clase desde el campo oculto
 
       $.ajax({
-          url: '/cliente_confirmado/' + id_tipo,
-          type: 'PUT',
-          data: formData,
-          success: function(response) {
-              $('#editCliente').offcanvas('hide'); // Ocultar el modal de edición "DIV"
-              $('#editClienteForm')[0].reset(); // Limpiar el formulario "FORM"
+        url: '/cliente_confirmado/' + id_tipo,
+        type: 'PUT',
+        data: formData,
+        success: function (response) {
+          $('#editCliente').offcanvas('hide'); // Ocultar el modal de edición "DIV"
+          $('#editClienteForm')[0].reset(); // Limpiar el formulario "FORM"
 
-              // Mostrar alerta de éxito
-              Swal.fire({
-                  icon: 'success',
-                  title: '¡Éxito!',
-                  text: response.success,
-                  customClass: {
-                      confirmButton: 'btn btn-success'
-                  }
-              });
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.success,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
 
-              // Recargar los datos en la tabla sin reinicializar DataTables
-              $('.datatables-users').DataTable().ajax.reload();
-          },
-          error: function(xhr) {
-            console.log('Error:', xhr.responseText);
-              // Mostrar alerta de error
-              Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: 'Error al actualizar la clase',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
-          }
+          // Recargar los datos en la tabla sin reinicializar DataTables
+          $('.datatables-users').DataTable().ajax.reload();
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la clase',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
       });
+    });
   });
-});
+
+
+  /* agregar un nuevo dictamen */
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation
+    const form = document.getElementById('ClientesConfirmadosForm');
+    const fv = FormValidation.formValidation(form, {
+      fields: {
+        razon_social: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese la razón social.'
+                },
+            }
+        },
+        regimen: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese el régimen.'
+                },
+            }
+        },
+        domicilio_fiscal: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese el domicilio fiscal.'
+                },
+            }
+        },
+        estado: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor seleccione un estado.'
+                },
+            }
+        },
+        representante: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese el representante.'
+                },
+            }
+        },
+        rfc: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese el RFC.'
+                },
+                stringLength: {
+                    max: 13,
+                    message: 'El RFC no puede tener más de 13 caracteres.'
+                },
+            }
+        },
+        correo: {
+          validators: {
+              notEmpty: {
+                  message: 'Por favor ingrese el correo electrónico.'
+              },
+              emailAddress: {
+                  message: 'Por favor ingrese un correo electrónico válido.'
+              },
+          }
+      },      
+        telefono: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor ingrese el teléfono.'
+                },
+            }
+        },
+        id_contacto: {
+            validators: {
+                notEmpty: {
+                    message: 'Por favor seleccione un contacto.'
+                }
+            }
+        }
+    },    
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+
+    }).on('core.form.valid', function () {
+      var formData = new FormData(form);
+
+      // Imprimir los datos del formulario para verificar
+      console.log('Form Data:', Object.fromEntries(formData.entries()));
+
+      $.ajax({
+        url: '/registrar-clientes',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          // Ocultar el modal y resetear el formulario
+          $('#AddClientesConfirmados').modal('hide');
+          $('#ClientesConfirmadosForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-users').DataTable().ajax.reload();
+
+          // Mostrar mensaje de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+          // Mostrar mensaje de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar el dictamen de granel',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+    // Inicializar select2
+    $('#estado').on('change', function() {
+      // Revalidar el campo cuando se cambia el valor del select2
+      fv.revalidateField($(this).attr('name'));
+  });
+
+  });
+
+
 
 });

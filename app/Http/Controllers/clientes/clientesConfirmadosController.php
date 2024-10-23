@@ -10,6 +10,7 @@ use App\Models\empresa;
 use App\Models\empresaContrato;
 use App\Models\empresaNumCliente;
 use App\Models\solicitud_informacion;
+use App\Models\estados;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -25,6 +26,7 @@ class clientesConfirmadosController extends Controller
         $morales = empresa::where('tipo', 2)->where('regimen', 'Persona moral')->count();
         //$usuarios = User::all();
         $usuarios = User::where("tipo",1)->get();
+        $estados = estados::all(); // Obtener todos los estados
         // $userCount = $empresas->count();
         $verified = 5;
         $notVerified = 10;
@@ -38,6 +40,7 @@ class clientesConfirmadosController extends Controller
             'fisicas' => $fisicas,
             'morales' => $morales,
             'usuarios' => $usuarios,
+            'estados' => $estados,
 
         ]);
     }
@@ -375,5 +378,43 @@ public function actualizarRegistros(Request $request)
         return response()->json(['error' => 'Error al actualizar los registros: ' . $e->getMessage()], 500);
     }
 }
+
+
+    /* funcion para insertar datos */
+    public function registrarClientes(Request $request)
+    {
+        $validatedData = $request->validate([
+          'razon_social' => 'required|string|max:255',
+          'regimen' => 'required|string',
+          'domicilio_fiscal' => 'required|string|max:255',
+          'representante' => 'required|string|max:255',
+          'estado' => 'required|exists:estados,id',
+          'rfc' => 'required|string|max:13',
+          'correo' => 'required|email|max:255',
+          'telefono' => 'nullable|string|max:15',
+          'id_contacto' => 'required|exists:users,id', // Asegúrate de que 'usuarios' sea tu tabla de contactos
+        ]);
+        
+        // Crear una nueva instancia del modelo Dictamen_Granel
+        $cliente = new empresa();
+        $cliente->razon_social = $validatedData['razon_social'];
+        $cliente->regimen = $validatedData['regimen'];
+        $cliente ->domicilio_fiscal = $validatedData['domicilio_fiscal'];
+        $cliente->representante = $validatedData['representante'];
+        $cliente->estado = $validatedData['estado'];
+        $cliente->rfc = $validatedData['rfc'];
+        $cliente->correo = $validatedData['correo'];
+        $cliente->telefono = $validatedData['telefono'];
+        $cliente->id_contacto = $validatedData['id_contacto'];
+
+        $cliente->tipo = 2;
+
+        $cliente->save();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Cliente registrado exitosamente',
+        ]);
+    }
 
 }
