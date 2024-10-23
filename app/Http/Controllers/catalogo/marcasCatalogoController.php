@@ -357,6 +357,7 @@ class marcasCatalogoController extends Controller
         $marca = Marcas::findOrFail($id);
         $tipos = tipos::all();
         $clases = clases::all();
+        $categorias = categorias::all();
         $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get();
 
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
@@ -373,6 +374,7 @@ class marcasCatalogoController extends Controller
             'marca' => $marca,
             'tipos' => $tipos,
             'clases' => $clases,
+            'categorias' => $categorias,
             'documentacion_urls' => $documentacion_urls, // Incluir la fecha de vigencia en los datos
             'numeroCliente' => $numeroCliente
         ]);
