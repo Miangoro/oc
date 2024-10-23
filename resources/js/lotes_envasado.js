@@ -176,41 +176,43 @@ function initializeSelect2($elements) {
          
  
          {
-           // Actions
-           targets: -1,
-           title: 'Acciones',
-           searchable: false,
-           orderable: false,
-           render: function (data, type, full, meta) {
-            return (
+            // Actions
+            targets: -1,
+            title: 'Acciones',
+            searchable: false,
+            orderable: false,
+            render: function (data, type, full, meta) {
+              return (
                 '<div class="d-flex align-items-center gap-50">' +
-                    // Botón de Opciones
-                    '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">' +
-                    '<i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>' +
+                  // Botón de Opciones con dropend para asegurar que se muestre correctamente
+                  '<div class="btn-group dropend">' +
+                    '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false">' +
+                      '<i class="ri-settings-5-fill"></i>&nbsp;Opciones' +
                     '</button>' +
                     // Menú desplegable
-                    '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                        // Opción Editar lotes envasado
-                        '<a data-id="' + full['id_lote_envasado'] + '" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" class="dropdown-item edit-record waves-effect">' +
-                        '<i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes envasado</a>' +
-                        
-                        // Opción Reclasificación SKU
-                        '<a data-id="' + full['id_lote_envasado'] + '" data-bs-toggle="modal" data-bs-target="#reclasificacion" class="dropdown-item edit-reclasificacion waves-effect">' +
-                        '<i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación SKU</a>' +
-                
-                        // Opción Trazabilidad
-                        '<a data-id="' + full['id_lote_envasado'] + '" data-bs-toggle="modal" data-bs-target="#" class="dropdown-item edit waves-effect">' +
-                        '<i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>' +
-                
-                        // Opción Eliminar lotes envasados
-                        '<a data-id="' + full['id_lote_envasado'] + '" class="dropdown-item delete-record waves-effect text-danger">' +
-                        '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasados</a>' +
-                    '</div>' +
+                    '<ul class="dropdown-menu dropdown-menu-end m-0">' +
+                      // Opción Editar lotes envasado
+                      '<li><a data-id="' + full['id_lote_envasado'] + '" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" class="dropdown-item edit-record">' +
+                      '<i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes envasado</a></li>' +
+          
+                      // Opción Reclasificación SKU
+                      '<li><a data-id="' + full['id_lote_envasado'] + '" data-bs-toggle="modal" data-bs-target="#reclasificacion" class="dropdown-item edit-reclasificacion">' +
+                      '<i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación SKU</a></li>' +
+          
+                      // Opción Trazabilidad
+                      '<li><a data-id="' + full['id_lote_envasado'] + '" data-bs-toggle="modal" class="dropdown-item edit">' +
+                      '<i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a></li>' +
+          
+                      // Opción Eliminar lotes envasados
+                      '<li><a data-id="' + full['id_lote_envasado'] + '" class="dropdown-item delete-record text-danger">' +
+                      '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasados</a></li>' +
+                    '</ul>' +
+                  '</div>' +
                 '</div>'
-            );
-            
-           }
-         }
+              );
+            }
+          }
+          
        ],
  
        order: [[2, 'desc']],

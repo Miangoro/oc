@@ -18,8 +18,9 @@
                 </div>
                 <form id="etiquetasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
-                        <input type="text" id="etiqueta_marca" name="etiqueta_marca">
+                        <input type="text" id="etiqueta_marca" name="id_marca">
 
+                        <div class="table-responsive">
 
                         <table class="table table-bordered">
                             <thead>
@@ -88,7 +89,7 @@
                                 </tr>
                             </tbody>
                         </table>
-
+                    </div>
 
 
 
@@ -103,3 +104,25 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    $(document).ready(function() {
+    // Inicializa select2 cuando el modal se muestra
+    $('#etiquetas').on('shown.bs.modal', function() {
+        $('.select2').select2({
+            dropdownParent: $('#etiquetas') // Esto asegura que el dropdown esté dentro del modal
+        });
+    });
+
+    // Añadir filas dinámicamente también necesita reinicializar select2
+    $(document).on('click', '.add-row-add', function() {
+        // Aquí añades la lógica para insertar una nueva fila en la tabla
+        // Una vez añadida la nueva fila, reinicializa los select2 dentro de la tabla
+        $('.select2').select2({
+            dropdownParent: $('#etiquetas')
+        });
+    });
+});
+
+</script>
