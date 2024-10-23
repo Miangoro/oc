@@ -330,7 +330,7 @@ class marcasCatalogoController extends Controller
                 $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
 
                 $documentacion_url = new Documentacion_url();
-                $documentacion_url->id_marca = $loteEnvasado->id_marca;
+                $documentacion_url->id_relacion = $loteEnvasado->id_marca;
                 $documentacion_url->id_documento = $id_documento;
                 $documentacion_url->nombre_documento = $request->nombre_documento[$index];
                 $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
