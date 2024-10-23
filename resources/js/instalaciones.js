@@ -1,4 +1,14 @@
 $(function () {
+
+
+  $(document).ready(function () {
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      todayHighlight: true,
+      language: 'es' // Configura el idioma a español
+    });
+  });
   // Definir la URL base
   var baseUrl = window.location.origin + '/';
 
