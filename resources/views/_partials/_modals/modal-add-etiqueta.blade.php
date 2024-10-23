@@ -2,7 +2,7 @@
     .modal-custom-size {
         max-width: 100%;
         /* Ajusta este valor para hacerlo más grande */
-        width: 75%;
+        width: auto%;
         /* Ajusta según tus necesidades */
     }
 </style>

@@ -1,9 +1,9 @@
 <!-- Add New Lote Envasado Modal -->
 <style>
     .modal-custom-size {
-        max-width: 95%;
+        max-width:100%;
         /* Ajusta este valor para hacerlo más grande */
-        width: 95%;
+        width: auto%;
         /* Ajusta según tus necesidades */
     }
 </style>
