@@ -736,30 +736,32 @@ $(function () {
                 </select>
               </td>
              <td>
-    <input class="form-control form-control-sm" type="file" name="url[]">
+    <div style="display: flex; align-items: center;">
+        <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
+        ${documento_etiquetas ? 
+            `<a href="/storage/uploads/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank" style="margin-left: 10px;">
+                <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
+            </a>` 
+            : ''}
+    </div>
     <input value="60" class="form-control" type="hidden" name="id_documento[]">
     <input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]">
-    ${documento_etiquetas ? 
-        `<div>
-            <a href="/storage/uploads/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank">
-                <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
-            </a>
-         </div>` 
-        : ''}
 </td>
 
-              <td>
-                <input class="form-control form-control-sm" type="file" name="url[]">
-                <input value="75" class="form-control" type="hidden" name="id_documento[]">
-                <input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]">
-                ${documento_corrugado ? 
-                  `<div>
-                  <a href="/storage/uploads/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank">
-                      <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
-                  </a>
-               </div>` 
-              : ''}
-              </td>
+
+<td>
+    <div style="display: flex; align-items: center;">
+        <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
+        ${documento_corrugado ? 
+            `<a href="/storage/uploads/${data.numeroCliente}/${documento_corrugado.url}" target="_blank" style="margin-left: 10px;">
+                <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
+            </a>` 
+            : ''}
+    </div>
+    <input value="75" class="form-control" type="hidden" name="id_documento[]">
+    <input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]">
+</td>
+
             </tr>`;
           
           $('#contenidoRango').append(newRow);
