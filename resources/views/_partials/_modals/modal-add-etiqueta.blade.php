@@ -18,7 +18,7 @@
                 </div>
                 <form id="etiquetasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
-                        <input type="text" id="etiqueta_marca" name="id_marca">
+                        <input type="hidden" id="etiqueta_marca" name="id_marca">
 
                         <div class="table-responsive">
 
