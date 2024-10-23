@@ -38,7 +38,7 @@
                         </div>
                     </div>
                         <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-3">
+                            <div class="form-floating form-floating-outline mb-3 select2-primary">
                                 <select class="form-select select2" id="normas" name="normas[]"
                                     data-placeholder="Seleccione una o más normas" aria-label="Normas" multiple
                                     required>

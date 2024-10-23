@@ -28,7 +28,7 @@ class clientesConfirmadosController extends Controller
         //$usuarios = User::all();
         $usuarios = User::where("tipo",1)->get();
         $estados = estados::all(); // Obtener todos los estados
-        $normas = normas_catalo::all();
+        $normas = normas_catalo::where('id_norma', '!=', 3)->get();
         // $userCount = $empresas->count();
         $verified = 5;
         $notVerified = 10;
@@ -421,17 +421,24 @@ public function actualizarRegistros(Request $request)
         // Obtener el id_empresa del cliente recién creado
         $id_empresa = $cliente->id_empresa;
 
-        // Registrar los números de cliente para cada norma
+        // 1. Registrar siempre la norma con id_norma = 3
+        $empresaNumCliente = new empresaNumCliente();
+        $empresaNumCliente->id_empresa = $id_empresa;
+        $empresaNumCliente->numero_cliente = null; // Número de cliente genérico o fijo para esta norma
+        $empresaNumCliente->id_norma = 3;
+        $empresaNumCliente->save();
+    
+        // 2. Registrar el resto de normas, omitiendo la norma con id_norma = 3
         foreach ($validatedData['normas'] as $index => $id_norma) {
-            if (isset($validatedData['numeros_clientes'][$index])) {
+            if ($id_norma != 3 && isset($validatedData['numeros_clientes'][$index])) {
                 $numero_cliente = $validatedData['numeros_clientes'][$index];
-
-                // Crear una nueva instancia del modelo empresa_num_cliente
+    
+                // Crear una nueva instancia del modelo empresaNumCliente para cada norma
                 $empresaNumCliente = new empresaNumCliente();
                 $empresaNumCliente->id_empresa = $id_empresa;
                 $empresaNumCliente->numero_cliente = $numero_cliente;
                 $empresaNumCliente->id_norma = $id_norma;
-
+    
                 $empresaNumCliente->save();
             }
         }
