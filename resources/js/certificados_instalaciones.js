@@ -1183,155 +1183,203 @@ $('#asignarRevisorModal').on('show.bs.modal', function (event) {
 
 //Evento para saber que certificado Reexpedir
 let isLoadingData = false;
-$(document).on('click', '.reexpedir-record', function () {
-    var id_certificado = $(this).data('id');
-   
-    console.log('ID Certificado para reexpedir:', id_certificado);
-   
-    $('#reexpedir_id_certificado').val(id_certificado);
-    $('#modalReexpedirCertificadoInstalaciones').modal('show');
-});
+let fieldsValidated = []; 
 
-// Evento llenar Fecha automática
-$('#fecha_vigencia_rex').on('change', function () {
-    var fechaVigencia = $(this).val();
-    if (fechaVigencia) {
-        var fecha = moment(fechaVigencia, 'YYYY-MM-DD');
-        var fechaVencimiento = fecha.add(1, 'years').format('YYYY-MM-DD');
-        $('#fecha_vencimiento_rex').val(fechaVencimiento);
-    }
-});
+$(document).ready(function () {
+    $('#campos_productor').hide(); 
+    $('#campos_condicionales').hide(); 
 
-// Mostrar campos condicionales
-$(document).on('change', '#accion_reexpedir', function () {
+    $(document).on('click', '.reexpedir-record', function () {
+        var id_certificado = $(this).data('id');
+        console.log('ID Certificado para reexpedir:', id_certificado);
+        $('#reexpedir_id_certificado').val(id_certificado);
+        $('#modalReexpedirCertificadoInstalaciones').modal('show');
+    });
+
+    $('#fecha_vigencia_rex').on('change', function () {
+        var fechaVigencia = $(this).val();
+        if (fechaVigencia) {
+            var fecha = moment(fechaVigencia, 'YYYY-MM-DD');
+            var fechaVencimiento = fecha.add(1, 'years').format('YYYY-MM-DD');
+            $('#fecha_vencimiento_rex').val(fechaVencimiento);
+        }
+    });
+
+    $(document).on('change', '#accion_reexpedir', function () {
+        var accionSeleccionada = $(this).val();
+        console.log('Acción seleccionada:', accionSeleccionada);
+        var id_certificado = $('#reexpedir_id_certificado').val();
+
+        if (accionSeleccionada && !isLoadingData) {
+            isLoadingData = true;
+            cargarDatosReexpedicion(id_certificado);
+        }
+
+        $('#campos_condicionales').hide();
+        $('#campos_productor').hide();
+
+        if (accionSeleccionada === '2') {
+            $('#campos_condicionales').show();
+        }
+    });
+
+    $(document).on('change', '#id_dictamen_rex', function () {
+      var tipoDictamen = $('#id_dictamen_rex option:selected').data('tipo-dictamen');
+      console.log('Tipo de Dictamen seleccionado:', tipoDictamen);
+  
+      if (tipoDictamen === 1) {
+          $('#campos_productor').show();
+          addFieldValidation('maestro_mezcalero', 'El nombre del maestro mezcalero es obligatorio.');
+          addFieldValidation('num_autorizacion', 'El campo No. Autorización es obligatorio.', true);
+      } else {
+          $('#campos_productor').hide(); 
+          clearProductorFields();
+          removeFieldValidation('maestro_mezcalero');
+          removeFieldValidation('num_autorizacion');
+      }
+  
+      const shouldShowProductorFields = $('#accion_reexpedir').val() === '2' && tipoDictamen === 1;
+      if (shouldShowProductorFields) {
+          $('#campos_productor').show();
+      }
+
+  });
+
+  $(document).on('change', '#accion_reexpedir', function () {
     var accionSeleccionada = $(this).val();
     console.log('Acción seleccionada:', accionSeleccionada);
     var id_certificado = $('#reexpedir_id_certificado').val();
+
+    let shouldShowProductorFields = false;
 
     if (accionSeleccionada && !isLoadingData) {
         isLoadingData = true;
         cargarDatosReexpedicion(id_certificado);
     }
-    var tipoDictamen = $('#id_dictamen_rex option:selected').data('tipo-dictamen');
-    console.log('Tipo de Dictamen seleccionado:', tipoDictamen);
 
-    // Ocultar siempre los campos antes de mostrar nuevos
     $('#campos_condicionales').hide();
-    $('#campos_productor').hide();
+    $('#campos_productor').hide(); 
 
     if (accionSeleccionada === '2') {
         $('#campos_condicionales').show();
     }
 
-    // Verifica el tipo de dictamen 
-    if (tipoDictamen === 1) { 
+    const tipoDictamen = $('#id_dictamen_rex option:selected').data('tipo-dictamen');
+    if (tipoDictamen === 1) {
+        shouldShowProductorFields = true; 
+    }
+
+    if (shouldShowProductorFields) {
         $('#campos_productor').show();
-    } else {
-        $('#campos_productor').hide();
-        // Limpiar los campos cuando se ocultan
-        $('#maestro_mezcalero_rex').val('');
-        $('#no_autorizacion_rex').val('');
     }
 });
-
-// Lógica para mostrar campos de Productor cuando el tipo de dictamen es 1
-$(document).on('change', '#id_dictamen_rex', function () {
-    var tipoDictamen = $('#id_dictamen_rex option:selected').data('tipo-dictamen');
-    console.log('Tipo de Dictamen seleccionado:', tipoDictamen);
-
-    if (tipoDictamen === 1) { 
-        $('#campos_productor').show(); 
-    } else {
-        $('#campos_productor').hide(); 
-        // Limpiar los campos cuando se ocultan
+  
+  function cargarDatosReexpedicion(id_certificado) {
+      console.log('Cargando datos para la reexpedición con ID:', id_certificado);
+      clearFields();
+  
+      $.get(`/certificados-list/${id_certificado}/edit`)
+          .done(function (data) {
+              console.log('Respuesta completa:', data);
+  
+              if (data.error) {
+                  showError(data.error);
+                  return;
+              }
+  
+              $('#id_dictamen_rex').val(data.id_dictamen).trigger('change');
+  
+              $('#numero_certificado_rex').val(data.num_certificado);
+              $('#id_firmante_rex').val(data.id_firmante).trigger('change');
+              $('#fecha_vigencia_rex').val(data.fecha_vigencia);
+              $('#fecha_vencimiento_rex').val(data.fecha_vencimiento);
+              $('#observaciones_rex').val(data.observaciones);
+  
+              const tipoDictamen = $('#id_dictamen_rex option:selected').data('tipo-dictamen');
+              console.log('Tipo de Dictamen seleccionado:', tipoDictamen);
+              if (Number(tipoDictamen) === 1) {
+                  $('#campos_productor').show(); 
+                  $('#maestro_mezcalero_rex').val(data.maestro_mezcalero || ''); 
+                  $('#no_autorizacion_rex').val(data.num_autorizacion || '');
+                  console.log('Campos de Productor cargados y mostrados.');
+              } else {
+                  $('#campos_productor').hide(); 
+                  clearProductorFields();
+                  console.log('Campos de Productor ocultos porque el tipo no es 1.');
+              }
+  
+              $('#accion_reexpedir').trigger('change'); 
+              isLoadingData = false;
+  
+              console.log('Campos de productor visibles:', $('#campos_productor').is(':visible'));
+          })
+          .fail(function () {
+              showError('No se pudieron cargar los datos para la reexpedición.');
+              isLoadingData = false;
+          });
+  }
+  
+    function clearFields() {
         $('#maestro_mezcalero_rex').val('');
         $('#no_autorizacion_rex').val('');
+        $('#numero_certificado_rex').val('');
+        $('#id_firmante_rex').val('');
+        $('#fecha_vigencia_rex').val('');
+        $('#fecha_vencimiento_rex').val('');
+        $('#observaciones_rex').val('');
     }
-});
 
-// Función para cargar los datos de reexpedición
-function cargarDatosReexpedicion(id_certificado) {
-    console.log('Cargando datos para la reexpedición con ID:', id_certificado);
+    function clearProductorFields() {
+        $('#maestro_mezcalero_rex').val(''); 
+        $('#no_autorizacion_rex').val(''); 
+    }
 
-    // Limpiar los campos antes de cargar nuevos datos
-    $('#maestro_mezcalero_rex').val('');
-    $('#no_autorizacion_rex').val('');
-    $('#numero_certificado_rex').val('');
-    $('#id_firmante_rex').val('');
-    $('#fecha_vigencia_rex').val('');
-    $('#fecha_vencimiento_rex').val('');
-    $('#observaciones_rex').val('');
-
-    $.get(`/certificados-list/${id_certificado}/edit`)
-        .done(function (data) {
-            console.log(data);
-
-            if (data.error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: data.error,
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
-                return;
+    function showError(message) {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: message,
+            customClass: {
+                confirmButton: 'btn btn-danger'
             }
-
-            // Asignación de datos en los campos del formulario
-            $('#id_dictamen_rex').val(data.id_dictamen).trigger('change');
-
-            if (data.maestro_mezcalero && data.num_autorizacion) {
-                $('#campos_productor').show(); 
-                $('#maestro_mezcalero_rex').val(data.maestro_mezcalero);
-                $('#no_autorizacion_rex').val(data.num_autorizacion);
-                console.log('Campos de Productor cargados y mostrados.');
-            } else {
-                $('#campos_productor').hide(); 
-                $('#maestro_mezcalero_rex').val(''); 
-                $('#no_autorizacion_rex').val(''); 
-                console.log('Campos de Productor ocultos por falta de datos.');
-            }
-
-            // Asignar el resto de los campos
-            $('#numero_certificado_rex').val(data.num_certificado);
-            $('#id_firmante_rex').val(data.id_firmante).trigger('change');
-            $('#fecha_vigencia_rex').val(data.fecha_vigencia);
-            $('#fecha_vencimiento_rex').val(data.fecha_vencimiento);
-            $('#observaciones_rex').val(data.observaciones);
-
-            // Llamar a la verificación de campos después de cargar los datos
-            $('#accion_reexpedir').trigger('change'); 
-            isLoadingData = false;
-        })
-        .fail(function () {
-            Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: 'No se pudieron cargar los datos para la reexpedición.',
-                customClass: {
-                    confirmButton: 'btn btn-danger'
-                }
-            });
-
-            isLoadingData = false;
         });
-}
+    }
 
-// Limpiar los campos al cerrar el modal
-$('#modalReexpedirCertificadoInstalaciones').on('hidden.bs.modal', function () {
-    // Limpiar todos los campos dentro del modal
-    $('#addReexpedirCertificadoInstalacionesForm')[0].reset();
+    function addFieldValidation(field, message, isNumeric = false) {
+        if (!fieldsValidated.includes(field)) {
+            const validators = {
+                notEmpty: {
+                    message: message
+                }
+            };
+            if (isNumeric) {
+                validators.numeric = {
+                    message: 'El campo debe contener solo números.'
+                };
+            }
+            validatorReexpedir.addField(field, {
+                validators: validators
+            });
+            fieldsValidated.push(field);
+        }
+    }
 
-    // También asegurarte de ocultar los campos condicionales
-    $('#campos_condicionales').hide();
-    $('#campos_productor').hide();
-});
+    function removeFieldValidation(field) {
+        if (fieldsValidated.includes(field)) {
+            validatorReexpedir.removeField(field);
+            fieldsValidated = fieldsValidated.filter(f => f !== field);
+        }
+    }
 
-// Inicializa la validación del formulario
-$(document).ready(function () {
+    $('#modalReexpedirCertificadoInstalaciones').on('hidden.bs.modal', function () {
+        $('#addReexpedirCertificadoInstalacionesForm')[0].reset();
+        clearFields();
+        $('#campos_condicionales').hide();
+        $('#campos_productor').hide();
+        fieldsValidated = []; 
+    });
+
     const formReexpedir = document.getElementById('addReexpedirCertificadoInstalacionesForm');
-
     const validatorReexpedir = FormValidation.formValidation(formReexpedir, {
         fields: {
             'accion_reexpedir': {
@@ -1355,26 +1403,6 @@ $(document).ready(function () {
                     }
                 }
             },
-            'maestro_mezcalero_rex': {  
-                validators: {
-                    notEmpty: {
-                        message: 'El maestro mezcalero es obligatorio.',
-                        enable: function() {
-                            return $('#maestro_mezcalero_rex').is(':visible');
-                        }
-                    }
-                }
-            },
-            'no_autorizacion_rex': { 
-                validators: {
-                    notEmpty: {
-                        message: 'El número de autorización es obligatorio.',
-                        enable: function() {
-                            return $('#no_autorizacion_rex').is(':visible');
-                        }
-                    }
-                }
-            },
         },
         plugins: {
             trigger: new FormValidation.plugins.Trigger(),
@@ -1387,7 +1415,6 @@ $(document).ready(function () {
             autoFocus: new FormValidation.plugins.AutoFocus()
         }
     }).on('core.form.valid', function () {
-
         const formData = $(formReexpedir).serialize();
 
         $.ajax({
@@ -1398,7 +1425,6 @@ $(document).ready(function () {
                 $('#modalReexpedirCertificadoInstalaciones').modal('hide');
                 formReexpedir.reset();
 
-                // Recargar la tabla de usuarios
                 dt_user_table.DataTable().ajax.reload();
                 Swal.fire({
                     icon: 'success',
@@ -1430,7 +1456,6 @@ $(document).ready(function () {
         });
     });
 });
-
 
 //end
 });

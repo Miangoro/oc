@@ -28,15 +28,30 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <input type="text" id="domicilio_fiscal" name="domicilio_fiscal" class="form-control"
-                                    autocomplete="off" placeholder="domicilio_fiscal" required />
-                                <label for="domicilio_fiscal">Domicilio fiscal</label>
+
+                    <div class="row">                 
+                      <div class="col-md-6">
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="text" id="domicilio_fiscal" name="domicilio_fiscal" class="form-control"
+                                autocomplete="off" placeholder="Domicilio fiscal" required />
+                            <label for="Domicilio fiscal">Domicilio fiscal</label>
+                        </div>
+                    </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-3">
+                                <select class="form-select select2" id="normas" name="normas[]"
+                                    data-placeholder="Seleccione una o más normas" aria-label="Normas" multiple
+                                    required>
+                                    <option value="">Seleccione una o más normas</option>
+                                    @foreach ($normas as $norma)
+                                        <option value="{{ $norma->id_norma }}">{{ $norma->norma }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="normas">Normas</label>
                             </div>
                         </div>
                     </div>
+                    <div id="normas-info"></div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-3">
@@ -88,7 +103,8 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select id="id_contacto" name="id_contacto" class="select2 form-select" required>
-                                    <option value="" disabled selected>Selecciona una persona de contacto</option>
+                                    <option value="" disabled selected>Selecciona una persona de contacto
+                                    </option>
                                     @foreach ($usuarios as $usuario)
                                         <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
                                     @endforeach
@@ -108,3 +124,27 @@
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function () {
+    $('#normas').on('change', function () {
+        const selectedNormas = $(this).val(); // Obtener las normas seleccionadas
+        const normasData = @json($normas); // Pasar las normas al JavaScript
+        $('#normas-info').empty(); // Limpiar campos previos
+
+        selectedNormas.forEach((normaId) => {
+            // Buscar el nombre de la norma correspondiente
+            const norma = normasData.find(n => n.id_norma == normaId);
+
+            if (norma) {
+                const normaField = `
+                    <div class="input-group mb-4 input-group-merge">
+                        <span class="input-group-text">${norma.norma}</span>
+                        <input type="text" class="form-control" name="numeros_clientes[]" placeholder="Número de Cliente" required>
+                    </div>`;
+                $('#normas-info').append(normaField); // Añadir el nuevo campo
+            }
+        });
+    });
+});
+</script>
