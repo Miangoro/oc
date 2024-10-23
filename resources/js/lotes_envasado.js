@@ -1,13 +1,19 @@
-/**
- * Page User List
+/*
+ Page User List
  */
-'use strict';
+ 'use strict';
+
+ // Datatable (jquery)
+ $(function () {
+ 
+   // Variable declaration for table
+   var dt_user_table = $('.datatables-users'),
+   select2Elements = $('.select2'),
+   userView = baseUrl + 'app/user/view/account',
+   offCanvasForm = $('#addlostesEnvasado');
 
 
 
-<<<<<<< HEAD
-// Agregar nuevo registro
-=======
 
 
 
@@ -439,7 +445,6 @@ function initializeSelect2($elements) {
  
  
    // Eliminar registro
->>>>>>> ebe3a7db6199da30230a67597eb283291277f031
 // validating form and updating user's data
 const addNewLoteForm = document.getElementById('addNewLoteForm');
 
@@ -561,141 +566,67 @@ const fv = FormValidation.formValidation(addNewLoteForm, {
     });
 });
 
+ 
+$(document).on('click', '.delete-record', function () {
+    var user_id = $(this).data('id'),
+        dtrModal = $('.dtr-bs-modal.show');
 
-
-
-
-
-
-$(function () {
-    // Datatable (jquery)
-    // Variable declaration for table
-    var dt_user_table = $('.datatables-users'),
-        select2Elements = $('.select2'),
-        userView = baseUrl + 'app/user/view/account',
-        offCanvasForm = $('#addlostesEnvasado');
-
-
-
-
-
-
-    // Función para inicializar Select2 en elementos específicos
-    function initializeSelect2($elements) {
-        $elements.each(function () {
-            var $this = $(this);
-            select2Focus($this);
-            $this.wrap('<div class="position-relative"></div>').select2({
-                placeholder: 'Selecciona cliente',
-                dropdownParent: $this.parent()
-            });
-        });
+    // hide responsive modal in small screen
+    if (dtrModal.length) {
+        dtrModal.modal('hide');
     }
 
-    // Inicialización de Select2 para elementos con clase .select2
-    initializeSelect2(select2Elements);
+    // sweetalert for confirmation of delete
+    Swal.fire({
+        title: '¿Está seguro?',
+        text: "No podrá revertir este evento",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si, eliminar',
+        customClass: {
+            confirmButton: 'btn btn-primary me-3',
+            cancelButton: 'btn btn-label-secondary'
+        },
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.value) {
+            // delete the data
+            $.ajax({
+                type: 'DELETE',
+                url: `${baseUrl}lotes-list/${user_id}`,
+                success: function () {
+                    dt_user.draw();
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
 
-
-    // ajax setup
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            // success sweetalert
+            Swal.fire({
+                icon: 'success',
+                title: '¡Eliminado!',
+                text: '¡La solicitud ha sido eliminada correctamente!',
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            Swal.fire({
+                title: 'Cancelado',
+                text: 'La solicitud no ha sido eliminada',
+                icon: 'error',
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
         }
     });
-
-    // Users datatable
-    if (dt_user_table.length) {
-        var dt_user = dt_user_table.DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: baseUrl + 'lotes-list'
-            },
-            columns: [
-                { data: '' },
-                { data: 'id_lote_envasado' },
-                {
-                    data: null,
-                    searchable: true, orderable: false,
-                    render: function (data, type, row) {
-                        var id_empresa = '';
-                        var razon_social = '';
-
-                        if (row.id_empresa != 'N/A') {
-                            id_empresa = '<br><span class="fw-bold text-dark small">Número del cliente:</span><span class="small"> ' + row.id_empresa + '</span>';
-                        }
-                        if (row.razon_social != 'N/A') {
-                            razon_social = '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' + row.razon_social + '</span>';
-                        }
-
-                        return '<span class="fw-bold text-dark small">Número del cliente:</span> <span class="small"> ' + row.id_empresa +
-                            '</span><br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' + row.razon_social
-                            ;
-                    }
-                },
-                {
-                    data: null,
-                    searchable: true, orderable: false,
-                    render: function (data, type, row) {
-                        var id_lote_granel = '';
-                        var nombre_lote = '';
-
-                        if (row.id_lote_granel != 'N/A') {
-                            id_lote_granel = '<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ' + row.id_lote_granel + '</span>';
-                        }
-                        if (row.nombre_lote != 'N/A') {
-                            nombre_lote = '<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ' + row.nombre_lote + '</span>';
-                        }
-
-                        return '<span class="fw-bold text-dark small">Agranel:</span> <span class="small"> ' + row.id_lote_granel +
-                            '</span><br><span class="fw-bold text-dark small">Envasado:</span><span class="small"> ' + row.nombre_lote
-                            ;
-                    }
-                },
-                { data: 'id_marca' },
-
-                                {
-                    data: null,
-                    searchable: true, orderable: false,
-                    render: function (data, type, row) {
-                        var cant_botellas = '';
-                        var cantt_botellas = '';
-
-                        if (row.cant_botellas != 'N/A') {
-                            cant_botellas = '<br><span class="fw-bold text-dark small">Cantidad de botellas:</span><span class="small"> ' + row.cant_botellas + '</span>';
-                        }
-                        if (row.cantt_botellas != 'N/A') {
-                            cantt_botellas = '<br><span class="fw-bold text-dark small">Cantidad de botellas restantes:</span><span class="small"> ' + row.cantt_botellas + '</span>';
-                        }
-
-                        return '<span class="fw-bold text-dark small">Inicial:</span> <span class="small"> ' + row.cant_botellas +
-                            '</span><br><span class="fw-bold text-dark small">Restantes:</span><span class="small"> ' + row.cantt_botellas
-                            ;
-                    }
-                },
-
-                {
-                    data: function (row, type, set) {
-                        return row.presentacion + ' ' + row.unidad;
-                    }
-                },
+});
 
 
-                {
-                    data: null,
-                    searchable: true, orderable: false,
-                    render: function (data, type, row) {
-                        var volumen_total = '';
-                        var volumen_total = '';
+$(document).on('click', '.edit-record', function () {
 
-<<<<<<< HEAD
-                        if (row.volumen_total != 'N/A') {
-                            volumen_total = '<br><span class="fw-bold text-dark small">Volumen inicial:</span><span class="small"> ' + row.volumen_total + ' </span>';
-                        }
-                        if (row.volumen_total != 'N/A') {
-                            volumen_total = '<br><span class="fw-bold text-dark small">Volumen restante:</span><span class="small"> ' + row.volumen_total + ' </span>';
-                        }
-=======
     var id_lote_envasado = $(this).data('id');
     // Realizar la solicitud AJAX para obtener los datos del lote envasado
     $.get('/lotes-envasado/edit/' + id_lote_envasado, function (data) {
@@ -711,491 +642,44 @@ $(function () {
         $('#edit_unidad').val(data.unidad);
         $('#edit_volumen_total').val(data.volumen_total);
         $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
->>>>>>> a8f0b7e53d5661992133b6c4f0c3dc9b9a82c268
 
-                        return '<span class="fw-bold text-dark small">Inicial:</span> <span class="small"> ' + row.volumen_total + ' Litros' +
-                            '</span><br><span class="fw-bold text-dark small">Restante:</span><span class="small"> ' + row.volumen_total + ' Litros'
-                            ;
-                    }
-                },
+        // EDIT TESTIGOS
+        $('#edit_contenidoGraneles').empty();
 
-                { data: 'destino_lote' },
-                { data: 'lugar_envasado' },
-                {
-                    data: null,
-                    searchable: true, orderable: false,
-                    render: function (data, type, row) {
-                        var inicial = '';
-                        var nuevo = '';
-
-                        if (row.inicial != 'N/A') {
-                            inicial = '<br><span class="fw-bold text-dark small">SKU inicial:</span><span class="small"> ' + row.inicial + '</span>';
-                        }
-                        if (row.nuevo != 'N/A') {
-                            nuevo = '<br><span class="fw-bold text-dark small">SKU nuevo:</span><span class="small"> ' + row.nuevo + '</span>';
-                        }
-
-                        return '<span class="fw-bold text-dark small">Inicial:</span> <span class="small"> ' + row.inicial +
-                            '</span><br><span class="fw-bold text-dark small">Nuevo:</span><span class="small"> ' + row.nuevo
-                            ;
-                    }
-                },
-                { data: 'estatus' },//status
-                { data: 'action' }
-            ],
-            columnDefs: [
-                {
-                    // For Responsive
-                    className: 'control',
-                    searchable: false,
-                    orderable: false,
-                    responsivePriority: 2,
-                    targets: 0,
-                    render: function (data, type, full, meta) {
-                        return '';
-                    }
-                },
-                {
-                    searchable: false,
-                    orderable: false,
-                    targets: 1,
-                    render: function (data, type, full, meta) {
-                        return `<span>${full.fake_id}</span>`;
-                    }
-                },
-                {
-                    // User full name
-                    targets: 2,
-                    responsivePriority: 4,
-                    render: function (data, type, full, meta) {
-                        var $name = full['id_empresa'];
-
-                        // For Avatar badge
-                        var stateNum = Math.floor(Math.random() * 6);
-                        var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
-                        var $state = states[stateNum];
-
-
-
-                        // Creates full output for row
-                        var $row_output =
-                            '<div class="d-flex justify-content-start align-items-center user-name">' +
-                            '<div class="avatar-wrapper">' +
-                            '<div class="avatar avatar-sm me-3">' +
-
-                            '</div>' +
-                            '</div>' +
-                            '<div class="d-flex flex-column">' +
-                            '<a href="' +
-                            userView +
-                            '" class="text-truncate text-heading"><span class="fw-medium">' +
-                            $name +
-                            '</span></a>' +
-                            '</div>' +
-                            '</div>';
-                        return $row_output;
-                    }
-                },
-                {
-                    // User email
-                    targets: 2,
-                    render: function (data, type, full, meta) {
-                        var $email = full['razon_social'];
-                        return '<span class="user-email">' + $email + '</span>';
-                    }
-                },
-
-                {
-                    // email verify
-                    targets: 11,
-                    className: 'text-center',
-                    render: function (data, type, full, meta) {
-                        var $verified = full['estatus'];
-                        var $colorRegimen;
-
-                        if ($verified == 'Pendiente') {
-                            $colorRegimen = 'danger'; // Azulnja
-                            /*                       } else if ($verified == 'Pendiente') {
-                                                    $colorRegimen = 'danger';  */
-                        } else {
-                            $colorRegimen = 'secondary'; // Color por defecto si no coincide con ninguno
-                        }
-
-                        return `${$verified
-                            ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                            : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                            }`;
-                    }
-                },
-
-                {
-                    // Actions botones de eliminar y actualizar(editar)
-                    targets: -1,
-                    title: 'Acciones',
-                    searchable: false,
-                    orderable: false,
-                    render: function (data, type, full, meta) {
-                      return (
-                        '<div class="d-flex align-items-center gap-50">' +
-                        '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
-                        '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                        `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" class="dropdown-item edit-record waves-effect"><i class="ri-edit-box-line ri-20px text-info"></i> Editar lotes envasado</a>` +
-                        `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" class="dropdown-item edit-reclasificacion waves-effect "><i class="ri-file-settings-line ri-20px text-success"></i> Reclasificación SKU</a>` +
-                        `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#" class="dropdown-item edit waves-effect "><i class="ri-file-settings-line ri-20px text-warning"></i> Trazabilidad</a>` +
-                        `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasados</a>` +
-                        '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                        '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
-                        '</div>' +
-                        '</div>'
-                      );
-                    }
-                  }
-            ],
-
-            order: [[2, 'desc']],
-            dom:
-                '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
-                '<"me-5 ms-n2"f>' +
-                '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
-                '>t' +
-                '<"row mx-1"' +
-                '<"col-sm-12 col-md-6"i>' +
-                '<"col-sm-12 col-md-6"p>' +
-                '>',
-            lengthMenu: [10, 20, 50, 70, 100], //for length of menu
-            language: {
-                sLengthMenu: '_MENU_',
-                search: '',
-                searchPlaceholder: 'Buscar',
-                info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
-                paginate: {
-                    "sFirst": "Primero",
-                    "sLast": "Último",
-                    "sNext": "Siguiente",
-                    "sPrevious": "Anterior"
-                }
-            },
-            // Buttons with Dropdown
-            buttons: [
-                {
-                    extend: 'collection',
-                    className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-                    text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
-                    buttons: [
-                        {
-                            extend: 'print',
-                            title: 'Users',
-                            text: '<i class="ri-printer-line me-1" ></i>Print',
-                            className: 'dropdown-item',
-                            exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11],
-                                // prevent avatar to be print
-                                format: {
-                                    body: function (inner, coldex, rowdex) {
-                                        if (inner.length <= 0) return inner;
-                                        var el = $.parseHTML(inner);
-                                        var result = '';
-                                        $.each(el, function (index, item) {
-                                            if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
-                                            } else if (item.innerText === undefined) {
-                                                result = result + item.textContent;
-                                            } else result = result + item.innerText;
-                                        });
-                                        return result;
-                                    }
-                                }
-                            },
-                            customize: function (win) {
-                                //customize print view for dark
-                                $(win.document.body)
-                                    .css('color', config.colors.headingColor)
-                                    .css('border-color', config.colors.borderColor)
-                                    .css('background-color', config.colors.body);
-                                $(win.document.body)
-                                    .find('table')
-                                    .addClass('compact')
-                                    .css('color', 'inherit')
-                                    .css('border-color', 'inherit')
-                                    .css('background-color', 'inherit');
-                            }
-                        },
-                        {
-                            extend: 'csv',
-                            title: 'Users',
-                            text: '<i class="ri-file-text-line me-1" ></i>Csv',
-                            className: 'dropdown-item',
-                            exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11],
-                                // prevent avatar to be print
-                                format: {
-                                    body: function (inner, coldex, rowdex) {
-                                        if (inner.length <= 0) return inner;
-                                        var el = $.parseHTML(inner);
-                                        var result = '';
-                                        $.each(el, function (index, item) {
-                                            if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
-                                            } else if (item.innerText === undefined) {
-                                                result = result + item.textContent;
-                                            } else result = result + item.innerText;
-                                        });
-                                        return result;
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            extend: 'excel',
-                            title: 'Users',
-                            text: '<i class="ri-file-excel-line me-1"></i>Excel',
-                            className: 'dropdown-item',
-                            exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11],
-                                // prevent avatar to be display
-                                format: {
-                                    body: function (inner, coldex, rowdex) {
-                                        if (inner.length <= 0) return inner;
-                                        var el = $.parseHTML(inner);
-                                        var result = '';
-                                        $.each(el, function (index, item) {
-                                            if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
-                                            } else if (item.innerText === undefined) {
-                                                result = result + item.textContent;
-                                            } else result = result + item.innerText;
-                                        });
-                                        return result;
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            extend: 'pdf',
-                            title: 'Users',
-                            text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
-                            className: 'dropdown-item',
-                            exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11],
-                                // prevent avatar to be display
-                                format: {
-                                    body: function (inner, coldex, rowdex) {
-                                        if (inner.length <= 0) return inner;
-                                        var el = $.parseHTML(inner);
-                                        var result = '';
-                                        $.each(el, function (index, item) {
-                                            if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
-                                            } else if (item.innerText === undefined) {
-                                                result = result + item.textContent;
-                                            } else result = result + item.innerText;
-                                        });
-                                        return result;
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            extend: 'copy',
-                            title: 'Users',
-                            text: '<i class="ri-file-copy-line me-1"></i>Copy',
-                            className: 'dropdown-item',
-                            exportOptions: {
-                                columns: [1, 2, 3, 4, 5, 7, 8, 9, 10, 11],
-                                // prevent avatar to be copy
-                                format: {
-                                    body: function (inner, coldex, rowdex) {
-                                        if (inner.length <= 0) return inner;
-                                        var el = $.parseHTML(inner);
-                                        var result = '';
-                                        $.each(el, function (index, item) {
-                                            if (item.classList !== undefined && item.classList.contains('user-name')) {
-                                                result = result + item.lastChild.firstChild.textContent;
-                                            } else if (item.innerText === undefined) {
-                                                result = result + item.textContent;
-                                            } else result = result + item.innerText;
-                                        });
-                                        return result;
-                                    }
-                                }
-                            }
-                        }
-                    ]
-                },
-                {
-                    text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo lote de envasado</span>',
-                    className: 'add-new btn btn-primary waves-effect waves-light',
-                    attr: {
-                        'data-bs-toggle': 'modal',
-                        'data-bs-dismiss': 'modal',
-                        'data-bs-target': '#addlostesEnvasado'
-                    }
-                }
-            ],
-            // For responsive popup
-            responsive: {
-                details: {
-                    display: $.fn.dataTable.Responsive.display.modal({
-                        header: function (row) {
-                            var data = row.data();
-                            return 'Detalles de ' + data['id_empresa'];
-                        }
-                    }),
-                    type: 'column',
-                    renderer: function (api, rowIdx, columns) {
-                        var data = $.map(columns, function (col, i) {
-                            return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
-                                ? '<tr data-dt-row="' +
-                                col.rowIndex +
-                                '" data-dt-column="' +
-                                col.columnIndex +
-                                '">' +
-                                '<td>' +
-                                col.title +
-                                ':' +
-                                '</td> ' +
-                                '<td>' +
-                                col.data +
-                                '</td>' +
-                                '</tr>'
-                                : '';
-                        }).join('');
-
-                        return data ? $('<table class="table"/><tbody />').append(data) : false;
-                    }
-                }
-            }
+        // Iterar sobre los testigos y agregar filas a la tabla
+        data.lotes_envasado_granel.forEach(function (lote, index) {
+            var newRow = `
+            <tr>
+                <th>
+                    <button type="button" class="btn btn-danger remove-row" ${index === 0 ? '' : ''}>
+                        <i class="ri-delete-bin-5-fill"></i>
+                    </button>
+                </th>
+                <td>
+                    <input type="text" class="form-control form-control-sm" name="id_lote_granel[]" value="${lote.id_lote_granel}" />
+                </td>
+                <td>
+                    <input type="text" class="form-control form-control-sm" name="volumen_parcial[]" value="${lote.volumen_parcial}" />
+                </td>
+                
+            </tr>
+        `;
+            $('#edit_contenidoGraneles').append(newRow);
         });
-    }
-    // Delete Record
-    $(document).on('click', '.delete-record', function () {
-        var user_id = $(this).data('id'),
-            dtrModal = $('.dtr-bs-modal.show');
+        // Mostrar el modal de edición
+        $('#editLoteEnvasado').modal('show');
+        $('#edit_marca option[value="' + data.id_marca + '').attr('selected', 'selected');
 
-        // hide responsive modal in small screen
-        if (dtrModal.length) {
-            dtrModal.modal('hide');
-        }
-
-        // sweetalert for confirmation of delete
+    }).fail(function () {
         Swal.fire({
-            title: '¿Está seguro?',
-            text: "No podrá revertir este evento",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Si, eliminar',
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al obtener los datos del lote envasado',
             customClass: {
-                confirmButton: 'btn btn-primary me-3',
-                cancelButton: 'btn btn-label-secondary'
-            },
-            buttonsStyling: false
-        }).then(function (result) {
-            if (result.value) {
-                // delete the data
-                $.ajax({
-                    type: 'DELETE',
-                    url: `${baseUrl}lotes-list/${user_id}`,
-                    success: function () {
-                        dt_user.draw();
-                    },
-                    error: function (error) {
-                        console.log(error);
-                    }
-                });
-
-                // success sweetalert
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Eliminado!',
-                    text: '¡La solicitud ha sido eliminada correctamente!',
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                Swal.fire({
-                    title: 'Cancelado',
-                    text: 'La solicitud no ha sido eliminada',
-                    icon: 'error',
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
+                confirmButton: 'btn btn-danger'
             }
         });
     });
-
-
-    $(document).on('click', '.edit-record', function () {
-
-        var id_lote_envasado = $(this).data('id');
-        // Realizar la solicitud AJAX para obtener los datos del lote envasado
-        $.get('/lotes-envasado/edit/' + id_lote_envasado, function (data) {
-            // Rellenar el formulario con los datos obtenidos
-            $('#edit_id_lote_envasado').val(data.id_lote_envasado);
-            $('#edit_cliente').val(data.id_empresa).trigger('change');
-            $('#edit_lote_granel').val(data.id_empresa).trigger('change');
-            $('#edit_nombre_lote').val(data.nombre_lote);
-            $('#edit_tipo_lote').val(data.tipo_lote);
-            $('#edit_sku').val(data.inicial);
-            $('#edit_destino_lote').val(data.destino_lote);
-            $('#edit_cant_botellas').val(data.cant_botellas);
-            $('#edit_presentacion').val(data.presentacion);
-            $('#edit_unidad').val(data.unidad);
-            $('#edit_volumen_total').val(data.volumen_total);
-            $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
-
-            // EDIT TESTIGOS
-            $('#edit_contenidoGraneles').empty();
-
-            // Iterar sobre los testigos y agregar filas a la tabla
-            data.lotes_envasado_granel.forEach(function (lote, index) {
-                var newRow = `
-                <tr>
-                    <th>
-                        <button type="button" class="btn btn-danger remove-row" ${index === 0 ? '' : ''}>
-                            <i class="ri-delete-bin-5-fill"></i>
-                        </button>
-                    </th>
-                    <td>
-                        <input type="text" class="form-control form-control-sm" name="id_lote_granel[]" value="${lote.id_lote_granel}" />
-                    </td>
-                    <td>
-                        <input type="text" class="form-control form-control-sm" name="volumen_parcial[]" value="${lote.volumen_parcial}" />
-                    </td>
-                    
-                </tr>
-            `;
-                $('#edit_contenidoGraneles').append(newRow);
-            });
-            // Mostrar el modal de edición
-            $('#editLoteEnvasado').modal('show');
-            $('#edit_marca option[value="' + data.id_marca + '').attr('selected', 'selected');
-
-        }).fail(function () {
-            Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: 'Error al obtener los datos del lote envasado',
-                customClass: {
-                    confirmButton: 'btn btn-danger'
-                }
-            });
-        });
-
-    });
-    /*$(document).on('click', '.pdf', function () {
-          var id = $(this).data('id');
-          var registro = $(this).data('registro');
-              var iframe = $('#pdfViewer');
-              iframe.attr('src', '../solicitudinfo_cliente/'+id);
-    
-              $("#titulo_modal").text("Solicitud de información del cliente");
-              $("#subtitulo_modal").text(registro);
-              
-            
-    });*/
-
 
 });
 
@@ -1329,7 +813,6 @@ const fv2 = FormValidation.formValidation(editLoteEnvasadoForm, {
     });
 });
 
-
 $(document).on('click', '.edit-reclasificacion', function () {
     var id_lote_envasado = $(this).data('id');
 
@@ -1357,46 +840,8 @@ $(document).on('click', '.edit-reclasificacion', function () {
     });
 });
 
-/* $('#reclasificacionForm').submit(function (e) {
-    e.preventDefault();
 
-    var formData = new FormData(this);
-    console.log()
 
-    $.ajax({
-      url: '/lotes-envasado/updateSKU/',
-      type: 'POST',
-      data: formData,
-      contentType: false,
-      processData: false,
-      success: function (response) {
-        Swal.fire({
-          title: 'Éxito',
-          text: response.success,
-          icon: 'success',
-          buttonsStyling: false,
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-        $('#reclasificacion').modal('hide');
-        $('.datatables-users').DataTable().ajax.reload();
-      },
-      error: function (response) {
-        console.log(response);
-
-        Swal.fire({
-          title: 'Error',
-          text: 'Ocurrió un error al actualizar la guía.',
-          icon: 'error',
-          buttonsStyling: false,
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      }
-    });
-  }); */
 
 
 //FUNCION MOSTRAR Y OCULTAR EN EDIT
@@ -1546,9 +991,6 @@ $(document).on('click', '.remove-row', function () {
     $(this).closest('tr').remove();
 
 });
-
-
-
 //MODAL para ocultar y mostara
 document.addEventListener('DOMContentLoaded', function () {
     // Evento para el cambio en el select de tipo de lote
@@ -1610,16 +1052,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Inicializar campos por defecto
     toggleFields();
 });
-
-
-
-
-
-
-//validaicon undate sku
-
-
-
 
 
 
@@ -1701,3 +1133,7 @@ const fv3 = FormValidation.formValidation(reclasificacionForm, {
         }
     });
 });
+ 
+ 
+ });
+ 

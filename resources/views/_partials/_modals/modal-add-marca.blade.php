@@ -12,7 +12,7 @@
                     <div class="col-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <select id="cliente" name="cliente" class="select2 form-select" required>
-                                <option value="">Selecciona cliente</option>
+                                <option value="" disabled>Selecciona cliente</option>
                                 @foreach ($clientes as $cliente)
                                     <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
                                 @endforeach
@@ -23,7 +23,7 @@
                     <div class="col-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <select id="id_norma" name="id_norma" class="select2 form-select" required>
-                                <option value="">Selecciona uan norma</option>
+                                <option value="" disabled>Selecciona uan norma</option>
                                 @foreach ($catalogo_norma_certificar as $normas)
                                     <option value="{{ $normas->id_norma }}">{{ $normas->norma }}</option>
                                 @endforeach
@@ -67,5 +67,15 @@
 <!--/ Add New Address Modal -->
 
 <script>
+    $(document).ready(function() {
+    // Cuando se muestra el modal de edición de marca
+    $('#addMarca').on('shown.bs.modal', function() {
+        // Inicializa o reinicializa todos los select2 dentro del modal
+        $('.select2').select2({
+            dropdownParent: $('#addMarca') // Asegura que el dropdown esté dentro del modal
+        });
 
+
+    });
+});
 </script>

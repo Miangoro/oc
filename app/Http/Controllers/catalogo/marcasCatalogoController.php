@@ -245,7 +245,9 @@ class marcasCatalogoController extends Controller
 
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-    
+
+
+
         return response()->json([
             'marca' => $marca,
             'documentacion_urls' => $documentacion_urls, // Incluir la fecha de vigencia en los datos
@@ -311,8 +313,8 @@ class marcasCatalogoController extends Controller
             'sku' => $request->sku,
             'id_tipo' => $request->id_tipo,
             'presentacion' => $request->presentacion, // Puedes agregar otros valores también
-           'clase' => $request->clase,
-           'categoria' => $request->categoria,
+           'id_clase' => $request->id_clase,
+           'id_categoria' => $request->id_categoria,
 
 
         ]);
@@ -345,6 +347,32 @@ class marcasCatalogoController extends Controller
     } catch (\Exception $e) {
         return response()->json(['error' => 'Error al actualizar la etiqueta'], 500);
     }
+    }
+
+
+
+    public function editEtiquetas($id)
+    {   
+       
+        $marca = Marcas::findOrFail($id);
+        $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get();
+
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+
+        $etiquetado = json_decode($marca->etiquetado, true);
+        $marca->sku = $etiquetado['sku'] ?? null;
+        $marca->id_tipo = $etiquetado['id_tipo'] ?? null;
+        $marca->presentacion = $etiquetado['presentacion'] ?? null;
+        $marca->id_clase = $etiquetado['id_clase'] ?? null;
+        $marca->id_categoria = $etiquetado['id_categoria'] ?? null;
+
+        return response()->json([
+            'marca' => $marca,
+            'documentacion_urls' => $documentacion_urls, // Incluir la fecha de vigencia en los datos
+            'numeroCliente' => $numeroCliente
+        ]);
+        
     }
 
 

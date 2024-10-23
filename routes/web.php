@@ -510,6 +510,7 @@ Route::post('/update-fecha-vigencia/{id_documento}', [marcasCatalogoController::
 Route::post('/marcas-list/update', [marcasCatalogoController::class, 'update'])->name('marcas.update');
 Route::post('/marcas-list/update', [marcasCatalogoController::class, 'update'])->name('marcas.update');
 Route::post('/etiquetado/updateEtiquetas', [marcasCatalogoController::class, 'updateEtiquetas']);
+Route::get('/marcas-list/{id}/editEtiquetas', [marcasCatalogoController::class, 'editEtiquetas'])->name('marcas.edit');
 
 
 

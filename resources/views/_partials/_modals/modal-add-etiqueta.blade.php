@@ -60,16 +60,16 @@
                                                 name="presentacion[]" id="presentacion" step="0.01" min="0">
                                         </td>
                                         <td>
-                                            <select class="form-control select2" name="clase[]" id="clase">
+                                            <select class="form-control select2" name="id_clase[]" id="id_clase">
                                                 @foreach ($clases as $clase)
-                                                    <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
+                                                    <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
                                                 @endforeach
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control select2" name="categoria[]" id="categoria">
+                                            <select class="form-control select2" name="id_categoria[]" id="id_categoria">
                                                 @foreach ($categorias as $categoria)
-                                                    <option value="{{ $categoria->categoria }}">
+                                                    <option value="{{ $categoria->id_categoria }}">
                                                         {{ $categoria->categoria }}</option>
                                                 @endforeach
                                             </select>
@@ -150,34 +150,37 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" class="form-control form-control-sm" name="presenatcion[]"
-                                            id="presenatcion" step="0.01" min="0">
+                                        <input type="number" class="form-control form-control-sm" name="presentacion[]"
+                                            id="presentacion" step="0.01" min="0">
                                     </td>
                                     <td>
-                                    <select class="form-control select2" name="clase[]" id="id_clase` + i + `">
+                                    <select class="form-control select2" name="id_clase[]" id="id_clase` + i + `">
                                         @foreach ($clases as $clase)
                                         <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
                                     @endforeach
                                     </select>
                                     </td>
                                     <td>
-                                    <select class="form-control select2" name="categoria[]" id="id_categoria` + i + `">
+                                    <select class="form-control select2" name="id_categoria[]" id="id_categoria` + i + `">
                                         @foreach ($categorias as $categoria)
                                         <option value="{{ $categoria->categoria }}">{{ $categoria->categoria }}</option>
                                     @endforeach
                                     </select>
                                     </td>
                                     <td>
-                                        <input class="form-control form-control-sm" type="file" name="url[]">
-                                        <input value="51" class="form-control" type="hidden" name="id_documento[]">
-                                        <input value="Comprobante de pago" class="form-control" type="hidden"
-                                            name="nombre_documento[]">
+                                            <input class="form-control form-control-sm" type="file" name="url[]">
+                                            <input value="60" class="form-control" type="hidden"
+                                                name="id_documento[]">
+                                            <input value="Etiquetas" class="form-control" type="hidden"
+                                                name="nombre_documento[]">
+
                                     </td>
                                     <td>
                                         <input class="form-control form-control-sm" type="file" name="url[]">
-                                        <input value="51" class="form-control" type="hidden" name="id_documento[]">
-                                        <input value="Comprobante de pago" class="form-control" type="hidden"
-                                            name="nombre_documento[]">
+                                            <input value="75" class="form-control" type="hidden"
+                                                name="id_documento[]">
+                                            <input value="Corrugado" class="form-control" type="hidden"
+                                                name="nombre_documento[]">
                                     </td>
 
             
@@ -203,5 +206,6 @@
         $(document).on('click', '.remove-row', function() {
             $(this).closest('tr').remove();
         });
+        
     });
 </script>
