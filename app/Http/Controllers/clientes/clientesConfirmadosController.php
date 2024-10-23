@@ -28,7 +28,7 @@ class clientesConfirmadosController extends Controller
         //$usuarios = User::all();
         $usuarios = User::where("tipo",1)->get();
         $estados = estados::all(); // Obtener todos los estados
-        $normas = normas_catalo::all();
+        $normas = normas_catalo::where('id_norma', '!=', 3)->get();
         // $userCount = $empresas->count();
         $verified = 5;
         $notVerified = 10;
