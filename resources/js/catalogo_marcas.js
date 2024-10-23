@@ -672,12 +672,24 @@ $(function () {
       // Realizar la solicitud AJAX para obtener los datos de la marca
       $.get('/marcas-list/' + id_marca + '/editEtiquetas', function (data) {
         var marca = data.marca;
+        var tipo = data.tipos;
+        var clase = data.clases;
         var documentos = data.documentacion_urls;  // Documentos asociados
     
         // Rellenar el campo con el ID de la marca obtenida
         $('#etiqueta_marca').val(marca.id_marca);
     
         $('#contenidoRango').empty();
+
+        var tipos = "";
+        tipo.forEach(function (item, index) {
+          tipos += "<option value='"+item.id_tipo+"'>"+item.nombre+"</option>";
+      });
+
+      var clases = "";
+      clase.forEach(function (item, index) {
+        clases += "<option value='"+item.id_clase+"'>"+item.clase+"</option>";
+    });
     
         // Crear nuevas filas en la tabla con los datos de las etiquetas y documentos
         marca.sku.forEach(function (sku, index) {
@@ -689,7 +701,7 @@ $(function () {
           // Obtenemos los documentos correspondientes (si existen)
           var documento_etiquetas = documentos.find(doc => doc.nombre_documento === 'Etiquetas');
           var documento_corrugado = documentos.find(doc => doc.nombre_documento === 'Corrugado');
-    
+          var i = 1000;
           var newRow = `
             <tr>
               <th>
@@ -700,15 +712,15 @@ $(function () {
               <td>
               <input type="text" class="form-control form-control-sm" name="sku[]"  min="0" value="${sku}"></td>
               <td>
-                <select class="form-control select2" name="id_tipo[]" id="id_tipo" value="${id_tipo}">
-
+                <select class="form-control select2" name="id_tipo[]" id="id_tipo${i}" value="${id_tipo}">
+                ${tipos}
                 </select>
               </td>
               <td>
               <input type="number" class="form-control form-control-sm" name="presentacion[]"  min="0"  value="${presentacion}"></td>
               <td>
-                <select class="form-control select2" name="id_clase[]" id="id_clase" value="${id_clase}">
-
+                <select class="form-control select2" name="id_clase[]" id="id_clase${i}" value="${id_clase}">
+                 ${clases}
                 </select>
               </td>
               <td>
@@ -739,12 +751,23 @@ $(function () {
             </tr>`;
           
           $('#contenidoRango').append(newRow);
+          $('#id_tipo' + i).select2({
+            dropdownParent: $(
+                '#etiquetas') // Esto asegura que el dropdown esté dentro del modal
+        });
+        $('#id_clase' + i).select2({
+            dropdownParent: $(
+                '#etiquetas') // Esto asegura que el dropdown esté dentro del modal
+        });
+        $('#id_categoria' + i).select2({
+            dropdownParent: $(
+                '#etiquetas') // Esto asegura que el dropdown esté dentro del modal
+        });
+        i++;
           
         });
         
-    
-        // Inicializar select2 para los selectores
-        $('.select2').select2();
+
     
         // Mostrar el modal de edición de etiquetas
         $('#etiquetas').modal('show');
@@ -761,7 +784,7 @@ $(function () {
       });
     });
     
-
+ 
 
 
     // Enviar el formulario de actualización de marca
