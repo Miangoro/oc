@@ -245,7 +245,9 @@ class marcasCatalogoController extends Controller
 
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-    
+
+
+
         return response()->json([
             'marca' => $marca,
             'documentacion_urls' => $documentacion_urls, // Incluir la fecha de vigencia en los datos
@@ -311,15 +313,15 @@ class marcasCatalogoController extends Controller
             'sku' => $request->sku,
             'id_tipo' => $request->id_tipo,
             'presentacion' => $request->presentacion, // Puedes agregar otros valores también
-           'clase' => $request->clase,
-           'categoria' => $request->categoria,
+           'id_clase' => $request->id_clase,
+           'id_categoria' => $request->id_categoria,
 
 
         ]);
         $loteEnvasado->save();
 
         //metodo para guardar pdf
-        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $loteEnvasado->id_empresa)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
         foreach ($request->id_documento as $index => $id_documento) {
@@ -330,21 +332,53 @@ class marcasCatalogoController extends Controller
                 $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
 
                 $documentacion_url = new Documentacion_url();
-                $documentacion_url->id_marca = $loteEnvasado->id_marca;
+                $documentacion_url->id_relacion = $loteEnvasado->id_marca;
                 $documentacion_url->id_documento = $id_documento;
                 $documentacion_url->nombre_documento = $request->nombre_documento[$index];
                 $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
-                $documentacion_url->id_empresa = $request->empresa;
+                $documentacion_url->id_empresa = $loteEnvasado->id_empresa;
                 $documentacion_url->save();
             }
         }
 
         // Retornar respuesta exitosa
 
-        return response()->json(['success' => 'Marca actualizada correctamente']);
+        return response()->json(['success' => 'Etiquetas cargadas correctamente']);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al actualizar la marca'], 500);
+        return response()->json(['error' => 'Error al actualizar la etiqueta'], 500);
     }
+    }
+
+
+
+    public function editEtiquetas($id)
+    {   
+       
+        $marca = Marcas::findOrFail($id);
+        $tipos = tipos::all();
+        $clases = clases::all();
+        $categorias = categorias::all();
+        $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get();
+
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+
+        $etiquetado = json_decode($marca->etiquetado, true);
+        $marca->sku = $etiquetado['sku'] ?? null;
+        $marca->id_tipo = $etiquetado['id_tipo'] ?? null;
+        $marca->presentacion = $etiquetado['presentacion'] ?? null;
+        $marca->id_clase = $etiquetado['id_clase'] ?? null;
+        $marca->id_categoria = $etiquetado['id_categoria'] ?? null;
+
+        return response()->json([
+            'marca' => $marca,
+            'tipos' => $tipos,
+            'clases' => $clases,
+            'categorias' => $categorias,
+            'documentacion_urls' => $documentacion_urls, // Incluir la fecha de vigencia en los datos
+            'numeroCliente' => $numeroCliente
+        ]);
+        
     }
 
 

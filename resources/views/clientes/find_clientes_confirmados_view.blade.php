@@ -122,7 +122,7 @@
         </div>
       </div>
     </div>
-  
+
   </div>
 
 <!-- Users List Table -->
@@ -157,8 +157,8 @@
       <form class="add-new-user pt-0" id="addNewUserForm">
         <input type="hidden" name="id_empresa" id="empresa_id">
         <div class="row">
-         
-                    
+
+
                       <div class="col-md-12">
                             <div class="card mb-5">
                                 <div class="card-body">
@@ -220,16 +220,16 @@
                             </div>
                         </div>
                     </div>
-                        
+
                     <div class="form-floating form-floating-outline mb-6 mt-5">
                       <textarea name="comentarios" class="form-control h-px-100" id="exampleFormControlTextarea1" placeholder="Comentarios aquí..."></textarea>
                       <label for="exampleFormControlTextarea1">Comentarios</label>
                     </div>
-                        
-                   
-               
-        
-          
+
+
+
+
+
         </div>
         <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Valiar</button>
         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
@@ -240,7 +240,9 @@
 
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-frames')
+@include('_partials/_modals/modal-add-clientes-confirmados')
 @include('_partials/_modals/modal-edit-cliente_confirmado')
+
 <!-- /Modal -->
 @endsection
 
@@ -254,7 +256,7 @@
           success: function(response) {
               if (response.length > 0) {
                   const contrato = response[0]; // Obtiene el primer contrato
-  
+
                   // Llena los campos del modal con los datos del contrato
                   $('#empresaID').val(contrato.id_empresa);
                   $('#modalAddressAddress1').val(contrato.fecha_cedula);
@@ -268,7 +270,7 @@
                   $('input[name="num_notario"]').val(contrato.num_notario);
                   $('input[name="estado_notario"]').val(contrato.estado_notario);
                   $('input[name="num_permiso"]').val(contrato.num_permiso);
-  
+
                   // Obtener el número de cliente basado en el id_empresa
                   $.ajax({
                       url: '/empresa_num_cliente/' + id_empresa,
@@ -279,7 +281,7 @@
                           } else {
                               $('#numero_cliente').val('');
                           }
-  
+
                           // Abre el modal
                           $('#editCliente').modal('show');
                       },
@@ -288,7 +290,7 @@
                           alert('Error al cargar el número de cliente.');
                       }
                   });
-  
+
               } else {
                   alert('No se encontraron contratos para esta empresa.');
               }
@@ -304,14 +306,14 @@
       });
   }
   </script>
-  
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
   $('#editClienteForm').on('submit', function(event) {
-      event.preventDefault(); 
+      event.preventDefault();
       var formData = $(this).serialize();
 
       $.ajax({
@@ -330,7 +332,7 @@ $(document).ready(function() {
                   }
               });
 
-              // Actualiza la vista 
+              // Actualiza la vista
               $('.datatables-users').DataTable().ajax.reload();
           },
           error: function(xhr) {
