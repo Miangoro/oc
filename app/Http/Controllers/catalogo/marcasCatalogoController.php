@@ -319,7 +319,7 @@ class marcasCatalogoController extends Controller
         $loteEnvasado->save();
 
         //metodo para guardar pdf
-        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $loteEnvasado->id_empresa)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
         foreach ($request->id_documento as $index => $id_documento) {
@@ -334,16 +334,16 @@ class marcasCatalogoController extends Controller
                 $documentacion_url->id_documento = $id_documento;
                 $documentacion_url->nombre_documento = $request->nombre_documento[$index];
                 $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
-                $documentacion_url->id_empresa = $request->empresa;
+                $documentacion_url->id_empresa = $loteEnvasado->id_empresa;
                 $documentacion_url->save();
             }
         }
 
         // Retornar respuesta exitosa
 
-        return response()->json(['success' => 'Marca actualizada correctamente']);
+        return response()->json(['success' => 'Etiquetas cargadas correctamente']);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al actualizar la marca'], 500);
+        return response()->json(['error' => 'Error al actualizar la etiqueta'], 500);
     }
     }
 

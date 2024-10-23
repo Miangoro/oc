@@ -736,69 +736,6 @@ $(document).on('click', '.edit-chelo', function () {
     }); 
 
 
-//Agregar o eliminar tablas en add activos
-$(document).ready(function () {
-  $('.add-row-add').click(function () {
-    // Añade una nueva fila
-    var newRow = `
-        <tr>
-            <th>
-                <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
-            </th>
 
-                                    <td>
-                                        <input type="text" class="form-control form-control-sm" name="sku[]"
-                                            id="sku">
-                                    </td>
-                                    <td>
-                                        <select class=" form-control select2" name="id_tipo[]" id="id_tipo">
-                                            @foreach ($tipos as $nombre)
-                                                <option value="{{ $nombre->id_tipo }}">{{ $nombre->nombre }}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="number" class="form-control form-control-sm" name="presenatcion[]"
-                                            id="presenatcion" step="0.01" min="0">
-                                    </td>
-                                    <td>
-                                    <select class="form-control select2" name="clase[]" id="clase">
-                                        @foreach ($clases as $clase)
-                                        <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
-                                    @endforeach
-                                    </select>
-                                    </td>
-                                    <td>
-                                    <select class="form-control select2" name="categoria[]" id="categoria">
-                                        @foreach ($categorias as $categoria)
-                                        <option value="{{ $categoria->categoria }}">{{ $categoria->categoria }}</option>
-                                    @endforeach
-                                    </select>
-                                    </td>
-                                    <td>
-                                        <input class="form-control form-control-sm" type="file" name="url[]">
-                                        <input value="51" class="form-control" type="hidden" name="id_documento[]">
-                                        <input value="Comprobante de pago" class="form-control" type="hidden"
-                                            name="nombre_documento[]">
-                                        <label for="Comprobante de pago">Adjuntar Etiqueta</label>
-                                    </td>
-                                    <td>
-                                        <input class="form-control form-control-sm" type="file" name="url[]">
-                                        <input value="51" class="form-control" type="hidden" name="id_documento[]">
-                                        <input value="Comprobante de pago" class="form-control" type="hidden"
-                                            name="nombre_documento[]">
-                                        <label for="Comprobante de pago">Adjuntar Etiqueta</label>
-                                    </td>
-
-            
-        </tr>`;
-    $('#contenidoRango').append(newRow);
-  });
-
-  // Función para eliminar una fila
-  $(document).on('click', '.remove-row', function () {
-    $(this).closest('tr').remove();
-  });
-});
 
 });
