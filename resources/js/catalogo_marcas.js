@@ -637,6 +637,7 @@ $(function () {
 //envio metodo
 $(document).on('click', '.edit-chelo', function () {
   var id_marca = $(this).data('id');
+
   console.log(id_marca)
   // Realizar la solicitud AJAX para obtener los datos de la marca
   $.get('/marcas-list/' + id_marca + '/edit', function (data) {
