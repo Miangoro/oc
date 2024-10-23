@@ -17,7 +17,8 @@ class marcas extends Model
           'folio',
           'marca',
           'id_empresa',
-          'id_norma'
+          'id_norma',
+          'etiquetado'
       ];
   
       public function empresa()

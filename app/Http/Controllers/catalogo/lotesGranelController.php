@@ -218,8 +218,9 @@ class LotesGranelController extends Controller
             'folio_fq_ajuste' => 'nullable|string|max:50',
             'folio_fq' => 'nullable|string|max:50',
             'es_creado_a_partir' => 'required|string',
-            'lote_original_id' => 'required_if:es_creado_a_partir,si|integer|exists:lotes_granel,id_lote_granel',
-
+            'lote_original_id' => 'nullable',
+            'id_lote_granel.*' => 'nullable|integer',
+            'volumen_parcial.*' => 'nullable|numeric',
         ]);
 
         // Crear una nueva instancia del modelo LotesGranel
@@ -243,6 +244,12 @@ class LotesGranelController extends Controller
         $folio_fq_Completo = $validatedData['folio_fq_completo'] ?? ' ';
         $folio_fq_ajuste = $validatedData['folio_fq_ajuste'] ?? ' ';
 
+          $lote->lote_original_id = json_encode([
+            'lotes' => $request->id_lote_granel,  // Array de IDs de lotes seleccionados
+            'volumenes' => $request->volumen_parcial  // Array de volúmenes parciales correspondientes
+        ]);
+
+
         // Verificar si ambos campos son espacios o vacíos
         if (trim($folio_fq_Completo) === '' && trim($folio_fq_ajuste) === '') {
             $lote->folio_fq = 'Sin FQ'; // Asignar 'Sin FQ' si ambos están vacíos
@@ -254,29 +261,10 @@ class LotesGranelController extends Controller
             $lote->folio_fq = $folio_fq_Completo;
         }
 
-                // Si el lote es creado a partir de otro lote
-        if ($validatedData['es_creado_a_partir'] === 'si') {
-            $loteOriginal = LotesGranel::find($validatedData['lote_original_id']);
 
-            // Verificar si el lote original existe y tiene suficiente volumen
-            if (!$loteOriginal || $loteOriginal->volumen < $validatedData['volumen']) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'El lote original no tiene suficiente volumen',
-                ], 400);
-            }
-
-            // Restar el volumen al lote original
-            $loteOriginal->volumen -= $validatedData['volumen'];
-            $loteOriginal->save();
-
-            // Establecer el lote original en el nuevo lote
-            $lote->lote_original_id = $validatedData['lote_original_id'];
-        } else {
-            $lote->lote_original_id = null;
-        }
         // Guardar el nuevo lote en la base de datos
         $lote->save();
+
 
         // Almacenar las guías en la tabla intermedia usando el modelo LotesGranelGuia
         if (isset($validatedData['id_guia'])) {
@@ -315,6 +303,31 @@ class LotesGranelController extends Controller
                 $documentacion_url->save();
             }
         }
+
+           // Aquí restamos el volumen parcial de los lotes originales
+          $loteOriginales = json_decode($lote->lote_original_id, true);
+
+          foreach ($loteOriginales['lotes'] as $index => $loteId) {
+              $volumenParcial = $loteOriginales['volumenes'][$index]; // Obtener el volumen parcial correspondiente
+              $loteOriginal = LotesGranel::find($loteId);
+
+              if ($loteOriginal) {
+                  // Restar el volumen parcial del lote original
+                  $loteOriginal->volumen -= $volumenParcial;
+
+                  // Verificar si el volumen no se vuelve negativo
+                  if ($loteOriginal->volumen < 0) {
+                      return response()->json([
+                          'success' => false,
+                          'message' => 'El volumen del lote original no puede ser negativo.'
+                      ], 400);
+                  }
+
+                  // Guardar el lote original actualizado
+                  $loteOriginal->save();
+              }
+          }
+
         // Retornar una respuesta
         return response()->json([
             'success' => true,
@@ -359,14 +372,38 @@ class LotesGranelController extends Controller
             // Obtener la URL del archivo para "otro organismo"
             $archivoUrlOtroOrganismo = $lote->tipo_lote == '2' ? $lote->url_certificado : '';
 
+
+          // Decodificar el campo JSON solo si no es nulo o vacío
+          $lote_original_data = $lote->lote_original_id ? json_decode($lote->lote_original_id, true) : null;
+
+          if ($lote_original_data && isset($lote_original_data['lotes']) && is_array($lote_original_data['lotes'])) {
+              $lotes = $lote_original_data['lotes'];
+              $volumenes = $lote_original_data['volumenes'];
+
+              // Obtener los nombres de los lotes basados en los IDs
+              $nombreLotes = [];
+              foreach ($lotes as $idLote) {
+                  $nombreLote = LotesGranel::find($idLote);
+                  $nombreLotes[$idLote] = $nombreLote ? $nombreLote->nombre_lote : 'Lote no encontrado';
+              }
+          } else {
+              // Si no hay datos en lote_original_id o no es un formato válido
+              $lotes = [];
+              $volumenes = [];
+              $nombreLotes = [];
+          }
             return response()->json([
                 'success' => true,
                 'lote' => $lote,
                 'guias' => $guias, // Devuelve tanto los IDs como los folios
                 'documentos' => $documentosConUrl,
                 'numeroCliente' => $numeroCliente,
-                'archivo_url_otro_organismo' => $archivoUrlOtroOrganismo
+                'archivo_url_otro_organismo' => $archivoUrlOtroOrganismo,
+                'lotes' => $lotes,
+                'volumenes' => $volumenes,
+                'nombreLotes' => $nombreLotes
             ]);
+
         } catch (ModelNotFoundException $e) {
             return response()->json(['success' => false], 404);
         }

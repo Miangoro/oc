@@ -17,6 +17,13 @@ const fv = FormValidation.formValidation(addNewMarca, {
         }
       }
     },
+    id_norma: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione una norma'
+        }
+      }
+    },
     marca: {
       validators: {
         notEmpty: {
@@ -36,12 +43,9 @@ const fv = FormValidation.formValidation(addNewMarca, {
       }
     }),
     submitButton: new FormValidation.plugins.SubmitButton(),
-    // Submit the form when all fields are valid
-    // defaultSubmit: new FormValidation.plugins.DefaultSubmit(),
     autoFocus: new FormValidation.plugins.AutoFocus()
   }
 }).on('core.form.valid', function (e) {
-  // e.preventDefault();
   var formData = new FormData(addNewMarca);
 
   $.ajax({
@@ -51,7 +55,14 @@ const fv = FormValidation.formValidation(addNewMarca, {
     processData: false, // Evita la conversión automática de datos a cadena
     contentType: false, // Evita que se establezca el tipo de contenido
     success: function (response) {
+      // Reinicializar el select2 para cliente e id_norma
+      $('#cliente').val(null).trigger('change'); // Limpiar el select2 de cliente
+      $('#id_norma').val(null).trigger('change'); // Limpiar el select2 de id_norma
+
+      // Ocultar el modal después de enviar el formulario
       $('#addMarca').modal('hide');
+      
+      // Recargar la tabla de DataTables
       $('.datatables-users').DataTable().ajax.reload();
 
       // Mostrar alerta de éxito
@@ -78,6 +89,23 @@ const fv = FormValidation.formValidation(addNewMarca, {
   });
 });
 
+// Inicializar select2 y revalidar los campos cuando cambien
+$('#cliente').select2({
+  placeholder: 'Seleccione un cliente',
+  allowClear: true
+}).on('change', function () {
+  fv.revalidateField('cliente'); // Revalidar el campo select cuando cambie
+});
+
+$('#id_norma').select2({
+  placeholder: 'Seleccione una norma',
+  allowClear: true
+}).on('change', function () {
+  fv.revalidateField('id_norma'); // Revalidar el campo select cuando cambie
+});
+
+
+
 
 
 //DATE PICKER
@@ -85,9 +113,11 @@ const fv = FormValidation.formValidation(addNewMarca, {
 
 $(document).ready(function () {
   $('.datepicker').datepicker({
-    format: 'yyyy-mm-dd'
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true,
+    language: 'es' // Configura el idioma a español
   });
-
 });
 
 $(function () {
@@ -644,7 +674,7 @@ $(document).on('click', '.edit-chelo', function () {
     var marca = data.marca;
 
     // Rellenar el campo con el ID de la marca obtenida
-    $('#edit_marca_id').val(marca.id_marca);
+    $('#etiqueta_marca').val(marca.id_marca);
 
     // Mostrar el modal de edición de etiquetas
     $('#etiquetas').modal('show');
@@ -663,6 +693,112 @@ $(document).on('click', '.edit-chelo', function () {
 
 
 
+    // Enviar el formulario de actualización de marca
+    $('#etiquetasForm').submit(function (e) {
+      e.preventDefault();
+  
+      var formData = new FormData(this);
+      console.log()
+  
+      $.ajax({
+        url: '/etiquetado/updateEtiquetas',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+          Swal.fire({
+            title: 'Éxito',
+            text: response.success,
+            icon: 'success',
+            buttonsStyling: false,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+          $('#etiquetas').modal('hide');
+          $('.datatables-users').DataTable().ajax.reload();
+        },
+        error: function (response) {
+          console.log(response);
+  
+          Swal.fire({
+            title: 'Error',
+            text: 'Ocurrió un error al actualizar la etiqueta.',
+            icon: 'error',
+            buttonsStyling: false,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        }
+      });
+    }); 
 
+
+//Agregar o eliminar tablas en add activos
+$(document).ready(function () {
+  $('.add-row-add').click(function () {
+    // Añade una nueva fila
+    var newRow = `
+        <tr>
+            <th>
+                <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+            </th>
+
+                                    <td>
+                                        <input type="text" class="form-control form-control-sm" name="sku[]"
+                                            id="sku">
+                                    </td>
+                                    <td>
+                                        <select class=" form-control select2" name="id_tipo[]" id="id_tipo">
+                                            @foreach ($tipos as $nombre)
+                                                <option value="{{ $nombre->id_tipo }}">{{ $nombre->nombre }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control form-control-sm" name="presenatcion[]"
+                                            id="presenatcion" step="0.01" min="0">
+                                    </td>
+                                    <td>
+                                    <select class="form-control select2" name="clase[]" id="clase">
+                                        @foreach ($clases as $clase)
+                                        <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
+                                    @endforeach
+                                    </select>
+                                    </td>
+                                    <td>
+                                    <select class="form-control select2" name="categoria[]" id="categoria">
+                                        @foreach ($categorias as $categoria)
+                                        <option value="{{ $categoria->categoria }}">{{ $categoria->categoria }}</option>
+                                    @endforeach
+                                    </select>
+                                    </td>
+                                    <td>
+                                        <input class="form-control form-control-sm" type="file" name="url[]">
+                                        <input value="51" class="form-control" type="hidden" name="id_documento[]">
+                                        <input value="Comprobante de pago" class="form-control" type="hidden"
+                                            name="nombre_documento[]">
+                                        <label for="Comprobante de pago">Adjuntar Etiqueta</label>
+                                    </td>
+                                    <td>
+                                        <input class="form-control form-control-sm" type="file" name="url[]">
+                                        <input value="51" class="form-control" type="hidden" name="id_documento[]">
+                                        <input value="Comprobante de pago" class="form-control" type="hidden"
+                                            name="nombre_documento[]">
+                                        <label for="Comprobante de pago">Adjuntar Etiqueta</label>
+                                    </td>
+
+            
+        </tr>`;
+    $('#contenidoRango').append(newRow);
+  });
+
+  // Función para eliminar una fila
+  $(document).on('click', '.remove-row', function () {
+    $(this).closest('tr').remove();
+  });
+});
 
 });
