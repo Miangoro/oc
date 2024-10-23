@@ -359,7 +359,7 @@ class Certificado_InstalacionesController extends Controller
                 $notifiedUser->notify(new GeneralNotification($data1));
             }
 
-            // Correo a Revisores
+/*             // Correo a Revisores
             try {
                 info('Enviando correo a: ' . $user->email);
 
@@ -372,7 +372,7 @@ class Certificado_InstalacionesController extends Controller
             } catch (\Exception $e) {
                 Log::error('Error al enviar el correo: ' . $e->getMessage()); 
                 return response()->json(['message' => 'Error al enviar el correo: ' . $e->getMessage()], 500);
-            }
+            } */
 
             return response()->json([
                 'message' => $message ?? 'Revisor del OC asignado exitosamente',

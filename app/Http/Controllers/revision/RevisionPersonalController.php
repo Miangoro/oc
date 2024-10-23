@@ -17,11 +17,14 @@ class RevisionPersonalController extends Controller
 {
     public function userManagement()
     {
-        $revisores = Revisor::with('certificado')->get(); 
-        $preguntas = preguntas_revision::where('tipo_revisor','=','1')->orwhere('tipo_certificado','=','1')->get(); //Solo preguntas para miemros del personal y certificvado de instalaciones
-        return view('revision.revision_certificados-personal_view', compact('revisores','preguntas'));
-    }   
-
+        $userId = auth()->id();   
+        $certificadosData = $this->calcularCertificados($userId); // Obtener Calculos
+        $revisores = Revisor::with('certificado')->get();
+        $preguntas = preguntas_revision::where('tipo_revisor', '1')->orWhere('tipo_certificado', '1')->get();
+    
+        return view('revision.revision_certificados-personal_view', compact('revisores', 'preguntas', 'certificadosData'));
+    }
+    
     public function index(Request $request)
     {
         $columns = [
@@ -290,6 +293,43 @@ class RevisionPersonalController extends Controller
     
         $pdf = Pdf::loadView('pdfs.bitacora_revicionPersonalOCCIDAM', $pdfData);
         return $pdf->stream('Bitácora de revisión documental.pdf');
+    }
+
+    public function calcularCertificados($userId)
+    {
+    // Total de certificados asignados al revisor
+    $totalCertificados = Revisor::where('id_revisor', $userId)->count();
+
+    // Total de certificados globales
+    $totalCertificadosGlobal = Revisor::count();
+
+    // Calcular el porcentaje general
+    $porcentaje = $totalCertificados > 0 ? ($totalCertificados / $totalCertificadosGlobal) * 100 : 0;
+
+    // Contar certificados pendientes (donde 'desicion' es null o vacío)
+    $certificadosPendientes = Revisor::where('id_revisor', $userId)
+        ->where(function ($query) {
+            $query->whereNull('desicion')
+                  ->orWhere('desicion', ''); 
+        })
+        ->count();
+
+    // Contar certificados revisados (donde 'desicion' no es null)
+    $certificadosRevisados = Revisor::where('id_revisor', $userId)
+        ->whereNotNull('desicion')
+        ->count();
+    
+    $porcentajePendientes = $totalCertificados > 0 ? ($certificadosPendientes / $totalCertificados) * 100 : 0;
+    $porcentajeRevisados = $totalCertificados > 0 ? ($certificadosRevisados / $totalCertificados) * 100 : 0;
+
+    return [
+        'totalCertificados' => $totalCertificados,
+        'porcentaje' => $porcentaje,
+        'certificadosPendientes' => $certificadosPendientes,
+        'porcentajePendientes' => $porcentajePendientes,
+        'certificadosRevisados' => $certificadosRevisados,
+        'porcentajeRevisados' => $porcentajeRevisados
+    ];  
     }
     
 //end
