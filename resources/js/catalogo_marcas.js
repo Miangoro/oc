@@ -672,12 +672,30 @@ $(function () {
       // Realizar la solicitud AJAX para obtener los datos de la marca
       $.get('/marcas-list/' + id_marca + '/editEtiquetas', function (data) {
         var marca = data.marca;
+        var tipo = data.tipos;
+        var clase = data.clases;
+        var categoria = data.categorias;
         var documentos = data.documentacion_urls;  // Documentos asociados
     
         // Rellenar el campo con el ID de la marca obtenida
         $('#etiqueta_marca').val(marca.id_marca);
     
         $('#contenidoRango').empty();
+
+        var tipos = "";
+        tipo.forEach(function (item, index) {
+          tipos += "<option value='"+item.id_tipo+"'>"+item.nombre+"</option>";
+      });
+
+      var clases = "";
+      clase.forEach(function (item, index) {
+        clases += "<option value='"+item.id_clase+"'>"+item.clase+"</option>";
+    });
+
+    var categorias = "";
+    categoria.forEach(function (item, index) {
+      categorias += "<option value='"+item.id_categoria+"'>"+item.categoria+"</option>";
+  });
     
         // Crear nuevas filas en la tabla con los datos de las etiquetas y documentos
         marca.sku.forEach(function (sku, index) {
@@ -689,7 +707,7 @@ $(function () {
           // Obtenemos los documentos correspondientes (si existen)
           var documento_etiquetas = documentos.find(doc => doc.nombre_documento === 'Etiquetas');
           var documento_corrugado = documentos.find(doc => doc.nombre_documento === 'Corrugado');
-    
+          var i = 1000;
           var newRow = `
             <tr>
               <th>
@@ -700,51 +718,70 @@ $(function () {
               <td>
               <input type="text" class="form-control form-control-sm" name="sku[]"  min="0" value="${sku}"></td>
               <td>
-                <select class="form-control select2" name="id_tipo[]" id="id_tipo" value="${id_tipo}">
-
+                <select class="form-control select2" name="id_tipo[]" id="id_tipo${i}" value="${id_tipo}">
+                ${tipos}
                 </select>
               </td>
               <td>
               <input type="number" class="form-control form-control-sm" name="presentacion[]"  min="0"  value="${presentacion}"></td>
               <td>
-                <select class="form-control select2" name="id_clase[]" id="id_clase" value="${id_clase}">
-
+                <select class="form-control select2" name="id_clase[]" id="id_clase${i}" value="${id_clase}">
+                 ${clases}
                 </select>
               </td>
               <td>
-                <select class="form-control select2" name="id_categoria[]" id="id_categoria" value="${id_categoria}">
+                <select class="form-control select2" name="id_categoria[]" id="id_categoria${i}" value="${id_categoria}">
+                 ${categorias}
 
                 </select>
               </td>
-              <td>
-                <input class="form-control form-control-sm" type="file" name="url[]">
-                <input value="60" class="form-control" type="hidden" name="id_documento[]">
-                <input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]">
-                ${documento_etiquetas ? 
-                    `<div>
-                        <a href="/storage/uploads/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank">${documento_etiquetas.nombre_documento}</a>
-                     </div>` 
-                    : ''}
-              </td>
-              <td>
-                <input class="form-control form-control-sm" type="file" name="url[]">
-                <input value="75" class="form-control" type="hidden" name="id_documento[]">
-                <input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]">
-                ${documento_corrugado ? 
-                    `<div>
-                        <a href="/storage/uploads/${data.numeroCliente}/${documento_corrugado.url}" target="_blank">${documento_corrugado.nombre_documento}</a>
-                     </div>` 
-                    : ''}
-              </td>
+             <td>
+    <div style="display: flex; align-items: center;">
+        <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
+        ${documento_etiquetas ? 
+            `<a href="/storage/uploads/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank" style="margin-left: 10px;">
+                <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
+            </a>` 
+            : ''}
+    </div>
+    <input value="60" class="form-control" type="hidden" name="id_documento[]">
+    <input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]">
+</td>
+
+
+<td>
+    <div style="display: flex; align-items: center;">
+        <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
+        ${documento_corrugado ? 
+            `<a href="/storage/uploads/${data.numeroCliente}/${documento_corrugado.url}" target="_blank" style="margin-left: 10px;">
+                <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
+            </a>` 
+            : ''}
+    </div>
+    <input value="75" class="form-control" type="hidden" name="id_documento[]">
+    <input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]">
+</td>
+
             </tr>`;
           
           $('#contenidoRango').append(newRow);
+          $('#id_tipo' + i).select2({
+            dropdownParent: $(
+                '#etiquetas') // Esto asegura que el dropdown esté dentro del modal
+        });
+        $('#id_clase' + i).select2({
+            dropdownParent: $(
+                '#etiquetas') // Esto asegura que el dropdown esté dentro del modal
+        });
+        $('#id_categoria' + i).select2({
+            dropdownParent: $(
+                '#etiquetas') // Esto asegura que el dropdown esté dentro del modal
+        });
+        i++;
           
         });
         
-    
-        // Inicializar select2 para los selectores
-        $('.select2').select2();
+
     
         // Mostrar el modal de edición de etiquetas
         $('#etiquetas').modal('show');
@@ -761,7 +798,7 @@ $(function () {
       });
     });
     
-
+ 
 
 
     // Enviar el formulario de actualización de marca

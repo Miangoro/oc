@@ -1,6 +1,6 @@
 <style>
     .modal-custom-size {
-        max-width: 75%;
+        max-width: 100%;
         /* Ajusta este valor para hacerlo más grande */
         width: 75%;
         /* Ajusta según tus necesidades */
@@ -18,7 +18,7 @@
                 </div>
                 <form id="etiquetasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
-                        <input type="text" id="etiqueta_marca" name="id_marca">
+                        <input type="hidden" id="etiqueta_marca" name="id_marca">
 
                         <div class="table-responsive">
 
