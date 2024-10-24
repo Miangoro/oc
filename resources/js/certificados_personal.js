@@ -169,7 +169,7 @@ $(function () {
               '<i class="ri-eye-fill ri-20px text-info"></i> Revisar' +
               '</a>' +
               // Botón para Aprobación
-              `<a data-id="${full['id_revision']}" data-bs-toggle="modal" data-bs-target="#modalAprobacion" class="dropdown-item Aprobacion-record waves-effect text-success">` +
+              `<a data-id='${full['id_revision']}' data-num-certificado="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAprobacion" class="dropdown-item Aprobacion-record waves-effect text-success">` +
               '<i class="ri-checkbox-circle-line text-success"></i> Aprobación' +
               '</a>' +
               '</div>' +
@@ -608,43 +608,48 @@ function cargarRespuestas(id_revision) {
   });
 
 
+//Abrir modal Aprobacion
   $(document).on('click', '.Aprobacion-record', function() {
     const idRevision = $(this).data('id');
     $('#modalAprobacion').modal('show');
-
-    // Inicializar select2
     const select2Elements = $('#id_firmante'); 
     initializeSelect2(select2Elements);
-
-    // Almacenar el id del revisor para usarlo más tarde
     $('#btnRegistrar').data('id-revisor', idRevision);
+    console.log('Id Revision ' + idRevision);
+
+    const certificado = $(this).data('num-certificado');
+    console.log('Certificado ' + certificado);
+    $('#numero-certificado').text(certificado);
 });
 
-// Manejar el evento submit del formulario
+// Registrar Aprobacion
 $('#formAprobacion').on('submit', function(event) {
-    event.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+    event.preventDefault();
 
-    var idRevisor = $('#btnRegistrar').data('id-revisor'); // Obtener el ID del revisor
-    var aprobacion = $('#respuesta-aprobacion').val(); // Obtener la decisión
-    var fechaAprobacion = $('#fecha-aprobacion').val(); // Obtener la fecha
-    var idAprobador = $('#id_firmante').val(); // Obtener el ID del aprobador
+    var idRevisor = $('#btnRegistrar').data('id-revisor'); 
+    var aprobacion = $('#respuesta-aprobacion').val(); 
+    var fechaAprobacion = $('#fecha-aprobacion').val(); 
+    var idAprobador = $('#id_firmante').val(); 
 
     $.ajax({
-        url: '/registrar-aprobacion', // Cambia la URL a la ruta adecuada
+        url: '/registrar-aprobacion', 
         type: 'POST',
         data: {
-            _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token
+            _token: $('meta[name="csrf-token"]').attr('content'),
             id_revisor: idRevisor,
             aprobacion: aprobacion,
             fecha_aprobacion: fechaAprobacion,
-            id_aprobador: idAprobador // Enviar el ID del aprobador
+            id_aprobador: idAprobador 
         },
         success: function(response) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Éxito',
-                text: response.message
-            });
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Aprobación registrada exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
             $('#modalAprobacion').modal('hide');
         },
         error: function(xhr) {
@@ -657,9 +662,33 @@ $('#formAprobacion').on('submit', function(event) {
     });
 });
 
+$(document).on('click', '.Aprobacion-record', function() {
+  const idRevision = $(this).data('id');
 
+  $.ajax({
+      url: `/aprobacion/${idRevision}`,
+      method: 'GET',
+      success: function(data) {
+          $('#id_firmante').val(data.revisor.id_aprobador || '').trigger('change');
+          $('#respuesta-aprobacion').val(data.revisor.aprobacion || '').prop('selected', true);
+          if (data.revisor.fecha_aprobacion && data.revisor.fecha_aprobacion !== '0000-00-00') {
+            $('#fecha-aprobacion').val(data.revisor.fecha_aprobacion);
+          } else {
+            $('#fecha-aprobacion').val(''); 
+          }          
+            $('#modalAprobacion').modal('show');
+      },
+      error: function(xhr) {
+          console.error(xhr.responseJSON.message);
+          alert('Error al cargar los datos de la aprobación.');
+      }
+  });
+});
 
+$('#modalAprobacion').on('hidden.bs.modal', function () {
+  $('#id_firmante, #respuesta-aprobacion, #fecha-aprobacion').val('');
+  $('#respuesta-aprobacion').prop('selected', true);
+});
 
-// Agregar 
-  //end
+//end
 });

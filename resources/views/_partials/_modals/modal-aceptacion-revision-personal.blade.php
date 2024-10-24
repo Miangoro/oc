@@ -7,6 +7,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+                <div style="border-radius: 10px;">
+                    <h4><p>CERTIFICADO: <span id="numero-certificado"></span></p></h4>
+                </div>
                 <form id="formAprobacion">
                     <div class="form-floating form-floating-outline mb-3">
                         <select class="select2 form-select" id="id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>

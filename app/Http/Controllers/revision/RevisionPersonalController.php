@@ -363,5 +363,20 @@ class RevisionPersonalController extends Controller
         }
     }
     
+    public function cargarAprobacion($id)
+    {
+    try {
+        $revisor = Revisor::findOrFail($id);
+
+        return response()->json([
+            'revisor' => $revisor
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Error al cargar la aprobación: ' . $e->getMessage(),
+        ], 500);
+    }
+    }
+
 //end
 }
