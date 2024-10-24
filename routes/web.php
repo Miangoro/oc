@@ -197,6 +197,7 @@ use App\Http\Controllers\solicitudes\solicitudesController;
 use App\Http\Controllers\TrazabilidadController;
 use App\Http\Controllers\pdf_llenado\PdfController;
 use App\Http\Controllers\revision\RevisionPersonalController;
+use App\Http\Controllers\revision\catalogo_personal_seleccion_preguntas_controller;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
