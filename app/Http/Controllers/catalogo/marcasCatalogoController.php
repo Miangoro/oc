@@ -356,13 +356,15 @@ class marcasCatalogoController extends Controller
             // Método para guardar PDF
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $loteEnvasado->id_empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-    
+            $nuevoIdDocEtiqueta = 1; 
+            $nuevoIdDocCorrugado = 1; 
             // Guardar documentos subidos
             foreach ($request->id_documento as $index => $id_documento) {
+              // Incrementar el contador
                 // Agregar nuevo documento si existe el archivo correspondiente
                 if ($request->hasFile('url') && isset($request->file('url')[$index])) {
                     $file = $request->file('url')[$index];
-                    $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $filename = $request->nombre_documento[$index] . '_' . time() .$index. '.' . $file->getClientOriginalExtension();
                     $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
     
                     $documentacion_url = new Documentacion_url();
@@ -372,15 +374,17 @@ class marcasCatalogoController extends Controller
                     $documentacion_url->url = $filename; // Almacenar solo el nombre del archivo
                     $documentacion_url->id_empresa = $loteEnvasado->id_empresa;
     
-                    // Aquí asociamos el id_doc correspondiente del SKU
-                    if (isset($etiquetado['id_doc'][$index])) {
-                        $documentacion_url->id_doc = $etiquetado['id_doc'][$index]; // Asociar el id_doc correspondiente
-                    }
-    
-                    // Si no se asigna, se podría asignar el último id_doc
-                    if (!isset($documentacion_url->id_doc)) {
-                        $documentacion_url->id_doc = end($etiquetado['id_doc']);
-                    }
+
+                       // Asociar el id_doc correspondiente
+                        if($id_documento==60){
+                            $documentacion_url->id_doc =  (string)($nuevoIdDocEtiqueta);
+                            $nuevoIdDocEtiqueta++;
+                        }else{
+                            $documentacion_url->id_doc =  (string)($nuevoIdDocCorrugado);
+                            $nuevoIdDocCorrugado++;
+                        }
+                       
+                    
     
                     $documentacion_url->save();
                 }
