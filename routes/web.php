@@ -811,3 +811,4 @@ Route::post('/revisor/registrar-respuestas', [RevisionPersonalController::class,
 Route::get('/revisor/obtener-respuestas/{id_revision}', [RevisionPersonalController::class, 'obtenerRespuestas']);
 Route::get('/get-certificado-url/{id_revision}/{tipo}', [RevisionPersonalController::class, 'getCertificadoUrl']);
 Route::get('/bitacora_revicionPersonalOCCIDAM/{id}', [RevisionPersonalController::class, 'bitacora_revicionPersonalOCCIDAM']);
+Route::post('/registrar-aprobacion', [RevisionPersonalController::class, 'registrarAprobacion'])->name('registrar.aprobacion');
