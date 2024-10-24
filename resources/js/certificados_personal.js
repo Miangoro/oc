@@ -424,82 +424,103 @@ $(document).on('click', '.cuest', function () {
 
 $(document).on('click', '#registrarRevision', function () {
   if (typeof id_revision === 'undefined') {
-    Swal.fire({
-      icon: 'error',
-      title: '¡Error!',
-      text: 'El ID de revisión no está definido.',
-      customClass: {
-        confirmButton: 'btn btn-danger'
-      }
-    });
-    return;
+      Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'El ID de revisión no está definido.',
+          customClass: {
+              confirmButton: 'btn btn-danger'
+          }
+      });
+      return;
   }
 
   const respuestas = {};
   const observaciones = {};
   const rows = $('#fullscreenModal .table-container table tbody tr');
   let todasLasRespuestasSonC = true;
+  let todasLasRespuestasContestas = true; // Variable para validar que todas las respuestas se han contestado
 
   rows.each(function (index) {
-    let respuesta = $(this).find('select').val();
-    const observacion = $(this).find('textarea').val();
+      let respuesta = $(this).find('select').val();
+      const observacion = $(this).find('textarea').val();
 
-    if (respuesta === '1') {
-      respuesta = 'C';
-    } else if (respuesta === '2') {
-      respuesta = 'NC';
-      todasLasRespuestasSonC = false; 
-    } else if (respuesta === '3') {
-      respuesta = 'NA';
-      todasLasRespuestasSonC = false; 
-    } else {
-      respuesta = null;
-      todasLasRespuestasSonC = false; // Si no hay respuesta, no se considera C
-    }
+      // Verificar si la respuesta está vacía
+      if (!respuesta) {
+          todasLasRespuestasContestas = false; // Hay al menos una respuesta no contestada
+          return false; // Salir del ciclo each
+      }
 
-    respuestas[`pregunta${index + 1}`] = respuesta;
-    observaciones[`pregunta${index + 1}`] = observacion || null;
+      // Convertir las respuestas a los valores correspondientes
+      if (respuesta === '1') {
+          respuesta = 'C';
+      } else if (respuesta === '2') {
+          respuesta = 'NC';
+          todasLasRespuestasSonC = false; 
+      } else if (respuesta === '3') {
+          respuesta = 'NA';
+          todasLasRespuestasSonC = false; 
+      } else {
+          respuesta = null;
+          todasLasRespuestasSonC = false; // Si no hay respuesta, no se considera C
+      }
+
+      respuestas[`pregunta${index + 1}`] = respuesta;
+      observaciones[`pregunta${index + 1}`] = observacion || null;
   });
+
+  // Validar si todas las respuestas han sido contestadas
+  if (!todasLasRespuestasContestas) {
+      Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Por favor, contesta todas las preguntas antes de enviar.',
+          customClass: {
+              confirmButton: 'btn btn-danger'
+          }
+      });
+      return; // Salir de la función si hay respuestas no contestadas
+  }
 
   // Determinar la decisión automáticamente
   const desicion = todasLasRespuestasSonC ? 'positiva' : 'negativa';
 
   $.ajax({
-    url: '/revisor/registrar-respuestas',
-    type: 'POST',
-    contentType: 'application/json',
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-    data: JSON.stringify({
-      id_revision: id_revision,
-      respuestas: respuestas,
-      observaciones: observaciones,
-      desicion: desicion 
-    }),
-    success: function (response) {
-      Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: response.message,
-        customClass: {
-          confirmButton: 'btn btn-success'
-        }
-      });
+      url: '/revisor/registrar-respuestas',
+      type: 'POST',
+      contentType: 'application/json',
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      data: JSON.stringify({
+          id_revision: id_revision,
+          respuestas: respuestas,
+          observaciones: observaciones,
+          desicion: desicion 
+      }),
+      success: function (response) {
+          Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.message,
+              customClass: {
+                  confirmButton: 'btn btn-success'
+              }
+          });
 
-      $('#fullscreenModal').modal('hide');
-      $('.datatables-users').DataTable().ajax.reload();
-    },
-    error: function (xhr) {
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al registrar las respuestas: ' + xhr.responseJSON.message,
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    }
+          $('#fullscreenModal').modal('hide');
+          $('.datatables-users').DataTable().ajax.reload();
+      },
+      error: function (xhr) {
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al registrar las respuestas: ' + xhr.responseJSON.message,
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      }
   });
 });
 
