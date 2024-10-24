@@ -1,5 +1,5 @@
 <!-- Modal para agregar nuevo lote -->
-<div class="modal fade" id="offcanvasAddLote" tabindex="-1" aria-labelledby="offcanvasAddLoteLabel" aria-hidden="true">
+<div class="modal fade" id="offcanvasAddLote" tabindex="-1" aria-labelledby="offcanvasAddLoteLabel">
     <div class="modal-dialog modal-xl modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

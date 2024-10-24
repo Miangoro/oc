@@ -303,51 +303,100 @@ class marcasCatalogoController extends Controller
 
 
 
-
     public function updateEtiquetas(Request $request)
     {
         try {
-            // Crear nuevo registro en la base de datos
+            // Obtener el lote envasado existente
             $loteEnvasado = marcas::findOrFail($request->input('id_marca'));
-            $loteEnvasado->etiquetado = json_encode([
-                'sku' => $request->sku,
-                'id_tipo' => $request->id_tipo,
-                'presentacion' => $request->presentacion,
-                'id_clase' => $request->id_clase,
-                'id_categoria' => $request->id_categoria,
-
-
-            ]);
+    
+            // Decodificar el JSON existente
+            $etiquetado = json_decode($loteEnvasado->etiquetado, true);
+            
+            // Inicializar los arrays si no existen
+            if (!isset($etiquetado['id_doc'])) {
+                $etiquetado['id_doc'] = [];
+            }
+            if (!isset($etiquetado['sku'])) {
+                $etiquetado['sku'] = [];
+            }
+            if (!isset($etiquetado['id_tipo'])) {
+                $etiquetado['id_tipo'] = [];
+            }
+            if (!isset($etiquetado['presentacion'])) {
+                $etiquetado['presentacion'] = [];
+            }
+            if (!isset($etiquetado['id_clase'])) {
+                $etiquetado['id_clase'] = [];
+            }
+            if (!isset($etiquetado['id_categoria'])) {
+                $etiquetado['id_categoria'] = [];
+            }
+    
+            // Obtener el siguiente id_doc
+            $nuevoIdDoc = count($etiquetado['id_doc']) + 1; // Incrementar el contador
+    
+            // Agregar los datos recibidos en la solicitud solo si no existen
+            foreach ($request->sku as $index => $sku) {
+                // Verificar si el SKU ya existe
+                if (!in_array($sku, $etiquetado['sku'])) {
+                    $etiquetado['id_doc'][] = (string)($nuevoIdDoc); // Asignar un nuevo id_doc
+                    $etiquetado['sku'][] = $sku;
+                    $etiquetado['id_tipo'][] = $request->id_tipo[$index];
+                    $etiquetado['presentacion'][] = $request->presentacion[$index];
+                    $etiquetado['id_clase'][] = $request->id_clase[$index];
+                    $etiquetado['id_categoria'][] = $request->id_categoria[$index];
+                    $nuevoIdDoc++; // Incrementar el id_doc para la siguiente entrada
+                }
+            }
+    
+            // Volver a codificar el JSON
+            $loteEnvasado->etiquetado = json_encode($etiquetado);
             $loteEnvasado->save();
-
-            //metodo para guardar pdf
+    
+            // Método para guardar PDF
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $loteEnvasado->id_empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-
+    
+            // Guardar documentos subidos
             foreach ($request->id_documento as $index => $id_documento) {
-                // Agregar nuevo documento si no existe
+                // Agregar nuevo documento si existe el archivo correspondiente
                 if ($request->hasFile('url') && isset($request->file('url')[$index])) {
                     $file = $request->file('url')[$index];
                     $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
                     $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
-
+    
                     $documentacion_url = new Documentacion_url();
                     $documentacion_url->id_relacion = $loteEnvasado->id_marca;
                     $documentacion_url->id_documento = $id_documento;
                     $documentacion_url->nombre_documento = $request->nombre_documento[$index];
-                    $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+                    $documentacion_url->url = $filename; // Almacenar solo el nombre del archivo
                     $documentacion_url->id_empresa = $loteEnvasado->id_empresa;
+    
+                    // Aquí asociamos el id_doc correspondiente del SKU
+                    if (isset($etiquetado['id_doc'][$index])) {
+                        $documentacion_url->id_doc = $etiquetado['id_doc'][$index]; // Asociar el id_doc correspondiente
+                    }
+    
+                    // Si no se asigna, se podría asignar el último id_doc
+                    if (!isset($documentacion_url->id_doc)) {
+                        $documentacion_url->id_doc = end($etiquetado['id_doc']);
+                    }
+    
                     $documentacion_url->save();
                 }
             }
-
+    
             // Retornar respuesta exitosa
-
             return response()->json(['success' => 'Etiquetas cargadas correctamente']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al actualizar la etiqueta'], 500);
+            return response()->json(['error' => 'Error al actualizar la etiqueta: ' . $e->getMessage()], 500);
         }
     }
+    
+    
+    
+    
+    
 
 
 
