@@ -12,13 +12,13 @@
                         REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (INSTALACIONES)
                     </h5>
                     <span style="font-weight: normal; margin-left: 10px; color: #3498db; text-transform: uppercase; font-weight: bold;">
-                        {{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->razon_social }}
+                        {{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->razon_social }}
                     </span>
                     <span style="font-weight: normal; margin-left: 5px; color: #000000; text-transform: uppercase; font-weight: bold;">
                         / <!-- Guion en negro -->
                     </span>
                     <span style="font-weight: normal; margin-left: 5px; color: #e74c3c; text-transform: uppercase; font-weight: bold;">
-                        {{ $revisores[0]->user->name }} <!-- Asumiendo que el nombre del revisor está aquí -->
+                        {{ $revisor->user->name }} 
                     </span>
                     
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -31,14 +31,8 @@
 
                     <div class="row">
                         <div class="col-md-7">
-                            <!-- Tercera Tabla -->
                             <div style="border: 1px solid #8DA399; padding: 20px; border-radius: 5px; margin-bottom: 30px;">
-{{--                                 <h5 style="font-size: 1.25rem; color: #2c3e50; font-weight: bold; margin: 20px 0;">
-                                    REVISIÓN DOCUMENTAL PARA LA TOMA DE DECISIÓN PARA LA CERTIFICACIÓN DE INSTALACIONES.
-                                </h5> --}}
-            
                                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                    <!-- Primera Tabla -->
                                     <div class="table-container" style="flex: 1; min-width: 250px;">
                                         <table class="table table-sm table-bordered table-hover table-striped" style="font-size: 12px;">
                                             <thead class="table-dark">
@@ -51,48 +45,43 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @php $contador = 1; @endphp <!-- Inicializa el contador -->
+                                                @php $contador = 1; @endphp
                                                 @foreach($preguntas as $pregunta)
                                                 <tr>
-                                                    <td>{{ $contador++ }}</td> <!-- Muestra el contador y luego lo incrementa -->
+                                                    <td>{{ $contador++ }}</td>
                                                     <td>{{ $pregunta->pregunta }}</td>
-                                            
-                                                    <!-- Columna de documento --> 
                                                     @if($pregunta->documentacion?->documentacionUrls)
                                                         <td>
-                                                            <a target="_Blank" href="../files/{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente }}/{{ $revisores[0]->obtenerDocumentosClientes($pregunta->id_documento,$revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa); }}">
+                                                            <a target="_Blank" href="../files/{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente }}/{{ $revisor->obtenerDocumentosClientes($pregunta->id_documento,$revisor->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa); }}">
                                                                 <i class="ri-file-pdf-2-fill text-danger ri-30px cursor-pointer"></i>
                                                             </a>
                                                         </td>
-                                                        @elseif($pregunta->filtro=='cliente')
-                                                        <td><b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar' }}</b></td>
-                                                    @elseif($pregunta->filtro=='direccion_fiscal')
-                                                        <td><b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal }}</b></td>
-                                                    @elseif($pregunta->filtro=='num_certificado')
-                                                        <td><b>{{ $revisores[0]->certificado->num_certificado }}</b></td>
-                                                    @elseif($pregunta->filtro=='nombre_empresa')
-                                                        <td><b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->razon_social }}</b></td>
-                                                    @elseif($pregunta->filtro=='domicilio_insta')
-                                                        <td><b>{{ $revisores[0]->certificado->dictamen->instalaciones->direccion_completa }}</b></td>
-                                                    @elseif($pregunta->filtro=='correo')
+                                                    @elseif($pregunta->filtro == 'cliente')
+                                                        <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar' }}</b></td>
+                                                    @elseif($pregunta->filtro == 'direccion_fiscal')
+                                                        <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal }}</b></td>
+                                                    @elseif($pregunta->filtro == 'num_certificado')
+                                                        <td><b>{{ $revisor->certificado->num_certificado }}</b></td>
+                                                    @elseif($pregunta->filtro == 'nombre_empresa')
+                                                        <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->razon_social }}</b></td>
+                                                    @elseif($pregunta->filtro == 'domicilio_insta')
+                                                        <td><b>{{ $revisor->certificado->dictamen->instalaciones->direccion_completa }}</b></td>
+                                                    @elseif($pregunta->filtro == 'correo')
                                                         <td>
-                                                            <b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->correo }}</b><br>
-                                                            <b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->telefono }}</b>
+                                                            <b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->correo }}</b><br>
+                                                            <b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->telefono }}</b>
                                                         </td>
-                                                    @elseif($pregunta->filtro=='fechas')
+                                                    @elseif($pregunta->filtro == 'fechas')
                                                         <td>
-                                                            <b>{{ Helpers::formatearFecha($revisores[0]->certificado->fecha_vigencia) }}</b><br>
-                                                            <b>{{ Helpers::formatearFecha($revisores[0]->certificado->fecha_vencimiento) }}</b>
+                                                            <b>{{ Helpers::formatearFecha($revisor->certificado->fecha_vigencia) }}</b><br>
+                                                            <b>{{ Helpers::formatearFecha($revisor->certificado->fecha_vencimiento) }}</b>
                                                         </td>
-                                                    @elseif($pregunta->filtro=='cliente')
-                                                        <td><b>{{ $revisores[0]->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar' }}</b></td>
                                                     @else
                                                         <td>Sin datos</td>
                                                     @endif
-                                                    
                                                     <td>
                                                         <select class="form-select form-select-sm" aria-label="Elige la respuesta">
-                                                            <option value="" selected>Selecciona</option> <!-- Añadir value="" -->
+                                                            <option value="" selected>Selecciona</option>
                                                             <option value="1">C</option>
                                                             <option value="2">NC</option>
                                                             <option value="3">NA</option>
@@ -108,7 +97,6 @@
                                     </div>        
                                 </div>
                                 <hr>
-                                <!-- Botón para registrar al final -->
                                 <div class="text-center mt-3">
                                     <button type="button" class="btn btn-primary" id="registrarRevision">
                                         Registrar Revisión
@@ -137,7 +125,6 @@
                                 </div>
                             </div>
                         
-                            <!-- Visualización del PDF -->
                             <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" 
                                     src="" 
                                     frameborder="0" 

@@ -18,11 +18,11 @@ class RevisionPersonalController extends Controller
     public function userManagement()
     {
         $userId = auth()->id();   
-        $certificadosData = $this->calcularCertificados($userId); // Obtener Calculos
-        $revisores = Revisor::with('certificado')->get();
-        $preguntas = preguntas_revision::where('tipo_revisor', '1')->orWhere('tipo_certificado', '1')->get();
+        $certificadosData = $this->calcularCertificados($userId); // Estadisticas
+        $revisor = Revisor::with('certificado')->where('id_revisor', $userId)->first(); // Autentificado
     
-        return view('revision.revision_certificados-personal_view', compact('revisores', 'preguntas', 'certificadosData'));
+        $preguntas = preguntas_revision::where('tipo_revisor', '1')->orWhere('tipo_certificado', '1')->get();
+        return view('revision.revision_certificados-personal_view', compact('revisor', 'preguntas', 'certificadosData'));
     }
     
     public function index(Request $request)

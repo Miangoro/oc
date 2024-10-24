@@ -68,21 +68,31 @@ $(function () {
       },
       {
         data: null,
-        searchable: true, orderable: false,
+        searchable: true,
+        orderable: false,
         render: function (data, type, row) {
           var ingredientes = '';
           var edad = '';
+          var procedencia = '';
+
           if (row.ingredientes != 'N/A') {
             ingredientes = '<br><span class="fw-bold text-dark small">Ingrediente:</span><span class="small"> ' + row.ingredientes + '</span>';
           }
+
           if (row.edad != 'N/A') {
             edad = '<br><span class="fw-bold text-dark small">Edad:</span><span class="small"> ' + row.edad + '</span>';
+          }
+
+          // Mostrar los nombres de los lotes de procedencia
+          if (row.lote_procedencia != 'No tiene procedencia de otros lotes.') {
+            procedencia = '<br><span class="fw-bold text-dark small">Lote de procedencia:</span><span class="small"> ' + row.lote_procedencia + '</span>';
           }
 
           return '<span class="fw-bold text-dark small">Volumen inicial:</span> <span class="small"> ' + row.volumen +
             ' L</span><br><span class="fw-bold text-dark small">Categoría:</span><span class="small"> ' + row.id_categoria +
             '</span><br><span class="fw-bold text-dark small">Clase:</span><span class="small"> ' + row.id_clase +
-            '</span><br><span class="fw-bold text-dark small">Tipo:</span><span class="small"> ' + row.id_tipo + '</span>' + ingredientes + edad;
+            '</span><br><span class="fw-bold text-dark small">Tipo:</span><span class="small"> ' + row.id_tipo + '</span>' +
+            ingredientes + edad + procedencia;
         }
       },
       { data: 'folio_fq' },
