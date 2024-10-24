@@ -134,6 +134,19 @@
     @endforeach
 `;
 
+let opciones2 = `
+                                                @foreach ($clases as $clase)
+                                                    <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
+                                                @endforeach
+`;
+
+let opciones3 = `
+                                                @foreach ($categorias as $categoria)
+                                                    <option value="{{ $categoria->id_categoria }}">
+                                                        {{ $categoria->categoria }}</option>
+                                                @endforeach
+`;
+
             var newRow = `
         <tr>
             <th>
@@ -155,16 +168,12 @@
                                     </td>
                                     <td>
                                     <select class="form-control select2" name="id_clase[]" id="id_clase` + i + `">
-                                        @foreach ($clases as $clase)
-                                        <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
-                                    @endforeach
+ ` + opciones2 + `
                                     </select>
                                     </td>
                                     <td>
                                     <select class="form-control select2" name="id_categoria[]" id="id_categoria` + i + `">
-                                        @foreach ($categorias as $categoria)
-                                        <option value="{{ $categoria->categoria }}">{{ $categoria->categoria }}</option>
-                                    @endforeach
+ ` + opciones3 + `
                                     </select>
                                     </td>
                                     <td>
