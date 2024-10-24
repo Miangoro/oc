@@ -381,6 +381,22 @@ $(function () {
 
   // FUNCIONES DEL FUNCIONAMIENTO DEL CRUD
 
+  // Inicializacion Elementos
+  function initializeSelect2($elements) {
+      $elements.each(function () {
+          var $this = $(this);
+          $this.wrap('<div class="position-relative"></div>').select2({
+              dropdownParent: $this.parent(),
+          });
+      });
+  }
+
+  $('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true,
+});
+
 // Registrar Respuesta y mostrar PDF correspondiente
 let id_revision;
 $(document).on('click', '.cuest', function () {
@@ -594,9 +610,56 @@ function cargarRespuestas(id_revision) {
 
   $(document).on('click', '.Aprobacion-record', function() {
     const idRevision = $(this).data('id');
-    // Puedes usar idRevision para realizar acciones adicionales
     $('#modalAprobacion').modal('show');
+
+    // Inicializar select2
+    const select2Elements = $('#id_firmante'); 
+    initializeSelect2(select2Elements);
+
+    // Almacenar el id del revisor para usarlo más tarde
+    $('#btnRegistrar').data('id-revisor', idRevision);
 });
 
+// Manejar el evento submit del formulario
+$('#formAprobacion').on('submit', function(event) {
+    event.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+
+    var idRevisor = $('#btnRegistrar').data('id-revisor'); // Obtener el ID del revisor
+    var aprobacion = $('#respuesta-aprobacion').val(); // Obtener la decisión
+    var fechaAprobacion = $('#fecha-aprobacion').val(); // Obtener la fecha
+    var idAprobador = $('#id_firmante').val(); // Obtener el ID del aprobador
+
+    $.ajax({
+        url: '/registrar-aprobacion', // Cambia la URL a la ruta adecuada
+        type: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'), // CSRF token
+            id_revisor: idRevisor,
+            aprobacion: aprobacion,
+            fecha_aprobacion: fechaAprobacion,
+            id_aprobador: idAprobador // Enviar el ID del aprobador
+        },
+        success: function(response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito',
+                text: response.message
+            });
+            $('#modalAprobacion').modal('hide');
+        },
+        error: function(xhr) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: xhr.responseJSON.message
+            });
+        }
+    });
+});
+
+
+
+
+// Agregar 
   //end
 });
