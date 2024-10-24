@@ -681,21 +681,21 @@ $(function () {
         $('#etiqueta_marca').val(marca.id_marca);
     
         $('#contenidoRango').empty();
-
+    
         var tipos = "";
         tipo.forEach(function (item, index) {
-          tipos += "<option value='"+item.id_tipo+"'>"+item.nombre+"</option>";
-      });
-
-      var clases = "";
-      clase.forEach(function (item, index) {
-        clases += "<option value='"+item.id_clase+"'>"+item.clase+"</option>";
-    });
-
-    var categorias = "";
-    categoria.forEach(function (item, index) {
-      categorias += "<option value='"+item.id_categoria+"'>"+item.categoria+"</option>";
-  });
+          tipos += "<option value='" + item.id_tipo + "'>" + item.nombre + "</option>";
+        });
+    
+        var clases = "";
+        clase.forEach(function (item, index) {
+          clases += "<option value='" + item.id_clase + "'>" + item.clase + "</option>";
+        });
+    
+        var categorias = "";
+        categoria.forEach(function (item, index) {
+          categorias += "<option value='" + item.id_categoria + "'>" + item.categoria + "</option>";
+        });
     
         // Crear nuevas filas en la tabla con los datos de las etiquetas y documentos
         marca.sku.forEach(function (sku, index) {
@@ -707,7 +707,8 @@ $(function () {
           // Obtenemos los documentos correspondientes (si existen)
           var documento_etiquetas = documentos.find(doc => doc.nombre_documento === 'Etiquetas');
           var documento_corrugado = documentos.find(doc => doc.nombre_documento === 'Corrugado');
-          var i = 1000;
+          var i = index; // Utilizar el índice del array
+    
           var newRow = `
             <tr>
               <th>
@@ -716,72 +717,67 @@ $(function () {
                 </button>
               </th>
               <td>
-              <input type="text" class="form-control form-control-sm" name="sku[]"  min="0" value="${sku}"></td>
+                <input type="text" class="form-control form-control-sm" name="sku[]" min="0" value="${sku}">
+              </td>
               <td>
-                <select class="form-control select2" name="id_tipo[]" id="id_tipo${i}" value="${id_tipo}">
-                ${tipos}
+                <select class="form-control select2" name="id_tipo[]" id="id_tipo${i}">
+                  ${tipos}
                 </select>
               </td>
               <td>
-              <input type="number" class="form-control form-control-sm" name="presentacion[]"  min="0"  value="${presentacion}"></td>
-              <td>
-                <select class="form-control select2" name="id_clase[]" id="id_clase${i}" value="${id_clase}">
-                 ${clases}
-                </select>
+                <input type="number" class="form-control form-control-sm" name="presentacion[]" min="0" value="${presentacion}">
               </td>
               <td>
-                <select class="form-control select2" name="id_categoria[]" id="id_categoria${i}" value="${id_categoria}">
-                 ${categorias}
-
-                </select>
+<select class="form-control select2" name="id_clase[]" id="id_clase${i}">
+  ${clases}
+</select>
               </td>
-             <td>
-    <div style="display: flex; align-items: center;">
-        <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
-        ${documento_etiquetas ? 
-            `<a href="/storage/uploads/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank" style="margin-left: 10px;">
-                <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
-            </a>` 
-            : ''}
-    </div>
-    <input value="60" class="form-control" type="hidden" name="id_documento[]">
-    <input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]">
-</td>
-
-
-<td>
-    <div style="display: flex; align-items: center;">
-        <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
-        ${documento_corrugado ? 
-            `<a href="/storage/uploads/${data.numeroCliente}/${documento_corrugado.url}" target="_blank" style="margin-left: 10px;">
-                <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
-            </a>` 
-            : ''}
-    </div>
-    <input value="75" class="form-control" type="hidden" name="id_documento[]">
-    <input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]">
-</td>
-
+              <td>
+<select class="form-control select2" name="id_categoria[]" id="id_categoria${i}">
+  ${categorias}
+</select>
+              </td>
+              <td>
+                <div style="display: flex; align-items: center;">
+                  <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
+                  ${documento_etiquetas ? 
+                    `<a href="/storage/uploads/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank" style="margin-left: 10px;">
+                      <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
+                    </a>` 
+                    : ''}
+                </div>
+                <input value="60" class="form-control" type="hidden" name="id_documento[]">
+                <input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]">
+              </td>
+              <td>
+                <div style="display: flex; align-items: center;">
+                  <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
+                  ${documento_corrugado ? 
+                    `<a href="/storage/uploads/${data.numeroCliente}/${documento_corrugado.url}" target="_blank" style="margin-left: 10px;">
+                      <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
+                    </a>` 
+                    : ''}
+                </div>
+                <input value="75" class="form-control" type="hidden" name="id_documento[]">
+                <input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]">
+              </td>
             </tr>`;
-          
+    
           $('#contenidoRango').append(newRow);
+    
+          // Inicializar select2 y establecer el valor seleccionado
           $('#id_tipo' + i).select2({
-            dropdownParent: $(
-                '#etiquetas') // Esto asegura que el dropdown esté dentro del modal
+            dropdownParent: $('#etiquetas')
+          }).val(id_tipo).trigger('change'); // Establecer el valor correcto
+    
+          $('#id_clase' + i).select2({
+            dropdownParent: $('#etiquetas')
+          }).val(id_clase).trigger('change');
+    
+          $('#id_categoria' + i).select2({
+            dropdownParent: $('#etiquetas')
+          }).val(id_categoria).trigger('change');
         });
-        $('#id_clase' + i).select2({
-            dropdownParent: $(
-                '#etiquetas') // Esto asegura que el dropdown esté dentro del modal
-        });
-        $('#id_categoria' + i).select2({
-            dropdownParent: $(
-                '#etiquetas') // Esto asegura que el dropdown esté dentro del modal
-        });
-        i++;
-          
-        });
-        
-
     
         // Mostrar el modal de edición de etiquetas
         $('#etiquetas').modal('show');
@@ -797,6 +793,7 @@ $(function () {
         });
       });
     });
+    
     
  
 
