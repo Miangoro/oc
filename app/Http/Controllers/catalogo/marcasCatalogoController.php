@@ -332,13 +332,13 @@ class marcasCatalogoController extends Controller
                 $etiquetado['id_categoria'] = [];
             }
     
-            // Obtener el siguiente id_doc (solo si se van a agregar nuevas entradas)
+            // Obtener el siguiente id_doc
             $nuevoIdDoc = count($etiquetado['id_doc']) + 1; // Incrementar el contador
     
             // Agregar los datos recibidos en la solicitud solo si no existen
             foreach ($request->sku as $index => $sku) {
                 // Verificar si el SKU ya existe
-                if (!in_array($sku, $etiquetado['sku'])) { // Verifica si el SKU ya está en la lista
+                if (!in_array($sku, $etiquetado['sku'])) {
                     $etiquetado['id_doc'][] = (string)($nuevoIdDoc); // Asignar un nuevo id_doc
                     $etiquetado['sku'][] = $sku;
                     $etiquetado['id_tipo'][] = $request->id_tipo[$index];
@@ -357,8 +357,9 @@ class marcasCatalogoController extends Controller
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $loteEnvasado->id_empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
     
+            // Guardar documentos subidos
             foreach ($request->id_documento as $index => $id_documento) {
-                // Agregar nuevo documento si no existe
+                // Agregar nuevo documento si existe el archivo correspondiente
                 if ($request->hasFile('url') && isset($request->file('url')[$index])) {
                     $file = $request->file('url')[$index];
                     $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
@@ -370,6 +371,17 @@ class marcasCatalogoController extends Controller
                     $documentacion_url->nombre_documento = $request->nombre_documento[$index];
                     $documentacion_url->url = $filename; // Almacenar solo el nombre del archivo
                     $documentacion_url->id_empresa = $loteEnvasado->id_empresa;
+    
+                    // Aquí asociamos el id_doc correspondiente del SKU
+                    if (isset($etiquetado['id_doc'][$index])) {
+                        $documentacion_url->id_doc = $etiquetado['id_doc'][$index]; // Asociar el id_doc correspondiente
+                    }
+    
+                    // Si no se asigna, se podría asignar el último id_doc
+                    if (!isset($documentacion_url->id_doc)) {
+                        $documentacion_url->id_doc = end($etiquetado['id_doc']);
+                    }
+    
                     $documentacion_url->save();
                 }
             }
@@ -380,6 +392,8 @@ class marcasCatalogoController extends Controller
             return response()->json(['error' => 'Error al actualizar la etiqueta: ' . $e->getMessage()], 500);
         }
     }
+    
+    
     
     
     
