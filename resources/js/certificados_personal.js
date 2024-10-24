@@ -418,11 +418,12 @@ $(document).on('click', '.cuest', function () {
       }
   });
 
-  cargarRespuestas(id_revision); // Cargar las respuestas para el ID de revisión
+  cargarRespuestas(id_revision); 
 });
 
-
+// Registrar Respuestas
 $(document).on('click', '#registrarRevision', function () {
+  // Verificar si id_revision está definido
   if (typeof id_revision === 'undefined') {
       Swal.fire({
           icon: 'error',
@@ -435,54 +436,40 @@ $(document).on('click', '#registrarRevision', function () {
       return;
   }
 
-  const respuestas = {};
-  const observaciones = {};
-  const rows = $('#fullscreenModal .table-container table tbody tr');
+  const respuestas = document.querySelectorAll('select[name^="respuesta"]');
+  let valid = true; 
+  const respuestasObj = {};
   let todasLasRespuestasSonC = true;
-  let todasLasRespuestasContestas = true; // Variable para validar que todas las respuestas se han contestado
 
-  rows.each(function (index) {
-      let respuesta = $(this).find('select').val();
-      const observacion = $(this).find('textarea').val();
-
-      // Verificar si la respuesta está vacía
-      if (!respuesta) {
-          todasLasRespuestasContestas = false; // Hay al menos una respuesta no contestada
-          return false; // Salir del ciclo each
+  // Validación de respuestas
+  respuestas.forEach((respuesta, index) => {
+      if (respuesta.value === '') {
+          valid = false;
+          respuesta.classList.add('is-invalid'); 
+      } else {
+          respuesta.classList.remove('is-invalid');
       }
 
-      // Convertir las respuestas a los valores correspondientes
-      if (respuesta === '1') {
-          respuesta = 'C';
-      } else if (respuesta === '2') {
-          respuesta = 'NC';
+      let respuestaValue = respuesta.value;
+      if (respuestaValue === '1') {
+          respuestaValue = 'C';
+      } else if (respuestaValue === '2') {
+          respuestaValue = 'NC';
           todasLasRespuestasSonC = false; 
-      } else if (respuesta === '3') {
-          respuesta = 'NA';
+      } else if (respuestaValue === '3') {
+          respuestaValue = 'NA';
           todasLasRespuestasSonC = false; 
       } else {
-          respuesta = null;
-          todasLasRespuestasSonC = false; // Si no hay respuesta, no se considera C
+          respuestaValue = null;
+          todasLasRespuestasSonC = false; 
       }
-
-      respuestas[`pregunta${index + 1}`] = respuesta;
-      observaciones[`pregunta${index + 1}`] = observacion || null;
+      respuestasObj[`pregunta${index + 1}`] = respuestaValue;
   });
 
-  // Validar si todas las respuestas han sido contestadas
-  if (!todasLasRespuestasContestas) {
-      Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Por favor, contesta todas las preguntas antes de enviar.',
-          customClass: {
-              confirmButton: 'btn btn-danger'
-          }
-      });
-      return; // Salir de la función si hay respuestas no contestadas
+  // NOTA: ¡Para que NO REGISTRE cuando aun hay validacion Activas!
+  if (!valid) {
+      return;
   }
-
-  // Determinar la decisión automáticamente
   const desicion = todasLasRespuestasSonC ? 'positiva' : 'negativa';
 
   $.ajax({
@@ -494,8 +481,8 @@ $(document).on('click', '#registrarRevision', function () {
       },
       data: JSON.stringify({
           id_revision: id_revision,
-          respuestas: respuestas,
-          observaciones: observaciones,
+          respuestas: respuestasObj,
+          observaciones: {},
           desicion: desicion 
       }),
       success: function (response) {
@@ -521,6 +508,20 @@ $(document).on('click', '#registrarRevision', function () {
               }
           });
       }
+  });
+});
+
+// Quitar Validacion al llenar Select
+$(document).on('change', 'select[name^="respuesta"], textarea[name^="observaciones"], select[name^="tipo"]', function () {
+  $(this).removeClass('is-invalid'); 
+});
+
+// Limpiar Validacion al cerrar Modal
+$(document).on('hidden.bs.modal', '#fullscreenModal', function () {
+  const respuestas = document.querySelectorAll('select[name^="respuesta"]');
+  respuestas.forEach((respuesta) => {
+      respuesta.classList.remove('is-invalid'); 
+      respuesta.value = ''; 
   });
 });
 
@@ -561,7 +562,6 @@ function cargarRespuestas(id_revision) {
       }
   });
 }
-
 
 //Abrir PDF Bitacora
   $(document).on('click', '.pdf', function () {
