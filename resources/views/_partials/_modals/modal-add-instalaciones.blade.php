@@ -102,13 +102,13 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="date" class="form-control" id="fecha_emision" name="fecha_emision" aria-label="Fecha de Emisión">
+                                        <input type="date" class="form-control datepicker" id="fecha_emision" name="fecha_emision" aria-label="Fecha de Emisión" readonly>
                                         <label for="fecha_emision">Fecha de Emisión</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="date" class="form-control" id="fecha_vigencia" name="fecha_vigencia" aria-label="Fecha de Vigencia">
+                                        <input type="date" class="form-control datepicker" id="fecha_vigencia" name="fecha_vigencia" aria-label="Fecha de Vigencia" readonly>
                                         <label for="fecha_vigencia">Fecha de Vigencia</label>
                                     </div>
                                 </div>

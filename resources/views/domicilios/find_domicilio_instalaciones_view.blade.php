@@ -10,7 +10,8 @@
     'resources/assets/vendor/libs/select2/select2.scss',
     'resources/assets/vendor/libs/@form-validation/form-validation.scss',
     'resources/assets/vendor/libs/animate-css/animate.scss',
-    'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss'
+    'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
+    'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss'
 ])
 @endsection
 
@@ -24,7 +25,9 @@
     'resources/assets/vendor/libs/@form-validation/auto-focus.js',
     'resources/assets/vendor/libs/cleavejs/cleave.js',
     'resources/assets/vendor/libs/cleavejs/cleave-phone.js',
-    'resources/assets/vendor/libs/sweetalert2/sweetalert2.js'
+    'resources/assets/vendor/libs/sweetalert2/sweetalert2.js',
+        'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js',
+  'resources/assets/vendor/libs/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js'
 ])
 @endsection
 
@@ -263,13 +266,13 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="date" class="form-control" id="edit_fecha_emision" name="fecha_emision" aria-label="Fecha de Emisión">
+                                        <input type="date" class="form-control datepicker" id="edit_fecha_emision" name="fecha_emision" aria-label="Fecha de Emisión" readonly>
                                         <label for="edit_fecha_emision">Fecha de Emisión</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="date" class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia" aria-label="Fecha de Vigencia">
+                                        <input type="date" class="form-control datepicker" id="edit_fecha_vigencia" name="fecha_vigencia" aria-label="Fecha de Vigencia" readonly>
                                         <label for="edit_fecha_vigencia">Fecha de Vigencia</label>
                                     </div>
                                 </div>

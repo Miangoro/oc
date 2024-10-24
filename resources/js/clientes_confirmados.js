@@ -148,8 +148,8 @@ $(function () {
               var $colorRegimen = 'warning';
             }
             return `${$verified
-                ? '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-                : '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+              ? '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+              : '<span class="badge rounded-pill  bg-label-' + $colorRegimen + '">' + $verified + '</span>'
               }`;
           }
         },
@@ -355,7 +355,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo prospecto</span>',
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nuevo Confirmado</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'modal',
@@ -403,25 +403,25 @@ $(function () {
 
   }
 
-  $(document).ready(function() {
+  $(document).ready(function () {
     var dt_user_table = $('.datatables-users'),
-    select2Elements = $('.select2'),
-    userView = baseUrl + 'app/user/view/account';
+      select2Elements = $('.select2'),
+      userView = baseUrl + 'app/user/view/account';
 
     // Inicializar Select2 en los elementos especificados
     initializeSelect2(select2Elements);
-});
+  });
 
-// Función para inicializar Select2
-function initializeSelect2($elements) {
+  // Función para inicializar Select2
+  function initializeSelect2($elements) {
     $elements.each(function () {
-        var $this = $(this);
-        select2Focus($this); // Asegúrate de que select2Focus esté definida o sea necesaria
-        $this.wrap('<div class="position-relative"></div>').select2({
-            dropdownParent: $this.parent()
-        });
+      var $this = $(this);
+      select2Focus($this); // Asegúrate de que select2Focus esté definida o sea necesaria
+      $this.wrap('<div class="position-relative"></div>').select2({
+        dropdownParent: $this.parent()
+      });
     });
-}
+  }
 
 
 
@@ -840,76 +840,93 @@ function initializeSelect2($elements) {
     const fv = FormValidation.formValidation(form, {
       fields: {
         razon_social: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor ingrese la razón social.'
-                },
-            }
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el nombre del cliente/empresa'
+            },
+          }
         },
         regimen: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor ingrese el régimen.'
-                },
-            }
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el régimen'
+            },
+          }
         },
         domicilio_fiscal: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor ingrese el domicilio fiscal.'
-                },
-            }
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el domicilio fiscal'
+            },
+          }
         },
         estado: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor seleccione un estado.'
-                },
-            }
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un estado'
+            },
+          }
         },
         representante: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor ingrese el representante.'
-                },
-            }
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el representante'
+            },
+          }
         },
         rfc: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor ingrese el RFC.'
-                },
-                stringLength: {
-                    max: 13,
-                    message: 'El RFC no puede tener más de 13 caracteres.'
-                },
-            }
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el RFC'
+            },
+            stringLength: {
+              max: 13,
+              message: 'El RFC no puede tener más de 13 caracteres'
+            },
+          }
         },
         correo: {
           validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el correo electrónico'
+            },
+            emailAddress: {
+              message: 'Por favor ingrese un correo electrónico válido'
+            },
+          }
+        },
+        telefono: {
+          validators: {
               notEmpty: {
-                  message: 'Por favor ingrese el correo electrónico.'
+                  message: 'Por favor ingrese el número de teléfono'
               },
-              emailAddress: {
-                  message: 'Por favor ingrese un correo electrónico válido.'
+              stringLength: {
+                  min: 10,
+                  max: 15,
+                  message: 'El teléfono debe tener entre 10 y 15 caracteres (incluidos espacios y otros caracteres)'
               },
+              regexp: {
+                  // Aceptar dígitos, espacios, guiones y paréntesis
+                  regexp: /^[0-9\s\-\(\)]+$/,
+                  message: 'El teléfono debe contener solo números, espacios, guiones y paréntesis'
+              }
           }
       },      
-        telefono: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor ingrese el teléfono.'
-                },
-            }
-        },
         id_contacto: {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor seleccione un contacto.'
-                }
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un contacto'
             }
+          }
+        },
+       'normas[]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una norma'
+            }
+          }
         }
-    },    
+      },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
@@ -923,10 +940,6 @@ function initializeSelect2($elements) {
 
     }).on('core.form.valid', function () {
       var formData = new FormData(form);
-
-      // Imprimir los datos del formulario para verificar
-      console.log('Form Data:', Object.fromEntries(formData.entries()));
-
       $.ajax({
         url: '/registrar-clientes',
         type: 'POST',
@@ -956,7 +969,7 @@ function initializeSelect2($elements) {
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al registrar el dictamen de granel',
+            text: 'Error al registrar el cliente',
             customClass: {
               confirmButton: 'btn btn-danger'
             }
@@ -965,12 +978,16 @@ function initializeSelect2($elements) {
       });
     });
     // Inicializar select2
-    $('#estado').on('change', function() {
+    $('#estado, #normas').on('change', function () {
       // Revalidar el campo cuando se cambia el valor del select2
       fv.revalidateField($(this).attr('name'));
-  });
+    });
 
   });
+
+
+
+
 
 
 

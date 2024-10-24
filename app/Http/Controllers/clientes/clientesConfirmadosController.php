@@ -11,6 +11,7 @@ use App\Models\empresaContrato;
 use App\Models\empresaNumCliente;
 use App\Models\solicitud_informacion;
 use App\Models\estados;
+use App\Models\normas_catalo;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -27,6 +28,7 @@ class clientesConfirmadosController extends Controller
         //$usuarios = User::all();
         $usuarios = User::where("tipo",1)->get();
         $estados = estados::all(); // Obtener todos los estados
+        $normas = normas_catalo::where('id_norma', '!=', 3)->get();
         // $userCount = $empresas->count();
         $verified = 5;
         $notVerified = 10;
@@ -41,6 +43,7 @@ class clientesConfirmadosController extends Controller
             'morales' => $morales,
             'usuarios' => $usuarios,
             'estados' => $estados,
+            'normas' => $normas,
 
         ]);
     }
@@ -392,7 +395,9 @@ public function actualizarRegistros(Request $request)
           'rfc' => 'required|string|max:13',
           'correo' => 'required|email|max:255',
           'telefono' => 'nullable|string|max:15',
-          'id_contacto' => 'required|exists:users,id', // Asegúrate de que 'usuarios' sea tu tabla de contactos
+          'id_contacto' => 'required|exists:users,id',
+          'normas' => 'required|array',
+          'numeros_clientes' => 'required|array', // Asegúrate de que sea un array
         ]);
         
         // Crear una nueva instancia del modelo Dictamen_Granel
@@ -410,6 +415,33 @@ public function actualizarRegistros(Request $request)
         $cliente->tipo = 2;
 
         $cliente->save();
+
+
+
+        // Obtener el id_empresa del cliente recién creado
+        $id_empresa = $cliente->id_empresa;
+
+        // 1. Registrar siempre la norma con id_norma = 3
+        $empresaNumCliente = new empresaNumCliente();
+        $empresaNumCliente->id_empresa = $id_empresa;
+        $empresaNumCliente->numero_cliente = null; // Número de cliente genérico o fijo para esta norma
+        $empresaNumCliente->id_norma = 3;
+        $empresaNumCliente->save();
+    
+        // 2. Registrar el resto de normas, omitiendo la norma con id_norma = 3
+        foreach ($validatedData['normas'] as $index => $id_norma) {
+            if ($id_norma != 3 && isset($validatedData['numeros_clientes'][$index])) {
+                $numero_cliente = $validatedData['numeros_clientes'][$index];
+    
+                // Crear una nueva instancia del modelo empresaNumCliente para cada norma
+                $empresaNumCliente = new empresaNumCliente();
+                $empresaNumCliente->id_empresa = $id_empresa;
+                $empresaNumCliente->numero_cliente = $numero_cliente;
+                $empresaNumCliente->id_norma = $id_norma;
+    
+                $empresaNumCliente->save();
+            }
+        }
         
         return response()->json([
             'success' => true,
