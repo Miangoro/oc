@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-10-2024 a las 20:37:15
+-- Tiempo de generación: 17-10-2024 a las 17:41:05
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -32,16 +32,14 @@ CREATE TABLE `lotes_envasado` (
   `id_empresa` int(11) NOT NULL COMMENT 'Relación con empresas',
   `nombre_lote` varchar(100) NOT NULL,
   `sku` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`sku`)),
+  `tipo_lote` varchar(45) NOT NULL COMMENT '1. Por un solo lote a granel 2. Por más de un lote a granel',
   `id_marca` int(11) NOT NULL COMMENT 'Relación con id_marca de la tabla marcas',
   `destino_lote` varchar(120) NOT NULL,
   `cant_botellas` int(11) NOT NULL,
-  `cant_bot_restantes` int(11) DEFAULT NULL,
   `presentacion` int(11) NOT NULL,
   `unidad` varchar(50) NOT NULL COMMENT 'Litros, mililitros o centilitros',
   `volumen_total` double NOT NULL,
-  `vol_restante` double DEFAULT NULL,
   `lugar_envasado` int(11) DEFAULT NULL COMMENT 'Relación con id_intalacion',
-  `estatus` varchar(40) NOT NULL DEFAULT 'Pendiente',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -64,7 +62,7 @@ ALTER TABLE `lotes_envasado`
 -- AUTO_INCREMENT de la tabla `lotes_envasado`
 --
 ALTER TABLE `lotes_envasado`
-  MODIFY `id_lote_envasado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_lote_envasado` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

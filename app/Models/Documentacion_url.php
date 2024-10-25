@@ -44,11 +44,5 @@ class Documentacion_url extends Model
         return $this->belongsTo(Instalaciones::class, 'id_relacion', 'id_instalacion');
       }
 
-
-      public function marcas()
-      {
-        return $this->belongsTo(Instalaciones::class, 'id_doc', 'id_doc');
-      }
-
       
 }

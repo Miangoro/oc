@@ -332,8 +332,8 @@ class marcasCatalogoController extends Controller
                 $etiquetado['id_categoria'] = [];
             }
     
-            // Obtener el siguiente id_doc
-            $nuevoIdDoc = count($etiquetado['id_doc']) + 1; // Incrementar el contador
+            // Obtener el siguiente id_doc tomando el valor más alto actual
+            $nuevoIdDoc = empty($etiquetado['id_doc']) ? 1 : max($etiquetado['id_doc']) + 1;
     
             // Agregar los datos recibidos en la solicitud solo si no existen
             foreach ($request->sku as $index => $sku) {
@@ -356,15 +356,20 @@ class marcasCatalogoController extends Controller
             // Método para guardar PDF
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $loteEnvasado->id_empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-            $nuevoIdDocEtiqueta = 1; 
-            $nuevoIdDocCorrugado = 1; 
+    
+            // Obtener el valor máximo actual de id_doc de la tabla documentacion_url por tipo de documento
+            $ultimoIdDocEtiqueta = Documentacion_url::where('id_documento', 60)->max('id_doc') ?: 0;
+            $ultimoIdDocCorrugado = Documentacion_url::where('id_documento', '!=', 60)->max('id_doc') ?: 0;
+    
+            $nuevoIdDocEtiqueta = $ultimoIdDocEtiqueta + 1; 
+            $nuevoIdDocCorrugado = $ultimoIdDocCorrugado + 1; 
+    
             // Guardar documentos subidos
             foreach ($request->id_documento as $index => $id_documento) {
-              // Incrementar el contador
                 // Agregar nuevo documento si existe el archivo correspondiente
                 if ($request->hasFile('url') && isset($request->file('url')[$index])) {
                     $file = $request->file('url')[$index];
-                    $filename = $request->nombre_documento[$index] . '_' . time() .$index. '.' . $file->getClientOriginalExtension();
+                    $filename = $request->nombre_documento[$index] . '_' . time() . $index . '.' . $file->getClientOriginalExtension();
                     $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
     
                     $documentacion_url = new Documentacion_url();
@@ -374,17 +379,14 @@ class marcasCatalogoController extends Controller
                     $documentacion_url->url = $filename; // Almacenar solo el nombre del archivo
                     $documentacion_url->id_empresa = $loteEnvasado->id_empresa;
     
-
-                       // Asociar el id_doc correspondiente
-                        if($id_documento==60){
-                            $documentacion_url->id_doc =  (string)($nuevoIdDocEtiqueta);
-                            $nuevoIdDocEtiqueta++;
-                        }else{
-                            $documentacion_url->id_doc =  (string)($nuevoIdDocCorrugado);
-                            $nuevoIdDocCorrugado++;
-                        }
-                       
-                    
+                    // Asociar el id_doc correspondiente
+                    if ($id_documento == 60) {
+                        $documentacion_url->id_doc = (string)($nuevoIdDocEtiqueta);
+                        $nuevoIdDocEtiqueta++;
+                    } else {
+                        $documentacion_url->id_doc = (string)($nuevoIdDocCorrugado);
+                        $nuevoIdDocCorrugado++;
+                    }
     
                     $documentacion_url->save();
                 }
