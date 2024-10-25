@@ -247,13 +247,13 @@ class GuiasController  extends Controller
 
     public function editGuias($run_folio)
     {
-        try {
-            $guia = guias::where('run_folio', $run_folio)->get();
-            return response()->json($guia);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al obtener la guía'], 500);
-        }
+        $guias = Guias::where('run_folio', $run_folio)
+            ->with('empresa') // Suponiendo que `razon_social` está en la tabla `empresas`
+            ->get();
+        
+        return response()->json($guias);
     }
+    
 
 
     // Método para actualizar una guía existente

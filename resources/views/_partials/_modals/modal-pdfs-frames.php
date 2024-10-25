@@ -81,8 +81,8 @@
           </div>
         </div>
         <!-- Botón para descargar el PDF -->
-        <a href="#" id="descargarPdfBtn" class="btn btn-primary position-absolute waves-effect" style="top: 0; right: 0; margin: 15px;">Descargar PDF</a>
-          <iframe src="" id="pdfViewerGuias" width="100%" height="800px" style="border: none;"></iframe>
+<!--         <a href="#" id="descargarPdfBtn" class="btn btn-primary position-absolute waves-effect" style="top: 0; right: 0; margin: 15px;">Descargar PDF</a>
+ -->          <iframe src="" id="pdfViewerGuias" width="100%" height="800px" style="border: none;"></iframe>
 
       </div>
     </div>

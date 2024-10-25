@@ -18,7 +18,9 @@
                 </div>
                 
                 <form id="verGuiasRegistardasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
-                    <div class="row">
+                    <a href="#" id="descargarPdfBtn" class="btn btn-primary position-absolute waves-effect" style="top: 0; right: 0; margin: 15px;">Descargar PDF</a>
+{{--                     <iframe src="" id="pdfViewerGuias" width="100%" height="800px" style="border: none;"></iframe>
+ --}}                    <div class="row">
 
                         <div class="table-responsive">
                             <table class="table table-bordered">

@@ -688,27 +688,25 @@ $(document).on('click', '.ver-registros', function () {
 
       // Iterar sobre los datos y rellenar la tabla con los datos obtenidos
       data.forEach(function (item) {
-
-          // Renderizar el ícono de PDF en la columna
-          var fila = `
-              <tr>
-                  <td>${item.run_folio}</td>
-                  <td>${item.folio}</td>
-                  <td>
-                      <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" 
-                          data-bs-target="#mostrarPdfGUias" 
-                          data-bs-toggle="modal" 
-                          data-bs-dismiss="modal" 
-                          data-id="${item.id_guia}" 
-                          data-registro="${item.razon_social}">
-                      </i>
-                  </td>
-              </tr>
-          `;
-
-          // Añadir la fila a la tabla
-          $('#tablita').append(fila);
-      });
+        var razon_social = item.empresa ? item.empresa.razon_social : 'Indefinido'; // Acceso a `razon_social`
+        var fila = `
+            <tr>
+                <td>${item.run_folio}</td>
+                <td>${item.folio}</td>
+                <td>
+                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" 
+                        data-bs-target="#mostrarPdfGUias" 
+                        data-bs-toggle="modal" 
+                        data-bs-dismiss="modal" 
+                        data-id="${item.id_guia}" 
+                        data-registro="${razon_social}">
+                    </i>
+                </td>
+            </tr>
+        `;
+        $('#tablita').append(fila);
+    });
+    
 
       // Mostrar el modal de edición
       $('#verGuiasRegistardas').modal('show');
