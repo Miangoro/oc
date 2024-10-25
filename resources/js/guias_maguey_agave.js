@@ -679,6 +679,7 @@ $(function () {
 
 
 //edit guias tablas
+// Evento de click para ver los registros y preparar la descarga de PDFs
 $(document).on('click', '.ver-registros', function () {
   var run_folio = $(this).data('id');
 
@@ -739,6 +740,16 @@ $(document).on('click', '.ver-registros', function () {
 
 // Función para descargar múltiples PDFs en un archivo ZIP
 function downloadPdfsAsZip(pdfFiles, zipFileName) {
+  // Mostrar alerta de "Procesando..."
+  Swal.fire({
+      title: 'Procesando...',
+      text: 'Por favor espera mientras se comprimen los archivos.',
+      allowOutsideClick: false,
+      didOpen: () => {
+          Swal.showLoading();
+      }
+  });
+
   var zip = new JSZip();
 
   // Crear una lista de promesas para descargar cada PDF
@@ -755,10 +766,26 @@ function downloadPdfsAsZip(pdfFiles, zipFileName) {
   Promise.all(pdfPromises).then(() => {
       zip.generateAsync({ type: "blob" })
           .then(function (zipBlob) {
+              // Descargar el archivo ZIP
               saveAs(zipBlob, zipFileName);
+
+              // Cerrar la alerta de "Procesando..." después de que el ZIP esté listo
+              Swal.close();
+          })
+          .catch(error => {
+              console.error('Error al generar el archivo ZIP:', error);
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Hubo un problema al generar el archivo ZIP.',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
           });
   });
 }
+
 
 
 
