@@ -170,7 +170,6 @@ $(function () {
         { data: 'num_anterior' },
         { data: 'num_comercializadas' },
         { data: 'mermas_plantas' },
-        { data: '' },
         { data: 'action' }
       ],
       columnDefs: [
@@ -253,7 +252,7 @@ $(function () {
             }`;
           }
         },*/
-        {
+/*         {
           // email verify
           targets: 11,
           className: 'text-center',
@@ -261,7 +260,7 @@ $(function () {
             var $id = full['id_guia'];
             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdfGUias" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_guia']}" data-registro="${full['razon_social']} "></i>`;
           }
-        },
+        }, */
         {
           // Actions
           targets: -1,
@@ -680,42 +679,54 @@ $(function () {
 
 
 //edit guias tablas
-  $(document).on('click', '.ver-registros', function () {
-    var run_folio = $(this).data('id');
+$(document).on('click', '.ver-registros', function () {
+  var run_folio = $(this).data('id');
 
-    $.get('/editGuias/' + run_folio, function (data) {
+  $.get('/editGuias/' + run_folio, function (data) {
 
       $('#tablita').empty();
 
-      // Rellenar el formulario con los datos obtenidos
+      // Iterar sobre los datos y rellenar la tabla con los datos obtenidos
       data.forEach(function (item) {
 
-        var fila = `
-        <tr>
-             <td>${item.run_folio}</td>
-            <td>${item.folio}</td>
-            <td>pdf</td>
+          // Renderizar el ícono de PDF en la columna
+          var fila = `
+              <tr>
+                  <td>${item.run_folio}</td>
+                  <td>${item.folio}</td>
+                  <td>
+                      <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" 
+                          data-bs-target="#mostrarPdfGUias" 
+                          data-bs-toggle="modal" 
+                          data-bs-dismiss="modal" 
+                          data-id="${item.id_guia}" 
+                          data-registro="${item.razon_social}">
+                      </i>
+                  </td>
+              </tr>
+          `;
 
-        </tr>
-    `;
+          // Añadir la fila a la tabla
+          $('#tablita').append(fila);
+      });
 
-    // Añadir la fila a la tabla
-    $('#tablita').append(fila);
-  });
       // Mostrar el modal de edición
       $('#verGuiasRegistardas').modal('show');
-    }).fail(function (jqXHR, textStatus, errorThrown) {
+  }).fail(function (jqXHR, textStatus, errorThrown) {
       console.error('Error: ' + textStatus + ' - ' + errorThrown);
       Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al obtener los datos de la guía de traslado',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al obtener los datos de la guía de traslado',
+          customClass: {
+              confirmButton: 'btn btn-danger'
+          }
       });
-    });
   });
+});
+
+
+
 
 
   const editGuiaForm = document.getElementById('editGuiaForm');

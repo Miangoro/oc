@@ -65,7 +65,6 @@
           <th>No. anterior</th>
           <th>Comercializadas</th>
           <th>No. mermas</th>
-          <th>Guia</th>
           <th>Acciones</th>
         </tr>
       </thead>
