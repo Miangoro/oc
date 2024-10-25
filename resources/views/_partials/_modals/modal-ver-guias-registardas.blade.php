@@ -1,11 +1,17 @@
 <!-- Add New Lote Envasado Modal -->
 <style>
     .modal-custom-size {
-        max-width:100%;
-        /* Ajusta este valor para hacerlo más grande */
-        width: 50%;
-        /* Ajusta según tus necesidades */
+    max-width: 100%;
+    width: 50%; /* Ancho por defecto para pantallas grandes */
+}
+
+/* Estilo para pantallas pequeñas (móviles) */
+@media (max-width: 768px) { /* Ajusta el valor según tu diseño */
+    .modal-custom-size {
+        width: auto; /* Ancho automático para dispositivos móviles */
     }
+}
+
 </style>
 <div class="modal fade" id="verGuiasRegistardas" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-custom-size modal-simple modal-add-new-address">
