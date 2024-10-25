@@ -273,6 +273,7 @@ $(function () {
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               `<a data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Llenar guia de traslado</a>` +
+              `<a data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#verGuiasRegistardas" href="javascript:;" class="dropdown-item ver-registros"><i class="ri-id-card-fill ri-20px text-info"></i> Ver/Llenar guias de traslado</a>` +
               `<a data-id="${full['id_guia']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar guia de traslado</a>` +
               /*               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
                             `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` + */
@@ -677,10 +678,50 @@ $(function () {
 
 
 
+//edit guias tablas
+  $(document).on('click', '.ver-registros', function () {
+    var id_guia = $(this).data('id');
 
+    $.get('/edit/' + id_guia, function (data) {
 
+      $('#tablita').empty();
 
+      // Rellenar el formulario con los datos obtenidos
+      data.forEach(function (item) {
 
+        var fila = `
+        <tr>
+            <td>${item.id_guia}</td>
+            <td>${item.id_plantacion}</td>
+            <td>${item.run_folio}</td>
+            <td>${item.folio}</td>
+            <td>${item.id_empresa}</td>
+            <td>${item.id_predio}</td>
+            <td>${item.numero_plantas}</td>
+            <td>${item.numero_guias}</td>
+            <td>${item.num_anterior}</td>
+            <td>${item.num_comercializadas}</td>
+            <td>${item.mermas_plantas}</td>
+        </tr>
+    `;
+
+    // Añadir la fila a la tabla
+    $('#tablita').append(fila);
+  });
+      // Mostrar el modal de edición
+      $('#verGuiasRegistardas').modal('show');
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error: ' + textStatus + ' - ' + errorThrown);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos de la guía de traslado',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    });
+  });
 
 
   const editGuiaForm = document.getElementById('editGuiaForm');

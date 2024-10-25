@@ -78,6 +78,8 @@
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-guias-agave')
 @include('_partials/_modals/modal-edit-guias-agave')
+@include('_partials/_modals/modal-ver-guias-registardas')
+
 
 
 
