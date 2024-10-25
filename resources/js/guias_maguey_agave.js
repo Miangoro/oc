@@ -701,7 +701,6 @@ $(document).on('click', '.ver-registros', function () {
           // Agregar la fila a la tabla con el icono del PDF
           var fila = `
               <tr>
-                  <td>${item.run_folio}</td>
                   <td>${item.folio}</td>
                   <td>
                       <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" 
