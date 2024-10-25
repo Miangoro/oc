@@ -180,7 +180,28 @@ function initializeSelect2($elements) {
            }
          },
          
- 
+         {
+            // email verify
+            targets: 11,
+            className: 'text-center',
+            render: function (data, type, full, meta) {
+                var $verified = full['estatus'];
+                var $colorRegimen;
+
+                if ($verified == 'Pendiente') {
+                    $colorRegimen = 'danger'; // Azulnja
+                    /*                       } else if ($verified == 'Pendiente') {
+                                            $colorRegimen = 'danger';  */
+                } else {
+                    $colorRegimen = 'secondary'; // Color por defecto si no coincide con ninguno
+                }
+
+                return `${$verified
+                    ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+                    : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
+                    }`;
+            }
+        },
          {
             // Actions
             targets: -1,
