@@ -683,33 +683,47 @@ $(document).on('click', '.ver-registros', function () {
   var run_folio = $(this).data('id');
 
   $.get('/editGuias/' + run_folio, function (data) {
-
       $('#tablita').empty();
+
+      // Array para almacenar URLs y nombres de los PDFs
+      var pdfFiles = [];
 
       // Iterar sobre los datos y rellenar la tabla con los datos obtenidos
       data.forEach(function (item) {
-        var razon_social = item.empresa ? item.empresa.razon_social : 'Indefinido'; // Acceso a `razon_social`
-        var fila = `
-            <tr>
-                <td>${item.run_folio}</td>
-                <td>${item.folio}</td>
-                <td>
-                    <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" 
-                        data-bs-target="#mostrarPdfGUias" 
-                        data-bs-toggle="modal" 
-                        data-bs-dismiss="modal" 
-                        data-id="${item.id_guia}" 
-                        data-registro="${razon_social}">
-                    </i>
-                </td>
-            </tr>
-        `;
-        $('#tablita').append(fila);
-    });
-    
+          var razon_social = item.empresa ? item.empresa.razon_social : 'Indefinido';
+          var pdfUrl = '../guia_de_translado/' + item.id_guia;
+          var filename = 'Guia_de_traslado_' + item.folio + '.pdf';
+
+          // Agregar cada archivo PDF a la lista para el ZIP
+          pdfFiles.push({ url: pdfUrl, filename: filename });
+
+          // Agregar la fila a la tabla con el icono del PDF
+          var fila = `
+              <tr>
+                  <td>${item.run_folio}</td>
+                  <td>${item.folio}</td>
+                  <td>
+                      <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" 
+                          data-bs-target="#mostrarPdfGUias" 
+                          data-bs-toggle="modal" 
+                          data-bs-dismiss="modal" 
+                          data-id="${item.id_guia}" 
+                          data-registro="${razon_social}">
+                      </i>
+                  </td>
+              </tr>
+          `;
+          $('#tablita').append(fila);
+      });
 
       // Mostrar el modal de edición
       $('#verGuiasRegistardas').modal('show');
+
+      // Evento para descargar todos los PDFs en un archivo ZIP
+      $('#descargarPdfBtn').off('click').on('click', function (e) {
+          e.preventDefault();
+          downloadPdfsAsZip(pdfFiles, `Guias_de_traslado_${run_folio}.zip`);
+      });
   }).fail(function (jqXHR, textStatus, errorThrown) {
       console.error('Error: ' + textStatus + ' - ' + errorThrown);
       Swal.fire({
@@ -722,6 +736,30 @@ $(document).on('click', '.ver-registros', function () {
       });
   });
 });
+
+// Función para descargar múltiples PDFs en un archivo ZIP
+function downloadPdfsAsZip(pdfFiles, zipFileName) {
+  var zip = new JSZip();
+
+  // Crear una lista de promesas para descargar cada PDF
+  var pdfPromises = pdfFiles.map(file =>
+      fetch(file.url)
+          .then(response => response.blob())
+          .then(blob => {
+              zip.file(file.filename, blob); // Añadir el archivo al ZIP
+          })
+          .catch(error => console.error('Error al descargar el PDF:', error))
+  );
+
+  // Esperar a que todas las descargas terminen y crear el ZIP
+  Promise.all(pdfPromises).then(() => {
+      zip.generateAsync({ type: "blob" })
+          .then(function (zipBlob) {
+              saveAs(zipBlob, zipFileName);
+          });
+  });
+}
+
 
 
 
