@@ -60,6 +60,7 @@
           <th>Folio</th>
           <th>Run Folio</th>
           <th>Predio</th>
+          <th>Cantidad guias</th>
           <th>Plantas actuales</th>
           <th>No. anterior</th>
           <th>Comercializadas</th>

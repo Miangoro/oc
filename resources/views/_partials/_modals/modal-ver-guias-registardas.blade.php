@@ -25,16 +25,9 @@
                               <thead>
                                 <tr>
                                   <th>id</th>
-                                  <th>Plantacion</th>
-                                  <th>runfoio</th>
                                   <th>folio</th>
-                                  <th>empresa</th>
-                                  <th>predio</th>
-                                  <th>numo plantas</th>
-                                  <th>num guias</th>
-                                  <th>num anterior</th>
-                                  <th>numo comercializadas</th>
-                                  <th>mermas</th>
+                                  <th>Guia</th>
+
 
                                 </tr>
                               </thead>

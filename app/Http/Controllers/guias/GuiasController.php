@@ -123,6 +123,7 @@ class GuiasController  extends Controller
                     'no_cliente' => $user->no_cliente,
                     'fecha_ingreso' => $user->fecha_ingreso,
                     'domicilio' => $user->domicilio,
+                    'numero_guias' => $user->numero_guias,
 
 
                 ];
@@ -188,7 +189,7 @@ class GuiasController  extends Controller
         }
     
         // Formatear el nuevo run_folio
-        $nuevoFolio = sprintf('SOL-GUIA-%06d/24', $nuevoNumero);
+        $nuevoFolio = sprintf('SOL-GUIA-%06d-24', $nuevoNumero);
     
         // Procesar la creación de las guías
         for ($i = 0; $i < $request->input('numero_guias'); $i++) {
@@ -242,6 +243,18 @@ class GuiasController  extends Controller
             return response()->json(['error' => 'Error al obtener la guía'], 500);
         }
     }
+
+
+    public function editGuias($run_folio)
+    {
+        try {
+            $guia = guias::where('run_folio', $run_folio)->get();
+            return response()->json($guia);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener la guía'], 500);
+        }
+    }
+
 
     // Método para actualizar una guía existente
     public function update(Request $request)

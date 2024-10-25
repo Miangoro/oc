@@ -625,6 +625,8 @@ Route::post('/guias/store', [GuiasController::class, 'store']);
 Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado');
 Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
 Route::post('/update', [GuiasController::class, 'update'])->name('guias.update');
+Route::get('/editGuias/{run_folio}', [GuiasController::class, 'editGuias']);
+
 //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
 
 /*-------------------Dictamenes de instalaciones-------------------*/
