@@ -281,10 +281,10 @@ class LotesGranelController extends Controller
 
                 if ($loteOriginal) {
                     // Restar el volumen parcial del lote original
-                    $loteOriginal->volumen -= $volumenParcial;
+                    $loteOriginal->volumen_restante -= $volumenParcial;
 
                     // Verificar si el volumen no se vuelve negativo
-                    if ($loteOriginal->volumen < 0) {
+                    if ($loteOriginal->volumen_restante < 0) {
                         return response()->json([
                             'success' => false,
                             'message' => 'El volumen del lote original no puede ser negativo.'
@@ -462,15 +462,45 @@ class LotesGranelController extends Controller
                 'folio_fq_ajuste' => 'nullable|string|max:50',
                 'folio_fq' => 'nullable|string|max:50'
             ]);
-
             $lote = LotesGranel::findOrFail($id_lote_granel);
+
+            // Guardar el volumen original
+            $volumenOriginal = $lote->volumen;
+            $volumenRestanteOriginal = $lote->volumen_restante;
+
+            // Calcular la diferencia de volumen
+            $diferencia = $validated['volumen'] - $volumenOriginal; // Calcula la diferencia
+
+            // Si el lote fue creado a partir de otro lote
+            if ($lote->lote_original_id) {
+                // Obtener el JSON de lotes originales
+                $loteOriginales = json_decode($lote->lote_original_id, true);
+                // Restablecer los volúmenes previamente descontados de los lotes originales
+                foreach ($loteOriginales['lotes'] as $index => $loteId) {
+                    $volumenParcial = $loteOriginales['volumenes'][$index]; // Volumen parcial que se había quitado
+
+                    $loteOriginal = LotesGranel::find($loteId); // Buscar el lote original
+                    if ($loteOriginal) {
+                        // Devolver el volumen previamente restado del lote original
+                        $loteOriginal->volumen_restante += $volumenParcial;
+
+                        // Log para verificar
+                        Log::info('Volumen Restante Original Antes:', [
+                            'id_lote' => $loteOriginal->id_lote_granel,
+                            'volumen_restante' => $loteOriginal->volumen_restante,
+                        ]);
+
+                        // Guardar el lote original actualizado
+                        $loteOriginal->save();
+                    }
+                }
+            }
 
             // Actualizar lote
             $lote->update([
                 'id_empresa' => $validated['id_empresa'],
                 'nombre_lote' => $validated['nombre_lote'],
                 'tipo_lote' => $validated['tipo_lote'],
-                'volumen' => $validated['volumen'],
                 'cont_alc' => $validated['cont_alc'],
                 'id_categoria' => $validated['id_categoria'],
                 'id_clase' => $validated['id_clase'],
@@ -538,7 +568,42 @@ class LotesGranelController extends Controller
                 $lote->folio_fq = substr($folio_fq_Completo, 0, 50); // Limitar a 50 caracteres
             }
 
-            $lote->save();
+       // Ajuste de volúmenes en lotes originales
+       if ($lote->lote_original_id) {
+        foreach ($loteOriginales['lotes'] as $index => $loteId) {
+            $volumenParcial = $loteOriginales['volumenes'][$index]; // Volumen parcial del lote original
+            $loteOriginal = LotesGranel::find($loteId);
+
+            if ($loteOriginal) {
+                // Si se disminuye el volumen del derivado
+                if ($diferencia < 0) {
+                    $loteOriginal->volumen_restante += abs($diferencia); // Aumenta el volumen restante
+                } else {
+                    $loteOriginal->volumen_restante -= $diferencia; // Disminuye según el nuevo volumen
+                }
+
+                // Validar que no sea negativo
+                if ($loteOriginal->volumen_restante < 0) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'El volumen restante del lote original no puede ser negativo.'
+                    ], 400);
+                }
+
+                // Guardar el lote original actualizado
+                $loteOriginal->save();
+                Log::info('Lote Original Actualizado:', [
+                    'id_lote_original' => $loteId,
+                    'nuevo_volumen_restante' => $loteOriginal->volumen_restante
+                ]);
+            }
+        }
+    }
+
+    // Actualizar el volumen del lote derivado
+    $lote->volumen = $validated['volumen'];
+    $lote->volumen_restante = $validated['volumen']; // Asegúrate que este valor sea correcto
+    $lote->save();
 
             // Almacenar las guías en la tabla intermedia usando el modelo LotesGranelGuia
             LotesGranelGuia::where('id_lote_granel', $id_lote_granel)->delete();

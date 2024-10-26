@@ -13,6 +13,8 @@ use App\Models\solicitud_informacion;
 use App\Models\estados;
 use App\Models\normas_catalo;
 use App\Models\User;
+use App\Models\catalogo_actividad_cliente;
+use App\Models\empresa_actividad;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +31,8 @@ class clientesConfirmadosController extends Controller
         $usuarios = User::where("tipo",1)->get();
         $estados = estados::all(); // Obtener todos los estados
         $normas = normas_catalo::where('id_norma', '!=', 3)->get();
+        $actividadesClientes = catalogo_actividad_cliente::all();
+
         // $userCount = $empresas->count();
         $verified = 5;
         $notVerified = 10;
@@ -44,6 +48,7 @@ class clientesConfirmadosController extends Controller
             'usuarios' => $usuarios,
             'estados' => $estados,
             'normas' => $normas,
+            'actividadesClientes' => $actividadesClientes,
 
         ]);
     }
@@ -119,9 +124,9 @@ public function editarCliente($id)
     public function pdfCartaAsignacion($id)
     {
         $res = DB::select('SELECT ac.actividad, nc.numero_cliente, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
-       e.estado 
-      FROM empresa e 
-      JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
+       e.estado
+      FROM empresa e
+      JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
       JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
       JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
       JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
@@ -135,9 +140,9 @@ public function editarCliente($id)
     public function pdfCartaAsignacion052($id)
     {
         $res = DB::select('SELECT ac.actividad, nc.numero_cliente, s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
-       e.estado 
-      FROM empresa e 
-      JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
+       e.estado
+      FROM empresa e
+      JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
       JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
       JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
       JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
@@ -152,8 +157,8 @@ public function editarCliente($id)
     {
         $res = DB::select('SELECT c.fecha_vigencia, e.domicilio_fiscal, e.rfc, c.nombre_notario, c.estado_notario, c.fecha_cedula, c.idcif, c.clave_ine, c.sociedad_mercantil, c.num_instrumento, c.vol_instrumento, c.fecha_instrumento, c.num_notario, c.num_permiso,  s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
       e.estado
-      FROM empresa e 
-      JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
+      FROM empresa e
+      JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
       JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
       JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
       JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
@@ -167,14 +172,14 @@ public function editarCliente($id)
     {
         $res = DB::select('SELECT c.fecha_vigencia, e.domicilio_fiscal, e.rfc, c.nombre_notario, c.estado_notario, c.fecha_cedula, c.idcif, c.clave_ine, c.sociedad_mercantil, c.num_instrumento, c.vol_instrumento, c.fecha_instrumento, c.num_notario, c.num_permiso,  s.medios, s.competencia, s.capacidad, s.comentarios, e.representante, e.razon_social, fecha_registro, info_procesos, s.fecha_registro, e.correo, e.telefono, p.id_producto, n.id_norma, a.id_actividad,
         e.estado
-        FROM empresa e 
-        JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa) 
+        FROM empresa e
+        JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
         JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
         JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
         JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
         JOIN empresa_contrato c ON (c.id_empresa = e.id_empresa)
         WHERE e.id_empresa=' . $id);
-        
+
         $fecha_cedula = Helpers::formatearFecha($res[0]->fecha_cedula);
         $fecha_vigencia = Helpers::formatearFecha($res[0]->fecha_vigencia);
       $pdf = Pdf::loadView('pdfs.prestacion_servicios_vigente', ['datos' => $res,'fecha_cedula'=>$fecha_cedula,'fecha_vigencia'=>$fecha_vigencia]);
@@ -294,31 +299,31 @@ public function editarCliente($id)
 
 
 
-    
+
     public function obtenerContratosPorEmpresa($id_empresa)
     {
         // Intenta obtener los contratos relacionados con la empresa
         try {
             $contratos = EmpresaContrato::where('id_empresa', $id_empresa)->get();
-    
+
             // Verifica si se encontraron contratos
             if ($contratos->isEmpty()) {
                 return response()->json(['error' => 'No se encontraron contratos para esta empresa.'], 404);
             }
-    
+
             // Retornar los contratos como respuesta JSON
             return response()->json($contratos);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener los contratos: ' . $e->getMessage()], 500);
         }
     }
-    
+
     public function obtenerNumeroCliente($id_empresa)
 {
     try {
         // Suponiendo que tienes un modelo EmpresaNumCliente
         $numero_cliente = EmpresaNumCliente::where('id_empresa', $id_empresa)->first();
-        
+
         // Verifica si se encontró el número de cliente
         if (!$numero_cliente) {
             return response()->json(['error' => 'No se encontró el número de cliente para esta empresa.'], 404);
@@ -335,7 +340,7 @@ public function editarCliente($id)
 public function actualizarRegistros(Request $request)
 {
     $request->validate([
-        'id_empresa' => 'required|exists:empresa,id_empresa', 
+        'id_empresa' => 'required|exists:empresa,id_empresa',
         'fecha_cedula' => 'required|date',
         'idcif' => 'required|string|max:255',
         'clave_ine' => 'required|string|max:255',
@@ -347,7 +352,7 @@ public function actualizarRegistros(Request $request)
         'num_notario' => 'required|string|max:255',
         'estado_notario' => 'required|string|max:255',
         'num_permiso' => 'required|string|max:255',
-        'numero_cliente' => 'required|string|max:255', 
+        'numero_cliente' => 'required|string|max:255',
     ]);
 
     try {
@@ -390,7 +395,7 @@ public function actualizarRegistros(Request $request)
           'razon_social' => 'required|string|max:255',
           'regimen' => 'required|string',
           'domicilio_fiscal' => 'required|string|max:255',
-          'representante' => 'required|string|max:255',
+          'representante' => 'nullable|string|max:255',
           'estado' => 'required|exists:estados,id',
           'rfc' => 'required|string|max:13',
           'correo' => 'required|email|max:255',
@@ -399,13 +404,17 @@ public function actualizarRegistros(Request $request)
           'normas' => 'required|array',
           'numeros_clientes' => 'required|array', // Asegúrate de que sea un array
         ]);
-        
+
         // Crear una nueva instancia del modelo Dictamen_Granel
         $cliente = new empresa();
         $cliente->razon_social = $validatedData['razon_social'];
         $cliente->regimen = $validatedData['regimen'];
         $cliente ->domicilio_fiscal = $validatedData['domicilio_fiscal'];
-        $cliente->representante = $validatedData['representante'];
+        /* solamente es prueba  */
+        $cliente->representante = isset($validatedData['representante']) && !empty($validatedData['representante'])
+        ? $validatedData['representante']
+        : 'No aplica';
+        /*  */
         $cliente->estado = $validatedData['estado'];
         $cliente->rfc = $validatedData['rfc'];
         $cliente->correo = $validatedData['correo'];
@@ -427,22 +436,29 @@ public function actualizarRegistros(Request $request)
         $empresaNumCliente->numero_cliente = null; // Número de cliente genérico o fijo para esta norma
         $empresaNumCliente->id_norma = 3;
         $empresaNumCliente->save();
-    
+
         // 2. Registrar el resto de normas, omitiendo la norma con id_norma = 3
         foreach ($validatedData['normas'] as $index => $id_norma) {
             if ($id_norma != 3 && isset($validatedData['numeros_clientes'][$index])) {
                 $numero_cliente = $validatedData['numeros_clientes'][$index];
-    
+
                 // Crear una nueva instancia del modelo empresaNumCliente para cada norma
                 $empresaNumCliente = new empresaNumCliente();
                 $empresaNumCliente->id_empresa = $id_empresa;
                 $empresaNumCliente->numero_cliente = $numero_cliente;
                 $empresaNumCliente->id_norma = $id_norma;
-    
+
                 $empresaNumCliente->save();
             }
         }
-        
+          // Registrar las actividades seleccionadas utilizando Eloquent
+          foreach ($request->actividad as $id_actividad) {
+            empresa_actividad::create([
+                'id_empresa' => $cliente->id_empresa,
+                'id_actividad' => $id_actividad,
+            ]);
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'Cliente registrado exitosamente',

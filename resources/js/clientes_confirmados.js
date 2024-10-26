@@ -157,6 +157,8 @@ $(function () {
           // PDF
           targets: 6,
           className: 'text-center',
+          searchable: false,
+          orderable: false,
           render: function (data, type, full, meta) {
             var $id = full['id_empresa'];
             return `<i id="pdf2" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-regimen="${full['regimen']}" data-id="${full['id_empresa']}" data-registro="${full['razon_social']} "></i>`;
@@ -654,12 +656,12 @@ $(function () {
       }
     });
   });
-  /* 
-  
-  
+  /*
+
+
     // validating form and updating user's data
     const addNewCliente = document.getElementById('addNewCliente');
-  
+
     // Validación del formulario de aceptar cliente
     const fv2 = FormValidation.formValidation(addNewCliente, {
       fields: {
@@ -707,7 +709,7 @@ $(function () {
         success: function (status) {
           dt_user.draw();
           offCanvasForm.offcanvas('hide');
-  
+
           // sweetalert
           Swal.fire({
             icon: 'success',
@@ -719,7 +721,7 @@ $(function () {
           });
         },
         error: function (err) {
-  
+
           offCanvasForm.offcanvas('hide');
           Swal.fire({
             title: 'Duplicate Entry!',
@@ -826,7 +828,6 @@ $(function () {
   });
 
 
-  /* agregar un nuevo dictamen */
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -843,35 +844,28 @@ $(function () {
           validators: {
             notEmpty: {
               message: 'Por favor ingrese el nombre del cliente/empresa'
-            },
+            }
           }
         },
         regimen: {
           validators: {
             notEmpty: {
               message: 'Por favor ingrese el régimen'
-            },
+            }
           }
         },
         domicilio_fiscal: {
           validators: {
             notEmpty: {
               message: 'Por favor ingrese el domicilio fiscal'
-            },
+            }
           }
         },
         estado: {
           validators: {
             notEmpty: {
               message: 'Por favor seleccione un estado'
-            },
-          }
-        },
-        representante: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el representante'
-            },
+            }
           }
         },
         rfc: {
@@ -882,7 +876,7 @@ $(function () {
             stringLength: {
               max: 13,
               message: 'El RFC no puede tener más de 13 caracteres'
-            },
+            }
           }
         },
         correo: {
@@ -893,25 +887,29 @@ $(function () {
             emailAddress: {
               message: 'Por favor ingrese un correo electrónico válido'
             },
+            regexp: {
+              // Expresión regular para validar correos electrónicos
+              regexp: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+              message: 'Por favor ingrese un correo electrónico en un formato válido'
+            }
           }
         },
         telefono: {
           validators: {
-              notEmpty: {
-                  message: 'Por favor ingrese el número de teléfono'
-              },
-              stringLength: {
-                  min: 10,
-                  max: 15,
-                  message: 'El teléfono debe tener entre 10 y 15 caracteres (incluidos espacios y otros caracteres)'
-              },
-              regexp: {
-                  // Aceptar dígitos, espacios, guiones y paréntesis
-                  regexp: /^[0-9\s\-\(\)]+$/,
-                  message: 'El teléfono debe contener solo números, espacios, guiones y paréntesis'
-              }
+            notEmpty: {
+              message: 'Por favor ingrese el número de teléfono'
+            },
+            stringLength: {
+              min: 10,
+              max: 15,
+              message: 'El teléfono debe tener entre 10 y 15 caracteres (incluidos espacios y otros caracteres)'
+            },
+            regexp: {
+              regexp: /^[0-9\s\-\(\)]+$/,
+              message: 'El teléfono debe contener solo números, espacios, guiones y paréntesis'
+            }
           }
-      },      
+        },
         id_contacto: {
           validators: {
             notEmpty: {
@@ -919,10 +917,25 @@ $(function () {
             }
           }
         },
-       'normas[]': {
+        'normas[]': {
           validators: {
             notEmpty: {
               message: 'Por favor seleccione una norma'
+            }
+          }
+        },
+        'actividad[]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una actividad'
+            }
+          }
+        },
+        // Validación condicional del campo representante
+        representante: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el nombre del representante'
             }
           }
         }
@@ -935,10 +948,59 @@ $(function () {
           rowSelector: '.form-floating'
         }),
         submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
+        //desactivar el autopfocus si causa problemas
+      /*   autoFocus: new FormValidation.plugins.AutoFocus() */
       }
+    });
+    // Revalidar campos dinámicos de normas cuando se cambien
+    $('#normas').on('change', function () {
+      setTimeout(function () {
+        $('input[name="numeros_clientes[]"]').each(function () {
+            // Verificar si el campo existe en el DOM antes de añadir validación
+            if ($(this).length > 0) {
+                fv.addField($(this).attr('name'), {
+                    validators: {
+                        notEmpty: {
+                            message: 'Por favor ingrese el número de cliente'
+                        }
+                    }
+                });
+            }
+        });
+    }, 500); // Aumenta el tiempo de espera
+    });
 
-    }).on('core.form.valid', function () {
+
+    // Escuchar el cambio en el campo #regimen
+    $('#regimen').on('change', function () {
+      var tipoPersona = $(this).val();
+
+      if (tipoPersona === 'Persona moral') {
+        // Mostrar el campo de Representante
+        $('#MostrarRepresentante').removeClass('d-none');
+
+        // Cambiar el tamaño de la columna EstadosClass de col-md-12 a col-md-6
+        $('#EstadosClass').removeClass('col-md-12').addClass('col-md-6');
+
+        // Habilitar validación para el campo "representante"
+        fv.enableValidator('representante');
+      } else {
+        // Ocultar el campo de Representante
+        $('#MostrarRepresentante').addClass('d-none');
+
+        // Restaurar el tamaño de la columna EstadosClass a col-md-12
+        $('#EstadosClass').removeClass('col-md-6').addClass('col-md-12');
+
+        // Deshabilitar la validación del campo "representante"
+        fv.disableValidator('representante');
+      }
+    });
+
+    // Inicializar el comportamiento por defecto para el campo "representante"
+    $('#regimen').trigger('change');
+
+    // Manejo de la validación y el envío del formulario
+    fv.on('core.form.valid', function () {
       var formData = new FormData(form);
       $.ajax({
         url: '/registrar-clientes',
@@ -977,14 +1039,12 @@ $(function () {
         }
       });
     });
-    // Inicializar select2
-    $('#estado, #normas').on('change', function () {
-      // Revalidar el campo cuando se cambia el valor del select2
+
+    // Inicializar select2 y revalidar campos dinámicos
+    $('#estado, #normas, #actividad').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
-
   });
-
 
 
 
