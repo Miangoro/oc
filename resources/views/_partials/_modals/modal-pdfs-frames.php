@@ -57,7 +57,7 @@
 <div class="modal fade" id="mostrarPdfGUias" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-simple">
     <div class="modal-content">
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <button type="button" class="btn-close" id="btnX" data-bs-dismiss="modal" aria-label="Close"></button>
       <div class="modal-body p-0 d-flex flex-column justify-content-center align-items-center">
         <div class="text-center mb-6">
           <h4 id="titulo_modal_GUIAS" class="address-title mb-2"></h4>
@@ -89,6 +89,31 @@
   </div>
 </div>
 
+
+<script>
+  //funcion para reditrigir a otra vista
+document.addEventListener("DOMContentLoaded", function() {
+  // Selecciona los botones por su id
+  const closeModalButtons = [document.getElementById("btnX")];
+
+  closeModalButtons.forEach(button => {
+    button.addEventListener("click", function(event) {
+      // Encuentra el modal padre del botón de cierre
+      const modalElement = button.closest('.modal');
+      
+      // Asegúrate de que no sea el modal #verGuiasRegistardas
+      if (modalElement && modalElement.id !== "verGuiasRegistardas") {
+        // Espera a que el modal actual se cierre antes de abrir el nuevo modal
+        setTimeout(() => {
+          // Abre el modal de guías registradas
+          const verGuiasRegistardasModal = new bootstrap.Modal(document.getElementById("verGuiasRegistardas"));
+          verGuiasRegistardasModal.show();
+        }, 300); // Ajusta el tiempo para asegurar que el modal anterior se cierre completamente
+      }
+    });
+  });
+});
+</script>
 
 
 
