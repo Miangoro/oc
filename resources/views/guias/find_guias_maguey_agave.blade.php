@@ -60,11 +60,11 @@
           <th>Folio</th>
           <th>Run Folio</th>
           <th>Predio</th>
+          <th>Cantidad guias</th>
           <th>Plantas actuales</th>
           <th>No. anterior</th>
           <th>Comercializadas</th>
           <th>No. mermas</th>
-          <th>Guia</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -78,6 +78,8 @@
 @include('_partials/_modals/modal-pdfs-frames')
 @include('_partials/_modals/modal-add-guias-agave')
 @include('_partials/_modals/modal-edit-guias-agave')
+@include('_partials/_modals/modal-ver-guias-registardas')
+
 
 
 

@@ -169,7 +169,7 @@ $(function () {
               '<i class="ri-eye-fill ri-20px text-info"></i> Revisar' +
               '</a>' +
               // Botón para Aprobación
-              `<a data-id="${full['id_revision']}" data-bs-toggle="modal" data-bs-target="#modalAprobacion" class="dropdown-item Aprobacion-record waves-effect text-success">` +
+              `<a data-id='${full['id_revision']}' data-num-certificado="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAprobacion" class="dropdown-item Aprobacion-record waves-effect text-success">` +
               '<i class="ri-checkbox-circle-line text-success"></i> Aprobación' +
               '</a>' +
               '</div>' +
@@ -381,6 +381,22 @@ $(function () {
 
   // FUNCIONES DEL FUNCIONAMIENTO DEL CRUD
 
+  // Inicializacion Elementos
+  function initializeSelect2($elements) {
+      $elements.each(function () {
+          var $this = $(this);
+          $this.wrap('<div class="position-relative"></div>').select2({
+              dropdownParent: $this.parent(),
+          });
+      });
+  }
+
+  $('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true,
+});
+
 // Registrar Respuesta y mostrar PDF correspondiente
 let id_revision;
 $(document).on('click', '.cuest', function () {
@@ -418,11 +434,12 @@ $(document).on('click', '.cuest', function () {
       }
   });
 
-  cargarRespuestas(id_revision); // Cargar las respuestas para el ID de revisión
+  cargarRespuestas(id_revision); 
 });
 
-
+// Registrar Respuestas
 $(document).on('click', '#registrarRevision', function () {
+  // Verificar si id_revision está definido
   if (typeof id_revision === 'undefined') {
       Swal.fire({
           icon: 'error',
@@ -435,54 +452,40 @@ $(document).on('click', '#registrarRevision', function () {
       return;
   }
 
-  const respuestas = {};
-  const observaciones = {};
-  const rows = $('#fullscreenModal .table-container table tbody tr');
+  const respuestas = document.querySelectorAll('select[name^="respuesta"]');
+  let valid = true; 
+  const respuestasObj = {};
   let todasLasRespuestasSonC = true;
-  let todasLasRespuestasContestas = true; // Variable para validar que todas las respuestas se han contestado
 
-  rows.each(function (index) {
-      let respuesta = $(this).find('select').val();
-      const observacion = $(this).find('textarea').val();
-
-      // Verificar si la respuesta está vacía
-      if (!respuesta) {
-          todasLasRespuestasContestas = false; // Hay al menos una respuesta no contestada
-          return false; // Salir del ciclo each
+  // Validación de respuestas
+  respuestas.forEach((respuesta, index) => {
+      if (respuesta.value === '') {
+          valid = false;
+          respuesta.classList.add('is-invalid'); 
+      } else {
+          respuesta.classList.remove('is-invalid');
       }
 
-      // Convertir las respuestas a los valores correspondientes
-      if (respuesta === '1') {
-          respuesta = 'C';
-      } else if (respuesta === '2') {
-          respuesta = 'NC';
+      let respuestaValue = respuesta.value;
+      if (respuestaValue === '1') {
+          respuestaValue = 'C';
+      } else if (respuestaValue === '2') {
+          respuestaValue = 'NC';
           todasLasRespuestasSonC = false; 
-      } else if (respuesta === '3') {
-          respuesta = 'NA';
+      } else if (respuestaValue === '3') {
+          respuestaValue = 'NA';
           todasLasRespuestasSonC = false; 
       } else {
-          respuesta = null;
-          todasLasRespuestasSonC = false; // Si no hay respuesta, no se considera C
+          respuestaValue = null;
+          todasLasRespuestasSonC = false; 
       }
-
-      respuestas[`pregunta${index + 1}`] = respuesta;
-      observaciones[`pregunta${index + 1}`] = observacion || null;
+      respuestasObj[`pregunta${index + 1}`] = respuestaValue;
   });
 
-  // Validar si todas las respuestas han sido contestadas
-  if (!todasLasRespuestasContestas) {
-      Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Por favor, contesta todas las preguntas antes de enviar.',
-          customClass: {
-              confirmButton: 'btn btn-danger'
-          }
-      });
-      return; // Salir de la función si hay respuestas no contestadas
+  // NOTA: ¡Para que NO REGISTRE cuando aun hay validacion Activas!
+  if (!valid) {
+      return;
   }
-
-  // Determinar la decisión automáticamente
   const desicion = todasLasRespuestasSonC ? 'positiva' : 'negativa';
 
   $.ajax({
@@ -494,8 +497,8 @@ $(document).on('click', '#registrarRevision', function () {
       },
       data: JSON.stringify({
           id_revision: id_revision,
-          respuestas: respuestas,
-          observaciones: observaciones,
+          respuestas: respuestasObj,
+          observaciones: {},
           desicion: desicion 
       }),
       success: function (response) {
@@ -521,6 +524,20 @@ $(document).on('click', '#registrarRevision', function () {
               }
           });
       }
+  });
+});
+
+// Quitar Validacion al llenar Select
+$(document).on('change', 'select[name^="respuesta"], textarea[name^="observaciones"], select[name^="tipo"]', function () {
+  $(this).removeClass('is-invalid'); 
+});
+
+// Limpiar Validacion al cerrar Modal
+$(document).on('hidden.bs.modal', '#fullscreenModal', function () {
+  const respuestas = document.querySelectorAll('select[name^="respuesta"]');
+  respuestas.forEach((respuesta) => {
+      respuesta.classList.remove('is-invalid'); 
+      respuesta.value = ''; 
   });
 });
 
@@ -562,7 +579,6 @@ function cargarRespuestas(id_revision) {
   });
 }
 
-
 //Abrir PDF Bitacora
   $(document).on('click', '.pdf', function () {
     var id_revisor = $(this).data('id');
@@ -592,11 +608,87 @@ function cargarRespuestas(id_revision) {
   });
 
 
+//Abrir modal Aprobacion
   $(document).on('click', '.Aprobacion-record', function() {
     const idRevision = $(this).data('id');
-    // Puedes usar idRevision para realizar acciones adicionales
     $('#modalAprobacion').modal('show');
+    const select2Elements = $('#id_firmante'); 
+    initializeSelect2(select2Elements);
+    $('#btnRegistrar').data('id-revisor', idRevision);
+    console.log('Id Revision ' + idRevision);
+
+    const certificado = $(this).data('num-certificado');
+    console.log('Certificado ' + certificado);
+    $('#numero-certificado').text(certificado);
 });
 
-  //end
+// Registrar Aprobacion
+$('#formAprobacion').on('submit', function(event) {
+    event.preventDefault();
+
+    var idRevisor = $('#btnRegistrar').data('id-revisor'); 
+    var aprobacion = $('#respuesta-aprobacion').val(); 
+    var fechaAprobacion = $('#fecha-aprobacion').val(); 
+    var idAprobador = $('#id_firmante').val(); 
+
+    $.ajax({
+        url: '/registrar-aprobacion', 
+        type: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            id_revisor: idRevisor,
+            aprobacion: aprobacion,
+            fecha_aprobacion: fechaAprobacion,
+            id_aprobador: idAprobador 
+        },
+        success: function(response) {
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Aprobación registrada exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+            $('#modalAprobacion').modal('hide');
+        },
+        error: function(xhr) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: xhr.responseJSON.message
+            });
+        }
+    });
+});
+
+$(document).on('click', '.Aprobacion-record', function() {
+  const idRevision = $(this).data('id');
+
+  $.ajax({
+      url: `/aprobacion/${idRevision}`,
+      method: 'GET',
+      success: function(data) {
+          $('#id_firmante').val(data.revisor.id_aprobador || '').trigger('change');
+          $('#respuesta-aprobacion').val(data.revisor.aprobacion || '').prop('selected', true);
+          if (data.revisor.fecha_aprobacion && data.revisor.fecha_aprobacion !== '0000-00-00') {
+            $('#fecha-aprobacion').val(data.revisor.fecha_aprobacion);
+          } else {
+            $('#fecha-aprobacion').val(''); 
+          }          
+            $('#modalAprobacion').modal('show');
+      },
+      error: function(xhr) {
+          console.error(xhr.responseJSON.message);
+          alert('Error al cargar los datos de la aprobación.');
+      }
+  });
+});
+
+$('#modalAprobacion').on('hidden.bs.modal', function () {
+  $('#id_firmante, #respuesta-aprobacion, #fecha-aprobacion').val('');
+  $('#respuesta-aprobacion').prop('selected', true);
+});
+
+//end
 });

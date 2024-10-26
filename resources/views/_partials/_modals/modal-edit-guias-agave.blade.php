@@ -2,7 +2,7 @@
 <div class="modal fade" id="editGuias" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button id="btnCloseModal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Llenar Guía de Traslado Agave/Maguey</h4>
@@ -189,8 +189,8 @@
                 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Actualizar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button id="btnCancelModal" type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+
                     </div>
                 </form>
             </div>
@@ -279,6 +279,30 @@
         // Asignar el valor calculado al input
         document.getElementById('edit_numero_plantas').value = plantasActualmente;
     }
-
     
+//funcion para reditrigir a otra vista
+document.addEventListener("DOMContentLoaded", function() {
+  // Selecciona los botones por su id
+  const closeModalButtons = [document.getElementById("btnCloseModal"), document.getElementById("btnCancelModal")];
+
+  closeModalButtons.forEach(button => {
+    button.addEventListener("click", function(event) {
+      // Encuentra el modal padre del botón de cierre
+      const modalElement = button.closest('.modal');
+      
+      // Asegúrate de que no sea el modal #verGuiasRegistardas
+      if (modalElement && modalElement.id !== "verGuiasRegistardas") {
+        // Espera a que el modal actual se cierre antes de abrir el nuevo modal
+        setTimeout(() => {
+          // Abre el modal de guías registradas
+          const verGuiasRegistardasModal = new bootstrap.Modal(document.getElementById("verGuiasRegistardas"));
+          verGuiasRegistardasModal.show();
+        }, 300); // Ajusta el tiempo para asegurar que el modal anterior se cierre completamente
+      }
+    });
+  });
+});
+
+
+
 </script>

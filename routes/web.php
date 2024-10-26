@@ -197,6 +197,7 @@ use App\Http\Controllers\solicitudes\solicitudesController;
 use App\Http\Controllers\TrazabilidadController;
 use App\Http\Controllers\pdf_llenado\PdfController;
 use App\Http\Controllers\revision\RevisionPersonalController;
+use App\Http\Controllers\revision\catalogo_personal_seleccion_preguntas_controller;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -624,6 +625,8 @@ Route::post('/guias/store', [GuiasController::class, 'store']);
 Route::get('/guia_de_translado/{id_guia}', [GuiasController::class, 'guiasTranslado'])->name('Guias_Translado');
 Route::get('/edit/{id_guia}', [GuiasController::class, 'edit'])->name('guias.edit');
 Route::post('/update', [GuiasController::class, 'update'])->name('guias.update');
+Route::get('/editGuias/{run_folio}', [GuiasController::class, 'editGuias']);
+
 //Route::get('/guias/getPlantaciones/{id_predio}', [GuiasController::class, 'getPlantacionesByPredio']);
 
 /*-------------------Dictamenes de instalaciones-------------------*/
@@ -810,3 +813,5 @@ Route::post('/revisor/registrar-respuestas', [RevisionPersonalController::class,
 Route::get('/revisor/obtener-respuestas/{id_revision}', [RevisionPersonalController::class, 'obtenerRespuestas']);
 Route::get('/get-certificado-url/{id_revision}/{tipo}', [RevisionPersonalController::class, 'getCertificadoUrl']);
 Route::get('/bitacora_revicionPersonalOCCIDAM/{id}', [RevisionPersonalController::class, 'bitacora_revicionPersonalOCCIDAM']);
+Route::post('/registrar-aprobacion', [RevisionPersonalController::class, 'registrarAprobacion'])->name('registrar.aprobacion');
+Route::get('/aprobacion/{id}', [RevisionPersonalController::class, 'cargarAprobacion']);

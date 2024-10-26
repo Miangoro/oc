@@ -59,10 +59,27 @@ function obtenerIcono(id_tipo) {
                 contentContainer.innerHTML = ''; 
 
                 var solicitudesMap = {
-                    1: "#addSolicitudMuestreoAgave",
+
+/*                     1: "#addSolicitudMuestreoAgave",
                     10: "#addSolicitudGeoreferenciacion",
                     14: "#addSolicitudDictamen",    
-                    3: "#addSolicitudOtroTipo",         
+                    3: "#addSolicitudOtroTipo",    */     
+                    
+                    1: "#addSolicitudMuestreoAgave",
+                    2: "#addVigilanciaProduccion",         
+                    3: "#addMuestreoLoteAgranel",         
+                    4: "#addVigilanciaTraslado",         
+                    5: "#addInspeccionEnvasado",         
+                    6: "#addMuestreoLoteEnvasado",         
+                    7: "#addInspeccionIngresoBarricada",         
+                    8: "#addLiberacionProducto",   
+                    9: "#addInspeccionLiberacion",         
+                    10: "#addSolicitudGeoreferenciacion",
+                    11: "#addPedidoExportacion",    
+                    12: "#addEmisionCetificado",    
+                    13: "#addEmisionCetificadoVentaNacional",    
+                    14: "#addSolicitudDictamen",    
+                    15: "#addRenovacionDictamenInstalaciones", 
                   
                 };
 

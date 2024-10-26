@@ -46,7 +46,7 @@
                                             </thead>
                                             <tbody>
                                                 @php $contador = 1; @endphp
-                                                @foreach($preguntas as $pregunta)
+                                                @foreach($preguntas as $index => $pregunta)
                                                 <tr>
                                                     <td>{{ $contador++ }}</td>
                                                     <td>{{ $pregunta->pregunta }}</td>
@@ -80,12 +80,12 @@
                                                         <td>Sin datos</td>
                                                     @endif
                                                     <td>
-                                                        <select class="form-select form-select-sm" aria-label="Elige la respuesta">
+                                                        <select class="form-select form-select-sm" aria-label="Elige la respuesta" name="respuesta[{{ $index }}]">
                                                             <option value="" selected>Selecciona</option>
                                                             <option value="1">C</option>
                                                             <option value="2">NC</option>
                                                             <option value="3">NA</option>
-                                                        </select>                                                         
+                                                        </select>                                                          
                                                     </td>
                                                     <td>
                                                         <textarea rows="1" name="" id="" class="form-control" placeholder="Observaciones"></textarea>                               

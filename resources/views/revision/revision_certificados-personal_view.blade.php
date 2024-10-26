@@ -149,6 +149,5 @@
 
 @include('_partials/_modals/modal-cuest-certificados-personal')
 @include('_partials/_modals/modal-pdfs-certificados')
+@include('_partials/_modals/modal-aceptacion-revision-personal')
 @endsection
-
-

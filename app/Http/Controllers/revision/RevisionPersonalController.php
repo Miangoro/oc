@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Revisor;
 use App\Models\Certificados;
 use App\Models\empresa;
+use App\Models\User;
 use App\Models\empresaNumCliente;
 use App\Helpers\Helpers;
 use App\Models\preguntas_revision;
@@ -20,9 +21,9 @@ class RevisionPersonalController extends Controller
         $userId = auth()->id();   
         $certificadosData = $this->calcularCertificados($userId); // Estadisticas
         $revisor = Revisor::with('certificado')->where('id_revisor', $userId)->first(); // Autentificado
-    
+        $users = User::where('tipo', 1)->get(); // Select Aprobacion
         $preguntas = preguntas_revision::where('tipo_revisor', '1')->orWhere('tipo_certificado', '1')->get();
-        return view('revision.revision_certificados-personal_view', compact('revisor', 'preguntas', 'certificadosData'));
+        return view('revision.revision_certificados-personal_view', compact('revisor', 'preguntas', 'certificadosData', 'users'));
     }
     
     public function index(Request $request)
@@ -332,5 +333,50 @@ class RevisionPersonalController extends Controller
     ];  
     }
     
+
+    public function registrarAprobacion(Request $request)
+    {
+        $request->validate([
+            'id_revisor' => 'required|exists:certificados_revision,id_revision',
+            'id_aprobador' => 'required|exists:users,id',
+            'aprobacion' => 'required|string|in:aprobado,desaprobado', 
+            'fecha_aprobacion' => 'required|date', 
+        ]);
+    
+        try {
+            $revisor = Revisor::findOrFail($request->input('id_revisor'));
+            $revisor->aprobacion = $request->input('aprobacion'); 
+            $revisor->fecha_aprobacion = $request->input('fecha_aprobacion'); 
+            $revisor->id_aprobador = $request->input('id_aprobador'); 
+            $revisor->save();
+    
+            return response()->json([
+                'message' => 'Aprobación registrada exitosamente.',
+                'revisor' => $revisor
+            ], 200);
+    
+        } catch (\Exception $e) {
+            \Log::error('Error al registrar la aprobación', ['exception' => $e]); 
+            return response()->json([
+                'message' => 'Error al registrar la aprobación: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    
+    public function cargarAprobacion($id)
+    {
+    try {
+        $revisor = Revisor::findOrFail($id);
+
+        return response()->json([
+            'revisor' => $revisor
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Error al cargar la aprobación: ' . $e->getMessage(),
+        ], 500);
+    }
+    }
+
 //end
 }
