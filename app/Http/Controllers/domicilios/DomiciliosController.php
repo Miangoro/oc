@@ -6,9 +6,9 @@ use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Documentacion_url;
 use App\Models\Instalaciones;
-use App\Models\empresa;
-use App\Models\estados;
-use App\Models\organismos;
+use App\Models\Empresa;
+use App\Models\Estados;
+use App\Models\Organismos;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
@@ -19,9 +19,9 @@ class DomiciliosController extends Controller
     public function UserManagement()
     {
         $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
-        $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
-        $estados = estados::all(); // Obtener todos los estados
-        $organismos = organismos::all(); // Obtener todos los organismos
+        $empresas = Empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+        $estados = Estados::all(); // Obtener todos los estados
+        $organismos = Organismos::all(); // Obtener todos los organismos
         return view('domicilios.find_domicilio_instalaciones_view', compact('instalaciones', 'empresas', 'estados', 'organismos'));
     }
 
@@ -132,7 +132,6 @@ class DomiciliosController extends Controller
                 '<b>Número de certificado:</b>' . ($instalacion->folio ?? 'N/A') . '<br>'.
                 '<b>Fecha de emisión:</b>' . (Helpers::formatearFecha($instalacion->fecha_emision)) . '<br>'.
                 '<b>Fecha de vigencia:</b>' . (Helpers::formatearFecha($instalacion->fecha_vigencia)) . '<br>';
-
                 $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['url'] = !empty($instalacion->documentos->pluck('url')->toArray()) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first().'/'.implode(',', $instalacion->documentos->pluck('url')->toArray()) : '';
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);
@@ -166,33 +165,31 @@ class DomiciliosController extends Controller
 
     public function store(Request $request)
     {
-        // Validar datos de entrada
         $request->validate([
             'id_empresa' => 'required|exists:empresa,id_empresa',
             'tipo' => 'required|string',
             'estado' => 'required|exists:estados,id',
-            'responsable' => 'required|string',
             'direccion_completa' => 'required|string',
-            'folio' => 'nullable|string', // Opcional
-            'id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo', // Opcional
-            'fecha_emision' => 'nullable|date', // Opcional
-            'fecha_vigencia' => 'nullable|date', // Opcional
-
+            'folio' => 'nullable|string', 
+            'id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo', 
+            'fecha_emision' => 'nullable|date', 
+            'fecha_vigencia' => 'nullable|date', 
+            'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf', 
+            'nombre_documento.*' => 'required_with:url.*|string',
+            'id_documento.*' => 'required_with:url.*|integer', 
 
         ]);
 
         try {
-            // Crear nueva instalación
             Instalaciones::create([
                 'id_empresa' => $request->input('id_empresa'),
                 'tipo' => $request->input('tipo'),
                 'estado' => $request->input('estado'),
-                'responsable' => $request->input('responsable'),
                 'direccion_completa' => $request->input('direccion_completa'),
-                'folio' => $request->input('folio', null), // Opcional
-                'id_organismo' => $request->input('id_organismo', null), // Opcional
-                'fecha_emision' => $request->input('fecha_emision', null), // Opcional
-                'fecha_vigencia' => $request->input('fecha_vigencia', null), // Opcional
+                'folio' => $request->input('folio', null), 
+                'id_organismo' => $request->input('id_organismo', null), 
+                'fecha_emision' => $request->input('fecha_emision', null),
+                'fecha_vigencia' => $request->input('fecha_vigencia', null),
             ]);
 
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->input('id_empresa'))->first();
@@ -229,13 +226,8 @@ class DomiciliosController extends Controller
     public function edit($id_instalacion)
     {
         try {
-            // Obtener la instalación y sus documentos asociados
             $instalacion = Instalaciones::findOrFail($id_instalacion);
-
-            // Obtener los documentos asociados
             $documentacion_urls = Documentacion_url::where('id_relacion', $id_instalacion)->get();
-
-            // Extraer la URL del primer documento, si existe
             $archivo_url = $documentacion_urls->isNotEmpty() ? $documentacion_urls->first()->url : '';
 
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $instalacion->id_empresa)->first();
@@ -244,7 +236,7 @@ class DomiciliosController extends Controller
             return response()->json([
                 'success' => true,
                 'instalacion' => $instalacion,
-                'archivo_url' => $archivo_url, // Incluir la URL del archivo
+                'archivo_url' => $archivo_url, 
                 'numeroCliente' => $numeroCliente
             ]);
         } catch (ModelNotFoundException $e) {
@@ -252,10 +244,8 @@ class DomiciliosController extends Controller
         }
     }
 
-
     public function update(Request $request, $id)
     {
-        // Validar datos de entrada
         $request->validate([
             'id_empresa' => 'required|exists:empresa,id_empresa',
             'tipo' => 'required|string',
@@ -271,10 +261,8 @@ class DomiciliosController extends Controller
         ]);
 
         try {
-            // Buscar la instalación existente
             $instalacion = Instalaciones::findOrFail($id);
 
-            // Actualizar los datos de la instalación
             $instalacion->update([
                 'id_empresa' => $request->input('id_empresa'),
                 'tipo' => $request->input('tipo'),
@@ -289,7 +277,6 @@ class DomiciliosController extends Controller
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->input('id_empresa'))->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
-            // Eliminar archivos antiguos
             $documentacionUrls = Documentacion_url::where('id_relacion', $id)->get();
             foreach ($documentacionUrls as $documentacionUrl) {
                 $filePath = 'uploads/' . $numeroCliente . '/' . $documentacionUrl->url;
@@ -299,13 +286,11 @@ class DomiciliosController extends Controller
                 $documentacionUrl->delete();
             }
 
-            // Almacenar nuevos documentos solo si se envían
             if ($request->hasFile('url')) {
                 foreach ($request->file('url') as $index => $file) {
                     $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
                     $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
 
-                    // Crear nuevo registro de Documentacion_url
                     Documentacion_url::create([
                         'id_relacion' => $id,
                         'id_documento' => $request->id_documento[$index],
@@ -321,9 +306,5 @@ class DomiciliosController extends Controller
             return response()->json(['code' => 500, 'message' => 'Error al actualizar la instalación.']);
         }
     }
-
-
-
-
-    //end
+//end
 }
