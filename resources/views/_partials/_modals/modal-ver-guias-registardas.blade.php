@@ -34,6 +34,7 @@
                                 <tr>
                                   <th>folio</th>
                                   <th>Guia</th>
+                                  <th>Acciones</th>
 
 
                                 </tr>
