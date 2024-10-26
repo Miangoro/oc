@@ -27,6 +27,8 @@ $customizerHidden = 'customizer-hide';
     z-index: -2;
   }
 
+
+  /*Estilos para halloweens*/
   /* Murciélago */
   .bat {
     position: absolute;
@@ -187,7 +189,7 @@ $customizerHidden = 'customizer-hide';
 
 <script>
   let batCount = 0; // Contador de murciélagos en pantalla
-  const maxBats = 15; // Máximo número de murciélagos
+  const maxBats = 10; // Máximo número de murciélagos
   const maxWidth = 768; // Ancho máximo para considerar el diseño responsive
 
   // Función para verificar si la fecha actual está dentro del rango deseado
