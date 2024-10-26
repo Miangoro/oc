@@ -27,8 +27,6 @@ $customizerHidden = 'customizer-hide';
     z-index: -2;
   }
 
-
-  /*Estilos para halloweens*/
   /* Murciélago */
   .bat {
     position: absolute;
@@ -211,7 +209,7 @@ $customizerHidden = 'customizer-hide';
       ];
       bat.src = batImages[Math.floor(Math.random() * batImages.length)];
       bat.classList.add("bat");
-      bat.style.left = Math.random() * 100 + "vw";
+      bat.style.left = Math.random() * 90 + "vw";
       bat.style.width = Math.random() * 30 + 20 + "px"; // Tamaño entre 20px y 50px
       document.body.appendChild(bat);
       batCount++;
