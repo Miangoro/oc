@@ -26,8 +26,8 @@
     'resources/assets/vendor/libs/cleavejs/cleave.js',
     'resources/assets/vendor/libs/cleavejs/cleave-phone.js',
     'resources/assets/vendor/libs/sweetalert2/sweetalert2.js',
-        'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js',
-  'resources/assets/vendor/libs/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js'
+    'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js',
+    'resources/assets/vendor/libs/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js'
 ])
 @endsection
 
@@ -59,20 +59,22 @@
       const fileCertificado = divElement.querySelector('input[type="file"]');
 
       switch (tipoSelect.value) {
-        case 'productora':
+        case 'Productora':
           hiddenIdDocumento.value = '127';
           hiddenNombreDocumento.value = 'Certificado de instalaciones';
           fileCertificado.setAttribute('id', 'file-127');
           break;
-        case 'envasadora':
+        case 'Envasadora':
           hiddenIdDocumento.value = '128';
           hiddenNombreDocumento.value = 'Certificado de envasadora';
           fileCertificado.setAttribute('id', 'file-128');
           break;
-        case 'comercializadora':
-          hiddenIdDocumento.value = '129';
-          hiddenNombreDocumento.value = 'Certificado de comercializadora';
-          fileCertificado.setAttribute('id', 'file-129');
+        case 'Comercializadora':
+        case 'Almacén y bodega':
+        case 'Área de maduración':
+          hiddenIdDocumento.val('129');
+          hiddenNombreDocumento.val('Certificado de comercializadora');
+          fileCertificado.attr('id', 'file-129');
           break;
         default:
           hiddenIdDocumento.value = '';
@@ -174,8 +176,6 @@
         </table>
     </div>
 
-
-
 <!-- Modal para editar instalación -->
     <div class="modal fade" id="modalEditInstalacion" tabindex="-1" aria-labelledby="modalEditInstalacionLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -198,17 +198,23 @@
                             <label for="edit_id_empresa">Empresa</label>
                         </div>
 
+                <div class="row">
+                        <div class="col-md-6">
                         <!-- Select de Tipo de Instalación -->
                         <div class="form-floating form-floating-outline mb-3">
                             <select class="form-select" id="edit_tipo" name="tipo" aria-label="Tipo de Instalación" required>
                                 <option value="">Seleccione un tipo de instalación</option>
-                                <option value="productora">Productora</option>
-                                <option value="envasadora">Envasadora</option>
-                                <option value="comercializadora">Comercializadora</option>
+                                <option value="Productora">Productora</option>
+                                <option value="Envasadora">Envasadora</option>
+                                <option value="Comercializadora">Comercializadora</option>
+                                <option value="Almacén y bodega">Almacén y bodega</option>
+                                <option value="Área de maduración">Área de maduración</option>
                             </select>
                             <label for="edit_tipo">Tipo de Instalación</label>
                         </div>
+                    </div>
 
+                        <div class="col-md-6">
                         <!-- Input de Estado -->
                         <div class="form-floating form-floating-outline mb-3">
                             <select class="form-select" id="edit_estado" name="estado" data-placeholder="Seleccione un estado" aria-label="Estado" required>
@@ -219,6 +225,8 @@
                             </select>
                             <label for="edit_estado">Estado</label>
                         </div>
+                    </div>
+                </div>
 
                         <!-- Input de Dirección Completa -->
                         <div class="form-floating form-floating-outline mb-3">
@@ -266,13 +274,13 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="date" class="form-control datepicker" id="edit_fecha_emision" name="fecha_emision" aria-label="Fecha de Emisión" readonly>
+                                        <input type="date" class="form-control" id="edit_fecha_emision" name="fecha_emision" aria-label="Fecha de Emisión">
                                         <label for="edit_fecha_emision">Fecha de Emisión</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="date" class="form-control datepicker" id="edit_fecha_vigencia" name="fecha_vigencia" aria-label="Fecha de Vigencia" readonly>
+                                        <input type="date" class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia" aria-label="Fecha de Vigencia">
                                         <label for="edit_fecha_vigencia">Fecha de Vigencia</label>
                                     </div>
                                 </div>
@@ -288,11 +296,9 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal -->
-    @include('_partials._modals.modal-pdfs-frames')
-    @include('_partials._modals.modal-add-instalaciones')
-    <!-- /Modal -->
-
 </div>
+
+<!-- Modal -->
+@include('_partials._modals.modal-pdfs-frames')
+@include('_partials/_modals/modal-add-instalaciones')
 @endsection

@@ -50,12 +50,6 @@
                             </div>
                         </div>
 
-                        <!-- Input de responsable de instalaciones -->
-                        <div class="form-floating form-floating-outline mb-3">
-                            <input type="text" class="form-control" id="direccion" placeholder="Ingrese el responsable de la instalación" name="responsable" aria-label="Responsable de la instalación" required>
-                            <label for="direccion">Responsable de la instalación</label>
-                        </div>
-
                         <!-- Input de Dirección Completa -->
                         <div class="form-floating form-floating-outline mb-3">
                             <input type="text" class="form-control" id="direccion" placeholder="Ingrese la dirección completa" name="direccion_completa" aria-label="Dirección Completa" required>
@@ -73,7 +67,6 @@
                         </div>
 
                         <!-- Campos adicionales para "Certificado por otro organismo" -->
-                               <!-- Campos adicionales para "Certificado por otro organismo" -->
                                <div id="certificado-otros" class="d-none mt-4">
                                 <div class="col-md-12 mb-3">
                                     <div class="form-floating form-floating-outline">
