@@ -259,7 +259,7 @@ $customizerHidden = 'customizer-hide';
   function isChristmasSeason() {
   const today = new Date();
   const month = today.getMonth(); // Obtiene el mes actual (0 = enero, 10 = noviembre)
-  return month === 10; // Solo retorna true si el mes es noviembre (10)
+  return month === 11; // Solo retorna true si el mes es noviembre (10)
 }
 
 function createSnowflake() {
