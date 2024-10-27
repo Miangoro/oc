@@ -65,6 +65,32 @@ $customizerHidden = 'customizer-hide';
       max-width: 37px !important; /* No más de 20px */
     }
   }
+
+
+
+  /*navidad*/
+  /* Snowflakes style */
+.snowflake {
+  position: fixed;
+  top: -10px;
+  font-size: 1.5rem;
+  color: #ffffff;
+  opacity: 0.8;
+  animation: fall linear infinite;
+  z-index: -1;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
 </style>
 
 
@@ -226,6 +252,38 @@ $customizerHidden = 'customizer-hide';
     // Intervalo para crear murciélagos cada segundo
     setInterval(createBat, 1000);
   }
+
+
+
+  //vavidad
+  function isChristmasSeason() {
+  const today = new Date();
+  const month = today.getMonth(); // Obtiene el mes actual (0 = enero, 10 = noviembre)
+  return month === 10; // Solo retorna true si el mes es noviembre (10)
+}
+
+function createSnowflake() {
+  const snowflake = document.createElement("span");
+  snowflake.classList.add("snowflake");
+  snowflake.textContent = "❄"; // Puedes cambiar el símbolo del copo de nieve aquí
+  snowflake.style.left = Math.random() * 100 + "vw";
+  snowflake.style.animationDuration = Math.random() * 3 + 2 + "s"; // Duración de caída de 2 a 5 segundos
+  snowflake.style.fontSize = Math.random() * 10 + 10 + "px"; // Tamaño entre 10px y 20px
+
+  document.body.appendChild(snowflake);
+
+  snowflake.addEventListener("animationend", () => {
+    snowflake.remove();
+  });
+}
+
+// Activar el efecto de nieve solo en noviembre
+if (isChristmasSeason()) {
+  // Crear un copo de nieve cada 500 milisegundos
+  setInterval(createSnowflake, 500);
+}
+
+
 </script>
 
 
