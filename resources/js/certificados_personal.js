@@ -9,7 +9,7 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: '/personal-list',
+        url: '/revision-personal-list',
       },
       columns: [
         { data: 'fake_id' },          //1
