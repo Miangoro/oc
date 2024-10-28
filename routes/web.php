@@ -808,7 +808,7 @@ Route::post('/registrar-clientes', [ClientesConfirmadosController::class, 'regis
 
 //Revision Personal
 Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManagement'])->name('revision-personal');
-Route::resource('/personal-list', RevisionPersonalController::class);
+Route::resource('/revision-personal-list', RevisionPersonalController::class);
 Route::post('/revisor/registrar-respuestas', [RevisionPersonalController::class, 'registrarRespuestas'])->name('registrar.respuestas');
 Route::get('/revisor/obtener-respuestas/{id_revision}', [RevisionPersonalController::class, 'obtenerRespuestas']);
 Route::get('/get-certificado-url/{id_revision}/{tipo}', [RevisionPersonalController::class, 'getCertificadoUrl']);
@@ -816,4 +816,4 @@ Route::get('/bitacora_revicionPersonalOCCIDAM/{id}', [RevisionPersonalController
 Route::post('/registrar-aprobacion', [RevisionPersonalController::class, 'registrarAprobacion'])->name('registrar.aprobacion');
 Route::get('/aprobacion/{id}', [RevisionPersonalController::class, 'cargarAprobacion']);
 Route::get('/obtener/historial/{id_revision}', [RevisionPersonalController::class, 'cargarHistorial']);
-Route::get('/bitacora-dinamica/{id}', [RevisionPersonalController::class, 'bitacora_dinamica']);
+Route::get('/bitacora-historial/{id}', [RevisionPersonalController::class, 'bitacora_historial']);
