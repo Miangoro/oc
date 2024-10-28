@@ -168,18 +168,19 @@ $(function () {
               `data-bs-target="#fullscreenModal">` +
               '<i class="ri-eye-fill ri-20px text-info"></i> Revisar' +
               '</a>' +
-              // Botón para Historial
-              `<button class="btn-historial btn btn-info" data-id="${full['id_revision']}">` +
-              'Ver Historial' +
-              '</button>' +
               // Botón para Aprobación
               `<a data-id='${full['id_revision']}' data-num-certificado="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAprobacion" class="dropdown-item Aprobacion-record waves-effect text-success">` +
               '<i class="ri-checkbox-circle-line text-success"></i> Aprobación' +
               '</a>' +
+              // Botón para Historial
+              `<a data-id='${full['id_revision']}' class="dropdown-item waves-effect text-warning abrir-historial" ` +
+              `data-bs-toggle="modal" data-bs-target="#historialModal">` +
+              '<i class="ri-history-line text-warning"></i> Historial' +
+              '</a>' +
               '</div>' +
               '</div>'
-          );
-                    }
+              );
+         }
         }
       ],
       order: [[2, 'desc']],
@@ -715,53 +716,45 @@ $('#modalAprobacion').on('hidden.bs.modal', function () {
 function cargarHistorial(id_revision) {
   console.log('Cargando historial para ID de revisión:', id_revision); // Mostrar el ID en consola
 
-  $('#historialModal').on('show.bs.modal', function (event) {
-      // Llamada a la API para obtener el historial de respuestas
-      $.ajax({
-          url: '/obtener/historial/' + id_revision, // Ajusta la URL según tu API
-          method: 'GET',
-          success: function(data) {
-              console.log('Datos recibidos:', data); // Mostrar los datos recibidos en consola
+  // Llamada a la API para obtener el historial de respuestas
+  $.ajax({
+      url: '/obtener/historial/' + id_revision, // Ajusta la URL según tu API
+      method: 'GET',
+      success: function(data) {
+          console.log('Datos recibidos:', data); // Mostrar los datos recibidos en consola
 
-              if (data.respuestas.length === 0) {
-                  $('#historialRespuestasContainer').html('<p>No hay historial disponible.</p>');
-                  return;
-              }
-
-              var historialHTML = ''; // Variable para almacenar el HTML
-
-              // Iterar sobre cada revisión en `data.respuestas`
-              $.each(data.respuestas[0].respuestas, function(revisionKey, revisionData) {
-                  historialHTML += '<h6>' + revisionKey + '</h6>'; // Título para la revisión
-                  historialHTML += '<table class="table table-bordered"><thead><tr><th>Pregunta</th><th>Respuesta</th><th>Observación</th></tr></thead><tbody>';
-
-                  // Iterar sobre las preguntas y respuestas de la revisión
-                  $.each(revisionData, function(preguntaKey, respuesta) {
-                      var observacion = respuesta.observacion ? respuesta.observacion : 'Sin observación';
-                      historialHTML += '<tr><td>' + preguntaKey + '</td><td>' + respuesta.respuesta + '</td><td>' + observacion + '</td></tr>';
-                  });
-
-                  historialHTML += '</tbody></table>'; // Cierra la tabla
-              });
-
-              $('#historialRespuestasContainer').html(historialHTML); // Inserta el HTML generado en el contenedor
-          },
-          error: function(xhr) {
-              $('#historialRespuestasContainer').html('<p>Error al cargar el historial.</p>');
-              console.error('Error al cargar el historial:', xhr); // Mostrar error en consola
+          if (data.respuestas.length === 0) {
+              $('#historialRespuestasContainer').html('<p>No hay historial disponible.</p>');
+              return;
           }
-      });
+
+          var historialHTML = '<ul>'; // Variable para almacenar el HTML como lista
+
+          // Iterar sobre cada revisión en `data.respuestas`
+          $.each(data.respuestas[0].respuestas, function(revisionKey, revisionData) {
+              historialHTML += '<li>' + revisionKey + 
+                               ' <a href="/bitacora-dinamica/' + id_revision + 
+                               '" class="text-info">Ver Respuestas</a></li>';
+          });
+
+          historialHTML += '</ul>'; // Cierra la lista
+
+          $('#historialRespuestasContainer').html(historialHTML); // Inserta el HTML generado en el contenedor
+      },
+      error: function(xhr) {
+          $('#historialRespuestasContainer').html('<p>Error al cargar el historial.</p>');
+          console.error('Error al cargar el historial:', xhr); // Mostrar error en consola
+      }
   });
 }
 
-// Al hacer clic en el botón de historial
-$(document).on('click', '.btn-historial', function() {
-  var id_revision = $(this).data('id'); // Asegúrate de que el atributo data-id-revision esté en el botón
+// Al hacer clic en el enlace de historial
+$(document).on('click', '.abrir-historial', function() {
+  var id_revision = $(this).data('id'); // Obtener ID desde el atributo data-id
   console.log('ID de revisión clicado:', id_revision); // Mostrar el ID clicado en consola
-  cargarHistorial(id_revision);
+  cargarHistorial(id_revision); // Cargar el historial
   $('#historialModal').modal('show'); // Abre el modal
 });
-
 
 
 //end
