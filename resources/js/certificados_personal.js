@@ -437,93 +437,110 @@ $(document).on('click', '.cuest', function () {
   cargarRespuestas(id_revision); 
 });
 
-// Registrar Respuestas
 $(document).on('click', '#registrarRevision', function () {
-  // Verificar si id_revision está definido
   if (typeof id_revision === 'undefined') {
-      Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'El ID de revisión no está definido.',
-          customClass: {
-              confirmButton: 'btn btn-danger'
-          }
-      });
-      return;
+    Swal.fire({
+      icon: 'error',
+      title: '¡Error!',
+      text: 'El ID de revisión no está definido.',
+      customClass: {
+        confirmButton: 'btn btn-danger'
+      }
+    });
+    return;
   }
 
-  const respuestas = document.querySelectorAll('select[name^="respuesta"]');
-  let valid = true; 
-  const respuestasObj = {};
+  const respuestas = {};
+  const observaciones = {};
+  const rows = $('#fullscreenModal .table-container table tbody tr');
   let todasLasRespuestasSonC = true;
+  let valid = true;
 
-  // Validación de respuestas
-  respuestas.forEach((respuesta, index) => {
-      if (respuesta.value === '') {
-          valid = false;
-          respuesta.classList.add('is-invalid'); 
-      } else {
-          respuesta.classList.remove('is-invalid');
-      }
+  rows.each(function (index) {
+    let respuesta = $(this).find('select').val();
+    const observacion = $(this).find('textarea').val();
 
-      let respuestaValue = respuesta.value;
-      if (respuestaValue === '1') {
-          respuestaValue = 'C';
-      } else if (respuestaValue === '2') {
-          respuestaValue = 'NC';
-          todasLasRespuestasSonC = false; 
-      } else if (respuestaValue === '3') {
-          respuestaValue = 'NA';
-          todasLasRespuestasSonC = false; 
-      } else {
-          respuestaValue = null;
-          todasLasRespuestasSonC = false; 
-      }
-      respuestasObj[`pregunta${index + 1}`] = respuestaValue;
+    if (!respuesta) {
+      $(this).find('select').addClass('is-invalid');
+      valid = false;
+    } else {
+      $(this).find('select').removeClass('is-invalid');
+    }
+
+    if (respuesta === '1') {
+      respuesta = 'C';
+    } else if (respuesta === '2') {
+      respuesta = 'NC';
+      todasLasRespuestasSonC = false;
+    } else if (respuesta === '3') {
+      respuesta = 'NA';
+      todasLasRespuestasSonC = false;
+    } else {
+      respuesta = null;
+      todasLasRespuestasSonC = false;
+    }
+
+    respuestas[`pregunta${index + 1}`] = respuesta;
+    observaciones[`pregunta${index + 1}`] = observacion || null;
   });
 
-  // NOTA: ¡Para que NO REGISTRE cuando aun hay validacion Activas!
   if (!valid) {
-      return;
+    Swal.fire({
+      icon: 'error',
+      title: '¡Error!',
+      text: 'Por favor, completa todos los campos requeridos.',
+      customClass: {
+        confirmButton: 'btn btn-danger'
+      }
+    });
+    return;
   }
+
   const desicion = todasLasRespuestasSonC ? 'positiva' : 'negativa';
 
-  $.ajax({
-      url: '/revisor/registrar-respuestas',
-      type: 'POST',
-      contentType: 'application/json',
-      headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-      data: JSON.stringify({
-          id_revision: id_revision,
-          respuestas: respuestasObj,
-          observaciones: {},
-          desicion: desicion 
-      }),
-      success: function (response) {
-          Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: response.message,
-              customClass: {
-                  confirmButton: 'btn btn-success'
-              }
-          });
+  console.log({
+    id_revision: id_revision,
+    respuestas: respuestas,
+    observaciones: observaciones,
+    desicion: desicion
+  });
 
-          $('#fullscreenModal').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload();
-      },
-      error: function (xhr) {
-          Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al registrar las respuestas: ' + xhr.responseJSON.message,
-              customClass: {
-                  confirmButton: 'btn btn-danger'
-              }
-          });
-      }
+  $.ajax({
+    url: '/revisor/registrar-respuestas',
+    type: 'POST',
+    contentType: 'application/json',
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    data: JSON.stringify({
+      id_revision: id_revision,
+      respuestas: respuestas,
+      observaciones: observaciones,
+      desicion: desicion 
+    }),
+    success: function (response) {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.message,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+
+      $('#fullscreenModal').modal('hide');
+      $('.datatables-users').DataTable().ajax.reload();
+    },
+    error: function (xhr) {
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al registrar las respuestas: ' + xhr.responseJSON.message,
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
   });
 });
 

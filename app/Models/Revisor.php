@@ -50,6 +50,11 @@ class Revisor extends Model
         return $this->belongsTo(User::class, 'id_revisor2', 'id'); // id_revisor2 es la clave foránea en la tabla revisores
     }
 
+    public function aprobador()
+    {
+        return $this->belongsTo(User::class, 'id_aprobador');
+    }
+
     public function obtenerDocumentosClientes($id_documento, $id_cliente)
     {
     $documento = Documentacion_url::where("id_documento", "=", $id_documento)

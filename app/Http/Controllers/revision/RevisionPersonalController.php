@@ -277,6 +277,9 @@ class RevisionPersonalController extends Controller
         $desicion = $revisor->desicion; 
         $nameRevisor = $revisor->user->name ?? null;
         $fecha = $revisor->updated_at;
+        $id_aprobador = $revisor->aprobador->name ?? 'Sin asignar';
+        $aprobacion = $revisor->aprobacion ?? 'Pendiente de aprobar';
+        $fecha_aprobacion = $revisor->fecha_aprobacion;
     
         $razonSocial = $datos_revisor->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar';
         $numero_cliente = $datos_revisor->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar';
@@ -290,11 +293,14 @@ class RevisionPersonalController extends Controller
             'razon_social' => $razonSocial,
             'fecha' => Helpers::formatearFecha($fecha),
             'numero_cliente' => $numero_cliente,
+            'aprobacion' => $aprobacion,
+            'id_aprobador' => $id_aprobador,
+            'fecha_aprobacion' => Helpers::formatearFecha($fecha_aprobacion),
         ];
     
         $pdf = Pdf::loadView('pdfs.bitacora_revicionPersonalOCCIDAM', $pdfData);
         return $pdf->stream('Bitácora de revisión documental.pdf');
-    }
+    }    
 
     public function calcularCertificados($userId)
     {
@@ -333,7 +339,6 @@ class RevisionPersonalController extends Controller
     ];  
     }
     
-
     public function registrarAprobacion(Request $request)
     {
         $request->validate([
