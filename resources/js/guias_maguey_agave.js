@@ -711,7 +711,7 @@ $(document).on('click', '.ver-registros', function () {
                           data-registro="${razon_social}">
                       </i>
                   </td>
-                   <td>
+                  <td>
                 <button type="button" class="btn btn-info">
                   <a href="javascript:;" class="edit-record" style="color:#FFF" 
                     data-id="${item.id_guia}" 
