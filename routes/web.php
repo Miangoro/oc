@@ -815,3 +815,4 @@ Route::get('/get-certificado-url/{id_revision}/{tipo}', [RevisionPersonalControl
 Route::get('/bitacora_revicionPersonalOCCIDAM/{id}', [RevisionPersonalController::class, 'bitacora_revicionPersonalOCCIDAM']); //New
 Route::post('/registrar-aprobacion', [RevisionPersonalController::class, 'registrarAprobacion'])->name('registrar.aprobacion');
 Route::get('/aprobacion/{id}', [RevisionPersonalController::class, 'cargarAprobacion']);
+Route::get('/obtener/historial/{id_revision}', [RevisionPersonalController::class, 'cargarHistorial']);
