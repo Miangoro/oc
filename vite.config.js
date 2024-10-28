@@ -66,7 +66,7 @@ export default defineConfig({
         ...LibsScssFiles,
         ...LibsCssFiles,
         ...FontsScssFiles,
-        'resources/assets/vendor/libs/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js',
+        
         'resources/js/usuarios-personal.js',
         'resources/js/catalogo_clases.js',
         'resources/js/catalogo_lotes.js',
