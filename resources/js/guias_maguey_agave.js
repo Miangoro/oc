@@ -11,10 +11,8 @@ $(document).ready(function () {
   });
 });
 
-// Agregar nuevo registro
-// Validando formulario y actualizando datos del usuario
-const addNewGuia = document.getElementById('addGuiaForm');
 // Validación del formulario
+const addNewGuia = document.getElementById('addGuiaForm');
 const fv = FormValidation.formValidation(addGuiaForm, {
   fields: {
     empresa: {
@@ -27,14 +25,14 @@ const fv = FormValidation.formValidation(addGuiaForm, {
     numero_guias: {
       validators: {
         notEmpty: {
-          message: 'Por favor introduzca un numero de guias a solicitar'
+          message: 'Por favor introduzca un número de guías a solicitar'
         }
       }
     },
     predios: {
       validators: {
         notEmpty: {
-          message: 'Por favor seleccione una empresa para continuar'
+          message: 'Por favor seleccione un predio de la lista'
         }
       }
     },
@@ -51,18 +49,17 @@ const fv = FormValidation.formValidation(addGuiaForm, {
     bootstrap5: new FormValidation.plugins.Bootstrap5({
       eleValidClass: '',
       rowSelector: function (field, ele) {
-        return '.mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+        return '.mb-5, .mb-6';
       }
     }),
     submitButton: new FormValidation.plugins.SubmitButton(),
     autoFocus: new FormValidation.plugins.AutoFocus()
   }
 }).on('core.form.valid', function (e) {
-  //e.preventDefault();
   var formData = new FormData(addGuiaForm);
 
   $.ajax({
-    url: '/guias/store', // Actualiza con la URL correcta
+    url: '/guias/store',
     type: 'POST',
     data: formData,
     processData: false,
@@ -71,7 +68,6 @@ const fv = FormValidation.formValidation(addGuiaForm, {
       $('#addGuias').modal('hide');
       $('.datatables-users').DataTable().ajax.reload();
 
-      // Mostrar alerta de éxito
       Swal.fire({
         icon: 'success',
         title: '¡Éxito!',
@@ -82,11 +78,10 @@ const fv = FormValidation.formValidation(addGuiaForm, {
       });
     },
     error: function (xhr) {
-      // Mostrar alerta de error
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
-        text: 'Error al registrar la guía dde traslado',
+        text: 'Error al registrar la guía de traslado',
         customClass: {
           confirmButton: 'btn btn-danger'
         }
@@ -94,6 +89,29 @@ const fv = FormValidation.formValidation(addGuiaForm, {
     }
   });
 });
+
+// Inicializar select2 y revalidar campos cuando cambien
+$('#id_empresa').select2({
+  placeholder: 'Seleccione un cliente',
+  allowClear: true
+}).on('change', function () {
+  fv.revalidateField('empresa'); // Revalidar el campo empresa cuando cambie
+});
+
+$('#nombre_predio').select2({
+  placeholder: 'Lista de predios',
+  allowClear: true
+}).on('change', function () {
+  fv.revalidateField('predios'); // Revalidar el campo predios cuando cambie
+});
+
+$('#id_plantacion').select2({
+  placeholder: 'Lista de plantas',
+  allowClear: true
+}).on('change', function () {
+  fv.revalidateField('plantacion'); // Revalidar el campo predios cuando cambie
+});
+
 
 $(function () {
   // Datatable (jquery)
