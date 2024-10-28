@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 
-class LotesGranelController extends Controller
+class lotesGranelController extends Controller
 {
     public function UserManagement(Request $request)
     {// Encuentra el lote a granel por ID
