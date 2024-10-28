@@ -97,7 +97,7 @@ class empresa extends Model
 
     public function normas()
     {
-        return $this->belongsToMany(normas_catalo::class, 'empresa_norma_certificar', 'id_empresa', 'id_norma');
+        return $this->belongsToMany(normas_catalo::class, 'empresa_num_cliente', 'id_empresa', 'id_norma');
     }
 
 

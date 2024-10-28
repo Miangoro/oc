@@ -27,7 +27,6 @@
     'resources/assets/vendor/libs/cleavejs/cleave-phone.js',
     'resources/assets/vendor/libs/sweetalert2/sweetalert2.js',
     'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js',
-    'resources/assets/vendor/libs/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js'
 ])
 @endsection
 

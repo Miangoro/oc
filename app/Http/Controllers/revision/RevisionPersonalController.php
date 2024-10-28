@@ -162,8 +162,16 @@ class RevisionPersonalController extends Controller
                 return response()->json(['message' => 'El registro no fue encontrado.'], 404);
             }
     
-            $respuestasGuardadas = json_decode($revisor->respuestas, true) ?? [];
-            $todasLasRespuestasSonC = true; 
+            // Cargar historial de respuestas y convertir a array si es null
+            $historialRespuestas = json_decode($revisor->respuestas, true) ?? [];
+    
+            // Determinar el número de la siguiente revisión
+            $numRevision = count($historialRespuestas) + 1;
+            $revisionKey = "Revision $numRevision";
+    
+            // Crear nuevo registro de respuestas directamente bajo la clave de la revisión
+            $nuevoRegistro = [];
+            $todasLasRespuestasSonC = true;
     
             foreach ($request->respuestas as $key => $nuevaRespuesta) {
                 $nuevaObservacion = $request->observaciones[$key] ?? null;
@@ -172,23 +180,19 @@ class RevisionPersonalController extends Controller
                     $todasLasRespuestasSonC = false;
                 }
     
-                if (isset($respuestasGuardadas[$key]['respuesta']) && !empty($respuestasGuardadas[$key]['respuesta']) && empty($nuevaRespuesta)) {
-                    continue;
-                }
-    
-                $respuestasGuardadas[$key] = [
+                // Agregar nueva respuesta directamente al registro
+                $nuevoRegistro[$key] = [
                     'respuesta' => $nuevaRespuesta,
                     'observacion' => $nuevaObservacion,
                 ];
             }
     
-            $revisor->respuestas = json_encode($respuestasGuardadas);
+            // Añadir el nuevo registro de revisión al historial sin sobrescribir
+            $historialRespuestas[$revisionKey] = $nuevoRegistro;
+            $revisor->respuestas = json_encode($historialRespuestas);
     
-            if ($todasLasRespuestasSonC) {
-                $revisor->desicion = 'positiva';
-            } else {
-                $revisor->desicion = 'negativa';
-            }
+            // Establecer la decisión
+            $revisor->desicion = $todasLasRespuestasSonC ? 'positiva' : 'negativa';
     
             $revisor->save();
             return response()->json(['message' => 'Respuestas y decisión registradas exitosamente.'], 201);
@@ -198,7 +202,7 @@ class RevisionPersonalController extends Controller
                 'message' => 'Ocurrió un error al registrar las respuestas: ' . $e->getMessage(),
             ], 500);
         }
-    }
+    }    
     
     public function obtenerRespuestas($id_revision)
     {
@@ -209,13 +213,17 @@ class RevisionPersonalController extends Controller
                 return response()->json(['message' => 'El registro no fue encontrado.'], 404);
             }
     
-            $respuestas = json_decode($revisor->respuestas, true);    
+            // Cargar el historial completo de respuestas y convertir a array
+            $historialRespuestas = json_decode($revisor->respuestas, true);
+    
+            // Obtener la última revisión
+            $ultimaRevision = end($historialRespuestas); 
             $desicion = $revisor->desicion;
     
             return response()->json([
-                'message' => 'Datos recuperados exitosamente.',
-                'respuestas' => $respuestas,
-                'desicion' => $desicion, 
+                'message' => 'Datos de la revisión más actual recuperados exitosamente.',
+                'respuestas' => $ultimaRevision,
+                'desicion' => $desicion,
             ], 200);
             
         } catch (\Exception $e) {
@@ -223,7 +231,8 @@ class RevisionPersonalController extends Controller
                 'message' => 'Ocurrió un error al cargar las respuestas: ' . $e->getMessage(),
             ], 500);
         }
-    }    
+    }
+    
  
     public function getCertificadoUrl($id_revision, $tipo)
     {
@@ -254,18 +263,24 @@ class RevisionPersonalController extends Controller
         $id_dictamen = $datos_revisor->dictamen->id_dictamen; 
     
         $tipo_certificado = '';
-        if ($id_dictamen == 1) {
-            $tipo_certificado = 'Productor';
-        } elseif ($id_dictamen == 2) {
-            $tipo_certificado = 'Envasador';
-        } elseif ($id_dictamen == 3) {
-            $tipo_certificado = 'Comercializador';
-        } elseif ($id_dictamen == 4) {
-            $tipo_certificado = 'Almacén y bodega';
-        } elseif ($id_dictamen == 5) {
-            $tipo_certificado = 'Área de maduración';
-        } else {
-            $tipo_certificado = 'Desconocido';
+        switch ($id_dictamen) {
+            case 1:
+                $tipo_certificado = 'Productor';
+                break;
+            case 2:
+                $tipo_certificado = 'Envasador';
+                break;
+            case 3:
+                $tipo_certificado = 'Comercializador';
+                break;
+            case 4:
+                $tipo_certificado = 'Almacén y bodega';
+                break;
+            case 5:
+                $tipo_certificado = 'Área de maduración';
+                break;
+            default:
+                $tipo_certificado = 'Desconocido';
         }
     
         $revisor = Revisor::where('id_certificado', $id)->first();
@@ -273,7 +288,10 @@ class RevisionPersonalController extends Controller
             return response()->json(['error' => 'Revisor not found'], 404);
         }
     
+        // Cargar el historial de respuestas
         $respuestas = json_decode($revisor->respuestas, true);
+        // Obtener la última revisión
+        $respuestasRecientes = end($respuestas);
         $desicion = $revisor->desicion; 
         $nameRevisor = $revisor->user->name ?? null;
         $fecha = $revisor->updated_at;
@@ -287,7 +305,7 @@ class RevisionPersonalController extends Controller
         $pdfData = [
             'num_certificado' => $datos_revisor->num_certificado,
             'tipo_certificado' => $tipo_certificado,
-            'respuestas' => $respuestas,
+            'respuestas' => $respuestasRecientes, // Solo la revisión más reciente
             'desicion' => $desicion,
             'id_revisor' => $nameRevisor,
             'razon_social' => $razonSocial,
@@ -301,6 +319,79 @@ class RevisionPersonalController extends Controller
         $pdf = Pdf::loadView('pdfs.bitacora_revicionPersonalOCCIDAM', $pdfData);
         return $pdf->stream('Bitácora de revisión documental.pdf');
     }    
+
+    public function bitacora_dinamica($id)
+{
+    // Buscar el certificado por ID
+    $datos_revisor = Certificados::findOrFail($id);
+    
+    // Obtener el ID del dictamen asociado
+    $id_dictamen = $datos_revisor->dictamen->id_dictamen; 
+
+    // Determinar el tipo de certificado basado en el ID del dictamen
+    $tipo_certificado = '';
+    switch ($id_dictamen) {
+        case 1:
+            $tipo_certificado = 'Productor';
+            break;
+        case 2:
+            $tipo_certificado = 'Envasador';
+            break;
+        case 3:
+            $tipo_certificado = 'Comercializador';
+            break;
+        case 4:
+            $tipo_certificado = 'Almacén y bodega';
+            break;
+        case 5:
+            $tipo_certificado = 'Área de maduración';
+            break;
+        default:
+            $tipo_certificado = 'Desconocido';
+    }
+
+    // Buscar el revisor asociado al certificado
+    $revisor = Revisor::where('id_certificado', $id)->first();
+    if (!$revisor) {
+        return response()->json(['error' => 'Revisor not found'], 404);
+    }
+
+    // Cargar el historial de respuestas
+    $respuestas = json_decode($revisor->respuestas, true);
+    
+    // Obtener la última revisión
+    $respuestasRecientes = end($respuestas);
+    $desicion = $revisor->desicion; 
+    $nameRevisor = $revisor->user->name ?? null;
+    $fecha = $revisor->updated_at;
+    $id_aprobador = $revisor->aprobador->name ?? 'Sin asignar';
+    $aprobacion = $revisor->aprobacion ?? 'Pendiente de aprobar';
+    $fecha_aprobacion = $revisor->fecha_aprobacion;
+
+    // Obtener datos de la empresa
+    $razonSocial = $datos_revisor->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar';
+    $numero_cliente = $datos_revisor->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar';
+
+    // Preparar los datos para el PDF
+    $pdfData = [
+        'num_certificado' => $datos_revisor->num_certificado,
+        'tipo_certificado' => $tipo_certificado,
+        'respuestas' => $respuestasRecientes, // Solo la revisión más reciente
+        'desicion' => $desicion,
+        'id_revisor' => $nameRevisor,
+        'razon_social' => $razonSocial,
+        'fecha' => Helpers::formatearFecha($fecha),
+        'numero_cliente' => $numero_cliente,
+        'aprobacion' => $aprobacion,
+        'id_aprobador' => $id_aprobador,
+        'fecha_aprobacion' => Helpers::formatearFecha($fecha_aprobacion),
+    ];
+
+    // Cargar la vista y generar el PDF
+    $pdf = Pdf::loadView('pdfs.bitacora_revicionPersonalOCCIDAM', $pdfData);
+    return $pdf->stream('Bitácora de revisión documental.pdf');
+}
+
 
     public function calcularCertificados($userId)
     {
@@ -382,6 +473,38 @@ class RevisionPersonalController extends Controller
         ], 500);
     }
     }
+    public function cargarHistorial($id_revision)
+    {
+        try {
+            // Busca todas las revisiones asociadas a la ID
+            $revisores = Revisor::where('id_revision', $id_revision)->get();
+    
+            if ($revisores->isEmpty()) {
+                return response()->json(['message' => 'El registro no fue encontrado.'], 404);
+            }
+    
+            $historialFormateado = [];
+            foreach ($revisores as $revisor) {
+                $historialRespuestas = json_decode($revisor->respuestas, true) ?? [];
+                // Agrega la revisión al historial formateado
+                $historialFormateado[] = [
+                    'revision' => $revisor->id_revision, // o cualquier otra propiedad que identifique la revisión
+                    'respuestas' => $historialRespuestas,
+                ];
+            }
+    
+            return response()->json([
+                'message' => 'Historial de respuestas recuperado exitosamente.',
+                'respuestas' => $historialFormateado,
+            ], 200);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ocurrió un error al cargar el historial: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+    
 
 //end
 }

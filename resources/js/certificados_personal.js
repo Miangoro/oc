@@ -9,7 +9,7 @@ $(function () {
       processing: true,
       serverSide: true,
       ajax: {
-        url: '/personal-list',
+        url: '/revision-personal-list',
       },
       columns: [
         { data: 'fake_id' },          //1
@@ -162,8 +162,8 @@ $(function () {
               `data-num-dictamen="${full['num_dictamen']}" ` +
               `data-tipo-dictamen="${full['tipo_dictamen']}" ` +
               `data-fecha-vigencia="${full['fecha_vigencia']}" ` +
-              `data-fecha-vencimiento="${full['fecha_vencimiento']}" ` +
-              `data-tipo="${full['tipo_dictamen']}"` +
+              `data-fecha-vencimiento="${full['fecha_vigencia']}" ` +
+              `data-tipo="${full['tipo_dictamen']}" ` +
               `data-bs-toggle="modal" ` +
               `data-bs-target="#fullscreenModal">` +
               '<i class="ri-eye-fill ri-20px text-info"></i> Revisar' +
@@ -172,10 +172,15 @@ $(function () {
               `<a data-id='${full['id_revision']}' data-num-certificado="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAprobacion" class="dropdown-item Aprobacion-record waves-effect text-success">` +
               '<i class="ri-checkbox-circle-line text-success"></i> Aprobación' +
               '</a>' +
+              // Botón para Historial
+              `<a data-id='${full['id_revision']}' class="dropdown-item waves-effect text-warning abrir-historial" ` +
+              `data-bs-toggle="modal" data-bs-target="#historialModal">` +
+              '<i class="ri-history-line text-warning"></i> Historial' +
+              '</a>' +
               '</div>' +
               '</div>'
-            );
-          }
+              );
+         }
         }
       ],
       order: [[2, 'desc']],
@@ -706,6 +711,51 @@ $('#modalAprobacion').on('hidden.bs.modal', function () {
   $('#id_firmante, #respuesta-aprobacion, #fecha-aprobacion').val('');
   $('#respuesta-aprobacion').prop('selected', true);
 });
+
+
+function cargarHistorial(id_revision) {
+  console.log('Cargando historial para ID de revisión:', id_revision); // Mostrar el ID en consola
+
+  // Llamada a la API para obtener el historial de respuestas
+  $.ajax({
+      url: '/obtener/historial/' + id_revision, // Ajusta la URL según tu API
+      method: 'GET',
+      success: function(data) {
+          console.log('Datos recibidos:', data); // Mostrar los datos recibidos en consola
+
+          if (data.respuestas.length === 0) {
+              $('#historialRespuestasContainer').html('<p>No hay historial disponible.</p>');
+              return;
+          }
+
+          var historialHTML = '<ul>'; // Variable para almacenar el HTML como lista
+
+          // Iterar sobre cada revisión en `data.respuestas`
+          $.each(data.respuestas[0].respuestas, function(revisionKey, revisionData) {
+              historialHTML += '<li>' + revisionKey + 
+                               ' <a href="/bitacora-dinamica/' + id_revision + 
+                               '" class="text-info">Ver Respuestas</a></li>';
+          });
+
+          historialHTML += '</ul>'; // Cierra la lista
+
+          $('#historialRespuestasContainer').html(historialHTML); // Inserta el HTML generado en el contenedor
+      },
+      error: function(xhr) {
+          $('#historialRespuestasContainer').html('<p>Error al cargar el historial.</p>');
+          console.error('Error al cargar el historial:', xhr); // Mostrar error en consola
+      }
+  });
+}
+
+// Al hacer clic en el enlace de historial
+$(document).on('click', '.abrir-historial', function() {
+  var id_revision = $(this).data('id'); // Obtener ID desde el atributo data-id
+  console.log('ID de revisión clicado:', id_revision); // Mostrar el ID clicado en consola
+  cargarHistorial(id_revision); // Cargar el historial
+  $('#historialModal').modal('show'); // Abre el modal
+});
+
 
 //end
 });
