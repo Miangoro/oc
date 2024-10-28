@@ -180,7 +180,7 @@ use App\Http\Controllers\usuarios\UsuariosController;
 use App\Http\Controllers\usuarios\UsuariosInspectoresController;
 use App\Http\Controllers\usuarios\UsuariosPersonalController;
 use App\Http\Controllers\usuarios\UsuariosConsejoController;
-use App\Http\Controllers\catalogo\LotesGranelController;
+use App\Http\Controllers\catalogo\lotesGranelController;
 use App\Http\Controllers\documentacion\DocumentosController;
 use App\Http\Controllers\solicitudes\SolicitudesTipoController;
 //Tipos maguey/agave
@@ -531,12 +531,12 @@ Route::post('/categorias', [categoriasController::class, 'store'])->name('catego
 Route::get('/categorias-list/{id_categoria}/edit', [categoriasController::class, 'edit'])->name('categoria.edit');
 Route::put('/categorias-list/{id_categoria}', [categoriasController::class, 'update'])->name('categoria.update');
 
-Route::get('/catalogo/lotes_granel', [LotesGranelController::class, 'UserManagement'])->name('catalogo-lotes-granel');
-Route::resource('/lotes-granel-list', LotesGranelController::class);
-Route::delete('/lotes-granel-list/{id_lote_granel}', [LotesGranelController::class, 'destroy']);
-Route::post('/lotes-register/store', [LotesGranelController::class, 'store'])->name('lotes-register.store');
-Route::get('/lotes-a-granel/{id_lote_granel}/edit', [LotesGranelController::class, 'edit'])->name('lotes-a-granel.edit');
-Route::post('/lotes-a-granel/{id_lote_granel}', [LotesGranelController::class, 'update']);
+Route::get('/catalogo/lotes_granel', [lotesGranelController::class, 'UserManagement'])->name('catalogo-lotes-granel');
+Route::resource('/lotes-granel-list', lotesGranelController::class);
+Route::delete('/lotes-granel-list/{id_lote_granel}', [lotesGranelController::class, 'destroy']);
+Route::post('/lotes-register/store', [lotesGranelController::class, 'store'])->name('lotes-register.store');
+Route::get('/lotes-a-granel/{id_lote_granel}/edit', [lotesGranelController::class, 'edit'])->name('lotes-a-granel.edit');
+Route::post('/lotes-a-granel/{id_lote_granel}', [lotesGranelController::class, 'update']);
 
 //Lotes de envasado
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
