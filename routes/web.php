@@ -816,4 +816,4 @@ Route::get('/bitacora_revicionPersonalOCCIDAM/{id}', [RevisionPersonalController
 Route::post('/registrar-aprobacion', [RevisionPersonalController::class, 'registrarAprobacion'])->name('registrar.aprobacion');
 Route::get('/aprobacion/{id}', [RevisionPersonalController::class, 'cargarAprobacion']);
 Route::get('/obtener/historial/{id_revision}', [RevisionPersonalController::class, 'cargarHistorial']);
-Route::get('/bitacora-historial/{id}', [RevisionPersonalController::class, 'bitacora_historial']);
+Route::get('/bitacora-historial/{id}', [RevisionPersonalController::class, 'bitacora_historial']); 
