@@ -36,7 +36,7 @@ class documentacionController extends Controller
     $normas = DB::select("
             SELECT n.id_norma, n.norma AS nombre
             FROM catalogo_norma_certificar n 
-            JOIN empresa_norma_certificar e ON n.id_norma = e.id_norma 
+            JOIN empresa_num_cliente e ON n.id_norma = e.id_norma 
             WHERE e.id_empresa = ?
         ", [$id_empresa]);
 
