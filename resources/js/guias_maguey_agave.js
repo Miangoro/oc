@@ -17,7 +17,6 @@ const addNewGuia = document.getElementById('addGuiaForm');
 // Validación del formulario
 const fv = FormValidation.formValidation(addGuiaForm, {
   fields: {
-
     empresa: {
       validators: {
         notEmpty: {
@@ -46,9 +45,6 @@ const fv = FormValidation.formValidation(addGuiaForm, {
         }
       }
     }
-
-
-
   },
   plugins: {
     trigger: new FormValidation.plugins.Trigger(),
@@ -99,7 +95,6 @@ const fv = FormValidation.formValidation(addGuiaForm, {
   });
 });
 
-
 $(function () {
   // Datatable (jquery)
   // Variable declaration for table
@@ -123,7 +118,6 @@ $(function () {
   // Inicialización de Select2 para elementos con clase .select2
   initializeSelect2(select2Elements);
 
-
   // ajax setup
   $.ajaxSetup({
     headers: {
@@ -145,23 +139,33 @@ $(function () {
         { data: 'id_guia' },
         {
           data: null,
-          searchable: true, orderable: false,
+          searchable: true,
+          orderable: false,
           render: function (data, type, row) {
-              var empresa = '';
-              var razonSocial = '';
-      
-              if(row.id_empresa != 'N/A'){
-                  empresa = '<br><span class="fw-bold text-dark small">Número del cliente:</span><span class="small"> ' + row.id_empresa + '</span>';
-              }
-              if(row.razon_social != 'N/A'){
-                  razonSocial = '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' + row.razon_social + '</span>';
-              }
-      
-              return '<span class="fw-bold text-dark small">Número del cliente:</span> <span class="small"> ' + row.id_empresa + 
-              '</span><br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' + row.razon_social  
-              ;
+            var empresa = '';
+            var razonSocial = '';
+
+            if (row.id_empresa != 'N/A') {
+              empresa =
+                '<br><span class="fw-bold text-dark small">Número del cliente:</span><span class="small"> ' +
+                row.id_empresa +
+                '</span>';
+            }
+            if (row.razon_social != 'N/A') {
+              razonSocial =
+                '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
+                row.razon_social +
+                '</span>';
+            }
+
+            return (
+              '<span class="fw-bold text-dark small">Número del cliente:</span> <span class="small"> ' +
+              row.id_empresa +
+              '</span><br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
+              row.razon_social
+            );
           }
-      },
+        },
         { data: 'folio' },
         { data: 'run_folio' },
         { data: 'id_predio' },
@@ -204,14 +208,11 @@ $(function () {
             var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
             var $state = states[stateNum];
 
-
-
             // Creates full output for row
             var $row_output =
               '<div class="d-flex justify-content-start align-items-center user-name">' +
               '<div class="avatar-wrapper">' +
               '<div class="avatar avatar-sm me-3">' +
-
               '</div>' +
               '</div>' +
               '<div class="d-flex flex-column">' +
@@ -252,7 +253,7 @@ $(function () {
             }`;
           }
         },*/
-/*         {
+        /*         {
           // email verify
           targets: 11,
           className: 'text-center',
@@ -272,8 +273,8 @@ $(function () {
               '<div class="d-flex align-items-center gap-50">' +
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
-/*               `<a data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Llenar guia de traslado</a>` +
- */              `<a data-id="${full['run_folio']}" data-bs-toggle="modal" data-bs-target="#verGuiasRegistardas" href="javascript:;" class="dropdown-item ver-registros"><i class="ri-id-card-line ri-20px text-primary"></i> Ver/Llenar guias de traslado</a>` +
+              /*               `<a data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Llenar guia de traslado</a>` +
+               */ `<a data-id="${full['run_folio']}" data-bs-toggle="modal" data-bs-target="#verGuiasRegistardas" href="javascript:;" class="dropdown-item ver-registros"><i class="ri-id-card-line ri-20px text-primary"></i> Ver/Llenar guias de traslado</a>` +
               `<a data-id="${full['id_guia']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar guia de traslado</a>` +
               /*               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
                             `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` + */
@@ -305,10 +306,10 @@ $(function () {
         searchPlaceholder: 'Buscar',
         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
         paginate: {
-          "sFirst": "Primero",
-          "sLast": "Último",
-          "sNext": "Siguiente",
-          "sPrevious": "Anterior"
+          sFirst: 'Primero',
+          sLast: 'Último',
+          sNext: 'Siguiente',
+          sPrevious: 'Anterior'
         }
       },
       // Buttons with Dropdown
@@ -482,18 +483,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                col.rowIndex +
-                '" data-dt-column="' +
-                col.columnIndex +
-                '">' +
-                '<td>' +
-                col.title +
-                ':' +
-                '</td> ' +
-                '<td>' +
-                col.data +
-                '</td>' +
-                '</tr>'
+                    col.rowIndex +
+                    '" data-dt-column="' +
+                    col.columnIndex +
+                    '">' +
+                    '<td>' +
+                    col.title +
+                    ':' +
+                    '</td> ' +
+                    '<td>' +
+                    col.data +
+                    '</td>' +
+                    '</tr>'
                 : '';
             }).join('');
 
@@ -517,7 +518,7 @@ $(function () {
     // sweetalert for confirmation of delete
     Swal.fire({
       title: '¿Está seguro?',
-      text: "No podrá revertir este evento",
+      text: 'No podrá revertir este evento',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Si, eliminar',
@@ -569,12 +570,12 @@ $(function () {
     var pdfUrl = '../guia_de_translado/' + id; // Ruta del PDF
 
     var iframe = $('#pdfViewerGuias');
-    $('#loading-spinner-chelo').show();//se el agrega esto
-    iframe.hide();//se el agrega esto
+    $('#loading-spinner-chelo').show(); //se el agrega esto
+    iframe.hide(); //se el agrega esto
     iframe.attr('src', '../guia_de_translado/' + id);
 
-    $("#titulo_modal_GUIAS").text("Guia de traslado");
-    $("#subtitulo_modal_GUIAS").text(registro);
+    $('#titulo_modal_GUIAS').text('Guia de traslado');
+    $('#subtitulo_modal_GUIAS').text(registro);
     $('#mostrarPdfGUias').modal('show');
     var descargarBtn = $('#descargarPdfBtn');
     // Actualizar el enlace de descarga
@@ -602,11 +603,10 @@ $(function () {
         zip.file(fileName, blob);
 
         // Generar el archivo ZIP
-        zip.generateAsync({ type: "blob" })
-          .then(function (zipBlob) {
-            // Guardar el archivo ZIP usando FileSaver.js
-            saveAs(zipBlob, fileName.replace('.pdf', '.zip'));
-          });
+        zip.generateAsync({ type: 'blob' }).then(function (zipBlob) {
+          // Guardar el archivo ZIP usando FileSaver.js
+          saveAs(zipBlob, fileName.replace('.pdf', '.zip'));
+        });
       })
       .catch(error => console.error('Error al descargar el PDF:', error));
   }
@@ -631,8 +631,6 @@ $(function () {
       descargarBtn.attr('download', 'Guia_de_traslado_' + registro + '.pdf'); // Nombre del archivo a descargar
   });
   */
-
-
 
   $(document).on('click', '.edit-record', function () {
     var id_guia = $(this).data('id');
@@ -659,7 +657,6 @@ $(function () {
       $('#edit_fecha_ingreso').val(data.fecha_ingreso);
       $('#edit_domicilio').val(data.domicilio);
 
-
       // Mostrar el modal de edición
       $('#editGuias').modal('show');
     }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -675,15 +672,12 @@ $(function () {
     });
   });
 
+  //edit guias tablas
+  // Evento de click para ver los registros y preparar la descarga de PDFs
+  $(document).on('click', '.ver-registros', function () {
+    var run_folio = $(this).data('id');
 
-
-
-//edit guias tablas
-// Evento de click para ver los registros y preparar la descarga de PDFs
-$(document).on('click', '.ver-registros', function () {
-  var run_folio = $(this).data('id');
-
-  $.get('/editGuias/' + run_folio, function (data) {
+    $.get('/editGuias/' + run_folio, function (data) {
       $('#tablita').empty();
 
       // Array para almacenar URLs y nombres de los PDFs
@@ -691,15 +685,15 @@ $(document).on('click', '.ver-registros', function () {
 
       // Iterar sobre los datos y rellenar la tabla con los datos obtenidos
       data.forEach(function (item) {
-          var razon_social = item.empresa ? item.empresa.razon_social : 'Indefinido';
-          var pdfUrl = '../guia_de_translado/' + item.id_guia;
-          var filename = 'Guia_de_traslado_' + item.folio + '.pdf';
+        var razon_social = item.empresa ? item.empresa.razon_social : 'Indefinido';
+        var pdfUrl = '../guia_de_translado/' + item.id_guia;
+        var filename = 'Guia_de_traslado_' + item.folio + '.pdf';
 
-          // Agregar cada archivo PDF a la lista para el ZIP
-          pdfFiles.push({ url: pdfUrl, filename: filename });
+        // Agregar cada archivo PDF a la lista para el ZIP
+        pdfFiles.push({ url: pdfUrl, filename: filename });
 
-          // Agregar la fila a la tabla con el icono del PDF
-          var fila = `
+        // Agregar la fila a la tabla con el icono del PDF
+        var fila = `
               <tr>
                   <td>${item.folio}</td>
                   <td>
@@ -723,83 +717,81 @@ $(document).on('click', '.ver-registros', function () {
             </td>
               </tr>
           `;
-          $('#tablita').append(fila);
+        $('#tablita').append(fila);
       });
 
       // Mostrar el modal de edición
       $('#verGuiasRegistardas').modal('show');
 
       // Evento para descargar todos los PDFs en un archivo ZIP
-      $('#descargarPdfBtn').off('click').on('click', function (e) {
+      $('#descargarPdfBtn')
+        .off('click')
+        .on('click', function (e) {
           e.preventDefault();
           downloadPdfsAsZip(pdfFiles, `Guias_de_traslado_${run_folio}.zip`);
-      });
-  }).fail(function (jqXHR, textStatus, errorThrown) {
+        });
+    }).fail(function (jqXHR, textStatus, errorThrown) {
       console.error('Error: ' + textStatus + ' - ' + errorThrown);
       Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al obtener los datos de la guía de traslado',
-          customClass: {
-              confirmButton: 'btn btn-danger'
-          }
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos de la guía de traslado',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
       });
+    });
   });
-});
 
-// Función para descargar múltiples PDFs en un archivo ZIP
-function downloadPdfsAsZip(pdfFiles, zipFileName) {
-  // Mostrar alerta de "Procesando..."
-  Swal.fire({
-      title: 'Procesando...',
+  // Función para descargar múltiples PDFs en un archivo ZIP
+  function downloadPdfsAsZip(pdfFiles, zipFileName) {
+    Swal.fire({
+      title: '🔄 Procesando...',
       text: 'Por favor espera mientras se comprimen los archivos.',
       allowOutsideClick: false,
+      customClass: {},
       didOpen: () => {
-          Swal.showLoading();
+        Swal.showLoading();
       }
-  });
+    });
+    
 
-  var zip = new JSZip();
+    var zip = new JSZip();
 
-  // Crear una lista de promesas para descargar cada PDF
-  var pdfPromises = pdfFiles.map(file =>
+    // Crear una lista de promesas para descargar cada PDF
+    var pdfPromises = pdfFiles.map(file =>
       fetch(file.url)
-          .then(response => response.blob())
-          .then(blob => {
-              zip.file(file.filename, blob); // Añadir el archivo al ZIP
-          })
-          .catch(error => console.error('Error al descargar el PDF:', error))
-  );
+        .then(response => response.blob())
+        .then(blob => {
+          zip.file(file.filename, blob); // Añadir el archivo al ZIP
+        })
+        .catch(error => console.error('Error al descargar el PDF:', error))
+    );
 
-  // Esperar a que todas las descargas terminen y crear el ZIP
-  Promise.all(pdfPromises).then(() => {
-      zip.generateAsync({ type: "blob" })
-          .then(function (zipBlob) {
-              // Descargar el archivo ZIP
-              saveAs(zipBlob, zipFileName);
+    // Esperar a que todas las descargas terminen y crear el ZIP
+    Promise.all(pdfPromises).then(() => {
+      zip
+        .generateAsync({ type: 'blob' })
+        .then(function (zipBlob) {
+          // Descargar el archivo ZIP
+          saveAs(zipBlob, zipFileName);
 
-              // Cerrar la alerta de "Procesando..." después de que el ZIP esté listo
-              Swal.close();
-          })
-          .catch(error => {
-              console.error('Error al generar el archivo ZIP:', error);
-              Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: 'Hubo un problema al generar el archivo ZIP.',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
+          // Cerrar la alerta de "Procesando..." después de que el ZIP esté listo
+          Swal.close();
+        })
+        .catch(error => {
+          console.error('Error al generar el archivo ZIP:', error);
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Hubo un problema al generar el archivo ZIP.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
           });
-  });
-}
-
-
-
-
-
-
+        });
+    });
+  }
 
   const editGuiaForm = document.getElementById('editGuiaForm');
 
@@ -834,8 +826,6 @@ function downloadPdfsAsZip(pdfFiles, zipFileName) {
           }
         }
       }
-
-
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -885,7 +875,4 @@ function downloadPdfsAsZip(pdfFiles, zipFileName) {
       }
     });
   });
-
-
-
 });
