@@ -165,7 +165,7 @@ use App\Http\Controllers\EnviarCorreoController;
 use App\Http\Controllers\clientes\clientesProspectoController;
 use App\Http\Controllers\catalogo\categoriasController;
 use App\Http\Controllers\catalogo\marcasCatalogoController;
-use App\Http\Controllers\catalogo\ClaseController;
+use App\Http\Controllers\catalogo\claseController;
 use App\Http\Controllers\catalogo\lotesEnvasadoController;
 use App\Http\Controllers\guias\GuiasController;
 use App\Http\Controllers\hologramas\solicitudHologramaController;
@@ -516,12 +516,12 @@ Route::get('/marcas-list/{id}/editEtiquetas', [marcasCatalogoController::class, 
 
 
 /* ruta de clases catalogo */
-Route::get('/catalogo/clases', [ClaseController::class, 'UserManagement'])->name('catalogo-clases');
-Route::get('/clases-list', [ClaseController::class, 'index']);
-Route::delete('/clases-list/{id_clase}', [ClaseController::class, 'destroy'])->name('clases.destroy');
-Route::post('/catalogo', [ClaseController::class, 'store'])->name('catalogo.store');
-Route::get('/clases-list/{id_clase}/edit', [ClaseController::class, 'edit'])->name('clases.edit');
-Route::put('/clases-list/{id_clase}', [ClaseController::class, 'update'])->name('clases.update');
+Route::get('/catalogo/clases', [claseController::class, 'UserManagement'])->name('catalogo-clases');
+Route::get('/clases-list', [claseController::class, 'index']);
+Route::delete('/clases-list/{id_clase}', [claseController::class, 'destroy'])->name('clases.destroy');
+Route::post('/catalogo', [claseController::class, 'store'])->name('catalogo.store');
+Route::get('/clases-list/{id_clase}/edit', [claseController::class, 'edit'])->name('clases.edit');
+Route::put('/clases-list/{id_clase}', [claseController::class, 'update'])->name('clases.update');
 
 //Categorias Agave
 Route::get('/catalogo/categorias', [categoriasController::class, 'UserManagement'])->name('catalogo-categorias');
