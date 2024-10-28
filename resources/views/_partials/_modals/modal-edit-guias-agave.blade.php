@@ -8,7 +8,7 @@
                     <h4 class="address-title mb-2">Llenar Guía de Traslado Agave/Maguey</h4>
                     <p class="address-subtitle"></p>
                 </div>
-                <form id="editGuiaForm" method="POST" enctype="multipart/form-data"  onsubmit="return false">
+                <form id="editGuiaForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <!-- Hidden field to store the ID of the guia being edited -->
                     <input type="hidden" id="editt_id_guia" name="id_guia">
 
@@ -28,12 +28,13 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input class="form-control bg-light text-muted" type="number" placeholder="Número de guías solicitadas"
-                                    id="edit_numero_guias" name="numero_guias" readonly style="pointer-events: none;" />
+                                <input class="form-control bg-light text-muted" type="number"
+                                    placeholder="Número de guías solicitadas" id="edit_numero_guias" name="numero_guias"
+                                    readonly style="pointer-events: none;" />
                                 <label for="edit_numero_guias">Número de guías solicitadas</label>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div class="form-floating form-floating-outline mb-6">
                         <select class="select2 form-select" id="edit_nombre_predio" name="predios" aria-label="Predio"
@@ -63,7 +64,8 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number" placeholder="Número de plantas anterior"
-                                    id="edit_num_anterior" name="anterior" oninput="editcalcularPlantasActualmente()" readonly/>
+                                    id="edit_num_anterior" name="anterior" oninput="editcalcularPlantasActualmente()"
+                                    readonly />
                                 <label for="edit_num_anterior">Número de plantas anterior</label>
                             </div>
                         </div>
@@ -94,8 +96,8 @@
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-5">
-                        <input class="form-control" type="text" placeholder="Ingrese la edad"
-                            id="edit_edad" name="edad"/>
+                        <input class="form-control" type="text" placeholder="Ingrese la edad" id="edit_edad"
+                            name="edad" />
                         <label for="edit_edad">Edad</label>
                     </div>
                     <div class="form-floating form-floating-outline mb-5">
@@ -107,8 +109,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input step="any" class="form-control" type="number"
-                                    placeholder="Ingrese la cantiad de maguey" id="edit_kg_magey"
-                                    name="kg_maguey" />
+                                    placeholder="Ingrese la cantiad de maguey" id="edit_kg_magey" name="kg_maguey" />
                                 <label for="edit_kg_magey">KG de maguey</label>
                             </div>
                         </div>
@@ -124,29 +125,32 @@
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="date" class="form-control datepicker" id="edit_fecha_corte" placeholder="fecha_corte"
-                                    name="fecha_corte" aria-label="fechacorte" readonly>
+                                <input type="date" class="form-control datepicker" id="edit_fecha_corte"
+                                    placeholder="fecha_corte" name="fecha_corte" aria-label="fechacorte" readonly>
                                 <label for="edit_fecha_corte">Fecha de corte</label>
                             </div>
-                            
+
                         </div>
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="observaciones" class="form-control h-px-100" id="edit_id_observaciones" placeholder="Observaciones..."></textarea>
+                            <textarea name="observaciones" class="form-control h-px-100" id="edit_id_observaciones"
+                                placeholder="Observaciones..."></textarea>
                             <label for="edit_id_observaciones">Observaciones</label>
                         </div>
-                         <div class="form-floating form-floating-outline mb-5">
-                            <input class="form-control form-control-sm" type="file"  name="url[]">
+                        <div class="form-floating form-floating-outline mb-5">
+                            <input class="form-control form-control-sm" type="file" name="url[]">
                             <input value="71" class="form-control" type="hidden" name="id_documento[]">
-                            <input value="Guía de traslado de agave" class="form-control" type="hidden" name="nombre_documento[]">
+                            <input value="Guía de traslado de agave" class="form-control" type="hidden"
+                                name="nombre_documento[]">
                             <label for="Guía de traslado de agave">Adjuntar Guia escaneada</label>
                         </div>
 
                         <div class="form-floating form-floating-outline mb-5">
                             <input class="form-control form-control-sm" type="file" name="url[]">
                             <input value="132" class="form-control" type="hidden" name="id_documento[]">
-                            <input value="Resultados ART" class="form-control" type="hidden" name="nombre_documento[]">
-                            <label for="Resultados ART">Adjuntar resultados  de ART</label>
-                        </div> 
+                            <input value="Resultados ART" class="form-control" type="hidden"
+                                name="nombre_documento[]">
+                            <label for="Resultados ART">Adjuntar resultados de ART</label>
+                        </div>
                     </div>
 
                     <div class="text-center mb-6">
@@ -173,10 +177,11 @@
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="date" class="form-control datepicker" id="edit_fecha_ingreso" placeholder="fecha_ingreso"
-                                    name="fecha_ingreso" aria-label="fecha_ingreso" readonly>
+                                <input type="date" class="form-control datepicker" id="edit_fecha_ingreso"
+                                    placeholder="fecha_ingreso" name="fecha_ingreso" aria-label="fecha_ingreso"
+                                    readonly>
                                 <label for="edit_fecha_ingreso">Fecha de ingreso</label>
-                                
+
                             </div>
                         </div>
                     </div>
@@ -184,18 +189,19 @@
                         <input class="form-control" type="text" placeholder="Ingrese el domicilio de entrega"
                             id="edit_domicilio" name="domicilio" />
                         <label for="edit_domicilio">Domicilio de entrega</label>
-                    </div>                    
-                </div> 
-                
-                    <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Actualizar</button>
-                        <button id="btnCancelModal" type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
-
                     </div>
-                </form>
             </div>
+
+            <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <button id="btnCancelModal" type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                    aria-label="Close">Cancelar</button>
+
+            </div>
+            </form>
         </div>
     </div>
+</div>
 </div>
 
 
@@ -279,30 +285,30 @@
         // Asignar el valor calculado al input
         document.getElementById('edit_numero_plantas').value = plantasActualmente;
     }
-    
-//funcion para reditrigir a otra vista
-document.addEventListener("DOMContentLoaded", function() {
-  // Selecciona los botones por su id
-  const closeModalButtons = [document.getElementById("btnCloseModal"), document.getElementById("btnCancelModal")];
 
-  closeModalButtons.forEach(button => {
-    button.addEventListener("click", function(event) {
-      // Encuentra el modal padre del botón de cierre
-      const modalElement = button.closest('.modal');
-      
-      // Asegúrate de que no sea el modal #verGuiasRegistardas
-      if (modalElement && modalElement.id !== "verGuiasRegistardas") {
-        // Espera a que el modal actual se cierre antes de abrir el nuevo modal
-        setTimeout(() => {
-          // Abre el modal de guías registradas
-          const verGuiasRegistardasModal = new bootstrap.Modal(document.getElementById("verGuiasRegistardas"));
-          verGuiasRegistardasModal.show();
-        }, 300); // Ajusta el tiempo para asegurar que el modal anterior se cierre completamente
-      }
+    //funcion para reditrigir a otra vista
+    document.addEventListener("DOMContentLoaded", function() {
+        // Selecciona los botones por su id
+        const closeModalButtons = [document.getElementById("btnCloseModal"), document.getElementById(
+            "btnCancelModal")];
+
+        closeModalButtons.forEach(button => {
+            button.addEventListener("click", function(event) {
+                // Encuentra el modal padre del botón de cierre
+                const modalElement = button.closest('.modal');
+
+                // Asegúrate de que no sea el modal #verGuiasRegistardas
+                if (modalElement && modalElement.id !== "verGuiasRegistardas") {
+                    // Espera a que el modal actual se cierre antes de abrir el nuevo modal
+                    setTimeout(() => {
+                        // Abre el modal de guías registradas
+                        const verGuiasRegistardasModal = new bootstrap.Modal(document
+                            .getElementById("verGuiasRegistardas"));
+                        verGuiasRegistardasModal.show();
+                    },
+                    300); // Ajusta el tiempo para asegurar que el modal anterior se cierre completamente
+                }
+            });
+        });
     });
-  });
-});
-
-
-
 </script>
