@@ -33,7 +33,6 @@
                                 <label for="tipo_lote">Conformado por</label>
                             </div>
                         </div> --}}
-                    </div>
 
 {{--                     <div id="datosOpcion1" class="col-md-12">
                         <div class="form-floating form-floating-outline mb-6">
@@ -86,9 +85,9 @@
                                     <input class="form-control" type="number" placeholder="Ingrese un valor"
                                         id="cantidad_botellas" name="cant_botellas" min="0" required />
                                     <label for="cantidad_botellas">Cantidad de botellas</label>
-                                    <div class="invalid-feedback">
+{{--                                     <div class="invalid-feedback">
                                         Por favor, ingrese un número positivo.
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                             
