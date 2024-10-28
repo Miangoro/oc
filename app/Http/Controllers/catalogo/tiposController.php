@@ -4,7 +4,7 @@ namespace App\Http\Controllers\catalogo;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Tipos;
+use App\Models\tipos;
 
 
 class tiposController extends Controller
@@ -27,7 +27,7 @@ class tiposController extends Controller
 
         $search = [];
         
-        $totalData = Tipos::count();
+        $totalData = tipos::count();
 
         $totalFiltered = $totalData;
 
@@ -37,21 +37,21 @@ class tiposController extends Controller
         $dir = $request->input('order.0.dir');
 
         if (empty($request->input('search.value'))) {
-            $users = Tipos::offset($start)
+            $users = tipos::offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
         } else {
             $search = $request->input('search.value');
 
-            $users = Tipos::where('id_tipo', 'LIKE', "%{$search}%")
+            $users = tipos::where('id_tipo', 'LIKE', "%{$search}%")
                 ->orWhere('nombre', 'LIKE', "%{$search}%")
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
 
-            $totalFiltered = Tipos::where('id_tipo', 'LIKE', "%{$search}%")
+            $totalFiltered = tipos::where('id_tipo', 'LIKE', "%{$search}%")
                 ->orWhere('nombre', 'LIKE', "%{$search}%")
                 ->count();
         }
@@ -95,7 +95,7 @@ class tiposController extends Controller
     public function destroy($id_tipo)
     {
         try {
-            $eliminar = Tipos::findOrFail($id_tipo);
+            $eliminar = tipos::findOrFail($id_tipo);
             $eliminar->delete();
 
             return response()->json(['success' => 'Eliminado correctamente']);
@@ -115,7 +115,7 @@ class tiposController extends Controller
         ]);
 
         try {
-            $var = new Tipos();
+            $var = new tipos();
             $var->nombre = $request->nombre;
             $var->cientifico = $request->cientifico;
 
@@ -148,7 +148,7 @@ public function edit($id_tipo)
     ]);
 
     try {
-        $var2 = Tipos::findOrFail($id_tipo);
+        $var2 = tipos::findOrFail($id_tipo);
         $var2->nombre = $request->nombre;
         $var2->cientifico = $request->cientifico;
         $var2->save();
