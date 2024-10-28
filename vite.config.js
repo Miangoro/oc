@@ -22,6 +22,7 @@ const vendorJsFiles = GetFilesArray('resources/assets/vendor/js/*.js');
 
 // Processing Libs JS Files
 const LibsJsFiles = GetFilesArray('resources/assets/vendor/libs/**/*.js');
+const personalizados = GetFilesArray('resources/js/*.js');
 
 /**
  * Scss Files
@@ -66,34 +67,7 @@ export default defineConfig({
         ...LibsScssFiles,
         ...LibsCssFiles,
         ...FontsScssFiles,
-        
-        'resources/js/usuarios-personal.js',
-        'resources/js/catalogo_clases.js',
-        'resources/js/catalogo_lotes.js',
-        'resources/js/catalogo_marcas.js',
-        'resources/js/categorias.js',
-        'resources/js/certificados_instalaciones.js',
-        'resources/js/certificados_personal.js',
-        'resources/js/clientes_confirmados.js',
-        'resources/js/clientes_prospecto.js',
-        'resources/js/dictamenes_granel.js',
-        'resources/js/dictamenes_instalaciones.js',
-        'resources/js/documentos.js',
-        'resources/js/domicilio_predios.js',
-        'resources/js/domicilios_destinos.js',
-        'resources/js/equipos.js',
-        'resources/js/guias_maguey_agave.js',
-        'resources/js/inspecciones.js',
-        'resources/js/instalaciones.js',
-        'resources/js/lotes_envasado.js',
-        'resources/js/solicitud_hologramas.js',
-        'resources/js/solicitudes.js',
-        'resources/js/solicitudes-tipo.js',
-        'resources/js/tipos.js',
-        'resources/js/usuarios-clientes.js',
-        'resources/js/usuarios-consejo.js',
-        'resources/js/usuarios-inspectores.js',
-        'resources/js/usuarios-personal.js'
+        ...personalizados,
       ],
       refresh: true
     }),
