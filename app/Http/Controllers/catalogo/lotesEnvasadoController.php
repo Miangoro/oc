@@ -16,7 +16,7 @@ class lotesEnvasadoController extends Controller
 {
     public function UserManagement()
     {
-        $clientes = Empresa::where('tipo','=','2')->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $clientes = empresa::where('tipo','=','2')->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
         $marcas = marcas::all(); // Obtener todas las marcas
         $lotes_granel = LotesGranel::all(); // Obtener todas las marcas
         $lotes_envasado = lotes_envasado::all();
