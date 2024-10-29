@@ -31,7 +31,7 @@ class lotes_envasado extends Model
 
     public function empresa()
     {
-        return $this->belongsTo(Empresa::class, 'id_empresa', 'id_empresa');
+        return $this->belongsTo(empresa::class, 'id_empresa', 'id_empresa');
     }
     public function marca(){
         return $this->belongsTo(marcas::class, 'id_marca', 'id_marca');

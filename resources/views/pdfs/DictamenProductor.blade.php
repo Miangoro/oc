@@ -12,11 +12,6 @@
         }
 
         @font-face {
-            font-family: 'Lucida Sans Seminegrita';
-            src: url('fonts/LSANSD.ttf') format('truetype');
-        }
-
-        @font-face {
             font-family: 'Arial Negrita';
             src: url('fonts/arial-negrita.ttf') format('truetype');
         }
