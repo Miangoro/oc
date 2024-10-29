@@ -444,7 +444,7 @@ class lotesGranelController extends Controller
     public function update(Request $request, $id_lote_granel)
     {
         try {
-            Log::info('Datos recibidos:', $request->all());
+
 
             // Validar los datos del formulario
             $validated = $request->validate([
@@ -469,41 +469,39 @@ class lotesGranelController extends Controller
                 'folio_fq_ajuste' => 'nullable|string|max:50',
                 'folio_fq' => 'nullable|string|max:50'
             ]);
-            $lote = LotesGranel::findOrFail($id_lote_granel);
 
-            // Guardar el volumen original
-            $volumenOriginal = $lote->volumen;
-            $volumenRestanteOriginal = $lote->volumen_restante;
+        // Obtener el lote actual
+        $lote = LotesGranel::findOrFail($id_lote_granel);
 
-            // Calcular la diferencia de volumen
-            $diferencia = $validated['volumen'] - $volumenOriginal; // Calcula la diferencia
+        // Guardar el volumen original del lote
+        $volumenOriginal = $lote->volumen;
 
-            // Si el lote fue creado a partir de otro lote
-            if ($lote->lote_original_id) {
-                // Obtener el JSON de lotes originales
-                $loteOriginales = json_decode($lote->lote_original_id, true);
-                // Restablecer los volúmenes previamente descontados de los lotes originales
-                foreach ($loteOriginales['lotes'] as $index => $loteId) {
-                    $volumenParcial = $loteOriginales['volumenes'][$index]; // Volumen parcial que se había quitado
+        // Calcular la diferencia de volumen
+        $diferencia = $validated['volumen'] - $volumenOriginal;
 
-                    $loteOriginal = LotesGranel::find($loteId); // Buscar el lote original
+        // Manejar lotes originales si existen
+        if ($lote->lote_original_id) {
+            // Decodificar el JSON de lotes originales
+            $loteOriginales = json_decode($lote->lote_original_id, true);
+            $lotesIds = $loteOriginales['lotes'] ?? [];
+
+            // Calcular la cantidad a restar (en este caso, simplemente usaremos el volumen que quieres restar)
+            $volumenARestar = abs($diferencia); // Usamos la diferencia como el volumen a restar
+
+            // Actualizar el volumen restante de los lotes originales
+            if (!empty($lotesIds)) {
+                foreach ($lotesIds as $loteId) {
+                    $loteOriginal = LotesGranel::find($loteId);
                     if ($loteOriginal) {
-                        // Devolver el volumen previamente restado del lote original
-                        $loteOriginal->volumen_restante += $volumenParcial;
-
-                        // Log para verificar
-                        Log::info('Volumen Restante Original Antes:', [
-                            'id_lote' => $loteOriginal->id_lote_granel,
-                            'volumen_restante' => $loteOriginal->volumen_restante,
-                        ]);
-
-                        // Guardar el lote original actualizado
+                        // Restar el volumen deseado
+                        $nuevoVolumenRestante = max(0, $loteOriginal->volumen_restante - $volumenARestar);
+                        $loteOriginal->volumen_restante = $nuevoVolumenRestante;
                         $loteOriginal->save();
                     }
                 }
             }
-
-            // Actualizar lote
+        }
+            // Actualizar lote_
             $lote->update([
                 'id_empresa' => $validated['id_empresa'],
                 'nombre_lote' => $validated['nombre_lote'],
@@ -519,7 +517,8 @@ class lotesGranelController extends Controller
                 'fecha_emision' => $validated['fecha_emision'],
                 'fecha_vigencia' => $validated['fecha_vigencia'],
             ]);
-
+         // Ajustar el volumen restante del lote principal
+         $lote->volumen_restante += $diferencia;
             // Obtener el número de cliente
             $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
@@ -574,43 +573,7 @@ class lotesGranelController extends Controller
                 }
                 $lote->folio_fq = substr($folio_fq_Completo, 0, 50); // Limitar a 50 caracteres
             }
-
-       // Ajuste de volúmenes en lotes originales
-       if ($lote->lote_original_id) {
-        foreach ($loteOriginales['lotes'] as $index => $loteId) {
-            $volumenParcial = $loteOriginales['volumenes'][$index]; // Volumen parcial del lote original
-            $loteOriginal = LotesGranel::find($loteId);
-
-            if ($loteOriginal) {
-                // Si se disminuye el volumen del derivado
-                if ($diferencia < 0) {
-                    $loteOriginal->volumen_restante += abs($diferencia); // Aumenta el volumen restante
-                } else {
-                    $loteOriginal->volumen_restante -= $diferencia; // Disminuye según el nuevo volumen
-                }
-
-                // Validar que no sea negativo
-                if ($loteOriginal->volumen_restante < 0) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'El volumen restante del lote original no puede ser negativo.'
-                    ], 400);
-                }
-
-                // Guardar el lote original actualizado
-                $loteOriginal->save();
-                Log::info('Lote Original Actualizado:', [
-                    'id_lote_original' => $loteId,
-                    'nuevo_volumen_restante' => $loteOriginal->volumen_restante
-                ]);
-            }
-        }
-    }
-
-    // Actualizar el volumen del lote derivado
-    $lote->volumen = $validated['volumen'];
-    $lote->volumen_restante = $validated['volumen']; // Asegúrate que este valor sea correcto
-    $lote->save();
+             $lote->save();
 
             // Almacenar las guías en la tabla intermedia usando el modelo LotesGranelGuia
             LotesGranelGuia::where('id_lote_granel', $id_lote_granel)->delete();
@@ -627,6 +590,7 @@ class lotesGranelController extends Controller
                 'success' => true,
                 'message' => 'Lote actualizado exitosamente',
             ]);
+
         } catch (\Exception $e) {
             Log::error('Error al actualizar el lote:', [
                 'error' => $e->getMessage(),
