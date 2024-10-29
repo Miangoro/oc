@@ -6,7 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>F-UV-02-04 Ver 10, Dictamen de cumplimiento de Instalaciones como productor</title>
     <style>
-       
+        @font-face {
+            font-family: 'Lucida Sans Unicode';
+            src: url('fonts/lsansuni.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Arial Negrita';
+            src: url('fonts/arial-negrita.ttf') format('truetype');
+        }
 
         body {
             font-family: 'Lucida Sans Unicode';
