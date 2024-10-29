@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>F-UV-02-04 Ver 10, Dictamen de cumplimiento de Instalaciones como productor</title>
     <style>
-      
+       
 
         body {
             font-family: 'Lucida Sans Unicode';
@@ -122,7 +122,116 @@
             font-family: Arial, Helvetica, Verdana;
         }
 
-    
+        td, th {
+            border: 2px solid #1E4678;
+            padding: 5px;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        td {
+            width: 50%;
+        }
+
+        .images-container {
+            position: relative;
+            display: flex;
+            margin-top: -40px;
+            width: 100%;
+        }
+
+        .image-left {
+            margin-right: 60%;
+            width: 12%;
+        }
+
+        .textsello {
+            text-align: left;
+            font-size: 8px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .numpag {
+            font-size: 10px;
+            position: fixed;
+            bottom: 10px;
+            right: 15px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sello {
+            text-align: right;
+            font-size: 11px;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            right: 50px;
+            top: 790px;
+            font-family: 'Arial Negrita' !important;
+        }
+
+        .container {
+            margin-top: 0px;
+            position: relative;
+        }
+
+        .textx, .textsello {
+            line-height: 1.2;
+            font-family: Arial, Helvetica, Verdana;
+        }
+
+        .image-right {
+            position: absolute; 
+            right: 10px; 
+            top: -20px; 
+            width: 240px;
+        }
+
+
+        .footer-bar {
+            position: fixed;
+            bottom: -55px;
+            left: -70px;
+            right: -70px;
+            width: calc(100% - 40px);
+            height: 45px;
+            background-color: #158F60;
+            color: white;
+            font-size: 10px;
+            text-align: center;
+            padding: 10px 0px;
+        }
+
+        .footer-bar p {
+            margin: 0; 
+            line-height: 1;
+        }
+
+        .font-lucida-sans-seminegrita {
+            font-family: 'Lucida Sans Seminegrita', sans-serif;
+        }
+
+        .pie {
+            text-align: right;
+            font-size: 9px;
+            line-height: 1;
+            position: fixed;
+            bottom: -10;
+            left: 0;   
+            right: 0;  
+            width: calc(100% - 40px); 
+            height: 45px;
+            margin-right: 30px; 
+            padding: 10px 0px;
+            font-family: 'Lucida Sans Unicode';
+        }
+
+        .negrita{
+            font-family: 'Lucida Sans Unicode Negrita' !important;
+        }
+       
     </style>
 </head>
 <body>
