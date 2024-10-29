@@ -370,6 +370,11 @@ class lotesGranelController extends Controller
             // Cargar el lote y las guías asociadas
             $lote = LotesGranel::with('lotesGuias.guia')->findOrFail($id_lote_granel);
 
+            $organismo = null; // Inicializar como null
+            if ($lote->id_organismo) {
+              $organismo = organismos::find($lote->id_organismo);
+            }
+
             // Obtener los documentos asociados
             $documentos = Documentacion_url::where('id_relacion', $id_lote_granel)->get();
 
@@ -417,6 +422,7 @@ class lotesGranelController extends Controller
               $volumenes = [];
               $nombreLotes = [];
           }
+
             return response()->json([
                 'success' => true,
                 'lote' => $lote,
@@ -424,6 +430,7 @@ class lotesGranelController extends Controller
                 'documentos' => $documentosConUrl,
                 'numeroCliente' => $numeroCliente,
                 'archivo_url_otro_organismo' => $archivoUrlOtroOrganismo,
+                'organismo' => $organismo->id_organismo ?? null,
                 'lotes' => $lotes,
                 'volumenes' => $volumenes,
                 'nombreLotes' => $nombreLotes
