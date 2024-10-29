@@ -543,7 +543,7 @@ $(function () {
         Swal.fire({
           icon: 'success',
           title: '¡Eliminado!',
-          text: '¡La solicitud ha sido eliminada correctamente!',
+          text: '¡La marca ha sido eliminada correctamente!',
           customClass: {
             confirmButton: 'btn btn-success'
           }
@@ -551,7 +551,7 @@ $(function () {
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: 'Cancelado',
-          text: 'La solicitud no ha sido eliminada',
+          text: 'La marca no ha sido eliminada',
           icon: 'error',
           customClass: {
             confirmButton: 'btn btn-success'
@@ -785,7 +785,7 @@ $(function () {
           Swal.fire({
               icon: 'error',
               title: '¡Error!',
-              text: 'Error al obtener los datos de la solicitud de holograma',
+              text: 'Error al obtener los datos de las etiquetas',
               customClass: {
                   confirmButton: 'btn btn-danger'
               }

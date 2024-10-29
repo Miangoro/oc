@@ -16,7 +16,7 @@ class lotesEnvasadoController extends Controller
 {
     public function UserManagement()
     {
-        $clientes = Empresa::where('tipo','=','2')->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $clientes = empresa::where('tipo','=','2')->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
         $marcas = marcas::all(); // Obtener todas las marcas
         $lotes_granel = LotesGranel::all(); // Obtener todas las marcas
         $lotes_envasado = lotes_envasado::all();
@@ -95,10 +95,10 @@ class lotesEnvasadoController extends Controller
                 $direccion_completa = $instalacion ? $instalacion->direccion_completa : '';
         
                 // Obtener el numero_cliente de la tabla empresa_num_cliente
-                $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
+                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
                 
                 // Obtener la marca de la tabla marcas mediante el id_marca
-                $marca = \App\Models\Marcas::where('id_marca', $user->id_marca)->value('marca');
+                $marca = \App\Models\marcas::where('id_marca', $user->id_marca)->value('marca');
         
                 $sku = json_decode($user->sku, true); // Decodifica el JSON en un array
 
