@@ -216,7 +216,7 @@ public function edit($id_dictamen)
         $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
         $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
-        $pdf = Pdf::loadView('pdfs.DictamenProductor',['datos'=>mb_convert_encoding($datos, 'UTF-8', 'UTF-8'), 'fecha_inspeccion'=>$fecha_inspeccion,'fecha_emision'=>$fecha_emision,'fecha_vigencia'=>$fecha_vigencia]);
+        $pdf = Pdf::loadView('pdfs.DictamenProductor',['datos'=>$datos, 'fecha_inspeccion'=>$fecha_inspeccion,'fecha_emision'=>$fecha_emision,'fecha_vigencia'=>$fecha_vigencia]);
         return $pdf->stream('F-UV-02-04 Ver 10, Dictamen de cumplimiento de Instalaciones como productor.pdf');
     }
 
