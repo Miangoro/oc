@@ -298,7 +298,7 @@ class marcasCatalogoController extends Controller
         $clase = marcas::findOrFail($id_marca);
         $clase->delete();
 
-        return response()->json(['success' => 'Clase eliminada correctamente']);
+        return response()->json(['success' => 'Marca eliminada correctamente']);
     }
 
 
@@ -308,10 +308,10 @@ class marcasCatalogoController extends Controller
         try {
             // Obtener el lote envasado existente
             $loteEnvasado = marcas::findOrFail($request->input('id_marca'));
-    
+
             // Decodificar el JSON existente
             $etiquetado = json_decode($loteEnvasado->etiquetado, true);
-            
+
             // Inicializar los arrays si no existen
             if (!isset($etiquetado['id_doc'])) {
                 $etiquetado['id_doc'] = [];
@@ -331,10 +331,10 @@ class marcasCatalogoController extends Controller
             if (!isset($etiquetado['id_categoria'])) {
                 $etiquetado['id_categoria'] = [];
             }
-    
+
             // Obtener el siguiente id_doc
             $nuevoIdDoc = count($etiquetado['id_doc']) + 1; // Incrementar el contador
-    
+
             // Agregar los datos recibidos en la solicitud solo si no existen
             foreach ($request->sku as $index => $sku) {
                 // Verificar si el SKU ya existe
@@ -348,59 +348,59 @@ class marcasCatalogoController extends Controller
                     $nuevoIdDoc++; // Incrementar el id_doc para la siguiente entrada
                 }
             }
-    
+
             // Volver a codificar el JSON
             $loteEnvasado->etiquetado = json_encode($etiquetado);
             $loteEnvasado->save();
-    
+
             // Método para guardar PDF
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $loteEnvasado->id_empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-            $nuevoIdDocEtiqueta = 1; 
-            $nuevoIdDocCorrugado = 1; 
+            $nuevoIdDocEtiqueta = 1;
+            $nuevoIdDocCorrugado = 1;
             // Guardar documentos subidos
             foreach ($request->id_documento as $index => $id_documento) {
-              // Incrementar el contador
+                // Incrementar el contador
                 // Agregar nuevo documento si existe el archivo correspondiente
                 if ($request->hasFile('url') && isset($request->file('url')[$index])) {
                     $file = $request->file('url')[$index];
-                    $filename = $request->nombre_documento[$index] . '_' . time() .$index. '.' . $file->getClientOriginalExtension();
+                    $filename = $request->nombre_documento[$index] . '_' . time() . $index . '.' . $file->getClientOriginalExtension();
                     $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
-    
+
                     $documentacion_url = new Documentacion_url();
                     $documentacion_url->id_relacion = $loteEnvasado->id_marca;
                     $documentacion_url->id_documento = $id_documento;
                     $documentacion_url->nombre_documento = $request->nombre_documento[$index];
                     $documentacion_url->url = $filename; // Almacenar solo el nombre del archivo
                     $documentacion_url->id_empresa = $loteEnvasado->id_empresa;
-    
 
-                       // Asociar el id_doc correspondiente
-                        if($id_documento==60){
-                            $documentacion_url->id_doc =  (string)($nuevoIdDocEtiqueta);
-                            $nuevoIdDocEtiqueta++;
-                        }else{
-                            $documentacion_url->id_doc =  (string)($nuevoIdDocCorrugado);
-                            $nuevoIdDocCorrugado++;
-                        }
-                       
-                    
-    
+
+                    // Asociar el id_doc correspondiente
+                    if ($id_documento == 60) {
+                        $documentacion_url->id_doc =  (string)($nuevoIdDocEtiqueta);
+                        $nuevoIdDocEtiqueta++;
+                    } else {
+                        $documentacion_url->id_doc =  (string)($nuevoIdDocCorrugado);
+                        $nuevoIdDocCorrugado++;
+                    }
+
+
+
                     $documentacion_url->save();
                 }
             }
-    
+
             // Retornar respuesta exitosa
             return response()->json(['success' => 'Etiquetas cargadas correctamente']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar la etiqueta: ' . $e->getMessage()], 500);
         }
     }
-    
-    
-    
-    
-    
+
+
+
+
+
 
 
 
