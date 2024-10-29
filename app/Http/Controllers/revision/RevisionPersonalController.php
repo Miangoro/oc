@@ -233,7 +233,6 @@ class RevisionPersonalController extends Controller
         }
     }
     
- 
     public function getCertificadoUrl($id_revision, $tipo)
     {
         $revisor = Revisor::with('certificado')->where('id_revision', $id_revision)->first();
@@ -320,79 +319,6 @@ class RevisionPersonalController extends Controller
         return $pdf->stream('Bitácora de revisión documental.pdf');
     }    
 
-    public function bitacora_dinamica($id)
-{
-    // Buscar el certificado por ID
-    $datos_revisor = Certificados::findOrFail($id);
-    
-    // Obtener el ID del dictamen asociado
-    $id_dictamen = $datos_revisor->dictamen->id_dictamen; 
-
-    // Determinar el tipo de certificado basado en el ID del dictamen
-    $tipo_certificado = '';
-    switch ($id_dictamen) {
-        case 1:
-            $tipo_certificado = 'Productor';
-            break;
-        case 2:
-            $tipo_certificado = 'Envasador';
-            break;
-        case 3:
-            $tipo_certificado = 'Comercializador';
-            break;
-        case 4:
-            $tipo_certificado = 'Almacén y bodega';
-            break;
-        case 5:
-            $tipo_certificado = 'Área de maduración';
-            break;
-        default:
-            $tipo_certificado = 'Desconocido';
-    }
-
-    // Buscar el revisor asociado al certificado
-    $revisor = Revisor::where('id_certificado', $id)->first();
-    if (!$revisor) {
-        return response()->json(['error' => 'Revisor not found'], 404);
-    }
-
-    // Cargar el historial de respuestas
-    $respuestas = json_decode($revisor->respuestas, true);
-    
-    // Obtener la última revisión
-    $respuestasRecientes = end($respuestas);
-    $desicion = $revisor->desicion; 
-    $nameRevisor = $revisor->user->name ?? null;
-    $fecha = $revisor->updated_at;
-    $id_aprobador = $revisor->aprobador->name ?? 'Sin asignar';
-    $aprobacion = $revisor->aprobacion ?? 'Pendiente de aprobar';
-    $fecha_aprobacion = $revisor->fecha_aprobacion;
-
-    // Obtener datos de la empresa
-    $razonSocial = $datos_revisor->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'Sin asignar';
-    $numero_cliente = $datos_revisor->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar';
-
-    // Preparar los datos para el PDF
-    $pdfData = [
-        'num_certificado' => $datos_revisor->num_certificado,
-        'tipo_certificado' => $tipo_certificado,
-        'respuestas' => $respuestasRecientes, // Solo la revisión más reciente
-        'desicion' => $desicion,
-        'id_revisor' => $nameRevisor,
-        'razon_social' => $razonSocial,
-        'fecha' => Helpers::formatearFecha($fecha),
-        'numero_cliente' => $numero_cliente,
-        'aprobacion' => $aprobacion,
-        'id_aprobador' => $id_aprobador,
-        'fecha_aprobacion' => Helpers::formatearFecha($fecha_aprobacion),
-    ];
-
-    // Cargar la vista y generar el PDF
-    $pdf = Pdf::loadView('pdfs.bitacora_revicionPersonalOCCIDAM', $pdfData);
-    return $pdf->stream('Bitácora de revisión documental.pdf');
-}
-
-
     public function calcularCertificados($userId)
     {
     // Total de certificados asignados al revisor
@@ -473,6 +399,7 @@ class RevisionPersonalController extends Controller
         ], 500);
     }
     }
+
     public function cargarHistorial($id_revision)
     {
         try {
@@ -505,6 +432,5 @@ class RevisionPersonalController extends Controller
         }
     }
     
-
 //end
 }
