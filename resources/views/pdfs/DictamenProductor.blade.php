@@ -248,54 +248,7 @@
 </head>
 <body>
 <div class="container">
-    <div class="header">
-        <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Logo UVEM" width="275px">
-    </div>
-  
-    <p class="text">
-    Se dictamina que la <span class="font-lucida-sans-seminegrita">Unidad de producción</span> cuenta con la infraestructura, el equipo y los procesos necesarios
-    para la producción de <span class="font-lucida-sans-seminegrita">Mezcal, clase (s)</span>, requisitos establecidos en la NOM-070-SCFI-2016,
-    Bebidas alcohólicas-Mezcal-Especificaciones y por el Organismo de Certificación del Centro de Innovación y
-    Desarrollo Agroalimentario de Michoacán A.C. (CIDAM)
-   </p>
-
-    <p class="text1">Las instalaciones se encuentran en región de los estados y municipios que contempla la resolución mediante el cual se otorga la protección
-    prevista a la denominación de origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre, publicada el 28 de noviembre
-    de 1994, así como sus modificaciones subsecuentes.</p>
-    <br><br>
-    <p class="sello">Sello de Unidad de Inspección</p>
-    <div class="images-container">
-    <img src="{{ public_path('img_pdf/qr_umc-074.png') }}" alt="Logo UVEM" width="90px">
-    <img src="{{ public_path('img_pdf/Sello ui.png') }}" alt="Imagen derecha" class="image-right">
-    </div>
-    <p class="textx" style="font-size: 10px; margin: 1;">
-    <strong>AUTORIZÓ</strong>
-    <span style="margin-left: 50px;">
-        <strong>Gerente Técnico Sustituto de la Unidad de Inspección | BTG. Erik Antonio Mejía Vaca</strong>
-    </span>
-    </p>
-
-    <p class="textx" style="font-size: 10px; margin: 1;">
-    <strong>Cadena Origina</strong>
-    <span style="margin-left: 29px;">
-        <strong>UMG-159/2024|2024-06-26|UMS-1094/2024</strong>
-    </span>
-    </p>
-
-    <p class="textx" style="font-size: 10px; margin: 1;">
-    <strong>Sello Digital</strong>
-    </p>
-
  
-
-    <div class="footer-bar">
-        <p class="font-lucida-sans-seminegrita">www.cidam.org . unidadverificacion@cidam.org</p>
-        <p>Kilómetro 8, Antigua Carretera a Pátzcuaro S/N. Col. Otra no especificada en el catálogo C.P. 58341. Morelia Michoacán</p>
-    </div>
-
-    <p class="pie">Entrada en vigor: 15-07-2024 <br>
-    F-UV-02-04 Ver 10
-    </p>
 </div>
 </body>
 </html>
