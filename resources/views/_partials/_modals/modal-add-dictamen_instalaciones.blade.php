@@ -37,14 +37,15 @@
 
                 <div class="col-md-3">
                     <div class="form-floating form-floating-outline mb-6">
-                <input type="date" class="form-control" id="fecha_emision" placeholder="fecha" name="fecha_emision" aria-label="Nombre" required>
+                <input type="date" class="form-control datepicker" id="fecha_emision" placeholder="fecha" name="fecha_emision" aria-label="Nombre" required readonly>
                     <label for="">Fecha de emisión</label>
                     </div>
                 </div>
+                
 
                 <div class="col-md-3">
                         <div class="form-floating form-floating-outline mb-6">
-        <input class="form-control" type="date" placeholder="vigencia" id="fecha_vigencia" name="fecha_vigencia" required />
+        <input class="form-control datepicker" type="date" placeholder="vigencia" id="fecha_vigencia" name="fecha_vigencia" required readonly/>
                             <label for="">Vigencia hasta</label>
                         </div>
                 </div>
@@ -139,14 +140,14 @@
     
                     <div class="col-md-3">
                         <div class="form-floating form-floating-outline mb-6">
-                    <input type="date" class="form-control" id="edit_fecha_emision" placeholder="fecha" name="fecha_emision" aria-label="Nombre" required>
+                    <input type="date" class="form-control datepicker" id="edit_fecha_emision" placeholder="fecha" name="fecha_emision" aria-label="Nombre" required readonly>
                         <label for="">Fecha de emisión</label>
                         </div>
                     </div>
     
                     <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-6">
-            <input class="form-control" type="date" placeholder="vigencia" id="edit_fecha_vigencia" name="fecha_vigencia" required />
+            <input class="form-control datepicker" type="date" placeholder="vigencia" id="edit_fecha_vigencia" name="fecha_vigencia" required readonly/>
                                 <label for="">Vigencia hasta</label>
                             </div>
                     </div>

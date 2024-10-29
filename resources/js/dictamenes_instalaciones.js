@@ -2,7 +2,14 @@
  Page User List
  */
  'use strict';
-
+ $(document).ready(function () {
+  $('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true,
+    language: 'es' // Configura el idioma a español
+  });
+});
 
 //const { formatDate } = require("@fullcalendar/core/index.js");
 
