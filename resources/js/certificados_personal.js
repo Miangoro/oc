@@ -712,50 +712,140 @@ $('#modalAprobacion').on('hidden.bs.modal', function () {
   $('#respuesta-aprobacion').prop('selected', true);
 });
 
-
 function cargarHistorial(id_revision) {
   console.log('Cargando historial para ID de revisión:', id_revision); // Mostrar el ID en consola
 
+  // Limpiar el contenido del contenedor del historial antes de cargar nuevos datos
+  $('#historialRespuestasContainer').html('<p>Cargando historial...</p>');
+  // Limpiar el contenedor de respuestas
+  $('#respuestasContainer').html(''); // Limpiar la tabla de respuestas
+
   // Llamada a la API para obtener el historial de respuestas
   $.ajax({
-      url: '/obtener/historial/' + id_revision, // Ajusta la URL según tu API
+      url: `/obtener/historial/${id_revision}`, // Ajusta la URL según tu API
       method: 'GET',
       success: function(data) {
           console.log('Datos recibidos:', data); // Mostrar los datos recibidos en consola
 
-          if (data.respuestas.length === 0) {
+          // Verificar si hay respuestas disponibles
+          if (!data.respuestas || data.respuestas.length === 0) {
               $('#historialRespuestasContainer').html('<p>No hay historial disponible.</p>');
               return;
           }
 
-          var historialHTML = '<ul>'; // Variable para almacenar el HTML como lista
+          let botonesHTML = ''; // Variable para almacenar los botones de revisiones
+
+          // Verificar si hay respuestas en la primera revisión
+          if (!data.respuestas[0].respuestas || Object.keys(data.respuestas[0].respuestas).length === 0) {
+              $('#historialRespuestasContainer').html('<p>No hay historial disponible para esta revisión.</p>');
+              return; // No continuar para evitar mostrar tabla anterior
+          }
 
           // Iterar sobre cada revisión en `data.respuestas`
           $.each(data.respuestas[0].respuestas, function(revisionKey, revisionData) {
-              historialHTML += '<li>' + revisionKey + 
-                               ' <a href="/bitacora-dinamica/' + id_revision + 
-                               '" class="text-info">Ver Respuestas</a></li>';
+              botonesHTML += `
+                  <button class="btn btn-primary btn-lg mb-2" 
+                          data-revision="${revisionKey}" 
+                          data-respuestas='${JSON.stringify(revisionData)}'>
+                      <i class="fas fa-history"></i>${revisionKey} <!-- Icono de historial -->
+                  </button>
+              `;
           });
 
-          historialHTML += '</ul>'; // Cierra la lista
+          // Inserta los botones en el contenedor
+          $('#historialRespuestasContainer').html(botonesHTML);
 
-          $('#historialRespuestasContainer').html(historialHTML); // Inserta el HTML generado en el contenedor
+          // Establecer el evento de clic en los botones generados
+          $('.btn-primary').on('click', function() {
+              const revisionSeleccionada = $(this).data('revision');
+              const respuestas = $(this).data('respuestas'); // Obtener las respuestas para la revisión seleccionada
+              mostrarRespuestas(respuestas); // Mostrar la tabla correspondiente
+          });
       },
       error: function(xhr) {
           $('#historialRespuestasContainer').html('<p>Error al cargar el historial.</p>');
+          $('#respuestasContainer').html(''); // Limpiar tabla de respuestas en caso de error
           console.error('Error al cargar el historial:', xhr); // Mostrar error en consola
       }
   });
 }
 
-// Al hacer clic en el enlace de historial
+function mostrarRespuestas(respuestas) {
+  // Asegúrate de que `respuestas` sea un objeto
+  if (typeof respuestas === 'string') {
+      respuestas = JSON.parse(respuestas); // Convertir si es una cadena JSON
+  }
+
+  // Crear la tabla y sus filas basadas en la estructura proporcionada
+  let respuestasHTML = `
+      <div class="table-responsive">
+          <table class="table table-striped table-bordered">
+              <thead class="table-light">
+                  <tr>
+                      <th class="text-start">#</th> <!-- Nueva columna para el número de pregunta -->
+                      <th class="text-start">Pregunta</th> <!-- Alineación a la izquierda -->
+                      <th class="text-center">C</th>
+                      <th class="text-center">NC</th>
+                      <th class="text-center">NA</th>
+                      <th class="text-start">Observaciones</th> <!-- Nueva columna de Observaciones -->
+                  </tr>
+              </thead>
+              <tbody>
+  `;
+
+  const preguntas = [
+      { key: 'pregunta1', label: 'CONTRATO DE PRESTACIÓN DE SERVICIOS' },
+      { key: 'pregunta2', label: 'CONSTANCIA SITUACIÓN FISCAL Y RFC' },
+      { key: 'pregunta3', label: 'CARTA NO. CLIENTE' },
+      { key: 'pregunta4', label: 'NOMBRE DE LA EMPRESA O PERSONA FÍSICA' },
+      { key: 'pregunta5', label: 'DIRECCIÓN FISCAL' },
+      { key: 'pregunta6', label: 'SOLICITUD DEL SERVICIO DE DICTAMINACIÓN DE INSTALACIONES' },
+      { key: 'pregunta7', label: 'NÚMERO DE CERTIFICADO DE INSTALACIONES' },
+      { key: 'pregunta8', label: 'NOMBRE DE LA EMPRESA O PERSONA FÍSICA' },
+      { key: 'pregunta9', label: 'DOMICILIO FISCAL DE LAS INSTALACIONES' },
+      { key: 'pregunta10', label: 'CORREO ELECTRÓNICO Y NÚMERO TELEFÓNICO' },
+      { key: 'pregunta11', label: 'FECHA DE VIGENCIA Y VENCIMIENTO DEL CERTIFICADO' },
+      { key: 'pregunta12', label: 'ALCANCE DE LA CERTIFICACIÓN' },
+      { key: 'pregunta13', label: 'NO. DE CLIENTE' },
+      { key: 'pregunta14', label: 'NÚMERO DE DICTAMEN EMITIDO POR LA UVEM' },
+      { key: 'pregunta15', label: 'ACTA DE LA UNIDAD DE INSPECCIÓN (FECHA DE INICIO, TÉRMINO Y FIRMAS)' },
+      { key: 'pregunta16', label: 'NOMBRE Y PUESTO DEL RESPONSABLE DE LA EMISIÓN DEL CERTIFICADO' },
+      { key: 'pregunta17', label: 'NOMBRE Y DIRECCIÓN DEL ORGANISMO CERTIFICADOR CIDAM' },
+  ];
+
+  preguntas.forEach((pregunta, index) => {
+      const respuesta = respuestas[pregunta.key]; // Obtener la respuesta para la pregunta actual
+      const observacion = respuesta?.observacion ? respuesta.observacion : '---'; // Verificar si hay observaciones
+
+      respuestasHTML += `
+          <tr>
+              <td class="text-start">${index + 1}</td> <!-- Número de pregunta -->
+              <td>${pregunta.label}</td>
+              <td class="text-center">${respuesta?.respuesta === 'C' ? 'C' : '---'}</td>
+              <td class="text-center ${respuesta?.respuesta === 'NC' ? 'text-danger' : ''}">${respuesta?.respuesta === 'NC' ? 'NC' : '---'}</td>
+              <td class="text-center">${respuesta?.respuesta === 'NA' ? 'NA' : '---'}</td>
+              <td class="text-start">${observacion}</td> <!-- Nueva celda para Observaciones -->
+          </tr>
+      `;
+  });
+
+  respuestasHTML += `
+              </tbody>
+          </table>
+      </div>
+  `;
+
+  // Inserta el HTML generado en el contenedor correspondiente en tu vista
+  document.getElementById('respuestasContainer').innerHTML = respuestasHTML;
+}
+
+// Al hacer clic en el botón de historial
 $(document).on('click', '.abrir-historial', function() {
-  var id_revision = $(this).data('id'); // Obtener ID desde el atributo data-id
+  const id_revision = $(this).data('id'); // Obtener el ID del atributo data-id del botón clicado
   console.log('ID de revisión clicado:', id_revision); // Mostrar el ID clicado en consola
-  cargarHistorial(id_revision); // Cargar el historial
+  cargarHistorial(id_revision); // Cargar el historial correspondiente
   $('#historialModal').modal('show'); // Abre el modal
 });
-
 
 //end
 });
