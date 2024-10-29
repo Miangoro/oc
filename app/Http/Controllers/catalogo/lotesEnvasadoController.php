@@ -95,7 +95,7 @@ class lotesEnvasadoController extends Controller
                 $direccion_completa = $instalacion ? $instalacion->direccion_completa : '';
         
                 // Obtener el numero_cliente de la tabla empresa_num_cliente
-                $numero_cliente = \App\Models\EmpresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
+                $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
                 
                 // Obtener la marca de la tabla marcas mediante el id_marca
                 $marca = \App\Models\Marcas::where('id_marca', $user->id_marca)->value('marca');
