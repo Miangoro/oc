@@ -19,7 +19,7 @@ $(function () {
         { data: 'created_at' },       //5
         { data: 'updated_at' },       //6
         { data: 'PDF' },              //7
-        { data: 'desicion' },         //8
+        { data: 'decision' },         //8
         { data: 'actions' }           //9
       ],
       columnDefs: [
@@ -118,11 +118,11 @@ $(function () {
           targets: 8,
           orderable: 0,
           render: function (data, type, full, meta) {
-            var $desicion = full['desicion'];
+            var $decision = full['decision'];
             var $colorDesicion;
             var $nombreDesicion;
 
-            switch ($desicion) {
+            switch ($decision) {
               case "positiva":
                 $nombreDesicion = 'Revision Positiva';
                 $colorDesicion = 'primary';
@@ -514,13 +514,13 @@ $(document).on('click', '#registrarRevision', function () {
     return;
   }
 
-  const desicion = todasLasRespuestasSonC ? 'positiva' : 'negativa';
+  const decision = todasLasRespuestasSonC ? 'positiva' : 'negativa';
 
   console.log({
     id_revision: id_revision,
     respuestas: respuestas,
     observaciones: observaciones,
-    desicion: desicion
+    decision: decision
   });
 
   $.ajax({
@@ -534,7 +534,7 @@ $(document).on('click', '#registrarRevision', function () {
       id_revision: id_revision,
       respuestas: respuestas,
       observaciones: observaciones,
-      desicion: desicion 
+      decision: decision 
     }),
     success: function (response) {
       Swal.fire({
@@ -605,8 +605,8 @@ function cargarRespuestas(id_revision) {
           });
 
           // Establecer la decisión si está disponible
-          const desicion = response.desicion || null;
-          $('#floatingSelect').val(desicion);
+          const decision = response.decision || null;
+          $('#floatingSelect').val(decision);
       },
       error: function (xhr) {
           console.error('Error al cargar las respuestas:', xhr);

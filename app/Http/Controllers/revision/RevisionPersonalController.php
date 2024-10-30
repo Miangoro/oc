@@ -36,7 +36,7 @@ class RevisionPersonalController extends Controller
             5 => 'id_certificado',
             6 => 'num_certificado',
             7 => 'created_at',
-            8 => 'desicion'
+            8 => 'decision'
         ];
     
         $search = $request->input('search.value');
@@ -133,7 +133,7 @@ class RevisionPersonalController extends Controller
                 'fecha_creacion' => Helpers::formatearFecha($fechaCreacion),
                 'created_at' => Helpers::formatearFecha($revisor->created_at), 
                 'updated_at' => Helpers::formatearFecha($revisor->updated_at),
-                'desicion' => $revisor->desicion,
+                'decision' => $revisor->decision,
             ];
         })->filter(function ($item) {
             return $item['id_revisor'] !== null;
@@ -154,7 +154,7 @@ class RevisionPersonalController extends Controller
                 'id_revision' => 'required|integer',
                 'respuestas' => 'nullable|array',
                 'observaciones' => 'nullable|array',
-                'desicion' => 'nullable|string', 
+                'decision' => 'nullable|string', 
             ]);
     
             $revisor = Revisor::where('id_revision', $request->id_revision)->first();
@@ -184,7 +184,7 @@ class RevisionPersonalController extends Controller
     
             $historialRespuestas[$revisionKey] = $nuevoRegistro;
             $revisor->respuestas = json_encode($historialRespuestas);
-            $revisor->desicion = $todasLasRespuestasSonC ? 'positiva' : 'negativa';
+            $revisor->decision = $todasLasRespuestasSonC ? 'positiva' : 'negativa';
     
             $revisor->save();
             return response()->json(['message' => 'Respuestas y decisión registradas exitosamente.'], 201);
@@ -207,12 +207,12 @@ class RevisionPersonalController extends Controller
     
             $historialRespuestas = json_decode($revisor->respuestas, true);
             $ultimaRevision = end($historialRespuestas); 
-            $desicion = $revisor->desicion;
+            $decision = $revisor->decision;
     
             return response()->json([
                 'message' => 'Datos de la revisión más actual recuperados exitosamente.',
                 'respuestas' => $ultimaRevision,
-                'desicion' => $desicion,
+                'decision' => $decision,
             ], 200);
             
         } catch (\Exception $e) {
@@ -278,7 +278,7 @@ class RevisionPersonalController extends Controller
     
         $respuestas = json_decode($revisor->respuestas, true);
         $respuestasRecientes = end($respuestas);
-        $desicion = $revisor->desicion; 
+        $decision = $revisor->decision; 
         $nameRevisor = $revisor->user->name ?? null;
         $fecha = $revisor->updated_at;
         $id_aprobador = $revisor->aprobador->name ?? 'Sin asignar';
@@ -292,7 +292,7 @@ class RevisionPersonalController extends Controller
             'num_certificado' => $datos_revisor->num_certificado,
             'tipo_certificado' => $tipo_certificado,
             'respuestas' => $respuestasRecientes,
-            'desicion' => $desicion,
+            'decision' => $decision,
             'id_revisor' => $nameRevisor,
             'razon_social' => $razonSocial,
             'fecha' => Helpers::formatearFecha($fecha),
@@ -314,13 +314,13 @@ class RevisionPersonalController extends Controller
 
         $certificadosPendientes = Revisor::where('id_revisor', $userId)
             ->where(function ($query) {
-                $query->whereNull('desicion')
-                    ->orWhere('desicion', ''); 
+                $query->whereNull('decision')
+                    ->orWhere('decision', ''); 
             })
             ->count();
 
         $certificadosRevisados = Revisor::where('id_revisor', $userId)
-            ->whereNotNull('desicion')
+            ->whereNotNull('decision')
             ->count();
         
         $porcentajePendientes = $totalCertificados > 0 ? ($certificadosPendientes / $totalCertificados) * 100 : 0;
@@ -452,7 +452,7 @@ class RevisionPersonalController extends Controller
             }
     
             $revisor->respuestas = json_encode($historialRespuestas);
-            $revisor->desicion = $todasLasRespuestasSonC ? 'positiva' : 'negativa';
+            $revisor->decision = $todasLasRespuestasSonC ? 'positiva' : 'negativa';
             $revisor->save();
             return response()->json(['message' => 'Revisión actualizada exitosamente.'], 200);
     
