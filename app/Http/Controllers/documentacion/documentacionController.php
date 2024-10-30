@@ -105,17 +105,17 @@ class documentacionController extends Controller
 
         if ($actividad->id_actividad == 2) {
           $documentosActividad = "Generales Productor Mezcal";
-          $act_instalacion = "productora";
+          $act_instalacion = "Productora";
         }
 
         if ($actividad->id_actividad == 3) {
           $documentosActividad = "Generales Envasador";
-          $act_instalacion = "envasadora";
+          $act_instalacion = "Envasadora";
         }
 
         if ($actividad->id_actividad == 4) {
           $documentosActividad = "Generales Comercializador";
-          $act_instalacion = "comercializadora";
+          $act_instalacion = "Comercializadora";
         }
 
         if ($actividad->id_actividad == 6) {
