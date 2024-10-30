@@ -305,7 +305,7 @@ class documentacionController extends Controller
  $marcas = marcas::where('id_empresa', '=', $id_empresa)->get();
             $contenidoMarcas ='';
 
-            if($act_instalacion=='comercializadora'){
+            if($act_instalacion=='Comercializadora'){
 
            
             foreach ($marcas as $indexII => $marca) {
