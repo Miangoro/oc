@@ -160,9 +160,9 @@ public function editarCliente($id)
       FROM empresa e
       JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
       JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
-      JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
+      JOIN empresa_num_cliente n ON (n.id_empresa = e.id_empresa)
       JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
-      JOIN empresa_contrato c ON (c.id_empresa = e.id_empresa)
+      LEFT JOIN empresa_contrato c ON (c.id_empresa = e.id_empresa)
       WHERE e.id_empresa=' . $id);
         $pdf = Pdf::loadView('pdfs.prestacion_servicio_fisica', ['datos' => $res]);
         return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 persona fisica VIGENTE.pdf');
@@ -175,13 +175,14 @@ public function editarCliente($id)
         FROM empresa e
         JOIN solicitud_informacion s ON (e.id_empresa = s.id_empresa)
         JOIN empresa_producto_certificar p ON (p.id_empresa = e.id_empresa)
-        JOIN empresa_norma_certificar n ON (n.id_empresa = e.id_empresa)
+        JOIN empresa_num_cliente n ON (n.id_empresa = e.id_empresa)
         JOIN empresa_actividad_cliente a ON (a.id_empresa = e.id_empresa)
-        JOIN empresa_contrato c ON (c.id_empresa = e.id_empresa)
+        LEFT JOIN empresa_contrato c ON (c.id_empresa = e.id_empresa)
         WHERE e.id_empresa=' . $id);
 
-        $fecha_cedula = Helpers::formatearFecha($res[0]->fecha_cedula);
-        $fecha_vigencia = Helpers::formatearFecha($res[0]->fecha_vigencia);
+$fecha_cedula = !empty($res[0]->fecha_cedula) ? Helpers::formatearFecha($res[0]->fecha_cedula) : 'Sin fecha especificada';
+$fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res[0]->fecha_vigencia) : 'Sin fecha especificada';
+
       $pdf = Pdf::loadView('pdfs.prestacion_servicios_vigente', ['datos' => $res,'fecha_cedula'=>$fecha_cedula,'fecha_vigencia'=>$fecha_vigencia]);
     return $pdf->stream('F4.1-01-01 Contrato de prestación de servicios NOM 070 Ed 4 VIGENTE.pdf');
     }
@@ -236,7 +237,8 @@ public function editarCliente($id)
 
         if (empty($request->input('search.value'))) {
             $users = empresa::join('empresa_num_cliente AS n', 'empresa.id_empresa', '=', 'n.id_empresa')
-                ->select('empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
+            ->leftjoin('empresa_contrato AS c', 'empresa.id_empresa', '=', 'c.id_empresa') // Nuevo join con empresa_contrato
+                ->select('c.id_contrato','empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
                 ->where('tipo', 2)->offset($start)
                 ->groupBy('empresa.id_empresa', 'empresa.razon_social',  'empresa.rfc', 'empresa.regimen', 'empresa.domicilio_fiscal', 'empresa.representante')
                 ->limit($limit)
@@ -246,7 +248,8 @@ public function editarCliente($id)
             $search = $request->input('search.value');
 
             $users = empresa::join('empresa_num_cliente AS n', 'empresa.id_empresa', '=', 'n.id_empresa')
-                ->select('empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
+            ->leftjoin('empresa_contrato AS c', 'empresa.id_empresa', '=', 'c.id_empresa') // Nuevo join con empresa_contrato
+                ->select('c.id_contrato','empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
                 ->where('tipo', 2)->where('id_empresa', 'LIKE', "%{$search}%")
                 ->orWhere('razon_social', 'LIKE', "%{$search}%")
                 ->orWhere('domicilio_fiscal', 'LIKE', "%{$search}%")
@@ -275,6 +278,7 @@ public function editarCliente($id)
                 $nestedData['razon_social'] = $user->razon_social;
                 $nestedData['domicilio_fiscal'] = $user->domicilio_fiscal;
                 $nestedData['regimen'] = $user->regimen;
+                $nestedData['id_contrato'] = $user->id_contrato;
 
                 $data[] = $nestedData;
             }
