@@ -50,7 +50,7 @@ const fv = FormValidation.formValidation(addHologramasForm, {
     cantidad_hologramas: {
       validators: {
         notEmpty: {
-          message: 'Por favor ingrese el numero de hologramas solicitados'
+          message: 'Por favor ingrese el número de hologramas solicitados'
         }
       }
     },
@@ -104,13 +104,34 @@ const fv = FormValidation.formValidation(addHologramasForm, {
       Swal.fire({
         icon: 'error',
         title: '¡Error!',
-        text: 'Error al registrar el lote envasado',
+        text: 'Error al registrar los hologramas',
         customClass: {
           confirmButton: 'btn btn-danger'
         }
       });
     }
   });
+});
+
+$('#id_empresa').select2({
+  placeholder: 'Seleccione un cliente',
+  allowClear: true
+}).on('change', function () {
+  fv.revalidateField('id_empresa'); // Revalidar el campo empresa cuando cambie
+});
+
+$('#id_marca').select2({
+  placeholder: 'Lista de predios',
+  allowClear: true
+}).on('change', function () {
+  fv.revalidateField('id_marca'); // Revalidar el campo predios cuando cambie
+});
+
+$('#id_direccion').select2({
+  placeholder: 'Lista de plantas',
+  allowClear: true
+}).on('change', function () {
+  fv.revalidateField('id_direccion'); // Revalidar el campo predios cuando cambie
 });
 
 
@@ -561,7 +582,7 @@ $(function () {
         Swal.fire({
           icon: 'success',
           title: '¡Eliminado!',
-          text: '¡La solicitud ha sido eliminada correctamente!',
+          text: '¡Los hologramas han sido eliminados correctamente!',
           customClass: {
             confirmButton: 'btn btn-success'
           }
@@ -569,7 +590,7 @@ $(function () {
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: 'Cancelado',
-          text: 'La solicitud no ha sido eliminada',
+          text: 'Los hologramas no han sido eliminados',
           icon: 'error',
           customClass: {
             confirmButton: 'btn btn-success'
@@ -713,7 +734,7 @@ $(function () {
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: 'Error al actualizar la solicitud',
+          text: 'Error al actualizar la solicitud de hologramas',
           customClass: {
             confirmButton: 'btn btn-danger'
           }
@@ -1713,7 +1734,7 @@ $(function () {
       error: function (response) {
         Swal.fire({
           title: 'Error',
-          text: 'Ocurrió un error al actualizar la guía.',
+          text: 'Ocurrió un error al actualizar los holograms.',
           icon: 'error',
           buttonsStyling: false,
           customClass: {
