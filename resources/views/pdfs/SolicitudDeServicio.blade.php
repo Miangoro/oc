@@ -14,13 +14,7 @@
             margin-bottom: 1px;
         }
 
-        @font-face {
-            font-family: 'Century Gothic';
-            src: url('fonts/CenturyGothic.ttf') format('truetype');
 
-        }
-
-    
         body {
             font-family: 'Century Gothic', sans-serif;
             font-size: 10px;
