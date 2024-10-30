@@ -219,7 +219,7 @@ $(function () {
             }
 
             return (
-              '<span class="fw-bold text-dark small">Cantidad hologramas solicitados:</span> <span class="small"> ' +
+              '<span class="fw-bold text-dark small">Solicitados:</span> <span class="small"> ' +
               row.cantidad_hologramas +
               '</span><br><span class="fw-bold text-dark small">Activados:</span><span class="small"> ' +
               row.activados +
