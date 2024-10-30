@@ -161,7 +161,7 @@ $(function () {
           orderable: false,
           render: function (data, type, full, meta) {
             var $id = full['id_empresa'];
-            if (full['id_contrato'] && full['id_contrato'] !== null && full['id_contrato'] !== undefined) {
+            if (full['id_contrato']) {
               return `<i id="pdf2" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-regimen="${full['regimen']}" data-id="${full['id_empresa']}" data-registro="${full['razon_social']} "></i>`;
             }else{
               return "<span class='badge rounded-pill bg-warning'>Sin contrato<span>";
