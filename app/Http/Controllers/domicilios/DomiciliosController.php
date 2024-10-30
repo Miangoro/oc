@@ -286,7 +286,7 @@ class DomiciliosController extends Controller
                 return !empty($value);
             });
 
-            dd($numeroCliente);
+            
 
             $documentacionUrls = Documentacion_url::where('id_relacion', $id)->get();
             foreach ($documentacionUrls as $documentacionUrl) {
@@ -324,7 +324,7 @@ class DomiciliosController extends Controller
 
             return response()->json(['code' => 200, 'message' => 'Instalación actualizada correctamente.']);
         } catch (\Exception $e) {
-            return response()->json(['code' => 500, 'message' => 'Error al actualizar la instalación.']);
+            return response()->json(['code' => 500, 'message' => 'Error al actualizar la instalación.'.$numeroCliente]);
         }
     }
 //end
