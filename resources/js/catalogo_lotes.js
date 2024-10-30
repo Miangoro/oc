@@ -586,7 +586,8 @@ $(function () {
           var guias = data.guias; // IDs y folios de las guías recibidos
           var lotes = data.lotes;
           var volumenes = data.volumenes;
-          var nombreLotes = data.nombreLotes; // Este array contiene los nombres de los lotes
+          var nombreLotes = data.nombreLotes; // Este array contiene los nombres de los lote
+          var organismoId = data.organismo;
 
           $('#contenidoGranelesEdit').html(''); // <-- Agrega esta línea para limpiar la tabla
 
@@ -658,7 +659,7 @@ $(function () {
             $('#edit_otro_organismo_fields').removeClass('d-none');
             $('#edit_oc_cidam_fields').addClass('d-none');
             $('#edit_folio_certificado').val(lote.folio_certificado);
-            $('#edit_organismo_certificacion').val(lote.id_organismo);
+            $('#edit_organismo_certificacion').val(organismoId).trigger('change');
             $('#edit_fecha_emision').val(lote.fecha_emision);
             $('#edit_fecha_vigencia').val(lote.fecha_vigencia);
 
@@ -967,9 +968,9 @@ $(function () {
 
           $('#contenidoGraneles').append(newRow); // Añadir nueva fila
           cargarLotesEnSelect(); // Llamar para cargar las opciones en el nuevo select
-// Inicializar los elementos select2
-var select2Elements = $('.select2');
-initializeSelect2(select2Elements);
+          // Inicializar los elementos select2
+          var select2Elements = $('.select2');
+          initializeSelect2(select2Elements);
       }
 
       // Función para eliminar una fila de lotes
@@ -1065,7 +1066,7 @@ $(document).ready(function () {
         var newRow = `
         <tr>
             <th>
-                <button type="button" class="btn btn-danger remove-row-lotes-edit" ${primeraFilaAgregada ? '' : 'disabled'}>
+                <button type="button" class="btn btn-danger remove-row-lotes-edit" ${primeraFilaAgregada ? '' : ''}>
                     <i class="ri-delete-bin-5-fill fs-5"></i>
                 </button>
             </th>
@@ -1085,10 +1086,6 @@ $(document).ready(function () {
         // Inicializar los elementos select2
         initializeSelect2($('.select2')); // Asegúrate de que esta función está definida
 
-        // Actualizar el estado de la primera fila
-        if (!primeraFilaAgregada) {
-            primeraFilaAgregada = true; // Cambiar a verdadero después de agregar la primera fila
-        }
     }
 
     // Función para eliminar una fila de lotes en modo edición
@@ -1123,7 +1120,7 @@ $(document).ready(function () {
 
 // Función para cargar lotes en los select dentro de las filas en modo edición
 function cargarLotesEnSelectEdit() {
-    $('.id_lote_granel').each(function () {
+    $('.edit_lote_id').each(function () {
         var $select = $(this);
         var valorSeleccionado = $select.val();
 
@@ -1154,7 +1151,7 @@ function calcularVolumenTotalEdit() {
     });
 
     // Actualizar el campo de volumen total
-    $('#volumen').val(totalVolumen.toFixed(2)); // Mostrar el total con dos decimales
+    $('#edit_volumen').val(totalVolumen.toFixed(2)); // Mostrar el total con dos decimales
 }
 
 

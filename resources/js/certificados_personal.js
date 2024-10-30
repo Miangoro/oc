@@ -19,7 +19,7 @@ $(function () {
         { data: 'created_at' },       //5
         { data: 'updated_at' },       //6
         { data: 'PDF' },              //7
-        { data: 'desicion' },         //8
+        { data: 'decision' },         //8
         { data: 'actions' }           //9
       ],
       columnDefs: [
@@ -118,11 +118,11 @@ $(function () {
           targets: 8,
           orderable: 0,
           render: function (data, type, full, meta) {
-            var $desicion = full['desicion'];
+            var $decision = full['decision'];
             var $colorDesicion;
             var $nombreDesicion;
 
-            switch ($desicion) {
+            switch ($decision) {
               case "positiva":
                 $nombreDesicion = 'Revision Positiva';
                 $colorDesicion = 'primary';
@@ -164,9 +164,19 @@ $(function () {
               `data-fecha-vigencia="${full['fecha_vigencia']}" ` +
               `data-fecha-vencimiento="${full['fecha_vigencia']}" ` +
               `data-tipo="${full['tipo_dictamen']}" ` +
+              `data-accion="revisar" ` +  // Identificador
               `data-bs-toggle="modal" ` +
               `data-bs-target="#fullscreenModal">` +
               '<i class="ri-eye-fill ri-20px text-info"></i> Revisar' +
+              '</a>' +
+              // Botón para editar revisión
+              `<a class="dropdown-item waves-effect text-primary editar-revision" ` + 
+              `data-id="${full['id_revision']}" ` +
+              `data-tipo="${full['tipo_dictamen']}" ` +
+              `data-accion="editar" ` +  // Identificador
+              `data-bs-toggle="modal" ` +
+              `data-bs-target="#fullscreenModal">` +
+              '<i class="ri-pencil-fill ri-20px text-primary"></i> Editar Revisión' + 
               '</a>' +
               // Botón para Aprobación
               `<a data-id='${full['id_revision']}' data-num-certificado="${full['num_certificado']}" data-bs-toggle="modal" data-bs-target="#modalAprobacion" class="dropdown-item Aprobacion-record waves-effect text-success">` +
@@ -179,7 +189,7 @@ $(function () {
               '</a>' +
               '</div>' +
               '</div>'
-              );
+            );            
          }
         }
       ],
@@ -412,6 +422,9 @@ $(document).on('click', '.cuest', function () {
   $('#modal-loading-spinner').show();
   $('#pdfViewerDictamenFrame').hide();
 
+  $('#Registrar').show();
+  $('#Editar').hide(); 
+
   // Genera un parámetro único para evitar el caché
   let timestamp = new Date().getTime();
   let url = '/get-certificado-url/' + id_revision + '/' + tipo + '?t=' + timestamp;
@@ -501,13 +514,13 @@ $(document).on('click', '#registrarRevision', function () {
     return;
   }
 
-  const desicion = todasLasRespuestasSonC ? 'positiva' : 'negativa';
+  const decision = todasLasRespuestasSonC ? 'positiva' : 'negativa';
 
   console.log({
     id_revision: id_revision,
     respuestas: respuestas,
     observaciones: observaciones,
-    desicion: desicion
+    decision: decision
   });
 
   $.ajax({
@@ -521,7 +534,7 @@ $(document).on('click', '#registrarRevision', function () {
       id_revision: id_revision,
       respuestas: respuestas,
       observaciones: observaciones,
-      desicion: desicion 
+      decision: decision 
     }),
     success: function (response) {
       Swal.fire({
@@ -592,8 +605,8 @@ function cargarRespuestas(id_revision) {
           });
 
           // Establecer la decisión si está disponible
-          const desicion = response.desicion || null;
-          $('#floatingSelect').val(desicion);
+          const decision = response.decision || null;
+          $('#floatingSelect').val(decision);
       },
       error: function (xhr) {
           console.error('Error al cargar las respuestas:', xhr);
@@ -684,6 +697,7 @@ $('#formAprobacion').on('submit', function(event) {
     });
 });
 
+// Aprobacion
 $(document).on('click', '.Aprobacion-record', function() {
   const idRevision = $(this).data('id');
 
@@ -712,50 +726,300 @@ $('#modalAprobacion').on('hidden.bs.modal', function () {
   $('#respuesta-aprobacion').prop('selected', true);
 });
 
+// Historial
+$(document).on('click', '.abrir-historial', function() {
+  const id_revision = $(this).data('id'); 
+  console.log('ID de revisión clicado:', id_revision); 
+  cargarHistorial(id_revision); 
+  $('#historialModal').modal('show'); 
+});
 
 function cargarHistorial(id_revision) {
-  console.log('Cargando historial para ID de revisión:', id_revision); // Mostrar el ID en consola
+  console.log('Cargando historial para ID de revisión:', id_revision);
+  $('#historialRespuestasContainer').html('<p>Cargando historial...</p>');
+  $('#respuestasContainer').html(''); 
 
-  // Llamada a la API para obtener el historial de respuestas
   $.ajax({
-      url: '/obtener/historial/' + id_revision, // Ajusta la URL según tu API
+      url: `/obtener/historial/${id_revision}`, 
       method: 'GET',
       success: function(data) {
-          console.log('Datos recibidos:', data); // Mostrar los datos recibidos en consola
-
-          if (data.respuestas.length === 0) {
+          console.log('Datos recibidos:', data);
+          if (!data.respuestas || data.respuestas.length === 0) {
               $('#historialRespuestasContainer').html('<p>No hay historial disponible.</p>');
               return;
           }
 
-          var historialHTML = '<ul>'; // Variable para almacenar el HTML como lista
+          let botonesHTML = ''; 
+          if (!data.respuestas[0].respuestas || Object.keys(data.respuestas[0].respuestas).length === 0) {
+              $('#historialRespuestasContainer').html('<p>No hay historial disponible para esta revisión.</p>');
+              return; 
+          }
 
-          // Iterar sobre cada revisión en `data.respuestas`
           $.each(data.respuestas[0].respuestas, function(revisionKey, revisionData) {
-              historialHTML += '<li>' + revisionKey + 
-                               ' <a href="/bitacora-dinamica/' + id_revision + 
-                               '" class="text-info">Ver Respuestas</a></li>';
+              botonesHTML += `
+                  <button class="btn btn-primary btn-lg mb-2" 
+                          data-revision="${revisionKey}" 
+                          data-respuestas='${JSON.stringify(revisionData)}'>
+                      <i class="fas fa-history"></i>${revisionKey} <!-- Icono de historial -->
+                  </button>
+              `;
           });
 
-          historialHTML += '</ul>'; // Cierra la lista
-
-          $('#historialRespuestasContainer').html(historialHTML); // Inserta el HTML generado en el contenedor
+          $('#historialRespuestasContainer').html(botonesHTML);
+          $('.btn-primary').on('click', function() {
+              const respuestas = $(this).data('respuestas'); 
+              mostrarRespuestas(respuestas); 
+          });
       },
       error: function(xhr) {
           $('#historialRespuestasContainer').html('<p>Error al cargar el historial.</p>');
-          console.error('Error al cargar el historial:', xhr); // Mostrar error en consola
+          $('#respuestasContainer').html(''); 
+          console.error('Error al cargar el historial:', xhr); 
       }
   });
 }
 
-// Al hacer clic en el enlace de historial
+function mostrarRespuestas(respuestas) {
+  if (typeof respuestas === 'string') {
+      respuestas = JSON.parse(respuestas); 
+  }
+
+  let respuestasHTML = `
+      <div class="table-responsive">
+          <table class="table table-striped table-bordered">
+              <thead class="table-light">
+                  <tr>
+                      <th class="text-start">#</th> <!-- Nueva columna para el número de pregunta -->
+                      <th class="text-start">Pregunta</th> <!-- Alineación a la izquierda -->
+                      <th class="text-center">C</th>
+                      <th class="text-center">NC</th>
+                      <th class="text-center">NA</th>
+                      <th class="text-start">Observaciones</th> <!-- Nueva columna de Observaciones -->
+                  </tr>
+              </thead>
+              <tbody>
+  `;
+
+  const preguntas = [
+      { key: 'pregunta1', label: 'CONTRATO DE PRESTACIÓN DE SERVICIOS' },
+      { key: 'pregunta2', label: 'CONSTANCIA SITUACIÓN FISCAL Y RFC' },
+      { key: 'pregunta3', label: 'CARTA NO. CLIENTE' },
+      { key: 'pregunta4', label: 'NOMBRE DE LA EMPRESA O PERSONA FÍSICA' },
+      { key: 'pregunta5', label: 'DIRECCIÓN FISCAL' },
+      { key: 'pregunta6', label: 'SOLICITUD DEL SERVICIO DE DICTAMINACIÓN DE INSTALACIONES' },
+      { key: 'pregunta7', label: 'NÚMERO DE CERTIFICADO DE INSTALACIONES' },
+      { key: 'pregunta8', label: 'NOMBRE DE LA EMPRESA O PERSONA FÍSICA' },
+      { key: 'pregunta9', label: 'DOMICILIO FISCAL DE LAS INSTALACIONES' },
+      { key: 'pregunta10', label: 'CORREO ELECTRÓNICO Y NÚMERO TELEFÓNICO' },
+      { key: 'pregunta11', label: 'FECHA DE VIGENCIA Y VENCIMIENTO DEL CERTIFICADO' },
+      { key: 'pregunta12', label: 'ALCANCE DE LA CERTIFICACIÓN' },
+      { key: 'pregunta13', label: 'NO. DE CLIENTE' },
+      { key: 'pregunta14', label: 'NÚMERO DE DICTAMEN EMITIDO POR LA UVEM' },
+      { key: 'pregunta15', label: 'ACTA DE LA UNIDAD DE INSPECCIÓN (FECHA DE INICIO, TÉRMINO Y FIRMAS)' },
+      { key: 'pregunta16', label: 'NOMBRE Y PUESTO DEL RESPONSABLE DE LA EMISIÓN DEL CERTIFICADO' },
+      { key: 'pregunta17', label: 'NOMBRE Y DIRECCIÓN DEL ORGANISMO CERTIFICADOR CIDAM' },
+  ];
+
+  preguntas.forEach((pregunta, index) => {
+      const respuesta = respuestas[pregunta.key]; 
+      const observacion = respuesta?.observacion ? respuesta.observacion : '---'; 
+
+      respuestasHTML += `
+          <tr>
+              <td class="text-start">${index + 1}</td> <!-- Número de pregunta -->
+              <td>${pregunta.label}</td>
+              <td class="text-center">${respuesta?.respuesta === 'C' ? 'C' : '---'}</td>
+              <td class="text-center ${respuesta?.respuesta === 'NC' ? 'text-danger' : ''}">${respuesta?.respuesta === 'NC' ? 'NC' : '---'}</td>
+              <td class="text-center">${respuesta?.respuesta === 'NA' ? 'NA' : '---'}</td>
+              <td class="text-start">${observacion}</td> <!-- Nueva celda para Observaciones -->
+          </tr>
+      `;
+  });
+
+  respuestasHTML += `
+              </tbody>
+          </table>
+      </div>
+  `;
+  document.getElementById('respuestasContainer').innerHTML = respuestasHTML;
+}
+
+// Editar Respuestas
+let id_revision_edit;
 $(document).on('click', '.abrir-historial', function() {
-  var id_revision = $(this).data('id'); // Obtener ID desde el atributo data-id
-  console.log('ID de revisión clicado:', id_revision); // Mostrar el ID clicado en consola
-  cargarHistorial(id_revision); // Cargar el historial
-  $('#historialModal').modal('show'); // Abre el modal
+  id_revision_edit = $(this).data('id'); 
+  console.log('ID de revisión clicado:', id_revision_edit);
+  cargarHistorial(id_revision_edit); 
+  $('#historialModal').modal('show'); 
 });
 
+$(document).on('click', '.editar-revision', function () {
+  id_revision_edit = $(this).data('id'); 
+  let tipox = $(this).data('tipo');
+  console.log('ID de revisión clicado:', id_revision_edit);
+  console.log('ID de revisión clicado:', tipox);
+
+  cargarRespuestas(id_revision_edit);
+  
+  $('#fullscreenModal').modal('show');
+  $('#Editar').show(); 
+  $('#Registrar').hide();
+  $('#modal-loading-spinner').show();
+  $('#pdfViewerDictamenFrame').hide();
+
+  // Genera un parámetro único para evitar el caché
+  let timestamp = new Date().getTime();
+  let url = '/get-certificado-url/' + id_revision_edit + '/' + tipox + '?t=' + timestamp;
+
+  $.ajax({
+      url: url,
+      type: 'GET',
+      success: function (response) {
+          if (response.certificado_url) {
+              let uniqueUrl = response.certificado_url + '?t=' + timestamp;
+              $('#pdfViewerDictamenFrame').attr('src', uniqueUrl + '#zoom=80');
+              console.log('PDF cargado: ' + uniqueUrl);
+          } else {
+              console.log('No se encontró el certificado para la revisión ' + id_revision_edit);
+          }
+      },
+      error: function (xhr) {
+          console.error('Error al obtener la URL del certificado: ', xhr.responseText);
+      },
+      complete: function () {
+          $('#pdfViewerDictamenFrame').on('load', function () {
+              $('#modal-loading-spinner').hide();
+              $(this).show();
+          });
+      }
+  });
+ 
+});
+
+$(document).on('click', '#editarRevision', function () {
+  $('#registrarRevision').hide(); 
+
+  console.log('ID de revisión usado en editarRevision:', id_revision_edit);
+  
+  if (!id_revision_edit) {
+    Swal.fire({
+      icon: 'error',
+      title: '¡Error!',
+      text: 'El ID de revisión no está definido.',
+      customClass: {
+        confirmButton: 'btn btn-danger'
+      }
+    });
+    return;
+  }
+
+  const respuestas = {};
+  const observaciones = {};
+  const rows = $('#fullscreenModal .table-container table tbody tr');
+  let todasLasRespuestasSonC = true;
+  let valid = true;
+
+  rows.each(function (index) {
+    let respuesta = $(this).find('select').val();
+    const observacion = $(this).find('textarea').val();
+
+    if (!respuesta) {
+      $(this).find('select').addClass('is-invalid');
+      valid = false;
+    } else {
+      $(this).find('select').removeClass('is-invalid');
+    }
+
+    if (respuesta === '1') {
+      respuesta = 'C';
+    } else if (respuesta === '2') {
+      respuesta = 'NC';
+      todasLasRespuestasSonC = false;
+    } else if (respuesta === '3') {
+      respuesta = 'NA';
+      todasLasRespuestasSonC = false;
+    } else {
+      respuesta = null;
+      todasLasRespuestasSonC = false;
+    }
+
+    respuestas[`pregunta${index + 1}`] = respuesta;
+    observaciones[`pregunta${index + 1}`] = observacion || null;
+  });
+
+  if (!valid) {
+    Swal.fire({
+      icon: 'error',
+      title: '¡Error!',
+      text: 'Por favor, completa todos los campos requeridos.',
+      customClass: {
+        confirmButton: 'btn btn-danger'
+      }
+    });
+    return;
+  }
+
+  const decision = todasLasRespuestasSonC ? 'positiva' : 'negativa';
+
+  console.log({
+    id_revision: id_revision_edit,
+    respuestas: respuestas,
+    observaciones: observaciones,
+    decision: decision
+  });
+
+  $.ajax({
+    url: `/editar-respuestas`,
+    type: 'POST',
+    contentType: 'application/json',
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    data: JSON.stringify({
+      id_revision: id_revision_edit,
+      respuestas: respuestas,
+      observaciones: observaciones,
+      decision: decision 
+    }),
+    success: function (response) {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: response.message,
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+
+      $('#fullscreenModal').modal('hide');
+      $('.datatables-users').DataTable().ajax.reload();
+    },
+    error: function (xhr) {
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al editar las respuestas: ' + xhr.responseJSON.message,
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
+  });
+});
+
+// Quitar Validación al llenar Select
+$(document).on('change', 'select[name^="respuesta"], textarea[name^="observaciones"], select[name^="tipo"]', function () {
+  $(this).removeClass('is-invalid'); 
+});
+
+// Limpiar Validación al cerrar Modal
+$(document).on('hidden.bs.modal', '#fullscreenModal', function () {
+  const respuestas = document.querySelectorAll('select[name^="respuesta"]');
+  respuestas.forEach((respuesta) => {
+    respuesta.classList.remove('is-invalid'); 
+    respuesta.value = ''; 
+  });
+});
 
 //end
 });

@@ -97,9 +97,14 @@
                                     </div>        
                                 </div>
                                 <hr>
-                                <div class="text-center mt-3">
+                                <div class="text-center mt-3" id="Registrar">
                                     <button type="button" class="btn btn-primary" id="registrarRevision">
                                         Registrar Revisión
+                                    </button>
+                                </div>
+                                <div class="text-center mt-3" id="Editar">
+                                    <button type="button" class="btn btn-warning" id="editarRevision">
+                                        Editar Respuestas
                                     </button>
                                 </div>
                             </div>
@@ -124,7 +129,8 @@
                                     <div class="sk-circle-fade-dot"></div>
                                 </div>
                             </div>
-                        
+                            <input type="hidden" id="id_revision" value="">
+
                             <iframe width="100%" height="80%" id="pdfViewerDictamenFrame" 
                                     src="" 
                                     frameborder="0" 

@@ -376,7 +376,7 @@
     </table>
     <br>
 
-<!-- Tabla Desicion -->
+<!-- Tabla decision -->
 <table style="width: 340px">
     <tr>
         <td class="letra-fondo negrita" style="font-size: 10.5px; padding-top: 0" colspan="2">
@@ -389,15 +389,15 @@
         </td>
     </tr>
     <tr>
-        <td style="background-color: {{ $desicion == 'positiva' ? '#b6d7a7' : 'white' }}; font-size: 10px; padding-top: 0; vertical-align: top; width: 50%; text-align: center;">
+        <td style="background-color: {{ $decision == 'positiva' ? '#b6d7a7' : 'white' }}; font-size: 10px; padding-top: 0; vertical-align: top; width: 50%; text-align: center;">
             SI
         </td>
-        <td style="background-color: {{ $desicion == 'negativa' ? '#b6d7a7' : 'white' }}; font-size: 10px; padding-top: 0; vertical-align: top; width: 50%; text-align: center;">
+        <td style="background-color: {{ $decision == 'negativa' ? '#b6d7a7' : 'white' }}; font-size: 10px; padding-top: 0; vertical-align: top; width: 50%; text-align: center;">
             NO
         </td>
     </tr>
     <tr>
-        @if($desicion === 'positiva')
+        @if($decision === 'positiva')
             <!-- Si la decisión es "SI", la celda de "SI" tiene contenido y la de "NO" está vacía -->
             <td class="leftLetter" style="background-color: #b6d7a7; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: justify;">
                 Cumple con cada uno de los requisitos mencionados en este documento para poder
@@ -408,7 +408,7 @@
             <td style="color: red; background-color: white; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: center;">
                 ---
             </td>
-        @elseif($desicion === 'negativa')
+        @elseif($decision === 'negativa')
             <!-- Si la decisión es "NO", la celda de "NO" tiene contenido y la de "SI" está vacía -->
             <td class="leftLetter" style="background-color: white; font-size: 7px; padding-top: 0; padding-bottom: 0; text-align: center;">
                 ---
@@ -446,7 +446,7 @@
             <td class="leftLetter" style="font-size: 8px;padding-top: 0">{{ $id_revisor }} <br>
                 Revisión realizada {{ $fecha }} 
                 el Certificado Revisión por el <br>
-                personal OC {{ ucfirst($desicion) }} <div style="padding-top: 25px"></div>
+                personal OC {{ ucfirst($decision) }} <div style="padding-top: 25px"></div>
             </td>
         </tr>
         <tr>
