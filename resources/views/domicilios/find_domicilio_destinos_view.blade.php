@@ -14,7 +14,7 @@
 
 <!-- Page Scripts -->
 @section('page-script')
- @vite(['resources\js\domicilios_destinos.js'])
+ @vite(['resources/js/domicilios_destinos.js'])
 @endsection
 
 @section('content')

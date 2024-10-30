@@ -640,7 +640,8 @@ $(document).on('click', '.delete-record', function () {
 
 
 $(document).on('click', '.edit-record', function () {
-
+    alert("entro");
+    $('#editLoteEnvasado').modal('show');
     var id_lote_envasado = $(this).data('id');
     // Realizar la solicitud AJAX para obtener los datos del lote envasado
     $.get('/lotes-envasado/edit/' + id_lote_envasado, function (data) {
