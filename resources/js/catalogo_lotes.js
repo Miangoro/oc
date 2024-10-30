@@ -1031,6 +1031,38 @@ $(function () {
   }
 
 
+  $(document).on('change', '.id_lote_granel', function() {
+    var loteSeleccionado = $(this).val();
+    var $volumenParcialInput = $(this).closest('tr').find('.volumen-parcial'); // Encuentra el campo de Volumen parcial correspondiente
+
+    // Verifica si hay un lote seleccionado
+    if (!loteSeleccionado) {
+        $volumenParcialInput.val(''); // Limpia el campo si no hay un lote seleccionado
+        return;
+    }
+
+    // Realiza una petición AJAX para obtener el volumen_restante del lote seleccionado
+    $.ajax({
+        url: '/lotes-a-granel/' + loteSeleccionado + '/volumen', // Nueva ruta GET para obtener el volumen
+        method: 'GET',
+        success: function(response) {
+            // Suponiendo que el volumen_restante viene en la respuesta
+            if (response.volumen_restante) {
+                $volumenParcialInput.val(response.volumen_restante);
+            } else {
+                $volumenParcialInput.val('0'); // Si no hay volumen restante
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error al obtener el volumen del lote:', error);
+            alert('Error al obtener el volumen. Por favor, intenta nuevamente.');
+        }
+    });
+});
+
+
+
+
   /* seccion repetida pero para el de editar */
 
   var lotesDisponiblesEdit = []; // Variable para almacenar los lotes disponibles en modo edición

@@ -251,6 +251,7 @@
 
                         <!-- Campos para "Certificado por otro organismo" -->
                         <div id="otro_organismo_fields" class="d-none">
+
                             <div class="row">
                                 <!-- Campo de archivo ocupando toda la fila -->
                                 <div class="col-md-12 mb-4">
@@ -266,6 +267,7 @@
 
                                 </div>
                             </div>
+                            
                             <div class="row">
                                 <!-- Campos en filas de dos -->
                                 <div class="col-md-6 mb-4">

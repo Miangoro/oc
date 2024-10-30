@@ -362,7 +362,19 @@ class lotesGranelController extends Controller
     }
 
 
+      public function getVolumen($id_lote_granel){
+          // Encuentra el lote por su ID
+          $lote = LotesGranel::find($id_lote_granel);
 
+          // Verifica si el lote existe
+          if ($lote) {
+              // Devuelve el volumen_restante en formato JSON
+              return response()->json(['volumen_restante' => $lote->volumen_restante]);
+          } else {
+              // Si no se encuentra el lote, devuelve un error 404
+              return response()->json(['error' => 'Lote no encontrado'], 404);
+          }
+      }
 
     public function edit($id_lote_granel)
     {
@@ -534,31 +546,44 @@ class lotesGranelController extends Controller
             }
 
             // Almacenar nuevos documentos solo si se envían
-            if ($request->hasFile('url')) {
-                foreach ($request->file('url') as $index => $file) {
-                    $folio_fq = $index == 0 && $request->id_documento[$index] == 58
-                        ? $request->folio_fq_completo
-                        : $request->folio_fq_ajuste;
+        // Almacenar nuevos documentos solo si se envían
+        if ($request->hasFile('url')) {
+          foreach ($request->file('url') as $index => $file) {
 
-                    $tipo_analisis = $request->tipo_analisis[$index] ?? '';
+              if (isset($request->id_documento[$index])) {
 
-                    // Generar un nombre único para el archivo
-                    $uniqueId = uniqid(); // Genera un identificador único
-                    $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
-                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); // Aquí se guarda en la ruta definida storage/public
+                  $folio_fq = $index == 0 && $request->id_documento[$index] == 58
+                      ? $request->folio_fq_completo
+                      : $request->folio_fq_ajuste;
 
-                    Log::info('Archivo guardado:', ['path' => $filePath, 'filename' => $filename]);
+                  $tipo_analisis = $request->tipo_analisis[$index] ?? '';
 
-                    $documentacion_url = new Documentacion_url();
-                    $documentacion_url->id_relacion = $lote->id_lote_granel;
-                    $documentacion_url->id_documento = $request->id_documento[$index];
-                    $documentacion_url->nombre_documento = $request->nombre_documento[$index] . ": " . $tipo_analisis . " - " . $folio_fq;
-                    $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
-                    $documentacion_url->id_empresa = $lote->id_empresa;
+                  // Generar un nombre único para el archivo
+                  $uniqueId = uniqid();
+                  $filename = $request->nombre_documento[$index] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
 
-                    $documentacion_url->save();
-                }
-            }
+                  Log::info('Procesando archivo:', ['file' => $file->getClientOriginalName(), 'numeroCliente' => $numeroCliente]);
+
+                  // Intentar guardar el archivo
+                  try {
+                      $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+                      Log::info('Archivo guardado:', ['path' => $filePath, 'filename' => $filename]);
+                  } catch (\Exception $e) {
+                      Log::error('Error al guardar el archivo:', ['error' => $e->getMessage()]);
+                  }
+
+                  $documentacion_url = new Documentacion_url();
+                  $documentacion_url->id_relacion = $lote->id_lote_granel;
+                  $documentacion_url->id_documento = $request->id_documento[$index];
+                  $documentacion_url->nombre_documento = $request->nombre_documento[$index] . ": " . $tipo_analisis . " - " . $folio_fq;
+                  $documentacion_url->url = $filename; // Almacenar solo el nombre del archivo
+                  $documentacion_url->id_empresa = $lote->id_empresa;
+
+                  $documentacion_url->save();
+              }
+          }
+        }
+
 
             // Actualizar el campo folio_fq
             $folio_fq_Completo = substr($validated['folio_fq_completo'] ?? '', 0, 50);

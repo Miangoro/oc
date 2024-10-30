@@ -254,15 +254,18 @@
                     <div id="edit_otro_organismo_fields" class="section d-none">
                         <h6>Certificado por otro organismo</h6>
                         <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-floating form-floating-outline mb-4">
-                                    <input type="file" id="edit_certificado_lote" name="url[]"
-                                        class="form-control" />
-                                    <label for="certificado_lote">Adjuntar certificado de lote a granel</label>
-                                </div>
-                                <div id="archivo_url_display_otro_organismo" class="mb-4"></div>
-                            </div>
-                        </div>
+                          <div class="col-md-12">
+                              <div class="form-floating form-floating-outline mb-4">
+                                  <input type="file" id="edit_certificado_lote" name="url[]"
+                                      class="form-control" />
+                                  <label for="edit_certificado_lote">Adjuntar certificado de lote a granel</label>
+                                  <input value="59" class="form-control" type="hidden" name="id_documento[]"> <!-- ID del documento -->
+                                  <input value="Certificado de lote a granel" class="form-control" type="hidden" name="nombre_documento[]"> <!-- Nombre del documento -->
+                              </div>
+                              <div id="archivo_url_display_otro_organismo" class="mb-4"></div>
+                          </div>
+                      </div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
