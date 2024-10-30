@@ -537,6 +537,8 @@ Route::delete('/lotes-granel-list/{id_lote_granel}', [lotesGranelController::cla
 Route::post('/lotes-register/store', [lotesGranelController::class, 'store'])->name('lotes-register.store');
 Route::get('/lotes-a-granel/{id_lote_granel}/edit', [lotesGranelController::class, 'edit'])->name('lotes-a-granel.edit');
 Route::post('/lotes-a-granel/{id_lote_granel}', [lotesGranelController::class, 'update']);
+Route::get('/lotes-a-granel/{id_lote_granel}/volumen', [lotesGranelController::class, 'getVolumen'])->name('lotes-a-granel.volumen');
+
 
 //Lotes de envasado
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
@@ -546,7 +548,7 @@ Route::get('/lotes-envasado/edit/{id}', [lotesEnvasadoController::class, 'edit']
 Route::post('/lotes-envasado/update/', [lotesEnvasadoController::class, 'update']);
 Route::get('/lotes-envasado/editSKU/{id}', [lotesEnvasadoController::class, 'editSKU']);
 Route::post('/lotes-envasado/updateSKU/', [lotesEnvasadoController::class, 'updateSKU']);
- 
+
 
 
 //Domicilios fiscal
