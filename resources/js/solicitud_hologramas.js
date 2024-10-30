@@ -183,11 +183,54 @@ $(function () {
         { data: 'razon_social' },
         { data: 'id_solicitante' },
         { data: 'id_marca' },
-        { data: 'cantidad_hologramas' },
-        { data: 'activados' },
-        { data: 'mermas' },
-        { data: 'restantes' },
-        { data: 'id_direccion' },
+        {
+          data: null,
+          searchable: true,
+          orderable: false,
+          render: function (data, type, row) {
+            var cantidad_hologramas = '';
+            var activados = '';
+            var mermas = '';
+            var restantes = '';
+
+            if (row.cantidad_hologramas != 'N/A') {
+              cantidad_hologramas =
+                '<br><span class="fw-bold text-dark small">Número del cliente:</span><span class="small"> ' +
+                row.cantidad_hologramas +
+                '</span>';
+            }
+            if (row.activados != 'N/A') {
+              activados =
+                '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
+                row.activados +
+                '</span>';
+            }
+            if (row.mermas != 'N/A') {
+              mermas =
+                '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
+                row.mermas +
+                '</span>';
+            }
+            if (row.restantes != 'N/A') {
+              restantes =
+                '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
+                row.restantes +
+                '</span>';
+            }
+
+            return (
+              '<span class="fw-bold text-dark small">Cantidad hologramas solicitados:</span> <span class="small"> ' +
+              row.cantidad_hologramas +
+              '</span><br><span class="fw-bold text-dark small">Activados:</span><span class="small"> ' +
+              row.activados +
+              '</span><br><span class="fw-bold text-dark small">Mermas:</span><span class="small"> ' +
+              row.mermas +
+              '</span><br><span class="fw-bold text-dark small">Restantes:</span><span class="small"> ' +
+              row.restantes 
+            );
+          }
+        },
+        
         { data: 'folio_inicial' },
         { data: 'folio_final' },
         { data: 'estatus' },
@@ -256,7 +299,7 @@ $(function () {
                 },  */
         {
           // email verify
-          targets: 13,
+          targets: 9,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $verified = full['estatus'];
@@ -285,7 +328,7 @@ $(function () {
 
         {
           // email verify
-          targets: 14,
+          targets: 10,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $id = full['id_solicitud'];
