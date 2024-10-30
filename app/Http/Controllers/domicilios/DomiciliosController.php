@@ -286,6 +286,8 @@ class DomiciliosController extends Controller
                 return !empty($value);
             });
 
+            dd($numeroCliente);
+
             $documentacionUrls = Documentacion_url::where('id_relacion', $id)->get();
             foreach ($documentacionUrls as $documentacionUrl) {
               /*  $filePath = 'uploads/' . $numeroCliente . '/' . $documentacionUrl->url;
