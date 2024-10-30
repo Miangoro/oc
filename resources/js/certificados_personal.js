@@ -642,65 +642,18 @@ function cargarRespuestas(id_revision) {
     $('#pdfViewerDictamen').show();
   });
 
-
-//Abrir modal Aprobacion
-  $(document).on('click', '.Aprobacion-record', function() {
-    const idRevision = $(this).data('id');
-    $('#modalAprobacion').modal('show');
-    const select2Elements = $('#id_firmante'); 
-    initializeSelect2(select2Elements);
-    $('#btnRegistrar').data('id-revisor', idRevision);
-    console.log('Id Revision ' + idRevision);
-
-    const certificado = $(this).data('num-certificado');
-    console.log('Certificado ' + certificado);
-    $('#numero-certificado').text(certificado);
-});
-
-// Registrar Aprobacion
-$('#formAprobacion').on('submit', function(event) {
-    event.preventDefault();
-
-    var idRevisor = $('#btnRegistrar').data('id-revisor'); 
-    var aprobacion = $('#respuesta-aprobacion').val(); 
-    var fechaAprobacion = $('#fecha-aprobacion').val(); 
-    var idAprobador = $('#id_firmante').val(); 
-
-    $.ajax({
-        url: '/registrar-aprobacion', 
-        type: 'POST',
-        data: {
-            _token: $('meta[name="csrf-token"]').attr('content'),
-            id_revisor: idRevisor,
-            aprobacion: aprobacion,
-            fecha_aprobacion: fechaAprobacion,
-            id_aprobador: idAprobador 
-        },
-        success: function(response) {
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: 'Aprobación registrada exitosamente.',
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-            $('#modalAprobacion').modal('hide');
-        },
-        error: function(xhr) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: xhr.responseJSON.message
-            });
-        }
-    });
-});
-
-// Aprobacion
+// Abrir modal Aprobacion
 $(document).on('click', '.Aprobacion-record', function() {
   const idRevision = $(this).data('id');
-
+  const certificado = $(this).data('num-certificado');
+  const select2Elements = $('#id_firmante'); 
+  initializeSelect2(select2Elements);
+  
+  $('#modalAprobacion').modal('show');
+  $('#numero-certificado').text(certificado);
+  $('#btnRegistrar').data('id-revisor', idRevision);
+  
+  // Cargar los datos de aprobación
   $.ajax({
       url: `/aprobacion/${idRevision}`,
       method: 'GET',
@@ -708,11 +661,10 @@ $(document).on('click', '.Aprobacion-record', function() {
           $('#id_firmante').val(data.revisor.id_aprobador || '').trigger('change');
           $('#respuesta-aprobacion').val(data.revisor.aprobacion || '').prop('selected', true);
           if (data.revisor.fecha_aprobacion && data.revisor.fecha_aprobacion !== '0000-00-00') {
-            $('#fecha-aprobacion').val(data.revisor.fecha_aprobacion);
+              $('#fecha-aprobacion').val(data.revisor.fecha_aprobacion);
           } else {
-            $('#fecha-aprobacion').val(''); 
-          }          
-            $('#modalAprobacion').modal('show');
+              $('#fecha-aprobacion').val(''); 
+          }
       },
       error: function(xhr) {
           console.error(xhr.responseJSON.message);
@@ -721,10 +673,118 @@ $(document).on('click', '.Aprobacion-record', function() {
   });
 });
 
+// Registrar Aprobacion
+$(function () {
+  $.ajaxSetup({
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+  });
+
+  // Inicializar FormValidation
+  const form = document.getElementById('formAprobacion');
+  const fv = FormValidation.formValidation(form, {
+      fields: {
+          'respuesta-aprobacion': {
+              validators: {
+                  notEmpty: {
+                      message: 'Selecciona una respuesta de aprobación.'
+                  }
+              }
+          },
+          'fecha-aprobacion': {
+              validators: {
+                  notEmpty: {
+                      message: 'Por favor, ingresa una fecha de aprobación.'
+                  },
+                  date: {
+                      format: 'YYYY-MM-DD',
+                      message: 'Por favor, ingresa una fecha válida en formato AAAA-MM-DD.'
+                  }
+              }
+          },
+          'id_firmante': {
+              validators: {
+                  notEmpty: {
+                      message: 'Por favor, selecciona la persona que aprueba.'
+                  }
+              }
+          }
+      },
+      plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+              eleValidClass: '',
+              eleInvalidClass: 'is-invalid',
+              rowSelector: '.form-floating'
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+  }).on('core.form.valid', function () {
+      const idRevisor = $('#btnRegistrar').data('id-revisor'); 
+      const aprobacion = $('#respuesta-aprobacion').val(); 
+      const fechaAprobacion = $('#fecha-aprobacion').val(); 
+      const idAprobador = $('#id_firmante').val(); 
+
+      $.ajax({
+          url: '/registrar-aprobacion', 
+          type: 'POST',
+          data: {
+              _token: $('meta[name="csrf-token"]').attr('content'),
+              id_revisor: idRevisor,
+              aprobacion: aprobacion,
+              fecha_aprobacion: fechaAprobacion,
+              id_aprobador: idAprobador 
+          },
+          success: function(response) {
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: 'Aprobación registrada exitosamente.',
+                  customClass: {
+                      confirmButton: 'btn btn-success'
+                  }
+              });
+              $('#modalAprobacion').modal('hide');
+              form.reset();
+              $('.select2').val(null).trigger('change');
+          },
+          error: function(xhr) {
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: xhr.responseJSON.message,
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+      });
+  });
+
+  // Revalidaciones
+  $('#id_firmante').on('change', function() {
+      if ($(this).val()) {
+          fv.revalidateField($(this).attr('name'));
+      }
+  });
+
+  $('#respuesta-aprobacion').on('change', function() {
+      fv.revalidateField($(this).attr('name'));
+  });
+
+  $('#fecha-aprobacion').on('change', function() {
+      fv.revalidateField($(this).attr('name'));
+  });
+});
+
+// Limpiar campos al cerrar el modal
 $('#modalAprobacion').on('hidden.bs.modal', function () {
   $('#id_firmante, #respuesta-aprobacion, #fecha-aprobacion').val('');
   $('#respuesta-aprobacion').prop('selected', true);
 });
+
 
 // Historial
 $(document).on('click', '.abrir-historial', function() {
