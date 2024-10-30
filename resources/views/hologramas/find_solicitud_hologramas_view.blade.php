@@ -56,14 +56,10 @@
           <th></th>
           <th>Id</th>
           <th>folio</th>
-          <th>empresa</th>
+          <th>Datos del cliente</th>
           <th>Solicitante</th>
           <th>Marca</th>
-          <th>Cantidad hologramas solicitados</th>
-          <th>Activados</th>
-          <th>Mermas</th>
-          <th>Restantes</th>
-          <th>dirección</th>
+          <th>Hologramas</th>
           <th>inicial</th>
           <th>final</th>
           <th>estatus</th>

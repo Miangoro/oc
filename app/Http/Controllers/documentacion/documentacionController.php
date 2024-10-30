@@ -116,6 +116,41 @@ class documentacionController extends Controller
         if ($actividad->id_actividad == 4) {
           $documentosActividad = "Generales Comercializador";
           $act_instalacion = "Comercializadora";
+          
+            $marcas = marcas::where('id_empresa', '=', $id_empresa)->get();
+            $contenidoMarcas ='';
+
+
+
+
+            foreach ($marcas as $indexII => $marca) {
+              $contenidoMarcas =  $contenidoMarcas . '
+
+            <div class="table-responsive text-nowrap col-md-6 mb-5 ">
+                  <table class="table table-sm table-bordered">
+                    <thead class="bg-secondary text-white">
+                      <tr>
+                        <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3">Marca: <b>' . $marca->marca . '</b></th>
+                      </tr>
+                      <tr>
+                        <th class="bg-transparent border-bottom">#</th>
+                        <th class="bg-transparent border-bottom">Descripción del documento</th>
+                        <th class="text-end bg-transparent border-bottom">Subir archivo</th>
+                        <th class="text-end bg-transparent border-bottom">Documento</th>
+                        <th class="text-end bg-transparent border-bottom">Validar</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0" style="font-size:12px">
+                        ' . $contenidoDocumentosMarcas . '
+                    </tbody>
+                  </table>
+                </div>';
+            }
+
+
+
+
+
         }
 
         if ($actividad->id_actividad == 6) {
@@ -301,40 +336,6 @@ class documentacionController extends Controller
 
             
  }
-
- $marcas = marcas::where('id_empresa', '=', $id_empresa)->get();
-            $contenidoMarcas ='';
-
-            if($act_instalacion=='Comercializadora'){
-
-           
-            foreach ($marcas as $indexII => $marca) {
-              $contenidoMarcas =  $contenidoMarcas . '
-           
-            <div class="table-responsive text-nowrap col-md-6 mb-5 ">
-                  <table class="table table-sm table-bordered">
-                    <thead class="bg-secondary text-white">
-                      <tr>
-                        <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3">Marca: <b>' . $marca->marca . '</b></th>
-                      </tr>
-                      <tr>
-                        <th class="bg-transparent border-bottom">#</th>
-                        <th class="bg-transparent border-bottom">Descripción del documento</th>
-                        <th class="text-end bg-transparent border-bottom">Subir archivo</th>
-                        <th class="text-end bg-transparent border-bottom">Documento</th>
-                        <th class="text-end bg-transparent border-bottom">Validar</th>
-                      </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0" style="font-size:12px">
-                        ' . $contenidoDocumentosMarcas . '
-                    </tbody>
-                  </table>
-                </div>';
-            }
-
-
-   
-      }
 
       foreach ($instalaciones as $indexI => $instalacion) {
         $contenidoInstalaciones = $contenidoInstalaciones . '
