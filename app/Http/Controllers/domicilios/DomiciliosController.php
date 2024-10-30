@@ -201,22 +201,29 @@ class DomiciliosController extends Controller
 
             // Almacenar nuevos documentos solo si se envían
             if ($request->hasFile('url')) {
-
+                // Define el path donde se almacenarán los archivos
+                $uploadPath = 'uploads/' . $numeroCliente;
+            
+                // Verifica si el directorio ya existe; si no, lo crea
+                if (!Storage::disk('public')->exists($uploadPath)) {
+                    Storage::disk('public')->makeDirectory($uploadPath);
+                }
+            
                 foreach ($request->file('url') as $index => $file) {
-
                     $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); //Aqui se guarda en la ruta definida storage/public
-
+                    $filePath = $file->storeAs($uploadPath, $filename, 'public'); // Se guarda en la ruta definida storage/public
+            
                     $documentacion_url = new Documentacion_url();
                     $documentacion_url->id_relacion = $ultimaInstalacion->id_instalacion;
                     $documentacion_url->id_documento = $request->id_documento[$index];
                     $documentacion_url->nombre_documento = $request->nombre_documento[$index];
                     $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
-                    $documentacion_url->id_empresa =  $request->input('id_empresa');
-
+                    $documentacion_url->id_empresa = $request->input('id_empresa');
+            
                     $documentacion_url->save();
                 }
             }
+            
             return response()->json(['code' => 200, 'message' => 'Instalación registrada correctamente.', 'aux' => $aux]);
         } catch (\Exception $e) {
             return response()->json(['code' => 500, 'message' => 'Error al registrar la instalación.']);
