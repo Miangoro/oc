@@ -646,6 +646,8 @@ function cargarRespuestas(id_revision) {
 $(document).on('click', '.Aprobacion-record', function() {
   const idRevision = $(this).data('id');
   const certificado = $(this).data('num-certificado');
+  const select2Elements = $('#id_firmante'); 
+  initializeSelect2(select2Elements);
   
   $('#modalAprobacion').modal('show');
   $('#numero-certificado').text(certificado);
