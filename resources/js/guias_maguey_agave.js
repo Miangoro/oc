@@ -160,17 +160,17 @@ $(function () {
           searchable: true,
           orderable: false,
           render: function (data, type, row) {
-            var empresa = '';
-            var razonSocial = '';
+            var id_empresa = '';
+            var razon_social = '';
 
             if (row.id_empresa != 'N/A') {
-              empresa =
+              id_empresa =
                 '<br><span class="fw-bold text-dark small">Número del cliente:</span><span class="small"> ' +
                 row.id_empresa +
                 '</span>';
             }
             if (row.razon_social != 'N/A') {
-              razonSocial =
+              razon_social =
                 '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
                 row.razon_social +
                 '</span>';

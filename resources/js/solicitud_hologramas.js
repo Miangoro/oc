@@ -195,25 +195,25 @@ $(function () {
 
             if (row.cantidad_hologramas != 'N/A') {
               cantidad_hologramas =
-                '<br><span class="fw-bold text-dark small">Número del cliente:</span><span class="small"> ' +
+                '<br><span class="fw-bold text-dark small">Solicitados:</span><span class="small"> ' +
                 row.cantidad_hologramas +
                 '</span>';
             }
             if (row.activados != 'N/A') {
               activados =
-                '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
+                '<br><span class="fw-bold text-dark small">Activados:</span><span class="small"> ' +
                 row.activados +
                 '</span>';
             }
             if (row.mermas != 'N/A') {
               mermas =
-                '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
+                '<br><span class="fw-bold text-dark small">Mermas:</span><span class="small"> ' +
                 row.mermas +
                 '</span>';
             }
             if (row.restantes != 'N/A') {
               restantes =
-                '<br><span class="fw-bold text-dark small">Nombre del cliente:</span><span class="small"> ' +
+                '<br><span class="fw-bold text-dark small">Restantes:</span><span class="small"> ' +
                 row.restantes +
                 '</span>';
             }
