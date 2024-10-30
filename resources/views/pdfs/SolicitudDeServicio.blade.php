@@ -20,11 +20,7 @@
 
         }
 
-        @font-face {
-            font-family: 'Century Gothic Negrita';
-            src: url('fonts/GOTHICB.TTF') format('truetype');
-        }
-
+    
         body {
             font-family: 'Century Gothic', sans-serif;
             font-size: 10px;
