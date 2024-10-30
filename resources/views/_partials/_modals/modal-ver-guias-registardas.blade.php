@@ -24,8 +24,10 @@
                 </div>
                 
                 <form id="verGuiasRegistardasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
-                    <a href="#" id="descargarPdfBtn" class="btn btn-primary position-absolute waves-effect" style="top: 0; right: 0; margin: 15px;">Descargar PDF</a>
-{{--                     <iframe src="" id="pdfViewerGuias" width="100%" height="800px" style="border: none;"></iframe>
+                    <div class="d-flex justify-content-center mb-3">
+                        <a href="#" id="descargarPdfBtn" class="btn btn-primary waves-effect">Descargar PDF</a>
+                    </div>
+                    {{--                     <iframe src="" id="pdfViewerGuias" width="100%" height="800px" style="border: none;"></iframe>
  --}}                    <div class="row">
 
                         <div class="table-responsive">

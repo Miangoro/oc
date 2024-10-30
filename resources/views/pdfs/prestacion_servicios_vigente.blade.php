@@ -216,9 +216,9 @@
                                     “EL CIDAM, A.C.”, REPRESENTADO EN ESTE
                                     ACTO POR SU REPRESENTANTE LEGAL LA
                                     MTRA. SYLVANA FIGUEROA SILVA Y POR LA
-                                    OTRA <u>{{ mb_strtoupper($datos[0]->razon_social) }}</u>, REPRESENTADO EN ESTE
+                                    OTRA <u>{{ mb_strtoupper($datos[0]->razon_social) ?? 'Sin especificar' }}</u>, REPRESENTADO EN ESTE
                                     ACTO POR SU REPRESENTANTE LEGAL EL C.
-                                    <u>{{ mb_strtoupper($datos[0]->representante) }}</u> Y A QUIEN EN LO SUCESIVO SE LE
+                                    <u>{{ mb_strtoupper($datos[0]->representante) ?? 'Sin especificar' }}</u> Y A QUIEN EN LO SUCESIVO SE LE
                                     DENOMINARÁ “EL CLIENTE”, AL TENOR DE
                                     LOS ANTECEDENTES, DECLARACIONES Y
                                     CLÁUSULAS SIGUIENTES:
@@ -365,16 +365,16 @@
                                 </p>
                                 <p> <strong>II.I.</strong>
                                     Que es una sociedad mercantil
-                                    <strong>“{{ mb_strtoupper($datos[0]->sociedad_mercantil) }}”</strong>
+                                    <strong>“{{ mb_strtoupper($datos[0]->sociedad_mercantil) ?? 'Sin especificar' }}”</strong>
                                     constituida como lo indica el instrumento
-                                    público número <strong>{{ mb_strtoupper($datos[0]->num_instrumento) }}</strong>,
-                                    volumen <strong>{{ mb_strtoupper($datos[0]->vol_instrumento) }}</strong>, el
+                                    público número <strong>{{ mb_strtoupper($datos[0]->num_instrumento) ?? 'Sin especificar' }}</strong>,
+                                    volumen <strong>{{ mb_strtoupper($datos[0]->vol_instrumento) ?? 'Sin especificar' }}</strong>, el
                                     <strong>{{ $fecha_cedula }}</strong>, del Protocolo a cargo del
-                                    Licenciado <strong>{{ mb_strtoupper($datos[0]->nombre_notario) }}</strong>, el
+                                    Licenciado <strong>{{ mb_strtoupper($datos[0]->nombre_notario) ?? 'Sin especificar' }}</strong>, el
                                     <strong>, Notario público número
                                         <strong>{{ mb_strtoupper($datos[0]->num_notario) }}</strong> del Estado de
                                         <strong>{{ mb_strtoupper($datos[0]->estado_notario) }}</strong>; número de
-                                        permiso: <strong>{{ mb_strtoupper($datos[0]->num_permiso) }}</strong> (clave
+                                        permiso: <strong>{{ mb_strtoupper($datos[0]->num_permiso) ?? 'Sin especificar' }}</strong> (clave
                                         única del
                                         documento) emitido por la Secretaria de
                                         Economía - Dirección General de
@@ -385,15 +385,15 @@
                                 <p>
                                     <strong>II.II. </strong>
                                     Que su representante legal es el C.
-                                    <strong>{{ mb_strtoupper($datos[0]->representante) }}</strong>,
+                                    <strong>{{ mb_strtoupper($datos[0]->representante) ?? 'Sin especificar' }}</strong>,
                                     acredita su personalidad con el instrumento
-                                    público número {{ mb_strtoupper($datos[0]->num_instrumento) }}, volumen
+                                    público número {{ mb_strtoupper($datos[0]->num_instrumento) ?? 'Sin especificar' }}, volumen
                                     {{ mb_strtoupper($datos[0]->vol_instrumento) }} del {{ $fecha_cedula }}, del
                                     Protocolo a
-                                    cargo del Licenciado {{ mb_strtoupper($datos[0]->nombre_notario) }}, Notario
+                                    cargo del Licenciado {{ mb_strtoupper($datos[0]->nombre_notario) ?? 'Sin especificar' }}, Notario
                                     público
-                                    número {{ mb_strtoupper($datos[0]->num_permiso) }} del Estado de
-                                    {{ mb_strtoupper($datos[0]->estado_notario) }},
+                                    número {{ mb_strtoupper($datos[0]->num_permiso) ?? 'Sin especificar' }} del Estado de
+                                    {{ mb_strtoupper($datos[0]->estado_notario) ?? 'Sin especificar' }},
                                 </p>
                             </td>
                         </tr>
@@ -421,7 +421,7 @@
                                 <p></p>
                                 <p>
                                     <strong>II.III.</strong> Que su registro federal de causantes
-                                    es: <strong>{{ mb_strtoupper($datos[0]->rfc) }}</strong>.
+                                    es: <strong>{{ mb_strtoupper($datos[0]->rfc) ?? 'Sin especificar' }}</strong>.
                                 </p>
                                 <p></p>
                                 <p>
