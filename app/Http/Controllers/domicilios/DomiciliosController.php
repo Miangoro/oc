@@ -282,7 +282,9 @@ class DomiciliosController extends Controller
             ]);
 
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->input('id_empresa'))->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($value) {
+                return !empty($value);
+            });
 
             $documentacionUrls = Documentacion_url::where('id_relacion', $id)->get();
             foreach ($documentacionUrls as $documentacionUrl) {
