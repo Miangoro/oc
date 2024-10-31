@@ -81,5 +81,10 @@ class Predios extends Model
             return $this->hasMany(actas_produccion::class, 'id_predio', 'nom_predio');
         }
 
+        public function solicitudes()
+        {
+            return $this->hasMany(solicitudesModel::class, 'id_predio', 'id_predio');
+        }
+
 
 }

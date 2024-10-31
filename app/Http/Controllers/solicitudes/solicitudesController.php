@@ -296,14 +296,16 @@ class solicitudesController extends Controller
 
     public function verificarSolicitud(Request $request)
 {
-    $id_predio = $request->input('id_predio');
+    $id_predios = $request->input('id_predios');
 
     // Verifica si existe una solicitud asociada al id_predio
-    $exists = solicitudesModel::where('id_predio', $id_predio)->exists();
+    $exists = solicitudesModel::where('id_predio', $id_predios)
+    ->pluck ('id_predio') ->toArray();
+    ;
 
     return response()->json(['hasSolicitud' => $exists]);
 }
 
 
-    
+
 }

@@ -801,7 +801,7 @@ $(function () {
                 });
             }
         });
-    }, 500); 
+    }, 500);
     });
 
     // Escuchar el cambio en el campo #regimen
@@ -843,6 +843,8 @@ $(function () {
               confirmButton: 'btn btn-success'
             }
           });
+          $('#ClientesConfirmadosForm')[0].reset();
+
         },
         error: function (xhr) {
           console.log('Error:', xhr.responseText);
@@ -958,7 +960,7 @@ $(document).ready(function() {
   });
    // Limpiar campos al cerrar el modal
    $('#editCliente').on('hidden.bs.modal', function() {
-    $('#editClienteForm')[0].reset(); 
+    $('#editClienteForm')[0].reset();
 });
 });
 
