@@ -40,18 +40,18 @@
          url: baseUrl + 'certificados-list',
        },
        columns: [
-         { data: '' },
-         { data: 'num_dictamen' }, 
-         { data: 'num_certificado' },
-         { data: 'maestro_mezcalero' },
-         { data: '' },
-         { data: 'fecha_vigencia' },
-         { data: 'fecha_vencimiento' },
-         { data: 'id_revisor' },
-         { data: 'Certificado' },
-         { data: '' },
-         { data: '' },
-         { data: 'actions', orderable: false, searchable: false }
+         { data: '#' },                //0
+         { data: 'fake_id' },          //1
+         { data: 'tipo_dictamen' },    //2 
+         { data: 'num_dictamen' },     //3
+         { data: 'num_certificado' },  //4
+         { data: 'maestro_mezcalero' },//5
+         { data: 'fecha_vigencia' },   //6
+         { data: 'fecha_vencimiento' },//7
+         { data: 'id_revisor' },       //8
+         { data: 'Certificado' },      //9
+         { data: 'estatus' },          //10
+         { data: 'actions'},           //11
        ],
        columnDefs: [
          {
@@ -212,8 +212,7 @@
         
                 return `<span class="badge rounded-pill bg-label-${colorEstatus}">${badgeText}</span>`;
             }
-        }
-,        
+        },  
          {
            // Actions
            targets: 11,

@@ -12,6 +12,7 @@ $(function () {
         url: '/revision-personal-list',
       },
       columns: [
+        { data: '#' },                //0
         { data: 'fake_id' },          //1
         { data: 'tipo_dictamen' },    //2
         { data: 'id_revisor' },       //3
@@ -648,7 +649,7 @@ $(document).on('click', '.Aprobacion-record', function() {
   const certificado = $(this).data('num-certificado');
   const select2Elements = $('#id_firmante'); 
   initializeSelect2(select2Elements);
-  
+
   $('#modalAprobacion').modal('show');
   $('#numero-certificado').text(certificado);
   $('#btnRegistrar').data('id-revisor', idRevision);
