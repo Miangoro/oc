@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\TranslatableActivityLog;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class empresa extends Model
 {
-    use HasFactory;
+    use LogsActivity, TranslatableActivityLog, HasFactory;
     protected $table = 'empresa';
     protected $primaryKey = 'id_empresa';
     protected $fillable = [
@@ -16,6 +18,11 @@ class empresa extends Model
         'domicilio_fiscal',
         'tipo',
       ];
+
+      public function getLogName2(): string
+      {
+          return 'empresa'; // Devuelve el nombre que desees
+      }
 
       public function empresaNumClientes()
     {

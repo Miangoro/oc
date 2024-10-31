@@ -278,6 +278,17 @@ class PrediosController extends Controller
 
                 $documentacion_url->save();
             }
+            $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+            $data1 = [
+                'title' => 'Nuevo registro de predio',
+                'message' => 'Se ha registrado un nuevo predio: ' . $predio->nombre_predio . '.',
+                'url' => 'predios-historial',
+            ];
+            foreach ($users as $user) {
+              $user->notify(new GeneralNotification($data1));
+          }
+
 
             // Retornar una respuesta
             return response()->json([
