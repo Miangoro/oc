@@ -129,6 +129,9 @@ class PrediosController extends Controller
             $ids = $start;
 
             foreach ($predios as $predio) {
+
+              $hasSolicitud = $predio->solicitudes()->exists();
+
                 $nestedData['id_predio'] = $predio->id_predio;
                 $nestedData['fake_id'] = ++$ids;
                 $nestedData['id_empresa'] = $predio->empresa->razon_social ?? 'N/A'; // Muestra la razón social de la empresa
@@ -140,6 +143,8 @@ class PrediosController extends Controller
                 $nestedData['cuenta_con_coordenadas'] = $predio->cuenta_con_coordenadas  ?? 'N/A';
                 $nestedData['superficie'] = $predio->superficie;
                 $nestedData['estatus']=$predio->estatus;
+                $nestedData['hasSolicitud'] = $hasSolicitud;
+
                 $data[] = $nestedData;
             }
         }

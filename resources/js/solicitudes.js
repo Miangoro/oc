@@ -285,14 +285,6 @@ $(function () {
              'data-bs-dismiss': 'modal',
              'data-bs-target': '#verSolicitudes'
             }
-          },
-          {
-            text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">GEOREFERENCIACION</span>',
-            className: 'add-new btn btn-primary waves-effect waves-light ms-2',
-            attr: {
-              'data-bs-toggle': 'modal',
-              'data-bs-target': '#addSolicitudGeoreferenciacion'
-            }
           }
       ],
             // For responsive popup
