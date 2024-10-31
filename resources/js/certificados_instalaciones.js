@@ -40,6 +40,7 @@
          url: baseUrl + 'certificados-list',
        },
        columns: [
+         { data: '#' },                //0
          { data: 'fake_id' },          //1
          { data: 'tipo_dictamen' },    //2 
          { data: 'num_dictamen' },     //3
@@ -211,8 +212,7 @@
         
                 return `<span class="badge rounded-pill bg-label-${colorEstatus}">${badgeText}</span>`;
             }
-        }
-,        
+        },  
          {
            // Actions
            targets: 11,
