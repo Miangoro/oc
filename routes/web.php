@@ -189,6 +189,7 @@ use App\Http\Controllers\dictamenes\InstalacionesController;
 use App\Http\Controllers\dictamenes\DictamenGranelController;
 use App\Http\Controllers\dictamenes\DictamenEnvasadoController;
 use App\Http\Controllers\certificados\Certificado_InstalacionesController;
+use App\Http\Controllers\certificados\Certificado_GranelController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\catalogo\catalogoEquiposController;
 use App\Http\Controllers\inspecciones\inspeccionesController;
@@ -818,3 +819,8 @@ Route::post('/registrar-aprobacion', [RevisionPersonalController::class, 'regist
 Route::get('/aprobacion/{id}', [RevisionPersonalController::class, 'cargarAprobacion']);
 Route::get('/obtener/historial/{id_revision}', [RevisionPersonalController::class, 'cargarHistorial']);
 Route::post('/editar-respuestas', [RevisionPersonalController::class, 'editarRespuestas']);
+
+//Certificado Granel
+Route::get('certificados/granel', [Certificado_GranelController::class, 'UserManagement'])->name('certificados-granel');
+Route::resource('certificados/granel-list',Certificado_GranelController::class);
+Route::post('/certificados', [Certificado_GranelController::class, 'store']);

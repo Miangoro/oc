@@ -130,6 +130,11 @@
           "slug": "certificados-instalaciones"
         },
         {
+          "url": "certificados/granel",
+          "name": "Granel",
+          "slug": "certificados-granel"
+        },
+        {
           "url": "certificados/producto",
           "name": "Producto",
           "slug": "certificados-producto"
