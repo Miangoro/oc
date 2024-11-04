@@ -25,7 +25,7 @@ class DomiciliosController extends Controller
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", 1)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
-        return view('domicilios.find_domicilio_instalaciones_view', compact('instalaciones', 'empresas', 'estados', 'organismos','numeroCliente'));
+        return view('domicilios.find_domicilio_instalaciones_view', compact('instalaciones', 'empresas', 'estados', 'organismos', 'numeroCliente'));
     }
 
     public function index(Request $request)
@@ -59,11 +59,11 @@ class DomiciliosController extends Controller
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
-                }) ->where(function ($query) {
+                })->where(function ($query) {
                     $query->whereHas('documentos', function ($query) {
                         $query->whereIn('id_documento', [127, 128, 129]);
                     })
-                    ->orWhereDoesntHave('documentos');
+                        ->orWhereDoesntHave('documentos');
                 })
                 ->offset($start)
                 ->limit($limit)
@@ -75,11 +75,11 @@ class DomiciliosController extends Controller
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
-                }) ->where(function ($query) {
+                })->where(function ($query) {
                     $query->whereHas('documentos', function ($query) {
                         $query->whereIn('id_documento', [127, 128, 129]);
                     })
-                    ->orWhereDoesntHave('documentos');
+                        ->orWhereDoesntHave('documentos');
                 })
                 ->where(function ($query) use ($search) {
                     $query->where('id_instalacion', 'LIKE', "%{$search}%")
@@ -103,7 +103,7 @@ class DomiciliosController extends Controller
                     $query->whereHas('documentos', function ($query) {
                         $query->whereIn('id_documento', [127, 128, 129]);
                     })
-                    ->orWhereDoesntHave('documentos');
+                        ->orWhereDoesntHave('documentos');
                 })
                 ->where(function ($query) use ($search) {
                     $query->where('id_instalacion', 'LIKE', "%{$search}%")
@@ -130,13 +130,13 @@ class DomiciliosController extends Controller
                 $nestedData['tipo'] = $instalacion->tipo  ?? 'N/A';
                 $nestedData['estado'] = $instalacion->estados->nombre  ?? 'N/A';
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa  ?? 'N/A';
-                $nestedData['folio'] = 
-                '<b>Certificadora:</b>' . ($instalacion->organismos->organismo ?? 'OC CIDAM') . '<br>' .
-                '<b>Número de certificado:</b>' . ($instalacion->folio ?? 'N/A') . '<br>'.
-                '<b>Fecha de emisión:</b>' . (Helpers::formatearFecha($instalacion->fecha_emision)) . '<br>'.
-                '<b>Fecha de vigencia:</b>' . (Helpers::formatearFecha($instalacion->fecha_vigencia)) . '<br>';
+                $nestedData['folio'] =
+                    '<b>Certificadora:</b>' . ($instalacion->organismos->organismo ?? 'OC CIDAM') . '<br>' .
+                    '<b>Número de certificado:</b>' . ($instalacion->folio ?? 'N/A') . '<br>' .
+                    '<b>Fecha de emisión:</b>' . (Helpers::formatearFecha($instalacion->fecha_emision)) . '<br>' .
+                    '<b>Fecha de vigencia:</b>' . (Helpers::formatearFecha($instalacion->fecha_vigencia)) . '<br>';
                 $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; // Maneja el caso donde el organismo sea nulo
-                $nestedData['url'] = !empty($instalacion->documentos->pluck('url')->toArray()) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first().'/'.implode(',', $instalacion->documentos->pluck('url')->toArray()) : '';
+                $nestedData['url'] = !empty($instalacion->documentos->pluck('url')->toArray()) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first() . '/' . implode(',', $instalacion->documentos->pluck('url')->toArray()) : '';
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($instalacion->fecha_vigencia);
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
@@ -173,13 +173,13 @@ class DomiciliosController extends Controller
             'tipo' => 'required|string',
             'estado' => 'required|exists:estados,id',
             'direccion_completa' => 'required|string',
-            'folio' => 'nullable|string', 
-            'id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo', 
-            'fecha_emision' => 'nullable|date', 
-            'fecha_vigencia' => 'nullable|date', 
-            'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf', 
+            'folio' => 'nullable|string',
+            'id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo',
+            'fecha_emision' => 'nullable|date',
+            'fecha_vigencia' => 'nullable|date',
+            'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
             'nombre_documento.*' => 'required_with:url.*|string',
-            'id_documento.*' => 'required_with:url.*|integer', 
+            'id_documento.*' => 'required_with:url.*|integer',
 
         ]);
 
@@ -189,8 +189,8 @@ class DomiciliosController extends Controller
                 'tipo' => $request->input('tipo'),
                 'estado' => $request->input('estado'),
                 'direccion_completa' => $request->input('direccion_completa'),
-                'folio' => $request->input('folio', null), 
-                'id_organismo' => $request->input('id_organismo', null), 
+                'folio' => $request->input('folio', null),
+                'id_organismo' => $request->input('id_organismo', null),
                 'fecha_emision' => $request->input('fecha_emision', null),
                 'fecha_vigencia' => $request->input('fecha_vigencia', null),
             ]);
@@ -205,7 +205,15 @@ class DomiciliosController extends Controller
             // Almacenar nuevos documentos solo si se envían
             if ($request->hasFile('url')) {
 
+                $directory = 'uploads/' . $numeroCliente;
+
+                // Verifica si el directorio no existe y lo crea si es necesario
+                if (!Storage::exists($directory)) {
+                    Storage::makeDirectory($directory, 0755, true);
+                }
+
                 foreach ($request->file('url') as $index => $file) {
+
 
                     $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
                     $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public'); //Aqui se guarda en la ruta definida storage/public
@@ -239,7 +247,7 @@ class DomiciliosController extends Controller
             return response()->json([
                 'success' => true,
                 'instalacion' => $instalacion,
-                'archivo_url' => $archivo_url, 
+                'archivo_url' => $archivo_url,
                 'numeroCliente' => $numeroCliente
             ]);
         } catch (ModelNotFoundException $e) {
@@ -309,5 +317,5 @@ class DomiciliosController extends Controller
             return response()->json(['code' => 500, 'message' => 'Error al actualizar la instalación.']);
         }
     }
-//end
+    //end
 }
