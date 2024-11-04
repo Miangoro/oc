@@ -23,10 +23,10 @@
 
         }
 
-        @font-face {
+     /*   @font-face {
             font-family: 'Century Gothic Negrita';
             src: url('fonts/GOTHICB.TTF') format('truetype');
-        }
+        }*/
 
         .negrita {
 
