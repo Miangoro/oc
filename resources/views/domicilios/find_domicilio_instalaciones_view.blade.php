@@ -150,7 +150,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <!-- Users List Table -->
-<div class="card">
+<div class="card"> {{ $numeroCliente }}
     <div class="card-header pb-0">
         <h3 class="card-title mb-0">Instalaciones</h3>
     </div>
