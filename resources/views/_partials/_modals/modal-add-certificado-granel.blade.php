@@ -8,6 +8,7 @@
             </div>
             <div class="modal-body">
                 <form id="addCertificadoForm">
+                    <!-- Select para el dictamen -->
                     <div class="form-floating form-floating-outline mb-4">
                         <select class="form-select select2" id="num_dictamen" name="num_dictamen" required>
                             <option value="" disabled selected>Seleccione un dictamen</option>
@@ -17,6 +18,7 @@
                         </select>
                     </div>
 
+                    <!-- Select para el firmante -->
                     <div class="form-floating form-floating-outline mb-4">
                         <select class="form-select select2" id="id_firmante" name="id_firmante" required>
                             <option value="" disabled selected>Seleccione un firmante</option>
@@ -26,6 +28,13 @@
                         </select>
                     </div>
 
+                    <!-- Campo de texto para num_dictamen -->
+                    <div class="form-floating form-floating-outline mb-4">
+                        <input type="text" class="form-control" id="num_certificado" name="num_certificado" placeholder="Número de Dictamen" required>
+                        <label for="num_dictamen_text">Número de Certificado</label>
+                    </div>
+
+                    <!-- Campos de fecha -->
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline">
@@ -41,6 +50,7 @@
                         </div>
                     </div>
                 </form>
+
                 <div class="d-flex justify-content-end mt-3">
                     <button id="btnRegistrarInstalacion" type="submit" class="btn btn-primary me-2">Registrar</button>
                     <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>

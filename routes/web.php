@@ -790,7 +790,7 @@ Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAu
 Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico');
 
 //
-Route::get('/Pre-certificado', [CartaAsignacionController::class, 'PreCertificado'])->name('Pre-certificado');
+
 Route::get('/Dictamen-MezcalEnvasado', [CartaAsignacionController::class, 'DictamenMezcalEnvasado'])->name('Dictamen-MezcalEnvasado');
 Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema');
 Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico');
@@ -824,3 +824,4 @@ Route::post('/editar-respuestas', [RevisionPersonalController::class, 'editarRes
 Route::get('certificados/granel', [Certificado_GranelController::class, 'UserManagement'])->name('certificados-granel');
 Route::resource('certificados/granel-list',Certificado_GranelController::class);
 Route::post('/certificados', [Certificado_GranelController::class, 'store']);
+Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCertificado'])->name('Pre-certificado');

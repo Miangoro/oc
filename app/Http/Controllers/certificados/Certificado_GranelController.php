@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\certificados;
 
 use App\Helpers\Helpers;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CertificadosGranel;
@@ -62,7 +63,7 @@ class Certificado_GranelController extends Controller
             return [
                 'fake_id' => ++$start,
                 'id_certificado' => $certificado->id_certificado,
-                'num_dictamen' => $certificado->dictamen->num_dictamen ?? 'N/A',
+                'id_dictamen' => $certificado->dictamen->num_dictamen ?? 'N/A',
                 'id_firmante' => $certificado->user->name ?? 'N/A',
                 'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
                 'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
@@ -83,15 +84,16 @@ class Certificado_GranelController extends Controller
     {
         $validatedData = $request->validate([
             'id_firmante' => 'required|integer',
-            'num_dictamen' => 'required|integer',
+            'id_dictamen' => 'required|integer',
+            'num_certificado' => 'required|string',
             'fecha_vigencia' => 'required|date',
             'fecha_vencimiento' => 'required|date',
         ]);
 
-        // Crear el registro en la tabla `certificados_granel`
         $certificado = CertificadosGranel::create([
             'id_firmante' => $validatedData['id_firmante'],
-            'num_dictamen' => $validatedData['num_dictamen'],
+            'id_dictamen' => $validatedData['id_dictamen'],
+            'num_certificado' => $validatedData['num_certificado'],
             'fecha_vigencia' => $validatedData['fecha_vigencia'],
             'fecha_vencimiento' => $validatedData['fecha_vencimiento'],
         ]);
@@ -102,4 +104,17 @@ class Certificado_GranelController extends Controller
         ]);
     }
 
+    public function PreCertificado($id_certificado)
+    {
+        $certificado = CertificadosGranel::with('dictamen.empresa')->findOrFail($id_certificado);
+    
+        $pdfData = [
+            'num_certificado' => $certificado->num_certificado,
+            'razon_social' => $certificado->dictamen->empresa->razon_social,
+        ];
+    
+        $pdf = Pdf::loadView('pdfs.pre-certificado', $pdfData);
+        return $pdf->stream("Pre-certificado CIDAM C-GRA-{$certificado->id_certificado}.pdf");
+    }
+    
 }

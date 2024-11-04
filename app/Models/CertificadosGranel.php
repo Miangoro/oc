@@ -14,18 +14,20 @@ class CertificadosGranel extends Model
 
     protected $fillable = [
         'id_firmante',
-        'num_dictamen',
+        'id_dictamen',
+        'num_certificado',
         'fecha_vigencia',
         'fecha_vencimiento',
     ];
 
     public function dictamen()
     {
-        return $this->belongsTo(Dictamen_Granel::class, 'num_dictamen', 'id_dictamen');
+        return $this->belongsTo(Dictamen_Granel::class, 'id_dictamen', 'id_dictamen');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_firmante', 'id'); // id_revisor es la clave foránea en la tabla revisores
+        return $this->belongsTo(User::class, 'id_firmante', 'id'); 
     }
+
 }

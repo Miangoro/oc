@@ -227,14 +227,14 @@
 		<tr>
 		
         <td class="columna">Nombre de la empresa</td>
-			<td colspan="3" class="columna">MESOAMERICANA DE BEBIDAS S. de R.L. de C.V. lore</td>
+			<td colspan="3" class="columna">{{ $razon_social }}</td>
 		</tr>
 		
         <tr> 
 			<td class="columna">Representante Legal</td>
 			<td class="columna">Salvador Rentería Jasso</td>
 			<td class="columna">Número de Certificado</td>
-			<td class="columna-end">CIDAM C-GRA-210/2024</td>
+			<td class="columna">{{ $num_certificado }}</td>
 		</tr>
 
 		<tr>

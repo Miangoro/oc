@@ -49,9 +49,10 @@
                     <th>#</th>
                     <th>ID</th>
                     <th>No. Dictamen</th>
-                    <th>Revisor Asignado</th>
+                    <th>Firmante</th>
                     <th>Fecha de Vigencia</th>
                     <th>Fecha de Vencimiento</th>
+                    <th>Certificado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>

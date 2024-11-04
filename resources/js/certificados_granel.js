@@ -39,10 +39,11 @@ initializeSelect2(select2Elements);
        columns: [
          { data: '#' },                //0
          { data: 'fake_id' },          //1
-         { data: 'num_dictamen' },     //2       
+         { data: 'id_dictamen' },      //2       
          { data: 'id_firmante' },      //3
          { data: 'fecha_vigencia' },   //4  
          { data: 'fecha_vencimiento' },//5  
+         { data: 'PDF' },              //6  
          { data: 'actions'},           //6
        ],
        columnDefs: [
@@ -67,8 +68,8 @@ initializeSelect2(select2Elements);
          {
             targets: 2,
             render: function (data, type, full, meta) {
-              var $num_dictamen = full['num_dictamen'];
-              return '<span class="fw-bold">' + $num_dictamen + '</span>';
+              var $id_dictamen = full['id_dictamen'];
+              return '<span class="fw-bold">' + $id_dictamen + '</span>';
             }
           }, 
           {
@@ -92,9 +93,17 @@ initializeSelect2(select2Elements);
               return '<span class="user-email">' + $fecha_vencimiento + '</span>';
             }
           }, 
+          {
+            // Abre el pdf del certificado
+            targets: 6,
+            className: 'text-center',
+            render: function (data, type, full, meta) {
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_certificado']}" data-dictamen="${full['id_dictamen']}"></i>`;
+            }
+          },
          {
            // Actions
-           targets: 6,
+           targets: 7,
            title: 'Acciones',
            searchable: false,
            orderable: false,
@@ -325,53 +334,161 @@ initializeSelect2(select2Elements);
    } 
 
 //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
-$('#btnRegistrarInstalacion').on('click', function (event) {
-    event.preventDefault(); // Evita el envío del formulario
 
-    // Obtiene los datos del formulario
-    var formData = {
-        id_firmante: $('#id_firmante').val(), // Cambia a id_firmante
-        num_dictamen: $('#num_dictamen').val(), // Este debe ser el id del dictamen
-        fecha_vigencia: $('#fecha_vigencia').val(),
-        fecha_vencimiento: $('#fecha_vencimiento').val(),
-    };
+// Agregar
+$(function () {
+  $.ajaxSetup({
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+  });
 
-    // Asegúrate de que se está enviando el valor correcto
-    console.log(formData);
+  function setFechaVencimiento() {
+      let fechaVigencia = $('#fecha_vigencia').val();
+      if (fechaVigencia) {
+          let fecha = new Date(fechaVigencia);
+          fecha.setFullYear(fecha.getFullYear() + 1);
+          let year = fecha.getFullYear();
+          let month = String(fecha.getMonth() + 1).padStart(2, '0');
+          let day = String(fecha.getDate()).padStart(2, '0');
+          let fechaVencimiento = `${year}-${month}-${day}`;
+          $('#fecha_vencimiento').val(fechaVencimiento);
+          fv.revalidateField('fecha_vencimiento'); 
+      }
+  }
 
-    // Enviar la solicitud AJAX
-    $.ajax({
-        url: '/certificados', // Cambia a tu ruta de almacenamiento
-        type: 'POST',
-        data: formData,
-        success: function () {
+  $('#fecha_vigencia').on('change', function () {
+      setFechaVencimiento();
+  });
 
-            $('#addCertificadoGrenelModal').modal('hide');
-            dt_instalaciones_table.ajax.reload(); // Cambiado para usar la tabla correcta
-  
-            Swal.fire({
-              icon: 'success',
-              title: '¡Registrado!',
-              text: '¡El certificado ha sido registrado correctamente!',
-              customClass: {
-                confirmButton: 'btn btn-success'
+  const form = document.getElementById('addCertificadoForm'); 
+  const fv = FormValidation.formValidation(form, {
+      fields: {
+          'id_firmante': {
+              validators: {
+                  notEmpty: {
+                      message: 'Selecciona un firmante.'
+                  }
               }
-            });
-        },
-        error: function (xhr, textStatus, errorThrown) {
-            console.error('Error al registrar:', textStatus, errorThrown);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Hubo un problema al registrar el certificado.',
-            });
-        }
-    });
+          },
+          'num_dictamen': {
+              validators: {
+                  notEmpty: {
+                      message: 'Selecciona un dictamen.'
+                  }
+              }
+          },
+          'num_certificado': {
+              validators: {
+                  notEmpty: {
+                      message: 'El número de certificado es obligatorio.'
+                  }
+              }
+          },
+          'fecha_vigencia': {
+              validators: {
+                  notEmpty: {
+                      message: 'La fecha de vigencia es obligatoria.'
+                  },
+                  date: {
+                      format: 'YYYY-MM-DD',
+                      message: 'Introduce una fecha de vigencia válida (YYYY-MM-DD).'
+                  }
+              }
+          },
+          'fecha_vencimiento': {
+              validators: {
+                  notEmpty: {
+                      message: 'La fecha de vencimiento es obligatoria.'
+                  },
+                  date: {
+                      format: 'YYYY-MM-DD',
+                      message: 'Introduce una fecha de vencimiento válida (YYYY-MM-DD).'
+                  }
+              }
+          },
+      },
+      plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+              eleValidClass: '',
+              eleInvalidClass: 'is-invalid',
+              rowSelector: '.form-floating'
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+  });
+
+  $('#btnRegistrarInstalacion').on('click', function (event) {
+      event.preventDefault();
+
+      fv.validate().then(function (status) {
+          if (status === 'Valid') {
+              var formData = {
+                  id_firmante: $('#id_firmante').val(),
+                  id_dictamen: $('#num_dictamen').val(),
+                  num_certificado: $('#num_certificado').val(),
+                  fecha_vigencia: $('#fecha_vigencia').val(),
+                  fecha_vencimiento: $('#fecha_vencimiento').val(),
+              };
+
+              $.ajax({
+                  url: '/certificados',
+                  type: 'POST',
+                  data: formData,
+                  success: function () {
+                      $('#addCertificadoGrenelModal').modal('hide');
+                      dt_instalaciones_table.ajax.reload();
+
+                      Swal.fire({
+                          icon: 'success',
+                          title: '¡Registrado!',
+                          text: '¡El certificado ha sido registrado correctamente!',
+                          customClass: {
+                              confirmButton: 'btn btn-success'
+                          }
+                      });
+                  },
+                  error: function (xhr, textStatus, errorThrown) {
+                      console.error('Error al registrar:', textStatus, errorThrown);
+                      Swal.fire({
+                          icon: 'error',
+                          title: 'Error',
+                          text: 'Hubo un problema al registrar el certificado.',
+                      });
+                  }
+              });
+          }
+      });
+  });
+
+  $('#id_firmante, #num_dictamen, #fecha_vigencia, #fecha_vencimiento').on('change', function() {
+      fv.revalidateField($(this).attr('name'));
+  });
 });
 
+$(document).on('click', '.pdf', function () {
+  var id = $(this).data('id');
+  var dictamen = $(this).data('dictamen');
+
+  $('#loading-spinner').show();
+  $('#pdfViewerDictamen').hide();
+
+  $('#titulo_modal_Dictamen').text("Certificado Granel");
+  $('#subtitulo_modal_Dictamen').text(dictamen);
+
+  var pdfUrl = '/Pre-certificado/' + id;
+  $('#openPdfBtnDictamen').attr('href', pdfUrl).show();
+  $('#pdfViewerDictamen').attr('src', pdfUrl);
+
+  $('#PdfDictamenIntalaciones').modal('show');
+});
+
+$('#pdfViewerDictamen').on('load', function () {
+  $('#loading-spinner').hide();
+  $('#pdfViewerDictamen').show();
+});
 
 //end
 });
-
-
-
