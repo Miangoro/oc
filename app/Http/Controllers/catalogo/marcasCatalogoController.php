@@ -146,7 +146,9 @@ class marcasCatalogoController extends Controller
 
 
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->cliente)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
 
         if ($request->id) {
             // Actualizar marca existente
@@ -159,6 +161,15 @@ class marcasCatalogoController extends Controller
 
             // Actualizar documentos existentes o agregar nuevos
             if ($request->has('id_documento')) {
+
+                $directory = 'uploads/' . $numeroCliente;
+
+                // Verifica si el directorio no existe y lo crea si es necesario
+                if (!Storage::exists($directory)) {
+                    Storage::makeDirectory($directory, 0755, true);
+                }
+
+
                 foreach ($request->id_documento as $index => $id_documento) {
                     $documento = Documentacion_url::where('id_relacion', $marca->id_marca)
                         ->where('id_documento', $id_documento)
