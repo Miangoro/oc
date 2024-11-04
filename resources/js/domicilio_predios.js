@@ -121,14 +121,11 @@ $(function () {
                           data-bs-dismiss="modal" data-id="${full['id_predio']}"
                           data-registro="${full['id_empresa']}"></i>`;
               } else {
-                  return `<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"
-                          data-bs-toggle="tooltip"
-                          title="Necesita hacer la solicitud"
-                          data-bs-placement="top"></i>`;
+                  return `<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf" data-bs-placement="right" title="Necesita hacer la solicitud"
+                          ></i>`;
               }
           }
       },
-
 
         // Pdf de pre-registro
         {

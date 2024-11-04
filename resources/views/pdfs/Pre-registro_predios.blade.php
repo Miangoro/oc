@@ -6,7 +6,7 @@
     <title>F-UV-21-01 Pre-registro de predios de maguey o agave Ed.1 Vigente</title>
 
     <style>
-    @font-face {
+  /*  @font-face {
         font-family: 'calibri';
         src: url('fonts/calibri-regular.ttf') format('truetype');
     }
@@ -19,7 +19,7 @@
     @font-face {
         font-family: 'century';
         src: url('fonts/Century Schoolbook Bold.otf') format('truetype');
-    }
+    }*/
 
     body {
         margin: 0;
