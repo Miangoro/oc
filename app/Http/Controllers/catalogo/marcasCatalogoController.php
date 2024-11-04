@@ -146,7 +146,9 @@ class marcasCatalogoController extends Controller
 
 
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->cliente)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
 
         if ($request->id) {
             // Actualizar marca existente
