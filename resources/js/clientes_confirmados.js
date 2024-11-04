@@ -224,7 +224,7 @@ $(function () {
             },
             {
               extend: 'csv',
-              title: 'Users',
+              title: 'Clientes confirmados',
               text: '<i class="ri-file-text-line me-1" ></i>Csv',
               className: 'dropdown-item',
               exportOptions: {
@@ -249,7 +249,7 @@ $(function () {
             },
             {
               extend: 'excel',
-              title: 'Users',
+              title: 'Clientes confirmados',
               text: '<i class="ri-file-excel-line me-1"></i>Excel',
               className: 'dropdown-item',
               exportOptions: {
@@ -274,7 +274,7 @@ $(function () {
             },
             {
               extend: 'pdf',
-              title: 'Users',
+              title: 'Clientes confirmados',
               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
               className: 'dropdown-item',
               exportOptions: {
@@ -299,7 +299,7 @@ $(function () {
             },
             {
               extend: 'copy',
-              title: 'Users',
+              title: 'Clientes confirmados',
               text: '<i class="ri-file-copy-line me-1"></i>Copy',
               className: 'dropdown-item',
               exportOptions: {
