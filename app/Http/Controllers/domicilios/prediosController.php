@@ -210,7 +210,7 @@ class PrediosController extends Controller
                   foreach ($request->latitud as $index => $latitud) {
                       if (!is_null($latitud) && !is_null($request->longitud[$index])) {
                           PredioCoordenadas::create([
-                              'id_predio' => $id_predio,
+                              'id_predio' => $predio->id_predio,
                               'latitud' => $latitud,
                               'longitud' => $request->longitud[$index],
                           ]);
