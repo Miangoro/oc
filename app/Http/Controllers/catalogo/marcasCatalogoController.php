@@ -255,7 +255,9 @@ class marcasCatalogoController extends Controller
         $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get(); // Obtener los documentos asociados a la marca
 
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
 
 
 
