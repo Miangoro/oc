@@ -565,7 +565,7 @@ $(function () {
         fv.removeField('fecha_vigencia');
       }
     });
-    $('#id_empresa, #estado').on('change', function() {
+    $('#id_empresa, #estado, #fecha_emision, #fecha_vigencia').on('change', function() {
       fv.revalidateField($(this).attr('name'));
     });
   });
@@ -737,6 +737,9 @@ $(function () {
             fv.removeField('fecha_emision');
             fv.removeField('fecha_vigencia');
         }
+    });
+    $('#edit_id_empresa, #edit_estado, #edit_fecha_emision, #edit_fecha_vigencia').on('change', function() {
+      fv.revalidateField($(this).attr('name'));
     });
 });
 
@@ -931,7 +934,7 @@ $('#fecha_emision').on('change', function() {
   var year = fechaInicial.getFullYear();
   var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
   var day = ('0' + fechaInicial.getDate()).slice(-2);
-  $('#fecha_vigencia').val(year + '-' + month + '-' + day);
+  $('#fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
 });
 
 $('#edit_fecha_emision').on('change', function() {
@@ -940,7 +943,7 @@ $('#edit_fecha_emision').on('change', function() {
   var year = fechaInicial.getFullYear();
   var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
   var day = ('0' + fechaInicial.getDate()).slice(-2);
-  $('#edit_fecha_vigencia').val(year + '-' + month + '-' + day);
+  $('#edit_fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
 });
 
 $(document).on('click', '.pdf', function () {
