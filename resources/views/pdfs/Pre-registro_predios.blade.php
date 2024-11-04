@@ -16,11 +16,7 @@
         src: url('fonts/calibri-bold.ttf') format('truetype');
     }
 
-    @font-face {
-        font-family: 'century';
-        src: url('fonts/Century Schoolbook Bold.otf') format('truetype');
-    }
-
+ 
     body {
         margin: 0;
         padding: 0;

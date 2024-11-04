@@ -22,10 +22,9 @@ class DomiciliosController extends Controller
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = estados::all(); // Obtener todos los estados
         $organismos = organismos::all(); // Obtener todos los organismos
-        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", 1)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+       
 
-        return view('domicilios.find_domicilio_instalaciones_view', compact('instalaciones', 'empresas', 'estados', 'organismos', 'numeroCliente'));
+        return view('domicilios.find_domicilio_instalaciones_view', compact('instalaciones', 'empresas', 'estados', 'organismos'));
     }
 
     public function index(Request $request)
