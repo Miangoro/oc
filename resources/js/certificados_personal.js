@@ -45,7 +45,7 @@ $(function () {
         {
           targets: 2,
           render: function (data, type, full, meta) {
-            var $tipoDictamen = full['tipo_dictamen'];
+            var $tipoDictamen = parseInt(full['tipo_dictamen']);
             var $colorDictamen;
             var $nombreDictamen;
 
