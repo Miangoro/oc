@@ -9,7 +9,7 @@
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="addNewLoteForm">
-                    <div class="row">
+                   
                         <div class="col-12">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select onchange="obtenerGraneles(); obtenerMarcas(); obtenerDirecciones();"
