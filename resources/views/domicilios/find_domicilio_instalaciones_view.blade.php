@@ -150,7 +150,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <!-- Users List Table -->
-<div class="card">
+<div class="card"> 
     <div class="card-header pb-0">
         <h3 class="card-title mb-0">Instalaciones</h3>
     </div>
@@ -202,7 +202,7 @@
                         <!-- Select de Tipo de Instalación -->
                         <div class="form-floating form-floating-outline mb-3">
                             <select class="form-select" id="edit_tipo" name="tipo" aria-label="Tipo de Instalación" required>
-                                <option value="">Seleccione un tipo de instalación</option>
+                                <option value="" disabled selected>Seleccione un tipo de instalación</option>
                                 <option value="Productora">Productora</option>
                                 <option value="Envasadora">Envasadora</option>
                                 <option value="Comercializadora">Comercializadora</option>
@@ -216,7 +216,7 @@
                         <div class="col-md-6">
                         <!-- Input de Estado -->
                         <div class="form-floating form-floating-outline mb-3">
-                            <select class="form-select" id="edit_estado" name="estado" data-placeholder="Seleccione un estado" aria-label="Estado" required>
+                            <select class="form-select select2" id="edit_estado" name="estado" data-placeholder="Seleccione un estado" aria-label="Estado" required>
                                 <option value="">Seleccione un estado</option>
                                 @foreach($estados as $estado)
                                     <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
@@ -236,7 +236,7 @@
                         <!-- Select de Tipo de Certificación -->
                         <div class="form-floating form-floating-outline mb-3">
                             <select class="form-select" id="edit_certificacion" name="certificacion" aria-label="Tipo de Certificación" required>
-                                <option value="">Seleccione el tipo de certificación</option>
+                                <option value="" disabled selected>Seleccione el tipo de certificación</option>
                                 <option value="oc_cidam">Certificación por OC CIDAM</option>
                                 <option value="otro_organismo">Certificado por otro organismo</option>
                             </select>
@@ -273,13 +273,13 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="date" class="form-control" id="edit_fecha_emision" name="fecha_emision" aria-label="Fecha de Emisión">
+                                        <input type="date" class="form-control datepicker" id="edit_fecha_emision" name="fecha_emision" aria-label="Fecha de Emisión" readonly>
                                         <label for="edit_fecha_emision">Fecha de Emisión</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="date" class="form-control" id="edit_fecha_vigencia" name="fecha_vigencia" aria-label="Fecha de Vigencia">
+                                        <input type="date" class="form-control datepicker" id="edit_fecha_vigencia" name="fecha_vigencia" aria-label="Fecha de Vigencia" readonly>
                                         <label for="edit_fecha_vigencia">Fecha de Vigencia</label>
                                     </div>
                                 </div>

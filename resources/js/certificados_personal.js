@@ -12,6 +12,7 @@ $(function () {
         url: '/revision-personal-list',
       },
       columns: [
+        { data: '#' },                //0
         { data: 'fake_id' },          //1
         { data: 'tipo_dictamen' },    //2
         { data: 'id_revisor' },       //3
@@ -44,7 +45,7 @@ $(function () {
         {
           targets: 2,
           render: function (data, type, full, meta) {
-            var $tipoDictamen = full['tipo_dictamen'];
+            var $tipoDictamen = parseInt(full['tipo_dictamen']);
             var $colorDictamen;
             var $nombreDictamen;
 
@@ -364,8 +365,7 @@ $(function () {
           display: $.fn.dataTable.Responsive.display.modal({
             header: function (row) {
               var data = row.data();
-              return 'Detalles de Cerificados de Instalaciones';
-            }
+              return 'Detalles de Certificado: ' + data['num_certificado'];            }
           }),
           type: 'column',
           renderer: function (api, rowIdx, columns) {
@@ -648,7 +648,7 @@ $(document).on('click', '.Aprobacion-record', function() {
   const certificado = $(this).data('num-certificado');
   const select2Elements = $('#id_firmante'); 
   initializeSelect2(select2Elements);
-  
+
   $('#modalAprobacion').modal('show');
   $('#numero-certificado').text(certificado);
   $('#btnRegistrar').data('id-revisor', idRevision);

@@ -12,7 +12,7 @@
                         @csrf
 
                         <div class="form-floating form-floating-outline mb-4">
-                            <select id="id_empresa" name="id_empresa" class="form-select select2 id_empresa_instalaciones" required>
+                            <select id="id_empresa" name="id_empresa" class="form-select select2" required>
                                 <option value="" disabled selected>Selecciona la empresa</option>
                                 @foreach ($empresas as $empresa)
                                     <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
@@ -26,7 +26,7 @@
                                 <!-- Select de Tipo de Instalación -->
                                 <div class="form-floating form-floating-outline mb-3">
                                     <select class="form-select" id="tipo" name="tipo" aria-label="Tipo de Instalación" required>
-                                        <option value="">Seleccione un tipo de instalación</option>
+                                        <option value="" disabled selected>Seleccione un tipo de instalación</option>
                                         <option value="Productora">Productora</option>
                                         <option value="Envasadora">Envasadora</option>
                                         <option value="Comercializadora">Comercializadora</option>
@@ -59,7 +59,7 @@
                         <!-- Select de Tipo de Certificación -->
                         <div class="form-floating form-floating-outline mb-3 mt-4">
                             <select class="form-select" id="certificacion" name="certificacion" aria-label="Tipo de Certificación" required>
-                                <option value="">Seleccione el tipo de certificación</option>
+                                <option value="" disabled selected>Seleccione el tipo de certificación</option>
                                 <option value="oc_cidam">Certificación por OC CIDAM</option>
                                 <option value="otro_organismo">Certificado por otro organismo</option>
                             </select>

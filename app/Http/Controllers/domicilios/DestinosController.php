@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Empresa;
 use App\Models\Destinos;
+use App\Notifications\GeneralNotification;
+use App\Models\User;
 
 class DestinosController extends Controller
 {
-    
+
     public function UserManagement()
     {
         // Obtener todos los registros de destinos con la relación empresa cargada
@@ -39,21 +41,21 @@ class DestinosController extends Controller
                 9 => 'correo_recibe',
                 10 => 'celular_recibe',
             ];
-        
+
             $search = [];
-        
+
             // Obtener el total de registros filtrados
             $totalData = Destinos::whereHas('empresa', function ($query) {
                 $query->where('tipo', 2);
             })->count();
-        
+
             $totalFiltered = $totalData;
-        
+
             $limit = $request->input('length');
             $start = $request->input('start');
             $order = $columns[$request->input('order.0.column')];
             $dir = $request->input('order.0.dir');
-        
+
             if (empty($request->input('search.value'))) {
                 $destinos = Destinos::with('empresa')
                     ->whereHas('empresa', function ($query) {
@@ -65,7 +67,7 @@ class DestinosController extends Controller
                     ->get();
             } else {
                 $search = $request->input('search.value');
-        
+
                 $destinos = Destinos::with('empresa')
                     ->whereHas('empresa', function ($query) {
                         $query->where('tipo', 2);
@@ -86,7 +88,7 @@ class DestinosController extends Controller
                     ->limit($limit)
                     ->orderBy($order, $dir)
                     ->get();
-        
+
                 $totalFiltered = Destinos::with('empresa')
                     ->whereHas('empresa', function ($query) {
                         $query->where('tipo', 2);
@@ -105,19 +107,19 @@ class DestinosController extends Controller
                     })
                     ->count();
             }
-        
+
             $data = [];
-        
+
             // Mapea los valores de tipo_direccion a texto
             $tipoDireccionMap = [
                 1 => 'Exportación',
                 2 => 'Nacional',
                 3 => 'Hologramas'
             ];
-        
+
             if (!empty($destinos)) {
                 $ids = $start;
-        
+
                 foreach ($destinos as $destino) {
                     $nestedData['id_direccion'] = $destino->id_direccion;
                     $nestedData['fake_id'] = ++$ids;
@@ -133,7 +135,7 @@ class DestinosController extends Controller
                     $data[] = $nestedData;
                 }
             }
-        
+
             return response()->json([
                 'draw' => intval($request->input('draw')),
                 'recordsTotal' => intval($totalData),
@@ -142,7 +144,7 @@ class DestinosController extends Controller
                 'data' => $data,
             ]);
         }
-        
+
 
             // Función para eliminar un predio
             public function destroy($id_direccion)
@@ -150,7 +152,7 @@ class DestinosController extends Controller
                 try {
                     $destino = Destinos::findOrFail($id_direccion);
                      $destino->delete();
-                
+
                      return response()->json(['success' => 'Direccion eliminada correctamente']);
                 } catch (\Exception $e) {
                      return response()->json(['error' => 'Error al eliminar la dirección ' . $e->getMessage()], 500);
@@ -171,7 +173,7 @@ class DestinosController extends Controller
                     'correo_recibe' => 'nullable|email',
                     'celular_recibe' => 'nullable|string',
                 ]);
-            
+
                 // Crear una nueva instancia del modelo Predios
                 $destino = new Destinos();
                 $destino->tipo_direccion = $validated['tipo_direccion'];
@@ -185,11 +187,35 @@ class DestinosController extends Controller
                 $destino->celular_recibe = $validated['celular_recibe'];
 
 
-            
+
                 // Guardar el nuevo predio en la base de datos
                 $destino->save();
-        
-            
+                // Obtener los usuarios por ID
+                $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+                // Definir el mapeo de tipo de dirección
+                $tipoDireccionMap = [
+                    1 => 'Para exportación',
+                    2 => 'Para venta nacional',
+                    3 => 'Para envío de hologramas',
+                ];
+
+                // Obtener el tipo de dirección basado en el valor de tipo_direccion
+                $tipoDireccion = isset($tipoDireccionMap[$destino->tipo_direccion]) ? $tipoDireccionMap[$destino->tipo_direccion] : 'Tipo desconocido';
+
+                // Datos de la notificación
+                $data1 = [
+                    'title' => 'Nuevo registro de destinos',
+                    'message' => 'Se ha registrado un nuevo destino de tipo: ' . $tipoDireccion . '.',
+                    'url' => 'destinos-historial',
+                ];
+
+                // Enviar la notificación a cada usuario
+                foreach ($users as $user) {
+                    $user->notify(new GeneralNotification($data1));
+                }
+
+
                 // Retornar una respuesta
                 return response()->json([
                     'success' => true,
@@ -224,9 +250,9 @@ class DestinosController extends Controller
                 'correo_recibe' => 'nullable|email',
                 'celular_recibe' => 'nullable|string',
             ]);
-            
+
             $destino = Destinos::findOrFail($id_direccion);
-            
+
             // Actualizar destino
             $destino->update([
                 'tipo_direccion' => $validated['tipo_direccion'],
@@ -239,13 +265,13 @@ class DestinosController extends Controller
                 'correo_recibe' => $validated['correo_recibe'],
                 'celular_recibe' => $validated['celular_recibe'],
             ]);
-    
+
             // Devolver una respuesta de éxito
             return response()->json([
                 'success' => true,
                 'message' => 'Destino actualizado correctamente.',
             ]);
-    
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -253,5 +279,5 @@ class DestinosController extends Controller
             ], 500);
         }
     }
-               
+
 }

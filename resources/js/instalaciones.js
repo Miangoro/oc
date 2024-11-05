@@ -1,4 +1,19 @@
 $(function () {
+  var dt_user_table = $('.datatables-users'),
+  select2Elements = $('.select2'),
+  userView = baseUrl + 'app/user/view/account'
+
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+  initializeSelect2(select2Elements);
+
   $(document).ready(function () {
     $('.datepicker').datepicker({
       format: 'yyyy-mm-dd',
@@ -317,21 +332,6 @@ $(function () {
     }
   });
 
-  var dt_user_table = $('.datatables-users'),
-  select2Elements = $('.select2'),
-  userView = baseUrl + 'app/user/view/account'
-
-  function initializeSelect2($elements) {
-    $elements.each(function () {
-      var $this = $(this);
-      select2Focus($this);
-      $this.wrap('<div class="position-relative"></div>').select2({
-        dropdownParent: $this.parent()
-      });
-    });
-  }
-  initializeSelect2(select2Elements);
-
   // Configuración CSRF para Laravel
   $.ajaxSetup({
     headers: {
@@ -339,65 +339,66 @@ $(function () {
     }
   });
 
-// Eliminar registro
-$(document).on('click', '.delete-record', function () {
-  var id_instalacion = $(this).data('id'),
-      dtrModal = $('.dtr-bs-modal.show');
+  // Eliminar registro
+  $(document).on('click', '.delete-record', function () {
+    var id_instalacion = $(this).data('id'),
+        dtrModal = $('.dtr-bs-modal.show');
 
-  if (dtrModal.length) {
-    dtrModal.modal('hide');
-  }
-
-  Swal.fire({
-    title: '¿Está seguro?',
-    text: "No podrá revertir este evento",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Sí, eliminar',
-    customClass: {
-      confirmButton: 'btn btn-primary me-3',
-      cancelButton: 'btn btn-label-secondary'
-    },
-    buttonsStyling: false
-  }).then(function (result) {
-    if (result.value) {
-      $.ajax({
-        type: 'DELETE',
-        url: `${baseUrl}instalaciones/${id_instalacion}`, 
-        success: function () {
-          dt_instalaciones_table.ajax.reload();
-
-          Swal.fire({
-            icon: 'success',
-            title: '¡Eliminado!',
-            text: '¡La solicitud ha sido eliminada correctamente!',
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-        },
-        error: function (xhr, textStatus, errorThrown) {
-          console.error('Error al eliminar:', textStatus, errorThrown);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Hubo un problema al eliminar el registro.',
-          });
-        }
-      });
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-      Swal.fire({
-        title: 'Cancelado',
-        text: 'La solicitud no ha sido eliminada',
-        icon: 'error',
-        customClass: {
-          confirmButton: 'btn btn-success'
-        }
-      });
+    if (dtrModal.length) {
+      dtrModal.modal('hide');
     }
-  });
-});
 
+    Swal.fire({
+      title: '¿Está seguro?',
+      text: "No podrá revertir este evento",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      customClass: {
+        confirmButton: 'btn btn-primary me-3',
+        cancelButton: 'btn btn-label-secondary'
+      },
+      buttonsStyling: false
+    }).then(function (result) {
+      if (result.value) {
+        $.ajax({
+          type: 'DELETE',
+          url: `${baseUrl}instalaciones/${id_instalacion}`, 
+          success: function () {
+            dt_instalaciones_table.ajax.reload();
+
+            Swal.fire({
+              icon: 'success',
+              title: '¡Eliminado!',
+              text: '¡La solicitud ha sido eliminada correctamente!',
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+            });
+          },
+          error: function (xhr, textStatus, errorThrown) {
+            console.error('Error al eliminar:', textStatus, errorThrown);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Hubo un problema al eliminar el registro.',
+            });
+          }
+        });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          title: 'Cancelado',
+          text: 'La solicitud no ha sido eliminada',
+          icon: 'error',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      }
+    });
+  });
+
+  // Agregar
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -564,10 +565,11 @@ $(document).on('click', '.delete-record', function () {
         fv.removeField('fecha_vigencia');
       }
     });
+    $('#id_empresa, #estado, #fecha_emision, #fecha_vigencia').on('change', function() {
+      fv.revalidateField($(this).attr('name'));
+    });
   });
 
-
-  // Agregar
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -668,6 +670,7 @@ $(document).on('click', '.delete-record', function () {
         });
     });
 
+    // Editar
     $('#edit_certificacion').on('change', function () {
         if ($(this).val() === 'otro_organismo') {
             $('#edit_certificado_otros').removeClass('d-none');
@@ -735,76 +738,94 @@ $(document).on('click', '.delete-record', function () {
             fv.removeField('fecha_vigencia');
         }
     });
+    $('#edit_id_empresa, #edit_estado, #edit_fecha_emision, #edit_fecha_vigencia').on('change', function() {
+      fv.revalidateField($(this).attr('name'));
+    });
 });
 
-  // Editar
+$(document).ready(function () {
+  let instalacionData = {};
+  $('#edit_certificacion').on('change', function () {
+      if ($(this).val() === 'otro_organismo') {
+          $('#edit_certificado_otros').removeClass('d-none');
+
+          if (instalacionData) {
+              $('#edit_folio').val(instalacionData.folio || '');
+              $('#edit_id_organismo').val(instalacionData.id_organismo || '').trigger('change');
+              $('#edit_fecha_emision').val(instalacionData.fecha_emision || '');
+              $('#edit_fecha_vigencia').val(instalacionData.fecha_vigencia || '');
+              
+              if (instalacionData.archivoUrl) {
+                  $('#archivo_url_display').html(`
+                      <p>Archivo existente: <a href="../files/${instalacionData.numeroCliente}/${instalacionData.archivoUrl}" target="_blank">${instalacionData.archivoUrl}</a></p>
+                  `);
+              } else {
+                  $('#archivo_url_display').html('No hay archivo disponible.');
+              }
+          }
+      } else {
+          $('#edit_certificado_otros').addClass('d-none');
+          $('#edit_folio').val(null);
+          $('#edit_id_organismo').val(null).trigger('change');
+          $('#edit_fecha_emision').val(null);
+          $('#edit_fecha_vigencia').val(null);
+          $('#archivo_url_display').html('No hay archivo disponible.');
+      }
+  });
+
   $(document).on('click', '.edit-record', function () {
-    var id_instalacion = $(this).data('id');
-    var url = baseUrl + 'domicilios/edit/' + id_instalacion;
+      var id_instalacion = $(this).data('id');
+      var url = baseUrl + 'domicilios/edit/' + id_instalacion;
 
-    $.get(url, function (data) {
-        if (data.success) {
-            var instalacion = data.instalacion;
+      $.get(url, function (data) {
+          if (data.success) {
+              var instalacion = data.instalacion;
+              
+              instalacionData = {
+                  folio: instalacion.folio || '',
+                  id_organismo: instalacion.id_organismo || '',
+                  fecha_emision: instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '',
+                  fecha_vigencia: instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '',
+                  archivoUrl: data.archivo_url || '',
+                  numeroCliente: data.numeroCliente || ''
+              };
 
-            $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
-            $('#edit_tipo').val(instalacion.tipo).trigger('change');
-            $('#edit_estado').val(instalacion.estado).trigger('change');
-            $('#edit_direccion').val(instalacion.direccion_completa);
+              $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
+              $('#edit_tipo').val(instalacion.tipo).trigger('change');
+              $('#edit_estado').val(instalacion.estado).trigger('change');
+              $('#edit_direccion').val(instalacion.direccion_completa);
 
-            var tieneCertificadoOtroOrganismo = instalacion.folio || instalacion.id_organismo ||
-                (instalacion.fecha_emision && instalacion.fecha_emision !== 'N/A') ||
-                (instalacion.fecha_vigencia && instalacion.fecha_vigencia !== 'N/A') ||
-                data.archivo_url;
+              if (instalacionData.folio || instalacionData.id_organismo || instalacionData.fecha_emision || instalacionData.fecha_vigencia) {
+                  $('#edit_certificacion').val('otro_organismo').trigger('change');
+              } else {
+                  $('#edit_certificacion').val('oc_cidam').trigger('change');
+                  $('#edit_certificado_otros').addClass('d-none');
+              }
 
-            if (tieneCertificadoOtroOrganismo) {
-                $('#edit_certificacion').val('otro_organismo').trigger('change');
-                $('#edit_certificado_otros').removeClass('d-none');
+              $('#modalEditInstalacion').modal('show');
+          } else {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'No se pudo cargar los datos de la instalación',
+                  customClass: {
+                      confirmButton: 'btn btn-primary'
+                  }
+              });
+          }
+      }).fail(function(jqXHR, textStatus, errorThrown) {
+          console.error('Error en la solicitud:', textStatus, errorThrown);
 
-                $('#edit_folio').val(instalacion.folio || '');
-                $('#edit_id_organismo').val(instalacion.id_organismo || '').trigger('change');
-                $('#edit_fecha_emision').val(instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '');
-                $('#edit_fecha_vigencia').val(instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '');
-
-                var archivoUrl = data.archivo_url || '';
-                var numCliente = data.numeroCliente;
-                if (archivoUrl) {
-                    try {
-                        $('#archivo_url_display').html(`
-                            <p>Archivo existente:</span> <a href="../files/${numCliente}/${archivoUrl}" target="_blank">${archivoUrl}</a></p>`);
-                    } catch (e) {
-                        $('#archivo_url_display').html('URL del archivo no válida.');
-                    }
-                } else {
-                    $('#archivo_url_display').html('No hay archivo disponible.');
-                }
-            } else {
-                $('#edit_certificacion').val('oc_cidam').trigger('change');
-                $('#edit_certificado_otros').addClass('d-none');
-                $('#archivo_url_display').html('No hay archivo disponible.');
-            }
-            $('#modalEditInstalacion').modal('show');
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo cargar los datos de la instalación',
-                customClass: {
-                    confirmButton: 'btn btn-primary'
-                }
-            });
-        }
-    }).fail(function(jqXHR, textStatus, errorThrown) {
-        console.error('Error en la solicitud:', textStatus, errorThrown);
-
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Error en la solicitud. Inténtalo de nuevo.',
-            customClass: {
-                confirmButton: 'btn btn-primary'
-            }
-        });
-    });
+          Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Error en la solicitud. Inténtalo de nuevo.',
+              customClass: {
+                  confirmButton: 'btn btn-primary'
+              }
+          });
+      });
+  });
 });
 
 $('#modalEditInstalacion').on('hidden.bs.modal', function () {
@@ -821,7 +842,6 @@ $('#modalEditInstalacion').on('hidden.bs.modal', function () {
     $('#edit_fecha_emision').val('');
     $('#edit_fecha_vigencia').val('');
 });
-
 
 // Manejar el cambio en el tipo de instalación
 $(document).on('change', '#edit_tipo', function () {
@@ -914,7 +934,16 @@ $('#fecha_emision').on('change', function() {
   var year = fechaInicial.getFullYear();
   var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
   var day = ('0' + fechaInicial.getDate()).slice(-2);
-  $('#fecha_vigencia').val(year + '-' + month + '-' + day);
+  $('#fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
+});
+
+$('#edit_fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+  var year = fechaInicial.getFullYear();
+  var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
+  var day = ('0' + fechaInicial.getDate()).slice(-2);
+  $('#edit_fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
 });
 
 $(document).on('click', '.pdf', function () {

@@ -115,38 +115,17 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            var hasSolicitud = false;
-
-            // Realiza una llamada AJAX para verificar si existe una solicitud
-            $.ajax({
-              url: '/verificar-solicitud', // Cambia esta URL según tu ruta de verificación
-              type: 'GET',
-              data: { id_predio: full['id_predio'] },
-              async: false, // Permite esperar la respuesta antes de continuar
-              success: function (response) {
-                hasSolicitud = response.hasSolicitud; // Asegúrate de que el servidor responda con este campo
-              },
-              error: function () {
-                console.error('Error al verificar la solicitud'); // Manejo de errores
+              if (full['hasSolicitud']) {
+                  return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdfSolicitud cursor-pointer"
+                          data-bs-target="#mostrarPdfDcitamen" data-bs-toggle="modal"
+                          data-bs-dismiss="modal" data-id="${full['id_predio']}"
+                          data-registro="${full['id_empresa']}"></i>`;
+              } else {
+                  return `<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf" data-bs-placement="right" title="Necesita hacer la solicitud"
+                          ></i>`;
               }
-            });
-
-            // Si hay una solicitud asociada al id_predio, muestra el ícono PDF, de lo contrario, muestra el ícono de sin PDF
-            if (hasSolicitud) {
-              return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdfSolicitud cursor-pointer"
-              data-bs-target="#mostrarPdfDcitamen" data-bs-toggle="modal"
-              data-bs-dismiss="modal" data-id="${full['id_predio']}"
-              data-registro="${full['id_empresa']}"></i>`;
-            } else {
-              // Mostrar ícono si no hay solicitud con un tooltip
-              return `<i class="ri-file-pdf-2-fill ri-40px icon-no-pdf"
-                  data-bs-toggle="tooltip"
-                  title="Necesita hacer la solicitud"
-                  data-bs-placement="top"></i>`;
-            }
           }
-        },
-
+      },
 
         // Pdf de pre-registro
         {

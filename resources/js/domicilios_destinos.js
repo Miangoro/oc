@@ -152,7 +152,7 @@ $(function () {
                     "sPrevious": "Anterior"
                 }
             },
-            
+
             // Buttons with Dropdown
             buttons: [
                 {
@@ -665,7 +665,7 @@ $(function () {
 
     $(document).on('click', '.edit-record', function () {
         var idDireccion = $(this).data('id');
-    
+
         $.ajax({
             url: '/destinos-list/' + idDireccion + '/edit',
             method: 'GET',
@@ -681,11 +681,11 @@ $(function () {
                     });
                     return;
                 }
-    
+
                 $('#edit_tipo_direccion').val(data.tipo_direccion).trigger('change');
                 $('#edit_id_empresa').val(data.id_empresa).trigger('change');
                 $('#edit_direccion').val(data.direccion);
-    
+
                 if (data.tipo_direccion == '1') { // Exportación
                     $('#exportacionFieldsEdit').show();
                     $('#hologramasFieldsEdit').hide();
@@ -702,7 +702,7 @@ $(function () {
                     $('#exportacionFieldsEdit').hide();
                     $('#hologramasFieldsEdit').hide();
                 }
-    
+
                 $('#modalEditDestino').modal('show');
             },
             error: function () {
@@ -721,14 +721,14 @@ $(function () {
     $('#modalEditDestino').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var id = button.data('id');
-    
+
         var modal = $(this);
         modal.find('#edit_destinos_id').val(id);
     });
-    
+
     $(document).ready(function () {
         const editDestinoForm = document.getElementById('EditDestinoForm');
-    
+
         if (editDestinoForm) {
             const formValidationInstance = FormValidation.formValidation(editDestinoForm, {
                 fields: {
@@ -812,7 +812,14 @@ $(function () {
                     'celular_recibe': {
                         validators: {
                             notEmpty: {
-                                message: 'El número de celular del receptor es obligatorio.',
+                                message: 'El número de celular es obligatorio.',
+                                enabled: function () {
+                                    return $('#edit_tipo_direccion').val() == '3'; // Hologramas
+                                }
+                            },
+                            regexp: {
+                                regexp: /^(\+52)?\s?\d{2}\s?\d{4}\s?\d{4}$/,
+                                message: 'El número de teléfono debe ser válido (ejemplo: +52 55 1234 5678 o 55 1234 5678)',
                                 enabled: function () {
                                     return $('#edit_tipo_direccion').val() == '3'; // Hologramas
                                 }
@@ -840,7 +847,7 @@ $(function () {
             }).on('core.form.valid', function () {
                 var formData = new FormData(editDestinoForm);
                 var idDestino = $('#edit_destinos_id').val();
-    
+
                 $.ajax({
                     url: '/destinos-update/' + idDestino,
                     type: 'POST',
@@ -865,7 +872,7 @@ $(function () {
                             var errorMessages = Object.keys(errors).map(function (key) {
                                 return errors[key].join('<br>');
                             }).join('<br>');
-    
+
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
@@ -887,7 +894,7 @@ $(function () {
                     }
                 });
             });
-    
+
             // Manejo de cambio en el tipo de dirección
             $('#edit_tipo_direccion').change(function () {
                 var tipoDireccion = $(this).val();
@@ -897,10 +904,10 @@ $(function () {
                 formValidationInstance.disableValidator('correo_recibe');
                 formValidationInstance.disableValidator('nombre_recibe');
                 formValidationInstance.disableValidator('celular_recibe');
-    
+
                 hideAndClearFields('#exportacionFieldsEdit');
                 hideAndClearFields('#hologramasFieldsEdit');
-    
+
                 if (tipoDireccion == '1') { // Exportación
                     $('#exportacionFieldsEdit').show();
                     formValidationInstance.enableValidator('destinatario');
@@ -917,15 +924,15 @@ $(function () {
                 }
             });
         }
-    
+
         function hideAndClearFields(selector) {
             $(selector).hide().find('input, textarea').val('');
         }
     });
-    
-    
 
-    
+
+
+
 
 
 });

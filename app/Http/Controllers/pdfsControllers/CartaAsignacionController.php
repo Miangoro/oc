@@ -217,11 +217,11 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Plan de auditoría de esquema de certificación F7.1-01-13.pdf');
     }
 
-    public function PreCertificado()
+/*     public function PreCertificado()
     {
         $pdf = Pdf::loadView('pdfs.pre-certificado');
         return $pdf->stream('Pre-certificado CIDAM C-GRA-210 2024.pdf');
-    }
+    } */
 
     public function DictamenMezcalEnvasado()
     {
