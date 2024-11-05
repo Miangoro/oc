@@ -1180,3 +1180,4 @@
     @vite(['resources/assets/vendor/libs/cleavejs/cleave.js'])
     @vite(['resources/assets/vendor/libs/cleavejs/cleave-phone.js'])
     @vite(['resources/assets/js/solicitud-cliente.js'])
+    @endsection
