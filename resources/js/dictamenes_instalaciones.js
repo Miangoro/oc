@@ -364,7 +364,7 @@ $('#edit_fecha_emision').on('change', function() {
            display: $.fn.dataTable.Responsive.display.modal({
              header: function (row) {
                var data = row.data();
-               return 'Detalles de ' + data['id_inspeccion'];
+               return 'Detalles de ' + data['num_dictamen'];
              }
            }),
            type: 'column',
