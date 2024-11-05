@@ -21,14 +21,13 @@ class InstalacionesController extends Controller
 
   public function UserManagement()
     {
-        $dictamenes = Dictamen_instalaciones::all(); // Obtener todos los datos
+        $dictamenes = Dictamen_instalaciones::all();
         $clases = clases::all();
         $inspeccion = inspecciones::all();
         $empresa = empresa::all();
         $soli = solicitudesModel::all();
         return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'inspeccion'));
     }
-
 
     public function index(Request $request)
     {
@@ -119,38 +118,40 @@ class InstalacionesController extends Controller
         }
     }
 
+    // Función para agregar registro
+    public function store(Request $request)
+    {
+        // Validación de datos
+        $request->validate([
+            'tipo_dictamen' => 'required|integer',
+            'num_dictamen' => 'required|string|max:255',
+            'fecha_emision' => 'nullable|date',
+            'fecha_vigencia' => 'nullable|date',
+            'categorias' => 'required|string|max:100',
+            'clases' => 'required|string|max:100',
+            'id_inspeccion' => 'required|integer',
+        ]);
 
-// Función para agregar registro
-     public function store(Request $request)
-        {
-            
-            try {
-                
-                $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
+        try {
+            $var = new Dictamen_instalaciones();
+            $var->id_inspeccion = $request->id_inspeccion;
+            $var->tipo_dictamen = $request->tipo_dictamen;
+       /*      $var->id_instalacion =  $instalaciones->solicitud->instalacion->id_instalacion; */
+            $var->id_instalacion = 1; 
+            $var->num_dictamen = $request->num_dictamen;
+            $var->fecha_emision = $request->fecha_emision;
+            $var->fecha_vigencia = $request->fecha_vigencia;
+            $var->categorias = $request->categorias;
+            $var->clases = $request->clases;
+            $var->save(); 
 
-                $var = new Dictamen_instalaciones();
-                $var->id_inspeccion = $request->id_inspeccion;
-                $var->tipo_dictamen = $request->tipo_dictamen;
-                $var->id_instalacion =  $instalaciones->solicitud->instalacion->id_instalacion;
-                $var->num_dictamen = $request->num_dictamen;
-                $var->fecha_emision = $request->fecha_emision;
-                $var->fecha_vigencia = $request->fecha_vigencia;
-                $var->categorias =json_encode($request->categorias);
-                $var->clases =  json_encode($request->clases);
-                $var->save();//guardar en BD
-
-
-    
-                return response()->json(['success' => 'Registro agregada correctamente']);
-            } catch (\Exception $e) {
-                return response()->json(['error' => 'Error al agregar'], 500);
-            }
+            return response()->json(['success' => 'Registro agregado correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al agregar: ' . $e->getMessage()], 500);
         }
+    }
 
-
-
-
-// Función para eliminar una clase
+    // Función para eliminar una clase
     public function destroy($id_dictamen)
     {
         try {
@@ -162,51 +163,47 @@ class InstalacionesController extends Controller
             return response()->json(['error' => 'Error al eliminar'], 500);
         }
     }
-
-
-
     
-//funcion para llenar el campo del formulario
-public function edit($id_dictamen)
-{
-    try {
-        $var1 = Dictamen_instalaciones::findOrFail($id_dictamen);
-        return response()->json($var1);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al obtener el dictamen'], 500);
+    //funcion para llenar el campo del formulario
+    public function edit($id_dictamen)
+    {
+        try {
+            $var1 = Dictamen_instalaciones::findOrFail($id_dictamen);
+            return response()->json($var1);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener el dictamen'], 500);
+        }
     }
-}
 
-// Función para EDITAR una clase existente
+    // Función para EDITAR una clase existente
     public function update(Request $request, $id_dictamen)
-{
-    $request->validate([
-        'tipo_dictamen' => 'required|integer',
-        'num_dictamen' => 'required|string|max:255',
-        'fecha_emision' => 'nullable|date',
-        'fecha_vigencia' => 'nullable|date',
-        'categorias' => 'required|string|max:100',
-        'clases' => 'required|string|max:100',
-        'id_inspeccion' => 'required|integer',
-    ]);
-    try {
-        $var2 = Dictamen_instalaciones::findOrFail($id_dictamen);
-        $var2->id_inspeccion = $request->id_inspeccion;
-        $var2->tipo_dictamen = $request->tipo_dictamen;
-        //$var2->id_instalacion = 1;
-        $var2->num_dictamen = $request->num_dictamen;
-        $var2->fecha_emision = $request->fecha_emision;
-        $var2->fecha_vigencia = $request->fecha_vigencia;
-        $var2->categorias = $request->categorias;
-        $var2->clases = $request->clases;
-        $var2->save();
+    {
+        $request->validate([
+            'tipo_dictamen' => 'required|integer',
+            'num_dictamen' => 'required|string|max:255',
+            'fecha_emision' => 'nullable|date',
+            'fecha_vigencia' => 'nullable|date',
+            'categorias' => 'required|string|max:100',
+            'clases' => 'required|string|max:100',
+            'id_inspeccion' => 'required|integer',
+        ]);
+        try {
+            $var2 = Dictamen_instalaciones::findOrFail($id_dictamen);
+            $var2->id_inspeccion = $request->id_inspeccion;
+            $var2->tipo_dictamen = $request->tipo_dictamen;
+            //$var2->id_instalacion = 1;
+            $var2->num_dictamen = $request->num_dictamen;
+            $var2->fecha_emision = $request->fecha_emision;
+            $var2->fecha_vigencia = $request->fecha_vigencia;
+            $var2->categorias = $request->categorias;
+            $var2->clases = $request->clases;
+            $var2->save();
 
-        return response()->json(['success' => 'Editado correctamente']);
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al editar'], 500);
+            return response()->json(['success' => 'Editado correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al editar'], 500);
+        }
     }
-}
-
 
     //PDFs Dictamen de instalaciones
     public function dictamen_productor($id_dictamen)
@@ -244,14 +241,11 @@ public function edit($id_dictamen)
     public function dictamen_almacen($id_dictamen)
     {
         $datos = Dictamen_instalaciones::find($id_dictamen);
-    
-        $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
+        $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio ?? null);
         $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
-    
-        // Solucion al problema de la cadena, como se guarda en la BD: ["Blanco o Joven","Reposado", "A\u00f1ejo"
-        $categorias = json_decode($datos->categorias, true);
-        $clases = json_decode($datos->clases, true);
+        $categorias = !empty($datos->categorias) ? explode(',', $datos->categorias) : [];
+        $clases = !empty($datos->clases) ? explode(',', $datos->clases) : [];
     
         $pdf = Pdf::loadView('pdfs.Dictamen_cumplimiento_Instalaciones', [
             'datos' => $datos,
@@ -263,20 +257,17 @@ public function edit($id_dictamen)
         ]);
     
         return $pdf->stream('F-UV-02-13 Ver 1, Dictamen de cumplimiento de Instalaciones almacén.pdf');
-    }
+    }    
     
     public function dictamen_maduracion($id_dictamen)
     {
-
         $datos = Dictamen_instalaciones::find($id_dictamen);
-    
-        $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
+        $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio ?? null);
         $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);
     
-        // Solucion al problema de la cadena, como se guarda en la BD: ["Blanco o Joven","Reposado", "A\u00f1ejo"
-        $categorias = json_decode($datos->categorias, true);
-        $clases = json_decode($datos->clases, true);
+        $categorias = json_decode($datos->categorias, true) ?? [];
+        $clases = json_decode($datos->clases, true) ?? [];
     
         $pdf = Pdf::loadView('pdfs.Dictamen_Instalaciones_maduracion_mezcal', [
             'datos' => $datos,
@@ -286,13 +277,7 @@ public function edit($id_dictamen)
             'categorias' => $categorias,
             'clases' => $clases
         ]);
-
+    
         return $pdf->stream('F-UV-02-12 Ver 5, Dictamen de cumplimiento de Instalaciones del área de maduración.pdf');
     }
-    
-
-
-
-
-
 }

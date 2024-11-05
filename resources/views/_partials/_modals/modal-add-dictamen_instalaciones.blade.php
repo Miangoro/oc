@@ -1,5 +1,3 @@
-
-
 <!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="addDictamen" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
@@ -22,7 +20,7 @@
                             <option value="2">Envasador</option>
                             <option value="3">Comercializador</option>
                             <option value="4">Almacen y bodega</option>
-                            <option value="5">Área de maduración</option>
+                     {{--        <option value="5">Área de maduración</option> --}}
                         </select>
                             <label for="">Tipo de Dictamen</label>
                     </div>
@@ -54,7 +52,7 @@
         <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-6">
-                        <select id="" name="id_inspeccion" class="form-select select2" aria-label="Default select example">
+                        <select id="id_inspeccion" name="id_inspeccion" class="form-select select2" aria-label="Default select example">
                             <option value="" disabled selected>Elige el número de servicio</option>
                                 @foreach ($inspeccion as $insp)
                                 <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option>
@@ -165,25 +163,28 @@
                                 <label for="">No. de servicio</label>
                         </div>
                     </div>
-    
+
                     <div class="col-md-3">
                         <div class="form-floating form-floating-outline mb-6">
-                        <input type="text" class="form-control" id="edit_categorias" placeholder="categoría" name="categorias" aria-label="Nombre" required>
-                        <label for="nombre">Categorías</label>
+                            <select id="edit_categorias" name="categorias[]" class="select2 form-select" multiple placeholder="Categorías de agave" data-error-message="Por favor selecciona una categoría de agave">
+                                @foreach ($clases as $clase)
+                                    <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
+                                @endforeach
+                            </select>
+                            <label for="edit_categorias">Categorías de agave</label>
                         </div>
                     </div>
-    
+                    
                     <div class="col-md-3">
                         <div class="form-floating form-floating-outline mb-4">
-                            <select id="edit_clases" name="clases" class="form-select" >
-                                <option value="" disabled selected>Selecciona una clase</option>
-                                    @foreach ($clases as $clase)
-                                        <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
-                                    @endforeach
+                            <select id="edit_clases" name="clases[]" class="select2 form-select" multiple placeholder="Clases de agave" data-error-message="Por favor selecciona una clase de agave">
+                                @foreach ($clases as $clase)
+                                    <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
+                                @endforeach
                             </select>
-                            <label for="">Clases</label>
+                            <label for="edit_clases">Clases de agave</label>
                         </div>
-                    </div>  
+                    </div>
             </div>
     
                         <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
@@ -197,7 +198,3 @@
             </div>
         </div>
     </div>
-
-
-
-
