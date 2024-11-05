@@ -320,10 +320,10 @@ class lotesEnvasadoController extends Controller
 
 
             // Retorna una respuesta exitosa
-            return response()->json(['success' => 'Solicitud de envio actualizada correctamente']);
+            return response()->json(['success' => 'Reclasificación  actualizada correctamente']);
         } catch (\Exception $e) {
             // Maneja cualquier error que ocurra durante el proceso
-            return response()->json(['error' => 'Error al actualizar la solicitud de envio'], 500);
+            return response()->json(['error' => 'Error al actualizar la solicitud de envió'], 500);
         }
     } 
 
