@@ -13,11 +13,11 @@
 
 <!-- Vendor Styles -->
 @section('vendor-style')
-    @vite(['resources/assets/vendor/libs/bs-stepper/bs-stepper.scss', 'resources/assets/vendor/fonts/personalizados/style.css', 'resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.scss', 'resources/assets/vendor/libs/select2/select2.scss', 'resources/assets/vendor/libs/@form-validation/form-validation.scss', 'resources/assets/vendor/libs/animate-css/animate.scss', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',])
+    @vite(['resources/assets/vendor/libs/bs-stepper/bs-stepper.scss', 'resources/assets/vendor/fonts/personalizados/style.css', 'resources/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.scss', 'resources/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.scss', 'resources/assets/vendor/libs/select2/select2.scss', 'resources/assets/vendor/libs/@form-validation/form-validation.scss', 'resources/assets/vendor/libs/animate-css/animate.scss', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss', 'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss', 'resources/assets/vendor/libs/spinkit/spinkit.scss'])
 
     <!-- Vendor Scripts -->
 @section('vendor-script')
-    @vite(['resources/assets/vendor/libs/jquery/jquery.js', 'resources/assets/vendor/libs/bootstrap/bootstrap.js', 'resources/assets/vendor/libs/bs-stepper/bs-stepper.js', 'resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js'])
+    @vite(['resources/assets/vendor/libs/jquery/jquery.js', 'resources/assets/vendor/libs/bootstrap/bootstrap.js', 'resources/assets/vendor/libs/bs-stepper/bs-stepper.js', 'resources/assets/vendor/libs/moment/moment.js', 'resources/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js', 'resources/assets/vendor/libs/select2/select2.js', 'resources/assets/vendor/libs/@form-validation/popular.js', 'resources/assets/vendor/libs/@form-validation/bootstrap5.js', 'resources/assets/vendor/libs/@form-validation/auto-focus.js', 'resources/assets/vendor/libs/cleavejs/cleave.js', 'resources/assets/vendor/libs/cleavejs/cleave-phone.js', 'resources/assets/vendor/libs/sweetalert2/sweetalert2.js', 'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js'])
 @section('content')
 
     <style>
@@ -1006,17 +1006,7 @@
                                     <label for="localidad1">Domicilio completo</label>
                                 </div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <div class="form-floating form-floating-outline">
-                                    <select class="form-control select2" name="estado_fiscal" id="estado" required>
-                                        <option disabled selected>selecciona un estado</option>
-                                        @foreach ($estados as $estado)
-                                            <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
-                                        @endforeach
-                                    </select>
-                                    <label for="estado">Estado</label>
-                                </div>
-                            </div>
+                           
                         </div>
 
                         <div class="row g-3">
@@ -1047,17 +1037,7 @@
                                         <label for="localidad2">Domicilio completo</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado2" id="estado2">
-                                            <option disabled selected>selecciona un estado</option>
-                                            @foreach ($estados as $estado)
-                                                <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
-                                            @endforeach
-                                        </select>
-                                        <label for="estado2">Estado</label>
-                                    </div>
-                                </div>
+                               
                             </div>
                             <hr>
                         </div>
@@ -1075,18 +1055,7 @@
                                         <label for="localidad3">Domicilio completo</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado_envasadora"
-                                            id="estado3">
-                                            <option disabled selected>selecciona un estado</option>
-                                            @foreach ($estados as $estado)
-                                                <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
-                                            @endforeach
-                                        </select>
-                                        <label for="estado3">Estado</label>
-                                    </div>
-                                </div>
+                                
                             </div>
                             <hr>
                         </div>
@@ -1104,18 +1073,7 @@
                                         <label for="localidad4">Domicilio completo</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado_productora"
-                                            id="estado4">
-                                            <option disabled selected>selecciona un estado</option>
-                                            @foreach ($estados as $estado)
-                                                <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
-                                            @endforeach
-                                        </select>
-                                        <label for="estado4">Estado</label>
-                                    </div>
-                                </div>
+                                
                             </div>
                             <hr>
                         </div>
@@ -1130,18 +1088,6 @@
                                         <input type="text" class="form-control" id="localidad5"
                                             name="domicilio_comercializadora" placeholder=" ">
                                         <label for="localidad5">Domicilio completo</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <select class="form-control custom-select" name="estado_comercializadora"
-                                            id="estado5">
-                                            <option disabled selected>selecciona un estado</option>
-                                            @foreach ($estados as $estado)
-                                                <option value="{{ $estado->id }}">{{ $estado->estado }}</option>
-                                            @endforeach
-                                        </select>
-                                        <label for="estado5">Estado</label>
                                     </div>
                                 </div>
                             </div>
@@ -1234,4 +1180,4 @@
 
     @vite(['resources/assets/vendor/libs/cleavejs/cleave.js'])
     @vite(['resources/assets/vendor/libs/cleavejs/cleave-phone.js'])
-
+    @vite(['resources/assets/js/solicitud-cliente.js'])
