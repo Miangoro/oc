@@ -31,9 +31,14 @@ const fv = FormValidation.formValidation(addGuiaForm, {
           min: 1,
           max: 100,
           message: 'El número de guías debe estar entre 1 y 100'
+        },
+        regexp: {
+          // Expresión regular que asegura que el número no comience con 0 a menos que sea exactamente 0
+          regexp: /^(?!0)\d+$/,
+          message: 'El número no debe comenzar con 0'
         }
       }
-    },
+},
     predios: {
       validators: {
         notEmpty: {
@@ -484,7 +489,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nueva Solicitud de Guia de Traslado</span>',
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Solicitud de Guia de Traslado</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'modal',
@@ -569,7 +574,7 @@ $(function () {
         Swal.fire({
           icon: 'success',
           title: '¡Eliminado!',
-          text: '¡La solicitud ha sido eliminada correctamente!',
+          text: '¡La guia ha sido eliminada correctamente!',
           customClass: {
             confirmButton: 'btn btn-success'
           }
@@ -577,7 +582,7 @@ $(function () {
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: 'Cancelado',
-          text: 'La solicitud no ha sido eliminada',
+          text: 'La guia no ha sido eliminada',
           icon: 'error',
           customClass: {
             confirmButton: 'btn btn-success'

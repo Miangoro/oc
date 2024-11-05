@@ -34,7 +34,7 @@
                     <div class="col-12 col-md-12 col-sm-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <input id="marca" type="text" name="marca" class="form-control" placeholder="Introduce el nombre de la marca" />
-                            <label for="modalAddressFirstName">Nombre de la marca</label>
+                            <label for="marca">Nombre de la marca</label>
                         </div>
                     </div>
                     <hr class="my-6">
@@ -67,15 +67,5 @@
 <!--/ Add New Address Modal -->
 
 <script>
-    $(document).ready(function() {
-    // Cuando se muestra el modal de edición de marca
-    $('#addMarca').on('shown.bs.modal', function() {
-        // Inicializa o reinicializa todos los select2 dentro del modal
-        $('.select2').select2({
-            dropdownParent: $('#addMarca') // Asegura que el dropdown esté dentro del modal
-        });
 
-
-    });
-});
 </script>

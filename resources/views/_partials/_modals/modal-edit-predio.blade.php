@@ -23,8 +23,8 @@
                    </div>
 
                    <!-- Nombre del Productor -->
-                   <div class="row mb-4">
-                       <div class="col-md-6">
+                   <div class="row">
+                       <div class="col-md-6 mb-4">
                            <div class="form-floating form-floating-outline">
                                <input type="text" class="form-control" id="edit_nombre_productor" autocomplete="off"
                                    name="nombre_productor" placeholder="Nombre del productor">
@@ -33,7 +33,7 @@
                        </div>
 
                        <!-- Nombre del Predio -->
-                       <div class="col-md-6">
+                       <div class="col-md-6 mb-4">
                            <div class="form-floating form-floating-outline">
                                <input type="text" class="form-control" id="edit_nombre_predio" autocomplete="off"
                                    name="nombre_predio" placeholder="Nombre del predio">
@@ -41,16 +41,16 @@
                            </div>
                        </div>
                    </div>
-                   <div class="row mb-4">
+                   <div class="row">
                        <!-- Ubicación del Predio -->
-                       <div class="col-md-6">
+                       <div class="col-md-6 mb-4">
                            <div class="form-floating form-floating-outline mb-3">
                                <input type="text" class="form-control" id="edit_ubicacion_predio" autocomplete="off"
                                    name="ubicacion_predio" placeholder="Ubicación del predio"></input>
                                <label for="ubicacion_predio">Ubicación del Predio</label>
                            </div>
                        </div>
-                       <div class="col-md-6">
+                       <div class="col-md-6 mb-4">
                            <div class="form-floating form-floating-outline">
                                <select class="form-select" id="edit_tipo_predio" name="tipo_predio"
                                    aria-label="Tipo de Predio">
@@ -65,8 +65,8 @@
                        </div>
                    </div>
                    <!-- Tipo de Predio y Puntos de Referencia -->
-                   <div class="row mb-4">
-                       <div class="col-md-6">
+                   <div class="row">
+                       <div class="col-md-6 mb-4">
                            <div class="form-floating form-floating-outline">
                                <input type="text" class="form-control" id="edit_puntos_referencia" autocomplete="off"
                                    name="puntos_referencia" placeholder="Puntos de referencia"></input>
@@ -74,7 +74,7 @@
                            </div>
                        </div>
                        <!-- Superficie del Predio -->
-                       <div class="col-md-6">
+                       <div class="col-md-6 mb-4">
                            <div class="form-floating form-floating-outline">
                                <input type="number" class="form-control" id="edit_superficie" autocomplete="off"
                                    name="superficie" placeholder="Superficie del predio (Ha)" step="0.01">
@@ -84,9 +84,9 @@
                    </div>
 
                    <!-- Coordenadas -->
-                   <div class="row mb-4">
+                   <div class="row">
                        <!-- ¿Cuenta con Coordenadas? -->
-                       <div class="col-md-6">
+                       <div class="col-md-6 mb-4">
                            <div class="form-floating form-floating-outline">
                                <select class="form-select" id="edit_tiene_coordenadas" name="tiene_coordenadas"
                                    aria-label="¿Cuenta con coordenadas?">
@@ -110,6 +110,7 @@
                    </div>
                    <div id="edit_coordenadas" class="d-none mb-4">
                     <div class="card">
+                      <div class="table-responsive text-nowrap">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -121,13 +122,14 @@
                                 <!-- Campos de coordenadas se agregarán aquí dinámicamente -->
                             </tbody>
                         </table>
+                      </div>
                     </div>
                 </div>
 
                    <div class="edit_InformacionAgave mb-4">
                        <!-- Información sobre el Agave/Maguey y Plantación combinada -->
                        <div class="card">
-                           <div class="card-body">
+                           <div class="table-responsive text-nowrap">
                                <table class="table table-bordered table-striped mb-3">
                                    <tr>
                                        <th><button type="button" class="btn btn-primary add-row-plantacion"><i

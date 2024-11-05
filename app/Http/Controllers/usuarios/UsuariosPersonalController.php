@@ -95,6 +95,8 @@ class UsuariosPersonalController extends Controller
         $nestedData['email'] = $user->email;
         $nestedData['password_original'] = $user->password_original;
         $nestedData['razon_social'] = 'No aplica';
+        $nestedData['foto_usuario'] = $user->profile_photo_path ?? '';
+        
 
         $data[] = $nestedData;
       }

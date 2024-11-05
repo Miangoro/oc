@@ -1,125 +1,170 @@
-<!-- Add New Address Modal -->
-<div class="modal fade" id="editCliente" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+<!-- Modal para agregar nuevo cliente -->
+<div class="modal fade" id="EditClientesConfirmados" tabindex="-1" aria-labelledby="AddClientesConfirmados">
+  <div class="modal-dialog modal-xl">
       <div class="modal-content">
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        <div class="modal-body p-0">
-          <div class="text-center mb-6">
-            <h4 class="address-title mb-2">Editar cliente</h4>
-             <!-- <p class="address-subtitle">Convertir a cliente confirmado del Organismo Certificador</p> -->
+          <div class="modal-header">
+              <h5 class="modal-title" id="AddClientesConfirmados">Editar cliente confirmado</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <form id="editClienteForm" class="row g-5" onsubmit="return false">
-            
-            <input name="id_empresa" type="hidden" id="empresaID">
-            <input type="hidden" id="edit_id_guia" name="id_guia">
-            <input name="id" type="hidden" id="edit_id">
-            
+          <div class="modal-body">
+              <form id="ClientesConfirmadosEditForm">
+                  @csrf
+                  <div class="row">
+                    <input type="hidden" name="id_empresa" id="id_empresa">
+                      <div class="col-md-6">
+                          <div class="form-floating form-floating-outline mb-4">
+                              <input type="text" id="razon_social_edit" name="razon_social" class="form-control"
+                                  autocomplete="off" placeholder="Nombre" required />
+                              <label for="razon_social">Nombre cliente/empresa</label>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="form-floating form-floating-outline mb-4">
+                              <select id="regimen_edit" name="regimen" class="form-select" required>
+                                  <option value="" disabled selected>Selecciona tipo de persona</option>
+                                  <option value="Persona física">Persona Física</option>
+                                  <option value="Persona moral">Persona Moral</option>
+                              </select>
+                              <label for="regimen">Tipo de persona</label>
+                          </div>
+                      </div>
+                  </div>
 
-            <div class="col-12">
-              <div class="form-floating form-floating-outline">
-                  <input type="text" id="numero_cliente" name="numero_cliente" class="form-control" placeholder="Número de Cliente" />
-                  <label for="numero_cliente">Número de cliente para la norma NOM-070-SCFI-2016</label>
-              </div>
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="form-floating form-floating-outline mb-4">
+                              <input type="text" id="domicilio_fiscal_edit" name="domicilio_fiscal" class="form-control"
+                                  autocomplete="off" placeholder="Domicilio fiscal" required />
+                              <label for="Domicilio fiscal">Domicilio fiscal</label>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="form-floating form-floating-outline mb-3 select2-primary">
+                              <select class="form-select select2" id="normas_edit" name="normas[]"
+                                  data-placeholder="Seleccione una o más normas" aria-label="Normas" multiple>
+                                  <option value="">Seleccione una o más normas</option>
+                                  @foreach ($normas as $norma)
+                                      <option value="{{ $norma->id_norma }}">{{ $norma->norma }}</option>
+                                  @endforeach
+                              </select>
+                              <label for="normas">Normas</label>
+                          </div>
+                      </div>
+                  </div>
+                  <div id="normas-info_edit"></div>
+                  <!-- Sección de estado y representante -->
+                  <div class="row">
+                      <!-- Estado -->
+                      <div id="EstadosClass" class="col-md-12">
+                          <div class="form-floating form-floating-outline mb-4">
+                              <select class="form-select select2" id="estado_edit" name="estado"
+                                  data-placeholder="Seleccione un estado" aria-label="Estado" required>
+                                  <option value="">Seleccione un estado</option>
+                                  <!-- Opción de estado -->
+                                  @foreach ($estados as $estado)
+                                      <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
+                                  @endforeach
+                              </select>
+                              <label for="estado">Estado</label>
+                          </div>
+                      </div>
+
+                      <!-- Representante Legal (Oculto por defecto) -->
+                      <div id="MostrarRepresentante" class="d-none col-md-6">
+                          <div class="form-floating form-floating-outline mb-4">
+                              <input type="text" id="representante" name="representante_edit" class="form-control"
+                                  autocomplete="off" placeholder="Representante"  />
+                              <label for="Representante">Representante</label>
+                          </div>
+                      </div>
+
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-12">
+                          <div class="form-floating form-floating-outline mb-3 select2-primary">
+                              <select class="form-select select2" id="actividad_edit" name="actividad[]"
+                                  data-placeholder="Seleccione una o más normas" aria-label="actividad" multiple>
+                                  <option value="">Seleccione una actividad</option>
+                                  @foreach ($actividadesClientes as $actividad)
+                                      <option value="{{ $actividad->id_actividad }}">{{ $actividad->actividad }}
+                                      </option>
+                                  @endforeach
+                              </select>
+                              <label for="normas">Actividad</label>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="form-floating form-floating-outline mb-4">
+                              <input type="text" id="rfc_edit" name="rfc" class="form-control"
+                                  autocomplete="off" placeholder="RFC" required />
+                              <label for="rfc">RFC</label>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="form-floating form-floating-outline mb-4">
+                              <input type="email" id="correo_edit" name="correo" class="form-control"
+                                  autocomplete="off" placeholder="Correo electrónico" required />
+                              <label for="correo">Correo electrónico</label>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row">
+                      <div class="col-md-6">
+                          <div class="form-floating form-floating-outline mb-4">
+                              <input type="tel" id="telefono_edit" name="telefono" class="form-control"
+                                  autocomplete="off" placeholder="Teléfono" required />
+                              <label for="telefono">Teléfono</label>
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="form-floating form-floating-outline mb-4">
+                              <select id="id_contacto_edit" name="id_contacto" class="select2 form-select" required>
+                                  <option value="" disabled selected>Selecciona una persona de contacto
+                                  </option>
+                                  @foreach ($usuarios as $usuario)
+                                      <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
+                                  @endforeach
+                              </select>
+                              <label for="id_contacto">Persona de contacto CIDAM</label>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Botones -->
+                  <div class="d-flex justify-content-center mt-3">
+                      <button type="submit" class="btn btn-primary me-2">Editar</button>
+                      <button type="reset" class="btn btn-outline-secondary"
+                          data-bs-dismiss="modal">Cancelar</button>
+                  </div>
+              </form>
           </div>
-            
-            <div class="col-12">
-              <div class="form-floating form-floating-outline">
-                <select id="id_contacto" name="id_contacto" class="select2 form-select" data-allow-clear="true">
-                 @foreach ($usuarios as $usuario)
-                   <option value="{{$usuario->id}}">{{$usuario->name}}</option>
-                 @endforeach
-                </select>
-                <label for="id_contacto">Persona de contacto CIDAM</label>
-              </div>
-            </div>
-          
-            <hr class="my-6">
-            <h5 class="mb-5">Información para el contrato</h5>
-  
-            <div class="col-md-6 col-sm-12">
-              <div class="form-floating form-floating-outline">
-                <input type="date" id="modalAddressAddress1" name="fecha_cedula" class="form-control" placeholder="12, Business Park" />
-                <label for="modalAddressAddress1">Fecha de Cédula de Identificación Fiscal</label>
-              </div>
-            </div>
-            <div class="col-md-6 col-sm-12">
-              <div class="form-floating form-floating-outline">
-                <input type="text" id="modalAddressAddress2" name="idcif" class="form-control" placeholder="Mall Road" />
-                <label for="modalAddressAddress2">idCIF del Servicio deAdministración Tributaria</label>
-              </div>
-            </div>
-            <div class="col-md-6 col-sm-12">
-              <div class="form-floating form-floating-outline">
-                <input type="text" id="modalAddressLandmark" name="clave_ine" class="form-control" placeholder="Nr. Hard Rock Cafe" />
-                <label for="modalAddressLandmark">Clave de elector del INE</label>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="form-floating form-floating-outline">
-                <select id="modalAddressCountry" name="sociedad_mercantil" class="select2 form-select" data-allow-clear="true">
-                  <option value="">Selecciona la opción</option>
-                  <option value="Sociedad de responsabilidad limitada">Sociedad de responsabilidad limitada</option>
-                  <option value="Sociedad por acciones simplificada">Sociedad por acciones simplificada</option>
-                  <option value="Sociedad anónima promotora de inversión (SAPI)">Sociedad anónima promotora de inversión (SAPI)</option>
-                  <option value="Sociedad anónima promotora de inversión de capital variable (SAPI de CV)">Sociedad anónima promotora de inversión de capital variable (SAPI de CV)</option>
-                  <option value="Sociedad anónima de capital variable (empresa SA de CV)">Sociedad anónima de capital variable (empresa SA de CV)</option>
-                </select>
-                <label for="modalAddressCountry">Sociedad mercantil</label>
-              </div>
-            </div>
-            <div class="col-12 col-md-4">
-              <div class="form-floating form-floating-outline">
-                <input type="text" id="modalAddressCity" name="num_instrumento" class="form-control" placeholder="Los Angeles" />
-                <label for="modalAddressCity">Número de instrumento público</label>
-              </div>
-            </div>
-            <div class="col-12 col-md-4">
-              <div class="form-floating form-floating-outline">
-                <input type="text" id="modalAddressState" name="vol_instrumento" class="form-control" placeholder="California" />
-                <label for="modalAddressLandmark">Volúmen de instrumento público</label>
-              </div>
-            </div>
-            <div class="col-12 col-md-4">
-              <div class="form-floating form-floating-outline">
-                <input type="date" name="fecha_instrumento" class="form-control" placeholder="99950" />
-                <label for="modalAddressZipCode">Fecha instrumento público</label>
-              </div>
-            </div>
-            <div class="col-12 col-md-6">
-              <div class="form-floating form-floating-outline">
-                <input type="text" name="nombre_notario" class="form-control" placeholder="99950" />
-                <label for="modalAddressZipCode">Nombre del notario público</label>
-              </div>
-            </div>
-            <div class="col-12 col-md-6">
-              <div class="form-floating form-floating-outline">
-                <input type="text"name="num_notario" class="form-control" placeholder="99950" />
-                <label for="modalAddressZipCode">Número de notario público</label>
-              </div>
-            </div>
-            <div class="col-12 col-md-6">
-              <div class="form-floating form-floating-outline">
-                <input type="text"name="estado_notario" class="form-control" placeholder="99950" />
-                <label for="modalAddressZipCode">Estado del notario público</label>
-              </div>
-            </div>
-  
-            <div class="col-12 col-md-6">
-              <div class="form-floating form-floating-outline">
-                <input type="text" name="num_permiso" class="form-control" placeholder="99950" />
-                <label for="modalAddressZipCode">Número de permiso</label>
-                <div id="floatingInputHelp" class="form-text">(Clave única del documento) emitido por la Secretaria de Economía.</div>
-              </div>
-            </div>
-            
-            <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-              <button type="submit" class="btn btn-primary">Editar</button>
-              <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
-            </div>
-          </form>
-        </div>
       </div>
-    </div>
   </div>
-  <!--/ Add New Address Modal -->
-  
+</div>
+
+<script>
+  $(document).ready(function() {
+      $('#normas_edit').on('change', function() {
+          const selectedNormas = $(this).val(); // Obtener las normas seleccionadas
+          const normasData = @json($normas); // Pasar las normas al JavaScript
+          $('#normas-info_edit').empty(); // Limpiar campos previos
+
+          selectedNormas.forEach((normaId) => {
+              // Buscar el nombre de la norma correspondiente
+              const norma = normasData.find(n => n.id_norma == normaId);
+
+              if (norma) {
+                  const normaField = `
+              <div class="input-group mb-4 input-group-merge">
+                  <span class="input-group-text">${norma.norma}</span>
+                  <input id="num_cliente${norma.id_norma}" type="text" class="form-control" name="numeros_clientes[]" placeholder="Número de Cliente">
+              </div>`;
+                  $('#normas-info_edit').append(normaField); // Añadir el nuevo campo
+              }
+          });
+      });
+  });
+</script>
