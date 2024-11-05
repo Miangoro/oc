@@ -496,9 +496,14 @@ const fv = FormValidation.formValidation(addNewLoteForm, {
         presentacion: {
             validators: {
                 notEmpty: {
-                    message: 'Por favor ingrese una cantidad'
+                    message: 'Por favor introduzca una cantidad'
+                },
+                between: {
+                  min: 1,
+                  max: Infinity,
+                  message: 'El número debe ser superior a 1 y sin negativos'
                 }
-            }
+              }
         },
         destino_lote: {
             validators: {
@@ -510,9 +515,14 @@ const fv = FormValidation.formValidation(addNewLoteForm, {
         cant_botellas: {
             validators: {
                 notEmpty: {
-                    message: 'Por favor ingrese una cantidad'
+                  message: 'Por favor introduzca una cantidad'
+                },
+                between: {
+                  min: 1,
+                  max: Infinity,
+                  message: 'El número debe ser superior a 1 y sin negativos'
                 }
-            }
+              }
         },
         volumen_total: {
             validators: {
