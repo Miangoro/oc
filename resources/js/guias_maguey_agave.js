@@ -26,6 +26,11 @@ const fv = FormValidation.formValidation(addGuiaForm, {
       validators: {
         notEmpty: {
           message: 'Por favor introduzca un número de guías a solicitar'
+        },
+        between: {
+          min: 1,
+          max: 100,
+          message: 'El número de guías debe estar entre 1 y 100'
         }
       }
     },
@@ -89,6 +94,7 @@ const fv = FormValidation.formValidation(addGuiaForm, {
     }
   });
 });
+
 
 // Inicializar select2 y revalidar campos cuando cambien
 $('#id_empresa').select2({

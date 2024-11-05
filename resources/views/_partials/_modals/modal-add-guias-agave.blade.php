@@ -26,7 +26,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number" placeholder="Número de guías solicitadas"
-                                    id="numero_guias" name="numero_guias" required />
+                                    id="numero_guias" name="numero_guias" required min="1" max="100"/>
                                 <label for="numero_guias">Número de guías solicitadas</label>
                             </div>
                         </div>
@@ -100,6 +100,14 @@
 
 
 <script>
+
+function validateMax(input) {
+    if (input.value > 100) {
+        input.value = 100;  // Limitar el valor máximo a 100
+    } else if (input.value < 1) {
+        input.value = "";  // Vaciar el campo si el valor es menor a 1
+    }
+}
     function obtenerNombrePredio() {
         var empresa = $("#id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa
