@@ -26,13 +26,13 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number" placeholder="Número de guías solicitadas"
-                                    id="numero_guias" name="numero_guias" required min="1" max="100"/>
+                                    id="numero_guias" name="numero_guias" required />
                                 <label for="numero_guias">Número de guías solicitadas</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-6">
-                        <select onchange="obtenerPlantacionPredio()" class="select2 form-select " id="nombre_predio" name="predios" aria-label="Marca"
+                        <select class="select2 form-select " id="nombre_predio" name="predios" aria-label="Marca"
                             required>
                             <option value="" selected>Lista de predios</option>
                         </select>
@@ -100,14 +100,6 @@
 
 
 <script>
-
-function validateMax(input) {
-    if (input.value > 100) {
-        input.value = 100;  // Limitar el valor máximo a 100
-    } else if (input.value < 1) {
-        input.value = "";  // Vaciar el campo si el valor es menor a 1
-    }
-}
     function obtenerNombrePredio() {
         var empresa = $("#id_empresa").val();
         // Hacer una petición AJAX para obtener los detalles de la empresa

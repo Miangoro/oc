@@ -484,7 +484,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar nueva Solicitud de Guia de Traslado</span>',
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Agregar Solicitud de Guia de Traslado</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'modal',
@@ -569,7 +569,7 @@ $(function () {
         Swal.fire({
           icon: 'success',
           title: '¡Eliminado!',
-          text: '¡La solicitud ha sido eliminada correctamente!',
+          text: '¡La guia ha sido eliminada correctamente!',
           customClass: {
             confirmButton: 'btn btn-success'
           }
@@ -577,7 +577,7 @@ $(function () {
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: 'Cancelado',
-          text: 'La solicitud no ha sido eliminada',
+          text: 'La guia no ha sido eliminada',
           icon: 'error',
           customClass: {
             confirmButton: 'btn btn-success'
