@@ -304,7 +304,7 @@
                 <td rowspan="2">
                    <b>Domicilio fiscal:</b>  {{ $data->empresa->domicilio_fiscal }}<br>
 
-                    <b>Domicilio de instalaciones:</b> {{ $data->inspeccion->solicitud->instalacion->direccion_completa }}
+                    <b>Domicilio de instalaciones:</b> {{ $data->inspeccion->solicitud->instalacion->direccion_completa ?? 'N/A' }}
 
                 </td>
                 <td style="color: #17365D; font-weight: bold; width: 18%;">RFC</td>
@@ -342,7 +342,7 @@
             <tr>
                 <td colspan="6" style="font-weight: bold; font-size: 13px; text-transform: uppercase;">
                     <p>producto {{ $data->lote_granel->categoria->categoria ?? 'N/A' }}</p>
-                    <p>origen {{ $data->inspeccion->solicitud->instalacion->estados->nombre }}</p>
+                    <p>origen {{ $data->inspeccion->solicitud->instalacion->estados->nombre ?? 'N/A' }}</p>
                 </td>
             </tr>
             <tr>
