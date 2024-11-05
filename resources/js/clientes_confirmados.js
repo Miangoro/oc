@@ -867,47 +867,91 @@ $(function () {
     });
   });
 
-//Editar
+
 $(document).ready(function() {
+  /* este es para editar contratos
+  window.abrirModal = function(id_empresa) {
+    $.ajax({
+        url: '/empresa_contrato/' + id_empresa,
+        method: 'GET',
+        success: function(response) {
+            if (response.length > 0) {
+                const contrato = response[0];
+
+                $('#empresaID').val(contrato.id_empresa);
+                $('#modalAddressAddress1').val(contrato.fecha_cedula);
+                $('#modalAddressAddress2').val(contrato.idcif);
+                $('#modalAddressLandmark').val(contrato.clave_ine);
+                $('#modalAddressCountry').val(contrato.sociedad_mercantil).trigger('change');
+                $('#modalAddressCity').val(contrato.num_instrumento);
+                $('#modalAddressState').val(contrato.vol_instrumento);
+                $('input[name="fecha_instrumento"]').val(contrato.fecha_instrumento);
+                $('input[name="nombre_notario"]').val(contrato.nombre_notario);
+                $('input[name="num_notario"]').val(contrato.num_notario);
+                $('input[name="estado_notario"]').val(contrato.estado_notario);
+                $('input[name="num_permiso"]').val(contrato.num_permiso);
+
+                $.ajax({
+                    url: '/empresa_num_cliente/' + id_empresa,
+                    method: 'GET',
+                    success: function(clienteResponse) {
+                        if (clienteResponse.numero_cliente) {
+                            $('#numero_cliente').val(clienteResponse.numero_cliente);
+                        } else {
+                            $('#numero_cliente').val('');
+                        }
+
+                        // Abre el modal
+                        $('#EditClientesConfirmados').modal('show');
+                    },
+                    error: function(clienteXhr) {
+                        console.log(clienteXhr.responseText);
+                        alert('Error al cargar el número de cliente.');
+                    }
+                });
+            } else {
+                alert('No se encontraron contratos para esta empresa.');
+            }
+        },
+        error: function(xhr) {
+            console.log(xhr.responseText);
+            var errorMsg = 'Error al cargar los detalles de la empresa.';
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+                errorMsg = xhr.responseJSON.error;
+            }
+            alert(errorMsg);
+        }
+    });
+};*/
+//Editar cliente confirmado
   window.abrirModal = function(id_empresa) {
       $.ajax({
-          url: '/empresa_contrato/' + id_empresa,
+          url: '/edit_cliente_confirmado/' + id_empresa,
           method: 'GET',
           success: function(response) {
               if (response.length > 0) {
-                  const contrato = response[0];
+                  const dato = response[0];
 
-                  $('#empresaID').val(contrato.id_empresa);
-                  $('#modalAddressAddress1').val(contrato.fecha_cedula);
-                  $('#modalAddressAddress2').val(contrato.idcif);
-                  $('#modalAddressLandmark').val(contrato.clave_ine);
-                  $('#modalAddressCountry').val(contrato.sociedad_mercantil).trigger('change');
-                  $('#modalAddressCity').val(contrato.num_instrumento);
-                  $('#modalAddressState').val(contrato.vol_instrumento);
-                  $('input[name="fecha_instrumento"]').val(contrato.fecha_instrumento);
-                  $('input[name="nombre_notario"]').val(contrato.nombre_notario);
-                  $('input[name="num_notario"]').val(contrato.num_notario);
-                  $('input[name="estado_notario"]').val(contrato.estado_notario);
-                  $('input[name="num_permiso"]').val(contrato.num_permiso);
+                  let normas = dato.empresa_num_clientes.map(cliente => cliente.id_norma);
+                  let actividad = dato.catalogo_actividades.map(cliente => cliente.id_actividad);
+                  
+                  $('#id_empresa').val(dato.id_empresa);
+                  $('#razon_social_edit').val(dato.razon_social);
+                  $('#regimen_edit').val(dato.regimen).trigger('change');
+                  $('#normas_edit').val(normas).trigger('change');
+                  for (let index = 0; index < dato.empresa_num_clientes.length; index++) {
+                    $('#num_cliente'+dato.empresa_num_clientes[index].id_norma).val(dato.empresa_num_clientes[index].numero_cliente);
+                  }
+                  $('#actividad_edit').val(actividad).trigger('change');
+                  
+                  $('#estado_edit').val(dato.estado).trigger('change');
+                  $('#domicilio_fiscal_edit').val(dato.domicilio_fiscal);
+                  $('#rfc_edit').val(dato.rfc);
+                  $('#correo_edit').val(dato.correo);
+                  $('#telefono_edit').val(dato.telefono);
+                   $('#id_contacto_edit').val(dato.id_contacto).trigger('change');
 
-                  $.ajax({
-                      url: '/empresa_num_cliente/' + id_empresa,
-                      method: 'GET',
-                      success: function(clienteResponse) {
-                          if (clienteResponse.numero_cliente) {
-                              $('#numero_cliente').val(clienteResponse.numero_cliente);
-                          } else {
-                              $('#numero_cliente').val('');
-                          }
-
-                          // Abre el modal
-                          $('#editCliente').modal('show');
-                      },
-                      error: function(clienteXhr) {
-                          console.log(clienteXhr.responseText);
-                          alert('Error al cargar el número de cliente.');
-                      }
-                  });
+                  $('#EditClientesConfirmados').modal('show');
               } else {
                   alert('No se encontraron contratos para esta empresa.');
               }
@@ -923,17 +967,17 @@ $(document).ready(function() {
       });
   };
 
-  $('#editClienteForm').on('submit', function(event) {
+  $('#ClientesConfirmadosEditForm').on('submit', function(event) {
       event.preventDefault();
       var formData = $(this).serialize();
 
       $.ajax({
-          url: '/actualizar-registros',
+          url: '/editar_cliente_confirmado',
           method: 'POST',
           data: formData,
           success: function(response) {
               console.log('Success:', response);
-              $('#editCliente').modal('hide');
+              $('#EditClientesConfirmados').modal('hide');
               Swal.fire({
                   icon: 'success',
                   title: '¡Éxito!',
@@ -959,8 +1003,8 @@ $(document).ready(function() {
       });
   });
    // Limpiar campos al cerrar el modal
-   $('#editCliente').on('hidden.bs.modal', function() {
-    $('#editClienteForm')[0].reset();
+   $('#EditClientesConfirmados').on('hidden.bs.modal', function() {
+    $('#ClientesConfirmadosEditForm')[0].reset();
 });
 });
 
