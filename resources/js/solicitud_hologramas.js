@@ -51,9 +51,15 @@ const fv = FormValidation.formValidation(addHologramasForm, {
       validators: {
         notEmpty: {
           message: 'Por favor ingrese el número de hologramas solicitados'
+        },
+        between: {
+          min: 1,
+          max: Infinity,
+          message: 'El número debe ser superior a 1 y sin negativos'
         }
       }
     },
+
     id_direccion: {
       validators: {
         notEmpty: {
