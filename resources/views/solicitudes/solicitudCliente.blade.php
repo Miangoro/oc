@@ -22,7 +22,7 @@
 
     <style>
         body {
-            background-image: url(assets/img/branding/fondo.png);
+           
         }
 
         .bs-stepper-header {
@@ -43,8 +43,7 @@
         }
     </style>
     <div class="card">
-        <img alt="Organismo de certificación" src="{{ asset('assets/img/branding/Banner solicitud_información.png') }}"
-            alt="timeline-image" class="card-img-top " style="object-fit: cover;">
+
         <div class="bs-stepper wizard-icons wizard-icons-example">
 
 
@@ -94,7 +93,7 @@
 
 
             <div class="bs-stepper-content">
-                <form action="{{ url('/solicitud-cliente-registrar') }}" method="POST" role="form"
+                <form action="" method="POST" role="form"
                     enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
