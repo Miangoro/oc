@@ -26,7 +26,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number" placeholder="Número de guías solicitadas"
-                                    id="numero_guias" name="numero_guias" required />
+                                    id="numero_guias" name="numero_guias" required min="1" max="100"/>
                                 <label for="numero_guias">Número de guías solicitadas</label>
                             </div>
                         </div>

@@ -31,9 +31,14 @@ const fv = FormValidation.formValidation(addGuiaForm, {
           min: 1,
           max: 100,
           message: 'El número de guías debe estar entre 1 y 100'
+        },
+        regexp: {
+          // Expresión regular que asegura que el número no comience con 0 a menos que sea exactamente 0
+          regexp: /^(?!0)\d+$/,
+          message: 'El número no debe comenzar con 0'
         }
       }
-    },
+},
     predios: {
       validators: {
         notEmpty: {
