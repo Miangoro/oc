@@ -108,7 +108,8 @@
                     </div>
                     <!-- ¿Cuenta con Coordenadas? -->
                     <div id="coordenadas" class="d-none mb-4">
-                        <div class="card">
+                      <div class="card">
+                        <div class="table-responsive text-nowrap">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -121,12 +122,13 @@
                                     <!-- Campos de coordenadas se agregarán aquí dinámicamente -->
                                 </tbody>
                             </table>
+                          </div>
                         </div>
                     </div>
                         <div class="informacionAgave mb-4">
                             <div class="card">
-                                <div class="card-body">
-                                    <table class="table table-bordered table-striped mb-3">
+                                <div class="table-responsive text-nowrap">
+                                    <table class="table  table-bordered table-striped mb-3">
                                         <tr>
                                             <th>
                                                 <button type="button" class="btn btn-primary add-row-plantacion"><i

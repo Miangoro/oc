@@ -102,7 +102,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="id_guia" name="id_guia[]" class="select2 form-select" multiple
                                         data-error-message="Por favor selecciona una guia">
@@ -110,6 +110,9 @@
                                     </select>
                                     <label for="id_guia">Folio de guía de translado</label>
                                 </div>
+                            </div>
+                            <div class="col">
+                              <a href="../guias/guias_de_agave" class="btn btn-primary" target="_blank" role="button"><i class="fas fa-eye"></i>Ver guías</a>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
@@ -267,7 +270,7 @@
 
                                 </div>
                             </div>
-                            
+
                             <div class="row">
                                 <!-- Campos en filas de dos -->
                                 <div class="col-md-6 mb-4">
@@ -328,67 +331,64 @@
 </div>
 
 <script>
+    function obtenerDatosEmpresa() {
+        var empresa = $("#id_empresa").val();
 
-function obtenerDatosEmpresa() {
-    var empresa = $("#id_empresa").val();
+        // Verifica si el valor de empresa es válido
+        if (!empresa) {
+            return; // No hacer la petición si el valor es inválido
+        }
 
-    // Verifica si el valor de empresa es válido
-    if (!empresa) {
-        return; // No hacer la petición si el valor es inválido
+        // Hacer una petición AJAX para obtener los detalles de la empresa
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                // Limpiar el contenido previo del select de guías
+                var $selectGuias = $('#id_guia');
+                $selectGuias.empty();
+
+                if (response.guias.length > 0) {
+                    // Recorrer las guías y añadirlas al select
+                    response.guias.forEach(function(guia) {
+                        $selectGuias.append(
+                            `<option value="${guia.id_guia}">${guia.folio}</option>`);
+                    });
+                } else {
+                    // Mostrar opción "Sin guías registradas" si no hay guías
+                    $selectGuias.append(
+                        '<option value="" disabled selected>Sin guías registradas</option>');
+                }
+
+                // Limpiar el contenido previo del select de lotes
+                var $selectLotes = $('#lote_original_id');
+                $selectLotes.empty();
+
+                if (response.lotes_granel.length > 0) {
+                    // Recorrer los lotes y añadirlos al select
+                    response.lotes_granel.forEach(function(lotes_granel) {
+                        $selectLotes.append(
+                            `<option value="${lotes_granel.id_lote_granel}">${lotes_granel.nombre_lote}</option>`
+                        );
+                    });
+                } else {
+                    // Mostrar opción "Sin lotes registrados" si no hay lotes
+                    $selectLotes.append(
+                        '<option value="" disabled selected>Sin lotes registrados</option>');
+                }
+
+                // Disparar un evento global para que el otro script pueda usar los lotes
+                $(document).trigger('lotesCargados', [response.lotes_granel]);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error al cargar los datos de la empresa:', error);
+                alert('Error al cargar los datos. Por favor, intenta nuevamente.');
+            }
+        });
     }
 
-    // Hacer una petición AJAX para obtener los detalles de la empresa
-    $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function(response) {
-            // Limpiar el contenido previo del select de guías
-            var $selectGuias = $('#id_guia');
-            $selectGuias.empty();
-
-            if (response.guias.length > 0) {
-                // Recorrer las guías y añadirlas al select
-                response.guias.forEach(function(guia) {
-                    $selectGuias.append(
-                        `<option value="${guia.id_guia}">${guia.folio}</option>`);
-                });
-            } else {
-                // Mostrar opción "Sin guías registradas" si no hay guías
-                $selectGuias.append(
-                    '<option value="" disabled selected>Sin guías registradas</option>');
-            }
-
-            // Limpiar el contenido previo del select de lotes
-            var $selectLotes = $('#lote_original_id');
-            $selectLotes.empty();
-
-            if (response.lotes_granel.length > 0) {
-                // Recorrer los lotes y añadirlos al select
-                response.lotes_granel.forEach(function(lotes_granel) {
-                    $selectLotes.append(
-                        `<option value="${lotes_granel.id_lote_granel}">${lotes_granel.nombre_lote}</option>`
-                    );
-                });
-            } else {
-                // Mostrar opción "Sin lotes registrados" si no hay lotes
-                $selectLotes.append(
-                    '<option value="" disabled selected>Sin lotes registrados</option>');
-            }
-
-            // Disparar un evento global para que el otro script pueda usar los lotes
-            $(document).trigger('lotesCargados', [response.lotes_granel]);
-        },
-        error: function(xhr, status, error) {
-            console.error('Error al cargar los datos de la empresa:', error);
-            alert('Error al cargar los datos. Por favor, intenta nuevamente.');
-        }
+    // Llamar a obtenerDatosEmpresa cuando se selecciona la empresa
+    $('#id_empresa').change(function() {
+        obtenerDatosEmpresa();
     });
-}
-
-// Llamar a obtenerDatosEmpresa cuando se selecciona la empresa
-$('#id_empresa').change(function() {
-    obtenerDatosEmpresa();
-});
-
-
 </script>
