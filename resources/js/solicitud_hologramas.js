@@ -55,10 +55,15 @@ const fv = FormValidation.formValidation(addHologramasForm, {
         between: {
           min: 1,
           max: Infinity,
-          message: 'El número debe ser superior a 1 y sin negativos'
+          message: 'El número debe ser superior a 0 y sin negativos'
+        },
+        regexp: {
+          // Expresión regular que asegura que el número no comience con 0 a menos que sea exactamente 0
+          regexp: /^(?!0)\d+$/,
+          message: 'El número no debe comenzar con 0'
         }
       }
-    },
+    },    
 
     id_direccion: {
       validators: {
