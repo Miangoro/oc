@@ -77,10 +77,15 @@ $(function () {
             var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
             var $state = states[stateNum],
               $name = full['name'],
+              foto_usuario = full['foto_usuario'],
               $initials = $name.match(/\b\w/g) || [],
               $output;
             $initials = (($initials.shift() || '') + ($initials.pop() || '')).toUpperCase();
-            $output = '<span class="avatar-initial rounded-circle bg-label-' + $state + '">' + $initials + '</span>';
+            if(foto_usuario !=''){
+              $output = '<div class="avatar "><img src="/storage/'+foto_usuario+'" alt class="rounded-circle"></div>';
+            }else{
+              $output = '<span class="avatar-initial rounded-circle bg-label-' + $state + '">' + $initials + '</span>';
+            }
 
             // Creates full output for row
             var $row_output =
