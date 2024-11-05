@@ -95,7 +95,7 @@ class InstalacionesController extends Controller
                 $nestedData['razon_social'] = $user->inspeccione->solicitud->empresa->razon_social;
                 $nestedData['num_dictamen'] = $user->num_dictamen;
                 $nestedData['num_servicio'] = $user->inspeccione->num_servicio;
-                $nestedData['fecha_emision'] = $user->fecha_emision;
+                $nestedData['fecha_emision'] = Helpers::formatearFecha($user->fecha_emision);
 
                 $data[] = $nestedData;
             }
