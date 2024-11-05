@@ -363,7 +363,7 @@ class PrediosController extends Controller
                     'edad_plantacion.*' => 'required|numeric',
                     'tipo_plantacion' => 'required|array',
                     'tipo_plantacion.*' => 'required|string',
-                    'url' => 'required|file|mimes:jpg,jpeg,png,pdf',
+                    'url' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
                     'id_documento' => 'required|integer',
                     'nombre_documento' => 'required|string|max:255'
                 ]);

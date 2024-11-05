@@ -1231,13 +1231,6 @@ $(function () {
             }
           }
         },
-        url: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor adjunta el documento o imagen requerido'
-            },
-          }
-        }
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),

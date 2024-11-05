@@ -71,7 +71,7 @@
                                     </th>
                                     <td>
                                         <select class="id_lote_granel select2" name="id_lote_granel[]"
-                                            id="id_lote_granel">
+                                        id="id_lote_granel">
                                             <!-- Opciones -->
                                         </select>
                                     </td>
