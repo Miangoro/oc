@@ -107,5 +107,23 @@ class empresa extends Model
         return $this->belongsToMany(normas_catalo::class, 'empresa_num_cliente', 'id_empresa', 'id_norma');
     }
 
+    public function actividades()
+    {
+        // Relación con el modelo empresa_actividad
+        return $this->hasMany(EmpresaActividad::class, 'id_empresa');
+    }
+
+    public function catalogoActividades()
+    {
+        // Relación a través de empresa_actividad hacia catalogo_actividad_cliente
+        return $this->hasManyThrough(
+            catalogo_actividad_cliente::class, // El modelo al que queremos acceder
+            empresa_actividad::class,          // El modelo intermedio
+            'id_empresa',                     // Clave foránea en empresa_actividad
+            'id_actividad',                   // Clave foránea en catalogo_actividad_cliente
+            'id_empresa',                     // Clave local en empresa
+            'id_actividad'                    // Clave local en empresa_actividad
+        );
+    }
 
 }

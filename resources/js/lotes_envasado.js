@@ -407,7 +407,7 @@ function initializeSelect2($elements) {
            ]
          },
          {
-           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo tipo de maguey/agave</span>',
+           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Lote Envasado</span>',
            className: 'add-new btn btn-primary waves-effect waves-light',
            attr: {
             
@@ -423,7 +423,7 @@ function initializeSelect2($elements) {
            display: $.fn.dataTable.Responsive.display.modal({
              header: function (row) {
                var data = row.data();
-               return 'Detalles de ' + data['nombre'];
+               return 'Detalles de ' + data['id_empresa'];
              }
            }),
            type: 'column',
@@ -620,7 +620,7 @@ $(document).on('click', '.delete-record', function () {
             Swal.fire({
                 icon: 'success',
                 title: '¡Eliminado!',
-                text: '¡La solicitud ha sido eliminada correctamente!',
+                text: '¡El lote envasado ha sido eliminada correctamente!',
                 customClass: {
                     confirmButton: 'btn btn-success'
                 }
@@ -628,7 +628,7 @@ $(document).on('click', '.delete-record', function () {
         } else if (result.dismiss === Swal.DismissReason.cancel) {
             Swal.fire({
                 title: 'Cancelado',
-                text: 'La solicitud no ha sido eliminada',
+                text: 'El lote envasado no ha sido eliminada',
                 icon: 'error',
                 customClass: {
                     confirmButton: 'btn btn-success'
@@ -640,8 +640,7 @@ $(document).on('click', '.delete-record', function () {
 
 
 $(document).on('click', '.edit-record', function () {
-    alert("entro");
-    $('#editLoteEnvasado').modal('show');
+   
     var id_lote_envasado = $(this).data('id');
     // Realizar la solicitud AJAX para obtener los datos del lote envasado
     $.get('/lotes-envasado/edit/' + id_lote_envasado, function (data) {
@@ -847,7 +846,7 @@ $(document).on('click', '.edit-reclasificacion', function () {
         Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al obtener los datos de la solicitud de holograma',
+            text: 'Error al obtener los datos de la reclasificacion SKU',
             customClass: {
                 confirmButton: 'btn btn-danger'
             }

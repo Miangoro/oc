@@ -212,8 +212,8 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
     public function index(Request $request)
     {
         $columns = [
-            1 => 'id_empresa',
-            2 => 'numero_cliente',
+            1 => 'numero_cliente',
+            2 => 'id_empresa',
             3 => 'razon_social',
             4 => 'domicilio_fiscal',
             5 => 'regimen',
@@ -245,9 +245,11 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
             $users = empresa::join('empresa_num_cliente AS n', 'empresa.id_empresa', '=', 'n.id_empresa')
             ->leftjoin('empresa_contrato AS c', 'empresa.id_empresa', '=', 'c.id_empresa') // Nuevo join con empresa_contrato
                 ->select('c.id_contrato','empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
-                ->where('tipo', 2)->where('id_empresa', 'LIKE', "%{$search}%")
+                ->where('tipo', 2)->where('empresa.id_empresa', 'LIKE', "%{$search}%")
                 ->orWhere('razon_social', 'LIKE', "%{$search}%")
                 ->orWhere('domicilio_fiscal', 'LIKE', "%{$search}%")
+                ->orWhere('numero_cliente', 'LIKE', "%{$search}%")
+                ->orWhere('regimen', 'LIKE', "%{$search}%")
                 ->offset($start)
                 ->groupBy('empresa.id_empresa', 'empresa.razon_social',  'empresa.rfc', 'empresa.regimen', 'empresa.domicilio_fiscal', 'empresa.representante')
                 ->limit($limit)
@@ -335,7 +337,111 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
 }
 
 
+public function edit_cliente_confirmado($id_empresa)
+{
+   
+    try {
+        $empresa = empresa::with(['empresaNumClientes', 'catalogoActividades'])->where('id_empresa', $id_empresa)->get();
+        if ($empresa->isEmpty()) {
+            return response()->json(['error' => 'No se encontraron contratos para esta empresa.'], 404);
+        }
+        return response()->json($empresa);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al obtener los datos de esta empresa: ' . $e->getMessage()], 500);
+    }
+}
+
 // -- Funciones para actualizar Cientes Confirmados -- //
+public function editar_cliente_confirmado(Request $request)
+{
+    $validatedData = $request->validate([
+        'razon_social' => 'required|string|max:255',
+        'regimen' => 'required|string',
+        'domicilio_fiscal' => 'required|string|max:255',
+        'representante' => 'nullable|string|max:255',
+        'estado' => 'required|exists:estados,id',
+        'rfc' => 'required|string|max:13',
+        'correo' => 'required|email|max:255',
+        'telefono' => 'nullable|string|max:15',
+        'id_contacto' => 'required|exists:users,id',
+        'normas' => 'required|array',
+        'numeros_clientes' => 'required|array', // Asegúrate de que sea un array
+      ]);
+
+      // Crear una nueva instancia del modelo Dictamen_Granel
+      $cliente = empresa::findOrFail($request->id_empresa);
+      $cliente->razon_social = $validatedData['razon_social'];
+      $cliente->regimen = $validatedData['regimen'];
+      $cliente ->domicilio_fiscal = $validatedData['domicilio_fiscal'];
+      /* solamente es prueba  */
+      $cliente->representante = isset($validatedData['representante']) && !empty($validatedData['representante'])
+      ? $validatedData['representante']
+      : 'No aplica';
+ 
+      $cliente->estado = $validatedData['estado'];
+      $cliente->rfc = $validatedData['rfc'];
+      $cliente->correo = $validatedData['correo'];
+      $cliente->telefono = $validatedData['telefono'];
+      $cliente->id_contacto = $validatedData['id_contacto'];
+
+
+      $cliente->save();
+
+
+
+      // Obtener el id_empresa del cliente recién creado
+      $id_empresa = $cliente->id_empresa;
+
+      empresaNumCliente::where('id_empresa', $id_empresa)->delete();
+    
+      // 2. Registrar el resto de normas, omitiendo la norma con id_norma = 3
+      foreach ($validatedData['normas'] as $index => $id_norma) {
+          if ($id_norma != 3 && isset($validatedData['numeros_clientes'][$index])) {
+              $numero_cliente = $validatedData['numeros_clientes'][$index];
+
+              // Crear una nueva instancia del modelo empresaNumCliente para cada norma
+              $empresaNumCliente = new empresaNumCliente();
+              $empresaNumCliente->id_empresa = $id_empresa;
+              $empresaNumCliente->numero_cliente = $numero_cliente;
+              $empresaNumCliente->id_norma = $id_norma;
+
+              $empresaNumCliente->save();
+          }
+      }
+
+      empresa_actividad::where('id_empresa', $id_empresa)->delete();
+        // Registrar las actividades seleccionadas utilizando Eloquent
+        foreach ($request->actividad as $id_actividad) {
+          empresa_actividad::create([
+              'id_empresa' => $cliente->id_empresa,
+              'id_actividad' => $id_actividad,
+          ]);
+      }
+
+
+      $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+      $data1 = [
+          'title' => 'Nuevo registro de cliente confirmado',
+          'message' => 'Se ha registrado un nuevo cliente confirmado  : ' . $cliente->razon_social . '.',
+          'url' => 'clientes-historial',
+      ];
+      foreach ($users as $user) {
+        $user->notify(new GeneralNotification($data1));
+    }
+
+
+
+      return response()->json([
+          'success' => true,
+          'message' => 'Cliente registrado exitosamente',
+      ]);
+  }
+
+
+
+
+// -- Funciones para actualizar contratos -- //
 public function actualizarRegistros(Request $request)
 {
     $request->validate([

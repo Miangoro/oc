@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-6">
-                        <select onchange="obtenerPlantacionPredio()" class="select2 form-select " id="nombre_predio" name="predios" aria-label="Marca"
+                        <select class="select2 form-select " id="nombre_predio" name="predios" aria-label="Marca"
                             required>
                             <option value="" selected>Lista de predios</option>
                         </select>
