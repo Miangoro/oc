@@ -12,13 +12,13 @@
                         REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (INSTALACIONES)
                     </h5>
                     <span style="font-weight: normal; margin-left: 10px; color: #3498db; text-transform: uppercase; font-weight: bold;">
-                        {{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->razon_social }}
+                        {{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A'}}
                     </span>
                     <span style="font-weight: normal; margin-left: 5px; color: #000000; text-transform: uppercase; font-weight: bold;">
                         / <!-- Guion en negro -->
                     </span>
                     <span style="font-weight: normal; margin-left: 5px; color: #e74c3c; text-transform: uppercase; font-weight: bold;">
-                        {{ $revisor->user->name }} 
+                        {{ $revisor->user->name ?? 'N/A'}} 
                     </span>
                     
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -52,29 +52,33 @@
                                                     <td>{{ $pregunta->pregunta }}</td>
                                                     @if($pregunta->documentacion?->documentacionUrls)
                                                         <td>
-                                                            <a target="_Blank" href="../files/{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente }}/{{ $revisor->obtenerDocumentosClientes($pregunta->id_documento,$revisor->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa); }}">
-                                                                <i class="ri-file-pdf-2-fill text-danger ri-30px cursor-pointer"></i>
-                                                            </a>
+                                                        <a target="_blank" 
+                                                            href="{{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->isNotEmpty() ? 
+                                                                   '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente . '/' . 
+                                                                   $revisor->obtenerDocumentosClientes($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa) 
+                                                                   : 'NA' }}">
+                                                         </a>                                                         
                                                         </td>
                                                     @elseif($pregunta->filtro == 'cliente')
-                                                        <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->first()->numero_cliente ?? 'Sin asignar' }}</b></td>
+                                                        <td><b>{{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->first()?->numero_cliente ?? 'Sin asignar' }}</b></td>
                                                     @elseif($pregunta->filtro == 'direccion_fiscal')
-                                                        <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal }}</b></td>
+                                                        <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }}</b></td>
                                                     @elseif($pregunta->filtro == 'num_certificado')
-                                                        <td><b>{{ $revisor->certificado->num_certificado }}</b></td>
+                                                        <td><b>{{ $revisor->certificado->num_certificado ?? 'N/A' }}</b></td>
                                                     @elseif($pregunta->filtro == 'nombre_empresa')
-                                                        <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->razon_social }}</b></td>
+                                                        <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</b></td>
                                                     @elseif($pregunta->filtro == 'domicilio_insta')
-                                                        <td><b>{{ $revisor->certificado->dictamen->instalaciones->direccion_completa }}</b></td>
+                                                        <td><b>{{ $revisor->certificado->dictamen->instalaciones->direccion_completa ?? 'N/A' }}</b></td>
                                                     @elseif($pregunta->filtro == 'correo')
                                                         <td>
-                                                            <b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->correo }}</b><br>
-                                                            <b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->telefono }}</b>
+                                                            <b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->correo ?? 'N/A' }}</b><br>
+                                                            <b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->telefono ?? 'N/A' }}</b>
                                                         </td>
                                                     @elseif($pregunta->filtro == 'fechas')
                                                         <td>
-                                                            <b>{{ Helpers::formatearFecha($revisor->certificado->fecha_vigencia) }}</b><br>
-                                                            <b>{{ Helpers::formatearFecha($revisor->certificado->fecha_vencimiento) }}</b>
+                                                            <b>{{ $revisor?->certificado?->fecha_vigencia ? Helpers::formatearFecha($revisor->certificado->fecha_vigencia) : 'NA' }}</b><br>
+                                                            <b>{{ $revisor?->certificado?->fecha_vencimiento ? Helpers::formatearFecha($revisor->certificado->fecha_vencimiento) : 'NA' }}</b>
+                                                            
                                                         </td>
                                                     @else
                                                         <td>Sin datos</td>
@@ -143,3 +147,18 @@
         </div>
     </div>
 </div>
+
+<!-- SweetAlert CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if($noCertificados)
+    <script>
+        const userName = "{{ auth()->user()->name }}";
+
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin Asignaciones',
+            html: `<b>${userName}</b>, no tienes certificados asignados.`,
+        });
+    </script>
+@endif
