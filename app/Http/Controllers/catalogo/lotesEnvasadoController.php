@@ -66,16 +66,21 @@ class lotesEnvasadoController extends Controller
         $dir = $request->input('order.0.dir');
 
         $searchValue = $request->input('search.value');
-
-        $query = lotes_envasado::with('empresa');
+        $query = lotes_envasado::with(['empresa', 'marca']); // Incluye también 'marca' en el with para cargarla
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
                 $q->where('id_empresa', 'LIKE', "%{$searchValue}%")
                     ->orWhere('nombre_lote', 'LIKE', "%{$searchValue}%")
                     ->orWhere('cant_botellas', 'LIKE', "%{$searchValue}%");
+        
+                // Añadir la búsqueda en el campo 'marca'
+                $q->orWhereHas('marca', function ($qMarca) use ($searchValue) {
+                    $qMarca->where('marca', 'LIKE', "%{$searchValue}%");
+                });
             });
         }
+        
 
         $totalData = lotes_envasado::count();
         $totalFiltered = $query->count();
