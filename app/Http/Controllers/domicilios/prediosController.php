@@ -418,6 +418,7 @@ class PrediosController extends Controller
                         }
                     }
                 }
+  
 
                 // Actualizar los demás datos del predio
                 $predio->update([

@@ -265,40 +265,60 @@ class lotesGranelController extends Controller
         $folio_fq_Completo = $validatedData['folio_fq_completo'] ?? ' ';
         $folio_fq_ajuste = $validatedData['folio_fq_ajuste'] ?? ' ';
 
-          // Lógica para cuando es creado a partir de otro lote
-          if ($validatedData['es_creado_a_partir'] === 'si') {
-            $lote->lote_original_id = json_encode([
-                'lotes' => $request->id_lote_granel,  // Array de IDs de lotes seleccionados
-                'volumenes' => $request->volumen_parcial  // Array de volúmenes parciales correspondientes
-            ]);
+    // Validar si es creado a partir de otro lote
+    if ($validatedData['es_creado_a_partir'] === 'si') {
+      $idLotes = [];
+      $volumenesParciales = [];
 
-            // Aquí restamos el volumen parcial de los lotes originales
-            $loteOriginales = json_decode($lote->lote_original_id, true);
+      // Recoger los lotes y volúmenes del request
+// Recoger los lotes y volúmenes del request
+foreach ($request->input('lote', []) as $index => $loteData) {
+  $idLotes[] = $loteData['id'] ?? null;
+  $volumenesParciales[] = $request->input("volumenes.{$index}.volumen_parcial") ?? null;
 
-            foreach ($loteOriginales['lotes'] as $index => $loteId) {
-                $volumenParcial = $loteOriginales['volumenes'][$index]; // Obtener el volumen parcial correspondiente
-                $loteOriginal = LotesGranel::find($loteId);
+}
+      // Validar que no haya lotes o volúmenes nulos
+      if (in_array(null, $idLotes)) {
+          return response()->json([
+              'success' => false,
+              'message' => 'Los lotes deben ser válidos.',
+              'debug' => [
+                  'idLotes' => $idLotes,
+                  'volumenesParciales' => $volumenesParciales
+              ]
+          ], 400);
+      }
 
-                if ($loteOriginal) {
-                    // Restar el volumen parcial del lote original
-                    $loteOriginal->volumen_restante -= $volumenParcial;
+      // Guardar los lotes y volúmenes en JSON para el registro
+      $lote->lote_original_id = json_encode([
+          'lotes' => $idLotes,
+          'volumenes' => $volumenesParciales,
+      ]);
 
-                    // Verificar si el volumen no se vuelve negativo
-                    if ($loteOriginal->volumen_restante < 0) {
-                        return response()->json([
-                            'success' => false,
-                            'message' => 'El volumen del lote original no puede ser negativo.'
-                        ], 400);
-                    }
+      // Procesar cada lote original y restar el volumen parcial
+      foreach ($idLotes as $index => $loteId) {
+          $volumenParcial = $volumenesParciales[$index];
+          $loteOriginal = LotesGranel::find($loteId);
 
-                    // Guardar el lote original actualizado
-                    $loteOriginal->save();
-                }
-            }
-        } else {
-            $lote->lote_original_id = null; // Si no es creado a partir de otro lote, no se guarda la relación
-        }
+          if ($loteOriginal) {
+              if ($volumenParcial !== null) {
+                  // Restar volumen parcial si es válido
+                  $loteOriginal->volumen_restante -= $volumenParcial;
 
+                  // Verificar que el volumen no sea negativo
+                  if ($loteOriginal->volumen_restante < 0) {
+                      return response()->json([
+                          'success' => false,
+                          'message' => 'El volumen del lote original no puede ser negativo.'
+                      ], 400);
+                  }
+              }
+
+              // Guardar el lote original actualizado
+              $loteOriginal->save();
+          }
+      }
+  }
 
         // Verificar si ambos campos son espacios o vacíos
         if (trim($folio_fq_Completo) === '' && trim($folio_fq_ajuste) === '') {
