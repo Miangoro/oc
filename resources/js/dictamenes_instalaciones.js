@@ -1,21 +1,29 @@
-'use strict';
+/*
+ Page User List
+ */
+ 'use strict';
  $(document).ready(function () {
   $('.datepicker').datepicker({
     format: 'yyyy-mm-dd',
     autoclose: true,
     todayHighlight: true,
-    language: 'es'
+    language: 'es' // Configura el idioma a español
   });
 });
 
 //const { formatDate } = require("@fullcalendar/core/index.js");
+
+ // Datatable (jquery)
  $(function () {
+ 
+   // Variable declaration for table
    var dt_user_table = $('.datatables-users'),
      select2 = $('.select2'),
      userView = baseUrl + 'app/user/view/account',
      offCanvasForm = $('#offcanvasAddUser');
  
      var select2Elements = $('.select2');
+  // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
     $elements.each(function () {
       var $this = $(this);
@@ -26,31 +34,24 @@
     });
   }
   
+
   initializeSelect2(select2Elements);
 
   $('#fecha_emision').on('change', function() {
     var fechaInicial = new Date($(this).val());
+    
+    // Sumar 1 año a la fecha inicial
     fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+    
+    // Formatear la fecha en YYYY-MM-DD
     var year = fechaInicial.getFullYear();
-    var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
+    var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2); // Los meses empiezan desde 0
     var day = ('0' + fechaInicial.getDate()).slice(-2);
     
-    $('#fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
+    // Asignar la fecha final al input correspondiente
+    $('#fecha_vigencia').val(year + '-' + month + '-' + day);
 });
-
-$('#edit_fecha_emision').on('change', function() {
-  var fechaInicial = new Date($(this).val());
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-  var year = fechaInicial.getFullYear();
-  var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
-  var day = ('0' + fechaInicial.getDate()).slice(-2);
-  
-  $('#edit_fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
-
-  // Revalidar el campo edit_fecha_vigencia
-  fv.revalidateField('edit_fecha_vigencia');
-});
-
+ 
  
    // ajax setup
    $.ajaxSetup({
@@ -58,6 +59,7 @@ $('#edit_fecha_emision').on('change', function() {
        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
      }
    });
+ 
  
    //FUNCIONALIDAD DE LA VISTA datatable
    if (dt_user_table.length) {
@@ -68,6 +70,7 @@ $('#edit_fecha_emision').on('change', function() {
          url: baseUrl + 'insta'
        },
        columns: [
+         // columns according to JSON
          { data: '' },
          { data: '' },
          { data: 'tipo_dictamen' },
@@ -119,6 +122,10 @@ $('#edit_fecha_emision').on('change', function() {
             else if($name == 5){ 
               return '<span class="text-warning">Área de maduración</span>';
             }
+
+             
+            
+             //return $name;
            }
          },
           {
@@ -205,6 +212,7 @@ $('#edit_fecha_emision').on('change', function() {
                }
        },
  
+       // Opciones Exportar Documentos
        buttons: [
          {
            extend: 'collection',
@@ -218,6 +226,7 @@ $('#edit_fecha_emision').on('change', function() {
                className: 'dropdown-item',
                exportOptions: {
                  columns: [1, 2, 3],
+                 // prevent avatar to be print
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -235,6 +244,7 @@ $('#edit_fecha_emision').on('change', function() {
                  }
                },
                customize: function (win) {
+                 //customize print view for dark
                  $(win.document.body)
                    .css('color', config.colors.headingColor)
                    .css('border-color', config.colors.borderColor)
@@ -254,6 +264,7 @@ $('#edit_fecha_emision').on('change', function() {
                className: 'dropdown-item',
                exportOptions: {
                  columns: [1, 2, 3],
+                 // prevent avatar to be print
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -278,6 +289,7 @@ $('#edit_fecha_emision').on('change', function() {
                className: 'dropdown-item',
                exportOptions: {
                  columns: [1, 2, 3],
+                 // prevent avatar to be display
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -302,6 +314,7 @@ $('#edit_fecha_emision').on('change', function() {
                className: 'dropdown-item',
                exportOptions: {
                  columns: [1, 2, 3],
+                 // prevent avatar to be display
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -326,6 +339,7 @@ $('#edit_fecha_emision').on('change', function() {
                className: 'dropdown-item',
                exportOptions: {
                  columns: [1, 2, 3],
+                 // prevent avatar to be copy
                  format: {
                    body: function (inner, coldex, rowdex) {
                      if (inner.length <= 0) return inner;
@@ -358,19 +372,19 @@ $('#edit_fecha_emision').on('change', function() {
          }
        ],
  
-      //PAGINA RESPONSIVA
+ ///PAGINA RESPONSIVA
        responsive: {
          details: {
            display: $.fn.dataTable.Responsive.display.modal({
              header: function (row) {
                var data = row.data();
-               return 'Detalles de ' + data['num_dictamen'];
+               return 'Detalles de ' + data['id_inspeccion'];
              }
            }),
            type: 'column',
            renderer: function (api, rowIdx, columns) {
              var data = $.map(columns, function (col, i) {
-               return col.title !== '' 
+               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                  ? '<tr data-dt-row="' +
                      col.rowIndex +
                      '" data-dt-column="' +
@@ -390,307 +404,145 @@ $('#edit_fecha_emision').on('change', function() {
              return data ? $('<table class="table"/><tbody />').append(data) : false;
            }
          }
-       }      
+       }
+ 
+       
      });
    } 
+ 
+ 
+ 
 
-   //Agregar
-   $(document).ready(function () {
-    const NuevoDictamen = document.getElementById('NuevoDictamen');
-    const fv = FormValidation.formValidation(NuevoDictamen, {
-        fields: {
-            tipo_dictamen: {
-                validators: {
-                    notEmpty: {
-                        message: 'Seleccione una opción'
-                    }
-                }
-            },
-            num_dictamen: {
-                validators: {
-                    notEmpty: {
-                        message: 'Introduzca el no. de dictamen'
-                    }
-                }
-            },
-            fecha_emision: {
-                validators: {
-                    notEmpty: {
-                        message: 'Seleccione una fecha'
-                    }
-                }
-            },
-            fecha_vigencia: {
-                validators: {
-                    notEmpty: {
-                        message: 'Seleccione una fecha'
-                    }
-                }
-            },
-            id_inspeccion: {
-                validators: {
-                    notEmpty: {
-                        message: 'Seleccione una opción'
-                    }
-                }
-            },
-            'categorias[]': {
-                validators: {
-                    notEmpty: {
-                        message: 'Seleccione al menos una categoría de agave'
-                    }
-                }
-            },
-            'clases[]': {
-                validators: {
-                    notEmpty: {
-                        message: 'Seleccione al menos una clase de agave'
-                    }
-                }
-            },
-        },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                rowSelector: function (field, ele) {
-                    return '.mb-4, .mb-5, .mb-6';
-                }
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-    }).on('core.form.valid', function () {
-        var categorias = $('#categorias').val(); 
-        var clases = $('select[name="clases[]"]').val();
-        var categoriasString = Array.isArray(categorias) ? categorias.join(',') : categorias;
-        var clasesString = Array.isArray(clases) ? clases.join(',') : clases;
+   
+// Agregar nuevo registro
+// validating form and updating user's data
+//const NuevoDictamen = document.getElementById('NuevoDictamen');
 
-        var formData = $(NuevoDictamen).serializeArray(); 
-        formData.push({ name: 'categorias', value: categoriasString }); 
-        formData.push({ name: 'clases', value: clasesString });
-
-        $.ajax({
-            url: '/insta',
-            type: 'POST',
-            data: $.param(formData),
-            success: function (response) {
-                $('#addDictamen').modal('hide'); 
-                NuevoDictamen.reset();
-                dt_user.ajax.reload();
-
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.success,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
-                $('#id_inspeccion').val(null).trigger('change'); 
-                $('#categorias').val(null).trigger('change'); 
-                $('select[name="clases[]"]').val(null).trigger('change'); 
-            },
-            error: function (xhr) {
-                console.log('Error:', xhr);
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: 'Error al subir!',
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
+// Validación del formulario
+const fv = FormValidation.formValidation(NuevoDictamen, {
+    fields: {
+      tipo_dictamen: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una opcion'
+                }
             }
-        });
-    });
+        },
+        num_dictamen: {
+            validators: {
+                notEmpty: {
+                    message: 'Introduzca el no. de dictamen'
+                }
+            }
+        },
+        fecha_emision: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una fecha'
+                }
+            }
+        },
+        fecha_vigencia: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una fecha'
+                }
+            }
+        },
+        id_inspeccion: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una opcion'
+                }
+            }
+        },
+        'categorias[]': {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una categoría de agave'
+                }
+            }
+        },
+        'clases[]': {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una clase de agave'
+                }
+            }
+        },
+        
+    },
+    plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+            eleValidClass: '',
+            rowSelector: function (field, ele) {
+                return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+            }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+}).on('core.form.valid', function (e) {
 
-    $('#id_inspeccion').on('change', function() {
-        fv.revalidateField($(this).attr('name'));
-    });
-    $('#categorias').on('change', function() {
-        fv.revalidateField('categorias[]');
-    });
-    $('select[name="clases[]"]').on('change', function() {
-        fv.revalidateField('clases[]');
-    });
-    $('#num_dictamen, #fecha_emision, #fecha_vigencia').on('change', function() {
-        fv.revalidateField($(this).attr('name'));
-    });
-    $('#addDictamen').on('hidden.bs.modal', function () {
-        fv.resetForm(); 
-        NuevoDictamen.reset(); 
-    });
-
-    $('#addDictamen').on('show.bs.modal', function () {
-      fv.resetForm(); 
-  });
-});
-
-  //Editar
-   $(document).ready(function() {
-    $('.datatables-users').on('click', '.edit-record', function() {
-        var id_dictamen = $(this).data('id');
+  var formData = new FormData(NuevoDictamen);
+/*$('#NuevoDictamen').on('submit', function (e) {//id del formulario #addNewCategory
+    e.preventDefault();
+    var formData = $(this).serialize();*/
+    $.ajax({
+        url: '/insta',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          console.log('Error222:', response);
+            $('#addDictamen').modal('hide');//div que encierra al formulario #addDictamen
+            $('#NuevoDictamen')[0].reset();
   
-        $.get('/insta/' + id_dictamen + '/edit', function(data) {
-            $('#edit_id_dictamen').val(data.id_dictamen);
-            $('#edit_tipo_dictamen').val(data.tipo_dictamen);
-            $('#edit_num_dictamen').val(data.num_dictamen);
-            $('#edit_fecha_emision').val(data.fecha_emision);
-            $('#edit_fecha_vigencia').val(data.fecha_vigencia);
-            $('#edit_id_inspeccion').val(data.id_inspeccion);
-  
-            var categorias = Array.isArray(data.categorias) ? data.categorias : data.categorias.split(',');
-            var clases = Array.isArray(data.clases) ? data.clases : data.clases.split(',');
-  
-            $('#edit_categorias').val(categorias).trigger('change');
-            $('#edit_clases').val(clases).trigger('change');
-              $('#editDictamen').modal('show');
-        }).fail(function() {
+            // Actualizar la tabla sin reinicializar DataTables
+      //es lo mismo que abajo$('.datatables-users').DataTable().ajax.reload();
+            dt_user.ajax.reload();
+            // Mostrar alerta de éxito
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.success,
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr);
+            // Mostrar alerta de error
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
-                text: 'Error al obtener los datos',
+                text: 'Error al subir!',
                 customClass: {
                     confirmButton: 'btn btn-danger'
                 }
             });
-        });
+        }
     });
-    $(document).ready(function () {
-      const EditarDictamen = document.getElementById('EditarDictamen');
-  
-      const fv = FormValidation.formValidation(EditarDictamen, {
-          fields: {
-              tipo_dictamen: {
-                  validators: {
-                      notEmpty: {
-                          message: 'Seleccione una opción'
-                      }
-                  }
-              },
-              num_dictamen: {
-                  validators: {
-                      notEmpty: {
-                          message: 'Introduzca el no. de dictamen'
-                      }
-                  }
-              },
-              fecha_emision: {
-                  validators: {
-                      notEmpty: {
-                          message: 'Seleccione una fecha'
-                      }
-                  }
-              },
-              fecha_vigencia: {
-                  validators: {
-                      notEmpty: {
-                          message: 'Seleccione una fecha'
-                      }
-                  }
-              },
-              id_inspeccion: {
-                  validators: {
-                      notEmpty: {
-                          message: 'Seleccione una opción'
-                      }
-                  }
-              },
-              'categorias[]': {
-                  validators: {
-                      notEmpty: {
-                          message: 'Seleccione al menos una categoría de agave'
-                      }
-                  }
-              },
-              'clases[]': {
-                  validators: {
-                      notEmpty: {
-                          message: 'Seleccione al menos una clase de agave'
-                      }
-                  }
-              },
-          },
-          plugins: {
-              trigger: new FormValidation.plugins.Trigger(),
-              bootstrap5: new FormValidation.plugins.Bootstrap5({
-                  eleValidClass: '',
-                  rowSelector: function (field, ele) {
-                      return '.mb-4, .mb-5, .mb-6';
-                  }
-              }),
-              submitButton: new FormValidation.plugins.SubmitButton(),
-              autoFocus: new FormValidation.plugins.AutoFocus()
-          }
-      }).on('core.form.valid', function () {
-          var categorias = $('#edit_categorias').val(); 
-          var clases = $('#edit_clases').val();
-          if (!Array.isArray(clases) || clases.length === 0) {
-              Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: 'Seleccione al menos una clase de agave',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
-              return; 
-          }
-  
-          var categoriasString = Array.isArray(categorias) ? categorias.join(',') : categorias; 
-          var clasesString = Array.isArray(clases) ? clases.join(',') : clases; 
-  
-          var formData = $(EditarDictamen).serializeArray(); 
-          formData.push({ name: 'categorias', value: categoriasString });
-          formData.push({ name: 'clases', value: clasesString }); 
-          var id_dictamen = $('#edit_id_dictamen').val();
-  
-          $.ajax({
-              url: '/insta/' + id_dictamen,
-              type: 'PUT',
-              data: $.param(formData), 
-              success: function (response) {
-                  $('#editDictamen').modal('hide'); 
-                  EditarDictamen.reset();
-                  $('#edit_categorias').val(null).trigger('change');
-                  $('#edit_clases').val(null).trigger('change');
-                  $('.datatables-users').DataTable().ajax.reload(null, false);
-  
-                  Swal.fire({
-                      icon: 'success',
-                      title: '¡Éxito!',
-                      text: response.success,
-                      customClass: {
-                          confirmButton: 'btn btn-success'
-                      }
-                  });
-              },
-              error: function (xhr) {
-                  console.log('Error:', xhr);
-                  Swal.fire({
-                      icon: 'error',
-                      title: '¡Error!',
-                      text: 'Error al actualizar el dictamen',
-                      customClass: {
-                          confirmButton: 'btn btn-danger'
-                      }
-                  });
-              }
-          });
-      });
   });
-});
+
+  
+
+
 
   // Eliminar registro
   $(document).on('click', '.delete-record', function () {
-    var id_dictamen = $(this).data('id');
+    var id_dictamen = $(this).data('id'); // Obtener el ID de la clase
     var dtrModal = $('.dtr-bs-modal.show');
 
+    // Ocultar modal responsivo en pantalla pequeña si está abierto
     if (dtrModal.length) {
         dtrModal.modal('hide');
     }
 
+    // SweetAlert para confirmar la eliminación
     Swal.fire({
         title: '¿Está seguro?',
         text: 'No podrá revertir este evento',
@@ -705,15 +557,18 @@ $('#edit_fecha_emision').on('change', function() {
         buttonsStyling: false
     }).then(function (result) {
         if (result.isConfirmed) {
-
-          $.ajax({
+            // Enviar solicitud DELETE al servidor
+            $.ajax({
                 type: 'DELETE',
                 url: `${baseUrl}insta/${id_dictamen}`,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function () {
+                    // Actualizar la tabla después de eliminar el registro
                     dt_user.draw();
+
+                    // Mostrar SweetAlert de éxito
                     Swal.fire({
                         icon: 'success',
                         title: '¡Eliminado!',
@@ -725,6 +580,8 @@ $('#edit_fecha_emision').on('change', function() {
                 },
                 error: function (error) {
                     console.log(error);
+
+                    // Mostrar SweetAlert de error
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -738,6 +595,7 @@ $('#edit_fecha_emision').on('change', function() {
 
             });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
+            // Acción cancelada, mostrar mensaje informativo
             Swal.fire({
                 title: 'Cancelado',
                 text: 'La eliminación del Dictamen ha sido cancelada',
@@ -750,6 +608,8 @@ $('#edit_fecha_emision').on('change', function() {
     });
 });
 
+
+  
 //Reciben los datos del pdf del dictamen
 $(document).on('click', '.pdf', function () {
   var id = $(this).data('id');
@@ -790,8 +650,89 @@ $(document).on('click', '.pdf', function () {
       $("#subtitulo_modal").text(registro);  
 });
 
-//end
+
+
+
+// FUNCION PARA EDITAR un registro
+$(document).ready(function() {
+  // Abrir el modal y cargar datos para editar
+  $('.datatables-users').on('click', '.edit-record', function() {
+      var id_dictamen = $(this).data('id');
+
+      // Realizar la solicitud AJAX para obtener los datos de la clase
+      $.get('/insta/' + id_dictamen + '/edit', function(data) {
+          // Rellenar el formulario con los datos obtenidos
+          $('#edit_id_dictamen').val(data.id_dictamen);
+          $('#edit_tipo_dictamen').val(data.tipo_dictamen);
+          $('#edit_num_dictamen').val(data.num_dictamen);
+          $('#edit_fecha_emision').val(data.fecha_emision);
+          $('#edit_fecha_vigencia').val(data.fecha_vigencia);
+          $('#edit_id_inspeccion').val(data.id_inspeccion);
+          $('#edit_categorias').val(data.categorias);
+          $('#edit_clases').val(data.clases);
+
+          // Mostrar el modal de edición
+          $('#editDictamen').modal('show');
+      }).fail(function() {
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al obtener los datos',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      });
+  });
+
+  // Manejar el envío del formulario de edición
+  $('#EditarDictamen').on('submit', function(e) {
+      e.preventDefault();
+
+      var formData = $(this).serialize();
+      var id_dictamen = $('#edit_id_dictamen').val(); // Obtener el ID de la clase desde el campo oculto
+
+      $.ajax({
+          url: '/insta/' + id_dictamen,
+          type: 'PUT',
+          data: formData,
+          success: function(response) {
+              $('#editDictamen').modal('hide'); // Ocultar el modal de edición "DIV"
+              $('#EditarDictamen')[0].reset(); // Limpiar el formulario "FORM"
+              // Mostrar alerta de éxito
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.success,
+                  customClass: {
+                      confirmButton: 'btn btn-success'
+                  }
+              });
+              // Recargar los datos en la tabla sin reinicializar DataTables
+              $('.datatables-users').DataTable().ajax.reload();
+          },
+          error: function(xhr) {
+            console.log('Error:', xhr.responseText);
+              // Mostrar alerta de error
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Error al actualizar el dictamen',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+      });
+  });
 });
+
+
  
+ 
+ 
+ });
+ 
+
 
 
