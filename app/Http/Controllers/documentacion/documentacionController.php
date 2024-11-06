@@ -37,7 +37,7 @@ class documentacionController extends Controller
             SELECT n.id_norma, n.norma AS nombre
             FROM catalogo_norma_certificar n 
             JOIN empresa_num_cliente e ON n.id_norma = e.id_norma 
-            WHERE e.id_empresa = ?
+            WHERE n.id_norma != 3 AND e.id_empresa = ?
         ", [$id_empresa]);
 
 
