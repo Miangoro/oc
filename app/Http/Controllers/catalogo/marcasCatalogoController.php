@@ -162,7 +162,7 @@ class marcasCatalogoController extends Controller
             // Actualizar documentos existentes o agregar nuevos
             if ($request->has('id_documento')) {
 
-                $directory = 'uploads/' . $numeroCliente;
+                $directory = 'app/public/uploads/' . $numeroCliente;
 
                 // Verifica si el directorio no existe y lo crea si es necesario
                 if (!Storage::exists($directory)) {
@@ -368,7 +368,9 @@ class marcasCatalogoController extends Controller
 
             // Método para guardar PDF
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $loteEnvasado->id_empresa)->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
             $nuevoIdDocEtiqueta = 1;
             $nuevoIdDocCorrugado = 1;
             // Guardar documentos subidos
@@ -427,7 +429,9 @@ class marcasCatalogoController extends Controller
         $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get();
 
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
 
         $etiquetado = json_decode($marca->etiquetado, true);
         $marca->sku = $etiquetado['sku'] ?? null;
