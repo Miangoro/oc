@@ -123,7 +123,7 @@
                                                 {{ $categoria->categoria }}</option>
                                         @endforeach
                                     </select>
-                                    <label for="id_categoria">Categoría de Agave</label>
+                                    <label for="id_categoria">Categoría de Mezcal</label>
                                 </div>
                             </div>
                         </div>

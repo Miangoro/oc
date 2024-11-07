@@ -25,7 +25,7 @@ class marcasCatalogoController extends Controller
     public function UserManagement()
     {
         // Obtener listado de clientes (empresas)
-        $clientes = empresa::where('tipo', 2)->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $clientes = Empresa::where('tipo', 2)->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
         $documentos = Documentacion::where('id_documento', '=', '82')
             ->orWhere('id_documento', '=', '80')
             ->orWhere('id_documento', '=', '121')
@@ -251,7 +251,7 @@ class marcasCatalogoController extends Controller
     public function edit($id)
     {
 
-        $marca = marcas::findOrFail($id);
+        $marca = Marcas::findOrFail($id);
         $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get(); // Obtener los documentos asociados a la marca
 
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
@@ -420,7 +420,7 @@ class marcasCatalogoController extends Controller
     public function editEtiquetas($id)
     {
 
-        $marca = marcas::findOrFail($id);
+        $marca = Marcas::findOrFail($id);
         $tipos = tipos::all();
         $clases = clases::all();
         $categorias = categorias::all();
