@@ -11,6 +11,7 @@
 
         <form id="NuevoDictamen">
             <div class="row">
+                
                 <div class="col-md-3">
                     <div class="form-floating form-floating-outline mb-4">
                         <select class="form-select" id="tipo_dictamen"
@@ -20,7 +21,7 @@
                             <option value="2">Envasador</option>
                             <option value="3">Comercializador</option>
                             <option value="4">Almacen y bodega</option>
-                     {{--        <option value="5">Área de maduración</option> --}}
+                       {{-- <option value="5">Área de maduración</option> --}}
                         </select>
                             <label for="">Tipo de Dictamen</label>
                     </div>
@@ -52,8 +53,8 @@
         <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-6">
-                        <select id="id_inspeccion" name="id_inspeccion" class="form-select select2" aria-label="Default select example">
-                            <option value="" disabled selected>Elige el número de servicio</option>
+                        <select id="id_inspeccion" name="id_inspeccion" data-placeholder="Elige un número de servicio" class="form-select select2" aria-label="Default select example">
+                            <option value="" disabled selected>NULL</option>
                                 @foreach ($inspeccion as $insp)
                                 <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option>
                                 @endforeach
@@ -63,21 +64,19 @@
                 </div>
 
                 <div class="col-md-4">
-                    <div class="form-floating form-floating-outline mb-6">
-              
-                   
-                    <select id="categorias" placeholder="Categorías de agave" name="categorias[]" class="select2 form-select" multiple data-error-message="Por favor selecciona una categoría de agave">
-                        @foreach ($clases as $clase)
-                            <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
-                        @endforeach
-                    </select>
-                    <label for="nombre">Categorías de agave</label>
+                    <div class="form-floating form-floating-outline mb-6 select2-primary">
+                        <select id="categorias" name="categorias[]" class="form-select select2" data-placeholder="Seleccione una o más categorias" multiple>
+                            @foreach ($categoria as $cate)
+                                <option value="{{ $cate->categoria }}">{{ $cate->categoria }}</option>
+                            @endforeach
+                        </select>
+                    <label for="">Categorías de agave</label>
                     </div>
                 </div>
 
                 <div class="col-md-4">
-                    <div class="form-floating form-floating-outline mb-4">
-                        <select  name="clases[]" class="select2 form-select" multiple  placeholder="Clases de agave" data-error-message="Por favor selecciona una clase de agave">
+                    <div class="form-floating form-floating-outline mb-4 select2-primary">
+                        <select name="clases[]" class="form-select select2" data-placeholder="Seleccione una o más clases" multiple>
                             @foreach ($clases as $clase)
                                 <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
                             @endforeach

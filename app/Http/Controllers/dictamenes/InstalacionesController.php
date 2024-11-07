@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dictamen_instalaciones;
 use App\Models\clases; 
+use App\Models\categorias;
 use App\Models\inspecciones; 
 
 use App\Models\empresa; 
@@ -23,10 +24,11 @@ class InstalacionesController extends Controller
     {
         $dictamenes = Dictamen_instalaciones::all(); // Obtener todos los datos
         $clases = clases::all();
+        $categoria = categorias::all();
         $inspeccion = inspecciones::all();
         $empresa = empresa::all();
         $soli = solicitudesModel::all();
-        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'inspeccion'));
+        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'categoria', 'inspeccion'));
     }
 
 
