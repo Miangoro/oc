@@ -63,7 +63,7 @@
                               </tr>
                           </thead>
                           <tbody id="contenidoGraneles">
-                              <tr data-row-index="0">
+{{--                               <tr data-row-index="0">
                                   <th>
                                       <button type="button" class="btn btn-danger" disabled>
                                           <i class="ri-delete-bin-5-fill"></i>
@@ -78,7 +78,7 @@
                                       <input type="text" class="form-control form-control-sm volumen-parcial"
                                              name="volumenes[0][volumen_parcial]" id="volumen_parcial_0">
                                   </td>
-                              </tr>
+                              </tr> --}}
                           </tbody>
                       </table>
                   </div>
@@ -146,7 +146,7 @@
                                                 {{ $categoria->categoria }}</option>
                                         @endforeach
                                     </select>
-                                    <label for="id_categoria">Categoría de Agave</label>
+                                    <label for="id_categoria">Categoría de Mezcal</label>
                                 </div>
                             </div>
                         </div>

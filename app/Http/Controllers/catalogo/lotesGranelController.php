@@ -271,12 +271,12 @@ class lotesGranelController extends Controller
       $volumenesParciales = [];
 
       // Recoger los lotes y volúmenes del request
-// Recoger los lotes y volúmenes del request
-foreach ($request->input('lote', []) as $index => $loteData) {
-  $idLotes[] = $loteData['id'] ?? null;
-  $volumenesParciales[] = $request->input("volumenes.{$index}.volumen_parcial") ?? null;
+        // Recoger los lotes y volúmenes del request
+        foreach ($request->input('lote', []) as $index => $loteData) {
+        $idLotes[] = $loteData['id'] ?? null;
+        $volumenesParciales[] = $request->input("volumenes.{$index}.volumen_parcial") ?? null;
 
-}
+        }
       // Validar que no haya lotes o volúmenes nulos
       if (in_array(null, $idLotes)) {
           return response()->json([
