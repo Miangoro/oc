@@ -46,15 +46,12 @@ $(function () {
     columns: [
       { data: '' },
       { data: 'id_instalacion' },
-      { data: 'razon_social' },
+      { data: 'razon_social', responsivePriority: 1 }, 
       { data: 'tipo' },
       { data: 'estado' },
       { data: 'direccion_completa' },
       { data: 'folio' },
-      { data: 'organismo' },
       { data: '' },
-      { data: 'fecha_emision' },
-      { data: 'fecha_vigencia' },
       { data: 'actions' } 
     ],
     columnDefs: [
@@ -78,7 +75,7 @@ $(function () {
       },
       {
         targets: 3,
-        responsivePriority: 4,
+        responsivePriority: 3,
         render: function (data, type, full, meta) {
           var $name = full['tipo'];
           if ($name == 'Productora'){
@@ -100,7 +97,7 @@ $(function () {
       },
       {
       // PDF
-        targets: 8,
+        targets: 7,
         className: 'text-center',
         render: function (data, type, full, meta) {
 

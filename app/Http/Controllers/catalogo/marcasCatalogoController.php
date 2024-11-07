@@ -25,7 +25,7 @@ class marcasCatalogoController extends Controller
     public function UserManagement()
     {
         // Obtener listado de clientes (empresas)
-        $clientes = empresa::where('tipo', 2)->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $clientes = Empresa::where('tipo', 2)->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
         $documentos = Documentacion::where('id_documento', '=', '82')
             ->orWhere('id_documento', '=', '80')
             ->orWhere('id_documento', '=', '121')
@@ -93,10 +93,16 @@ class marcasCatalogoController extends Controller
         } else {
             $search = $request->input('search.value');
 
-            $users = marcas::with('empresa') // Incluye la relación empresa
+            $users = marcas::with(['empresa', 'catalogo_norma_certificar']) // Incluye la relación empresa
                 ->where('id_marca', 'LIKE', "%{$search}%")
                 ->orWhere('folio', 'LIKE', "%{$search}%")
                 ->orWhere('marca', 'LIKE', "%{$search}%")
+                ->orWhereHas('empresa', function ($qEmpresa) use ($search) {
+                    $qEmpresa->where('razon_social', 'LIKE', "%{$search}%");
+                })
+              ->orWhereHas('catalogo_norma_certificar', function ($qNorma) use ($search) {
+                $qNorma->where('norma', 'LIKE', "%{$search}%");
+            })
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
@@ -105,6 +111,12 @@ class marcasCatalogoController extends Controller
             $totalFiltered = marcas::where('id_marca', 'LIKE', "%{$search}%")
                 ->orWhere('folio', 'LIKE', "%{$search}%")
                 ->orWhere('marca', 'LIKE', "%{$search}%")
+                ->orWhereHas('empresa', function ($qEmpresa) use ($search) {
+                    $qEmpresa->where('razon_social', 'LIKE', "%{$search}%");
+                })
+              ->orWhereHas('catalogo_norma_certificar', function ($qNorma) use ($search) {
+                $qNorma->where('norma', 'LIKE', "%{$search}%");
+            })
                 ->count();
         }
 
@@ -162,7 +174,7 @@ class marcasCatalogoController extends Controller
             // Actualizar documentos existentes o agregar nuevos
             if ($request->has('id_documento')) {
 
-                $directory = 'uploads/' . $numeroCliente;
+                $directory = 'app/public/uploads/' . $numeroCliente;
 
                 // Verifica si el directorio no existe y lo crea si es necesario
                 if (!Storage::exists($directory)) {
@@ -251,7 +263,7 @@ class marcasCatalogoController extends Controller
     public function edit($id)
     {
 
-        $marca = marcas::findOrFail($id);
+        $marca = Marcas::findOrFail($id);
         $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get(); // Obtener los documentos asociados a la marca
 
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
@@ -368,7 +380,9 @@ class marcasCatalogoController extends Controller
 
             // Método para guardar PDF
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $loteEnvasado->id_empresa)->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
             $nuevoIdDocEtiqueta = 1;
             $nuevoIdDocCorrugado = 1;
             // Guardar documentos subidos
@@ -420,14 +434,16 @@ class marcasCatalogoController extends Controller
     public function editEtiquetas($id)
     {
 
-        $marca = marcas::findOrFail($id);
+        $marca = Marcas::findOrFail($id);
         $tipos = tipos::all();
         $clases = clases::all();
         $categorias = categorias::all();
         $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get();
 
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
 
         $etiquetado = json_decode($marca->etiquetado, true);
         $marca->sku = $etiquetado['sku'] ?? null;

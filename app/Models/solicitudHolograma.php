@@ -48,6 +48,11 @@ class solicitudHolograma extends Model
     }
 
 
+    public function marcas()
+    {
+        return $this->belongsTo(marcas::class, 'id_marca', 'id_marca');
+    }
+
     public function empresanumcliente()
     {
         return $this->belongsTo(empresaNumCliente::class, 'id_empresa', 'id_empresa');

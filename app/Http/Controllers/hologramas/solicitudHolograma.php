@@ -82,13 +82,26 @@ class solicitudHolograma extends Controller
 
         $searchValue = $request->input('search.value');
 
-        $query = ModelsSolicitudHolograma::with(['empresa']);
+        $query = ModelsSolicitudHolograma::with(['empresa', 'user', 'marcas']);
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
-                $q->where('id_solicitud', 'LIKE', "%{$searchValue}%")
+                $q->where('estatus', 'LIKE', "%{$searchValue}%")
                     ->orWhere('folio', 'LIKE', "%{$searchValue}%")
                     ->orWhere('id_empresa', 'LIKE', "%{$searchValue}%");
+
+                    $q->orWhereHas('empresa', function ($Nombre) use ($searchValue) {
+                        $Nombre->where('razon_social', 'LIKE', "%{$searchValue}%");
+                    });
+
+                    $q->orWhereHas('user', function ($Solicitante) use ($searchValue) {
+                        $Solicitante->where('name', 'LIKE', "%{$searchValue}%");
+                    });
+
+
+                    $q->orWhereHas('marcas', function ($Marca) use ($searchValue) {
+                        $Marca->where('marca', 'LIKE', "%{$searchValue}%");
+                    });
             });
         }
 
@@ -289,7 +302,10 @@ class solicitudHolograma extends Controller
             $holograma->save();
             //metodo para guardar pdf
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
+            
 
             foreach ($request->id_documento as $index => $id_documento) {
                 // Agregar nuevo documento si no existe
@@ -330,7 +346,9 @@ class solicitudHolograma extends Controller
             $holograma->save();
             //metodo para guardar pdf
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
 
             foreach ($request->id_documento as $index => $id_documento) {
                 // Agregar nuevo documento si no existe
@@ -391,8 +409,13 @@ class solicitudHolograma extends Controller
 
             $holograma->save();
             //metodo para guardar pdf
+            
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
+
+
 
             foreach ($request->id_documento as $index => $id_documento) {
                 // Agregar nuevo documento si no existe

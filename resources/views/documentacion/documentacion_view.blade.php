@@ -48,7 +48,6 @@
             <form id="uploadForm" enctype="multipart/form-data">
               <div class="form-floating form-floating-outline m-5 col-md-6">
                 <select name="id_empresa" id="id_empresa" class="select2 form-select">
-                  <option value="">Select</option>
                   
                   @foreach ($empresas as $empresa)
                   <option value="{{$empresa->id_empresa}}">{{$empresa->razon_social}}</option>
@@ -83,28 +82,34 @@ window.Helpers.initCustomOptionCheck();
 </script>
 
 <script>
-  $(document).ready(function() {
-      $('#id_empresa').change(function() {
-          var clienteId = $(this).val();
-          if (clienteId) {
-              $.ajax({
-                  url: '{{ route('documentacion.getNormas') }}',
-                  method: 'GET',
-                  data: { cliente_id: clienteId },
-                  success: function(data) {
-                      $('#contenido').html(data.tabs); // Insertar pestañas
-                     
+$(document).ready(function() {
+    // Función para cargar los datos de la normativa
+    function cargarNormas(clienteId) {
+        if (clienteId) {
+            $.ajax({
+                url: '{{ route('documentacion.getNormas') }}',
+                method: 'GET',
+                data: { cliente_id: clienteId },
+                success: function(data) {
+                    $('#contenido').html(data.tabs); // Insertar pestañas
+                }
+            });
+        } else {
+            $('#contenido').empty(); // Limpiar pestañas anteriores
+        }
+    }
 
-                      
-                      
-                  }
-              });
-          } else {
-              $('#contenido').empty(); // Limpiar pestañas anteriores
-            
-          }
-      });
-  });
+    // Cargar datos cuando el valor de #id_empresa cambia
+    $('#id_empresa').change(function() {
+        var clienteId = $(this).val();
+        cargarNormas(clienteId);  // Llamada para cargar las normas según el cliente seleccionado
+    });
+
+    // Cargar datos al cargar la página por primera vez, usando el valor seleccionado inicialmente
+    var clienteIdInicial = $('#id_empresa').val();
+    cargarNormas(clienteIdInicial);  // Llamada para cargar las normas al cargar la página
+
+});
 
 
 

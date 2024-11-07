@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+
+
 
 class DomiciliosController extends Controller
 {
@@ -38,10 +41,12 @@ class DomiciliosController extends Controller
             6 => 'id_organismo',
             7 => 'url',
             8 => 'fecha_emision',
-            9 => 'fecha_vigencia'
+            9 => 'fecha_vigencia',
+            10 => 'razon_social'
         ];
 
         $search = [];
+      
 
         $totalData = Instalaciones::whereHas('empresa', function ($query) {
             $query->where('tipo', 2);
@@ -71,6 +76,9 @@ class DomiciliosController extends Controller
         } else {
             $search = $request->input('search.value');
 
+          
+
+        
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
@@ -81,14 +89,21 @@ class DomiciliosController extends Controller
                         ->orWhereDoesntHave('documentos');
                 })
                 ->where(function ($query) use ($search) {
+                    
                     $query->where('id_instalacion', 'LIKE', "%{$search}%")
+                        ->orWhereHas('empresa', function ($subQuery) use ($search) {
+                            $subQuery->where('razon_social', 'LIKE', "%{$search}%");
+                        })
+                        ->orWhereHas('estados', function ($subQuery) use ($search) {
+                            $subQuery->where('nombre', 'LIKE', "%{$search}%");
+                        })
+                        ->orWhereHas('organismos', function ($subQuery) use ($search) {
+                            $subQuery->where('organismo', 'LIKE', "%{$search}%");
+                        })
                         ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
-                        ->orWhere('estado', 'LIKE', "%{$search}%")
                         ->orWhere('folio', 'LIKE', "%{$search}%")
-                        ->orWhere('tipo', 'LIKE', "%{$search}%")
-                        ->orWhere('id_organismo', 'LIKE', "%{$search}%")
-                        ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
-                        ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%");
+                        ->orWhere('tipo', 'LIKE', "%{$search}%");
+                    
                 })
                 ->offset($start)
                 ->limit($limit)
@@ -130,10 +145,10 @@ class DomiciliosController extends Controller
                 $nestedData['estado'] = $instalacion->estados->nombre  ?? 'N/A';
                 $nestedData['direccion_completa'] = $instalacion->direccion_completa  ?? 'N/A';
                 $nestedData['folio'] =
-                    '<b>Certificadora:</b>' . ($instalacion->organismos->organismo ?? 'OC CIDAM') . '<br>' .
-                    '<b>Número de certificado:</b>' . ($instalacion->folio ?? 'N/A') . '<br>' .
-                    '<b>Fecha de emisión:</b>' . (Helpers::formatearFecha($instalacion->fecha_emision)) . '<br>' .
-                    '<b>Fecha de vigencia:</b>' . (Helpers::formatearFecha($instalacion->fecha_vigencia)) . '<br>';
+                    '<b>Certificadora:</b> ' . ($instalacion->organismos->organismo ?? 'OC CIDAM') . '<br>' .
+                    '<b>Folio de certificado:</b> ' . ($instalacion->folio ?? 'N/A') . '<br>' .
+                    '<b>Fecha de emisión:</b> ' . (Helpers::formatearFecha($instalacion->fecha_emision)) . '<br>' .
+                    '<b>Fecha de vigencia:</b> ' . (Helpers::formatearFecha($instalacion->fecha_vigencia)) . '<br>';
                 $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['url'] = !empty($instalacion->documentos->pluck('url')->toArray()) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first() . '/' . implode(',', $instalacion->documentos->pluck('url')->toArray()) : '';
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);

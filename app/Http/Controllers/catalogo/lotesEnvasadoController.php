@@ -66,20 +66,32 @@ class lotesEnvasadoController extends Controller
         $dir = $request->input('order.0.dir');
 
         $searchValue = $request->input('search.value');
-        $query = lotes_envasado::with(['empresa', 'marca']); // Incluye también 'marca' en el with para cargarla
+        
+        $query = lotes_envasado::with(['empresa', 'marca', 'Instalaciones']); // Cargar relaciones necesarias
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
-                $q->where('id_empresa', 'LIKE', "%{$searchValue}%")
+                $q->where('destino_lote', 'LIKE', "%{$searchValue}%")
                     ->orWhere('nombre_lote', 'LIKE', "%{$searchValue}%")
-                    ->orWhere('cant_botellas', 'LIKE', "%{$searchValue}%");
-        
-                // Añadir la búsqueda en el campo 'marca'
+                    ->orWhere('estatus', 'LIKE', "%{$searchValue}%");
+                
+                // Búsqueda en la relación 'marca'
                 $q->orWhereHas('marca', function ($qMarca) use ($searchValue) {
                     $qMarca->where('marca', 'LIKE', "%{$searchValue}%");
                 });
+        
+                // Búsqueda en la relación 'Instalaciones' para 'direccion_completa'
+                $q->orWhereHas('Instalaciones', function ($qDireccion) use ($searchValue) {
+                    $qDireccion->where('direccion_completa', 'LIKE', "%{$searchValue}%");
+                });
+        
+                // Búsqueda en la relación 'empresa' para 'razon_social'
+                $q->orWhereHas('empresa', function ($qEmpresa) use ($searchValue) {
+                    $qEmpresa->where('razon_social', 'LIKE', "%{$searchValue}%");
+                });
             });
         }
+        
         
 
         $totalData = lotes_envasado::count();
