@@ -76,7 +76,7 @@
           targets: 2,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
-            var $tipoDictamen = full['tipo_dictamen'];
+            var $tipoDictamen = parseInt(full['tipo_dictamen']);
             var $colorDictamen;
             var $nombreDictamen;
         

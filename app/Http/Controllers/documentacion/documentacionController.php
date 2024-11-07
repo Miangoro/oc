@@ -37,7 +37,7 @@ class documentacionController extends Controller
             SELECT n.id_norma, n.norma AS nombre
             FROM catalogo_norma_certificar n 
             JOIN empresa_num_cliente e ON n.id_norma = e.id_norma 
-            WHERE e.id_empresa = ?
+            WHERE n.id_norma != 3 AND e.id_empresa = ?
         ", [$id_empresa]);
 
 
@@ -133,134 +133,132 @@ class documentacionController extends Controller
           ->with('documentacionUrls') // Eager loading de la relación
           ->get();
 
-          $empresa = empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
-          $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-          $razonSocial = $empresa->razon_social;
-          
-          
-
-          foreach ($documentos2 as $indexD => $documento) {
-
-            $urlPrimera = $documento->documentacionUrls->first();
-
-          $url = '';
-
-          if(!empty($urlPrimera)){
-            $url = $urlPrimera->url;
-          }
+        $empresa = empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $razonSocial = $empresa->razon_social;
 
 
-            if(!empty($url)){
-              $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
-            }else{
-              $mostrarDocumento = '---';
-            }
-    
 
-        $contenidoDocumentosGenerales = $contenidoDocumentosGenerales.'<tr>
-                      <td>' . ($indexD + 1) . '</td>
-                      <td class="text-wrap text-break"><b>' . $documento->nombre . '</b></td>
-                      <td class="text-end p-1">
-                          <input class="form-control form-control-sm" type="file" id="file'.$documento->id_documento.'" data-id="'.$documento->id_documento.'" name="url[]">
-                                <input value="'. $documento->id_documento .'" class="form-control" type="hidden" name="id_documento[]">
-                                <input value="'. $documento->nombre .'" class="form-control" type="hidden" name="nombre_documento[]">
-                      </td>
-                      <td class="text-end fw-medium">   
-                      
-                         '.$mostrarDocumento.'
-                      
-                     </td>
-                      <td class="text-success fw-medium text-end">----</td>
-                    </tr>';
-          }
-
-          $documentos3 = Documentacion::where('tipo', 'Marcas')
-          ->with('documentacionUrls') // Eager loading de la relación
-          ->get();
-
-          $empresa = empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
-          $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-          $razonSocial = $empresa->razon_social;
-          
-          
-
-          foreach ($documentos3 as $indexD => $documento) {
-
-            $urlPrimera = $documento->documentacionUrls->first();
-
-          $url = '';
-
-          if(!empty($urlPrimera)){
-            $url = $urlPrimera->url;
-          }
-
-
-            if(!empty($url)){
-              $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
-            }else{
-              $mostrarDocumento = '---';
-            }
-    
-
-        $contenidoDocumentosMarcas = $contenidoDocumentosMarcas.'<tr>
-                      <td>' . ($indexD + 1) . '</td>
-                      <td class="text-wrap text-break"><b>' . $documento->nombre . '</b></td>
-                      <td class="text-end">
-                          <input class="form-control form-control-sm" type="file" id="file'.$documento->id_documento.'" data-id="'.$documento->id_documento.'" name="url[]">
-                                <input value="'. $documento->id_documento .'" class="form-control" type="hidden" name="id_documento[]">
-                                <input value="'. $documento->nombre .'" class="form-control" type="hidden" name="nombre_documento[]">
-                      </td>
-                      <td class="text-end fw-medium">   
-                      
-                         '.$mostrarDocumento.'
-                      
-                     </td>
-                      <td class="text-success fw-medium text-end">----</td>
-                    </tr>';
-          }
-      
-      
-          $documentos = Documentacion::where('subtipo', $documentosActividad)
-          ->with('documentacionUrls') // Eager loading de la relación
-          ->get();
-
-         
-
-        foreach ($documentos as $indexD => $documento) {
+        foreach ($documentos2 as $indexD => $documento) {
 
           $urlPrimera = $documento->documentacionUrls->first();
 
           $url = '';
 
-          if(!empty($urlPrimera)){
+          if (!empty($urlPrimera)) {
             $url = $urlPrimera->url;
           }
 
-         /* foreach ($documento->documentacionUrls as $url) {
-            "URL: " . $url->url . "<br>";
-        }*/
 
-      
-        if(!empty($url)){
-          $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
-        }else{
-          $mostrarDocumento = '---';
+          if (!empty($url)) {
+            $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
+          } else {
+            $mostrarDocumento = '---';
+          }
+
+
+          $contenidoDocumentosGenerales = $contenidoDocumentosGenerales . '<tr>
+                      <td>' . ($indexD + 1) . '</td>
+                      <td class="text-wrap text-break"><b>' . $documento->nombre . '</b></td>
+                      <td class="text-end p-1">
+                          <input class="form-control form-control-sm" type="file" id="file' . $documento->id_documento . '" data-id="' . $documento->id_documento . '" name="url[]">
+                                <input value="' . $documento->id_documento . '" class="form-control" type="hidden" name="id_documento[]">
+                                <input value="' . $documento->nombre . '" class="form-control" type="hidden" name="nombre_documento[]">
+                      </td>
+                      <td class="text-end fw-medium">   
+                      
+                         ' . $mostrarDocumento . '
+                      
+                     </td>
+                      <td class="text-success fw-medium text-end">----</td>
+                    </tr>';
         }
 
-        
+        $documentos3 = Documentacion::where('tipo', 'Marcas')
+          ->with('documentacionUrls') // Eager loading de la relación
+          ->get();
+
+        $empresa = empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $razonSocial = $empresa->razon_social;
+
+
+
+        foreach ($documentos3 as $indexD => $documento) {
+
+          $urlPrimera = $documento->documentacionUrls->first();
+
+          $url = '';
+
+          if (!empty($urlPrimera)) {
+            $url = $urlPrimera->url;
+          }
+
+
+          if (!empty($url)) {
+            $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
+          } else {
+            $mostrarDocumento = '---';
+          }
+
+
+          $contenidoDocumentosMarcas = $contenidoDocumentosMarcas . '<tr>
+                      <td>' . ($indexD + 1) . '</td>
+                      <td class="text-wrap text-break"><b>' . $documento->nombre . '</b></td>
+                      <td class="text-end">
+                          <input class="form-control form-control-sm" type="file" id="file' . $documento->id_documento . '" data-id="' . $documento->id_documento . '" name="url[]">
+                                <input value="' . $documento->id_documento . '" class="form-control" type="hidden" name="id_documento[]">
+                                <input value="' . $documento->nombre . '" class="form-control" type="hidden" name="nombre_documento[]">
+                      </td>
+                      <td class="text-end fw-medium">   
+                      
+                         ' . $mostrarDocumento . '
+                      
+                     </td>
+                      <td class="text-success fw-medium text-end">----</td>
+                    </tr>';
+        }
+
+
+        $documentos = Documentacion::where('subtipo', $documentosActividad)
+          ->with('documentacionUrls') // Eager loading de la relación
+          ->get();
+
+
+
+        foreach ($documentos as $indexD => $documento) {
+
+
+          $urlPrimera = $documento->documentacionUrls->first();
+
+          $url = '';
+
+          if (!empty($urlPrimera)) {
+            $url = $urlPrimera->url;
+          }
+
+
+
+          if (!empty($url)) {
+            $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
+          } else {
+            $mostrarDocumento = '---';
+          }
+
+
 
           $contenidoDocumentos = $contenidoDocumentos . '
                     <tr>
                       <td>' . ($indexD + 1) . '</td>
                       <td class="text-wrap text-break"><b>' . $documento->nombre . '</b></td>
                       <td class="text-end">
-                          <input class="form-control form-control-sm" type="file" id="file'.$documento->id_documento.'" data-id="'.$documento->id_documento.'" name="url[]">
-                                <input value="'. $documento->id_documento .'" class="form-control" type="hidden" name="id_documento[]">
-                                <input value="'. $documento->nombre .'" class="form-control" type="hidden" name="nombre_documento[]">
+                          <input class="form-control form-control-sm" type="file" id="file' . $documento->id_documento . '" data-id="' . $documento->id_documento . '" name="url[]">
+                                <input value="' . $documento->id_documento . '" class="form-control" type="hidden" name="id_documento[]">
+                                <input value="' . $documento->nombre . '" class="form-control" type="hidden" name="nombre_documento[]">
                       </td>
                       <td class="text-end fw-medium">   
                       
-                        '.$mostrarDocumento.'
+                        ' . $mostrarDocumento . '
                       
                      </td>
                       <td class="text-success fw-medium text-end">----</td>
@@ -268,9 +266,12 @@ class documentacionController extends Controller
                     ';
         }
 
-        
+
+
+
 
         $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)->where('tipo', '=', $act_instalacion)->get();
+
 
         $contenidoInstalacionesGenerales = '
        
@@ -294,50 +295,16 @@ class documentacionController extends Controller
               </table>
             </div>';
 
+        /*  $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)
+                ->where('tipo', '=', $act_instalacion);
 
-            
-
-            
-
-            
- }
-
- $marcas = marcas::where('id_empresa', '=', $id_empresa)->get();
-            $contenidoMarcas ='';
-
-            if($act_instalacion=='Comercializadora'){
-
-           
-            foreach ($marcas as $indexII => $marca) {
-              $contenidoMarcas =  $contenidoMarcas . '
-           
-            <div class="table-responsive text-nowrap col-md-6 mb-5 ">
-                  <table class="table table-sm table-bordered">
-                    <thead class="bg-secondary text-white">
-                      <tr>
-                        <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3">Marca: <b>' . $marca->marca . '</b></th>
-                      </tr>
-                      <tr>
-                        <th class="bg-transparent border-bottom">#</th>
-                        <th class="bg-transparent border-bottom">Descripción del documento</th>
-                        <th class="text-end bg-transparent border-bottom">Subir archivo</th>
-                        <th class="text-end bg-transparent border-bottom">Documento</th>
-                        <th class="text-end bg-transparent border-bottom">Validar</th>
-                      </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0" style="font-size:12px">
-                        ' . $contenidoDocumentosMarcas . '
-                    </tbody>
-                  </table>
-                </div>';
-            }
+$instalaciones->toSql();
 
 
-   
-      }
+print_r($instalaciones->getBindings());*/
 
-      foreach ($instalaciones as $indexI => $instalacion) {
-        $contenidoInstalaciones = $contenidoInstalaciones . '
+        foreach ($instalaciones as $indexI => $instalacion) {
+          $contenidoInstalaciones = $contenidoInstalaciones . '
      
       <div class="table-responsive text-nowrap col-md-6 mb-5 ">
             <table class="table table-sm table-bordered">
@@ -358,7 +325,57 @@ class documentacionController extends Controller
               </tbody>
             </table>
           </div>';
+        }
+
+        
+      $marcas = marcas::where('id_empresa', '=', $id_empresa)->get();
+      $contenidoMarcas = '';
+
+      if ($act_instalacion == 'Comercializadora') {
+
+
+        foreach ($marcas as $indexII => $marca) {
+          $contenidoMarcas =  $contenidoMarcas . '
+           
+            <div class="table-responsive text-nowrap col-md-6 mb-5 ">
+                  <table class="table table-sm table-bordered">
+                    <thead class="bg-secondary text-white">
+                      <tr>
+                        <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3">Marca: <b>' . $marca->marca . '</b></th>
+                      </tr>
+                      <tr>
+                        <th class="bg-transparent border-bottom">#</th>
+                        <th class="bg-transparent border-bottom">Descripción del documento</th>
+                        <th class="text-end bg-transparent border-bottom">Subir archivo</th>
+                        <th class="text-end bg-transparent border-bottom">Documento</th>
+                        <th class="text-end bg-transparent border-bottom">Validar</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0" style="font-size:12px">
+                        ' . $contenidoDocumentosMarcas . '
+                    </tbody>
+                  </table>
+                </div>';
+        }
       }
+
+      $contenidoActividades = $contenidoActividades . '
+      <div class="tab-pane fade" id="navs-orders-id-' . $actividad->id_actividad . '" role="tabpanel">
+       <div class="row p-5">
+        ' . $contenidoInstalaciones . '
+        ' . $contenidoMarcas . '
+      </div> 
+      </div>';
+
+
+
+
+
+
+      }
+
+
+
 
       $contenidoGenerales =  '<div class="tab-pane fade show active" id="navs-orders-id-0" role="tabpanel">
       <div class="row p-5"> 
@@ -366,15 +383,8 @@ class documentacionController extends Controller
      </div> 
      </div>';
 
-      $contenidoActividades = $contenidoActividades . '
-        <div class="tab-pane fade" id="navs-orders-id-' . $actividad->id_actividad . '" role="tabpanel">
-         <div class="row p-5">
-          ' . $contenidoInstalaciones . '
-          ' . $contenidoMarcas . '
-        </div> 
-        </div>';
 
-     
+
 
 
 
@@ -464,26 +474,26 @@ class documentacionController extends Controller
   }
 
   public function upload(Request $request)
-    {
-      
-      if ($request->hasFile('url')) {
-        $numeroCliente = $request->numCliente;
-        foreach ($request->file('url') as $index => $file) {
-            $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-            $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+  {
 
-            $documentacion_url = new Documentacion_url ();
-            $documentacion_url->id_relacion = 0;
-            $documentacion_url->id_documento = $request->id_documento[$index];
-            $documentacion_url->nombre_documento = $request->nombre_documento[$index];
-            $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
-            $documentacion_url->id_empresa = $request->id_empresa;
-            $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index] ?? null; // Usa null si no hay fecha
-            $documentacion_url->save();
-        }
-    }
-        
+    if ($request->hasFile('url')) {
+      $numeroCliente = $request->numCliente;
+      foreach ($request->file('url') as $index => $file) {
+        $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
 
-        return response()->json(['success' => 'Files uploaded successfully!']);
+        $documentacion_url = new Documentacion_url();
+        $documentacion_url->id_relacion = 0;
+        $documentacion_url->id_documento = $request->id_documento[$index];
+        $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+        $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+        $documentacion_url->id_empresa = $request->id_empresa;
+        $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index] ?? null; // Usa null si no hay fecha
+        $documentacion_url->save();
+      }
     }
+
+
+    return response()->json(['success' => 'Files uploaded successfully!']);
+  }
 }

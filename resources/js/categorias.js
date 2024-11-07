@@ -142,8 +142,8 @@ $(function () {
               '<div class="d-flex align-items-center gap-50">' +
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              `<a data-id="${full['id_categoria']}" data-bs-toggle="offcanvas" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar categoria agave</a>` +
-              `<a data-id="${full['id_categoria']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar categoria agave</a>` +
+              `<a data-id="${full['id_categoria']}" data-bs-toggle="offcanvas" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar categoria</a>` +
+              `<a data-id="${full['id_categoria']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar categoria</a>` +
 /*               '<button class="btn btn-sm btn-icon btn-text-secondary rounded-pill waves-effect dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-more-2-line ri-20px"></i></button>' +
  */              '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
@@ -192,7 +192,7 @@ $(function () {
           buttons: [
             {
               extend: 'print',
-              title: 'Categorías de Agave',
+              title: 'Categorías de Mezcal',
               text: '<i class="ri-printer-line me-1" ></i>Print',
               className: 'dropdown-item',
               exportOptions: {
@@ -255,7 +255,7 @@ $(function () {
             },
             {
               extend: 'excel',
-              title: 'Categorías de Agave',
+              title: 'Categorías de Mezcal',
               text: '<i class="ri-file-excel-line me-1"></i>Excel',
               className: 'dropdown-item',
               exportOptions: {
@@ -280,7 +280,7 @@ $(function () {
             },
             {
               extend: 'pdf',
-              title: 'Categorías de Agave',
+              title: 'Categorías de Mezcal',
               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
               className: 'dropdown-item',
               exportOptions: {
@@ -305,7 +305,7 @@ $(function () {
             },
             {
               extend: 'copy',
-              title: 'Categorías de Agave',
+              title: 'Categorías de Mezcal',
               text: '<i class="ri-file-copy-line me-1"></i>Copy',
               className: 'dropdown-item',
               exportOptions: {

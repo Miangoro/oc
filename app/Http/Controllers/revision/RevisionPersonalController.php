@@ -23,7 +23,8 @@ class RevisionPersonalController extends Controller
         $revisor = Revisor::with('certificado')->where('id_revisor', $userId)->first(); // Autentificado
         $users = User::where('tipo', 1)->get(); // Select Aprobacion
         $preguntas = preguntas_revision::where('tipo_revisor', '1')->orWhere('tipo_certificado', '1')->get();
-        return view('revision.revision_certificados-personal_view', compact('revisor', 'preguntas', 'certificadosData', 'users'));
+        $noCertificados = !$revisor || !$revisor->certificado; // Alerta 
+        return view('revision.revision_certificados-personal_view', compact('revisor', 'preguntas', 'certificadosData', 'users', 'noCertificados'));
     }
     
     public function index(Request $request)
