@@ -237,7 +237,7 @@ class PrediosController extends Controller
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $validatedData['id_empresa'])->first();
             $empresaNumCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
                 return !empty($numero);
-            });
+            }); 
 
             // Almacenar el documento si se envía
             if ($request->hasFile('url')) {
@@ -302,9 +302,10 @@ class PrediosController extends Controller
                 $tipos = tipos::all();
 
                 // Obtener el número del cliente
-                $numeroCliente = DB::table('empresa_num_cliente')
-                    ->where('id_empresa', $predio->id_empresa)
-                    ->value('numero_cliente');
+                $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $predio->id_empresa)->first();
+                    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                        return !empty($numero);
+                    }); 
 
                 // Filtrar documentos para obtener solo el documento con id_documento igual a 34
                 $documentos = $predio->documentos->filter(function ($documento) {
@@ -379,11 +380,12 @@ class PrediosController extends Controller
                     $uniqueId = uniqid();
                     $filename = $validated['nombre_documento'] . '_' . $uniqueId . '.' . $file->getClientOriginalExtension();
 
-                    // Ruta de la subcarpeta usando numero_cliente
-                    $empresaNumCliente = DB::table('empresa_num_cliente')
-                        ->where('id_empresa', $validated['id_empresa'])
-                        ->value('numero_cliente');
+                    $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $validated['id_empresa'])->first();
+                    $empresaNumCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                        return !empty($numero);
+                    }); 
                     $directory = $empresaNumCliente;
+
 
                     // Guardar el nuevo archivo
                     $filePath = $file->storeAs($directory, $filename, 'public_uploads');

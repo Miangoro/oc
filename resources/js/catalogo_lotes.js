@@ -433,6 +433,7 @@ $(function () {
     });
   });
 
+
   $(document).ready(function () {
     const addNewLote = document.getElementById('loteForm');
     /* registro de un nuevo lote */
@@ -576,18 +577,25 @@ $(function () {
     let rowIndex = 0; // Contador global para el índice de las filas
 
 
-      $('#es_creado_a_partir').change(function () {
-        var valor = $(this).val();
-        if (valor === 'si') {
+    $('#es_creado_a_partir').change(function () {
+      var valor = $(this).val();
+      if (valor === 'si') {
           $('#addLotes').removeClass('d-none');
           if ($('#contenidoGraneles').children('tr').length === 0) {
-            agregarFilaLotes(); // Llamar a la función para agregar la fila
+              agregarFilaLotes(); // Llamar a la función para agregar la fila
           }
-        } else {
+      } else {
           $('#addLotes').addClass('d-none');
           $('#contenidoGraneles').empty(); // Limpiar filas existentes
-        }
-      });
+
+          // Verificar si hay alguna fila de volumen[${rowIndex}][volumen_parcial] antes de eliminar la validación
+          if (fv.getFieldElements(`volumenes[${rowIndex}][volumen_parcial]`).length > 0) {
+              fv.removeField(`volumenes[${rowIndex}][volumen_parcial]`); // Solo eliminar si existe
+          }
+      }
+  });
+
+
 
       $('.add-row-lotes').click(function () {
         agregarFilaLotes(); // Usar la función para agregar fila
@@ -619,8 +627,9 @@ $(function () {
         initializeSelect2($('.select2'));
 
         // Revalidar el campo después de agregar la fila
-        setTimeout(function() {
-            fv.addField(`lote[${rowIndex}][id]`, {
+
+
+            fv.addField(`volumenes[${rowIndex}][volumen_parcial]`, {
                 validators: {
                     notEmpty: {
                         message: 'Por favor seleccione un lote'
@@ -646,14 +655,27 @@ $(function () {
             // Revalidar ambos campos después de agregar la fila
             fv.revalidateField(`lote[${rowIndex}][id]`);
             fv.revalidateField(`volumenes[${rowIndex}][volumen_parcial]`);
-        }, 100); // Esperar 100ms para asegurarse que los campos estén bien procesados
+       // Esperar 100ms para asegurarse que los campos estén bien procesados
     }
 
-      $(document).on('click', '.remove-row-lotes', function () {
-        $(this).closest('tr').remove(); // Eliminar la fila actual
-        calcularVolumenTotal(); // Recalcular total al eliminar fila
+    $(document).on('click', '.remove-row-lotes', function () {
+      // Obtén la fila y el índice de la fila a eliminar
+      var row = $(this).closest('tr');
+      var rowIndex = row.data('row-index');
 
-      });
+      // Verifica si los campos existen antes de intentar eliminarlos
+/*       if (fv.getFieldElements(`volumenes[${rowIndex}][volumen_parcial]`).length > 0) {
+          fv.removeField(`volumenes[${rowIndex}][volumen_parcial]`);
+      } */
+          fv.removeField(`volumenes[${rowIndex}][volumen_parcial]`);
+
+      // Ahora elimina la fila del DOM
+      row.remove();
+
+      // Recalcula el volumen total al eliminar la fila
+      calcularVolumenTotal();
+  });
+
 
 
       $(document).on('input', '.volumen-parcial', function () {
