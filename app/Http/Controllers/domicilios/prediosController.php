@@ -234,16 +234,10 @@ class PrediosController extends Controller
             }
 
             // Obtener el número del cliente desde la tabla empresa_num_cliente
-            $empresaNumCliente = DB::table('empresa_num_cliente')
-                ->where('id_empresa', $validatedData['id_empresa'])
-                ->value('numero_cliente');
-
-            if (!$empresaNumCliente) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Número de cliente no encontrado para el ID de empresa proporcionado.',
-                ], 404);
-            }
+            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $validatedData['id_empresa'])->first();
+            $empresaNumCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
 
             // Almacenar el documento si se envía
             if ($request->hasFile('url')) {
