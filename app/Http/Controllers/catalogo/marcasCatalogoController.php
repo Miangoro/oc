@@ -93,10 +93,16 @@ class marcasCatalogoController extends Controller
         } else {
             $search = $request->input('search.value');
 
-            $users = marcas::with('empresa') // Incluye la relación empresa
+            $users = marcas::with(['empresa', 'catalogo_norma_certificar']) // Incluye la relación empresa
                 ->where('id_marca', 'LIKE', "%{$search}%")
                 ->orWhere('folio', 'LIKE', "%{$search}%")
                 ->orWhere('marca', 'LIKE', "%{$search}%")
+                ->orWhereHas('empresa', function ($qEmpresa) use ($search) {
+                    $qEmpresa->where('razon_social', 'LIKE', "%{$search}%");
+                })
+              ->orWhereHas('catalogo_norma_certificar', function ($qNorma) use ($search) {
+                $qNorma->where('norma', 'LIKE', "%{$search}%");
+            })
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
@@ -105,6 +111,12 @@ class marcasCatalogoController extends Controller
             $totalFiltered = marcas::where('id_marca', 'LIKE', "%{$search}%")
                 ->orWhere('folio', 'LIKE', "%{$search}%")
                 ->orWhere('marca', 'LIKE', "%{$search}%")
+                ->orWhereHas('empresa', function ($qEmpresa) use ($search) {
+                    $qEmpresa->where('razon_social', 'LIKE', "%{$search}%");
+                })
+              ->orWhereHas('catalogo_norma_certificar', function ($qNorma) use ($search) {
+                $qNorma->where('norma', 'LIKE', "%{$search}%");
+            })
                 ->count();
         }
 

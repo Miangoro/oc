@@ -77,9 +77,17 @@ class GuiasController  extends Controller
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
-                $q->where('id_guia', 'LIKE', "%{$searchValue}%")
+                $q->where('run_folio', 'LIKE', "%{$searchValue}%")
                     ->orWhere('folio', 'LIKE', "%{$searchValue}%")
                     ->orWhere('id_empresa', 'LIKE', "%{$searchValue}%");
+
+                    $q->orWhereHas('empresa', function ($Nombre) use ($searchValue) {
+                        $Nombre->where('razon_social', 'LIKE', "%{$searchValue}%");
+                    });
+
+                    $q->orWhereHas('predios', function ($Predio) use ($searchValue) {
+                        $Predio->where('nombre_predio', 'LIKE', "%{$searchValue}%");
+                    });
             });
         }
 
