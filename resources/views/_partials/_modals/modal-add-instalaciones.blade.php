@@ -84,7 +84,7 @@
 
                             <div class="form-floating form-floating-outline mb-3">
                                 <select class="form-select" id="id_organismo" name="id_organismo" data-placeholder="Seleccione un organismo de certificación" aria-label="Organismo de Certificación">
-                                    <option value="">Seleccione un organismo de certificación</option>
+                                    <option value="" disabled selected>Seleccione un organismo de certificación</option>
                                     @foreach($organismos as $organismo)
                                         <option value="{{ $organismo->id_organismo }}">{{ $organismo->organismo }}</option>
                                     @endforeach

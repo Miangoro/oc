@@ -433,8 +433,7 @@ $(function () {
     });
   });
 
-
-  $(function () {
+  $(document).ready(function () {
     const addNewLote = document.getElementById('loteForm');
     /* registro de un nuevo lote */
     const fv = FormValidation.formValidation(addNewLote, {
@@ -510,6 +509,7 @@ $(function () {
           }
         },
       },
+
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
@@ -569,6 +569,172 @@ $(function () {
     $('#id_empresa, #id_guia, #tipo_agave').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
+
+
+    var lotesDisponibles = []; // Variable para almacenar los lotes disponibles
+
+    let rowIndex = 0; // Contador global para el índice de las filas
+
+
+      $('#es_creado_a_partir').change(function () {
+        var valor = $(this).val();
+        if (valor === 'si') {
+          $('#addLotes').removeClass('d-none');
+          if ($('#contenidoGraneles').children('tr').length === 0) {
+            agregarFilaLotes(); // Llamar a la función para agregar la fila
+          }
+        } else {
+          $('#addLotes').addClass('d-none');
+          $('#contenidoGraneles').empty(); // Limpiar filas existentes
+        }
+      });
+
+      $('.add-row-lotes').click(function () {
+        agregarFilaLotes(); // Usar la función para agregar fila
+      });
+
+      function agregarFilaLotes() {
+        rowIndex++; // Incrementar el índice global
+
+        var newRow = `
+        <tr data-row-index="${rowIndex}">
+            <th>
+                <button type="button" class="btn btn-danger remove-row-lotes">
+                    <i class="ri-delete-bin-5-fill fs-5"></i>
+                </button>
+            </th>
+            <td>
+                <select class="id_lote_granel form-control-sm select2" name="lote[${rowIndex}][id]" id="id_lote_granel_${rowIndex}">
+                    <!-- Opciones se cargarán dinámicamente -->
+                </select>
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm volumen-parcial" name="volumenes[${rowIndex}][volumen_parcial]" id="volumen_parcial_${rowIndex}">
+            </td>
+        </tr>`;
+
+        $('#contenidoGraneles').append(newRow);
+
+        // Inicializar select2 para el nuevo select
+        initializeSelect2($('.select2'));
+
+        // Revalidar el campo después de agregar la fila
+        setTimeout(function() {
+            fv.addField(`lote[${rowIndex}][id]`, {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor seleccione un lote'
+                    }
+                }
+            });
+
+            fv.addField(`volumenes[${rowIndex}][volumen_parcial]`, {
+                validators: {
+                    notEmpty: {
+                        message: 'Por favor ingrese el volumen parcial'
+                    },
+                    numeric: {
+                        message: 'El volumen debe ser un número válido'
+                    },
+                    greaterThan: {
+                        value: 0,
+                        message: 'El volumen debe ser mayor a cero'
+                    }
+                }
+            });
+
+            // Revalidar ambos campos después de agregar la fila
+            fv.revalidateField(`lote[${rowIndex}][id]`);
+            fv.revalidateField(`volumenes[${rowIndex}][volumen_parcial]`);
+        }, 100); // Esperar 100ms para asegurarse que los campos estén bien procesados
+    }
+
+      $(document).on('click', '.remove-row-lotes', function () {
+        $(this).closest('tr').remove(); // Eliminar la fila actual
+        calcularVolumenTotal(); // Recalcular total al eliminar fila
+
+      });
+
+
+      $(document).on('input', '.volumen-parcial', function () {
+        calcularVolumenTotal(); // Recalcular total en cada cambio
+      });
+
+      $(document).on('lotesCargados', function (event, lotesGranel) {
+        lotesDisponibles = lotesGranel;
+        cargarLotesEnSelect();
+      });
+
+
+
+
+    // Función para cargar lotes en los select dentro de las filas
+    function cargarLotesEnSelect() {
+      $('.id_lote_granel').each(function () {
+        var $select = $(this);
+        var valorSeleccionado = $select.val();
+
+        $select.empty(); // Vaciar las opciones actuales
+
+        if (lotesDisponibles.length > 0) {
+          lotesDisponibles.forEach(function (lote) {
+            // Usar backticks para agregar la opción correctamente
+            $select.append(`<option value="${lote.id_lote_granel}">${lote.nombre_lote}</option>`);
+          });
+          if (valorSeleccionado) {
+            $select.val(valorSeleccionado); // Seleccionar el valor si ya está definido
+          }
+        } else {
+          $select.append('<option value="" disabled selected>Sin lotes registrados</option>');
+        }
+      });
+    }
+
+    // Función para calcular el volumen total
+    function calcularVolumenTotal() {
+      let totalVolumen = 0;
+
+      // Sumar todos los volúmenes parciales
+      $('.volumen-parcial').each(function () {
+        const valor = parseFloat($(this).val()) || 0; // Obtener valor o 0 si no es un número
+        totalVolumen += valor; // Sumar al total
+      });
+
+      // Actualizar el campo de volumen total
+      $('#volumen').val(totalVolumen.toFixed(2)); // Mostrar el total con dos decimales
+
+    }
+
+
+    $(document).on('change', '.id_lote_granel', function () {
+      var loteSeleccionado = $(this).val();
+      var $volumenParcialInput = $(this).closest('tr').find('.volumen-parcial'); // Encuentra el campo de Volumen parcial correspondiente
+
+      // Verifica si hay un lote seleccionado
+      if (!loteSeleccionado) {
+        $volumenParcialInput.val(''); // Limpia el campo si no hay un lote seleccionado
+        return;
+      }
+
+      // Realiza una petición AJAX para obtener el volumen_restante del lote seleccionado
+      $.ajax({
+        url: '/lotes-a-granel/' + loteSeleccionado + '/volumen', // Nueva ruta GET para obtener el volumen
+        method: 'GET',
+        success: function (response) {
+          // Suponiendo que el volumen_restante viene en la respuesta
+          if (response.volumen_restante) {
+            $volumenParcialInput.val(response.volumen_restante);
+          } else {
+            $volumenParcialInput.val('0'); // Si no hay volumen restante
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error('Error al obtener el volumen del lote:', error);
+          alert('Error al obtener el volumen. Por favor, intenta nuevamente.');
+        }
+      });
+    });
+
 
   });
 
@@ -923,179 +1089,40 @@ $(function () {
 
 
 
-  var lotesDisponibles = []; // Variable para almacenar los lotes disponibles
-
-  $(document).ready(function () {
-      // Función que detecta el cambio de valor en el select de creación de lote
-      $('#es_creado_a_partir').change(function () {
-          var valor = $(this).val();
-
-          // Si la respuesta es 'si', se quita la clase d-none para mostrar la sección de lotes
-          if (valor === 'si') {
-              $('#addLotes').removeClass('d-none');
-              // Agregar una fila por defecto si no hay filas existentes
-              if ($('#contenidoGraneles').children('tr').length === 0) {
-                  agregarFilaLotes(); // Llamar a la función para agregar la fila
-              }
-          } else {
-              // Si es 'no', se vuelve a ocultar la sección de lotes
-              $('#addLotes').addClass('d-none');
-              $('#contenidoGraneles').empty(); // Limpiar filas existentes
-          }
-      });
-
-      // Función para agregar una nueva fila de lotes
-      $('.add-row-lotes').click(function () {
-          agregarFilaLotes(); // Usar la función para agregar fila
-      });
-
-      // Función para agregar una fila de lotes
-      function agregarFilaLotes() {
-          var newRow = `
-          <tr>
-              <th>
-                  <button type="button" class="btn btn-danger remove-row-lotes"> <i class="ri-delete-bin-5-fill fs-5"></i> </button>
-              </th>
-              <td>
-                  <select class="id_lote_granel form-control-sm select2" name="id_lote_granel[]">
-                      <!-- Opciones se cargarán dinámicamente -->
-                  </select>
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm volumen-parcial" name="volumen_parcial[]" id="volumen_parcial">
-              </td>
-          </tr>`;
-
-          $('#contenidoGraneles').append(newRow); // Añadir nueva fila
-          cargarLotesEnSelect(); // Llamar para cargar las opciones en el nuevo select
-          // Inicializar los elementos select2
-          var select2Elements = $('.select2');
-          initializeSelect2(select2Elements);
-      }
-
-      // Función para eliminar una fila de lotes
-      $(document).on('click', '.remove-row-lotes', function () {
-          $(this).closest('tr').remove(); // Eliminar la fila actual
-          calcularVolumenTotal(); // Recalcular total al eliminar fila
-      });
-
-      // Escuchar cambios en los campos de volumen parcial
-      $(document).on('input', '.volumen-parcial', function () {
-          calcularVolumenTotal(); // Recalcular total en cada cambio
-      });
-
-      // Escuchar el evento global 'lotesCargados'
-      $(document).on('lotesCargados', function (event, lotesGranel) {
-          // Guardar los lotes en la variable global
-          lotesDisponibles = lotesGranel;
-
-          // Cargar los lotes en los selects existentes
-          cargarLotesEnSelect();
-      });
-  });
-
-  // Función para cargar lotes en los select dentro de las filas
-  function cargarLotesEnSelect() {
-      $('.id_lote_granel').each(function () {
-          var $select = $(this);
-          var valorSeleccionado = $select.val();
-
-          $select.empty(); // Vaciar las opciones actuales
-
-          if (lotesDisponibles.length > 0) {
-              lotesDisponibles.forEach(function (lote) {
-                  // Usar backticks para agregar la opción correctamente
-                  $select.append(`<option value="${lote.id_lote_granel}">${lote.nombre_lote}</option>`);
-              });
-              if (valorSeleccionado) {
-                  $select.val(valorSeleccionado); // Seleccionar el valor si ya está definido
-              }
-          } else {
-              $select.append('<option value="" disabled selected>Sin lotes registrados</option>');
-          }
-      });
-  }
-
-  // Función para calcular el volumen total
-  function calcularVolumenTotal() {
-      let totalVolumen = 0;
-
-      // Sumar todos los volúmenes parciales
-      $('.volumen-parcial').each(function () {
-          const valor = parseFloat($(this).val()) || 0; // Obtener valor o 0 si no es un número
-          totalVolumen += valor; // Sumar al total
-      });
-
-      // Actualizar el campo de volumen total
-      $('#volumen').val(totalVolumen.toFixed(2)); // Mostrar el total con dos decimales
-  }
-
-
-  $(document).on('change', '.id_lote_granel', function() {
-    var loteSeleccionado = $(this).val();
-    var $volumenParcialInput = $(this).closest('tr').find('.volumen-parcial'); // Encuentra el campo de Volumen parcial correspondiente
-
-    // Verifica si hay un lote seleccionado
-    if (!loteSeleccionado) {
-        $volumenParcialInput.val(''); // Limpia el campo si no hay un lote seleccionado
-        return;
-    }
-
-    // Realiza una petición AJAX para obtener el volumen_restante del lote seleccionado
-    $.ajax({
-        url: '/lotes-a-granel/' + loteSeleccionado + '/volumen', // Nueva ruta GET para obtener el volumen
-        method: 'GET',
-        success: function(response) {
-            // Suponiendo que el volumen_restante viene en la respuesta
-            if (response.volumen_restante) {
-                $volumenParcialInput.val(response.volumen_restante);
-            } else {
-                $volumenParcialInput.val('0'); // Si no hay volumen restante
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error al obtener el volumen del lote:', error);
-            alert('Error al obtener el volumen. Por favor, intenta nuevamente.');
-        }
-    });
-});
-
-
-
 
   /* seccion repetida pero para el de editar */
 
   var lotesDisponiblesEdit = []; // Variable para almacenar los lotes disponibles en modo edición
-var primeraFilaAgregada = false; // Variable para controlar si la primera fila ha sido agregada
+  var primeraFilaAgregada = false; // Variable para controlar si la primera fila ha sido agregada
 
-$(document).ready(function () {
+  $(document).ready(function () {
     // Función que detecta el cambio de valor en el select de edición de lote
     $('#edit_es_creado_a_partir').change(function () {
-        var valor = $(this).val();
+      var valor = $(this).val();
 
-        // Si la respuesta es 'si', se quita la clase d-none para mostrar la sección de lotes
-        if (valor === 'si') {
-            $('#editLotesGranel').removeClass('d-none');
-            // Agregar una fila por defecto si no hay filas existentes
-            if ($('#contenidoGranelesEdit').children('tr').length === 0) {
-                agregarFilaLotesEdit(); // Llamar a la función para agregar la fila
-            }
-        } else {
-            // Si es 'no', se vuelve a ocultar la sección de lotes
-            $('#editLotesGranel').addClass('d-none');
-            $('#contenidoGranelesEdit').empty(); // Limpiar filas existentes
-            primeraFilaAgregada = false; // Reiniciar la variable al ocultar
+      // Si la respuesta es 'si', se quita la clase d-none para mostrar la sección de lotes
+      if (valor === 'si') {
+        $('#editLotesGranel').removeClass('d-none');
+        // Agregar una fila por defecto si no hay filas existentes
+        if ($('#contenidoGranelesEdit').children('tr').length === 0) {
+          agregarFilaLotesEdit(); // Llamar a la función para agregar la fila
         }
+      } else {
+        // Si es 'no', se vuelve a ocultar la sección de lotes
+        $('#editLotesGranel').addClass('d-none');
+        $('#contenidoGranelesEdit').empty(); // Limpiar filas existentes
+        primeraFilaAgregada = false; // Reiniciar la variable al ocultar
+      }
     });
 
     // Función para agregar una nueva fila de lotes en modo edición
     $('.add-row-lotes-edit').click(function () {
-        agregarFilaLotesEdit(); // Usar la función para agregar fila
+      agregarFilaLotesEdit(); // Usar la función para agregar fila
     });
 
     // Función para agregar una fila de lotes en modo edición
     function agregarFilaLotesEdit() {
-        var newRow = `
+      var newRow = `
         <tr>
             <th>
                 <button type="button" class="btn btn-danger remove-row-lotes-edit" ${primeraFilaAgregada ? '' : ''}>
@@ -1112,79 +1139,79 @@ $(document).ready(function () {
             </td>
         </tr>`;
 
-        $('#contenidoGranelesEdit').append(newRow); // Añadir nueva fila
-        cargarLotesEnSelectEdit(); // Llamar para cargar las opciones en el nuevo select
+      $('#contenidoGranelesEdit').append(newRow); // Añadir nueva fila
+      cargarLotesEnSelectEdit(); // Llamar para cargar las opciones en el nuevo select
 
-        // Inicializar los elementos select2
-        initializeSelect2($('.select2')); // Asegúrate de que esta función está definida
+      // Inicializar los elementos select2
+      initializeSelect2($('.select2')); // Asegúrate de que esta función está definida
 
     }
 
     // Función para eliminar una fila de lotes en modo edición
     $(document).on('click', '.remove-row-lotes-edit', function () {
-        if (!$(this).is(':disabled')) { // Solo eliminar si el botón no está deshabilitado
-            $(this).closest('tr').remove(); // Eliminar la fila actual
-            calcularVolumenTotalEdit(); // Recalcular total al eliminar fila
+      if (!$(this).is(':disabled')) { // Solo eliminar si el botón no está deshabilitado
+        $(this).closest('tr').remove(); // Eliminar la fila actual
+        calcularVolumenTotalEdit(); // Recalcular total al eliminar fila
 
-            // Rehabilitar el botón de eliminación si hay más de una fila
-            if ($('#contenidoGranelesEdit').children('tr').length > 1) {
-                $('.remove-row-lotes-edit').removeAttr('disabled');
-            } else {
-                $('.remove-row-lotes-edit').attr('disabled', true);
-            }
+        // Rehabilitar el botón de eliminación si hay más de una fila
+        if ($('#contenidoGranelesEdit').children('tr').length > 1) {
+          $('.remove-row-lotes-edit').removeAttr('disabled');
+        } else {
+          $('.remove-row-lotes-edit').attr('disabled', true);
         }
+      }
     });
 
     // Escuchar cambios en los campos de volumen parcial en modo edición
     $(document).on('input', '.volumen-parcial-edit', function () {
-        calcularVolumenTotalEdit(); // Recalcular total en cada cambio
+      calcularVolumenTotalEdit(); // Recalcular total en cada cambio
     });
 
     // Escuchar el evento global 'lotesCargadosEdit'
     $(document).on('lotesCargadosEdit', function (event, lotesGranel) {
-        // Guardar los lotes en la variable global
-        lotesDisponiblesEdit = lotesGranel;
+      // Guardar los lotes en la variable global
+      lotesDisponiblesEdit = lotesGranel;
 
-        // Cargar los lotes en los selects existentes
-        cargarLotesEnSelectEdit();
+      // Cargar los lotes en los selects existentes
+      cargarLotesEnSelectEdit();
     });
-});
+  });
 
-// Función para cargar lotes en los select dentro de las filas en modo edición
-function cargarLotesEnSelectEdit() {
+  // Función para cargar lotes en los select dentro de las filas en modo edición
+  function cargarLotesEnSelectEdit() {
     $('.edit_lote_id').each(function () {
-        var $select = $(this);
-        var valorSeleccionado = $select.val();
+      var $select = $(this);
+      var valorSeleccionado = $select.val();
 
-        $select.empty(); // Vaciar las opciones actuales
+      $select.empty(); // Vaciar las opciones actuales
 
-        if (lotesDisponiblesEdit.length > 0) {
-            lotesDisponiblesEdit.forEach(function (lote) {
-                // Usar backticks para agregar la opción correctamente
-                $select.append(`<option value="${lote.id_lote_granel}">${lote.nombre_lote}</option>`);
-            });
-            if (valorSeleccionado) {
-                $select.val(valorSeleccionado); // Seleccionar el valor si ya está definido
-            }
-        } else {
-            $select.append('<option value="" disabled selected>Sin lotes registrados</option>');
+      if (lotesDisponiblesEdit.length > 0) {
+        lotesDisponiblesEdit.forEach(function (lote) {
+          // Usar backticks para agregar la opción correctamente
+          $select.append(`<option value="${lote.id_lote_granel}">${lote.nombre_lote}</option>`);
+        });
+        if (valorSeleccionado) {
+          $select.val(valorSeleccionado); // Seleccionar el valor si ya está definido
         }
+      } else {
+        $select.append('<option value="" disabled selected>Sin lotes registrados</option>');
+      }
     });
-}
+  }
 
-// Función para calcular el volumen total en modo edición
-function calcularVolumenTotalEdit() {
+  // Función para calcular el volumen total en modo edición
+  function calcularVolumenTotalEdit() {
     let totalVolumen = 0;
 
     // Sumar todos los volúmenes parciales
     $('.volumen-parcial-edit').each(function () {
-        const valor = parseFloat($(this).val()) || 0; // Obtener valor o 0 si no es un número
-        totalVolumen += valor; // Sumar al total
+      const valor = parseFloat($(this).val()) || 0; // Obtener valor o 0 si no es un número
+      totalVolumen += valor; // Sumar al total
     });
 
     // Actualizar el campo de volumen total
     $('#edit_volumen').val(totalVolumen.toFixed(2)); // Mostrar el total con dos decimales
-}
+  }
 
 
 

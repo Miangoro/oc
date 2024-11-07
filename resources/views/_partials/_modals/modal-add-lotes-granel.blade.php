@@ -54,35 +54,35 @@
                         </div>
                     </div>
                     <div id="addLotes" class="d-none">
-                        <table class="table table-bordered shadow-lg">
-                            <thead>
-                                <tr>
-                                    <th><button type="button" class="btn btn-primary add-row-lotes"> <i
-                                                class="ri-add-line"></i> </button></th>
-                                    <th>Lote a granel</th>
-                                    <th>Volumen parcial</th>
-                                </tr>
-                            </thead>
-                            <tbody id="contenidoGraneles">
-                                <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-danger" disabled> <i
-                                                class="ri-delete-bin-5-fill"></i> </button>
-                                    </th>
-                                    <td>
-                                        <select class="id_lote_granel select2" name="id_lote_granel[]"
-                                        id="id_lote_granel">
-                                            <!-- Opciones -->
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control form-control-sm volumen-parcial"
-                                            name="volumen_parcial[]" id="volumen_parcial">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                      <table class="table table-bordered shadow-lg">
+                          <thead>
+                              <tr>
+                                  <th><button type="button" class="btn btn-primary add-row-lotes"> <i class="ri-add-line"></i> </button></th>
+                                  <th>Lote a granel</th>
+                                  <th>Volumen parcial</th>
+                              </tr>
+                          </thead>
+                          <tbody id="contenidoGraneles">
+{{--                               <tr data-row-index="0">
+                                  <th>
+                                      <button type="button" class="btn btn-danger" disabled>
+                                          <i class="ri-delete-bin-5-fill"></i>
+                                      </button>
+                                  </th>
+                                  <td>
+                                      <select class="id_lote_granel select2" name="lote[0][id]" id="id_lote_granel_0">
+                                          <!-- Opciones -->
+                                      </select>
+                                  </td>
+                                  <td>
+                                      <input type="text" class="form-control form-control-sm volumen-parcial"
+                                             name="volumenes[0][volumen_parcial]" id="volumen_parcial_0">
+                                  </td>
+                              </tr> --}}
+                          </tbody>
+                      </table>
+                  </div>
+
 
                     <div class="form-section mb-4 p-3 border rounded">
                         <!-- Sección para información del lote -->
@@ -102,18 +102,18 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-floating form-floating-outline mb-4">
-                                    <select id="id_guia" name="id_guia[]" class="select2 form-select" multiple
-                                        data-error-message="Por favor selecciona una guia">
-                                        {{--  <option value="" disabled selected>Seleccione una guía</option> --}}
+                          <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3 input-group input-group-merge">
+                                <div class="flex-grow-1">
+                                    <select id="id_guia" name="id_guia[]" class="select2 form-select" multiple data-error-message="Por favor selecciona una guia">
+                                        {{-- <option value="" disabled selected>Seleccione una guía</option> --}}
                                     </select>
-                                    <label for="id_guia">Folio de guía de translado</label>
                                 </div>
+                                <a href="../guias/guias_de_agave" class="btn btn-primary" style="padding: 0.75rem 1.5rem;" target="_blank" role="button">
+                                    <i class="ri-menu-search-line"></i> Ver guías
+                                </a>
                             </div>
-                            <div class="col">
-                              <a href="../guias/guias_de_agave" class="btn btn-primary" target="_blank" role="button"><i class="fas fa-eye"></i>Ver guías</a>
-                            </div>
+                        </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="volumen" name="volumen"
@@ -123,6 +123,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
@@ -145,7 +146,7 @@
                                                 {{ $categoria->categoria }}</option>
                                         @endforeach
                                     </select>
-                                    <label for="id_categoria">Categoría de Agave</label>
+                                    <label for="id_categoria">Categoría de Mezcal</label>
                                 </div>
                             </div>
                         </div>
