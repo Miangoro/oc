@@ -302,9 +302,10 @@ class PrediosController extends Controller
                 $tipos = tipos::all();
 
                 // Obtener el número del cliente
-                $numeroCliente = DB::table('empresa_num_cliente')
-                    ->where('id_empresa', $predio->id_empresa)
-                    ->value('numero_cliente');
+                $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $predio->id_empresa)->first();
+                    $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                        return !empty($numero);
+                    }); 
 
                 // Filtrar documentos para obtener solo el documento con id_documento igual a 34
                 $documentos = $predio->documentos->filter(function ($documento) {
