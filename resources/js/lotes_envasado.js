@@ -81,13 +81,13 @@ $(function () {
 
             if (row.id_lote_granel != 'N/A') {
               id_lote_granel =
-                '<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ' +
+                '<br><span class="fw-bold text-dark small">Agranel:</span><span class="small"> ' +
                 row.id_lote_granel +
                 '</span>';
             }
             if (row.nombre_lote != 'N/A') {
               nombre_lote =
-                '<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ' +
+                '<br><span class="fw-bold text-dark small">Envasado:</span><span class="small"> ' +
                 row.nombre_lote +
                 '</span>';
             }
