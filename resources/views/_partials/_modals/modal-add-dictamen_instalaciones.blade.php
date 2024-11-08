@@ -165,11 +165,12 @@
 
                     <div class="col-md-4">
                         <div class="form-floating form-floating-outline mb-6 select2-primary">
-                            <select id="edit_categorias" name="categorias[]" class="form-select select2" data-placeholder="Seleccione una o más categorias" data-error-message="Por favor selecciona una categoría de agave" multiple>
+                            {{-- <select id="edit_categorias" name="categorias[]" class="form-select select2" data-placeholder="Seleccione una o más categorias" data-error-message="Por favor selecciona una categoría de agave" multiple>
                                 @foreach ($categoria as $cate)
                                     <option value="{{ $cate->categoria }}">{{ $cate->categoria }}</option>
                                 @endforeach
-                            </select>
+                            </select> --}}
+                            <input type="text" class="form-control" id="edit_categorias">
                             <label for="edit_categorias">Categorías de agave</label>
                         </div>
                     </div>
