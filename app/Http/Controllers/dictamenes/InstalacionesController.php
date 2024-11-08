@@ -168,7 +168,19 @@ public function edit($id_dictamen)
 {
     try {
         $var1 = Dictamen_instalaciones::findOrFail($id_dictamen);
-        return response()->json($var1);
+
+        $categorias = json_decode($var1->categorias);  //Convertir array
+        //return response()->json($var1);
+        return response()->json([
+            'id_dictamen' => $var1->id_dictamen,
+            'tipo_dictamen' => $var1->tipo_dictamen,
+            'num_dictamen' => $var1->num_dictamen,
+            'fecha_emision' => $var1->fecha_emision,
+            'fecha_vigencia' => $var1->fecha_vigencia,
+            'id_inspeccion' => $var1->id_inspeccion,
+            'categorias' => $categorias,
+            'clases' => $var1->clases
+        ]);
     } catch (\Exception $e) {
         return response()->json(['error' => 'Error al obtener el dictamen'], 500);
     }

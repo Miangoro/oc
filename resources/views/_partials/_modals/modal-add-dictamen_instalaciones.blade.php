@@ -165,12 +165,12 @@
 
                     <div class="col-md-4">
                         <div class="form-floating form-floating-outline mb-6 select2-primary">
-                            {{-- <select id="edit_categorias" name="categorias[]" class="form-select select2" data-placeholder="Seleccione una o más categorias" data-error-message="Por favor selecciona una categoría de agave" multiple>
+                            <select id="edit_categorias" name="categorias[]" class="form-select select2" data-placeholder="Seleccione una o más categorias" data-error-message="Por favor selecciona una categoría de agave" multiple>
                                 @foreach ($categoria as $cate)
                                     <option value="{{ $cate->categoria }}">{{ $cate->categoria }}</option>
                                 @endforeach
-                            </select> --}}
-                            <input type="text" class="form-control" id="edit_categorias">
+                            </select>
+                            {{-- <input type="text" class="form-control" id="edit_categorias"> --}}
                             <label for="edit_categorias">Categorías de agave</label>
                         </div>
                     </div>
@@ -198,3 +198,30 @@
             </div>
         </div>
     </div>
+
+
+
+<script>
+        $(document).ready(function() {
+            $('#edit_categorias').on('change', function() {
+                const selectedNormas = $(this).val(); // Obtener las normas seleccionadas
+                const normasData = @json($categoria); // Pasar las normas al JavaScript
+                $('#normas-info_edit').empty(); // Limpiar campos previos
+      
+                selectedNormas.forEach((normaId) => {
+                    // Buscar el nombre de la norma correspondiente
+                    const norma = normasData.find(n => n.id_categoria == normaId);
+      
+                    if (norma) {
+                        const normaField = `
+                    <div class="input-group mb-4 input-group-merge">
+                        <span class="input-group-text">${norma.categoria}</span>
+                        
+                    </div>`;
+                        $('#normas-info_edit').append(normaField); // Añadir el nuevo campo
+                    }
+                });
+            });
+        });
+</script>
+      

@@ -692,10 +692,11 @@ $(document).ready(function() {
           $('#edit_fecha_emision').val(data.fecha_emision);
           $('#edit_fecha_vigencia').val(data.fecha_vigencia);
           $('#edit_id_inspeccion').val(data.id_inspeccion);
-          $('#edit_categorias').val(data.categorias);
-          //$('#edit_categorias').val(actividad).trigger('change');
+          //$('#edit_categorias').val(data.categorias);
+        $('#edit_categorias').val(data.categorias).trigger('change');
 
 
+        
           // Mostrar el modal de edición
           $('#editDictamen').modal('show');
       }).fail(function() {
