@@ -263,8 +263,6 @@ $(function () {
               `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit-reclasificacion"><i class="ri-id-card-fill ri-20px text-success"></i> Reclasificación SKU</a>` +
               `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit-reclasificacion"><i class="ri-git-repository-line ri-20px text-warning"></i> Trazabilidad</a>` +
               `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasados</a>` +
-              /*               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}" data-bs-toggle="modal" data-bs-target="#editGuias"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-                                  `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_guia']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` + */
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
               userView +
@@ -508,7 +506,7 @@ $(function () {
           }
         }
       },
-      nombre_lote: {
+      nombre: {
         validators: {
           notEmpty: {
             message: 'Por favor introduzca el nombre del lote'
@@ -715,9 +713,7 @@ data.lotes_envasado_granel.forEach(function (lote, index) {
               </button>
           </th>
             <td>
-                <!-- Campo de texto que muestra el nombre del lote -->
                 <input type="text" class="form-control form-control-sm" value="${lote.nombre_lote}" readonly />
-                <!-- Campo oculto que guarda el id_lote_granel real -->
                 <input type="hidden" name="id_lote_granel[]" value="${lote.id_lote_granel}" />
             </td>
           <td>
@@ -745,7 +741,6 @@ data.lotes_envasado_granel.forEach(function (lote, index) {
 
   //update valiacion: en editar
   const editLoteEnvasadoForm = document.getElementById('editLoteEnvasadoForm');
-
   // Validación del formulario
   const fv2 = FormValidation.formValidation(editLoteEnvasadoForm, {
     fields: {
