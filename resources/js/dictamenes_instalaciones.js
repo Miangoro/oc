@@ -594,7 +594,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'No se pudo eliminar el dictamen. Inténtalo de nuevo más tarde.',
+                        text: 'No se pudo eliminar el dictamen. Inténtelo más tarde.',
                         footer: `<pre>${error.responseText}</pre>`,
                         customClass: {
                             confirmButton: 'btn btn-danger'
@@ -670,6 +670,7 @@ $(document).ready(function() {
 
       // Realizar la solicitud AJAX para obtener los datos de la clase
       $.get('/insta/' + id_dictamen + '/edit', function(data) {
+        
           // Rellenar el formulario con los datos obtenidos
           $('#edit_id_dictamen').val(data.id_dictamen);
           $('#edit_tipo_dictamen').val(data.tipo_dictamen);
@@ -678,7 +679,8 @@ $(document).ready(function() {
           $('#edit_fecha_vigencia').val(data.fecha_vigencia);
           $('#edit_id_inspeccion').val(data.id_inspeccion);
           $('#edit_categorias').val(data.categorias);
-          $('#edit_clases').val(data.clases);
+          //$('#edit_categorias').val(actividad).trigger('change');
+
 
           // Mostrar el modal de edición
           $('#editDictamen').modal('show');

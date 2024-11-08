@@ -67,7 +67,7 @@
                     <div class="form-floating form-floating-outline mb-6 select2-primary">
                         <select id="categorias" name="categorias[]" class="form-select select2" data-placeholder="Seleccione una o más categorias" multiple>
                             @foreach ($categoria as $cate)
-                                <option value="{{ $cate->categoria }}">{{ $cate->categoria }}</option>
+                                <option value="{{ $cate->id_categoria }}">{{ $cate->categoria }}</option>
                             @endforeach
                         </select>
                     <label for="">Categorías de agave</label>
@@ -151,32 +151,32 @@
             </div>
     
             <div class="row">
+
                     <div class="col-md-4">
                         <div class="form-floating form-floating-outline mb-6">
-                            <select id="edit_id_inspeccion" name="id_inspeccion" class="form-select" aria-label="Default select example">
-                                <option value="" disabled selected>Elige el número de servicio</option>
+                            <select id="edit_id_inspeccion" name="id_inspeccion" class="form-select select2" aria-label="Default select example">
                                     @foreach ($inspeccion as $insp)
                                     <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option>
                                     @endforeach
                             </select>
-                                <label for="">No. de servicio</label>
+                            <label for="">No. de servicio</label>
                         </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <div class="form-floating form-floating-outline mb-6">
-                            <select id="edit_categorias" name="categorias[]" class="select2 form-select" multiple placeholder="Categorías de agave" data-error-message="Por favor selecciona una categoría de agave">
-                                @foreach ($clases as $clase)
-                                    <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
+                    <div class="col-md-4">
+                        <div class="form-floating form-floating-outline mb-6 select2-primary">
+                            <select id="edit_categorias" name="categorias[]" class="form-select select2" data-placeholder="Seleccione una o más categorias" data-error-message="Por favor selecciona una categoría de agave" multiple>
+                                @foreach ($categoria as $cate)
+                                    <option value="{{ $cate->categoria }}">{{ $cate->categoria }}</option>
                                 @endforeach
                             </select>
                             <label for="edit_categorias">Categorías de agave</label>
                         </div>
                     </div>
                     
-                    <div class="col-md-3">
-                        <div class="form-floating form-floating-outline mb-4">
-                            <select id="edit_clases" name="clases[]" class="select2 form-select" multiple placeholder="Clases de agave" data-error-message="Por favor selecciona una clase de agave">
+                    <div class="col-md-4">
+                        <div class="form-floating form-floating-outline mb-4 select2-primary">
+                            <select id="edit_clases" name="clases[]" class="form-select select2" data-placeholder="Seleccione una o más clases" data-error-message="Por favor selecciona una clase de agave" multiple>
                                 @foreach ($clases as $clase)
                                     <option value="{{ $clase->clase }}">{{ $clase->clase }}</option>
                                 @endforeach

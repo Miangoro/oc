@@ -123,10 +123,9 @@ class InstalacionesController extends Controller
 
 
 // Función para agregar registro
-     public function store(Request $request)
-        {
-            
-            try {
+    public function store(Request $request)
+    {
+        try {
                 
                 $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
 
@@ -141,14 +140,11 @@ class InstalacionesController extends Controller
                 $var->clases =  json_encode($request->clases);
                 $var->save();//guardar en BD
 
-
-    
                 return response()->json(['success' => 'Registro agregada correctamente']);
-            } catch (\Exception $e) {
+        } catch (\Exception $e) {
                 return response()->json(['error' => 'Error al agregar'], 500);
-            }
         }
-
+    }
 
 
 
@@ -164,7 +160,6 @@ class InstalacionesController extends Controller
             return response()->json(['error' => 'Error al eliminar'], 500);
         }
     }
-
 
 
     
