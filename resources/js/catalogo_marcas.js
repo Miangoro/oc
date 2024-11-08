@@ -346,101 +346,115 @@ $(function () {
     });
   });
 
-  // Agregar nuevo registro y validacion
-  const addNewMarca = document.getElementById('addNewMarca');
-  const fv = FormValidation.formValidation(addNewMarca, {
-    fields: {
-      cliente: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione el cliente'
-          }
-        }
-      },
-      id_norma: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una norma'
-          }
-        }
-      },
-      marca: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor introduzca el nombre de la marca'
-          }
-        }
-      }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        // Use this for enabling/changing valid/invalid class
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          // field is the field name & ele is the field element
-          return '.mb-5';
-        }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function (e) {
-    var formData = new FormData(addNewMarca);
-    $.ajax({
-      url: '/catalago-list',
-      type: 'POST',
-      data: formData,
-      processData: false, // Evita la conversión automática de datos a cadena
-      contentType: false, // Evita que se establezca el tipo de contenido
-      success: function (response) {
-        // Reinicializar el select2 para cliente e id_norma
-        $('#cliente').val(null).trigger('change'); // Limpiar el select2 de cliente
-        $('#id_norma').val(null).trigger('change'); // Limpiar el select2 de id_norma
-
-        // Ocultar el modal después de enviar el formulario
-        $('#addMarca').modal('hide');
-
-        // Recargar la tabla de DataTables
-        $('.datatables-users').DataTable().ajax.reload();
-
-        // Mostrar alerta de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: response.success,
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function (xhr) {
-        // Mostrar alerta de error
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al agregar la marca',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
+  // Registrar Aprobacion
+  $(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
+    const addNewMarca = document.getElementById('addNewMarca');
+    const fv = FormValidation.formValidation(addNewMarca, {
+      fields: {
+        cliente: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione el cliente'
+            }
+          }
+        },
+        id_norma: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una norma'
+            }
+          }
+        },
+        marca: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor introduzca el nombre de la marca'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          // Use this for enabling/changing valid/invalid class
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            // field is the field name & ele is the field element
+            return '.mb-5';
+          }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      var formData = new FormData(addNewMarca);
+      $.ajax({
+        url: '/catalago-list',
+        type: 'POST',
+        data: formData,
+        processData: false, // Evita la conversión automática de datos a cadena
+        contentType: false, // Evita que se establezca el tipo de contenido
+        success: function (response) {
+          // Reinicializar el select2 para cliente e id_norma
+          $('#cliente').val(null).trigger('change'); // Limpiar el select2 de cliente
+          $('#id_norma').val(null).trigger('change'); // Limpiar el select2 de id_norma
+
+          // Ocultar el modal después de enviar el formulario
+          $('#addMarca').modal('hide');
+
+          // Recargar la tabla de DataTables
+          $('.datatables-users').DataTable().ajax.reload();
+
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.success,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al agregar la marca',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+
+    // Revalidaciones
+    $('#cliente').on('change', function () {
+      if ($(this).val()) {
+        fv.revalidateField($(this).attr('name'));
+      }
+    });
+    $('#id_norma').on('change', function () {
+      if ($(this).val()) {
+        fv.revalidateField($(this).attr('name'));
+      }
+    });
+
+    $('#marca').on('change', function() {
+      fv.revalidateField($(this).attr('name'));
+  });
   });
 
-  // Inicializar select2 y revalidar los campos cuando cambien
-  $('#cliente').select2({
-    placeholder: 'Seleccione un cliente',
-    allowClear: true
-  }).on('change', function () {
-    fv.revalidateField('cliente'); // Revalidar el campo select cuando cambie
-  });
-
-  $('#id_norma').select2({
-    placeholder: 'Seleccione una norma',
-    allowClear: true
-  }).on('change', function () {
-    fv.revalidateField('id_norma'); // Revalidar el campo select cuando cambie
+  // Limpiar campos al cerrar el modal
+  $('#addMarca').on('hidden.bs.modal', function () {
+    $('#cliente, #id_norma, #marca').val('');
+    $('#marca').prop('selected', true);
   });
 
   initializeSelect2(select2Elements);
