@@ -1,150 +1,11 @@
-/**
- * Page User List
- */
 'use strict';
-
-// Agregar nuevo registro
-// validating form and updating user's data
-const addNewMarca = document.getElementById('addNewMarca');
-
-// Validación del formulario
-const fv = FormValidation.formValidation(addNewMarca, {
-  fields: {
-    cliente: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione el cliente'
-        }
-      }
-    },
-    id_norma: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione una norma'
-        }
-      }
-    },
-    marca: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor introduzca el nombre de la marca'
-        }
-      }
-    }
-  },
-  plugins: {
-    trigger: new FormValidation.plugins.Trigger(),
-    bootstrap5: new FormValidation.plugins.Bootstrap5({
-      // Use this for enabling/changing valid/invalid class
-      eleValidClass: '',
-      rowSelector: function (field, ele) {
-        // field is the field name & ele is the field element
-        return '.mb-5';
-      }
-    }),
-    submitButton: new FormValidation.plugins.SubmitButton(),
-    autoFocus: new FormValidation.plugins.AutoFocus()
-  }
-}).on('core.form.valid', function (e) {
-  var formData = new FormData(addNewMarca);
-
-  $.ajax({
-    url: '/catalago-list',
-    type: 'POST',
-    data: formData,
-    processData: false, // Evita la conversión automática de datos a cadena
-    contentType: false, // Evita que se establezca el tipo de contenido
-    success: function (response) {
-      // Reinicializar el select2 para cliente e id_norma
-      $('#cliente').val(null).trigger('change'); // Limpiar el select2 de cliente
-      $('#id_norma').val(null).trigger('change'); // Limpiar el select2 de id_norma
-
-      // Ocultar el modal después de enviar el formulario
-      $('#addMarca').modal('hide');
-      
-      // Recargar la tabla de DataTables
-      $('.datatables-users').DataTable().ajax.reload();
-
-      // Mostrar alerta de éxito
-      Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: response.success,
-        customClass: {
-          confirmButton: 'btn btn-success'
-        }
-      });
-    },
-    error: function (xhr) {
-      // Mostrar alerta de error
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al agregar la marca',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    }
-  });
-});
-
-// Inicializar select2 y revalidar los campos cuando cambien
-$('#cliente').select2({
-  placeholder: 'Seleccione un cliente',
-  allowClear: true
-}).on('change', function () {
-  fv.revalidateField('cliente'); // Revalidar el campo select cuando cambie
-});
-
-$('#id_norma').select2({
-  placeholder: 'Seleccione una norma',
-  allowClear: true
-}).on('change', function () {
-  fv.revalidateField('id_norma'); // Revalidar el campo select cuando cambie
-});
-
-
-
-
-
-//DATE PICKER
-//Datepicker inicializador
-
-$(document).ready(function () {
-  $('.datepicker').datepicker({
-    format: 'yyyy-mm-dd',
-    autoclose: true,
-    todayHighlight: true,
-    language: 'es' // Configura el idioma a español
-  });
-});
-
 $(function () {
-  // Datatable (jquery)
-  // Variable declaration for table
+
   var dt_user_table = $('.datatables-users'),
     select2Elements = $('.select2'),
     userView = baseUrl + 'app/user/view/account',
     offCanvasForm = $('#addMarca');
 
-  // Función para inicializar Select2 en elementos específicos
-  function initializeSelect2($elements) {
-    $elements.each(function () {
-      var $this = $(this);
-      select2Focus($this);
-      $this.wrap('<div class="position-relative"></div>').select2({
-        placeholder: 'Selecciona cliente',
-        dropdownParent: $this.parent()
-      });
-    });
-  }
-
-  // Inicialización de Select2 para elementos con clase .select2
-  initializeSelect2(select2Elements);
-
-
-  // ajax setup
   $.ajaxSetup({
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -160,12 +21,11 @@ $(function () {
         url: baseUrl + 'catalago-list'
       },
       columns: [
-        // columns according to JSON
         { data: '' },
         { data: 'id_marca' },
         { data: 'folio' },
         { data: 'marca' },
-        { data: 'razon_social' }, // Nueva columna para la razón social
+        { data: 'razon_social' },
         { data: 'id_norma' },
         { data: 'action' }
       ],
@@ -229,35 +89,6 @@ $(function () {
             return '<span class="user-email">' + $email + '</span>';
           }
         },
-
-        /*{
-          // email verify
-          targets: 4,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $verified = full['regimen'];
-            if($verified=='Persona física'){
-              var $colorRegimen = 'info';
-            }else{
-              var $colorRegimen = 'warning';
-            }
-            return `${
-              $verified
-                ? '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-                : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-            }`;
-          }
-        },*/
-        /*{
-           // email verify
-           targets: 5,
-           className: 'text-center',
-           render: function (data, type, full, meta) {
-             var $id = full['id_marca'];
-             return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_marca']}" data-registro="${full['folio']} "></i>`;
-           }
-         },*/
-
         {
           // Actions
           targets: -1,
@@ -269,8 +100,6 @@ $(function () {
               '<div class="d-flex align-items-center gap-50">' +
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
-              /*               `<button class="btn btn-sm btn-icon edit-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#editMarca"><i class="ri-edit-box-line ri-20px text-info"></i></button>` +
-                            `<button class="btn btn-sm btn-icon delete-record btn-text-secondary rounded-pill waves-effect" data-id="${full['id_marca']}"><i class="ri-delete-bin-7-line ri-20px text-danger"></i></button>` + */
               `<a data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#editMarca" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar marca</a>` +
               `<a data-id="${full['id_marca']}" data-bs-toggle="modal" data-bs-target="#etiquetas" href="javascript:;" class="dropdown-item edit-etiquetas"><i class="ri-price-tag-2-line ri-20px text-success"></i> Subir/Ver etiquetas</a>` +
               `<a data-id="${full['id_marca']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar marca</a>` +
@@ -283,7 +112,6 @@ $(function () {
               '</div>'
             );
           }
-
         }
       ],
       order: [[2, 'desc']],
@@ -296,7 +124,7 @@ $(function () {
         '<"col-sm-12 col-md-6"i>' +
         '<"col-sm-12 col-md-6"p>' +
         '>',
-      lengthMenu: [10, 20, 50, 70, 100], //for length of menu
+      lengthMenu: [10, 20, 50, 70, 100],
       language: {
         sLengthMenu: '_MENU_',
         search: '',
@@ -309,7 +137,6 @@ $(function () {
           "sPrevious": "Anterior"
         }
       },
-      // Buttons with Dropdown
       buttons: [
         {
           extend: 'collection',
@@ -341,7 +168,6 @@ $(function () {
                 }
               },
               customize: function (win) {
-                //customize print view for dark
                 $(win.document.body)
                   .css('color', config.colors.headingColor)
                   .css('border-color', config.colors.borderColor)
@@ -386,7 +212,6 @@ $(function () {
               className: 'dropdown-item',
               exportOptions: {
                 columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
                     if (inner.length <= 0) return inner;
@@ -411,7 +236,6 @@ $(function () {
               className: 'dropdown-item',
               exportOptions: {
                 columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be display
                 format: {
                   body: function (inner, coldex, rowdex) {
                     if (inner.length <= 0) return inner;
@@ -436,7 +260,6 @@ $(function () {
               className: 'dropdown-item',
               exportOptions: {
                 columns: [1, 2, 3, 4, 5],
-                // prevent avatar to be copy
                 format: {
                   body: function (inner, coldex, rowdex) {
                     if (inner.length <= 0) return inner;
@@ -466,7 +289,6 @@ $(function () {
           }
         }
       ],
-      // For responsive popup
       responsive: {
         details: {
           display: $.fn.dataTable.Responsive.display.modal({
@@ -502,18 +324,134 @@ $(function () {
     });
   }
 
+  // Inicializacion Elementos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        placeholder: 'Selecciona cliente',
+        dropdownParent: $this.parent()
+      });
+    });
+  }
 
-  // Delete Record
+  // Inicializacion DatePicker
+  $(document).ready(function () {
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      todayHighlight: true,
+      language: 'es'
+    });
+  });
+
+  // Agregar nuevo registro y validacion
+  const addNewMarca = document.getElementById('addNewMarca');
+  const fv = FormValidation.formValidation(addNewMarca, {
+    fields: {
+      cliente: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione el cliente'
+          }
+        }
+      },
+      id_norma: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una norma'
+          }
+        }
+      },
+      marca: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor introduzca el nombre de la marca'
+          }
+        }
+      }
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        // Use this for enabling/changing valid/invalid class
+        eleValidClass: '',
+        rowSelector: function (field, ele) {
+          // field is the field name & ele is the field element
+          return '.mb-5';
+        }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function (e) {
+    var formData = new FormData(addNewMarca);
+    $.ajax({
+      url: '/catalago-list',
+      type: 'POST',
+      data: formData,
+      processData: false, // Evita la conversión automática de datos a cadena
+      contentType: false, // Evita que se establezca el tipo de contenido
+      success: function (response) {
+        // Reinicializar el select2 para cliente e id_norma
+        $('#cliente').val(null).trigger('change'); // Limpiar el select2 de cliente
+        $('#id_norma').val(null).trigger('change'); // Limpiar el select2 de id_norma
+
+        // Ocultar el modal después de enviar el formulario
+        $('#addMarca').modal('hide');
+
+        // Recargar la tabla de DataTables
+        $('.datatables-users').DataTable().ajax.reload();
+
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.success,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function (xhr) {
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al agregar la marca',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+  });
+
+  // Inicializar select2 y revalidar los campos cuando cambien
+  $('#cliente').select2({
+    placeholder: 'Seleccione un cliente',
+    allowClear: true
+  }).on('change', function () {
+    fv.revalidateField('cliente'); // Revalidar el campo select cuando cambie
+  });
+
+  $('#id_norma').select2({
+    placeholder: 'Seleccione una norma',
+    allowClear: true
+  }).on('change', function () {
+    fv.revalidateField('id_norma'); // Revalidar el campo select cuando cambie
+  });
+
+  initializeSelect2(select2Elements);
+
+  // Eliminar Registro Marca
   $(document).on('click', '.delete-record', function () {
     var user_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
-
-    // hide responsive modal in small screen
     if (dtrModal.length) {
       dtrModal.modal('hide');
     }
-
-    // sweetalert for confirmation of delete
     Swal.fire({
       title: '¿Está seguro?',
       text: "No podrá revertir este evento",
@@ -527,7 +465,6 @@ $(function () {
       buttonsStyling: false
     }).then(function (result) {
       if (result.value) {
-        // delete the data
         $.ajax({
           type: 'DELETE',
           url: `${baseUrl}catalago-list/${user_id}`,
@@ -538,8 +475,6 @@ $(function () {
             console.log(error);
           }
         });
-
-        // success sweetalert
         Swal.fire({
           icon: 'success',
           title: '¡Eliminado!',
@@ -561,41 +496,24 @@ $(function () {
     });
   });
 
-  /*$(document).on('click', '.pdf', function () {
-        var id = $(this).data('id');
-        var registro = $(this).data('registro');
-            var iframe = $('#pdfViewer');
-            iframe.attr('src', '../solicitudinfo_cliente/'+id);
-
-            $("#titulo_modal").text("Solicitud de información del cliente");
-            $("#subtitulo_modal").text(registro);
-            
-          
-  });*/
+  // Editar Registro Marca
   $(document).ready(function () {
-    // Abrir el modal y cargar datos para editar
     $(document).on('click', '.edit-record', function () {
       var id_marca = $(this).data('id');
-
       // Limpiar campos y contenido residual del formulario de edición
       $('#editMarcaForm')[0].reset();
       $('.existing-file').html(''); // Asegúrate de que todos los contenedores de archivos existentes estén vacíos
       $('.existing-date').text(''); // Asegúrate de que todos los contenedores de fechas existentes estén vacíos
-
       // Realizar la solicitud AJAX para obtener los datos de la marca
       $.get('/marcas-list/' + id_marca + '/edit', function (data) {
         var marca = data.marca;
         var documentacion_urls = data.documentacion_urls;
         var numCliente = data.numeroCliente;
-
-
         // Rellenar el formulario con los datos obtenidos
         $('#edit_marca_id').val(marca.id_marca);
         $('#edit_marca_nombre').val(marca.marca);
         $('#edit_cliente').val(marca.id_empresa).trigger('change');
         $('#edit_id_norma').val(marca.id_norma).trigger('change');
-
-
         // Mostrar archivos existentes en los mismos espacios de entrada de archivo
         documentacion_urls.forEach(function (doc) {
           console.log(doc.url);
@@ -608,10 +526,6 @@ $(function () {
           var existingDateId = '#Editdate' + doc.id_documento;
           $(existingDateId).val(doc.fecha_vigencia);
 
-
-
-
-
           $('#date' + doc.id_documento).val(doc.fecha_vigencia);  // Rellenar la fecha existente en el campo de fecha
         });
 
@@ -620,95 +534,89 @@ $(function () {
     });
   });
 
+  // Actualizar Registro Marca
+  $('#editMarcaForm').submit(function (e) {
+    e.preventDefault();
 
+    var formData = new FormData(this);
 
-    // Enviar el formulario de actualización de marca
-    $('#editMarcaForm').submit(function (e) {
-      e.preventDefault();
+    $.ajax({
+      url: '/marcas-list/update',
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        Swal.fire({
+          title: 'Éxito',
+          text: response.success,
+          icon: 'success',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+        $('#editMarca').modal('hide');
+        $('#editMarcaForm')[0].reset();
+        $('.datatables-users').DataTable().ajax.reload();
+      },
+      error: function (response) {
 
-      var formData = new FormData(this);
-
-      $.ajax({
-        url: '/marcas-list/update',
-        type: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: function (response) {
-          Swal.fire({
-            title: 'Éxito',
-            text: response.success,
-            icon: 'success',
-            buttonsStyling: false,
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-          $('#editMarca').modal('hide');
-          $('#editMarcaForm')[0].reset();
-          $('.datatables-users').DataTable().ajax.reload();
-        },
-        error: function (response) {
-
-          Swal.fire({
-            title: 'Error',
-            text: 'Ocurrió un error al actualizar la marca.',
-            icon: 'error',
-            buttonsStyling: false,
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-        }
-      });
+        Swal.fire({
+          title: 'Error',
+          text: 'Ocurrió un error al actualizar la marca.',
+          icon: 'error',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      }
     });
+  });
 
+  // Agregar nuevo registro Etiquetas
+  $(document).on('click', '.edit-etiquetas', function () {
+    var id_marca = $(this).data('id');
+    console.log(id_marca);
+    $.get('/marcas-list/' + id_marca + '/editEtiquetas', function (data) {
+      var marca = data.marca;
+      var tipo = data.tipos;
+      var clase = data.clases;
+      var categoria = data.categorias;
+      var documentos = data.documentacion_urls; // Documentos asociados
 
-    $(document).on('click', '.edit-etiquetas', function () {
-      var id_marca = $(this).data('id');
-  
-      console.log(id_marca);
-  
-      // Realizar la solicitud AJAX para obtener los datos de la marca
-      $.get('/marcas-list/' + id_marca + '/editEtiquetas', function (data) {
-          var marca = data.marca;
-          var tipo = data.tipos;
-          var clase = data.clases;
-          var categoria = data.categorias;
-          var documentos = data.documentacion_urls; // Documentos asociados
-  
-          // Rellenar el campo con el ID de la marca obtenida
-          $('#etiqueta_marca').val(marca.id_marca);
-  
-          $('#contenidoRango').empty();
-  
-          var tipos = "";
-          tipo.forEach(function (item) {
-              tipos += "<option value='" + item.id_tipo + "'>" + item.nombre + "</option>";
-          });
-  
-          var clases = "";
-          clase.forEach(function (item) {
-              clases += "<option value='" + item.id_clase + "'>" + item.clase + "</option>";
-          });
-  
-          var categorias = "";
-          categoria.forEach(function (item) {
-              categorias += "<option value='" + item.id_categoria + "'>" + item.categoria + "</option>";
-          });
-  
-          // Crear nuevas filas en la tabla con los datos de las etiquetas y documentos
-          marca.sku.forEach(function (sku, index) {
-              var id_tipo = marca.id_tipo[index];
-              var presentacion = marca.presentacion[index];
-              var id_clase = marca.id_clase[index];
-              var id_categoria = marca.id_categoria[index];
-  
-              // Obtenemos los documentos correspondientes por id_doc
-              var documento_etiquetas = documentos.find(doc => doc.nombre_documento === 'Etiquetas' && doc.id_doc === (index + 1));
-              var documento_corrugado = documentos.find(doc => doc.nombre_documento === 'Corrugado' && doc.id_doc === (index + 1));
-  
-              var newRow = `
+      // Rellenar el campo con el ID de la marca obtenida
+      $('#etiqueta_marca').val(marca.id_marca);
+
+      $('#contenidoRango').empty();
+
+      var tipos = "";
+      tipo.forEach(function (item) {
+        tipos += "<option value='" + item.id_tipo + "'>" + item.nombre + "</option>";
+      });
+
+      var clases = "";
+      clase.forEach(function (item) {
+        clases += "<option value='" + item.id_clase + "'>" + item.clase + "</option>";
+      });
+
+      var categorias = "";
+      categoria.forEach(function (item) {
+        categorias += "<option value='" + item.id_categoria + "'>" + item.categoria + "</option>";
+      });
+      // Crear nuevas filas en la tabla con los datos de las etiquetas y documentos
+      marca.sku.forEach(function (sku, index) {
+        var id_tipo = marca.id_tipo[index];
+        var presentacion = marca.presentacion[index];
+        var id_clase = marca.id_clase[index];
+        var id_categoria = marca.id_categoria[index];
+
+        // Obtenemos los documentos correspondientes por id_doc
+        var documento_etiquetas = documentos.find(doc => doc.nombre_documento === 'Etiquetas' && doc.id_doc === (index + 1));
+        var documento_corrugado = documentos.find(doc => doc.nombre_documento === 'Corrugado' && doc.id_doc === (index + 1));
+
+        var newRow = `
                   <tr>
                       <th>
                           <button type="button" class="btn btn-danger remove-row">
@@ -739,11 +647,11 @@ $(function () {
                       <td>
                           <div style="display: flex; align-items: center;">
                               <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
-                              ${documento_etiquetas ? 
-                                  `<a href="/storage/uploads/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank" style="margin-left: 10px;">
+                              ${documento_etiquetas ?
+            `<a href="/storage/uploads/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank" style="margin-left: 10px;">
                                       <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
-                                  </a>` 
-                                  : ''}
+                                  </a>`
+            : ''}
                           </div>
                           <input value="60" class="form-control" type="hidden" name="id_documento[]">
                           <input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]">
@@ -751,96 +659,85 @@ $(function () {
                       <td>
                           <div style="display: flex; align-items: center;">
                               <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
-                              ${documento_corrugado ? 
-                                  `<a href="/storage/uploads/${data.numeroCliente}/${documento_corrugado.url}" target="_blank" style="margin-left: 10px;">
+                              ${documento_corrugado ?
+            `<a href="/storage/uploads/${data.numeroCliente}/${documento_corrugado.url}" target="_blank" style="margin-left: 10px;">
                                       <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
-                                  </a>` 
-                                  : ''}
+                                  </a>`
+            : ''}
                           </div>
                           <input value="75" class="form-control" type="hidden" name="id_documento[]">
                           <input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]">
                       </td>
                   </tr>`;
-  
-              $('#contenidoRango').append(newRow);
-  
-              // Inicializar select2 y establecer el valor seleccionado
-              $('#id_tipo' + index).select2({
-                  dropdownParent: $('#etiquetas')
-              }).val(id_tipo).trigger('change'); // Establecer el valor correcto
-  
-              $('#id_clase' + index).select2({
-                  dropdownParent: $('#etiquetas')
-              }).val(id_clase).trigger('change');
-  
-              $('#id_categoria' + index).select2({
-                  dropdownParent: $('#etiquetas')
-              }).val(id_categoria).trigger('change');
-          });
-  
-          // Mostrar el modal de edición de etiquetas
-          $('#etiquetas').modal('show');
-      }).fail(function (jqXHR, textStatus, errorThrown) {
-          console.error('Error: ' + textStatus + ' - ' + errorThrown);
-          Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al obtener los datos de las etiquetas',
-              customClass: {
-                  confirmButton: 'btn btn-danger'
-              }
-          });
+
+        $('#contenidoRango').append(newRow);
+
+        // Inicializar select2 y establecer el valor seleccionado
+        $('#id_tipo' + index).select2({
+          dropdownParent: $('#etiquetas')
+        }).val(id_tipo).trigger('change'); // Establecer el valor correcto
+
+        $('#id_clase' + index).select2({
+          dropdownParent: $('#etiquetas')
+        }).val(id_clase).trigger('change');
+
+        $('#id_categoria' + index).select2({
+          dropdownParent: $('#etiquetas')
+        }).val(id_categoria).trigger('change');
       });
-  });
-  
-    
-    
- 
-
-
-    // Enviar el formulario de actualización de marca
-    $('#etiquetasForm').submit(function (e) {
-      e.preventDefault();
-  
-      var formData = new FormData(this);
-      console.log()
-  
-      $.ajax({
-        url: '/etiquetado/updateEtiquetas',
-        type: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        success: function (response) {
-          Swal.fire({
-            title: 'Éxito',
-            text: response.success,
-            icon: 'success',
-            buttonsStyling: false,
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-          $('#etiquetas').modal('hide');
-          $('.datatables-users').DataTable().ajax.reload();
-        },
-        error: function (response) {
-          console.log(response);
-  
-          Swal.fire({
-            title: 'Error',
-            text: 'Ocurrió un error al actualizar la etiqueta.',
-            icon: 'error',
-            buttonsStyling: false,
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
+      $('#etiquetas').modal('show');
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.error('Error: ' + textStatus + ' - ' + errorThrown);
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos de las etiquetas',
+        customClass: {
+          confirmButton: 'btn btn-danger'
         }
       });
-    }); 
+    });
+  });
 
+  // Actualizar registro Etiquetas
+  $('#etiquetasForm').submit(function (e) {
+    e.preventDefault();
 
+    var formData = new FormData(this);
+    console.log()
 
+    $.ajax({
+      url: '/etiquetado/updateEtiquetas',
+      type: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        Swal.fire({
+          title: 'Éxito',
+          text: response.success,
+          icon: 'success',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+        $('#etiquetas').modal('hide');
+        $('.datatables-users').DataTable().ajax.reload();
+      },
+      error: function (response) {
+        console.log(response);
 
+        Swal.fire({
+          title: 'Error',
+          text: 'Ocurrió un error al actualizar la etiqueta.',
+          icon: 'error',
+          buttonsStyling: false,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      }
+    });
+  });
 });

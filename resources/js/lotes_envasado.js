@@ -515,13 +515,6 @@ $(function () {
           }
         }
       },
-      sku: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese un numero de pedido/SKU'
-          }
-        }
-      },
       id_marca: {
         validators: {
           notEmpty: {
@@ -771,13 +764,6 @@ $(function () {
         validators: {
           notEmpty: {
             message: 'Por favor introduzca el nombre del lote'
-          }
-        }
-      },
-      edit_sku: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese un numero de pedido/SKU'
           }
         }
       },
