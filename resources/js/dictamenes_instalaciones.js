@@ -37,37 +37,51 @@ var select2Elements = $('.select2');
 initializeSelect2(select2Elements);
 
 
-//Fecha emision y vigencia
+///FECHAS FORMAT ADD
 $('#fecha_emision').on('change', function() {
   var fechaInicial = new Date($(this).val());
 
-// Sumar 1 año a la fecha inicial
+//Sumar 1 año a la fecha inicial
   fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-// Sumar 1 día a la fecha inicial
+//Sumar 1 día a la fecha inicial
   fechaInicial.setDate(fechaInicial.getDate() + 1);
 
-// Formatear la fecha en YYYY-MM-DD
+//Formatear la fecha en YYYY-MM-DD
   var year = fechaInicial.getFullYear();
   var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2); // Los meses empiezan desde 0
   var day = ('0' + fechaInicial.getDate() ).slice(-2); // Usamos el día original
 
-// Asignar la fecha final al input correspondiente
+//Asignar la fecha final al input correspondiente
   //$('#fecha_vigencia').val(year + '/' + month + '/' + day);//misma funcion que la linea de abajo
 
-// Establecer el calendario de #fecha_vigencia en el año sumado
+//Establecer el calendario de #fecha_vigencia en el año sumado
   //$('#fecha_vigencia').datepicker("option", "yearRange", (year) + ":" + (year)); //rango de años
   $('#fecha_vigencia').datepicker("setDate", fechaInicial); // un dia menos, calendario bien
 });
 
 
- 
- 
-   // ajax setup
-   $.ajaxSetup({
+//7FECHAS FORMAT EDIT
+$('#edit_fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+
+  //Sumar 1 año a la fecha inicial
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+  //Sumar 1 día a la fecha inicial
+  fechaInicial.setDate(fechaInicial.getDate() + 1);
+
+  //Establecer el calendario de #fecha_vigencia en el año sumado
+  $('#edit_fecha_vigencia').datepicker("setDate", fechaInicial); // un dia menos, calendario bien
+});
+
+
+
+  
+// ajax setup
+  $.ajaxSetup({
      headers: {
        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
      }
-   });
+  });
  
  
    //FUNCIONALIDAD DE LA VISTA datatable
