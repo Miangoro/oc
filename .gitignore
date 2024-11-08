@@ -49,6 +49,10 @@ yarn-error.log
 /public/js
 
 <<<<<<< HEAD
+# Ignorar el contenido de la carpeta storage
+/storage/*
+=======
+<<<<<<< HEAD
 /storage/
 
 
@@ -108,3 +112,4 @@ yarn-error.log
 # Ignorar el contenido de la carpeta storage
 /storage/*
 >>>>>>> 1fe233c605e0676a7cf43876957909ea259f4c86
+>>>>>>> 4815d073d6f26aa9c1cae7cf70e5abb01a951b05

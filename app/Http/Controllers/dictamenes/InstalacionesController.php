@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dictamen_instalaciones;
 use App\Models\clases; 
+use App\Models\categorias;
 use App\Models\inspecciones; 
 
 use App\Models\empresa; 
@@ -23,10 +24,11 @@ class InstalacionesController extends Controller
     {
         $dictamenes = Dictamen_instalaciones::all(); // Obtener todos los datos
         $clases = clases::all();
+        $categoria = categorias::all();
         $inspeccion = inspecciones::all();
         $empresa = empresa::all();
         $soli = solicitudesModel::all();
-        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'inspeccion'));
+        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'categoria', 'inspeccion'));
     }
 
 
@@ -121,10 +123,9 @@ class InstalacionesController extends Controller
 
 
 // Función para agregar registro
-     public function store(Request $request)
-        {
-            
-            try {
+    public function store(Request $request)
+    {
+        try {
                 
                 $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
 
@@ -139,14 +140,11 @@ class InstalacionesController extends Controller
                 $var->clases =  json_encode($request->clases);
                 $var->save();//guardar en BD
 
-
-    
                 return response()->json(['success' => 'Registro agregada correctamente']);
-            } catch (\Exception $e) {
+        } catch (\Exception $e) {
                 return response()->json(['error' => 'Error al agregar'], 500);
-            }
         }
-
+    }
 
 
 
@@ -162,7 +160,6 @@ class InstalacionesController extends Controller
             return response()->json(['error' => 'Error al eliminar'], 500);
         }
     }
-
 
 
     
