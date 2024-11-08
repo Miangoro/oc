@@ -437,135 +437,215 @@ $(function () {
   });
 
   // Agregar nuevo registro y validacion
-  const addHologramasForm = document.getElementById('addHologramasForm');
-  const formValidator = FormValidation.formValidation(addHologramasForm, {
-    fields: {
-      folio: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor introduzca un folio'
-          }
-        }
-      },
-      id_empresa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un cliente'
-          }
-        }
-      },
-      id_marca: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese una marca'
-          }
-        }
-      },
-      id_solicitante: {
-        validators: {
-          notEmpty: {
-            message: 'falta el ID del usuario'
-          }
-        }
-      },
-      cantidad_hologramas: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el número de hologramas solicitados'
-          },
-          between: {
-            min: 1,
-            max: Infinity,
-            message: 'El número debe ser superior a 0 y sin negativos'
-          },
-          regexp: {
-            // Expresión regular que asegura que el número no comience con 0 a menos que sea exactamente 0
-            regexp: /^(?!0)\d+$/,
-            message: 'El número no debe comenzar con 0'
-          }
-        }
-      },
-
-      id_direccion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese un destino de lote'
-          }
-        }
+  $(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+    });
+  
+    // Función que obtiene las marcas de la empresa seleccionada
+    function obtenerMarcas() {
+      var empresa = $("#id_empresa").val();
+      // Hacer una petición AJAX para obtener los detalles de la empresa
+      $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+          // Cargar los detalles de las marcas en el select
+          var contenido = "";
+          for (let index = 0; index < response.marcas.length; index++) {
+            contenido = '<option value="' + response.marcas[index].id_marca + '">' + response.marcas[index].marca + '</option>' + contenido;
+          }
+  
+          if (response.marcas.length == 0) {
+            contenido = '<option value="">Sin marcas registradas</option>';
+          }
+          $('#id_marca').html(contenido);
+  
+          // Revalidar el campo 'id_marca' para verificar la selección
+          formValidator.revalidateField('id_marca');
+        },
+        error: function() {
+          //alert('Error al cargar las marcas.');
         }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
+      });
     }
-  }).on('core.form.valid', function (e) {
-    //e.preventDefault();
-    var formData = new FormData(addHologramasForm);
-
-    $.ajax({
-      url: '/hologramas/store', // Actualiza con la URL correcta
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        $('#addHologramas').modal('hide');
-        $('.datatables-users').DataTable().ajax.reload();
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: response.success,
-          customClass: {
-            confirmButton: 'btn btn-success'
+  
+    // Función que obtiene las direcciones de la empresa seleccionada
+    function obtenerDirecciones() {
+      var empresa = $("#id_empresa").val();
+      // Hacer una petición AJAX para obtener los detalles de la empresa
+      $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+          // Filtrar las direcciones para que solo se incluyan las que tienen tipo_direccion igual a 3
+          var direccionesFiltradas = response.direcciones.filter(function(direccion) {
+            return direccion.tipo_direccion == 3;
+          });
+  
+          // Cargar los detalles de las direcciones en el select
+          var contenido = "";
+          for (let index = 0; index < direccionesFiltradas.length; index++) {
+            contenido += '<option value="' + direccionesFiltradas[index].id_direccion + '">' +
+              'Nombre de destinatario: ' + direccionesFiltradas[index].nombre_recibe +
+              ' - Dirección: ' + direccionesFiltradas[index].direccion +
+              ' - Correo: ' + direccionesFiltradas[index].correo_recibe +
+              ' - Celular: ' + direccionesFiltradas[index].celular_recibe +
+              '</option>';
           }
-        });
+  
+          if (direccionesFiltradas.length == 0) {
+            contenido = '<option value="">Sin direcciones registradas</option>';
+          }
+  
+          $('.id_direccion').html(contenido);
+  
+          // Revalidar el campo 'id_direccion' para verificar la selección
+          formValidator.revalidateField('id_direccion');
+        },
+        error: function() {
+          //alert('Error al cargar las direcciones.');
+        }
+      });
+    }
+  
+    // Event listener para cuando cambie la selección de empresa
+    $('#id_empresa').on('change', function () {
+      obtenerMarcas();  // Cargar las marcas
+      obtenerDirecciones();  // Cargar las direcciones
+      formValidator.revalidateField('id_empresa');  // Revalidar el campo de empresa
+    });
+  
+    // Validación del formulario
+    const addHologramasForm = document.getElementById('addHologramasForm');
+    const formValidator = FormValidation.formValidation(addHologramasForm, {
+      fields: {
+        folio: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor introduzca un folio'
+            }
+          }
+        },
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un cliente'
+            }
+          }
+        },
+        id_marca: {
+          validators: {
+            callback: {
+              message: 'Por favor seleccione al menos una marca',
+              callback: function (input) {
+                return $('#id_marca').val() && $('#id_marca').val().length > 0;
+              }
+            }
+          }
+        },
+        id_solicitante: {
+          validators: {
+            notEmpty: {
+              message: 'Falta el ID del usuario'
+            }
+          }
+        },
+        cantidad_hologramas: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el número de hologramas solicitados'
+            },
+            between: {
+              min: 1,
+              max: Infinity,
+              message: 'El número debe ser superior a 0 y sin negativos'
+            },
+            regexp: {
+              regexp: /^(?!0)\d+$/,
+              message: 'El número no debe comenzar con 0'
+            }
+          }
+        },
+        id_direccion: {
+          validators: {
+            callback: {
+              message: 'Por favor seleccione al menos una dirección',
+              callback: function (input) {
+                return $('#id_direccion').val() && $('#id_direccion').val().length > 0;
+              }
+            }
+          }
+        }
       },
-      error: function (xhr) {
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar los hologramas',
-          customClass: {
-            confirmButton: 'btn btn-danger'
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-4, .mb-5, .mb-6';
           }
-        });
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
       }
+    }).on('core.form.valid', function (e) {
+      var formData = new FormData(addHologramasForm);
+  
+      $.ajax({
+        url: '/hologramas/store',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#addHologramas').modal('hide');
+          $('.datatables-users').DataTable().ajax.reload();
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.success,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar los hologramas',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
     });
   });
 
-  $('#id_empresa')
-    .select2({
-      placeholder: 'Seleccione un cliente',
-      allowClear: true
-    })
-    .on('change', function () {
-      formValidator.revalidateField('id_empresa'); // Revalidar el campo empresa cuando cambie
-    });
+// Limpiar campos al cerrar el modal
+$('#addHologramas').on('hidden.bs.modal', function () {
+  // Restablecer select de empresa
+  $('#id_empresa').val('');
+  $('#id_empresa').prop('selected', true);
 
-  $('#id_marca')
-    .select2({
-      placeholder: 'Lista de predios',
-      allowClear: true
-    })
-    .on('change', function () {
-      formValidator.revalidateField('id_marca'); // Revalidar el campo predios cuando cambie
-    });
+  // Limpiar el contenido de los select de marca y dirección
+  $('#id_marca').html('<option value="">Seleccione una marca</option>');
+  $('.id_direccion').html('<option value="">Seleccione una dirección</option>');
 
-  $('#id_direccion')
-    .select2({
-      placeholder: 'Lista de plantas',
-      allowClear: true
-    })
-    .on('change', function () {
-      formValidator.revalidateField('id_direccion'); // Revalidar el campo predios cuando cambie
-    });
+  // Opcional: limpiar otros campos del formulario, si es necesario
+  $('#folio').val('');
+  $('#comentarios').val(''); // Asegúrate de que el selector sea correcto
+  $('#id_solicitante').val('');
+  $('#cantidad_hologramas').val('');
+  
+  // Restablecer la validación del formulario
+  formValidator.resetForm(true);
+});
+
 
   initializeSelect2(select2Elements);
 

@@ -11,15 +11,12 @@ use App\Models\direcciones;
 use App\Models\empresaNumCliente;
 use App\Models\inspecciones;
 use App\Models\tipos;
-
 use App\Models\categorias;
 use App\Models\Documentacion_url;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
-
-
 class solicitudHolograma extends Controller
 {
     public function UserManagement()
