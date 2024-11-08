@@ -32,14 +32,14 @@
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-6">
-                        <select class="select2 form-select " id="nombre_predio" name="predios" aria-label="Marca"
+                        <select class="select2 form-select " id="nombre_predio" name="nombre_predio" aria-label="Marca"
                             required>
                             <option value="" selected>Lista de predios</option>
                         </select>
                         <label for="nombre_predio">Lista de predios</label>
                     </div>
                     <div class="form-floating form-floating-outline mb-6">
-                        <select class="select2 form-select " id="id_plantacion" name="plantacion" aria-label="Marca"
+                        <select class="select2 form-select " id="id_plantacion" name="id_plantacion" aria-label="Marca"
                             required>
                             <option value="" selected>Plantación del predio</option>
                         </select>

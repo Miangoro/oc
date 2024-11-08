@@ -38,4 +38,11 @@ class lotes_envasado_granel extends Model
     }
 
 
+    public function loteGranel()
+    {
+        return $this->belongsTo(LotesGranel::class, 'id_lote_granel', 'id_empresa');
+    }
+    
+    
+
 }

@@ -23,33 +23,11 @@
                             </div>
                         </div>
 
-                       {{--  <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <select id="tipo_lote" name="tipo_lote" class="form-select" required
-                                    onchange="toggleFields()">
-                                    <option value="Por un solo lote a granel">Por un solo lote a granel</option>
-                                    <option value="Por más de un lote a granel">Por más de un lote a granel</option>
-                                </select>
-                                <label for="tipo_lote">Conformado por</label>
-                            </div>
-                        </div> --}}
-
-{{--                     <div id="datosOpcion1" class="col-md-12">
-                        <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select id_lote_granel" name="id_lote_granel[]"
-                                aria-label="Default select example">
-
-
-                            </select>
-                            <label for="id_lote_granel">No de lote granel:</label>
-                        </div>
-                    </div> --}}
-
                         <div class="form-floating form-floating-outline mb-5">
-                            <input type="text" class="form-control" id="nombre_lote"
-                                placeholder="Introduce el nombre del lote" name="nombre_lote"
+                            <input type="text" class="form-control" id="nombre"
+                                placeholder="Introduce el nombre del lote" name="nombre"
                                 aria-label="Nombre del lote" />
-                            <label for="nombre_lote">Nombre del lote</label>
+                            <label for="nombre">Nombre del lote</label>
                         </div>
 
                         <div class="row">

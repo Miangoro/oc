@@ -387,6 +387,13 @@ $(function () {
     });
   });
 
+
+  $(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
   // Agregar nuevo registro y validacion
   const addNewGuia = document.getElementById('addGuiaForm');
   const fv = FormValidation.formValidation(addGuiaForm, {
@@ -414,14 +421,14 @@ $(function () {
           }
         }
       },
-      predios: {
+      nombre_predio: {
         validators: {
           notEmpty: {
             message: 'Por favor seleccione un predio de la lista'
           }
         }
       },
-      plantacion: {
+      id_plantacion: {
         validators: {
           notEmpty: {
             message: 'Por favor seleccione una empresa para continuar'
@@ -450,6 +457,11 @@ $(function () {
       processData: false,
       contentType: false,
       success: function (response) {
+
+        $('#id_empresa').val(null).trigger('change'); // Limpiar el select2 de cliente
+        $('#nombre_predio').val(null).trigger('change'); // Limpiar el select2 de id_norma
+        $('#id_plantacion').val(null).trigger('change'); // Limpiar el select2 de id_norma
+
         $('#addGuias').modal('hide');
         $('.datatables-users').DataTable().ajax.reload();
 
@@ -476,27 +488,25 @@ $(function () {
   });
 
 
-  // Inicializar select2 y revalidar campos cuando cambien
-  $('#id_empresa').select2({
-    placeholder: 'Seleccione un cliente',
-    allowClear: true
-  }).on('change', function () {
-    fv.revalidateField('empresa'); // Revalidar el campo empresa cuando cambie
-  });
+      // Revalidaciones
+      $('#id_empresa').on('change', function () {
+        if ($(this).val()) {
+          fv.revalidateField($(this).attr('name'));
+        }
+      });
+      $('#nombre_predio').on('change', function () {
+        if ($(this).val()) {
+          fv.revalidateField($(this).attr('name'));
+        }
+      });
 
-  $('#nombre_predio').select2({
-    placeholder: 'Lista de predios',
-    allowClear: true
-  }).on('change', function () {
-    fv.revalidateField('predios'); // Revalidar el campo predios cuando cambie
-  });
-
-  $('#id_plantacion').select2({
-    placeholder: 'Lista de plantas',
-    allowClear: true
-  }).on('change', function () {
-    fv.revalidateField('plantacion'); // Revalidar el campo predios cuando cambie
-  });
+      $('#id_plantacion').on('change', function () {
+        if ($(this).val()) {
+          fv.revalidateField($(this).attr('name'));
+        }
+      });
+  
+    });
 
   initializeSelect2(select2Elements);
 

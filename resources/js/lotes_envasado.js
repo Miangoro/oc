@@ -77,7 +77,7 @@ $(function () {
           orderable: false,
           render: function (data, type, row) {
             var id_lote_granel = '';
-            var nombre_lote = '';
+            var nombre = '';
 
             if (row.id_lote_granel != 'N/A') {
               id_lote_granel =
@@ -85,10 +85,10 @@ $(function () {
                 row.id_lote_granel +
                 '</span>';
             }
-            if (row.nombre_lote != 'N/A') {
-              nombre_lote =
+            if (row.nombre != 'N/A') {
+              nombre =
                 '<br><span class="fw-bold text-dark small">Envasado:</span><span class="small"> ' +
-                row.nombre_lote +
+                row.nombre +
                 '</span>';
             }
 
@@ -96,7 +96,7 @@ $(function () {
               '<span class="fw-bold text-dark small">Agranel:</span> <span class="small"> ' +
               row.id_lote_granel +
               '</span><br><span class="fw-bold text-dark small">Envasado:</span><span class="small"> ' +
-              row.nombre_lote
+              row.nombre
             );
           }
         },
@@ -691,8 +691,8 @@ $(function () {
       // Rellenar el formulario con los datos obtenidos
       $('#edit_id_lote_envasado').val(data.id_lote_envasado);
       $('#edit_cliente').val(data.id_empresa).trigger('change');
-      $('#edit_lote_granel').val(data.id_empresa).trigger('change');
-      $('#edit_nombre_lote').val(data.nombre_lote);
+      $('#edit_lote_granel').val(data.id_lote_granel).trigger('change');
+      $('#edit_nombre').val(data.nombre); // Revisar que data.nombre contenga el nombre_lote
       $('#edit_sku').val(data.inicial);
       $('#edit_destino_lote').val(data.destino_lote);
       $('#edit_cant_botellas').val(data.cant_botellas);
@@ -705,25 +705,29 @@ $(function () {
       $('#edit_contenidoGraneles').empty();
 
       // Iterar sobre los testigos y agregar filas a la tabla
-      data.lotes_envasado_granel.forEach(function (lote, index) {
-        var newRow = `
-            <tr>
-                <th>
-                    <button type="button" class="btn btn-danger remove-row" ${index === 0 ? '' : ''}>
-                        <i class="ri-delete-bin-5-fill"></i>
-                    </button>
-                </th>
-                <td>
-                    <input type="text" class="form-control form-control-sm" name="id_lote_granel[]" value="${lote.id_lote_granel}" />
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control-sm" name="volumen_parcial[]" value="${lote.volumen_parcial}" />
-                </td>
-                
-            </tr>
-        `;
-        $('#edit_contenidoGraneles').append(newRow);
-      });
+// Iterar sobre los lotes envasado granel y agregar filas a la tabla
+data.lotes_envasado_granel.forEach(function (lote, index) {
+  var newRow = `
+      <tr>
+          <th>
+              <button type="button" class="btn btn-danger remove-row" ${index === 0 ? '' : ''}>
+                  <i class="ri-delete-bin-5-fill"></i>
+              </button>
+          </th>
+            <td>
+                <!-- Campo de texto que muestra el nombre del lote -->
+                <input type="text" class="form-control form-control-sm" value="${lote.nombre_lote}" readonly />
+                <!-- Campo oculto que guarda el id_lote_granel real -->
+                <input type="hidden" name="id_lote_granel[]" value="${lote.id_lote_granel}" />
+            </td>
+          <td>
+              <input type="text" class="form-control form-control-sm" name="volumen_parcial[]" value="${lote.volumen_parcial}" />
+          </td>
+      </tr>
+  `;
+  $('#edit_contenidoGraneles').append(newRow);
+});
+
       // Mostrar el modal de edición
       $('#editLoteEnvasado').modal('show');
       $('#edit_marca option[value="' + data.id_marca + '').attr('selected', 'selected');
@@ -760,7 +764,7 @@ $(function () {
           }
         }
       },
-      edit_nombre_lote: {
+      edit_nombre: {
         validators: {
           notEmpty: {
             message: 'Por favor introduzca el nombre del lote'
