@@ -886,53 +886,7 @@ data.lotes_envasado_granel.forEach(function (lote, index) {
     });
   });
 
-  //FUNCION MOSTRAR Y OCULTAR EN EDIT
-  document.addEventListener('DOMContentLoaded', function () {
-    // Evento para el cambio en el select de tipo de lote
-    document.getElementById('edit_tipo_lote').addEventListener('change', function () {
-      mostrarLotes();
-    });
-    function mostrarLotes() {
-      var tipoLote = document.getElementById('edit_tipo_lote').value;
 
-      if (tipoLote == 'Por un solo lote a granel') {
-        document.getElementById('edit_datosOpcion1').style.display = 'block';
-        document.getElementById('edit_datosOpcion2').style.display = 'none';
-      } else if (tipoLote == 'Por más de un lote a granel') {
-        document.getElementById('edit_datosOpcion1').style.display = 'none';
-        document.getElementById('edit_datosOpcion2').style.display = 'block';
-      } else {
-        document.getElementById('edit_datosOpcion1').style.display = 'none';
-        document.getElementById('edit_datosOpcion2').style.display = 'none';
-      }
-    }
-
-    //Ocultar select
-    document.addEventListener('DOMContentLoaded', function () {
-      const edittipoLoteSelect = document.getElementById('edit_tipo_lote');
-      const edit_datosOpcion1 = document.getElementById('edit_datosOpcion1');
-      const edit_datosOpcion2 = document.getElementById('edit_datosOpcion2');
-
-      function toggleFields() {
-        if (edittipoLoteSelect.value === 'Por un solo lote a granel') {
-          edit_datosOpcion1.style.display = 'block'; // Muestra el campo
-          edit_datosOpcion2.style.display = 'none'; // Oculta la opción 2
-        } else if (edittipoLoteSelect.value === 'Por más de un lote a granel') {
-          edit_datosOpcion1.style.display = 'none'; // Oculta el campo
-          edit_datosOpcion2.style.display = 'block'; // Muestra la opción 2
-        } else {
-          edit_datosOpcion1.style.display = 'none'; // Oculta el campo
-          edit_datosOpcion2.style.display = 'none'; // Oculta la opción 2
-        }
-      }
-
-      // Llama a toggleFields cuando se carga la página
-      toggleFields();
-
-      // Llama a toggleFields cada vez que cambia el valor del select
-      edittipoLoteSelect.addEventListener('change', toggleFields);
-    });
-  });
 
   //Añadir row
   $(document).ready(function () {
@@ -941,8 +895,8 @@ data.lotes_envasado_granel.forEach(function (lote, index) {
       if ($('#id_empresa').val() === '') {
         // Mostrar la alerta de SweetAlert2
         Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
+          icon: 'warning',
+          title: 'Espere!',
           text: 'Por favor, selecciona un cliente primero.',
           customClass: {
             confirmButton: 'btn btn-danger'
@@ -1028,65 +982,7 @@ data.lotes_envasado_granel.forEach(function (lote, index) {
   $(document).on('click', '.remove-row', function () {
     $(this).closest('tr').remove();
   });
-  //MODAL para ocultar y mostara
-  document.addEventListener('DOMContentLoaded', function () {
-    // Evento para el cambio en el select de tipo de lote
-    document.getElementById('tipo_lote').addEventListener('change', function () {
-      toggleFields();
-    });
 
-    // Función para mostrar u ocultar campos dependiendo de la opción seleccionada
-    function toggleFields() {
-      var tipoLote = document.getElementById('tipo_lote').value;
-      if (tipoLote == 'Por un solo lote a granel') {
-        document.getElementById('datosOpcion1').style.display = 'block';
-        document.getElementById('datosOpcion2').style.display = 'none';
-      } else if (tipoLote == 'Por más de un lote a granel') {
-        document.getElementById('datosOpcion1').style.display = 'none';
-        document.getElementById('datosOpcion2').style.display = 'block';
-      } else {
-        document.getElementById('datosOpcion1').style.display = 'none';
-        document.getElementById('datosOpcion2').style.display = 'none';
-      }
-    }
-
-    //Ocultar select
-    document.addEventListener('DOMContentLoaded', function () {
-      const tipoLoteSelect = document.getElementById('tipo_lote');
-      const datosOpcion1 = document.getElementById('datosOpcion1');
-      const datosOpcion2 = document.getElementById('datosOpcion2');
-
-      function toggleFields() {
-        if (tipoLoteSelect.value === 'Por un solo lote a granel') {
-          datosOpcion1.style.display = 'block'; // Muestra el campo
-          datosOpcion2.style.display = 'none'; // Oculta la opción 2
-        } else if (tipoLoteSelect.value === 'Por más de un lote a granel') {
-          datosOpcion1.style.display = 'none'; // Oculta el campo
-          datosOpcion2.style.display = 'block'; // Muestra la opción 2
-        } else {
-          datosOpcion1.style.display = 'none'; // Oculta el campo
-          datosOpcion2.style.display = 'none'; // Oculta la opción 2
-        }
-      }
-
-      // Llama a toggleFields cuando se carga la página
-      toggleFields();
-
-      // Llama a toggleFields cada vez que cambia el valor del select
-      tipoLoteSelect.addEventListener('change', toggleFields);
-    });
-
-    // Función para inicializar select2 en los select
-    function initializeSelect2() {
-      $('.select2').select2();
-    }
-
-    // Inicializar select2
-    initializeSelect2();
-
-    // Inicializar campos por defecto
-    toggleFields();
-  });
 
   //update valiacion: en editar
   const reclasificacionForm = document.getElementById('reclasificacionForm');
