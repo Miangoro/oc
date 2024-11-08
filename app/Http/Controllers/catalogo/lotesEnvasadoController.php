@@ -71,17 +71,14 @@ class lotesEnvasadoController extends Controller
                     ->orWhere('nombre', 'LIKE', "%{$searchValue}%")
                     ->orWhere('estatus', 'LIKE', "%{$searchValue}%");
 
-                // Búsqueda en la relación 'marca'
                 $q->orWhereHas('marca', function ($qMarca) use ($searchValue) {
                     $qMarca->where('marca', 'LIKE', "%{$searchValue}%");
                 });
 
-                // Búsqueda en la relación 'Instalaciones' para 'direccion_completa'
                 $q->orWhereHas('Instalaciones', function ($qDireccion) use ($searchValue) {
                     $qDireccion->where('direccion_completa', 'LIKE', "%{$searchValue}%");
                 });
 
-                // Búsqueda en la relación 'empresa' para 'razon_social'
                 $q->orWhereHas('empresa', function ($qEmpresa) use ($searchValue) {
                     $qEmpresa->where('razon_social', 'LIKE', "%{$searchValue}%");
                 });
