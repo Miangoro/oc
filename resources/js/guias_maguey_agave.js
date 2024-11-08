@@ -1,153 +1,12 @@
-/**
- * Page User List
- */
 'use strict';
-$(document).ready(function () {
-  $('.datepicker').datepicker({
-    format: 'yyyy-mm-dd',
-    autoclose: true,
-    todayHighlight: true,
-    language: 'es' // Configura el idioma a español
-  });
-});
-
-// Validación del formulario
-const addNewGuia = document.getElementById('addGuiaForm');
-const fv = FormValidation.formValidation(addGuiaForm, {
-  fields: {
-    empresa: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione una empresa'
-        }
-      }
-    },
-    numero_guias: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor introduzca un número de guías a solicitar'
-        },
-        between: {
-          min: 1,
-          max: 100,
-          message: 'El número de guías debe estar entre 1 y 100'
-        },
-        regexp: {
-          // Expresión regular que asegura que el número no comience con 0 a menos que sea exactamente 0
-          regexp: /^(?!0)\d+$/,
-          message: 'El número no debe comenzar con 0'
-        }
-      }
-},
-    predios: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione un predio de la lista'
-        }
-      }
-    },
-    plantacion: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione una empresa para continuar'
-        }
-      }
-    }
-  },
-  plugins: {
-    trigger: new FormValidation.plugins.Trigger(),
-    bootstrap5: new FormValidation.plugins.Bootstrap5({
-      eleValidClass: '',
-      rowSelector: function (field, ele) {
-        return '.mb-5, .mb-6';
-      }
-    }),
-    submitButton: new FormValidation.plugins.SubmitButton(),
-    autoFocus: new FormValidation.plugins.AutoFocus()
-  }
-}).on('core.form.valid', function (e) {
-  var formData = new FormData(addGuiaForm);
-
-  $.ajax({
-    url: '/guias/store',
-    type: 'POST',
-    data: formData,
-    processData: false,
-    contentType: false,
-    success: function (response) {
-      $('#addGuias').modal('hide');
-      $('.datatables-users').DataTable().ajax.reload();
-
-      Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: response.success,
-        customClass: {
-          confirmButton: 'btn btn-success'
-        }
-      });
-    },
-    error: function (xhr) {
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al registrar la guía de traslado',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    }
-  });
-});
-
-
-// Inicializar select2 y revalidar campos cuando cambien
-$('#id_empresa').select2({
-  placeholder: 'Seleccione un cliente',
-  allowClear: true
-}).on('change', function () {
-  fv.revalidateField('empresa'); // Revalidar el campo empresa cuando cambie
-});
-
-$('#nombre_predio').select2({
-  placeholder: 'Lista de predios',
-  allowClear: true
-}).on('change', function () {
-  fv.revalidateField('predios'); // Revalidar el campo predios cuando cambie
-});
-
-$('#id_plantacion').select2({
-  placeholder: 'Lista de plantas',
-  allowClear: true
-}).on('change', function () {
-  fv.revalidateField('plantacion'); // Revalidar el campo predios cuando cambie
-});
-
 
 $(function () {
-  // Datatable (jquery)
-  // Variable declaration for table
+
   var dt_user_table = $('.datatables-users'),
     select2Elements = $('.select2'),
     userView = baseUrl + 'app/user/view/account',
     offCanvasForm = $('#addGuias');
 
-  // Función para inicializar Select2 en elementos específicos
-  function initializeSelect2($elements) {
-    $elements.each(function () {
-      var $this = $(this);
-      select2Focus($this);
-      $this.wrap('<div class="position-relative"></div>').select2({
-        placeholder: 'Selecciona cliente',
-        dropdownParent: $this.parent()
-      });
-    });
-  }
-
-  // Inicialización de Select2 para elementos con clase .select2
-  initializeSelect2(select2Elements);
-
-  // ajax setup
   $.ajaxSetup({
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -263,34 +122,6 @@ $(function () {
             return '<span class="user-email">' + $email + '</span>';
           }
         },
-
-        /*{
-          // email verify
-          targets: 4,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $verified = full['regimen'];
-            if($verified=='Persona física'){
-              var $colorRegimen = 'info';
-            }else{
-              var $colorRegimen = 'warning';
-            }
-            return `${
-              $verified
-                ? '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-                : '<span class="badge rounded-pill  bg-label-'+$colorRegimen+'">' + $verified + '</span>'
-            }`;
-          }
-        },*/
-        /*         {
-          // email verify
-          targets: 11,
-          className: 'text-center',
-          render: function (data, type, full, meta) {
-            var $id = full['id_guia'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdfGUias" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_guia']}" data-registro="${full['razon_social']} "></i>`;
-          }
-        }, */
         {
           // Actions
           targets: -1,
@@ -512,18 +343,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -534,7 +365,142 @@ $(function () {
     });
   }
 
-  // Delete Record
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        placeholder: 'Selecciona cliente',
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+
+  //Inicializar DatePicker
+  $(document).ready(function () {
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      todayHighlight: true,
+      language: 'es' // Configura el idioma a español
+    });
+  });
+
+  // Agregar nuevo registro y validacion
+  const addNewGuia = document.getElementById('addGuiaForm');
+  const fv = FormValidation.formValidation(addGuiaForm, {
+    fields: {
+      empresa: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una empresa'
+          }
+        }
+      },
+      numero_guias: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor introduzca un número de guías a solicitar'
+          },
+          between: {
+            min: 1,
+            max: 100,
+            message: 'El número de guías debe estar entre 1 y 100'
+          },
+          regexp: {
+            regexp: /^(?!0)\d+$/,
+            message: 'El número no debe comenzar con 0'
+          }
+        }
+      },
+      predios: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un predio de la lista'
+          }
+        }
+      },
+      plantacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una empresa para continuar'
+          }
+        }
+      }
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        rowSelector: function (field, ele) {
+          return '.mb-5, .mb-6';
+        }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function (e) {
+    var formData = new FormData(addGuiaForm);
+
+    $.ajax({
+      url: '/guias/store',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        $('#addGuias').modal('hide');
+        $('.datatables-users').DataTable().ajax.reload();
+
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.success,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function (xhr) {
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al registrar la guía de traslado',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+  });
+
+
+  // Inicializar select2 y revalidar campos cuando cambien
+  $('#id_empresa').select2({
+    placeholder: 'Seleccione un cliente',
+    allowClear: true
+  }).on('change', function () {
+    fv.revalidateField('empresa'); // Revalidar el campo empresa cuando cambie
+  });
+
+  $('#nombre_predio').select2({
+    placeholder: 'Lista de predios',
+    allowClear: true
+  }).on('change', function () {
+    fv.revalidateField('predios'); // Revalidar el campo predios cuando cambie
+  });
+
+  $('#id_plantacion').select2({
+    placeholder: 'Lista de plantas',
+    allowClear: true
+  }).on('change', function () {
+    fv.revalidateField('plantacion'); // Revalidar el campo predios cuando cambie
+  });
+
+  initializeSelect2(select2Elements);
+
+  // Eliminar registro
   $(document).on('click', '.delete-record', function () {
     var user_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
@@ -618,7 +584,6 @@ $(function () {
     $('#loading-spinner-chelo').hide(); // Ocultar el spinner
     $(this).show(); // Mostrar el iframe con el PDF
   });
-
   // Función para descargar el PDF dentro de un ZIP
   function downloadPdfAsZip(pdfUrl, fileName) {
     // Crear una nueva instancia de JSZip
@@ -640,27 +605,7 @@ $(function () {
       .catch(error => console.error('Error al descargar el PDF:', error));
   }
 
-  /*// Reciben los datos del pdf
-  $(document).on('click', '.pdf', function () {
-      var id = $(this).data('id');
-      var registro = $(this).data('registro');
-      var pdfUrl = '../guia_de_translado/' + id; // Ruta del PDF
-  
-      // Actualizar el iframe con el PDF
-      var iframe = $('#pdfViewerGuias');
-      iframe.attr('src', pdfUrl);
-  
-      // Actualizar el título y subtítulo del modal
-      $("#titulo_modal_GUIAS").text("Guia de traslado");
-      $("#subtitulo_modal_GUIAS").text(registro);
-  
-      // Actualizar el enlace de descarga
-      var descargarBtn = $('#descargarPdfBtn');
-      descargarBtn.attr('href', pdfUrl);
-      descargarBtn.attr('download', 'Guia_de_traslado_' + registro + '.pdf'); // Nombre del archivo a descargar
-  });
-  */
-
+  //Editar guias
   $(document).on('click', '.edit-record', function () {
     var id_guia = $(this).data('id');
 
@@ -701,8 +646,7 @@ $(function () {
     });
   });
 
-  //edit guias tablas
-  // Evento de click para ver los registros y preparar la descarga de PDFs
+  //Ver guias y descargar
   $(document).on('click', '.ver-registros', function () {
     var run_folio = $(this).data('id');
 
@@ -748,10 +692,7 @@ $(function () {
           `;
         $('#tablita').append(fila);
       });
-
-      // Mostrar el modal de edición
       $('#verGuiasRegistardas').modal('show');
-
       // Evento para descargar todos los PDFs en un archivo ZIP
       $('#descargarPdfBtn')
         .off('click')
@@ -783,10 +724,7 @@ $(function () {
         Swal.showLoading();
       }
     });
-    
-
     var zip = new JSZip();
-
     // Crear una lista de promesas para descargar cada PDF
     var pdfPromises = pdfFiles.map(file =>
       fetch(file.url)
@@ -804,7 +742,6 @@ $(function () {
         .then(function (zipBlob) {
           // Descargar el archivo ZIP
           saveAs(zipBlob, zipFileName);
-
           // Cerrar la alerta de "Procesando..." después de que el ZIP esté listo
           Swal.close();
         })
@@ -822,9 +759,8 @@ $(function () {
     });
   }
 
+  //Editar Guias y validacion
   const editGuiaForm = document.getElementById('editGuiaForm');
-
-  // Validación del formulario
   const fv2 = FormValidation.formValidation(editGuiaForm, {
     fields: {
       id_empresa: {
@@ -870,7 +806,6 @@ $(function () {
   }).on('core.form.valid', function (e) {
     //e.preventDefault();
     var formData = new FormData(editGuiaForm);
-
     $.ajax({
       url: '/update/', // Actualiza con la URL correcta
       type: 'POST',
@@ -880,7 +815,6 @@ $(function () {
       success: function (response) {
         $('#editGuias').modal('hide');
         $('.datatables-users').DataTable().ajax.reload();
-
         // Mostrar alerta de éxito
         Swal.fire({
           icon: 'success',
