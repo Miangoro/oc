@@ -630,15 +630,10 @@ $(function () {
 $('#addHologramas').on('hidden.bs.modal', function () {
   // Restablecer select de empresa
   $('#id_empresa').val('');
-  $('#id_empresa').prop('selected', true);
-
-  // Limpiar el contenido de los select de marca y dirección
-  $('#id_marca').html('<option value="">Seleccione una marca</option>');
-  $('.id_direccion').html('<option value="">Seleccione una dirección</option>');
-
-  // Opcional: limpiar otros campos del formulario, si es necesario
+  $('#id_marca').html('');
+  $('.id_direccion').html('');
   $('#folio').val('');
-  $('#comentarios').val(''); // Asegúrate de que el selector sea correcto
+  $('#comentarios').val(''); 
   $('#id_solicitante').val('');
   $('#cantidad_hologramas').val('');
   
