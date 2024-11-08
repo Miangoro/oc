@@ -22,7 +22,6 @@ $(function () {
       });
     });
   }
-  initializeSelect2(select2Elements);
 
   // ajax setup
   $.ajaxSetup({
@@ -241,11 +240,10 @@ $(function () {
               $colorRegimen = 'secondary'; // Color por defecto si no coincide con ninguno
             }
 
-            return `${
-              $verified
+            return `${$verified
                 ? '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
                 : '<span class="badge rounded-pill bg-label-' + $colorRegimen + '">' + $verified + '</span>'
-            }`;
+              }`;
           }
         },
         {
@@ -470,18 +468,18 @@ $(function () {
             var data = $.map(columns, function (col, i) {
               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
                 ? '<tr data-dt-row="' +
-                    col.rowIndex +
-                    '" data-dt-column="' +
-                    col.columnIndex +
-                    '">' +
-                    '<td>' +
-                    col.title +
-                    ':' +
-                    '</td> ' +
-                    '<td>' +
-                    col.data +
-                    '</td>' +
-                    '</tr>'
+                col.rowIndex +
+                '" data-dt-column="' +
+                col.columnIndex +
+                '">' +
+                '<td>' +
+                col.title +
+                ':' +
+                '</td> ' +
+                '<td>' +
+                col.data +
+                '</td>' +
+                '</tr>'
                 : '';
             }).join('');
 
@@ -492,11 +490,8 @@ $(function () {
     });
   }
 
-  // Eliminar registro
-  // validating form and updating user's data
+  // Registrar Lotes y validar
   const addNewLoteForm = document.getElementById('addNewLoteForm');
-
-  // Validación del formulario
   const fv = FormValidation.formValidation(addNewLoteForm, {
     fields: {
       id_empresa: {
@@ -625,6 +620,8 @@ $(function () {
     });
   });
 
+  initializeSelect2(select2Elements);
+
   $(document).on('click', '.delete-record', function () {
     var user_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
@@ -702,10 +699,8 @@ $(function () {
       // EDIT TESTIGOS
       $('#edit_contenidoGraneles').empty();
 
-      // Iterar sobre los testigos y agregar filas a la tabla
-// Iterar sobre los lotes envasado granel y agregar filas a la tabla
-data.lotes_envasado_granel.forEach(function (lote, index) {
-  var newRow = `
+      data.lotes_envasado_granel.forEach(function (lote, index) {
+        var newRow = `
       <tr>
           <th>
               <button type="button" class="btn btn-danger remove-row" ${index === 0 ? '' : ''}>
@@ -721,8 +716,8 @@ data.lotes_envasado_granel.forEach(function (lote, index) {
           </td>
       </tr>
   `;
-  $('#edit_contenidoGraneles').append(newRow);
-});
+        $('#edit_contenidoGraneles').append(newRow);
+      });
 
       // Mostrar el modal de edición
       $('#editLoteEnvasado').modal('show');
