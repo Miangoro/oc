@@ -12,12 +12,9 @@ use App\Models\catalogo_norma_certificar;
 use App\Models\tipos;
 use App\Models\clases;
 use App\Models\categorias;
-
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Storage;
-
-
 
 class marcasCatalogoController extends Controller
 {
@@ -25,7 +22,7 @@ class marcasCatalogoController extends Controller
     public function UserManagement()
     {
         // Obtener listado de clientes (empresas)
-        $clientes = Empresa::where('tipo', 2)->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $clientes = Empresa::where('tipo', '=', '2')->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
         $documentos = Documentacion::where('id_documento', '=', '82')
             ->orWhere('id_documento', '=', '80')
             ->orWhere('id_documento', '=', '121')
@@ -100,9 +97,9 @@ class marcasCatalogoController extends Controller
                 ->orWhereHas('empresa', function ($qEmpresa) use ($search) {
                     $qEmpresa->where('razon_social', 'LIKE', "%{$search}%");
                 })
-              ->orWhereHas('catalogo_norma_certificar', function ($qNorma) use ($search) {
-                $qNorma->where('norma', 'LIKE', "%{$search}%");
-            })
+                ->orWhereHas('catalogo_norma_certificar', function ($qNorma) use ($search) {
+                    $qNorma->where('norma', 'LIKE', "%{$search}%");
+                })
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
@@ -114,9 +111,9 @@ class marcasCatalogoController extends Controller
                 ->orWhereHas('empresa', function ($qEmpresa) use ($search) {
                     $qEmpresa->where('razon_social', 'LIKE', "%{$search}%");
                 })
-              ->orWhereHas('catalogo_norma_certificar', function ($qNorma) use ($search) {
-                $qNorma->where('norma', 'LIKE', "%{$search}%");
-            })
+                ->orWhereHas('catalogo_norma_certificar', function ($qNorma) use ($search) {
+                    $qNorma->where('norma', 'LIKE', "%{$search}%");
+                })
                 ->count();
         }
 
@@ -150,13 +147,9 @@ class marcasCatalogoController extends Controller
         ]);
     }
 
-
-    /*Metodo para actualizar*/
+    //Metodo para registrar
     public function store(Request $request)
     {
-
-
-
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->cliente)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
             return !empty($numero);
@@ -252,17 +245,12 @@ class marcasCatalogoController extends Controller
                 }
             }
         }
-
         return response()->json(['success' => 'Marca registrada exitosamente.']);
     }
 
-
-
-
-    //Metodo para editar las marcas
+    //Metodo para editar marcas
     public function edit($id)
     {
-
         $marca = Marcas::findOrFail($id);
         $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get(); // Obtener los documentos asociados a la marca
 
@@ -271,8 +259,6 @@ class marcasCatalogoController extends Controller
             return !empty($numero);
         });
 
-
-
         return response()->json([
             'marca' => $marca,
             'documentacion_urls' => $documentacion_urls, // Incluir la fecha de vigencia en los datos
@@ -280,13 +266,7 @@ class marcasCatalogoController extends Controller
         ]);
     }
 
-
-
-
-
-
-
-    // Método para actualizar una marca existente
+    // Método para actualizar marca
     public function update(Request $request)
     {
         $request->validate([
@@ -314,10 +294,7 @@ class marcasCatalogoController extends Controller
         return view('catalogo.find_catalago_marcas', compact('opciones', 'clientes'));
     }
 
-
-
-
-    //funcion para eliminar
+    //Funcion para eliminar
     public function destroy($id_marca)
     {
         $clase = marcas::findOrFail($id_marca);
@@ -326,8 +303,7 @@ class marcasCatalogoController extends Controller
         return response()->json(['success' => 'Marca eliminada correctamente']);
     }
 
-
-
+    //Metodo para actualizar etiquetas
     public function updateEtiquetas(Request $request)
     {
         try {
@@ -411,8 +387,6 @@ class marcasCatalogoController extends Controller
                         $nuevoIdDocCorrugado++;
                     }
 
-
-
                     $documentacion_url->save();
                 }
             }
@@ -424,13 +398,7 @@ class marcasCatalogoController extends Controller
         }
     }
 
-
-
-
-
-
-
-
+    //Metodo para ediatr etiquetas
     public function editEtiquetas($id)
     {
 
