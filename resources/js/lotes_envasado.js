@@ -472,14 +472,6 @@ $(function () {
     });
   }
 
-  // Registrar Lotes y validar
-  $(function () {
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-
     // Función para inicializar Select2 en elementos específicos
     function initializeSelect2($elements) {
       $elements.each(function () {
@@ -491,6 +483,14 @@ $(function () {
         });
       });
     }
+
+  // Registrar Lotes y validar
+  $(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
 
     //Obtener graneles
     function obtenerGraneles() {
