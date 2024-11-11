@@ -12,8 +12,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select  id="id_empresa"
-                                    name="empresa" class="select2 form-select" required>
+                                <select id="id_empresa" name="empresa" class="select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($empresa as $id_cliente)
                                         <option value="{{ $id_cliente->id_empresa }}">{{ $id_cliente->razon_social }}
@@ -73,7 +72,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number" placeholder="Mermas plantas"
-                                    id="mermas_plantas" name="mermas"   oninput="calcularPlantasActualmente()"/>
+                                    id="mermas_plantas" name="mermas" oninput="calcularPlantasActualmente()" />
                                 <label for="mermas_plantas">Mermas plantas</label>
                             </div>
                         </div>
@@ -100,27 +99,21 @@
 
 
 <script>
-// Función para restar los campos
-function calcularPlantasActualmente() {
-    // Obtener los valores de los inputs
-    const numAnterior = parseFloat(document.getElementById('num_anterior').value) || 0;
-    const numComercializadas = parseFloat(document.getElementById('num_comercializadas').value) || 0;
-    const mermasPlantas = parseFloat(document.getElementById('mermas_plantas').value) || 0;
-
-    // Calcular el número de plantas actualmente
-    let plantasActualmente = numAnterior - numComercializadas - mermasPlantas;
-
-    // Evitar números negativos
-    if (plantasActualmente < 0) {
-        plantasActualmente = 0;
+    // Función para restar los campos
+    function calcularPlantasActualmente() {
+        // Obtener los valores de los inputs
+        const numAnterior = parseFloat(document.getElementById('num_anterior').value) || 0;
+        const numComercializadas = parseFloat(document.getElementById('num_comercializadas').value) || 0;
+        const mermasPlantas = parseFloat(document.getElementById('mermas_plantas').value) || 0;
+        // Calcular el número de plantas actualmente
+        let plantasActualmente = numAnterior - numComercializadas - mermasPlantas;
+        // Evitar números negativos
+        if (plantasActualmente < 0) {
+            plantasActualmente = 0;
+        }
+        // Asignar el valor calculado al input
+        document.getElementById('numero_plantas').value = plantasActualmente;
     }
-
-    // Asignar el valor calculado al input
-    document.getElementById('numero_plantas').value = plantasActualmente;
-}
-
-
-
 
     //Limpia en el boton cancelar
     document.addEventListener('DOMContentLoaded', function() {
@@ -129,46 +122,5 @@ function calcularPlantasActualmente() {
                 document.getElementById('addGuiaForm').reset();
                 $('.select2').val(null).trigger('change'); // Reset select2 fields
             });
-    });
-
-    //Limpia al registrar
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const modal = document.getElementById('addGuias');
-        const form = document.getElementById('addGuiaForm');
-
-        modal.addEventListener('hidden.bs.modal', (event) => {
-            form.reset();
-            // Limpia select2
-            $('#id_empresa').val('').trigger('change');
-            $('#nombre_predio').val('').trigger('change');
-            $('#id_plantacion').val('').trigger('change');
-            // Si hay campos adicionales que necesitan ser limpiados
-            document.querySelectorAll('.select2').forEach((select) => {
-                $(select).val('').trigger('change');
-            });
-        });
-
-        form.addEventListener('submit', (event) => {
-            // Evitar el comportamiento predeterminado del formulario
-            event.preventDefault();
-
-            // Simular envío del formulario (ejemplo: hacer una solicitud AJAX)
-            // Aquí podrías realizar la solicitud AJAX
-
-            // Después de enviar el formulario, restablecerlo y cerrar el modal
-            form.reset();
-            // Limpia select2
-            $('#id_empresa').val('').trigger('change');
-            $('#nombre_predio').val('').trigger('change');
-            $('#id_plantacion').val('').trigger('change');
-            // Si hay campos adicionales que necesitan ser limpiados
-            document.querySelectorAll('.select2').forEach((select) => {
-                $(select).val('').trigger('change');
-            });
-
-            // Cerrar el modal
-            const modalInstance = bootstrap.Modal.getInstance(modal);
-            modalInstance.hide();
-        });
     });
 </script>
