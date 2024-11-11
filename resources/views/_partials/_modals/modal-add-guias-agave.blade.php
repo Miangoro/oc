@@ -115,7 +115,7 @@
         document.getElementById('numero_plantas').value = plantasActualmente;
     }
 
-    //Limpia en el boton cancelar
+    //Limpia en cancelar
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelector('#addGuias .btn-outline-secondary').addEventListener('click',
             function() {

@@ -390,7 +390,6 @@ $(function () {
 
 
   // Agregar nuevo registro y validacion
-
   $(function () {
     $.ajaxSetup({
       headers: {
@@ -398,20 +397,18 @@ $(function () {
       }
     });
 
+    //Obtener nombre predio
     function obtenerNombrePredio() {
       var empresa = $("#id_empresa").val();
-      // Hacer una petición AJAX para obtener los detalles de la empresa
       $.ajax({
         url: '/getDatos/' + empresa,
         method: 'GET',
         success: function (response) {
           console.log(response);
-          // Cargar los detalles en el modal
           var contenido = "";
           for (let index = 0; index < response.predios.length; index++) {
             contenido = '<option value="' + response.predios[index].id_predio + '">' + response
               .predios[index].nombre_predio + '</option>' + contenido;
-            // console.log(response.normas[index].norma);
           }
           if (response.predios.length == 0) {
             contenido = '<option value="">Sin predios registradas</option>';
@@ -420,20 +417,18 @@ $(function () {
           formValidator.revalidateField('predios');
         },
         error: function () {
-          //alert('Error al cargar los lotes a granel.');
         }
       });
     }
 
+    //Obtener plantacion
     function obtenerPlantacionPredio() {
       var empresa = $("#id_empresa").val();
-      // Hacer una petición AJAX para obtener los detalles de la empresa
       $.ajax({
         url: '/getDatos/' + empresa,
         method: 'GET',
         success: function (response) {
           console.log(response);
-          // Cargar los detalles en el modal
           var contenido = "";
           for (let index = 0; index < response.predio_plantacion.length; index++) {
             contenido = '<option value="' + response.predio_plantacion[index].id_plantacion +
@@ -442,14 +437,11 @@ $(function () {
                   .predio_plantacion[index].nombre + ' ' + response
                     .predio_plantacion[index].cientifico + ' | Año de platanción: ' + response
                       .predio_plantacion[index].anio_plantacion + '</option>' + contenido;
-            // console.log(response.normas[index].norma);
           }
           if (response.predio_plantacion.length == 0) {
             contenido = '<option value="">Sin predios registradas</option>';
           }
           $('#id_plantacion').html(contenido);
-
-          // Agregar evento change para actualizar el valor de #num_anterior
           $('#id_plantacion').on('change', function () {
             var selectedOption = $(this).find('option:selected');
             var numPlantas = selectedOption.data('num-plantas');
@@ -475,7 +467,7 @@ $(function () {
         empresa: {
           validators: {
             notEmpty: {
-              message: 'Por favor seleccione una empresa'
+              message: 'Por favor seleccione un cliente'
             }
           }
         },
@@ -579,13 +571,9 @@ $(function () {
   $(document).on('click', '.delete-record', function () {
     var user_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
-
-    // hide responsive modal in small screen
     if (dtrModal.length) {
       dtrModal.modal('hide');
     }
-
-    // sweetalert for confirmation of delete
     Swal.fire({
       title: '¿Está seguro?',
       text: 'No podrá revertir este evento',
@@ -599,7 +587,6 @@ $(function () {
       buttonsStyling: false
     }).then(function (result) {
       if (result.value) {
-        // delete the data
         $.ajax({
           type: 'DELETE',
           url: `${baseUrl}guias-list/${user_id}`,
@@ -610,8 +597,6 @@ $(function () {
             console.log(error);
           }
         });
-
-        // success sweetalert
         Swal.fire({
           icon: 'success',
           title: '¡Eliminado!',
@@ -663,7 +648,6 @@ $(function () {
   function downloadPdfAsZip(pdfUrl, fileName) {
     // Crear una nueva instancia de JSZip
     var zip = new JSZip();
-
     // Descargar el archivo PDF
     fetch(pdfUrl)
       .then(response => response.blob())
@@ -705,7 +689,6 @@ $(function () {
       $('#edit_no_cliente').val(data.no_cliente);
       $('#edit_fecha_ingreso').val(data.fecha_ingreso);
       $('#edit_domicilio').val(data.domicilio);
-
       // Mostrar el modal de edición
       $('#editGuias').modal('show');
     }).fail(function (jqXHR, textStatus, errorThrown) {
