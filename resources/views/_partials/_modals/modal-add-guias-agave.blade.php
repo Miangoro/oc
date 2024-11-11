@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerNombrePredio(); obtenerPlantacionPredio();" id="id_empresa"
+                                <select  id="id_empresa"
                                     name="empresa" class="select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($empresa as $id_cliente)
@@ -26,20 +26,20 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number" placeholder="Número de guías solicitadas"
-                                    id="numero_guias" name="numero_guias" required min="1" max="100"/>
+                                    id="numero_guias" name="numero_guias" required />
                                 <label for="numero_guias">Número de guías solicitadas</label>
                             </div>
                         </div>
                     </div>
                     <div class="form-floating form-floating-outline mb-6">
-                        <select class="select2 form-select " id="nombre_predio" name="nombre_predio" aria-label="Marca"
+                        <select class="select2 form-select " id="nombre_predio" name="predios" aria-label="Marca"
                             required>
                             <option value="" selected>Lista de predios</option>
                         </select>
                         <label for="nombre_predio">Lista de predios</label>
                     </div>
                     <div class="form-floating form-floating-outline mb-6">
-                        <select class="select2 form-select " id="id_plantacion" name="id_plantacion" aria-label="Marca"
+                        <select class="select2 form-select " id="id_plantacion" name="plantacion" aria-label="Marca"
                             required>
                             <option value="" selected>Plantación del predio</option>
                         </select>
@@ -100,82 +100,6 @@
 
 
 <script>
-    function obtenerNombrePredio() {
-        var empresa = $("#id_empresa").val();
-        // Hacer una petición AJAX para obtener los detalles de la empresa
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
-
-                // Cargar los detalles en el modal
-                var contenido = "";
-                for (let index = 0; index < response.predios.length; index++) {
-                    contenido = '<option value="' + response.predios[index].id_predio + '">' + response
-                        .predios[index].nombre_predio + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
-                }
-
-                if (response.predios.length == 0) {
-                    contenido = '<option value="">Sin predios registradas</option>';
-                }
-                $('#nombre_predio').html(contenido);
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
-            }
-        });
-    }
-
-    function obtenerPlantacionPredio() {
-        var empresa = $("#id_empresa").val();
-        // Hacer una petición AJAX para obtener los detalles de la empresa
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
-
-                // Cargar los detalles en el modal
-                var contenido = "";
-                for (let index = 0; index < response.predio_plantacion.length; index++) {
-                    contenido = '<option value="' + response.predio_plantacion[index].id_plantacion +
-                        '" " data-num-plantas="' + response.predio_plantacion[index].num_plantas + '">Número de plantas: ' + response
-                        .predio_plantacion[index].num_plantas + ' | Tipo de agave: ' + response
-                        .predio_plantacion[index].nombre + ' ' + response
-                        .predio_plantacion[index].cientifico + ' | Año de platanción: ' + response
-                        .predio_plantacion[index].anio_plantacion + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
-
-                    
-                }
-
-                if (response.predio_plantacion.length == 0) {
-                    contenido = '<option value="">Sin predios registradas</option>';
-                }
-                $('#id_plantacion').html(contenido);
-
-         
-                
-            // Agregar evento change para actualizar el valor de #num_anterior
-            $('#id_plantacion').on('change', function() {
-                var selectedOption = $(this).find('option:selected');
-                var numPlantas = selectedOption.data('num-plantas');
-                $('#num_anterior').val(numPlantas);
-            });
-                    
-            $('#id_plantacion').trigger('change');
-              
-
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
-            }
-        });
-    }
-
-
 // Función para restar los campos
 function calcularPlantasActualmente() {
     // Obtener los valores de los inputs

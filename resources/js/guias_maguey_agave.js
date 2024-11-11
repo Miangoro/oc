@@ -388,125 +388,190 @@ $(function () {
   });
 
 
+
+  // Agregar nuevo registro y validacion
+
   $(function () {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-  // Agregar nuevo registro y validacion
-  const addNewGuia = document.getElementById('addGuiaForm');
-  const fv = FormValidation.formValidation(addGuiaForm, {
-    fields: {
-      empresa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una empresa'
+
+    function obtenerNombrePredio() {
+      var empresa = $("#id_empresa").val();
+      // Hacer una petición AJAX para obtener los detalles de la empresa
+      $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function (response) {
+          console.log(response);
+          // Cargar los detalles en el modal
+          var contenido = "";
+          for (let index = 0; index < response.predios.length; index++) {
+            contenido = '<option value="' + response.predios[index].id_predio + '">' + response
+              .predios[index].nombre_predio + '</option>' + contenido;
+            // console.log(response.normas[index].norma);
           }
-        }
-      },
-      numero_guias: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor introduzca un número de guías a solicitar'
-          },
-          between: {
-            min: 1,
-            max: 100,
-            message: 'El número de guías debe estar entre 1 y 100'
-          },
-          regexp: {
-            regexp: /^(?!0)\d+$/,
-            message: 'El número no debe comenzar con 0'
+          if (response.predios.length == 0) {
+            contenido = '<option value="">Sin predios registradas</option>';
           }
+          $('#nombre_predio').html(contenido);
+          formValidator.revalidateField('predios');
+        },
+        error: function () {
+          //alert('Error al cargar los lotes a granel.');
         }
-      },
-      nombre_predio: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un predio de la lista'
-          }
-        }
-      },
-      id_plantacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una empresa para continuar'
-          }
-        }
-      }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          return '.mb-5, .mb-6';
-        }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
+      });
     }
-  }).on('core.form.valid', function (e) {
-    var formData = new FormData(addGuiaForm);
 
-    $.ajax({
-      url: '/guias/store',
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-
-        $('#id_empresa').val(null).trigger('change'); // Limpiar el select2 de cliente
-        $('#nombre_predio').val(null).trigger('change'); // Limpiar el select2 de id_norma
-        $('#id_plantacion').val(null).trigger('change'); // Limpiar el select2 de id_norma
-
-        $('#addGuias').modal('hide');
-        $('.datatables-users').DataTable().ajax.reload();
-
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: response.success,
-          customClass: {
-            confirmButton: 'btn btn-success'
+    function obtenerPlantacionPredio() {
+      var empresa = $("#id_empresa").val();
+      // Hacer una petición AJAX para obtener los detalles de la empresa
+      $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function (response) {
+          console.log(response);
+          // Cargar los detalles en el modal
+          var contenido = "";
+          for (let index = 0; index < response.predio_plantacion.length; index++) {
+            contenido = '<option value="' + response.predio_plantacion[index].id_plantacion +
+              '" " data-num-plantas="' + response.predio_plantacion[index].num_plantas + '">Número de plantas: ' + response
+                .predio_plantacion[index].num_plantas + ' | Tipo de agave: ' + response
+                  .predio_plantacion[index].nombre + ' ' + response
+                    .predio_plantacion[index].cientifico + ' | Año de platanción: ' + response
+                      .predio_plantacion[index].anio_plantacion + '</option>' + contenido;
+            // console.log(response.normas[index].norma);
           }
-        });
+          if (response.predio_plantacion.length == 0) {
+            contenido = '<option value="">Sin predios registradas</option>';
+          }
+          $('#id_plantacion').html(contenido);
+
+          // Agregar evento change para actualizar el valor de #num_anterior
+          $('#id_plantacion').on('change', function () {
+            var selectedOption = $(this).find('option:selected');
+            var numPlantas = selectedOption.data('num-plantas');
+            $('#num_anterior').val(numPlantas);
+          });
+          $('#id_plantacion').trigger('change');
+          formValidator.revalidateField('plantacion');
+        },
+        error: function () {
+        }
+      });
+    }
+
+    $('#id_empresa').on('change', function () {
+      obtenerNombrePredio();  // Cargar las marcas
+      obtenerPlantacionPredio();  // Cargar las direcciones
+      formValidator.revalidateField('empresa');  // Revalidar el campo de empresa
+    });
+    // Agregar nuevo registro y validacion
+    const addGuiaForm = document.getElementById('addGuiaForm');
+    const formValidator = FormValidation.formValidation(addGuiaForm, {
+      fields: {
+        empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa'
+            }
+          }
+        },
+        numero_guias: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor introduzca un número de guías a solicitar'
+            },
+            between: {
+              min: 1,
+              max: 100,
+              message: 'El número de guías debe estar entre 1 y 100'
+            },
+            regexp: {
+              regexp: /^(?!0)\d+$/,
+              message: 'El número no debe comenzar con 0'
+            }
+          }
+        },
+        predios: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un predio de la lista'
+            }
+          }
+        },
+        plantacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa para continuar'
+            }
+          }
+        }
       },
-      error: function (xhr) {
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar la guía de traslado',
-          customClass: {
-            confirmButton: 'btn btn-danger'
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-5, .mb-6';
           }
-        });
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
       }
+    }).on('core.form.valid', function (e) {
+      var formData = new FormData(addGuiaForm);
+
+      $.ajax({
+        url: '/guias/store',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+
+          $('#addGuias').modal('hide');
+          $('.datatables-users').DataTable().ajax.reload();
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.success,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar la guía de traslado',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
     });
   });
 
+  // Limpiar campos al cerrar el modal
+  $('#addGuias').on('hidden.bs.modal', function () {
+    // Restablecer select de empresa
+    $('#id_empresa').val('');
+    $('#nombre_predio').html('');
+    $('#id_plantacion').html('');
+    $('#numero_guias').val('');
+    $('#num_comercializadas').val('');
+    $('#mermas_plantas').val('');
+    $('#numero_plantas').val('');
 
-      // Revalidaciones
-      $('#id_empresa').on('change', function () {
-        if ($(this).val()) {
-          fv.revalidateField($(this).attr('name'));
-        }
-      });
-      $('#nombre_predio').on('change', function () {
-        if ($(this).val()) {
-          fv.revalidateField($(this).attr('name'));
-        }
-      });
-
-      $('#id_plantacion').on('change', function () {
-        if ($(this).val()) {
-          fv.revalidateField($(this).attr('name'));
-        }
-      });
-  
-    });
+    // Restablecer la validación del formulario
+    formValidator.resetForm(true);
+  });
 
   initializeSelect2(select2Elements);
 

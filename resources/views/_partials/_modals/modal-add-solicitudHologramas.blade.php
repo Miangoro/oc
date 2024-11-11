@@ -18,7 +18,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="obtenerMarcas(); obtenerDirecciones();" id="id_empresa" name="id_empresa" class="select2 form-select" required>
+                                <select id="id_empresa" name="id_empresa" class="select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($Empresa as $cliente)
                                         <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
@@ -72,65 +72,6 @@
 
 
 <script>
-    function obtenerMarcas() {
-        var empresa = $("#id_empresa").val();
-        // Hacer una petición AJAX para obtener los detalles de la empresa
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                // Cargar los detalles en el modal
-                var contenido = "";
-                for (let index = 0; index < response.marcas.length; index++) {
-                    contenido = '<option value="' + response.marcas[index].id_marca + '">' + response
-                        .marcas[index].marca + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
-                }
 
-                if (response.marcas.length == 0) {
-                    contenido = '<option value="">Sin marcas registradas</option>';
-                }
-                $('#id_marca').html(contenido);
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
-            }
-        });
-    }
-
-    function obtenerDirecciones() {
-    var empresa = $("#id_empresa").val();
-    // Hacer una petición AJAX para obtener los detalles de la empresa
-    $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function(response) {
-            // Filtrar las direcciones para que solo se incluyan las que tienen tipo_direccion igual a 3
-            var direccionesFiltradas = response.direcciones.filter(function(direccion) {
-                return direccion.tipo_direccion == 3;
-            });
-
-            // Cargar los detalles en el modal
-            var contenido = "";
-            for (let index = 0; index < direccionesFiltradas.length; index++) {
-                contenido += '<option value="' + direccionesFiltradas[index].id_direccion + '">' +
-                    'Nombre de destinatario: ' + direccionesFiltradas[index].nombre_recibe +
-                    ' - Dirección: ' + direccionesFiltradas[index].direccion +
-                    ' - Correo: ' + direccionesFiltradas[index].correo_recibe +
-                    ' - Celular: ' + direccionesFiltradas[index].celular_recibe +
-                    '</option>';
-            }
-
-            if (direccionesFiltradas.length == 0) {
-                contenido = '<option value="">Sin direcciones registradas</option>';
-            }
-
-            $('.id_direccion').html(contenido);
-        },
-        error: function() {
-            //alert('Error al cargar las direcciones.');
-        }
-    });
-}
 
 </script>
