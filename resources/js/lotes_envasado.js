@@ -1,6 +1,3 @@
-/*
- Page User List
- */
 'use strict';
 
 // Datatable (jquery)
@@ -11,18 +8,6 @@ $(function () {
     userView = baseUrl + 'app/user/view/account',
     offCanvasForm = $('#addlostesEnvasado');
 
-  // Función para inicializar Select2 en elementos específicos
-  function initializeSelect2($elements) {
-    $elements.each(function () {
-      var $this = $(this);
-      select2Focus($this);
-      $this.wrap('<div class="position-relative"></div>').select2({
-        placeholder: 'Selecciona cliente',
-        dropdownParent: $this.parent()
-      });
-    });
-  }
-
   // ajax setup
   $.ajaxSetup({
     headers: {
@@ -30,7 +15,6 @@ $(function () {
     }
   });
 
-  //FUNCIONALIDAD DE LA VISTA datatable
   if (dt_user_table.length) {
     var dt_user = dt_user_table.DataTable({
       processing: true,
@@ -272,7 +256,6 @@ $(function () {
           }
         }
       ],
-
       order: [[2, 'desc']],
       dom:
         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
@@ -296,7 +279,6 @@ $(function () {
           sPrevious: 'Anterior'
         }
       },
-
       // Opciones Exportar Documentos
       buttons: [
         {
@@ -497,6 +479,18 @@ $(function () {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
+
+    // Función para inicializar Select2 en elementos específicos
+    function initializeSelect2($elements) {
+      $elements.each(function () {
+        var $this = $(this);
+        select2Focus($this);
+        $this.wrap('<div class="position-relative"></div>').select2({
+          placeholder: 'Selecciona cliente',
+          dropdownParent: $this.parent()
+        });
+      });
+    }
 
     //Obtener graneles
     function obtenerGraneles() {
