@@ -952,15 +952,7 @@ function inicializarRowIndex() {
               });
 
               // Agregar validación para guías si es necesario
-              if (!fv.hasField('id_guia[]')) {
-                fv.addField('id_guia[]', {
-                  validators: {
-                    notEmpty: {
-                      message: 'Por favor seleccione al menos un folio de guía'
-                    }
-                  }
-                });
-              }
+
             } else if (lote.tipo_lote == '2') {
               $('#edit_otro_organismo_fields').removeClass('d-none');
               $('#edit_oc_cidam_fields').addClass('d-none');
@@ -977,9 +969,6 @@ function inicializarRowIndex() {
                   $('#edit_id_guia').empty();
 
                   // Eliminar validación de guías si es tipo 2
-                  if (fv.hasField('id_guia[]')) {
-                    fv.removeField('id_guia[]');
-                  }
 
               // Mostrar enlace al archivo PDF si está disponible
               var archivoDisponible = false;
@@ -1029,12 +1018,14 @@ function inicializarRowIndex() {
                   folioFqAjusteInput.val(documento.nombre);
                   documentoAjusteUrlAsignado = true; // Marcar como asignado
                   ultimoDocumentoAjusteId = documento.id_documento; // Guardar el ID
+
                 }
               });
 
               // Si no se asignó un documento completo, mostrar un mensaje
               if (!documentoCompletoUrlAsignado && ultimoDocumentoCompletoId !== null) {
                 $('#archivo_url_display_completo_' + ultimoDocumentoCompletoId).html('No hay archivo completo disponible.');
+
               }
               // Si no se asignó un documento de ajuste, mostrar un mensaje
               if (!documentoAjusteUrlAsignado && ultimoDocumentoAjusteId !== null) {
@@ -1149,12 +1140,6 @@ function inicializarRowIndex() {
       }
     });
 
-
-
-    // Escuchar cambios en los campos de volumen parcial en modo edición
-    $(document).on('input', '.volumen-parcial-edit', function () {
-      calcularVolumenTotalEdit(); // Recalcular total en cada cambio
-    });
 
     // Cargar lotes en los selects dentro de filas en modo edición
 // Cargar lotes en los selects dentro de filas en modo edición

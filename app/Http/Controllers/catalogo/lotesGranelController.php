@@ -511,103 +511,106 @@ class lotesGranelController extends Controller
                 'folio_fq' => 'nullable|string|max:50'
             ]);
 
-    // Obtener el lote actual
-    $lote = LotesGranel::findOrFail($id_lote_granel);
-    $volumenOriginal = $lote->volumen;
-    $diferencia = $validated['volumen'] - $volumenOriginal;
+            $lote = LotesGranel::findOrFail($id_lote_granel);
+        // Si `lote_original_id` es nulo, inicializar `$lote_original_data` como un arreglo vacío
+        $lote_original_data = $lote->lote_original_id ? json_decode($lote->lote_original_id, true) : ['lotes' => [], 'volumenes' => []];
+        $lotesPrevios = $lote_original_data['lotes'];
+        $volumenesPrevios = $lote_original_data['volumenes'];
 
-    // Verificar si el lote se está creando a partir de otro lote
-    if ($request->input('edit_es_creado_a_partir') === 'si') {
-        $loteOriginalId = $request->input('edit_lotes.0.id');
-        $volumenParcial = $request->input('edit_volumenes.0.volumen_parcial');
+      // Actualizar el lote principal
+      $lote->update([
+          'id_empresa' => $validated['id_empresa'],
+          'nombre_lote' => $validated['nombre_lote'],
+          'tipo_lote' => $validated['tipo_lote'],
+          'cont_alc' => $validated['cont_alc'],
+          'id_categoria' => $validated['id_categoria'],
+          'id_clase' => $validated['id_clase'],
+          'id_tipo' => json_encode($validated['id_tipo']),
+          'ingredientes' => $validated['ingredientes'],
+          'edad' => $validated['edad'],
+          'folio_certificado' => $validated['folio_certificado'],
+          'id_organismo' => $validated['id_organismo'] ?? null,
+          'fecha_emision' => $validated['fecha_emision'],
+          'fecha_vigencia' => $validated['fecha_vigencia'],
+          'volumen' => $validated['volumen'],
+          'volumen_restante' => $validated['volumen']
+      ]);
+        // Actualizar lotes relacionados solo si hay datos de 'edit_lotes' y 'edit_volumenes'
+        if ($request->has('edit_lotes') && $request->has('edit_volumenes')) {
+          $nuevosLotes = [];
+          $nuevosVolumenes = [];
 
-        // Asegúrate de que el volumen parcial sea válido
-        if ($volumenParcial && $loteOriginalId) {
-            $lote->lote_original_id = json_encode([
-                'lotes' => [$loteOriginalId],
-                'volumenes' => [$volumenParcial]
-            ]);
-            $lote->save();
-        } else {
-            return response()->json(['success' => false, 'message' => 'Datos incompletos para crear el lote a partir de otro']);
-        }
-    }
+          foreach ($request->input('edit_lotes') as $index => $loteData) {
+              $idLote = $loteData['id'];
+              $volumenParcial = $request->input("edit_volumenes.$index.volumen_parcial");
 
+              $loteRelacionado = LotesGranel::find($idLote);
 
-// Actualizar el lote principal
-$lote->update([
-    'id_empresa' => $validated['id_empresa'],
-    'nombre_lote' => $validated['nombre_lote'],
-    'tipo_lote' => $validated['tipo_lote'],
-    'cont_alc' => $validated['cont_alc'],
-    'id_categoria' => $validated['id_categoria'],
-    'id_clase' => $validated['id_clase'],
-    'id_tipo' => json_encode($validated['id_tipo']),
-    'ingredientes' => $validated['ingredientes'],
-    'edad' => $validated['edad'],
-    'folio_certificado' => $validated['folio_certificado'],
-    'id_organismo' => $validated['id_organismo'] ?? null,
-    'fecha_emision' => $validated['fecha_emision'],
-    'fecha_vigencia' => $validated['fecha_vigencia'],
-    'volumen_restante' => $validated['volumen'],
-]);
+              if ($volumenParcial && $loteRelacionado) {
+                  $keyAnterior = array_search($idLote, $lotesPrevios);
 
-// Actualizar lotes relacionados
-if ($request->has('edit_lotes') && $request->has('edit_volumenes')) {
-  $lotes = [];
-  $volumenes = [];
+                  // Restaurar el volumen previo si estaba en el JSON anterior
+                  if ($keyAnterior !== false) {
+                      $volumenAnterior = $volumenesPrevios[$keyAnterior];
+                      $loteRelacionado->volumen_restante += $volumenAnterior;
 
-  foreach ($request->input('edit_lotes') as $index => $loteData) {
-      $idLote = $loteData['id'];
-      $volumenParcial = $request->input("edit_volumenes.$index.volumen_parcial"); // Accede al volumen de la posición actual
+                      // Elimina lote de los lotes previos para detectar no seleccionados
+                      unset($lotesPrevios[$keyAnterior], $volumenesPrevios[$keyAnterior]);
+                  }
 
-      // Verificar que el volumen parcial esté presente y válido
-      if ($volumenParcial && $loteRelacionado = LotesGranel::find($idLote)) {
-          // Asegúrate de que el volumen restante sea suficiente
-          if ($loteRelacionado->volumen_restante - $volumenParcial < 0) {
-              return response()->json(['success' => false, 'message' => 'No hay suficiente volumen restante en el lote relacionado']);
+                  // Verificar que el nuevo volumen restante sea suficiente
+                  if ($loteRelacionado->volumen_restante - $volumenParcial < 0) {
+                      return response()->json(['success' => false, 'message' => 'No hay suficiente volumen restante en el lote relacionado']);
+                  }
+
+                  // Reducir el volumen restante con el nuevo valor
+                  $loteRelacionado->volumen_restante -= $volumenParcial;
+                  $loteRelacionado->save();
+
+                  $nuevosLotes[] = $idLote;
+                  $nuevosVolumenes[] = $volumenParcial;
+              } else {
+                  return response()->json(['success' => false, 'message' => 'Error al actualizar el lote relacionado']);
+              }
           }
-          $loteRelacionado->volumen_restante -= $volumenParcial;
-          $loteRelacionado->save();
 
-          // Agregar el lote y volumen procesados al arreglo
-          $lotes[] = $idLote;
-          $volumenes[] = $volumenParcial;
-      } else {
-          // Si no se encuentra el lote relacionado o el volumen parcial es inválido
-          return response()->json(['success' => false, 'message' => 'Error al actualizar el lote relacionado']);
+          // Restaurar el volumen de lotes no seleccionados en esta actualización
+          foreach ($lotesPrevios as $index => $idLoteAnterior) {
+              $loteAnterior = LotesGranel::find($idLoteAnterior);
+              if ($loteAnterior) {
+                  $loteAnterior->volumen_restante += $volumenesPrevios[$index];
+                  $loteAnterior->save();
+              }
+          }
+
+          // Actualizar el JSON con los nuevos lotes seleccionados
+          $lote->lote_original_id = json_encode([
+              'lotes' => $nuevosLotes,
+              'volumenes' => $nuevosVolumenes
+          ]);
+          $lote->save();
       }
-  }
 
-  // Guardar la relación de lotes y volúmenes en el campo correspondiente
-  $lote->lote_original_id = json_encode([
-      'lotes' => $lotes,
-      'volumenes' => $volumenes
-  ]);
-  $lote->save();
-}
+      // Obtener el número de cliente
+      $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
+      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
-            // Obtener el número de cliente
-            $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+      // Solo eliminar archivos antiguos y guardar nuevos si se han enviado nuevos archivos
+      if ($request->hasFile('url')) {
 
-            // Eliminar archivos antiguos
-            $documentacionUrls = Documentacion_url::where('id_relacion', $id_lote_granel)->get();
-            foreach ($documentacionUrls as $documentacionUrl) {
-                $filePath = 'uploads/' . $numeroCliente . '/' . $documentacionUrl->url;
-                if (Storage::disk('public')->exists($filePath)) {
-                    Storage::disk('public')->delete($filePath);
-                }
-                $documentacionUrl->delete();
-            }
+          // Eliminar archivos antiguos
+          $documentacionUrls = Documentacion_url::where('id_relacion', $id_lote_granel)->get();
+          foreach ($documentacionUrls as $documentacionUrl) {
+              $filePath = 'uploads/' . $numeroCliente . '/' . $documentacionUrl->url;
+              if (Storage::disk('public')->exists($filePath)) {
+                  Storage::disk('public')->delete($filePath);
+              }
+              $documentacionUrl->delete();
+          }
 
-            // Almacenar nuevos documentos solo si se envían
-        // Almacenar nuevos documentos solo si se envían
-        if ($request->hasFile('url')) {
+          // Almacenar nuevos documentos
           foreach ($request->file('url') as $index => $file) {
-
               if (isset($request->id_documento[$index])) {
-
                   $folio_fq = $index == 0 && $request->id_documento[$index] == 58
                       ? $request->folio_fq_completo
                       : $request->folio_fq_ajuste;
@@ -638,23 +641,23 @@ if ($request->has('edit_lotes') && $request->has('edit_volumenes')) {
                   $documentacion_url->save();
               }
           }
-        }
+      }
 
+      // Actualizar el campo folio_fq
+      $folio_fq_Completo = substr($validated['folio_fq_completo'] ?? '', 0, 50);
+      $folio_fq_ajuste = substr($validated['folio_fq_ajuste'] ?? '', 0, 50);
 
-            // Actualizar el campo folio_fq
-            $folio_fq_Completo = substr($validated['folio_fq_completo'] ?? '', 0, 50);
-            $folio_fq_ajuste = substr($validated['folio_fq_ajuste'] ?? '', 0, 50);
+      if (trim($folio_fq_Completo) === '' && trim($folio_fq_ajuste) === '') {
+          $lote->folio_fq = 'Sin FQ'; // Asignar 'Sin FQ' si ambos están vacíos
+      } else {
+          // Concatenar los valores si alguno tiene contenido
+          if (!empty($folio_fq_ajuste)) {
+              $folio_fq_Completo .= ' ' . $folio_fq_ajuste;
+          }
+          $lote->folio_fq = substr($folio_fq_Completo, 0, 50); // Limitar a 50 caracteres
+      }
+      $lote->save();
 
-            if (trim($folio_fq_Completo) === '' && trim($folio_fq_ajuste) === '') {
-                $lote->folio_fq = 'Sin FQ'; // Asignar 'Sin FQ' si ambos están vacíos
-            } else {
-                // Concatenar los valores si alguno tiene contenido
-                if (!empty($folio_fq_ajuste)) {
-                    $folio_fq_Completo .= ' ' . $folio_fq_ajuste;
-                }
-                $lote->folio_fq = substr($folio_fq_Completo, 0, 50); // Limitar a 50 caracteres
-            }
-             $lote->save();
 
             // Almacenar las guías en la tabla intermedia usando el modelo LotesGranelGuia
             LotesGranelGuia::where('id_lote_granel', $id_lote_granel)->delete();
