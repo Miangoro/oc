@@ -9,109 +9,94 @@
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="addNewLoteForm">
-                   
-                        <div class="col-12">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="obtenerGraneles(); obtenerMarcas(); obtenerDirecciones();"
-                                    id="id_empresa" name="id_empresa" class="select2 form-select">
-                                    <option value="">Selecciona cliente</option>
-                                    @foreach ($clientes as $cliente)
-                                        <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
-                                    @endforeach
+                    <div class="col-12">
+                        <div class="form-floating form-floating-outline mb-4">
+                            <select id="id_empresa" name="id_empresa" class="select2 form-select">
+                                <option value="">Selecciona cliente</option>
+                                @foreach ($clientes as $cliente)
+                                    <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
+                                @endforeach
+                            </select>
+                            <label for="id_empresa">Cliente</label>
+                        </div>
+                    </div>
+
+                    <div class="form-floating form-floating-outline mb-5">
+                        <input type="text" class="form-control" id="nombre"
+                            placeholder="Introduce el nombre del lote" name="nombre" aria-label="Nombre del lote" />
+                        <label for="nombre">Nombre del lote</label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" id="sku" class="form-control"
+                                    placeholder="No. de pedido/SKU" aria-label="No. de pedido/SKU" name="sku" />
+                                <label for="sku">No. de pedido/SKU</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select class="select2 form-select id_marca" id="id_marca" name="id_marca"
+                                    aria-label="Marca">
+                                    <option value="" selected>Selecciona una marca</option>
                                 </select>
-                                <label for="id_empresa">Cliente</label>
+                                <label for="id_marca">Marca</label>
                             </div>
                         </div>
-
-                        <div class="form-floating form-floating-outline mb-5">
-                            <input type="text" class="form-control" id="nombre"
-                                placeholder="Introduce el nombre del lote" name="nombre"
-                                aria-label="Nombre del lote" />
-                            <label for="nombre">Nombre del lote</label>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-floating form-floating-outline mb-5">
-                                    <input type="text" id="sku" class="form-control"
-                                        placeholder="No. de pedido/SKU" aria-label="No. de pedido/SKU" name="sku" />
-                                    <label for="sku">No. de pedido/SKU</label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select id_marca" id="id_marca" name="id_marca"
-                                        aria-label="Marca">
-                                        <option value="" selected>Selecciona una marca</option>
-
-                                    </select>
-                                    <label for="id_marca">Marca</label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-floating form-floating-outline mb-6">
-                                    <input class="form-control" type="text" placeholder="Destino lote"
-                                        id="destino_lote" name="destino_lote" />
-                                    <label for="destino_lote">Destino lote</label>
-                                </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" type="text" placeholder="Destino lote" id="destino_lote"
+                                    name="destino_lote" />
+                                <label for="destino_lote">Destino lote</label>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline mb-6">
-                                    <input class="form-control" type="number" placeholder="Ingrese un valor"
-                                        id="cantidad_botellas" name="cant_botellas" min="1" required />
-                                    <label for="cantidad_botellas">Cantidad de botellas</label>
-{{--                                     <div class="invalid-feedback">
-                                        Por favor, ingrese un número positivo.
-                                    </div> --}}
-                                </div>
-                            </div>
-                            
-
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline mb-6">
-                                    <input class="form-control" type="number" placeholder="Presentación de la botella"
-                                        id="presentacion" name="presentacion" min="1"/>
-                                    <label for="presentacion">Presentación de la botella</label>
-                                </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" type="number" placeholder="Ingrese un valor"
+                                    id="cantidad_botellas" name="cant_botellas" min="1" required />
+                                <label for="cantidad_botellas">Cantidad de botellas</label>
                             </div>
                         </div>
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-floating form-floating-outline mb-6">
-                                    <select class=" form-select" id="unidad" name="unidad" aria-label="Unidad">
-                                        <option value="Litros">Litros</option>
-                                        <option value="Mililitros">Mililitros</option>
-                                        <option value="Centrilitros">Centrilitros</option>
-                                    </select>
-                                    <label for="unidad">Unidad</label>
-                                </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" type="number" placeholder="Presentación de la botella"
+                                    id="presentacion" name="presentacion" min="1" />
+                                <label for="presentacion">Presentación de la botella</label>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-floating form-floating-outline mb-6">
-                                    <input class="form-control" type="number" step="0.01"
-                                        placeholder="Volumen total" id="volumen_total" name="volumen_total"
-                                        readonly />
-                                    <label for="volumen_total">Volumen total en Litros</label>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select id_instalacion" id="lugar_envasado"
-                                        name="lugar_envasado" aria-label="Default select example">
-
-                                    </select>
-                                    <label for="lugar_envasado">Lugar de envasado</label>
-                                </div>
-                            </div>
-
-
                         </div>
-                        
+                    </div>
 
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select class=" form-select" id="unidad" name="unidad" aria-label="Unidad">
+                                    <option value="Litros">Litros</option>
+                                    <option value="Mililitros">Mililitros</option>
+                                    <option value="Centrilitros">Centrilitros</option>
+                                </select>
+                                <label for="unidad">Unidad</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <input class="form-control" type="number" step="0.01" placeholder="Volumen total"
+                                    id="volumen_total" name="volumen_total" readonly />
+                                <label for="volumen_total">Volumen total en Litros</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select class="select2 form-select id_instalacion" id="lugar_envasado"
+                                    name="lugar_envasado" aria-label="Default select example">
+                                </select>
+                                <label for="lugar_envasado">Lugar de envasado</label>
+                            </div>
+                        </div>
+                    </div>
 
                     <div id="datosOpcion2">
                         <table class="table table-bordered">
@@ -130,8 +115,8 @@
                                                 class="ri-delete-bin-5-fill"></i> </button>
                                     </th>
                                     <td>
-                                        <select class="id_lote_granel form-control select2" name="id_lote_granel[]" id="id_lote_granel">
-                                            <!-- Opciones -->
+                                        <select class="id_lote_granel form-control select2" name="id_lote_granel[]"
+                                            id="id_lote_granel">
                                         </select>
                                     </td>
                                     <td>
@@ -141,10 +126,7 @@
                                 </tr>
                             </tbody>
                         </table>
-
                     </div>
-
-
 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
@@ -157,92 +139,8 @@
     </div>
 </div>
 
-
 <script>
-    function obtenerGraneles() {
-        var empresa = $("#id_empresa").val();
-        // Hacer una petición AJAX para obtener los detalles de la empresa
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                // Cargar los detalles en el modal
-                var contenido = "";
-                for (let index = 0; index < response.lotes_granel.length; index++) {
-                    contenido = '<option value="' + response.lotes_granel[index].id_empresa + '">' +
-                        response.lotes_granel[index].nombre_lote + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
-                }
-
-                if (response.lotes_granel.length == 0) {
-                    contenido = '<option value="">Sin lotes a granel registrados</option>';
-                }
-                $('.id_lote_granel').html(contenido);
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
-            }
-        });
-    }
-
-    function obtenerMarcas() {
-        var empresa = $("#id_empresa").val();
-        // Hacer una petición AJAX para obtener los detalles de la empresa
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                // Cargar los detalles en el modal
-                var contenido = "";
-                for (let index = 0; index < response.marcas.length; index++) {
-                    contenido = '<option value="' + response.marcas[index].id_marca + '">' + response
-                        .marcas[index].marca + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
-                }
-
-                if (response.marcas.length == 0) {
-                    contenido = '<option value="">Sin marcas registradas</option>';
-                }
-                $('#id_marca').html(contenido);
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
-            }
-        });
-    }
-
-
-    function obtenerDirecciones() {
-        var empresa = $("#id_empresa").val();
-        // Hacer una petición AJAX para obtener los detalles de la empresa
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                // Cargar los detalles en el modal
-                var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    if (response.instalaciones[index].tipo === 'envasadora' || response.instalaciones[index]
-                        .tipo === 'Envasadora') {
-                        contenido += '<option value="' + response.instalaciones[index].id_instalacion +
-                            '">' +
-                            response.instalaciones[index].direccion_completa + '</option>';
-                    }
-                }
-
-                if (contenido === "") {
-                    contenido = '<option value="">Sin lotes a granel registrados</option>';
-                }
-
-                $('.id_instalacion').html(contenido);
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
-            }
-        });
-    }
-
-
+    //Metodo para calcular Volumen en litros
     document.addEventListener('DOMContentLoaded', function() {
         function calcularVolumenTotal() {
             var cantidadBotellas = parseFloat(document.getElementById('cantidad_botellas').value) || 0;
@@ -260,16 +158,12 @@
             } else {
                 volumenTotal = ''; // Limpiar el campo si la unidad no es Litros ni Mililitros
             }
-
             document.getElementById('volumen_total').value = volumenTotal ? volumenTotal.toFixed(2) : '';
         }
-
-        // Añadir eventos de cambio a los campos relevantes
         document.getElementById('cantidad_botellas').addEventListener('input', calcularVolumenTotal);
         document.getElementById('presentacion').addEventListener('input', calcularVolumenTotal);
         document.getElementById('unidad').addEventListener('change', calcularVolumenTotal);
     });
-
 
     //Limpia en cancelar
     document.addEventListener('DOMContentLoaded', function() {
@@ -279,47 +173,4 @@
                 $('.select2').val(null).trigger('change'); // Reset select2 fields
             });
     });
-    //Limpia en registrar
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const modal = document.getElementById('addlostesEnvasado');
-        const form = document.getElementById('addNewLoteForm');
-
-        modal.addEventListener('hidden.bs.modal', (event) => {
-            form.reset();
-            // Limpia select2
-            $('#id_empresa').val('').trigger('change');
-            $('#id_lote_granel').val('').trigger('change');
-            $('#id_marca').val('').trigger('change');
-            $('#id_instalacion').val('').trigger('change');
-            // Si hay campos adicionales que necesitan ser limpiados
-            document.querySelectorAll('.select2').forEach((select) => {
-                $(select).val('').trigger('change');
-            });
-        });
-
-        form.addEventListener('submit', (event) => {
-            // Evitar el comportamiento predeterminado del formulario
-            event.preventDefault();
-
-            // Simular envío del formulario (ejemplo: hacer una solicitud AJAX)
-            // Aquí podrías realizar la solicitud AJAX
-
-            // Después de enviar el formulario, restablecerlo y cerrar el modal
-            form.reset();
-            // Limpia select2
-            $('#id_empresa').val('').trigger('change');
-            $('#id_lote_granel').val('').trigger('change');
-            $('#id_marca').val('').trigger('change');
-            $('#id_instalacion').val('').trigger('change');
-            // Si hay campos adicionales que necesitan ser limpiados
-            document.querySelectorAll('.select2').forEach((select) => {
-                $(select).val('').trigger('change');
-            });
-
-            // Cerrar el modal
-            const modalInstance = bootstrap.Modal.getInstance(modal);
-            modalInstance.hide();
-        });
-    });
-
 </script>
