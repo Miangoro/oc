@@ -439,6 +439,19 @@ public function editar_cliente_confirmado(Request $request)
   }
 
 
+//Función para eliminar CLIENTE
+public function destroy($id_empresa)
+{
+    try {
+        $eliminar = empresa::findOrFail($id_empresa);
+        $eliminar->delete();
+
+        return response()->json(['success' => 'Eliminado correctamente']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al eliminar'], 500);
+    }
+}
+
 
 
 // -- Funciones para actualizar contratos -- //
