@@ -549,45 +549,43 @@ $lote->update([
     'id_organismo' => $validated['id_organismo'] ?? null,
     'fecha_emision' => $validated['fecha_emision'],
     'fecha_vigencia' => $validated['fecha_vigencia'],
+    'volumen_restante' => $validated['volumen'],
 ]);
 
- // Actualizar el volumen restante del lote principal
- $lote->volumen_restante = $validated['volumen']; // Asignar el volumen que llegó del formulario
- $lote->save();
+// Actualizar lotes relacionados
+if ($request->has('edit_lotes') && $request->has('edit_volumenes')) {
+  $lotes = [];
+  $volumenes = [];
 
- // Verificar volumen restante y actualizarlo si es necesario
- if (isset($validated['volumen_restante'])) {
-     if ($lote->volumen_restante - $validated['volumen_restante'] < 0) {
-         return response()->json([
-             'success' => false,
-             'message' => 'No hay suficiente volumen restante para la operación.',
-         ], 400);
-     }
-     // Restar el volumen al lote principal (solo si es necesario)
-     $lote->volumen_restante -= $validated['volumen_restante'];
-     $lote->save();
- }
+  foreach ($request->input('edit_lotes') as $index => $loteData) {
+      $idLote = $loteData['id'];
+      $volumenParcial = $request->input("edit_volumenes.$index.volumen_parcial"); // Accede al volumen de la posición actual
 
- // Actualizar lotes relacionados
- if ($request->has('edit_lotes')) {
-     foreach ($request->input('edit_lotes') as $index => $loteData) {
-         $idLote = $loteData['id'];
-         $volumenParcial = $request->input('edit_volumenes.0.volumen_parcial');
+      // Verificar que el volumen parcial esté presente y válido
+      if ($volumenParcial && $loteRelacionado = LotesGranel::find($idLote)) {
+          // Asegúrate de que el volumen restante sea suficiente
+          if ($loteRelacionado->volumen_restante - $volumenParcial < 0) {
+              return response()->json(['success' => false, 'message' => 'No hay suficiente volumen restante en el lote relacionado']);
+          }
+          $loteRelacionado->volumen_restante -= $volumenParcial;
+          $loteRelacionado->save();
 
-         // Verificar que el volumen parcial esté presente
-         if ($volumenParcial && $loteRelacionado = LotesGranel::find($idLote)) {
-             // Asegúrate de que el volumen restante sea suficiente
-             if ($loteRelacionado->volumen_restante - $volumenParcial < 0) {
-                 return response()->json(['success' => false, 'message' => 'No hay suficiente volumen restante en el lote relacionado']);
-             }
-             $loteRelacionado->volumen_restante -= $volumenParcial;
-             $loteRelacionado->save();
-         } else {
-             // Si no se encuentra el lote relacionado o el volumen parcial es inválido
-             return response()->json(['success' => false, 'message' => 'Error al actualizar el lote relacionado']);
-         }
-     }
- }
+          // Agregar el lote y volumen procesados al arreglo
+          $lotes[] = $idLote;
+          $volumenes[] = $volumenParcial;
+      } else {
+          // Si no se encuentra el lote relacionado o el volumen parcial es inválido
+          return response()->json(['success' => false, 'message' => 'Error al actualizar el lote relacionado']);
+      }
+  }
+
+  // Guardar la relación de lotes y volúmenes en el campo correspondiente
+  $lote->lote_original_id = json_encode([
+      'lotes' => $lotes,
+      'volumenes' => $volumenes
+  ]);
+  $lote->save();
+}
 
             // Obtener el número de cliente
             $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();

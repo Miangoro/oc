@@ -702,7 +702,7 @@ $(function () {
             }
           }
         },
-        id_tipo: {
+        'id_tipo[]': {
           validators: {
             notEmpty: {
               message: 'Por favor seleccione un tipo de agave'
