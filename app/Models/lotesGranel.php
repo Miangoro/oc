@@ -16,9 +16,9 @@ class LotesGranel extends Model
     protected $primaryKey = 'id_lote_granel';  // Cambia esto al nombre correcto de la columna de identificación
 
     protected $fillable = [
-        'id_empresa', 'nombre_lote', 'tipo_lote', 'folio_fq', 'volumen', 
-        'cont_alc', 'id_categoria', 'id_clase', 'id_tipo', 'ingredientes', 
-        'edad', 'id_guia', 'folio_certificado', 'id_organismo', 
+        'id_empresa', 'nombre_lote', 'tipo_lote', 'folio_fq', 'volumen', 'volumen_restante',
+        'cont_alc', 'id_categoria', 'id_clase', 'id_tipo', 'ingredientes',
+        'edad', 'id_guia', 'folio_certificado', 'id_organismo',
         'fecha_emision', 'fecha_vigencia', 'estatus', 'lote_original_id'
     ];
 
@@ -51,7 +51,7 @@ class LotesGranel extends Model
 
     public function organismo()
     {
-        return $this->belongsTo(organismos::class, 'id_organismo'); 
+        return $this->belongsTo(organismos::class, 'id_organismo');
     }
 
     public function guias()
@@ -83,5 +83,5 @@ class LotesGranel extends Model
     {
         return $this->belongsToMany(LotesEnvasado::class, 'lotes_envasado_granel', 'id_lote_granel', 'id_lote_envasado');
     }
-    
+
 }

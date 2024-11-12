@@ -102,7 +102,7 @@
                             </div>
                         </div>
                         <div class="row">
-                          <div class="col-md-6">
+                          <div class="col-md-6 d-none" id="mostrar_guias">
                             <div class="d-flex align-items-center mb-3 input-group input-group-merge">
                                 <div class="flex-grow-1">
                                     <select id="id_guia" name="id_guia[]" class="select2 form-select" multiple data-error-message="Por favor selecciona una guia">
@@ -114,7 +114,7 @@
                                 </a>
                             </div>
                         </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12" id="volmen_in">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="volumen" name="volumen"
                                         class="form-control" placeholder="Volumen de Lote Inicial (litros)"
@@ -165,17 +165,17 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-floating form-floating-outline mb-4">
-                                    <select id="tipo_agave" name="id_tipo" class="select2 form-select">
-                                        <option value="" disabled selected>Selecciona el tipo de agave
-                                        </option>
-                                        @foreach ($tipos as $tipo)
-                                            <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                    <label for="tipo_agave">Tipo de Agave</label>
-                                </div>
-                            </div>
+                              <div class="form-floating form-floating-outline mb-4">
+                                  <select id="tipo_agave" name="id_tipo[]" class="select2 form-select" multiple>
+                                      @foreach ($tipos as $tipo)
+                                          <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
+                                      @endforeach
+                                  </select>
+                                  <label for="tipo_agave">Tipo de Agave</label>
+                              </div>
+                          </div>
+
+
                         </div>
 
                         <!-- Campos para "Certificación por OC CIDAM" -->
@@ -209,9 +209,9 @@
                                         <!-- Primer bloque -->
                                         <tr>
                                             <td>
-                                                <input readonly value="Análisis completo" type="text"
-                                                    class="form-control form-control-sm"
-                                                    id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
+                                              <span>Análisis completo</span>
+                                                <input hidden readonly value="Análisis completo" type="text"
+                                                    class="form-control form-control-sm" id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
                                             </td>
                                             <td>
                                                 <input type="text" class="form-control form-control-sm"
@@ -230,7 +230,8 @@
                                         <!-- Segundo bloque -->
                                         <tr>
                                             <td>
-                                                <input readonly value="Ajuste de grado" type="text"
+                                              <span>Ajuste de grado</span>
+                                                <input hidden readonly value="Ajuste de grado" type="text"
                                                     class="form-control form-control-sm"
                                                     id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
                                             </td>
