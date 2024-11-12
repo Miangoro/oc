@@ -460,7 +460,9 @@ class lotesGranelController extends Controller
               $volumenes = [];
               $nombreLotes = [];
           }
-
+            // Decodificar `id_tipo` si es JSON válido, o inicializarlo como array vacío
+            $idTipoArray = $lote->id_tipo ? json_decode($lote->id_tipo, true) : [];
+            $tipos = tipos::all();
             return response()->json([
                 'success' => true,
                 'lote' => $lote,
@@ -471,7 +473,9 @@ class lotesGranelController extends Controller
                 'organismo' => $organismo->id_organismo ?? null,
                 'lotes' => $lotes,
                 'volumenes' => $volumenes,
-                'nombreLotes' => $nombreLotes
+                'nombreLotes' => $nombreLotes,
+                'id_tipo' => $idTipoArray, // Aquí tienes los ID
+                'tipos' => $tipos, // Todos los tipos de agave
             ]);
 
         } catch (ModelNotFoundException $e) {

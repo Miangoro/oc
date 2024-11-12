@@ -835,8 +835,11 @@ function inicializarRowIndex() {
             var volumenes = data.volumenes;
             var nombreLotes = data.nombreLotes; // Este array contiene los nombres de los lote
             var organismoId = data.organismo;
+            var tipos = data.tipos;
 
             $('#contenidoGranelesEdit').html('');
+            $('#edit_tipo_agave').empty();
+
             inicializarRowIndex(); // Reiniciar rowIndex en función de las filas cargadas
 
             // Código para cargar los datos del lote, incluyendo el bucle para agregar las filas
@@ -890,7 +893,14 @@ function inicializarRowIndex() {
             $('#edit_cont_alc').val(lote.cont_alc);
             $('#edit_id_categoria').val(lote.id_categoria).trigger('change');
             $('#edit_clase_agave').val(lote.id_clase).trigger('change');
-            $('#edit_tipo_agave').val(lote.id_tipo).trigger('change');
+             // Si es un array, asegúrate de usar `.val()` con un array de valores
+            // Cargar las opciones estáticas (de $tipos)
+            $.each(tipos, function (index, tipo) {
+              var option = new Option(tipo.nombre, tipo.id_tipo);
+              $('#edit_tipo_agave').append(option);
+          });
+            // Asignar las opciones seleccionadas del lote
+            $('#edit_tipo_agave').val(data.id_tipo).trigger('change');
             // Mostrar campos condicionales
             if (lote.tipo_lote == '1') {
               $('#edit_oc_cidam_fields').removeClass('d-none');
@@ -1168,7 +1178,14 @@ function inicializarRowIndex() {
               message: 'Por favor seleccione un tipo'
             }
           }
-        }
+        },
+        'id_tipo[]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un tipo'
+            }
+          }
+        },
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
