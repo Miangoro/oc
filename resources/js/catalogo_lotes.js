@@ -789,27 +789,63 @@ $(function () {
     const edit_tipoLoteSelect = document.getElementById('edit_tipo_lote');
     const edit_ocCidamFields = document.getElementById('edit_oc_cidam_fields');
     const edit_otroOrganismoFields = document.getElementById('edit_otro_organismo_fields');
+    const edit_mostrarGuias = document.getElementById('edit_mostrar_guias');
+    const edit_volumenIn = document.getElementById('edit_volumen_in');
 
     // Selecciona los campos de archivo y de texto
     const edit_otroOrganismoFileField = document.getElementById('file-59');
 
-    edit_tipoLoteSelect.addEventListener('change', function () {
-      const edit_selectedValue = edit_tipoLoteSelect.value;
+    // Lógica para cambiar los campos visibles y la validación de las guías
+    function updateFieldsAndValidation() {
+      const selectedValue = edit_tipoLoteSelect.value;
 
-      if (edit_selectedValue === '1') {
+      // Si el lote es certificado por OC CIDAM (Tipo 1)
+      if (selectedValue === '1') {
+        // Mostrar campos de CIDAM y ocultar los de otro organismo
         edit_ocCidamFields.classList.remove('d-none');
         edit_otroOrganismoFields.classList.add('d-none');
 
-      } else if (edit_selectedValue === '2') {
+        // Mostrar los campos de guías y volumen de tipo lote
+        edit_mostrarGuias.classList.remove('d-none');
+        edit_volumenIn.classList.remove('col-md-12');
+        edit_volumenIn.classList.add('col-md-6');
+
+        // Agregar la validación de las guías
+        fv.addField('id_guia[]', {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione al menos un folio de guía'
+            }
+          }
+        });
+      }
+      // Si el lote es certificado por otro organismo (Tipo 2)
+      else if (selectedValue === '2') {
+        // Ocultar campos de CIDAM y mostrar los de otro organismo
         edit_ocCidamFields.classList.add('d-none');
         edit_otroOrganismoFields.classList.remove('d-none');
 
-      } else {
+        // Ocultar los campos de guías y hacer que el volumen ocupe todo el ancho
+        edit_mostrarGuias.classList.add('d-none');
+        edit_volumenIn.classList.remove('col-md-6');
+        edit_volumenIn.classList.add('col-md-12');
+
+        // Eliminar la validación de las guías
+        fv.removeField('id_guia[]');
+      }
+      // Si no hay tipo de lote seleccionado
+      else {
+        // Ocultar todo
         edit_ocCidamFields.classList.add('d-none');
         edit_otroOrganismoFields.classList.add('d-none');
+        edit_mostrarGuias.classList.add('d-none');
+        edit_volumenIn.classList.remove('col-md-12');
+        edit_volumenIn.classList.add('col-md-6');
 
+        // Eliminar la validación de las guías en caso de que no se seleccione un tipo de lote
+        fv.removeField('id_guia[]');
       }
-    });
+    }
 
     var rowIndex = 0;
 
@@ -882,9 +918,7 @@ function inicializarRowIndex() {
             $('#edit_id_empresa').val(lote.id_empresa).trigger('change');
             $('#edit_tipo_lote').val(lote.tipo_lote);
             // Agrega manualmente las opciones usando los folios como el texto visible
-            guias.forEach(function (guia) {
-              $('#edit_id_guia').append(new Option(guia.folio, guia.id));
-            });
+
             // Asigna los valores seleccionados (solo IDs)
             var guiasIds = guias.map(function (guia) { return guia.id; });
             $('#edit_id_guia').val(guiasIds).trigger('change');
@@ -907,6 +941,26 @@ function inicializarRowIndex() {
               $('#edit_otro_organismo_fields').addClass('d-none');
               $('#edit_ingredientes').val(lote.ingredientes);
               $('#edit_edad').val(lote.edad);
+
+              // Mostrar las guías solo si el lote es CIDAM
+              $('#edit_mostrar_guias').removeClass('d-none');
+              $('#edit_volumen_in').removeClass('col-md-12').addClass('col-md-6');
+
+              // Añadir guías al campo select de guías
+              guias.forEach(function (guia) {
+                $('#edit_id_guia').append(new Option(guia.folio, guia.id));
+              });
+
+              // Agregar validación para guías si es necesario
+              if (!fv.hasField('id_guia[]')) {
+                fv.addField('id_guia[]', {
+                  validators: {
+                    notEmpty: {
+                      message: 'Por favor seleccione al menos un folio de guía'
+                    }
+                  }
+                });
+              }
             } else if (lote.tipo_lote == '2') {
               $('#edit_otro_organismo_fields').removeClass('d-none');
               $('#edit_oc_cidam_fields').addClass('d-none');
@@ -914,6 +968,18 @@ function inicializarRowIndex() {
               $('#edit_organismo_certificacion').val(organismoId).trigger('change');
               $('#edit_fecha_emision').val(lote.fecha_emision);
               $('#edit_fecha_vigencia').val(lote.fecha_vigencia);
+
+                // Ocultar el campo de las guías si es tipo 2
+                  $('#edit_mostrar_guias').addClass('d-none');
+                  $('#edit_volumen_in').removeClass('col-md-6').addClass('col-md-12');
+
+                  // Eliminar las opciones de guías si es tipo 2
+                  $('#edit_id_guia').empty();
+
+                  // Eliminar validación de guías si es tipo 2
+                  if (fv.hasField('id_guia[]')) {
+                    fv.removeField('id_guia[]');
+                  }
 
               // Mostrar enlace al archivo PDF si está disponible
               var archivoDisponible = false;
@@ -1137,13 +1203,6 @@ function inicializarRowIndex() {
             }
           }
         },
-        'id_guia[]': {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione al menos un folio de guía'
-            }
-          }
-        },
         volumen: {
           validators: {
             notEmpty: {
@@ -1250,12 +1309,17 @@ function inicializarRowIndex() {
       });
     });
 
+
     // Inicializar select2 y revalidar el campo cuando cambie
     $('#id_empresa, #id_guia, #tipo_agave').on('change', function () {
       fv.revalidateField($(this).attr('name'));
     });
 
+// Inicializar la página con los valores correctos
+document.addEventListener('DOMContentLoaded', updateFieldsAndValidation);
 
+// Añadir el listener para el cambio en el tipo de lote
+edit_tipoLoteSelect.addEventListener('change', updateFieldsAndValidation);
 
   });
 

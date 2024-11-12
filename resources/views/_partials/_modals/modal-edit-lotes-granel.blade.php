@@ -85,7 +85,7 @@
                     <div class="section">
                         <h6>Información Adicional</h6>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 d-none" id="edit_mostrar_guias">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="edit_id_guia" name="id_guia[]" class="select2 form-select" multiple>
                                         {{--  <option value="" disabled selected>Seleccione una guía</option> --}}
@@ -96,7 +96,7 @@
                                     <label for="id_guia">Folio de guía de translado</label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="edit_volumen_in">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="edit_volumen" name="volumen"
                                         class="form-control" placeholder="Volumen de Lote Inicial (litros)"
