@@ -288,6 +288,7 @@ class DomiciliosController extends Controller
             'edit_tipo' => 'required|array', 
             'edit_estado' => 'required|exists:estados,id',
             'edit_direccion' => 'required|string',
+            'edit_responsable' => 'required|string', 
             'edit_folio' => 'nullable|string',
             'edit_id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo',
             'edit_fecha_emision' => 'nullable|date',
@@ -304,12 +305,13 @@ class DomiciliosController extends Controller
         try {
             $instalacion = Instalaciones::findOrFail($id);
     
-            // Actualiza los datos de la instalación
+            // Actualiza los datos de la instalación, incluyendo el responsable
             $instalacion->update([
                 'id_empresa' => $request->input('edit_id_empresa'),
                 'tipo' => $request->input('edit_tipo'),
                 'estado' => $request->input('edit_estado'),
                 'direccion_completa' => $request->input('edit_direccion'),
+                'responsable' => $request->input('edit_responsable'), 
                 'folio' => $request->input('edit_folio', null),
                 'id_organismo' => $request->input('edit_id_organismo', null),
                 'fecha_emision' => $request->input('edit_fecha_emision', null),
@@ -320,18 +322,21 @@ class DomiciliosController extends Controller
             $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $request->input('edit_id_empresa'))->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
     
-            // Eliminar documentos antiguos si existen
+            // Obtener los documentos relacionados a la instalación
             $documentacionUrls = Documentacion_url::where('id_relacion', $id)->get();
-            foreach ($documentacionUrls as $documentacionUrl) {
-                $filePath = 'uploads/' . $numeroCliente . '/' . $documentacionUrl->url;
-                if (Storage::disk('public')->exists($filePath)) {
-                    Storage::disk('public')->delete($filePath);
-                }
-                $documentacionUrl->delete();
-            }
-    
-            // Subir y guardar los nuevos documentos si se suben
+            
+            // Si hay documentos relacionados, los mantenemos intactos a menos que se suba un nuevo archivo
             if ($request->hasFile('edit_url')) {
+                // Si se sube un archivo nuevo, eliminamos los documentos antiguos
+                foreach ($documentacionUrls as $documentacionUrl) {
+                    $filePath = 'uploads/' . $numeroCliente . '/' . $documentacionUrl->url;
+                    if (Storage::disk('public')->exists($filePath)) {
+                        Storage::disk('public')->delete($filePath);
+                    }
+                    $documentacionUrl->delete();
+                }
+    
+                // Subir y guardar los nuevos documentos
                 $files = $request->file('edit_url');
                 $documentoIds = $request->input('edit_id_documento');
                 $documentoNombres = $request->input('edit_nombre_documento');
@@ -363,6 +368,6 @@ class DomiciliosController extends Controller
             return response()->json(['code' => 500, 'message' => 'Error al actualizar la instalación.', 'error' => $e->getMessage()]);
         }
     }
-    
+
 //end
 }
