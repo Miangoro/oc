@@ -770,60 +770,110 @@ $(function () {
     });
   });
 
-  $(document).on('click', '.edit-record', function () {
-    var id_lote_envasado = $(this).data('id');
-    // Realizar la solicitud AJAX para obtener los datos del lote envasado
-    $.get('/lotes-envasado/edit/' + id_lote_envasado, function (data) {
-      // Rellenar el formulario con los datos obtenidos
-      $('#edit_id_lote_envasado').val(data.id_lote_envasado);
-      $('#edit_cliente').val(data.id_empresa).trigger('change');
-      $('#edit_lote_granel').val(data.id_lote_granel).trigger('change');
-      $('#edit_nombre').val(data.nombre); // Revisar que data.nombre contenga el nombre_lote
-      $('#edit_sku').val(data.inicial);
-      $('#edit_destino_lote').val(data.destino_lote);
-      $('#edit_cant_botellas').val(data.cant_botellas);
-      $('#edit_presentacion').val(data.presentacion);
-      $('#edit_unidad').val(data.unidad);
-      $('#edit_volumen_total').val(data.volumen_total);
-      $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
+// Método para mostrar el modal de edición con los datos del lote envasado
+$(document).on('click', '.edit-record', function () {
+  var id_lote_envasado = $(this).data('id');
 
-      // EDIT TESTIGOS
-      $('#edit_contenidoGraneles').empty();
+  // Realizar la solicitud AJAX para obtener los datos del lote envasado
+  $.get('/lotes-envasado/edit/' + id_lote_envasado, function (data) {
+    // Rellenar el formulario con los datos obtenidos
+    $('#edit_id_lote_envasado').val(data.id_lote_envasado);
+    $('#edit_cliente').val(data.id_empresa).trigger('change');
+    $('#edit_lote_granel').val(data.id_lote_granel).trigger('change');
+    $('#edit_nombre').val(data.nombre);
+    $('#edit_sku').val(data.inicial);
+    $('#edit_destino_lote').val(data.destino_lote);
+    $('#edit_cant_botellas').val(data.cant_botellas);
+    $('#edit_presentacion').val(data.presentacion);
+    $('#edit_unidad').val(data.unidad);
+    $('#edit_volumen_total').val(data.volumen_total);
+    $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
+    $('#edit_marca').val(data.id_marca).trigger('change');
 
-      data.lotes_envasado_granel.forEach(function (lote, index) {
-        var newRow = `
-      <tr>
+    // Limpiar contenido previo de lotes de envasado de granel
+    $('#edit_contenidoGraneles').empty();
+
+    // Agregar las opciones y rellenar cada fila del lote
+    data.lotes_envasado_granel.forEach(function (lote, index) {
+      var newRow = `
+        <tr>
           <th>
-              <button type="button" class="btn btn-danger remove-row" ${index === 0 ? '' : ''}>
-                  <i class="ri-delete-bin-5-fill"></i>
-              </button>
+            <button type="button" class="btn btn-danger remove-row">
+              <i class="ri-delete-bin-5-fill"></i>
+            </button>
           </th>
-            <td>
-                <input type="text" class="form-control form-control-sm" value="${lote.nombre_lote}" readonly />
-                <input type="hidden" name="id_lote_granel[]" value="${lote.id_lote_granel}" />
-            </td>
           <td>
-              <input type="text" class="form-control form-control-sm" name="volumen_parcial[]" value="${lote.volumen_parcial}" />
+            <select class="form-control select2 edit_lote_granel" name="id_lote_granel[]" id="id_lote_granel${index}">
+              <option value="${lote.id_lote_granel}" selected>${lote.nombre_lote}</option>
+            </select>
           </td>
-      </tr>
-  `;
-        $('#edit_contenidoGraneles').append(newRow);
-      });
+          <td>
+            <input type="text" class="form-control form-control-sm" name="volumen_parcial[]" value="${lote.volumen_parcial}" />
+          </td>
+        </tr>
+      `;
+      $('#edit_contenidoGraneles').append(newRow);
 
-      // Mostrar el modal de edición
-      $('#editLoteEnvasado').modal('show');
-      $('#edit_marca option[value="' + data.id_marca + '').attr('selected', 'selected');
-    }).fail(function () {
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al obtener los datos del lote envasado',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
+      // Inicializar select2 para el select en la fila recién añadida
+      $('#id_lote_granel' + index).select2({
+        dropdownParent: $('#editLoteEnvasado')
       });
     });
+
+    // Mostrar el modal de edición
+    $('#editLoteEnvasado').modal('show');
+  }).fail(function () {
+    Swal.fire({
+      icon: 'error',
+      title: '¡Error!',
+      text: 'Error al obtener los datos del lote envasado',
+      customClass: {
+        confirmButton: 'btn btn-danger'
+      }
+    });
   });
+});
+
+// Agregar nueva fila en la tabla de edición
+$(document).on('click', '.add-row-edit', function () {
+  var newRow = `
+    <tr>
+      <th>
+        <button type="button" class="btn btn-danger remove-row">
+          <i class="ri-delete-bin-5-fill"></i>
+        </button>
+      </th>
+      <td>
+        <select class="form-control select2 select2-edit edit_lote_granel" name="id_lote_granel[]">
+          <!-- Opciones se copiarán del primer select existente -->
+        </select>
+      </td>
+      <td>
+        <input type="text" class="form-control form-control-sm" name="volumen_parcial[]" />
+      </td>
+    </tr>
+  `;
+
+  // Agregar la nueva fila al contenedor de filas
+  $('#edit_contenidoGraneles').append(newRow);
+
+  // Inicializar select2 para el nuevo select
+  $('#edit_contenidoGraneles').find('.select2-edit').last().select2({
+    dropdownParent: $('#editLoteEnvasado'),
+    width: '100%',
+  });
+
+  // Copiar las opciones del primer select al nuevo select
+  var options = $('#edit_contenidoGraneles tr:first-child .edit_lote_granel').html();
+  $('#edit_contenidoGraneles tr:last-child .edit_lote_granel').html(options);
+});
+
+// Eliminar fila de la tabla
+$(document).on('click', '.remove-row', function () {
+  $(this).closest('tr').remove();
+});
+
+  
 
   //update valiacion: en editar
   const editLoteEnvasadoForm = document.getElementById('editLoteEnvasadoForm');
@@ -948,7 +998,8 @@ $(function () {
 
   $(document).on('click', '.edit-reclasificacion', function () {
     var id_lote_envasado = $(this).data('id');
-
+    alert("entro");
+    $('#reclasificacion').modal('show');
     $.get('/lotes-envasado/editSKU/' + id_lote_envasado, function (data) {
       // Rellenar el formulario con los datos obtenidos
       $('#id_lote_envasado').val(data.id_lote_envasado);
@@ -1030,44 +1081,7 @@ $(function () {
     });
   });
 
-  //agregar tabal a editar:
-  $(document).on('click', '.add-row-edit', function () {
-    var newRow = `
-      <tr>
-          <th>
-              <button type="button" class="btn btn-danger remove-row">
-                  <i class="ri-delete-bin-5-fill"></i>
-              </button>
-          </th>
-                <td>
-                    <select class="id_lote_granel form-control select2-edit edit_lote_granel" name="id_lote_granel[]">
-                    </select>
-                    
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
-                </td>
-      </tr>`;
 
-    $('#edit_contenidoGraneles').append(newRow);
-    $('#edit_contenidoGraneles')
-      .find('.select2-edit')
-      .select2({
-        dropdownParent: $('#editLoteEnvasado'), // Asegúrate de que #myModal sea el id de tu modal
-        width: '100%',
-        dropdownCssClass: 'select2-dropdown'
-      });
-    $('.select2-dropdown').css('z-index', 9999);
-
-    // Copiar opciones del primer select al nuevo select
-    var options = $('#edit_contenidoGraneles tr:first-child .edit_lote_granel').html();
-    $('#edit_contenidoGraneles tr:last-child .edit_lote_granel').html(options);
-  });
-
-  // Eliminar fila de la tabla
-  $(document).on('click', '.remove-row', function () {
-    $(this).closest('tr').remove();
-  });
 
 
   //update valiacion: en editar

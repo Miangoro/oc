@@ -55,16 +55,11 @@ $(function () {
             var $row_output = "";
             array.forEach(function (numero1) {
             var numero = numero1.split(",");
-              $row_output += '<div class="d-flex justify-content-start align-items-center user-name">' +
-                '<div class="avatar-wrapper">' +
-                '<div class="avatar avatar-sm me-3">' +
-                '</div>' +
-                '</div>' +
+              $row_output += 
                 '<div class="d-flex flex-column">' +
                 '<a data-pdf="' + numero[1] + '" id="pdf" data-bs-target="#mostrarPdf" href="javascript:;" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="' + numero[0] + '" data-registro="' + numero[0] + '" class="text-truncate text-heading"><span class="fw-medium">' +
                 numero[0] +
                 '</span></a>' +
-                '</div>' +
                 '</div>';
             });
             return $row_output;
@@ -75,6 +70,7 @@ $(function () {
           responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $name = full['razon_social'];
+            /*ANTERIOR
             var stateNum = Math.floor(Math.random() * 6);
             var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
             var $state = states[stateNum];
@@ -92,7 +88,8 @@ $(function () {
               '</span></a>' +
               '</div>' +
               '</div>';
-            return $row_output;
+            return $row_output;*/
+            return $name;
           }
         },
         {
@@ -146,7 +143,8 @@ $(function () {
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
 
               `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editCliente"   onclick="abrirModal(${full['id_empresa']})" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-edit-fill"></i>Editar</a>` +
-             /* `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-search-eye-line"></i>Otra opción</a>` + */
+              `<a data-id="${full['id_empresa']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar Cliente</a>` +
+              /* `<a data-id="${full['id_empresa']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasValidarSolicitud" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-search-eye-line"></i>Otra opción</a>` + */
 
               '</div>' +
               '</div>'
@@ -386,12 +384,13 @@ $(function () {
     });
   }
 
-  // Delete Record
+  //ELIMINAR CLIENTE
   $(document).on('click', '.delete-record', function () {
-    var user_id = $(this).data('empresa_id'),
+    var id_empresa = $(this).data('id'),
     dtrModal = $('.dtr-bs-modal.show');
 
-      if (dtrModal.length) {
+    // Ocultar modal responsivo en pantalla pequeña si está abierto
+    if (dtrModal.length) {
       dtrModal.modal('hide');
     }
 
@@ -401,6 +400,7 @@ $(function () {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Si, eliminar',
+      cancelButtonText: 'Cancelar',
       customClass: {
         confirmButton: 'btn btn-primary me-3',
         cancelButton: 'btn btn-label-secondary'
@@ -408,30 +408,48 @@ $(function () {
       buttonsStyling: false
     }).then(function (result) {
       if (result.value) {
+        // Enviar solicitud DELETE al servidor
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}empresas-list/${id_empresa}`,
+          url: `${baseUrl}clientes-list/${id_empresa}`,
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
           success: function () {
+            // Actualizar la tabla después de eliminar el registro
             dt_user.draw();
+
+            // Mostrar Alert de éxito
+            Swal.fire({
+              icon: 'success',
+              title: '¡Eliminado!',
+              text: '¡El Cliente ha sido eliminado correctamente!',
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+            });
           },
           error: function (error) {
             console.log(error);
+            // Mostrar Alert de error
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo eliminar el Cliente. Inténtalo más tarde.',
+                //footer: `<pre>${error.responseText}</pre>`,
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
           }
-        });
 
-        Swal.fire({
-          icon: 'success',
-          title: '¡Eliminado!',
-          text: '¡La solicitud ha sido eliminada correctamente!',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
+        });//fin AJAX
+        
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: 'Cancelado',
-          text: 'La solicitud no ha sido eliminada',
-          icon: 'error',
+          text: 'La eliminación del Cliente ha sido cancelada',
+          icon: 'info',
           customClass: {
             confirmButton: 'btn btn-success'
           }
@@ -981,7 +999,7 @@ $(document).ready(function() {
               Swal.fire({
                   icon: 'success',
                   title: '¡Éxito!',
-                  text: response.success,
+                  text: /*response.success,*/'Cliente actualizado correctamente',
                   customClass: {
                       confirmButton: 'btn btn-success'
                   }

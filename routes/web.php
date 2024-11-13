@@ -827,3 +827,8 @@ Route::get('certificados/granel', [Certificado_GranelController::class, 'UserMan
 Route::resource('certificados/granel-list',Certificado_GranelController::class);
 Route::post('/certificados', [Certificado_GranelController::class, 'store']);
 Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCertificado'])->name('Pre-certificado');
+
+
+
+//Eliminar Cliente Confirmado
+Route::delete('clientes-list/{id_empresa}', [clientesConfirmadosController::class, 'destroy'])->name('');
