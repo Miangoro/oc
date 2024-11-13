@@ -38,8 +38,8 @@
                         <div class="col-md-6">
                             <!-- Input de Estado -->
                             <div class="form-floating form-floating-outline mb-3">
-                                <select class="form-select select2" id="edit_estado" name="edit_estado" data-placeholder="Seleccione un estado" aria-label="Estado" required>
-                                    <option value="">Seleccione un estado</option>
+                                <select class="form-select select2" id="edit_estado" name="edit_estado" required>
+                                    <option value="" disabled selected>Seleccione un estado</option>
                                     @foreach($estados as $estado)
                                         <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
                                     @endforeach
