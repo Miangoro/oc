@@ -55,16 +55,11 @@ $(function () {
             var $row_output = "";
             array.forEach(function (numero1) {
             var numero = numero1.split(",");
-              $row_output += '<div class="d-flex justify-content-start align-items-center user-name">' +
-                '<div class="avatar-wrapper">' +
-                '<div class="avatar avatar-sm me-3">' +
-                '</div>' +
-                '</div>' +
+              $row_output += 
                 '<div class="d-flex flex-column">' +
                 '<a data-pdf="' + numero[1] + '" id="pdf" data-bs-target="#mostrarPdf" href="javascript:;" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="' + numero[0] + '" data-registro="' + numero[0] + '" class="text-truncate text-heading"><span class="fw-medium">' +
                 numero[0] +
                 '</span></a>' +
-                '</div>' +
                 '</div>';
             });
             return $row_output;
@@ -75,6 +70,7 @@ $(function () {
           responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $name = full['razon_social'];
+            /*ANTERIOR
             var stateNum = Math.floor(Math.random() * 6);
             var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
             var $state = states[stateNum];
@@ -92,7 +88,8 @@ $(function () {
               '</span></a>' +
               '</div>' +
               '</div>';
-            return $row_output;
+            return $row_output;*/
+            return $name;
           }
         },
         {
