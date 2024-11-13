@@ -816,8 +816,22 @@ $(document).on('click', '.edit-record', function () {
 
       // Inicializar select2 para el select en la fila recién añadida
       $('#id_lote_granel' + index).select2({
-        dropdownParent: $('#editLoteEnvasado')
+        dropdownParent: $('#editLoteEnvasado')  // Especificamos el dropdownParent para evitar problemas de visualización
       });
+    });
+
+    // Inicializar select2 en los elementos que ya están en el formulario de edición
+    $('#edit_cliente').select2({
+      dropdownParent: $('#editLoteEnvasado')
+    });
+    $('#edit_lote_granel').select2({
+      dropdownParent: $('#editLoteEnvasado')
+    });
+    $('#edit_Instalaciones').select2({
+      dropdownParent: $('#editLoteEnvasado')
+    });
+    $('#edit_marca').select2({
+      dropdownParent: $('#editLoteEnvasado')
     });
 
     // Mostrar el modal de edición
@@ -833,6 +847,7 @@ $(document).on('click', '.edit-record', function () {
     });
   });
 });
+
 
 // Agregar nueva fila en la tabla de edición
 $(document).on('click', '.add-row-edit', function () {
