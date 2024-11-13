@@ -85,7 +85,7 @@
                     <div class="section">
                         <h6>Información Adicional</h6>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-6 d-none" id="edit_mostrar_guias">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="edit_id_guia" name="id_guia[]" class="select2 form-select" multiple>
                                         {{--  <option value="" disabled selected>Seleccione una guía</option> --}}
@@ -96,7 +96,7 @@
                                     <label for="id_guia">Folio de guía de translado</label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="edit_volumen_in">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="edit_volumen" name="volumen"
                                         class="form-control" placeholder="Volumen de Lote Inicial (litros)"
@@ -123,7 +123,7 @@
                                                 {{ $categoria->categoria }}</option>
                                         @endforeach
                                     </select>
-                                    <label for="id_categoria">Categoría de Agave</label>
+                                    <label for="id_categoria">Categoría de Mezcal</label>
                                 </div>
                             </div>
                         </div>
@@ -141,8 +141,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select id="edit_tipo_agave" name="id_tipo" class="select2 form-select">
-                                        <option value="" disabled selected>Selecciona el tipo de agave</option>
+                                    <select id="edit_tipo_agave" name="id_tipo[]" class="select2 form-select" multiple>
                                         @foreach ($tipos as $tipo)
                                             <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
                                         @endforeach
@@ -186,7 +185,8 @@
                                     <!-- Primer bloque para Análisis completo -->
                                     <tr id="documento-row-{{ $documento->id_documento }}">
                                         <td>
-                                            <input readonly value="Análisis completo" type="text"
+                                          <span>Análisis completo</span>
+                                            <input hidden readonly value="Análisis completo" type="text"
                                                 class="form-control form-control-sm"
                                                 id="tipo_analisis_{{ $documento->id_documento }}"
                                                 name="tipo_analisis[]">
@@ -216,7 +216,8 @@
                                     <!-- Segundo bloque para Ajuste de grado -->
                                     <tr id="documento-row-{{ $documento->id_documento }}-2">
                                         <td>
-                                            <input readonly value="Ajuste de grado" type="text"
+                                          <span>Ajuste de grado</span>
+                                            <input hidden readonly value="Ajuste de grado" type="text"
                                                 class="form-control form-control-sm"
                                                 id="tipo_analisis_{{ $documento->id_documento }}-2"
                                                 name="tipo_analisis[]">

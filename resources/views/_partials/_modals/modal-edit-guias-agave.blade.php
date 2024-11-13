@@ -161,7 +161,7 @@
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="text"
                                     placeholder="Ingrese el nombre del cliente/comprador" id="edit_nombre_cliente"
-                                    name="nombre_cliente" />
+                                    name="nombre_cliente" min="1"/>
                                 <label for="edit_nombre_cliente">Nombre del cliente/comprador</label>
                             </div>
                         </div>

@@ -44,19 +44,18 @@ $(function () {
       }
     },
     columns: [
-      { data: '#' },                 //0
-      { data: 'id_instalacion' },    //1
-      { data: 'razon_social' },      //2
-      { data: 'tipo' },              //3
-      { data: 'responsable' },       //4
-      { data: 'estado' },            //5
-      { data: 'direccion_completa' },//6
-      { data: 'folio' },             //7
-      { data: 'organismo' },         //8
-      { data: 'PDF' },               //9
-      { data: 'fecha_emision' },     //10
-      { data: 'fecha_vigencia' },    //11
-      { data: 'actions' }            //12
+      { data: '' },
+      { data: 'id_instalacion' },
+      { data: 'razon_social' },
+      { data: 'tipo' },
+      { data: 'estado' },
+      { data: 'direccion_completa' },
+      { data: 'folio' },
+      { data: 'organismo' },
+      { data: '' },
+      { data: 'fecha_emision' },
+      { data: 'fecha_vigencia' },
+      { data: 'actions' } 
     ],
     columnDefs: [
       {
@@ -79,7 +78,7 @@ $(function () {
       },
       {
         targets: 3,
-        responsivePriority: 4,
+        responsivePriority: 3,
         render: function (data, type, full, meta) {
             var tipos = []; 
             try {
@@ -117,7 +116,7 @@ $(function () {
       },
       {
       // PDF
-        targets: 9,
+        targets: 8,
         className: 'text-center',
         render: function (data, type, full, meta) {
 

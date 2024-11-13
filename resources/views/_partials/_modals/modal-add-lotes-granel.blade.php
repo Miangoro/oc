@@ -40,6 +40,17 @@
                         </div>
                         <!-- Campo para seleccionar lote original -->
                         <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select id="tipo_lote" name="tipo_lote" class=" form-select"
+                                    data-error-message="Por favor selecciona el tipo de lote">
+                                    <option value="" disabled selected>Selecciona el tipo de lote</option>
+                                    <option value="1">Certificación por OC CIDAM</option>
+                                    <option value="2">Certificado por otro organismo</option>
+                                </select>
+                                <label for="tipo_lote">Tipo de Lote</label>
+                            </div>
+                        </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="es_creado_a_partir" name="es_creado_a_partir" class="form-select">
@@ -52,69 +63,57 @@
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
                     <div id="addLotes" class="d-none">
-                        <table class="table table-bordered shadow-lg">
-                            <thead>
-                                <tr>
-                                    <th><button type="button" class="btn btn-primary add-row-lotes"> <i
-                                                class="ri-add-line"></i> </button></th>
-                                    <th>Lote a granel</th>
-                                    <th>Volumen parcial</th>
-                                </tr>
-                            </thead>
-                            <tbody id="contenidoGraneles">
-                                <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-danger" disabled> <i
-                                                class="ri-delete-bin-5-fill"></i> </button>
-                                    </th>
-                                    <td>
-                                        <select class="id_lote_granel select2" name="id_lote_granel[]"
-                                        id="id_lote_granel">
-                                            <!-- Opciones -->
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control form-control-sm volumen-parcial"
-                                            name="volumen_parcial[]" id="volumen_parcial">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                      <table class="table table-bordered shadow-lg">
+                          <thead>
+                              <tr>
+                                  <th><button type="button" class="btn btn-primary add-row-lotes"> <i class="ri-add-line"></i> </button></th>
+                                  <th>Lote a granel</th>
+                                  <th>Volumen parcial</th>
+                              </tr>
+                          </thead>
+                          <tbody id="contenidoGraneles">
+{{--                               <tr data-row-index="0">
+                                  <th>
+                                      <button type="button" class="btn btn-danger" disabled>
+                                          <i class="ri-delete-bin-5-fill"></i>
+                                      </button>
+                                  </th>
+                                  <td>
+                                      <select class="id_lote_granel select2" name="lote[0][id]" id="id_lote_granel_0">
+                                          <!-- Opciones -->
+                                      </select>
+                                  </td>
+                                  <td>
+                                      <input type="text" class="form-control form-control-sm volumen-parcial"
+                                             name="volumenes[0][volumen_parcial]" id="volumen_parcial_0">
+                                  </td>
+                              </tr> --}}
+                          </tbody>
+                      </table>
+                  </div>
+
 
                     <div class="form-section mb-4 p-3 border rounded">
                         <!-- Sección para información del lote -->
                         <h6 class="mb-3">Detalles del Lote</h6>
-                        <!-- Empresa y Tipo de Lote -->
                         <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-floating form-floating-outline mb-4">
-                                    <select id="tipo_lote" name="tipo_lote" class=" form-select"
-                                        data-error-message="Por favor selecciona el tipo de lote">
-                                        <option value="" disabled selected>Selecciona el tipo de lote</option>
-                                        <option value="1">Certificación por OC CIDAM</option>
-                                        <option value="2">Certificado por otro organismo</option>
+                          <div class="col-md-6 d-none" id="mostrar_guias">
+                            <div class="d-flex align-items-center mb-3 input-group input-group-merge">
+                                <div class="flex-grow-1">
+                                    <select id="id_guia" name="id_guia[]" class="select2 form-select" multiple data-error-message="Por favor selecciona una guia">
+                                        {{-- <option value="" disabled selected>Seleccione una guía</option> --}}
                                     </select>
-                                    <label for="tipo_lote">Tipo de Lote</label>
                                 </div>
+                                <a href="../guias/guias_de_agave" class="btn btn-primary" style="padding: 0.75rem 1.5rem;" target="_blank" role="button">
+                                    <i class="ri-menu-search-line"></i> Ver guías
+                                </a>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-floating form-floating-outline mb-4">
-                                    <select id="id_guia" name="id_guia[]" class="select2 form-select" multiple
-                                        data-error-message="Por favor selecciona una guia">
-                                        {{--  <option value="" disabled selected>Seleccione una guía</option> --}}
-                                    </select>
-                                    <label for="id_guia">Folio de guía de translado</label>
-                                </div>
-                            </div>
-                            <div class="col">
-                              <a href="../guias/guias_de_agave" class="btn btn-primary" target="_blank" role="button"><i class="fas fa-eye"></i>Ver guías</a>
-                            </div>
-                            <div class="col-md-6">
+                            <div class="col-md-12" id="volmen_in">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <input type="number" step="0.01" id="volumen" name="volumen"
                                         class="form-control" placeholder="Volumen de Lote Inicial (litros)"
@@ -123,6 +122,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
@@ -145,7 +145,7 @@
                                                 {{ $categoria->categoria }}</option>
                                         @endforeach
                                     </select>
-                                    <label for="id_categoria">Categoría de Agave</label>
+                                    <label for="id_categoria">Categoría de Mezcal</label>
                                 </div>
                             </div>
                         </div>
@@ -164,17 +164,17 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-floating form-floating-outline mb-4">
-                                    <select id="tipo_agave" name="id_tipo" class="select2 form-select">
-                                        <option value="" disabled selected>Selecciona el tipo de agave
-                                        </option>
-                                        @foreach ($tipos as $tipo)
-                                            <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                    <label for="tipo_agave">Tipo de Agave</label>
-                                </div>
-                            </div>
+                              <div class="form-floating form-floating-outline mb-4">
+                                  <select id="tipo_agave" name="id_tipo[]" class="select2 form-select" multiple>
+                                      @foreach ($tipos as $tipo)
+                                          <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
+                                      @endforeach
+                                  </select>
+                                  <label for="tipo_agave">Tipo de Agave</label>
+                              </div>
+                          </div>
+
+
                         </div>
 
                         <!-- Campos para "Certificación por OC CIDAM" -->
@@ -208,9 +208,9 @@
                                         <!-- Primer bloque -->
                                         <tr>
                                             <td>
-                                                <input readonly value="Análisis completo" type="text"
-                                                    class="form-control form-control-sm"
-                                                    id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
+                                              <span>Análisis completo</span>
+                                                <input hidden readonly value="Análisis completo" type="text"
+                                                    class="form-control form-control-sm" id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
                                             </td>
                                             <td>
                                                 <input type="text" class="form-control form-control-sm"
@@ -229,7 +229,8 @@
                                         <!-- Segundo bloque -->
                                         <tr>
                                             <td>
-                                                <input readonly value="Ajuste de grado" type="text"
+                                              <span>Ajuste de grado</span>
+                                                <input hidden readonly value="Ajuste de grado" type="text"
                                                     class="form-control form-control-sm"
                                                     id="date{{ $documento->id_documento }}" name="tipo_analisis[]">
                                             </td>

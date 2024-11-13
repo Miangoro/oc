@@ -25,34 +25,10 @@
                             </div>
                         </div>
 
-{{--                         <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <select id="edit_tipo_lote" name="edit_tipo_lote" class="form-select" required onchange="mostrarLotes()">
-                                    <option value="Por un solo lote a granel">Por un solo lote a granel</option>
-                                    <option value="Por más de un lote a granel">Por más de un lote a granel</option>
-                                </select>
-                                <label for="edit_tipo_lote">Conformado por</label>
-                            </div>
-                        </div> --}}
-                    </div>
-{{--                     <div id="edit_datosOpcion1" div class="col-md-12">
-                        <div class="form-floating form-floating-outline mb-6">
-                            <select class="select2 form-select edit_lote_granel"
-                                name="edit_lote_granel" aria-label="Default select example">
-                                <option value="" selected>Lote Granel</option>
-                                @foreach ($lotes_granel as $lotesGra)
-                                    <option value="{{ $lotesGra->id_empresa }}">{{ $lotesGra->nombre_lote }}</option>
-                                @endforeach
-                            </select>
-                            <label for="edit_lote_granel">No de lote granel:</label>
-                        </div>
-                    </div> --}}
-
-
                         <!-- Datos a mostrar para la opción 1 -->
                         <div class="form-floating form-floating-outline mb-5">
-                            <input type="text" class="form-control" id="edit_nombre_lote"
-                                placeholder="Introduce el nombre del lote" name="edit_nombre_lote"
+                            <input type="text" class="form-control" id="edit_nombre"
+                                placeholder="Introduce el nombre del lote" name="edit_nombre"
                                 aria-label="Nombre del lote" required />
                             <label for="name">Nombre del lote</label>
                         </div>

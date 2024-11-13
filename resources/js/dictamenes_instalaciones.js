@@ -22,7 +22,8 @@
      userView = baseUrl + 'app/user/view/account',
      offCanvasForm = $('#offcanvasAddUser');
  
-     var select2Elements = $('.select2');
+
+var select2Elements = $('.select2');
   // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
     $elements.each(function () {
@@ -33,32 +34,54 @@
       });
     });
   }
-  
+initializeSelect2(select2Elements);
 
-  initializeSelect2(select2Elements);
 
-  $('#fecha_emision').on('change', function() {
-    var fechaInicial = new Date($(this).val());
-    
-    // Sumar 1 año a la fecha inicial
-    fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-    
-    // Formatear la fecha en YYYY-MM-DD
-    var year = fechaInicial.getFullYear();
-    var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2); // Los meses empiezan desde 0
-    var day = ('0' + fechaInicial.getDate()).slice(-2);
-    
-    // Asignar la fecha final al input correspondiente
-    $('#fecha_vigencia').val(year + '-' + month + '-' + day);
+///FECHAS FORMAT ADD
+$('#fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+
+//Sumar 1 año a la fecha inicial
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+//Sumar 1 día a la fecha inicial
+  fechaInicial.setDate(fechaInicial.getDate() + 1);
+
+//Formatear la fecha en YYYY-MM-DD
+  var year = fechaInicial.getFullYear();
+  var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2); // Los meses empiezan desde 0
+  var day = ('0' + fechaInicial.getDate() ).slice(-2); // Usamos el día original
+
+//Asignar la fecha final al input correspondiente
+  //$('#fecha_vigencia').val(year + '/' + month + '/' + day);//misma funcion que la linea de abajo
+
+//Establecer el calendario de #fecha_vigencia en el año sumado
+  //$('#fecha_vigencia').datepicker("option", "yearRange", (year) + ":" + (year)); //rango de años
+  $('#fecha_vigencia').datepicker("setDate", fechaInicial); // un dia menos, calendario bien
 });
- 
- 
-   // ajax setup
-   $.ajaxSetup({
+
+
+//7FECHAS FORMAT EDIT
+$('#edit_fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+
+  //Sumar 1 año a la fecha inicial
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+  //Sumar 1 día a la fecha inicial
+  fechaInicial.setDate(fechaInicial.getDate() + 1);
+
+  //Establecer el calendario de #fecha_vigencia en el año sumado
+  $('#edit_fecha_vigencia').datepicker("setDate", fechaInicial); // un dia menos, calendario bien
+});
+
+
+
+  
+// ajax setup
+  $.ajaxSetup({
      headers: {
        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
      }
-   });
+  });
  
  
    //FUNCIONALIDAD DE LA VISTA datatable
@@ -585,7 +608,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'No se pudo eliminar el dictamen. Inténtalo de nuevo más tarde.',
+                        text: 'No se pudo eliminar el dictamen. Inténtelo más tarde.',
                         footer: `<pre>${error.responseText}</pre>`,
                         customClass: {
                             confirmButton: 'btn btn-danger'
@@ -661,6 +684,7 @@ $(document).ready(function() {
 
       // Realizar la solicitud AJAX para obtener los datos de la clase
       $.get('/insta/' + id_dictamen + '/edit', function(data) {
+        
           // Rellenar el formulario con los datos obtenidos
           $('#edit_id_dictamen').val(data.id_dictamen);
           $('#edit_tipo_dictamen').val(data.tipo_dictamen);
@@ -668,9 +692,11 @@ $(document).ready(function() {
           $('#edit_fecha_emision').val(data.fecha_emision);
           $('#edit_fecha_vigencia').val(data.fecha_vigencia);
           $('#edit_id_inspeccion').val(data.id_inspeccion);
-          $('#edit_categorias').val(data.categorias);
-          $('#edit_clases').val(data.clases);
+          //$('#edit_categorias').val(data.categorias);
+        $('#edit_categorias').val(data.categorias).trigger('change');
 
+
+        
           // Mostrar el modal de edición
           $('#editDictamen').modal('show');
       }).fail(function() {

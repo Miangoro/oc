@@ -73,17 +73,25 @@ class GuiasController  extends Controller
         $searchValue = $request->input('search.value');
 
         $query = Guias::with(['empresa', 'predios'])
-              ->groupBy('run_folio');
+            ->groupBy('run_folio');
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
-                $q->where('id_guia', 'LIKE', "%{$searchValue}%")
+                $q->where('run_folio', 'LIKE', "%{$searchValue}%")
                     ->orWhere('folio', 'LIKE', "%{$searchValue}%")
                     ->orWhere('id_empresa', 'LIKE', "%{$searchValue}%");
+
+                $q->orWhereHas('empresa', function ($Nombre) use ($searchValue) {
+                    $Nombre->where('razon_social', 'LIKE', "%{$searchValue}%");
+                });
+
+                $q->orWhereHas('predios', function ($Predio) use ($searchValue) {
+                    $Predio->where('nombre_predio', 'LIKE', "%{$searchValue}%");
+                });
             });
         }
 
-        $totalData =$query->get()->count();
+        $totalData = $query->get()->count();
         $totalFiltered = $query->count();
 
         $users = $query->offset($start)
@@ -163,11 +171,11 @@ class GuiasController  extends Controller
             'mermas' => 'nullable|numeric',
             'plantas' => 'nullable|numeric',
         ]);
-    
+
         // Obtener el valor de plantas actuales y num_anterior
         $plantasActuales = $request->input('plantas');
         $numAnterior = $request->input('anterior');
-    
+
         // Verificar si plantasActuales no es null
         if ($plantasActuales !== null) {
             // Calcular el valor a actualizar en predio_plantacion
@@ -176,10 +184,10 @@ class GuiasController  extends Controller
             // Si plantas es null, no modificamos predio_plantacion
             $plantasNuevas = null;
         }
-    
+
         // Obtener el último run_folio creado
         $ultimoFolio = \App\Models\Guias::latest('run_folio')->first();
-        
+
         // Extraer el número del último run_folio y calcular el siguiente número
         if ($ultimoFolio) {
             $ultimoNumero = intval(substr($ultimoFolio->run_folio, 9, 6)); // Extrae 000001 de SOL-GUIA-000001/24
@@ -187,10 +195,10 @@ class GuiasController  extends Controller
         } else {
             $nuevoNumero = 1;
         }
-    
+
         // Formatear el nuevo run_folio
         $nuevoFolio = sprintf('SOL-GUIA-%06d-24', $nuevoNumero);
-    
+
         // Procesar la creación de las guías
         for ($i = 0; $i < $request->input('numero_guias'); $i++) {
             // Crear una nueva instancia del modelo Guia
@@ -207,28 +215,28 @@ class GuiasController  extends Controller
             $guia->numero_plantas = $plantasActuales;
             $guia->save();
         }
-    
+
         // Actualizar la cantidad de plantas en la tabla predio_plantacion si es necesario
         if ($plantasNuevas !== null) {
             $predioPlantacion = \App\Models\predio_plantacion::where('id_predio', $request->input('predios'))
                 ->where('id_plantacion', $request->input('plantacion'))
                 ->first();
-    
+
             if ($predioPlantacion) {
                 $predioPlantacion->num_plantas = $predioPlantacion->num_plantas + $plantasNuevas;
                 $predioPlantacion->save();
             }
         }
-    
+
         // Responder con éxito
         return response()->json(['success' => 'Guía registrada correctamente']);
     }
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
 
 
 
@@ -250,10 +258,10 @@ class GuiasController  extends Controller
         $guias = Guias::where('run_folio', $run_folio)
             ->with('empresa') // Suponiendo que `razon_social` está en la tabla `empresas`
             ->get();
-        
+
         return response()->json($guias);
     }
-    
+
 
 
     // Método para actualizar una guía existente
@@ -329,7 +337,7 @@ class GuiasController  extends Controller
         return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
     }
 
-    
+
     //Metodo para llenar el pdf
     public function guiasTransladoDescargar($id_guia)
     {

@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class DomiciliosController extends Controller
 {
@@ -42,6 +43,7 @@ class DomiciliosController extends Controller
         ];
 
         $search = [];
+      
 
         $totalData = Instalaciones::whereHas('empresa', function ($query) {
             $query->where('tipo', 2);
@@ -71,6 +73,9 @@ class DomiciliosController extends Controller
         } else {
             $search = $request->input('search.value');
 
+          
+
+        
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
@@ -81,14 +86,21 @@ class DomiciliosController extends Controller
                         ->orWhereDoesntHave('documentos');
                 })
                 ->where(function ($query) use ($search) {
+                    
                     $query->where('id_instalacion', 'LIKE', "%{$search}%")
+                        ->orWhereHas('empresa', function ($subQuery) use ($search) {
+                            $subQuery->where('razon_social', 'LIKE', "%{$search}%");
+                        })
+                        ->orWhereHas('estados', function ($subQuery) use ($search) {
+                            $subQuery->where('nombre', 'LIKE', "%{$search}%");
+                        })
+                        ->orWhereHas('organismos', function ($subQuery) use ($search) {
+                            $subQuery->where('organismo', 'LIKE', "%{$search}%");
+                        })
                         ->orWhere('direccion_completa', 'LIKE', "%{$search}%")
-                        ->orWhere('estado', 'LIKE', "%{$search}%")
                         ->orWhere('folio', 'LIKE', "%{$search}%")
-                        ->orWhere('tipo', 'LIKE', "%{$search}%")
-                        ->orWhere('id_organismo', 'LIKE', "%{$search}%")
-                        ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
-                        ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%");
+                        ->orWhere('tipo', 'LIKE', "%{$search}%");
+                    
                 })
                 ->offset($start)
                 ->limit($limit)

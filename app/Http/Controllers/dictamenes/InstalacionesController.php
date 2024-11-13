@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dictamen_instalaciones;
 use App\Models\clases; 
+use App\Models\categorias;
 use App\Models\inspecciones; 
 
 use App\Models\empresa; 
@@ -23,10 +24,11 @@ class InstalacionesController extends Controller
     {
         $dictamenes = Dictamen_instalaciones::all(); // Obtener todos los datos
         $clases = clases::all();
+        $categoria = categorias::all();
         $inspeccion = inspecciones::all();
         $empresa = empresa::all();
         $soli = solicitudesModel::all();
-        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'inspeccion'));
+        return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'categoria', 'inspeccion'));
     }
 
 
@@ -121,10 +123,9 @@ class InstalacionesController extends Controller
 
 
 // Función para agregar registro
-     public function store(Request $request)
-        {
-            
-            try {
+    public function store(Request $request)
+    {
+        try {
                 
                 $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
 
@@ -139,14 +140,11 @@ class InstalacionesController extends Controller
                 $var->clases =  json_encode($request->clases);
                 $var->save();//guardar en BD
 
-
-    
                 return response()->json(['success' => 'Registro agregada correctamente']);
-            } catch (\Exception $e) {
+        } catch (\Exception $e) {
                 return response()->json(['error' => 'Error al agregar'], 500);
-            }
         }
-
+    }
 
 
 
@@ -164,14 +162,25 @@ class InstalacionesController extends Controller
     }
 
 
-
     
 //funcion para llenar el campo del formulario
 public function edit($id_dictamen)
 {
     try {
         $var1 = Dictamen_instalaciones::findOrFail($id_dictamen);
-        return response()->json($var1);
+
+        $categorias = json_decode($var1->categorias);  //Convertir array
+        //return response()->json($var1);
+        return response()->json([
+            'id_dictamen' => $var1->id_dictamen,
+            'tipo_dictamen' => $var1->tipo_dictamen,
+            'num_dictamen' => $var1->num_dictamen,
+            'fecha_emision' => $var1->fecha_emision,
+            'fecha_vigencia' => $var1->fecha_vigencia,
+            'id_inspeccion' => $var1->id_inspeccion,
+            'categorias' => $categorias,
+            'clases' => $var1->clases
+        ]);
     } catch (\Exception $e) {
         return response()->json(['error' => 'Error al obtener el dictamen'], 500);
     }
