@@ -700,6 +700,7 @@ $(function () {
   // Limpiar campos al cerrar el modal
   $('#addlostesEnvasado').on('hidden.bs.modal', function () {
     // Restablecer select de empresa
+    $('#id_empresa').trigger('change');
     $('.id_lote_granel').html('');
     $('#id_marca').html('');
     $('.id_instalacion').html('');
@@ -778,8 +779,8 @@ $(document).on('click', '.edit-record', function () {
   $.get('/lotes-envasado/edit/' + id_lote_envasado, function (data) {
     // Rellenar el formulario con los datos obtenidos
     $('#edit_id_lote_envasado').val(data.id_lote_envasado);
-    $('#edit_cliente').val(data.id_empresa).trigger('change');
-    $('#edit_lote_granel').val(data.id_lote_granel).trigger('change');
+    $('#edit_cliente').val(data.id_empresa)
+    $('#edit_lote_granel').val(data.id_lote_granel)
     $('#edit_nombre').val(data.nombre);
     $('#edit_sku').val(data.inicial);
     $('#edit_destino_lote').val(data.destino_lote);
@@ -787,8 +788,8 @@ $(document).on('click', '.edit-record', function () {
     $('#edit_presentacion').val(data.presentacion);
     $('#edit_unidad').val(data.unidad);
     $('#edit_volumen_total').val(data.volumen_total);
-    $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
-    $('#edit_marca').val(data.id_marca).trigger('change');
+    $('#edit_Instalaciones').val(data.lugar_envasado)
+    $('#edit_marca').val(data.id_marca)
 
     // Limpiar contenido previo de lotes de envasado de granel
     $('#edit_contenidoGraneles').empty();
