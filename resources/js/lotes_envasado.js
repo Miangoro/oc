@@ -700,7 +700,6 @@ $(function () {
   // Limpiar campos al cerrar el modal
   $('#addlostesEnvasado').on('hidden.bs.modal', function () {
     // Restablecer select de empresa
-    $('#id_empresa').trigger('change');
     $('.id_lote_granel').html('');
     $('#id_marca').html('');
     $('.id_instalacion').html('');
@@ -779,8 +778,8 @@ $(document).on('click', '.edit-record', function () {
   $.get('/lotes-envasado/edit/' + id_lote_envasado, function (data) {
     // Rellenar el formulario con los datos obtenidos
     $('#edit_id_lote_envasado').val(data.id_lote_envasado);
-    $('#edit_cliente').val(data.id_empresa)
-    $('#edit_lote_granel').val(data.id_lote_granel)
+    $('#edit_cliente').val(data.id_empresa).trigger('change');
+    $('#edit_lote_granel').val(data.id_lote_granel).trigger('change');
     $('#edit_nombre').val(data.nombre);
     $('#edit_sku').val(data.inicial);
     $('#edit_destino_lote').val(data.destino_lote);
@@ -788,8 +787,8 @@ $(document).on('click', '.edit-record', function () {
     $('#edit_presentacion').val(data.presentacion);
     $('#edit_unidad').val(data.unidad);
     $('#edit_volumen_total').val(data.volumen_total);
-    $('#edit_Instalaciones').val(data.lugar_envasado)
-    $('#edit_marca').val(data.id_marca)
+    $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
+    $('#edit_marca').val(data.id_marca).trigger('change');
 
     // Limpiar contenido previo de lotes de envasado de granel
     $('#edit_contenidoGraneles').empty();
@@ -817,22 +816,8 @@ $(document).on('click', '.edit-record', function () {
 
       // Inicializar select2 para el select en la fila recién añadida
       $('#id_lote_granel' + index).select2({
-        dropdownParent: $('#editLoteEnvasado')  // Especificamos el dropdownParent para evitar problemas de visualización
+        dropdownParent: $('#editLoteEnvasado')
       });
-    });
-
-    // Inicializar select2 en los elementos que ya están en el formulario de edición
-    $('#edit_cliente').select2({
-      dropdownParent: $('#editLoteEnvasado')
-    });
-    $('#edit_lote_granel').select2({
-      dropdownParent: $('#editLoteEnvasado')
-    });
-    $('#edit_Instalaciones').select2({
-      dropdownParent: $('#editLoteEnvasado')
-    });
-    $('#edit_marca').select2({
-      dropdownParent: $('#editLoteEnvasado')
     });
 
     // Mostrar el modal de edición
@@ -848,7 +833,6 @@ $(document).on('click', '.edit-record', function () {
     });
   });
 });
-
 
 // Agregar nueva fila en la tabla de edición
 $(document).on('click', '.add-row-edit', function () {
