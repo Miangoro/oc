@@ -44,15 +44,19 @@ $(function () {
       }
     },
     columns: [
-      { data: '' },
-      { data: 'id_instalacion' },
-      { data: 'razon_social', responsivePriority: 1 }, 
-      { data: 'tipo' },
-      { data: 'estado' },
-      { data: 'direccion_completa' },
-      { data: 'folio' },
-      { data: '' },
-      { data: 'actions' } 
+      { data: '#' },                 //0
+      { data: 'id_instalacion' },    //1
+      { data: 'razon_social' },      //2
+      { data: 'tipo' },              //3
+      { data: 'responsable' },       //4
+      { data: 'estado' },            //5
+      { data: 'direccion_completa' },//6
+      { data: 'folio' },             //7
+      { data: 'organismo' },         //8
+      { data: 'PDF' },               //9
+      { data: 'fecha_emision' },     //10
+      { data: 'fecha_vigencia' },    //11
+      { data: 'actions' }            //12
     ],
     columnDefs: [
       {
@@ -71,6 +75,13 @@ $(function () {
         targets: 1,
         render: function (data, type, full, meta) {
           return `<span>${full.fake_id}</span>`;
+        }
+      },
+      {
+        targets: 2,
+        render: function (data, type, full, meta) {
+          var $razon_social = full['razon_social'] ?? 'N/A';
+          return '<span class="user-email">' + $razon_social + '</span>';
         }
       },
       {
@@ -107,13 +118,41 @@ $(function () {
       {
         targets: 4,
         render: function (data, type, full, meta) {
-          var $responsable = full['responsable'];
+          var $responsable = full['responsable'] ?? 'N/A';
           return '<span class="user-email">' + $responsable + '</span>';
         }
       },
       {
-      // PDF
+        targets: 5,
+        render: function (data, type, full, meta) {
+          var $estado = full['estado'] ?? 'N/A';
+          return '<span class="user-email">' + $estado + '</span>';
+        }
+      },
+      {
+        targets: 6,
+        render: function (data, type, full, meta) {
+          var $direccion_completa = full['direccion_completa'] ?? 'N/A';
+          return '<span class="user-email">' + $direccion_completa + '</span>';
+        }
+      },
+      {
         targets: 7,
+        render: function (data, type, full, meta) {
+          var $folio = full['folio'] ?? 'N/A';
+          return '<span class="user-email">' + $folio + '</span>';
+        }
+      },
+      {
+        targets: 8,
+        render: function (data, type, full, meta) {
+          var $organismo = full['organismo'] ?? 'N/A';
+          return '<span class="user-email">' + $organismo + '</span>';
+        }
+      },
+      {
+      // PDF
+        targets: 9,
         className: 'text-center',
         render: function (data, type, full, meta) {
 
@@ -125,8 +164,22 @@ $(function () {
         }
       },
       {
+        targets: 10,
+        render: function (data, type, full, meta) {
+          var $fecha_emision = full['fecha_emision'] ?? 'N/A';
+          return '<span class="user-email">' + $fecha_emision + '</span>';
+        }
+      },
+      {
+        targets:11,
+        render: function (data, type, full, meta) {
+          var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A';
+          return '<span class="user-email">' + $fecha_vigencia + '</span>';
+        }
+      },
+      {
         // Actions
-        targets: -1,
+        targets: 12,
         title: 'Acciones',
         searchable: false,
         orderable: false,
@@ -449,7 +502,7 @@ $(function () {
               Swal.fire({
                 icon: 'success',
                 title: '¡Eliminado!',
-                text: '¡La Instalacion ha sido eliminada correctamente!',
+                text: '¡La solicitud ha sido eliminada correctamente!',
                 customClass: {
                   confirmButton: 'btn btn-success'
                 }
@@ -460,14 +513,14 @@ $(function () {
               Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Hubo un problema al eliminar la Instalacion.',
+                text: 'Hubo un problema al eliminar el registro.',
               });
             }
           });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire({
             title: 'Cancelado',
-            text: 'La Instalacion no ha sido eliminada',
+            text: 'La solicitud no ha sido eliminada',
             icon: 'error',
             customClass: {
               confirmButton: 'btn btn-success'
@@ -795,22 +848,49 @@ $(function () {
     });
 });
 
-  //Editar
-  $('#edit_fecha_emision').on('change', function() {
-    var fechaInicial = new Date($(this).val());
-    fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-    var year = fechaInicial.getFullYear();
-    var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
-    var day = ('0' + fechaInicial.getDate()).slice(-2);
-    $('#edit_fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
-  });
+
+
+
+
+
+
+
+//Editar
+$(document).on('change', '#tipo', function () {
+  var tipo = $(this).val(); 
+  
+  var hiddenIdDocumento = $('#certificado-otros').find('input[name="id_documento[]"]');
+  var hiddenNombreDocumento = $('#certificado-otros').find('input[name="nombre_documento[]"]');
+  var fileCertificado = $('#certificado-otros').find('input[type="file"]');
+  
+  if (tipo.includes("Productora")) {
+      hiddenIdDocumento.val('127');
+      hiddenNombreDocumento.val('Certificado de instalaciones');
+      fileCertificado.attr('id', 'file-127');
+  } else if (tipo.includes("Envasadora")) {
+      hiddenIdDocumento.val('128');
+      hiddenNombreDocumento.val('Certificado de envasadora');
+      fileCertificado.attr('id', 'file-128');
+  } else if (tipo.includes("Comercializadora") || tipo.includes("Almacen y bodega") || tipo.includes("Area de maduracion")) {
+      hiddenIdDocumento.val('129');
+      hiddenNombreDocumento.val('Certificado de comercializadora');
+      fileCertificado.attr('id', 'file-129');
+  } else {
+      hiddenIdDocumento.val('');
+      hiddenNombreDocumento.val('');
+      fileCertificado.removeAttr('id');
+  }
+});
 
   $(document).ready(function () {
     let instalacionData = {};
 
+    // Función para mostrar u ocultar campos según el valor de certificación
     function toggleCamposCertificacion(certificacion) {
         if (certificacion === 'otro_organismo') {
-            $('#edit_certificado_otros').removeClass('d-none');           
+            $('#edit_certificado_otros').removeClass('d-none');
+            
+            // Rellenar los campos adicionales con los datos obtenidos
             $('#edit_folio').val(instalacionData.folio || '');
             $('#edit_id_organismo').val(instalacionData.id_organismo || '').trigger('change');
             $('#edit_fecha_emision').val(instalacionData.fecha_emision || '');
@@ -832,9 +912,12 @@ $(function () {
             $('#archivo_url_display').html('No hay archivo disponible.');
         }
     }
+
+    // Manejar el cambio en el select de certificación
     $('#edit_certificacion').on('change', function () {
         toggleCamposCertificacion($(this).val());
     });
+
     $(document).on('click', '.edit-record', function () {
       var id_instalacion = $(this).data('id');
       var url = baseUrl + 'domicilios/edit/' + id_instalacion;
@@ -842,7 +925,9 @@ $(function () {
       $.get(url, function (data) {
           if (data.success) {
               var instalacion = data.instalacion;
-              var tipoParsed = JSON.parse(instalacion.tipo);
+  
+              // Parsear el tipo (JSON) a un array
+              var tipoParsed = JSON.parse(instalacion.tipo); // Convertir el string JSON a un array
   
               instalacionData = {
                   folio: instalacion.folio || '',
@@ -850,49 +935,60 @@ $(function () {
                   fecha_emision: instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '',
                   fecha_vigencia: instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '',
                   archivoUrl: data.archivo_url || '',
-                  numeroCliente: data.numeroCliente || '',
-                  edit_nombre_documento: data.edit_nombre_documento || [], 
-                  edit_id_documento: data.edit_id_documento || []
+                  numeroCliente: data.numeroCliente || ''
               };
   
+              // Asignar los valores a los campos del formulario
               $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
+              
+              // Asignar el array de tipo al select
               $('#edit_tipo').val(tipoParsed).trigger('change');
+  
               $('#edit_estado').val(instalacion.estado).trigger('change');
               $('#edit_direccion').val(instalacion.direccion_completa);
-              $('#edit_responsable').val(instalacion.responsable || '').trigger('change');
+  
+              // Asignar el responsable al campo correspondiente
+              $('#edit_responsable').val(instalacion.responsable || '').trigger('change');  // Aquí asignamos el responsable
+  
+              // Establecer el valor del select y mostrar los campos adicionales si corresponde
               $('#edit_certificacion').val(instalacion.certificacion).trigger('change');
               toggleCamposCertificacion(instalacion.certificacion);
   
-              $('#edit_nombre_documento').val(instalacion.edit_nombre_documento).trigger('change');
-              $('#edit_id_documento').val(instalacion.edit_id_documento).trigger('change');
-  
+              // Asignar el id_instalacion al atributo data-id del formulario
               $('#editInstalacionForm').data('id', id_instalacion);
+  
               $('#modalEditInstalacion').modal('show');
           } else {
               Swal.fire({
                   icon: 'error',
                   title: 'Error',
                   text: 'No se pudo cargar los datos de la instalación',
-                  customClass: { confirmButton: 'btn btn-primary' }
+                  customClass: {
+                      confirmButton: 'btn btn-primary'
+                  }
               });
           }
       }).fail(function (jqXHR, textStatus, errorThrown) {
           console.error('Error en la solicitud:', textStatus, errorThrown);
+  
           Swal.fire({
               icon: 'error',
               title: 'Error',
               text: 'Error en la solicitud. Inténtalo de nuevo.',
-              customClass: { confirmButton: 'btn btn-primary' }
+              customClass: {
+                  confirmButton: 'btn btn-primary'
+              }
           });
       });
   });
-  
+
   $(document).on('change', '#edit_tipo', function () {
-    var tipo = $(this).val();
+    var tipo = $(this).val(); 
+    
     var hiddenIdDocumento = $('#edit_certificado_otros').find('input[name="edit_id_documento[]"]');
     var hiddenNombreDocumento = $('#edit_certificado_otros').find('input[name="edit_nombre_documento[]"]');
     var fileCertificado = $('#edit_certificado_otros').find('input[type="file"]');
-
+    
     if (tipo.includes("Productora")) {
         hiddenIdDocumento.val('127');
         hiddenNombreDocumento.val('Certificado de instalaciones');
@@ -901,7 +997,7 @@ $(function () {
         hiddenIdDocumento.val('128');
         hiddenNombreDocumento.val('Certificado de envasadora');
         fileCertificado.attr('id', 'file-128');
-    } else if (tipo.includes("Comercializadora") || tipo.includes("Almacén y bodega") || tipo.includes("Área de maduración")) {
+    } else if (tipo.includes("Comercializadora") || tipo.includes("Almacen y bodega") || tipo.includes("Area de maduracion")) {
         hiddenIdDocumento.val('129');
         hiddenNombreDocumento.val('Certificado de comercializadora');
         fileCertificado.attr('id', 'file-129');
@@ -912,47 +1008,48 @@ $(function () {
     }
 });
 
-  $('#editInstalacionForm').submit(function (e) {
-        e.preventDefault();
+// Enviar el formulario de edición de instalación
+$('#editInstalacionForm').submit(function (e) {
+    e.preventDefault();
 
-        var id_instalacion = $(this).data('id');
-        var form = $(this)[0];
-        var formData = new FormData(form);
+    var id_instalacion = $(this).data('id'); // Obtenemos el id_instalacion del atributo data-id del formulario
+    var form = $(this)[0];
+    var formData = new FormData(form);
 
-        $.ajax({
-            url: baseUrl + 'instalaciones/' + id_instalacion,
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-HTTP-Method-Override', 'PUT');
-            },
-            success: function (response) {
-                dt_instalaciones_table.ajax.reload();
-                $('#modalEditInstalacion').modal('hide');
+    $.ajax({
+        url: baseUrl + 'instalaciones/' + id_instalacion,
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        beforeSend: function (xhr) {
+            xhr.setRequestHeader('X-HTTP-Method-Override', 'PUT');
+        },
+        success: function (response) {
+            dt_instalaciones_table.ajax.reload();
+            $('#modalEditInstalacion').modal('hide');
 
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.message,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
-            },
-            error: function (xhr) {
-                console.error('Error en la solicitud AJAX:', xhr.responseJSON);
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.message,
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
+        },
+        error: function (xhr) {
+            console.error('Error en la solicitud AJAX:', xhr.responseJSON);
 
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Hubo un problema al actualizar los datos.',
-                    footer: `<pre>${JSON.stringify(xhr.responseJSON, null, 2)}</pre>`,
-                });
-            }
-        });
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un problema al actualizar los datos.',
+                footer: `<pre>${JSON.stringify(xhr.responseJSON, null, 2)}</pre>`,
+            });
+        }
     });
+});
 });
 
 $(document).on('click', '.pdf', function () {

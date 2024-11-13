@@ -54,8 +54,11 @@
                     <th>Responsable</th>
                     <th>Estado</th>
                     <th>Dirección</th>
-                    <th>Información</th>
+                    <th>Folio</th>
+                    <th>Organismo</th>
                     <th>Certificado de instalaciones</th>
+                    <th>Fecha Emisión</th>
+                    <th>Fecha Vigencia</th>
                     <th>Acciones</th>
                 </tr>
             </thead>

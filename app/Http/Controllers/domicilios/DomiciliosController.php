@@ -293,14 +293,18 @@ class DomiciliosController extends Controller
             'edit_fecha_emision' => 'nullable|date',
             'edit_fecha_vigencia' => 'nullable|date',
             'edit_certificacion' => 'nullable|string',
-            'edit_url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
-            'edit_nombre_documento.*' => 'nullable:edit_url.*|string',
-            'edit_id_documento.*' => 'nullable:edit_url.*|integer',
+            'edit_url' => 'nullable|array',
+            'edit_url.*' => 'file|mimes:jpg,jpeg,png,pdf', 
+            'edit_nombre_documento' => 'nullable|array',
+            'edit_nombre_documento.*' => 'string', 
+            'edit_id_documento' => 'nullable|array',
+            'edit_id_documento.*' => 'integer', 
         ]);
     
         try {
             $instalacion = Instalaciones::findOrFail($id);
     
+            // Actualiza los datos de la instalación
             $instalacion->update([
                 'id_empresa' => $request->input('edit_id_empresa'),
                 'tipo' => $request->input('edit_tipo'),
@@ -316,7 +320,7 @@ class DomiciliosController extends Controller
             $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $request->input('edit_id_empresa'))->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
     
-            // Eliminar documentos antiguos relacionados
+            // Eliminar documentos antiguos si existen
             $documentacionUrls = Documentacion_url::where('id_relacion', $id)->get();
             foreach ($documentacionUrls as $documentacionUrl) {
                 $filePath = 'uploads/' . $numeroCliente . '/' . $documentacionUrl->url;
@@ -326,11 +330,15 @@ class DomiciliosController extends Controller
                 $documentacionUrl->delete();
             }
     
-            // Subir y guardar nuevos documentos
+            // Subir y guardar los nuevos documentos si se suben
             if ($request->hasFile('edit_url')) {
-                foreach ($request->file('edit_url') as $index => $file) {
-                    $documentoId = $request->edit_id_documento[$index];
-                    $documentoNombre = $request->edit_nombre_documento[$index];
+                $files = $request->file('edit_url');
+                $documentoIds = $request->input('edit_id_documento');
+                $documentoNombres = $request->input('edit_nombre_documento');
+    
+                foreach ($files as $index => $file) {
+                    $documentoId = $documentoIds[$index] ?? null;
+                    $documentoNombre = $documentoNombres[$index] ?? 'Documento sin nombre';
     
                     // Crear el nombre de archivo y la ruta con el número de cliente
                     $filename = $documentoNombre . '_' . time() . '.' . $file->getClientOriginalExtension();
@@ -339,6 +347,7 @@ class DomiciliosController extends Controller
                     // Subir el archivo al subdirectorio correcto
                     $filePath = $file->storeAs($directoryPath, $filename, 'public');
     
+                    // Guardar el documento en la base de datos
                     Documentacion_url::create([
                         'id_relacion' => $id,
                         'id_documento' => $documentoId,
@@ -351,7 +360,7 @@ class DomiciliosController extends Controller
     
             return response()->json(['code' => 200, 'message' => 'Instalación actualizada correctamente.']);
         } catch (\Exception $e) {
-            return response()->json(['code' => 500, 'message' => 'Error al actualizar la instalación.']);
+            return response()->json(['code' => 500, 'message' => 'Error al actualizar la instalación.', 'error' => $e->getMessage()]);
         }
     }
     
