@@ -25,13 +25,12 @@
                             <div class="col-md-6">
                                 <!-- Select de Tipo de Instalación -->
                                 <div class="form-floating form-floating-outline mb-3">
-                                    <select class="form-select" id="tipo" name="tipo" aria-label="Tipo de Instalación" required>
-                                        <option value="" disabled selected>Seleccione un tipo de instalación</option>
+                                    <select class="select2 form-select" id="tipo" name="tipo[]" aria-label="Tipo de Instalación" multiple>
                                         <option value="Productora">Productora</option>
                                         <option value="Envasadora">Envasadora</option>
                                         <option value="Comercializadora">Comercializadora</option>
-                                        <option value="Almacén y bodega">Almacén y bodega</option>
-                                        <option value="Área de maduración">Área de maduración</option>
+                                        <option value="Almacen y bodega">Almacén y bodega</option>
+                                        <option value="Area de maduracion">Área de maduración</option>
                                     </select>
                                     <label for="tipo">Tipo de Instalación</label>
                                 </div>
@@ -39,8 +38,8 @@
                                 <!-- Input de Estado -->
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-3">
-                                    <select class="form-select select2" id="estado" name="estado" data-placeholder="Seleccione un estado" aria-label="Estado" required>
-                                        <option value="">Seleccione un estado</option>
+                                    <select class="form-select select2" id="estado" name="estado" required>
+                                        <option value="" disabled selected>Seleccione un estado</option>
                                         @foreach($estados as $estado)
                                             <option value="{{ $estado->id }}">{{ $estado->nombre }}</option>
                                         @endforeach
@@ -54,6 +53,12 @@
                         <div class="form-floating form-floating-outline mb-3">
                             <input type="text" class="form-control" id="direccion" placeholder="Ingrese la dirección completa" name="direccion_completa" aria-label="Dirección Completa" required>
                             <label for="direccion">Dirección Completa</label>
+                        </div>
+
+                        <!-- Input de Responsable de Instalación -->
+                        <div class="form-floating form-floating-outline mb-3">
+                            <input type="text" class="form-control" id="responsable" placeholder="Ingrese el nombre del responsable de la instalación" name="responsable" aria-label="Responsable de Instalación" required>
+                            <label for="responsable_instalacion">Responsable de Instalación</label>
                         </div>
 
                         <!-- Select de Tipo de Certificación -->
@@ -84,7 +89,7 @@
 
                             <div class="form-floating form-floating-outline mb-3">
                                 <select class="form-select" id="id_organismo" name="id_organismo" data-placeholder="Seleccione un organismo de certificación" aria-label="Organismo de Certificación">
-                                    <option value="">Seleccione un organismo de certificación</option>
+                                    <option value="" disabled selected>Seleccione un organismo de certificación</option>
                                     @foreach($organismos as $organismo)
                                         <option value="{{ $organismo->id_organismo }}">{{ $organismo->organismo }}</option>
                                     @endforeach
