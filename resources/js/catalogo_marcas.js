@@ -381,10 +381,8 @@ $(function () {
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
         bootstrap5: new FormValidation.plugins.Bootstrap5({
-          // Use this for enabling/changing valid/invalid class
           eleValidClass: '',
           rowSelector: function (field, ele) {
-            // field is the field name & ele is the field element
             return '.mb-5';
           }
         }),
@@ -397,19 +395,12 @@ $(function () {
         url: '/catalago-list',
         type: 'POST',
         data: formData,
-        processData: false, // Evita la conversión automática de datos a cadena
-        contentType: false, // Evita que se establezca el tipo de contenido
+        processData: false, 
+        contentType: false, 
         success: function (response) {
-          // Reinicializar el select2 para cliente e id_norma
-          $('#cliente').val(null).trigger('change'); // Limpiar el select2 de cliente
-          $('#id_norma').val(null).trigger('change'); // Limpiar el select2 de id_norma
-
-          // Ocultar el modal después de enviar el formulario
           $('#addMarca').modal('hide');
-
           // Recargar la tabla de DataTables
           $('.datatables-users').DataTable().ajax.reload();
-
           // Mostrar alerta de éxito
           Swal.fire({
             icon: 'success',

@@ -44,15 +44,19 @@ $(function () {
       }
     },
     columns: [
-      { data: '' },
-      { data: 'id_instalacion' },
-      { data: 'razon_social', responsivePriority: 1 }, 
-      { data: 'tipo' },
-      { data: 'estado' },
-      { data: 'direccion_completa' },
-      { data: 'folio' },
-      { data: '' },
-      { data: 'actions' } 
+      { data: '#' },                 //0
+      { data: 'id_instalacion' },    //1
+      { data: 'razon_social' },      //2
+      { data: 'tipo' },              //3
+      { data: 'responsable' },       //4
+      { data: 'estado' },            //5
+      { data: 'direccion_completa' },//6
+      { data: 'folio' },             //7
+      { data: 'organismo' },         //8
+      { data: 'PDF' },               //9
+      { data: 'fecha_emision' },     //10
+      { data: 'fecha_vigencia' },    //11
+      { data: 'actions' }            //12
     ],
     columnDefs: [
       {
@@ -74,30 +78,81 @@ $(function () {
         }
       },
       {
+        targets: 2,
+        render: function (data, type, full, meta) {
+          var $razon_social = full['razon_social'] ?? 'N/A';
+          return '<span class="user-email">' + $razon_social + '</span>';
+        }
+      },
+      {
         targets: 3,
         responsivePriority: 3,
         render: function (data, type, full, meta) {
-          var $name = full['tipo'];
-          if ($name == 'Productora'){
-             return '<span class="badge bg-primary">'+full['tipo']+'</span>';
-          }
-          else if($name == 'Envasadora'){ 
-                 return '<span class="badge bg-success">'+full['tipo']+'</span>';
-          }
-          else if($name == 'Comercializadora'){ 
-             return '<span class="badge bg-info">'+full['tipo']+'</span>';
-         }
-         else if($name == 'Almacén y bodega'){ 
-             return '<span class="badge bg-danger">Almacén y bodega</span>';
-         }
-         else if($name == 'Área de maduración'){ 
-           return '<span class="badge bg-warning">Área de maduración</span>';
-         }
+            var tipos = []; 
+            try {
+                if (full['tipo']) {
+                    tipos = JSON.parse(full['tipo']); 
+                }
+            } catch (e) {
+                tipos = full['tipo'] ? full['tipo'].split(',') : [];
+            }
+    
+            const tipoConfig = {
+                'Productora': { color: 'primary', nombre: 'Productora' },     // Azul
+                'Envasadora': { color: 'success', nombre: 'Envasadora' },     // Verde
+                'Comercializadora': { color: 'info', nombre: 'Comercializadora' }, // Celeste
+                'Almacen y bodega': { color: 'danger', nombre: 'Almacén y bodega' }, // Rojo
+                'Area de maduracion': { color: 'warning', nombre: 'Área de maduración' } // Amarillo
+            };
+    
+            var badges = ''; 
+            tipos.forEach(function(tipo) {
+                tipo = tipo.trim();
+                const config = tipoConfig[tipo] || { color: 'secondary', nombre: 'Desconocido' }; 
+                badges += `<span class="badge rounded-pill bg-label-${config.color}">${config.nombre}</span> `;
+            });
+    
+            return badges || '<span class="badge rounded-pill bg-label-secondary">N/A</span>';
+        }
+      },      
+      {
+        targets: 4,
+        render: function (data, type, full, meta) {
+          var $responsable = full['responsable'] ?? 'N/A';
+          return '<span class="user-email">' + $responsable + '</span>';
+        }
+      },
+      {
+        targets: 5,
+        render: function (data, type, full, meta) {
+          var $estado = full['estado'] ?? 'N/A';
+          return '<span class="user-email">' + $estado + '</span>';
+        }
+      },
+      {
+        targets: 6,
+        render: function (data, type, full, meta) {
+          var $direccion_completa = full['direccion_completa'] ?? 'N/A';
+          return '<span class="user-email">' + $direccion_completa + '</span>';
+        }
+      },
+      {
+        targets: 7,
+        render: function (data, type, full, meta) {
+          var $folio = full['folio'] ?? 'N/A';
+          return '<span class="user-email">' + $folio + '</span>';
+        }
+      },
+      {
+        targets: 8,
+        render: function (data, type, full, meta) {
+          var $organismo = full['organismo'] ?? 'N/A';
+          return '<span class="user-email">' + $organismo + '</span>';
         }
       },
       {
       // PDF
-        targets: 7,
+        targets: 9,
         className: 'text-center',
         render: function (data, type, full, meta) {
 
@@ -109,8 +164,22 @@ $(function () {
         }
       },
       {
+        targets: 10,
+        render: function (data, type, full, meta) {
+          var $fecha_emision = full['fecha_emision'] ?? 'N/A';
+          return '<span class="user-email">' + $fecha_emision + '</span>';
+        }
+      },
+      {
+        targets:11,
+        render: function (data, type, full, meta) {
+          var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A';
+          return '<span class="user-email">' + $fecha_vigencia + '</span>';
+        }
+      },
+      {
         // Actions
-        targets: -1,
+        targets: 12,
         title: 'Acciones',
         searchable: false,
         orderable: false,
@@ -367,7 +436,7 @@ $(function () {
             Swal.fire({
               icon: 'success',
               title: '¡Eliminado!',
-              text: '¡La solicitud ha sido eliminada correctamente!',
+              text: '¡La Instalacion ha sido eliminada correctamente!',
               customClass: {
                 confirmButton: 'btn btn-success'
               }
@@ -378,14 +447,14 @@ $(function () {
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: 'Hubo un problema al eliminar el registro.',
+              text: 'Hubo un problema al eliminar la Istalacion.',
             });
           }
         });
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire({
           title: 'Cancelado',
-          text: 'La solicitud no ha sido eliminada',
+          text: 'La Instalacion no ha sido eliminada',
           icon: 'error',
           customClass: {
             confirmButton: 'btn btn-success'
@@ -395,198 +464,124 @@ $(function () {
     });
   });
 
-  // Agregar
-  $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-
-    // Inicializar FormValidation
-    const form = document.getElementById('addNewInstalacionForm');
-    const fv = FormValidation.formValidation(form, {
-      fields: {
-        'id_empresa': {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona una empresa.'
-            }
-          }
-        },
-        'tipo': {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona un tipo de instalación.'
-            }
-          }
-        },
-        'estado': {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona un estado.'
-            }
-          }
-        },
-        'direccion_completa': {
-          validators: {
-            notEmpty: {
-              message: 'Ingrese la dirección completa.'
-            }
-          }
-        },
-        'certificacion': {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona el tipo de certificación.'
-            }
-          }
-        },
-      },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          eleInvalidClass: 'is-invalid',
-          rowSelector: '.form-floating'
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
+  
+    // Eliminar registro
+    $(document).on('click', '.delete-record', function () {
+      var id_instalacion = $(this).data('id'),
+          dtrModal = $('.dtr-bs-modal.show');
+  
+      if (dtrModal.length) {
+        dtrModal.modal('hide');
       }
-
-    }).on('core.form.valid', function (e) {
-      var formData = new FormData(form);
-
-      $.ajax({
-        url: '/instalaciones',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-          $('#modalAddInstalacion').modal('hide');
-          $('#addNewInstalacionForm')[0].reset();
-          $('.select2').val(null).trigger('change');
-          $('.datatables-users').DataTable().ajax.reload();
-          console.log(response);
-
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.message,
-            customClass: {
-              confirmButton: 'btn btn-success'
+  
+      Swal.fire({
+        title: '¿Está seguro?',
+        text: "No podrá revertir este evento",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        customClass: {
+          confirmButton: 'btn btn-primary me-3',
+          cancelButton: 'btn btn-label-secondary'
+        },
+        buttonsStyling: false
+      }).then(function (result) {
+        if (result.value) {
+          $.ajax({
+            type: 'DELETE',
+            url: `${baseUrl}instalaciones/${id_instalacion}`, 
+            success: function () {
+              dt_instalaciones_table.ajax.reload();
+  
+              Swal.fire({
+                icon: 'success',
+                title: '¡Eliminado!',
+                text: '¡La Instalacion ha sido eliminada correctamente!',
+                customClass: {
+                  confirmButton: 'btn btn-success'
+                }
+              });
+            },
+            error: function (xhr, textStatus, errorThrown) {
+              console.error('Error al eliminar:', textStatus, errorThrown);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hubo un problema al eliminar el registro.',
+              });
             }
           });
-        },
-        error: function (xhr) {
-          console.log('Error:', xhr.responseText);
-
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire({
+            title: 'Cancelado',
+            text: 'La Instalacion no ha sido eliminada',
             icon: 'error',
-            title: '¡Error!',
-            text: 'Error al agregar la instalación',
             customClass: {
-              confirmButton: 'btn btn-danger'
+              confirmButton: 'btn btn-success'
             }
           });
         }
       });
     });
+  
 
-    $('#certificacion').on('change', function () {
-      if ($(this).val() === 'otro_organismo') {
-        $('#certificado-otros').removeClass('d-none');
-
-        fv.addField('url[]', {
-          validators: {
-            notEmpty: {
-              message: 'Debes subir un archivo de certificado.'
-            },
-            file: {
-              extension: 'pdf,jpg,jpeg,png',
-              type: 'application/pdf,image/jpeg,image/png',
-              maxSize: 2097152, // 2 MB en bytes
-              message: 'El archivo debe ser un PDF o una imagen (jpg, png) y no debe superar los 2 MB.'
-            }
-          }
-        });
-
-        fv.addField('folio', {
-          validators: {
-            notEmpty: {
-              message: 'El folio o número del certificado es obligatorio.'
-            }
-          }
-        });
-
-        fv.addField('id_organismo', {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona un organismo de certificación.'
-            }
-          }
-        });
-
-        fv.addField('fecha_emision', {
-          validators: {
-            notEmpty: {
-              message: 'La fecha de emisión es obligatoria.'
-            },
-            date: {
-              format: 'YYYY-MM-DD',
-              message: 'La fecha de emisión no es válida.'
-            }
-          }
-        });
-
-        fv.addField('fecha_vigencia', {
-          validators: {
-            notEmpty: {
-              message: 'La fecha de vigencia es obligatoria.'
-            },
-            date: {
-              format: 'YYYY-MM-DD',
-              message: 'La fecha de vigencia no es válida.'
-            }
-          }
-        });
-
+    //Agregar
+    $('#fecha_emision').on('change', function() {
+      var fechaInicial = new Date($(this).val());
+      fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+      var year = fechaInicial.getFullYear();
+      var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
+      var day = ('0' + fechaInicial.getDate()).slice(-2);
+      $('#fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
+    });
+  
+    $(document).on('change', '#tipo', function () {
+      var tipo = $(this).val(); 
+      
+      var hiddenIdDocumento = $('#certificado-otros').find('input[name="id_documento[]"]');
+      var hiddenNombreDocumento = $('#certificado-otros').find('input[name="nombre_documento[]"]');
+      var fileCertificado = $('#certificado-otros').find('input[type="file"]');
+      
+      if (tipo.includes("Productora")) {
+          hiddenIdDocumento.val('127');
+          hiddenNombreDocumento.val('Certificado de instalaciones');
+          fileCertificado.attr('id', 'file-127');
+      } else if (tipo.includes("Envasadora")) {
+          hiddenIdDocumento.val('128');
+          hiddenNombreDocumento.val('Certificado de envasadora');
+          fileCertificado.attr('id', 'file-128');
+      } else if (tipo.includes("Comercializadora") || tipo.includes("Almacen y bodega") || tipo.includes("Area de maduracion")) {
+          hiddenIdDocumento.val('129');
+          hiddenNombreDocumento.val('Certificado de comercializadora');
+          fileCertificado.attr('id', 'file-129');
       } else {
-        $('#certificado-otros').addClass('d-none');
-        fv.removeField('url[]');
-        fv.removeField('folio');
-        fv.removeField('id_organismo');
-        fv.removeField('fecha_emision');
-        fv.removeField('fecha_vigencia');
+          hiddenIdDocumento.val('');
+          hiddenNombreDocumento.val('');
+          fileCertificado.removeAttr('id');
       }
-    });
-    $('#id_empresa, #estado, #fecha_emision, #fecha_vigencia').on('change', function() {
-      fv.revalidateField($(this).attr('name'));
-    });
   });
+  
+  $(document).ready(function () {
+    const formAdd = document.getElementById('addNewInstalacionForm');
+    const certificadoContainer = $('#certificado-otros');
+    const fieldsAdded = new Set();
 
-  $(function () {
-    // Configuración CSRF para Laravel
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    // Inicializar FormValidation
-    const form = document.getElementById('editInstalacionForm');
-    const fv = FormValidation.formValidation(form, {
+    const fv = FormValidation.formValidation(formAdd, {
         fields: {
             'id_empresa': {
                 validators: {
                     notEmpty: {
-                        message: 'Selecciona una empresa.'
+                        message: 'El ID de la empresa es obligatorio.'
                     }
                 }
             },
-            'tipo': {
+            'tipo[]': {
                 validators: {
                     notEmpty: {
                         message: 'Selecciona un tipo de instalación.'
@@ -596,24 +591,31 @@ $(function () {
             'estado': {
                 validators: {
                     notEmpty: {
-                        message: 'Selecciona un estado.'
+                        message: 'Selecciona el estado.'
                     }
                 }
             },
             'direccion_completa': {
                 validators: {
                     notEmpty: {
-                        message: 'Ingrese la dirección completa.'
+                        message: 'La dirección es obligatoria.'
                     }
                 }
             },
             'certificacion': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona el tipo de certificación.'
-                    }
+              validators: {
+                  notEmpty: {
+                      message: 'La dirección es obligatoria.'
+                  }
+              }
+          },
+          'responsable': { 
+            validators: {
+                notEmpty: {
+                    message: 'El nombre del responsable de la instalación es obligatorio.'
                 }
             }
+        }
         },
         plugins: {
             trigger: new FormValidation.plugins.Trigger(),
@@ -625,141 +627,305 @@ $(function () {
             submitButton: new FormValidation.plugins.SubmitButton(),
             autoFocus: new FormValidation.plugins.AutoFocus()
         }
-    }).on('core.form.valid', function (e) {
-        var formData = new FormData(form);
-
-        $.ajax({
-            url: baseUrl + 'instalaciones/' + $('#editInstalacionForm').data('id'),
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-HTTP-Method-Override', 'PUT');
-            },
-            success: function (response) {
-                dt_instalaciones_table.ajax.reload();
-                $('#modalEditInstalacion').modal('hide');
-                $('#editInstalacionForm')[0].reset();
-                $('.select2').val(null).trigger('change');
-
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.message,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
-            },
-            error: function (xhr) {
-                console.log('Error:', xhr.responseText);
-
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: 'Error al actualizar la instalación',
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
-            }
-        });
     });
 
-    // Editar
-    $('#edit_certificacion').on('change', function () {
-        if ($(this).val() === 'otro_organismo') {
-            $('#edit_certificado_otros').removeClass('d-none');
+    function updateCertificadoValidation() {
+        const tipo = $('#certificacion').val();
 
-            fv.addField('url[]', {
-                validators: {
-                    notEmpty: {
-                        message: 'Debes subir un archivo de certificado.'
-                    },
-                    file: {
-                        extension: 'pdf,jpg,jpeg,png',
-                        type: 'application/pdf,image/jpeg,image/png',
-                        maxSize: 2097152, // 2 MB en bytes
-                        message: 'El archivo debe ser un PDF o una imagen (jpg, png) y no debe superar los 2 MB.'
+        if (tipo === 'otro_organismo') {
+            certificadoContainer.removeClass('d-none');
+
+            if (!fieldsAdded.has('url[]')) {
+                fv.addField('url[]', {
+                    validators: {
+                        notEmpty: {
+                            message: 'Debes subir un archivo de certificado.'
+                        },
+                        file: {
+                            extension: 'pdf,jpg,jpeg,png',
+                            type: 'application/pdf,image/jpeg,image/png',
+                            maxSize: 2097152, 
+                            message: 'El archivo debe ser un PDF o una imagen (jpg, png) y no debe superar los 2 MB.'
+                        },
+                        enabled: function (field) {
+                            return $(field).closest('.form-group').css('display') !== 'none';
+                        }
                     }
-                }
-            });
+                });
+                fieldsAdded.add('url[]');
+            }
 
-            fv.addField('folio', {
-                validators: {
-                    notEmpty: {
-                        message: 'El folio o número del certificado es obligatorio.'
+            if (!fieldsAdded.has('folio')) {
+                fv.addField('folio', {
+                    validators: {
+                        notEmpty: {
+                            message: 'El folio o número del certificado es obligatorio.'
+                        },
+                        enabled: function (field) {
+                            return $(field).closest('.form-group').css('display') !== 'none';
+                        }
                     }
-                }
-            });
+                });
+                fieldsAdded.add('folio');
+            }
 
-            fv.addField('id_organismo', {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona un organismo de certificación.'
+            if (!fieldsAdded.has('id_organismo')) {
+                fv.addField('id_organismo', {
+                    validators: {
+                        notEmpty: {
+                            message: 'Selecciona un organismo de certificación.'
+                        },
+                        enabled: function (field) {
+                            return $(field).closest('.form-group').css('display') !== 'none';
+                        }
                     }
-                }
-            });
+                });
+                fieldsAdded.add('id_organismo');
+            }
 
-            fv.addField('fecha_emision', {
-                validators: {
-                    notEmpty: {
-                        message: 'La fecha de emisión es obligatoria.'
-                    },
-                    date: {
-                        format: 'YYYY-MM-DD',
-                        message: 'La fecha de emisión no es válida.'
+            if (!fieldsAdded.has('fecha_emision')) {
+                fv.addField('fecha_emision', {
+                    validators: {
+                        notEmpty: {
+                            message: 'La fecha de emisión es obligatoria.'
+                        },
+                        date: {
+                            format: 'YYYY-MM-DD',
+                            message: 'La fecha de emisión no es válida.'
+                        },
+                        enabled: function (field) {
+                            return $(field).closest('.form-group').css('display') !== 'none';
+                        }
                     }
-                }
-            });
+                });
+                fieldsAdded.add('fecha_emision');
+            }
 
-            fv.addField('fecha_vigencia', {
-                validators: {
-                    notEmpty: {
-                        message: 'La fecha de vigencia es obligatoria.'
-                    },
-                    date: {
-                        format: 'YYYY-MM-DD',
-                        message: 'La fecha de vigencia no es válida.'
+            if (!fieldsAdded.has('fecha_vigencia')) {
+                fv.addField('fecha_vigencia', {
+                    validators: {
+                        notEmpty: {
+                            message: 'La fecha de vigencia es obligatoria.'
+                        },
+                        date: {
+                            format: 'YYYY-MM-DD',
+                            message: 'La fecha de vigencia no es válida.'
+                        },
+                        enabled: function (field) {
+                            return $(field).closest('.form-group').css('display') !== 'none';
+                        }
                     }
-                }
-            });
-
+                });
+                fieldsAdded.add('fecha_vigencia');
+            }
         } else {
-            $('#edit_certificado_otros').addClass('d-none');
-            fv.removeField('url[]');
-            fv.removeField('folio');
-            fv.removeField('id_organismo');
-            fv.removeField('fecha_emision');
-            fv.removeField('fecha_vigencia');
+            certificadoContainer.addClass('d-none'); 
+
+            if (fieldsAdded.has('url[]')) {
+                fv.removeField('url[]');
+                fieldsAdded.delete('url[]');
+                $('input[name="url[]"]').removeClass('is-invalid');
+            }
+            if (fieldsAdded.has('folio')) {
+                fv.removeField('folio');
+                fieldsAdded.delete('folio');
+                $('input[name="folio"]').removeClass('is-invalid');
+            }
+            if (fieldsAdded.has('id_organismo')) {
+                fv.removeField('id_organismo');
+                fieldsAdded.delete('id_organismo');
+                $('select[name="id_organismo"]').removeClass('is-invalid');
+            }
+            if (fieldsAdded.has('fecha_emision')) {
+                fv.removeField('fecha_emision');
+                fieldsAdded.delete('fecha_emision');
+                $('input[name="fecha_emision"]').removeClass('is-invalid');
+            }
+            if (fieldsAdded.has('fecha_vigencia')) {
+                fv.removeField('fecha_vigencia');
+                fieldsAdded.delete('fecha_vigencia');
+                $('input[name="fecha_vigencia"]').removeClass('is-invalid');
+            }
+        }
+    }
+
+    // Revalidar los select2 cuando cambian
+    $('#id_empresa, #estado, #fecha_emision').on('change', function () {
+        fv.revalidateField($(this).attr('name'));
+        if ($(this).val() === '') {
+            $(this).removeClass('is-invalid'); 
         }
     });
-    $('#edit_id_empresa, #edit_estado, #edit_fecha_emision, #edit_fecha_vigencia').on('change', function() {
-      fv.revalidateField($(this).attr('name'));
+
+    $('#tipo').on('change', function () {
+      fv.revalidateField('tipo[]');
+    });
+
+    $('#certificacion').on('change', function () {
+        updateCertificadoValidation();
+    });
+
+    function updateDatepickerValidation() {
+        $('#fecha_vigencia').on('change', function () {
+            const fechaVigencia = $(this).val();
+            if (fechaVigencia) {
+                const fecha = moment(fechaVigencia, 'YYYY-MM-DD');
+                const fechaVencimiento = fecha.add(1, 'years').format('YYYY-MM-DD');
+                $('#fecha_vencimiento').val(fechaVencimiento);
+
+                fv.revalidateField('fecha_vigencia');
+                fv.revalidateField('fecha_vencimiento');
+            }
+        });
+
+        $('#fecha_vencimiento').on('change', function () {
+            fv.revalidateField('fecha_vencimiento');
+        });
+    }
+
+    updateCertificadoValidation();
+    updateDatepickerValidation();
+
+    // Enviar el formulario si es válido
+    fv.on('core.form.valid', function () {
+        var formData = new FormData(formAdd); 
+        $.ajax({
+            url: '/instalaciones',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            beforeSend: function () {
+                $('#btnRegistrarInstalacion').prop('disabled', true).text('Registrando...');
+            },
+            success: function (response) {
+              dt_user_table.DataTable().ajax.reload();
+          
+              $('#btnRegistrarInstalacion').prop('disabled', false).text('Registrar');
+              $('#modalAddInstalacion').modal('hide');
+          
+              // Desactivar validaciones temporalmente
+              fv.disableValidator('id_empresa');
+              fv.disableValidator('estado');
+              fv.disableValidator('tipo[]');
+              $('#addNewInstalacionForm')[0].reset();
+          
+              // Limpiar selects y quitar clases de error
+              $('#id_empresa').val('').trigger('change').removeClass('is-invalid');
+              $('#estado').val('').trigger('change').removeClass('is-invalid');
+              $('#tipo').val([]).trigger('change').removeClass('is-invalid'); 
+              certificadoContainer.addClass('d-none');
+          
+              // Reactivar validaciones después de reiniciar
+              setTimeout(() => {
+                  fv.enableValidator('id_empresa');
+                  fv.enableValidator('estado');
+                  fv.enableValidator('tipo[]');
+              }, 0);
+          
+              // Mostrar mensaje de éxito
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.message,
+                  customClass: {
+                      confirmButton: 'btn btn-success'
+                  }
+              });
+          },           
+          error: function (xhr) {
+              console.log('Error:', xhr.responseText); 
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Error al registrar la Instalacion',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+        });
     });
 });
 
+
+
+
+
+
+
+
+//Editar
+$('#edit_fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+  var year = fechaInicial.getFullYear();
+  var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
+  var day = ('0' + fechaInicial.getDate()).slice(-2);
+  $('#edit_fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
+});
+
+$(document).on('change', '#edit_tipo', function () {
+  var tipo = $(this).val(); 
+  
+  var hiddenIdDocumento = $('#edit_certificado_otros').find('input[name="edit_id_documento[]"]');
+  var hiddenNombreDocumento = $('#edit_certificado_otros').find('input[name="edit_nombre_documento[]"]');
+  var fileCertificado = $('#edit_certificado_otros').find('input[type="file"]');
+  
+  if (tipo.includes("Productora")) {
+      hiddenIdDocumento.val('127');
+      hiddenNombreDocumento.val('Certificado de instalaciones');
+      fileCertificado.attr('id', 'file-127');
+  } else if (tipo.includes("Envasadora")) {
+      hiddenIdDocumento.val('128');
+      hiddenNombreDocumento.val('Certificado de envasadora');
+      fileCertificado.attr('id', 'file-128');
+  } else if (tipo.includes("Comercializadora") || tipo.includes("Almacen y bodega") || tipo.includes("Area de maduracion")) {
+      hiddenIdDocumento.val('129');
+      hiddenNombreDocumento.val('Certificado de comercializadora');
+      fileCertificado.attr('id', 'file-129');
+  } else {
+      hiddenIdDocumento.val('');
+      hiddenNombreDocumento.val('');
+      fileCertificado.removeAttr('id');
+  }
+});
 $(document).ready(function () {
   let instalacionData = {};
-  $('#edit_certificacion').on('change', function () {
-      if ($(this).val() === 'otro_organismo') {
-          $('#edit_certificado_otros').removeClass('d-none');
+  let archivo = false; // Variable para manejar la existencia del archivo
 
-          if (instalacionData) {
-              $('#edit_folio').val(instalacionData.folio || '');
-              $('#edit_id_organismo').val(instalacionData.id_organismo || '').trigger('change');
-              $('#edit_fecha_emision').val(instalacionData.fecha_emision || '');
-              $('#edit_fecha_vigencia').val(instalacionData.fecha_vigencia || '');
-              
-              if (instalacionData.archivoUrl) {
-                  $('#archivo_url_display').html(`
-                      <p>Archivo existente: <a href="../files/${instalacionData.numeroCliente}/${instalacionData.archivoUrl}" target="_blank">${instalacionData.archivoUrl}</a></p>
-                  `);
-              } else {
-                  $('#archivo_url_display').html('No hay archivo disponible.');
-              }
+  // Función para mostrar u ocultar campos según el valor de certificación
+  function toggleCamposCertificacion(certificacion) {
+      if (certificacion === 'otro_organismo') {
+          $('#edit_certificado_otros').removeClass('d-none');
+          
+          // Rellenar los campos adicionales con los datos obtenidos
+          $('#edit_folio').val(instalacionData.folio || '');
+          $('#edit_id_organismo').val(instalacionData.id_organismo || '').trigger('change');
+          $('#edit_fecha_emision').val(instalacionData.fecha_emision || '');
+          $('#edit_fecha_vigencia').val(instalacionData.fecha_vigencia || '');
+          
+          if (instalacionData.archivoUrl) {
+              $('#archivo_url_display').html(`
+                  <p>Archivo existente: <a href="../files/${instalacionData.numeroCliente}/${instalacionData.archivoUrl}" target="_blank">${instalacionData.archivoUrl}</a></p>`);
+              archivo = true; // Si existe un archivo, asignamos true
+          } else {
+              $('#archivo_url_display').html('No hay archivo disponible.');
+              archivo = false; // Si no existe archivo, asignamos false
           }
+
+          // Deshabilitar o habilitar la validación del archivo según la existencia del archivo
+          if (archivo) {
+            fvEdit.disableValidator('edit_url[]'); // Deshabilitamos la validación si ya existe un archivo
+          } else {
+            fvEdit.enableValidator('edit_url[]'); // Habilitamos la validación si no existe un archivo
+          }
+
+          // Habilitar la validación de los otros campos
+          fvEdit.enableValidator('edit_folio');
+          fvEdit.enableValidator('edit_id_organismo');
+          fvEdit.enableValidator('edit_fecha_emision');
+          fvEdit.enableValidator('edit_fecha_vigencia');
       } else {
           $('#edit_certificado_otros').addClass('d-none');
           $('#edit_folio').val(null);
@@ -767,8 +933,148 @@ $(document).ready(function () {
           $('#edit_fecha_emision').val(null);
           $('#edit_fecha_vigencia').val(null);
           $('#archivo_url_display').html('No hay archivo disponible.');
+
+          // Si no es 'otro_organismo', deshabilitar la validación del archivo y otros campos
+          fvEdit.disableValidator('edit_folio');
+          fvEdit.disableValidator('edit_id_organismo');
+          fvEdit.disableValidator('edit_fecha_emision');
+          fvEdit.disableValidator('edit_fecha_vigencia');
+          fvEdit.disableValidator('edit_url[]');
       }
+  }
+
+  // Manejar el cambio en el select de certificación
+  $('#edit_certificacion').on('change', function () {
+      toggleCamposCertificacion($(this).val());
   });
+
+  // Iniciar FormValidation
+  const editForm = document.getElementById('editInstalacionForm');
+  const fvEdit = FormValidation.formValidation(editForm, {
+      fields: {
+        'edit_tipo[]': {
+            validators: {
+                notEmpty: {
+                    message: 'Selecciona al menos un tipo de instalación.'
+                }
+            }
+        },
+        'edit_direccion': {
+            validators: {
+                notEmpty: {
+                    message: 'La dirección completa es obligatoria.'
+                }
+            }
+        },
+        'edit_responsable': {
+            validators: {
+                notEmpty: {
+                    message: 'El nombre del responsable es obligatorio.'
+                }
+            }
+        },
+        'edit_folio': {
+            validators: {
+                notEmpty: {
+                    message: 'El folio es obligatorio.'
+                }
+            }
+        },
+        'edit_id_organismo': {
+            validators: {
+                notEmpty: {
+                    message: 'Selecciona un organismo de certificación.'
+                }
+            }
+        },
+        'edit_fecha_emision': {
+            validators: {
+                notEmpty: {
+                    message: 'La fecha de emisión es obligatoria.'
+                }
+            }
+        },
+        'edit_fecha_vigencia': {
+            validators: {
+                notEmpty: {
+                    message: 'La fecha de vigencia es obligatoria.'
+                }
+            }
+        },
+        'edit_url[]': {
+            validators: {
+                file: {
+                    extension: 'pdf,jpg,jpeg,png',
+                    type: 'application/pdf,image/jpeg,image/png',
+                    maxSize: 2097152, // 2MB en bytes
+                    message: 'El archivo debe ser en formato PDF, JPG, JPEG o PNG y no debe superar los 2MB.'
+                },
+                notEmpty: {
+                    message: 'El archivo es obligatorio cuando se selecciona "Otro organismo".'
+                }
+            }
+        },
+      },
+      plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+              eleValidClass: '',
+              eleInvalidClass: 'is-invalid',
+              rowSelector: '.form-floating'
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+  }).on('core.form.valid', function (e) {
+      // Si la validación es exitosa, enviar el formulario
+      var id_instalacion = $(editForm).data('id');
+      var formData = new FormData(editForm);
+
+      $.ajax({
+          url: baseUrl + 'instalaciones/' + id_instalacion,
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          beforeSend: function (xhr) {
+              xhr.setRequestHeader('X-HTTP-Method-Override', 'PUT');
+          },
+          success: function (response) {
+              dt_instalaciones_table.ajax.reload();
+              $('#modalEditInstalacion').modal('hide');
+
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.message,
+                  customClass: {
+                      confirmButton: 'btn btn-success'
+                  }
+              });
+          },
+          error: function (xhr) {
+              console.error('Error en la solicitud AJAX:', xhr.responseJSON);
+
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'Hubo un problema al actualizar los datos.',
+                  footer: `<pre>${JSON.stringify(xhr.responseJSON, null, 2)}</pre>`
+              });
+          }
+      });
+  });
+
+  $('#edit_tipo').on('change', function () {
+    fvEdit.revalidateField('edit_tipo[]');
+  });
+
+  // Deshabilitar validación inicial
+  fvEdit.disableValidator('edit_folio');
+  fvEdit.disableValidator('edit_id_organismo');
+  fvEdit.disableValidator('edit_fecha_emision');
+  fvEdit.disableValidator('edit_fecha_vigencia');
+  fvEdit.disableValidator('edit_url[]');
 
   $(document).on('click', '.edit-record', function () {
       var id_instalacion = $(this).data('id');
@@ -777,7 +1083,10 @@ $(document).ready(function () {
       $.get(url, function (data) {
           if (data.success) {
               var instalacion = data.instalacion;
-              
+
+              // Parsear el tipo (JSON) a un array
+              var tipoParsed = JSON.parse(instalacion.tipo); // Convertir el string JSON a un array
+
               instalacionData = {
                   folio: instalacion.folio || '',
                   id_organismo: instalacion.id_organismo || '',
@@ -787,17 +1096,24 @@ $(document).ready(function () {
                   numeroCliente: data.numeroCliente || ''
               };
 
+              // Asignar los valores a los campos del formulario
               $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
-              $('#edit_tipo').val(instalacion.tipo).trigger('change');
+              
+              // Asignar el array de tipo al select
+              $('#edit_tipo').val(tipoParsed).trigger('change');
+
               $('#edit_estado').val(instalacion.estado).trigger('change');
               $('#edit_direccion').val(instalacion.direccion_completa);
 
-              if (instalacionData.folio || instalacionData.id_organismo || instalacionData.fecha_emision || instalacionData.fecha_vigencia) {
-                  $('#edit_certificacion').val('otro_organismo').trigger('change');
-              } else {
-                  $('#edit_certificacion').val('oc_cidam').trigger('change');
-                  $('#edit_certificado_otros').addClass('d-none');
-              }
+              // Asignar el responsable al campo correspondiente
+              $('#edit_responsable').val(instalacion.responsable || '').trigger('change');
+
+              // Establecer el valor del select y mostrar los campos adicionales si corresponde
+              $('#edit_certificacion').val(instalacion.certificacion).trigger('change');
+              toggleCamposCertificacion(instalacion.certificacion);
+
+              // Asignar el id_instalacion al atributo data-id del formulario
+              $('#editInstalacionForm').data('id', id_instalacion);
 
               $('#modalEditInstalacion').modal('show');
           } else {
@@ -810,7 +1126,7 @@ $(document).ready(function () {
                   }
               });
           }
-      }).fail(function(jqXHR, textStatus, errorThrown) {
+      }).fail(function (jqXHR, textStatus, errorThrown) {
           console.error('Error en la solicitud:', textStatus, errorThrown);
 
           Swal.fire({
@@ -825,133 +1141,26 @@ $(document).ready(function () {
   });
 });
 
-$('#modalEditInstalacion').on('hidden.bs.modal', function () {
-    $('#edit_certificado_otros').addClass('d-none');
-    $('#archivo_url_display').html('No hay archivo disponible.');
-
-    $('#edit_id_empresa').val('').trigger('change');
-    $('#edit_tipo').val('').trigger('change');
-    $('#edit_estado').val('').trigger('change');
-    $('#edit_direccion').val('');
-    $('#edit_certificacion').val('oc_cidam').trigger('change');
-    $('#edit_folio').val('');
-    $('#edit_id_organismo').val('').trigger('change');
-    $('#edit_fecha_emision').val('');
-    $('#edit_fecha_vigencia').val('');
-});
-
-// Manejar el cambio en el tipo de instalación
-$(document).on('change', '#edit_tipo', function () {
-    var tipo = $(this).val();
-    var hiddenIdDocumento = $('#edit_certificado_otros').find('input[name="id_documento[]"]');
-    var hiddenNombreDocumento = $('#edit_certificado_otros').find('input[name="nombre_documento[]"]');
-    var fileCertificado = $('#edit_certificado_otros').find('input[type="file"]');
-
-    switch (tipo) {
-        case 'Productora':
-            hiddenIdDocumento.val('127');
-            hiddenNombreDocumento.val('Certificado de instalaciones');
-            fileCertificado.attr('id', 'file-127');
-            break;
-        case 'Envasadora':
-            hiddenIdDocumento.val('128');
-            hiddenNombreDocumento.val('Certificado de envasadora');
-            fileCertificado.attr('id', 'file-128');
-            break;
-        case 'Comercializadora':
-        case 'Almacén y bodega':
-        case 'Área de maduración':
-            hiddenIdDocumento.val('129');
-            hiddenNombreDocumento.val('Certificado de comercializadora');
-            fileCertificado.attr('id', 'file-129');
-            break;
-        default:
-            hiddenIdDocumento.val('');
-            hiddenNombreDocumento.val('');
-            fileCertificado.removeAttr('id');
-            break;
-    }
-});
-
-$(document).ready(function() {
-    $('#modalEditInstalacion').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var id_instalacion = button.data('id');
-        var modal = $(this);
-
-        modal.find('#editInstalacionForm').data('id', id_instalacion);
-    });
-
-    $('#editInstalacionForm').submit(function (e) {
-        e.preventDefault();
-
-        var id_instalacion = $(this).data('id');
-        var form = $(this)[0];
-        var formData = new FormData(form);
-
-        $.ajax({
-            url: baseUrl + 'instalaciones/' + id_instalacion,
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader('X-HTTP-Method-Override', 'PUT');
-            },
-            success: function (response) {
-                dt_instalaciones_table.ajax.reload();
-                $('#modalEditInstalacion').modal('hide');
-
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.message,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
-            },
-            error: function (xhr) {
-                console.error('Error en la solicitud AJAX:', xhr.responseJSON);
-
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Hubo un problema al actualizar los datos.',
-                    footer: `<pre>${JSON.stringify(xhr.responseJSON, null, 2)}</pre>`,
-                });
-            }
-        });
-    });
-});
-
-$('#fecha_emision').on('change', function() {
-  var fechaInicial = new Date($(this).val());
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-  var year = fechaInicial.getFullYear();
-  var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
-  var day = ('0' + fechaInicial.getDate()).slice(-2);
-  $('#fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
-});
-
-$('#edit_fecha_emision').on('change', function() {
-  var fechaInicial = new Date($(this).val());
-  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-  var year = fechaInicial.getFullYear();
-  var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
-  var day = ('0' + fechaInicial.getDate()).slice(-2);
-  $('#edit_fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
-});
-
 $(document).on('click', '.pdf', function () {
   var url = $(this).data('url');
   var registro = $(this).data('registro');
-  var iframe = $('#pdfViewer');
-  iframe.attr('src', '../files/'+url);
-  $("#titulo_modal").text("Certificado de instalaciones");
-  $("#subtitulo_modal").text(registro);
+
+  // Actualiza el iframe y los textos del modal
+  $('#pdfViewerDictamen').attr('src', '../files/' + url);
+  $('#titulo_modal_Dictamen').text("Certificado de instalaciones");
+  $('#subtitulo_modal_Dictamen').text(registro);
+  $('#openPdfBtnDictamen').attr('href', '../files/' + url).show();
+
+  // Muestra el spinner 
+  $('#loading-spinner').show();
+  $('#pdfViewerDictamen').hide();
+  $('#PdfDictamenIntalaciones').modal('show');
 });
 
+$('#pdfViewerDictamen').on('load', function () {
+  $('#loading-spinner').hide();
+  $('#pdfViewerDictamen').show();
+});
 
 //end
 });

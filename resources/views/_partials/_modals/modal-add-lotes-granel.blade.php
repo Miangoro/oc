@@ -40,6 +40,17 @@
                         </div>
                         <!-- Campo para seleccionar lote original -->
                         <div class="row">
+                          <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select id="tipo_lote" name="tipo_lote" class=" form-select"
+                                    data-error-message="Por favor selecciona el tipo de lote">
+                                    <option value="" disabled selected>Selecciona el tipo de lote</option>
+                                    <option value="1">Certificación por OC CIDAM</option>
+                                    <option value="2">Certificado por otro organismo</option>
+                                </select>
+                                <label for="tipo_lote">Tipo de Lote</label>
+                            </div>
+                        </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="es_creado_a_partir" name="es_creado_a_partir" class="form-select">
@@ -52,6 +63,8 @@
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
                     <div id="addLotes" class="d-none">
                       <table class="table table-bordered shadow-lg">
@@ -87,20 +100,6 @@
                     <div class="form-section mb-4 p-3 border rounded">
                         <!-- Sección para información del lote -->
                         <h6 class="mb-3">Detalles del Lote</h6>
-                        <!-- Empresa y Tipo de Lote -->
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-floating form-floating-outline mb-4">
-                                    <select id="tipo_lote" name="tipo_lote" class=" form-select"
-                                        data-error-message="Por favor selecciona el tipo de lote">
-                                        <option value="" disabled selected>Selecciona el tipo de lote</option>
-                                        <option value="1">Certificación por OC CIDAM</option>
-                                        <option value="2">Certificado por otro organismo</option>
-                                    </select>
-                                    <label for="tipo_lote">Tipo de Lote</label>
-                                </div>
-                            </div>
-                        </div>
                         <div class="row">
                           <div class="col-md-6 d-none" id="mostrar_guias">
                             <div class="d-flex align-items-center mb-3 input-group input-group-merge">

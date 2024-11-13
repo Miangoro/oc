@@ -18,6 +18,8 @@ class Instalaciones extends Model
         'tipo',
         'estado',
         'direccion_completa',
+        'certificacion',
+        'responsable',
         'folio',
         'id_organismo',
         'fecha_emision',
