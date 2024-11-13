@@ -94,6 +94,7 @@ $(function () {
             '</span><br><span class="fw-bold text-dark small">Tipo:</span><span class="small"> ' + row.id_tipo + '</span>' +
             ingredientes + edad + procedencia;
         }
+
       },
       { data: 'folio_fq' },
       { data: 'cont_alc' },
@@ -105,19 +106,29 @@ $(function () {
       },
       {
         data: null,
-        searchable: true, orderable: false,
+        searchable: true,
+        orderable: false,
         render: function (data, type, row) {
-
-          if (row.folio_certificado != 'N/A') {
-            return '<span class="fw-bold text-dark small">Organismo:</span> <span class="small"> ' + row.id_organismo +
-              '</span><br><span class="fw-bold text-dark small">Certificado:</span><span class="small"> ' + row.folio_certificado +
-              '</span><br><span class="fw-bold text-dark small">Fecha de emisión:</span><span class="small"> ' + row.fecha_emision +
-              '</span><br><span class="fw-bold text-dark small">Fecha de vigencia:</span><span class="small"> ' + row.fecha_vigencia + '</span>';
+          if (row.folio_certificado !== 'N/A') {
+            return '<span class="fw-bold text-dark small">Organismo:</span> <span class="small">' + row.id_organismo +
+              '</span><br><span class="fw-bold text-dark small">Certificado:</span><span class="small"> ' +
+              // Verifica si hay URL del certificado
+              (row.url_certificado ?
+                `<a class="text-decoration-underline waves-effect text-primary pdf3" data-bs-target="#mostrarPdfDictamen"
+                  data-bs-toggle="modal" data-bs-dismiss="modal"
+                  data-id="${row.id_lote_granel}" data-registro="${row.id_empresa}"
+                  data-url="${row.url_certificado}">${row.folio_certificado}</a>`
+                : row.folio_certificado) +
+              '</span>' +
+              '<br><span class="fw-bold text-dark small">Fecha de emisión:</span><span class="small"> ' + row.fecha_emision +
+              '</span><br><span class="fw-bold text-dark small">Fecha de vigencia:</span><span class="small"> ' + row.fecha_vigencia +
+              '</span>';
           } else {
             return '<span class="badge rounded-pill bg-danger">Sin certificado</span>';
           }
         }
       },
+
       {
         data: 'estatus',
         searchable: false, orderable: false,
@@ -357,6 +368,33 @@ $(function () {
   }
 
   initializeSelect2(select2Elements);
+
+// Reciben los datos del PDF
+$(document).on('click', '.pdf3', function () {
+  var id = $(this).data('id');
+  var registro = $(this).data('registro');
+  var url = $(this).data('url'); // Aquí obtenemos la URL del certificado
+
+  var iframe = $('#pdfViewerDictamen'); // El iframe donde se muestra el PDF
+
+  // Mostrar el spinner y ocultar el iframe
+  $('#loading-spinner').show();
+  iframe.hide();
+
+  // Cargar el PDF en el iframe usando la URL
+  iframe.attr('src', url); // Usamos directamente la URL que pasaste en data-url
+  $("#titulo_modal_Dictamen").text("Certificado de lote a granel");
+  $("#subtitulo_modal_Dictamen").text(registro);
+
+  // Abrir el modal
+  $('#mostrarPdfDictamen').modal('show');
+});
+
+// Ocultar el spinner cuando el PDF esté completamente cargado
+$('#pdfViewerDictamen').on('load', function () {
+  $('#loading-spinner').hide(); // Ocultar el spinner
+  $(this).show(); // Mostrar el iframe con el PDF
+});
 
 
   // Delete Record

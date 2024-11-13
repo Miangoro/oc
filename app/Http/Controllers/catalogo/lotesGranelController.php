@@ -93,6 +93,8 @@ class lotesGranelController extends Controller
             $data = [];
             if (!empty($LotesGranel)) {
                 $ids = $start;
+                $tipos = tipos::all();
+                $tiposNombres = $tipos->pluck('nombre', 'id_tipo')->toArray();
 
                 foreach ($LotesGranel as $lote) {
                     $nestedData['id_lote_granel'] = $lote->id_lote_granel ?? 'N/A';
@@ -106,7 +108,20 @@ class lotesGranelController extends Controller
                     $nestedData['cont_alc'] = $lote->cont_alc ?? 'N/A';
                     $nestedData['id_categoria'] = $lote->categoria->categoria ?? 'N/A';
                     $nestedData['id_clase'] = $lote->clase->clase ?? 'N/A';
-                    $nestedData['id_tipo'] = $lote->tipo->nombre ?? 'N/A';
+
+                    if ($lote->id_tipo && $lote->id_tipo !== 'N/A') {
+                      $idTipo = json_decode($lote->id_tipo, true);
+                      if (is_array($idTipo)) {
+                          $nombresTipos = array_map(function($tipoId) use ($tiposNombres) {
+                              return $tiposNombres[$tipoId] ?? 'Desconocido';
+                          }, $idTipo);
+                          $nestedData['id_tipo'] = implode(', ', $nombresTipos);
+                      } else {
+                          $nestedData['id_tipo'] = 'Desconocido';
+                      }
+                  } else {
+                      $nestedData['id_tipo'] = 'N/A';
+                  }
                     $nestedData['ingredientes'] = $lote->ingredientes ?? 'N/A';
                     $nestedData['edad'] = $lote->edad ?? 'N/A';
                     $nestedData['folio_certificado'] = $lote->folio_certificado ?? 'N/A';
@@ -132,13 +147,34 @@ class lotesGranelController extends Controller
                     } else {
                       $nestedData['lote_procedencia'] = 'No tiene procedencia de otros lotes.';
                     }
+                    /*  */
+                        // Consulta la URL en la tabla Documentacion_url
+                    // Obtén la URL del certificado desde la tabla Documentacion_url
+                    $documentacion = Documentacion_url::where('id_relacion', $lote->id_lote_granel)->first();
+                      // Obtener el número de cliente
+                      $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
 
+                      // Verificar si la empresa tiene asociados números de clientes
+                      if ($empresa && $empresa->empresaNumClientes->isNotEmpty()) {
+                          $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+                      } else {
+                          // En caso de que no exista el número de cliente, asignar un valor por defecto o manejar el error
+                          $numeroCliente = 'default'; // O puedes dejarlo en null, según el caso
+                      }
 
+                      // Ahora puedes usar el número de cliente en la URL
+                      if ($lote->tipo_lote == 2 && $documentacion) {
+                          $nestedData['url_certificado'] = '/files/' . $numeroCliente . '/' . rawurlencode($documentacion->url);
+                      } else {
+                          $nestedData['url_certificado'] = null;
+                      }
 
+                    /*  */
                     $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $lote->id_lote_granel . '">Eliminar</button>';
 
                     $data[] = $nestedData;
                 }
+
             }
 
             return response()->json([
@@ -150,8 +186,6 @@ class lotesGranelController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('Error en LotesGranelController@index: ' . $e->getMessage());
-
             return response()->json([
                 'draw' => intval($request->input('draw')),
                 'recordsTotal' => 0,
