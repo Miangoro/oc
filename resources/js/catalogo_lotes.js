@@ -114,7 +114,7 @@ $(function () {
               '</span><br><span class="fw-bold text-dark small">Certificado:</span><span class="small"> ' +
               // Verifica si hay URL del certificado
               (row.url_certificado ?
-                `<a class="text-decoration-underline waves-effect text-primary pdf3" data-bs-target="#mostrarPdfDictamen"
+                `<a class="text-decoration-underline waves-effect text-primary pdf3" data-bs-target="#mostrarPdfDictamen1"
                   data-bs-toggle="modal" data-bs-dismiss="modal"
                   data-id="${row.id_lote_granel}" data-registro="${row.id_empresa}"
                   data-url="${row.url_certificado}">${row.folio_certificado}</a>`
@@ -375,24 +375,24 @@ $(document).on('click', '.pdf3', function () {
   var registro = $(this).data('registro');
   var url = $(this).data('url'); // Aquí obtenemos la URL del certificado
 
-  var iframe = $('#pdfViewerDictamen'); // El iframe donde se muestra el PDF
+  var iframe = $('#pdfViewerDictamen1'); // El iframe donde se muestra el PDF
 
   // Mostrar el spinner y ocultar el iframe
-  $('#loading-spinner').show();
+  $('#loading-spinner1').show();
   iframe.hide();
 
   // Cargar el PDF en el iframe usando la URL
   iframe.attr('src', url); // Usamos directamente la URL que pasaste en data-url
-  $("#titulo_modal_Dictamen").text("Certificado de lote a granel");
-  $("#subtitulo_modal_Dictamen").text(registro);
+  $("#titulo_modal_Dictamen1").text("Certificado de lote a granel");
+  $("#subtitulo_modal_Dictamen1").text(registro);
 
   // Abrir el modal
-  $('#mostrarPdfDictamen').modal('show');
+  $('#mostrarPdfDictamen1').modal('show');
 });
 
 // Ocultar el spinner cuando el PDF esté completamente cargado
-$('#pdfViewerDictamen').on('load', function () {
-  $('#loading-spinner').hide(); // Ocultar el spinner
+$('#pdfViewerDictamen1').on('load', function () {
+  $('#loading-spinner1').hide(); // Ocultar el spinner
   $(this).show(); // Mostrar el iframe con el PDF
 });
 

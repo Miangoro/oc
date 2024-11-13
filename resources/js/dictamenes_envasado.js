@@ -133,7 +133,7 @@ $(function () {
                     searchable: false, orderable: false,
                     render: function (data, type, full, meta) {
                         var $id = full['id_dictamen_envasado'];
-                        return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
+                        return '<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="' + $id + '" data-bs-target="#mostrarPdfDictamen1" data-bs-toggle="modal" data-bs-dismiss="modal"></i>';
                     }
                 },
 
@@ -619,7 +619,7 @@ $(function () {
         });
     });
 
-    
+
     /* editar el dictamen envasado */
     $(function () {
         // Configuración CSRF para Laravel
@@ -1085,22 +1085,22 @@ $(function () {
                 });
 
     });
-    
+
         // Reciben los datos del PDF
         $(document).on('click', '.pdf', function () {
             var id = $(this).data('id'); // Obtén el ID desde el atributo data-id
-            var iframe = $('#pdfViewerDictamen');
-            var spinner = $('#loading-spinner');
+            var iframe = $('#pdfViewerDictamen1');
+            var spinner = $('#loading-spinner1');
             // Mostrar el spinner y ocultar el iframe antes de cargar el PDF
             spinner.show();
             iframe.hide();
-    
+
             // Cargar el PDF con el ID
             iframe.attr('src', '/Dictamen-MezcalEnvasado/' + id); // Usa URL absoluta
-    
-            $("#titulo_modal_Dictamen").text("Dictamen de Cumplimiento NOM de Mezcal Envasado");
-            $("#subtitulo_modal_Dictamen").text("PDF de Dictamen");
-    
+
+            $("#titulo_modal_Dictamen1").text("Dictamen de Cumplimiento NOM de Mezcal Envasado");
+            $("#subtitulo_modal_Dictamen1").text("PDF de Dictamen");
+
             // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
             iframe.on('load', function () {
                 spinner.hide();
