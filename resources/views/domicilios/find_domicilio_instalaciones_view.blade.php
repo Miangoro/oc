@@ -66,7 +66,7 @@
     </div>
 
 <!-- Modal -->
-@include('_partials._modals.modal-pdfs-frames')
+@include('_partials._modals.modal-pdfs-certificados')
 @include('_partials/_modals/modal-add-instalaciones')
 @include('_partials/_modals/modal-edit-instalaciones')
 @endsection
