@@ -502,7 +502,7 @@ $(function () {
               Swal.fire({
                 icon: 'success',
                 title: '¡Eliminado!',
-                text: '¡La solicitud ha sido eliminada correctamente!',
+                text: '¡La Instalacion ha sido eliminada correctamente!',
                 customClass: {
                   confirmButton: 'btn btn-success'
                 }
@@ -520,7 +520,7 @@ $(function () {
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           Swal.fire({
             title: 'Cancelado',
-            text: 'La solicitud no ha sido eliminada',
+            text: 'La Instalacion no ha sido eliminada',
             icon: 'error',
             customClass: {
               confirmButton: 'btn btn-success'
@@ -838,7 +838,7 @@ $(function () {
               Swal.fire({
                   icon: 'error',
                   title: '¡Error!',
-                  text: 'Error al registrar el certificado',
+                  text: 'Error al registrar la Instalacion',
                   customClass: {
                       confirmButton: 'btn btn-danger'
                   }
@@ -856,12 +856,21 @@ $(function () {
 
 
 //Editar
-$(document).on('change', '#tipo', function () {
+$('#edit_fecha_emision').on('change', function() {
+  var fechaInicial = new Date($(this).val());
+  fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+  var year = fechaInicial.getFullYear();
+  var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
+  var day = ('0' + fechaInicial.getDate()).slice(-2);
+  $('#edit_fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
+});
+
+$(document).on('change', '#edit_tipo', function () {
   var tipo = $(this).val(); 
   
-  var hiddenIdDocumento = $('#certificado-otros').find('input[name="id_documento[]"]');
-  var hiddenNombreDocumento = $('#certificado-otros').find('input[name="nombre_documento[]"]');
-  var fileCertificado = $('#certificado-otros').find('input[type="file"]');
+  var hiddenIdDocumento = $('#edit_certificado_otros').find('input[name="edit_id_documento[]"]');
+  var hiddenNombreDocumento = $('#edit_certificado_otros').find('input[name="edit_nombre_documento[]"]');
+  var fileCertificado = $('#edit_certificado_otros').find('input[type="file"]');
   
   if (tipo.includes("Productora")) {
       hiddenIdDocumento.val('127');
@@ -981,32 +990,6 @@ $(document).on('change', '#tipo', function () {
           });
       });
   });
-
-  $(document).on('change', '#edit_tipo', function () {
-    var tipo = $(this).val(); 
-    
-    var hiddenIdDocumento = $('#edit_certificado_otros').find('input[name="edit_id_documento[]"]');
-    var hiddenNombreDocumento = $('#edit_certificado_otros').find('input[name="edit_nombre_documento[]"]');
-    var fileCertificado = $('#edit_certificado_otros').find('input[type="file"]');
-    
-    if (tipo.includes("Productora")) {
-        hiddenIdDocumento.val('127');
-        hiddenNombreDocumento.val('Certificado de instalaciones');
-        fileCertificado.attr('id', 'file-127');
-    } else if (tipo.includes("Envasadora")) {
-        hiddenIdDocumento.val('128');
-        hiddenNombreDocumento.val('Certificado de envasadora');
-        fileCertificado.attr('id', 'file-128');
-    } else if (tipo.includes("Comercializadora") || tipo.includes("Almacen y bodega") || tipo.includes("Area de maduracion")) {
-        hiddenIdDocumento.val('129');
-        hiddenNombreDocumento.val('Certificado de comercializadora');
-        fileCertificado.attr('id', 'file-129');
-    } else {
-        hiddenIdDocumento.val('');
-        hiddenNombreDocumento.val('');
-        fileCertificado.removeAttr('id');
-    }
-});
 
 // Enviar el formulario de edición de instalación
 $('#editInstalacionForm').submit(function (e) {
