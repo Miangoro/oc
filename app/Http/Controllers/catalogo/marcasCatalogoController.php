@@ -272,6 +272,8 @@ class marcasCatalogoController extends Controller
         $request->validate([
             'marca' => 'required|string|max:60',
             'cliente' => 'required|integer|exists:empresa,id_empresa',
+            'id_norma' => 'required|string|max:60',
+
         ]);
 
         try {

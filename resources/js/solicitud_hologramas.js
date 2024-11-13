@@ -436,6 +436,7 @@ $(function () {
     });
   });
 
+  // Agregar nuevo registro y validacion
   $(function () {
     $.ajaxSetup({
       headers: {
@@ -443,35 +444,48 @@ $(function () {
       }
     });
   
+    // Función que obtiene las marcas de la empresa seleccionada
     function obtenerMarcas() {
       var empresa = $("#id_empresa").val();
+      // Hacer una petición AJAX para obtener los detalles de la empresa
       $.ajax({
         url: '/getDatos/' + empresa,
         method: 'GET',
         success: function(response) {
+          // Cargar los detalles de las marcas en el select
           var contenido = "";
           for (let index = 0; index < response.marcas.length; index++) {
             contenido = '<option value="' + response.marcas[index].id_marca + '">' + response.marcas[index].marca + '</option>' + contenido;
           }
+  
           if (response.marcas.length == 0) {
             contenido = '<option value="">Sin marcas registradas</option>';
           }
           $('#id_marca').html(contenido);
+  
+          // Revalidar el campo 'id_marca' para verificar la selección
           formValidator.revalidateField('id_marca');
+        },
+        error: function() {
+          //alert('Error al cargar las marcas.');
         }
       });
     }
   
+    // Función que obtiene las direcciones de la empresa seleccionada
     function obtenerDirecciones() {
       var empresa = $("#id_empresa").val();
+      // Hacer una petición AJAX para obtener los detalles de la empresa
       $.ajax({
         url: '/getDatos/' + empresa,
         method: 'GET',
         success: function(response) {
+          // Filtrar las direcciones para que solo se incluyan las que tienen tipo_direccion igual a 3
           var direccionesFiltradas = response.direcciones.filter(function(direccion) {
             return direccion.tipo_direccion == 3;
           });
   
+          // Cargar los detalles de las direcciones en el select
           var contenido = "";
           for (let index = 0; index < direccionesFiltradas.length; index++) {
             contenido += '<option value="' + direccionesFiltradas[index].id_direccion + '">' +
@@ -481,21 +495,30 @@ $(function () {
               ' - Celular: ' + direccionesFiltradas[index].celular_recibe +
               '</option>';
           }
+  
           if (direccionesFiltradas.length == 0) {
             contenido = '<option value="">Sin direcciones registradas</option>';
           }
-          $('#id_direccion').html(contenido);  // Cambiado a `#id_direccion`
+  
+          $('.id_direccion').html(contenido);
+  
+          // Revalidar el campo 'id_direccion' para verificar la selección
           formValidator.revalidateField('id_direccion');
+        },
+        error: function() {
+          //alert('Error al cargar las direcciones.');
         }
       });
     }
   
+    // Event listener para cuando cambie la selección de empresa
     $('#id_empresa').on('change', function () {
-      obtenerMarcas();
-      obtenerDirecciones();
-      formValidator.revalidateField('id_empresa');
+      obtenerMarcas();  // Cargar las marcas
+      obtenerDirecciones();  // Cargar las direcciones
+      formValidator.revalidateField('id_empresa');  // Revalidar el campo de empresa
     });
   
+    // Validación del formulario
     const addHologramasForm = document.getElementById('addHologramasForm');
     const formValidator = FormValidation.formValidation(addHologramasForm, {
       fields: {
@@ -517,9 +540,16 @@ $(function () {
           validators: {
             callback: {
               message: 'Por favor seleccione al menos una marca',
-              callback: function () {
+              callback: function (input) {
                 return $('#id_marca').val() && $('#id_marca').val().length > 0;
               }
+            }
+          }
+        },
+        id_solicitante: {
+          validators: {
+            notEmpty: {
+              message: 'Falta el ID del usuario'
             }
           }
         },
@@ -530,7 +560,7 @@ $(function () {
             },
             between: {
               min: 1,
-              max: 1000000,  // Cambia Infinity a un valor alto como 1000000
+              max: Infinity,
               message: 'El número debe ser superior a 0 y sin negativos'
             },
             regexp: {
@@ -543,7 +573,7 @@ $(function () {
           validators: {
             callback: {
               message: 'Por favor seleccione al menos una dirección',
-              callback: function () {
+              callback: function (input) {
                 return $('#id_direccion').val() && $('#id_direccion').val().length > 0;
               }
             }
@@ -561,7 +591,7 @@ $(function () {
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
-    }).on('core.form.valid', function () {
+    }).on('core.form.valid', function (e) {
       var formData = new FormData(addHologramasForm);
   
       $.ajax({
@@ -582,7 +612,7 @@ $(function () {
             }
           });
         },
-        error: function () {
+        error: function (xhr) {
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
@@ -594,19 +624,22 @@ $(function () {
         }
       });
     });
-  
-    $('#addHologramas').on('hidden.bs.modal', function () {
-      resetFormularioHologramas();
-    });
-  
-    function resetFormularioHologramas() {
-      $('#addHologramasForm')[0].reset();
-      $('.select2').val(null).trigger('change');
-      formValidator.resetForm(true);
-      $('#addHologramasForm').find('.is-invalid').removeClass('is-invalid');
-      $('#addHologramasForm').find('.is-valid').removeClass('is-valid');
-    }
   });
+
+// Limpiar campos al cerrar el modal
+$('#addHologramas').on('hidden.bs.modal', function () {
+  // Restablecer select de empresa
+  $('#id_empresa').val('');
+  $('#id_marca').html('');
+  $('.id_direccion').html('');
+  $('#folio').val('');
+  $('#comentarios').val(''); 
+  $('#id_solicitante').val('');
+  $('#cantidad_hologramas').val('');
+  
+  // Restablecer la validación del formulario
+  formValidator.resetForm(true);
+});
 
 
   initializeSelect2(select2Elements);
