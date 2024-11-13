@@ -998,7 +998,8 @@ $(document).on('click', '.remove-row', function () {
 
   $(document).on('click', '.edit-reclasificacion', function () {
     var id_lote_envasado = $(this).data('id');
-
+    alert("entro");
+    $('#reclasificacion').modal('show');
     $.get('/lotes-envasado/editSKU/' + id_lote_envasado, function (data) {
       // Rellenar el formulario con los datos obtenidos
       $('#id_lote_envasado').val(data.id_lote_envasado);
