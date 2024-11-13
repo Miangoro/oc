@@ -192,6 +192,7 @@ use App\Http\Controllers\certificados\Certificado_InstalacionesController;
 use App\Http\Controllers\certificados\Certificado_GranelController;
 use App\Http\Controllers\hologramas\solicitudHolograma;
 use App\Http\Controllers\catalogo\catalogoEquiposController;
+use App\Http\Controllers\insertar_datos_bd;
 use App\Http\Controllers\inspecciones\inspeccionesController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\solicitudes\solicitudesController;
@@ -827,3 +828,5 @@ Route::get('certificados/granel', [Certificado_GranelController::class, 'UserMan
 Route::resource('certificados/granel-list',Certificado_GranelController::class);
 Route::post('/certificados', [Certificado_GranelController::class, 'store']);
 Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCertificado'])->name('Pre-certificado');
+
+Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');

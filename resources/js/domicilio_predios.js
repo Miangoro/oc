@@ -686,6 +686,7 @@ $(function () {
       }
 
       addRow(container);
+      fv.revalidateField('edad_plantacion[]');
     });
 
     // Evento para eliminar filas de plantación
