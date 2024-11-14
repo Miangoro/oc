@@ -1,4 +1,3 @@
-
 <!-- Modal Certificados Intslaciones -->
 <div class="modal fade" id="PdfDictamenIntalaciones" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-simple">
@@ -31,5 +30,29 @@
         <iframe src="" id="pdfViewerDictamen" width="100%" height="800px" style="border: none;"></iframe>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Modal para ver el documento -->
+<div class="modal fade" id="modalVerDocumento" tabindex="-1" aria-labelledby="modalVerDocumentoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content text-center">
+          <div class="modal-header">
+              <h5 class="modal-title" id="modalVerDocumentoLabel">Certificados de Instalaciones</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <table class="table table-striped">
+                  <thead>
+                      <tr>
+                          <th style="text-align: left;"><b>Nombre</b></th>
+                          <th><b>Certificado</b></th>
+                      </tr>
+                  </thead>
+                  <tbody id="documentosTableBody">
+                  </tbody>
+              </table>
+          </div>
+      </div>
   </div>
 </div>
