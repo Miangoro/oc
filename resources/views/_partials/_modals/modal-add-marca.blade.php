@@ -8,11 +8,12 @@
                     <h4 class="address-title mb-2">Registrar nueva marca</h4>
                     <p class="address-subtitle"></p>
                 </div>
-                <form method="POST" enctype="multipart/form-data" id="addNewMarca" class="row g-5" onsubmit="return false">
+                <form method="POST" enctype="multipart/form-data" id="addNewMarca" class="row g-5"
+                    onsubmit="return false">
                     <div class="col-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <select id="cliente" name="cliente" class="select2 form-select" required>
-                                <option value="" disabled>Selecciona cliente</option>
+                                <option value="" >Selecciona cliente</option>
                                 @foreach ($clientes as $cliente)
                                     <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
                                 @endforeach
@@ -23,7 +24,7 @@
                     <div class="col-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <select id="id_norma" name="id_norma" class="select2 form-select" required>
-                                <option value="" disabled>Selecciona uan norma</option>
+                                <option value="">Selecciona uan norma</option>
                                 @foreach ($catalogo_norma_certificar as $normas)
                                     <option value="{{ $normas->id_norma }}">{{ $normas->norma }}</option>
                                 @endforeach
@@ -33,7 +34,8 @@
                     </div>
                     <div class="col-12 col-md-12 col-sm-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <input id="marca" type="text" name="marca" class="form-control" placeholder="Introduce el nombre de la marca" />
+                            <input id="marca" type="text" name="marca" class="form-control"
+                                placeholder="Introduce el nombre de la marca" />
                             <label for="marca">Nombre de la marca</label>
                         </div>
                     </div>
@@ -42,30 +44,33 @@
                     @foreach ($documentos as $documento)
                         <div class="row mb-3">
                             <div class="col-md-9 mb-5">
-                                <label for="file{{ $documento->id_documento }}" class="form-label">{{ $documento->nombre }}</label>
-                                <input class="form-control" type="file" id="file{{ $documento->id_documento }}" data-id="{{ $documento->id_documento }}" name="url[]">
-                                <input value="{{ $documento->id_documento }}" class="form-control" type="hidden" name="id_documento[]">
-                                <input value="{{ $documento->nombre }}" class="form-control" type="hidden" name="nombre_documento[]">
+                                <label for="file{{ $documento->id_documento }}"
+                                    class="form-label">{{ $documento->nombre }}</label>
+                                <input class="form-control" type="file" id="file{{ $documento->id_documento }}"
+                                    data-id="{{ $documento->id_documento }}" name="url[]">
+                                <input value="{{ $documento->id_documento }}" class="form-control" type="hidden"
+                                    name="id_documento[]">
+                                <input value="{{ $documento->nombre }}" class="form-control" type="hidden"
+                                    name="nombre_documento[]">
                             </div>
                             <div class="col-md-3 mb-5">
-                                <label for="date{{ $documento->id_documento }}" class="form-label">Fecha de vigencia</label>
+                                <label for="date{{ $documento->id_documento }}" class="form-label">Fecha de
+                                    vigencia</label>
                                 <div class="input-group">
-                                    <input placeholder="YYYY-MM-DD" readonly type="text" class="form-control datepicker" id="date{{ $documento->id_documento }}" name="fecha_vigencia[]">
+                                    <input placeholder="YYYY-MM-DD" readonly type="text"
+                                        class="form-control datepicker" id="date{{ $documento->id_documento }}"
+                                        name="fecha_vigencia[]">
                                 </div>
                             </div>
                         </div>
                     @endforeach
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                            aria-label="Close">Cancelar</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<!--/ Add New Address Modal -->
-
-<script>
-
-</script>
