@@ -8,7 +8,8 @@
                     <h4 class="address-title mb-2">Editar marca</h4>
                     <p class="address-subtitle"></p>
                 </div>
-                <form method="POST" enctype="multipart/form-data" id="editMarcaForm" class="row g-5" onsubmit="return false">
+                <form method="POST" enctype="multipart/form-data" id="editMarcaForm" class="row g-5"
+                    onsubmit="return false">
                     <input type="hidden" id="edit_marca_id" name="id">
 
                     <div class="col-12">
@@ -35,7 +36,8 @@
                     </div>
                     <div class="col-12 col-md-12 col-sm-12">
                         <div class="form-floating form-floating-outline">
-                            <input id="edit_marca_nombre" type="text" name="marca" class="form-control" placeholder="Introduce el nombre de la marca" />
+                            <input id="edit_marca_nombre" type="text" name="marca" class="form-control"
+                                placeholder="Introduce el nombre de la marca" />
                             <label for="edit_marca_nombre">Nombre de la marca</label>
                         </div>
                     </div>
@@ -45,17 +47,24 @@
                     @foreach ($documentos as $documento)
                         <div class="row mb-3">
                             <div class="col-md-9 mb-5">
-                                <label for="file{{ $documento->id_documento }}" class="form-label">{{ $documento->nombre }}</label>
-                                <input class="form-control" type="file" id="file{{ $documento->id_documento }}" data-id="{{ $documento->id_documento }}" name="url[]">
-                                <input value="{{ $documento->id_documento }}" class="form-control" type="hidden" name="id_documento[]">
-                                <input value="{{ $documento->nombre }}" class="form-control" type="hidden" name="nombre_documento[]">
-                                <div id="existing_file_{{ $documento->id_documento }}"></div>  <!-- Contenedor para el archivo existente -->
+                                <label for="file{{ $documento->id_documento }}"
+                                    class="form-label">{{ $documento->nombre }}</label>
+                                <input class="form-control" type="file" id="file{{ $documento->id_documento }}"
+                                    data-id="{{ $documento->id_documento }}" name="url[]">
+                                <input value="{{ $documento->id_documento }}" class="form-control" type="hidden"
+                                    name="id_documento[]">
+                                <input value="{{ $documento->nombre }}" class="form-control" type="hidden"
+                                    name="nombre_documento[]">
+                                <div id="existing_file_{{ $documento->id_documento }}"></div>
+                                <!-- Contenedor para el archivo existente -->
                             </div>
                             <div class="col-md-3 mb-5">
-                                <label for="date{{ $documento->id_documento }}" class="form-label">Fecha de vigencia</label>
+                                <label for="date{{ $documento->id_documento }}" class="form-label">Fecha de
+                                    vigencia</label>
                                 <div class="input-group">
-                                    <input placeholder="YYYY-MM-DD" type="text" class="form-control  datepicker" id="Editdate{{ $documento->id_documento }}" name="fecha_vigencia[]" readonly>
-                                 
+                                    <input placeholder="YYYY-MM-DD" type="text" class="form-control  datepicker"
+                                        id="Editdate{{ $documento->id_documento }}" name="fecha_vigencia[]" readonly>
+
                                 </div>
                             </div>
                         </div>
@@ -63,25 +72,12 @@
 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Actualizar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                            aria-label="Close">Cancelar</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<!--/ Edit Marca Modal -->
-<script>
-    $(document).ready(function() {
-    // Cuando se muestra el modal de edición de marca
-    $('#editMarca').on('shown.bs.modal', function() {
-        // Inicializa o reinicializa todos los select2 dentro del modal
-        $('.select2').select2({
-            dropdownParent: $('#editMarca') // Asegura que el dropdown esté dentro del modal
-        });
 
-
-    });
-});
-
-</script>

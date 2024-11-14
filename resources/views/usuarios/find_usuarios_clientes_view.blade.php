@@ -137,6 +137,7 @@
           <th>Id</th>
           <th>Usuario</th>
           <th>Correo</th>
+          <th>Teléfono</th>
           <th>Contraseña</th>
           <th>Cliente</th>
           <th>Carta de asignación</th>
@@ -161,6 +162,10 @@
         <div class="form-floating form-floating-outline mb-5">
           <input type="text" id="add-user-email" class="form-control" placeholder="ana.gmz@example.com" aria-label="ana.gmz@example.com" name="email" />
           <label for="add-user-email">Correo</label>
+        </div>
+        <div class="form-floating form-floating-outline mb-5">
+          <input id="add-user-tel" type="tel" class="form-control" placeholder="Teléfono" aria-label="" name="telefono" />
+          <label for="">Teléfono</label>
         </div>
        
         <div class="form-floating form-floating-outline mb-5">

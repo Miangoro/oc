@@ -98,10 +98,10 @@ $(function () {
             }
     
             const tipoConfig = {
-                'Productora': { color: 'primary', nombre: 'Productora' },     // Azul
-                'Envasadora': { color: 'success', nombre: 'Envasadora' },     // Verde
-                'Comercializadora': { color: 'info', nombre: 'Comercializadora' }, // Celeste
-                'Almacen y bodega': { color: 'danger', nombre: 'Almacén y bodega' }, // Rojo
+                'Productora': { color: 'primary', nombre: 'Productora' },                // Azul
+                'Envasadora': { color: 'success', nombre: 'Envasadora' },                // Verde
+                'Comercializadora': { color: 'info', nombre: 'Comercializadora' },       // Celeste
+                'Almacen y bodega': { color: 'danger', nombre: 'Almacén y bodega' },     // Rojo
                 'Area de maduracion': { color: 'warning', nombre: 'Área de maduración' } // Amarillo
             };
     
@@ -151,18 +151,18 @@ $(function () {
         }
       },
       {
-      // PDF
         targets: 9,
         className: 'text-center',
         render: function (data, type, full, meta) {
-
-          if (full['url'] && full['url'].trim() !== '') {
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-url="${full['url']}" data-registro="${full['url']}"></i>`;
-        } else {
-            return '---';
+            if (full['url'] && full['url'].trim() !== '') {
+                return `<button class="verDocumentosBtn" data-urls="${full['url']}" data-nombres="${full['nombre_documento']}" data-bs-toggle="modal" data-bs-target="#modalVerDocumento" data-bs-dismiss="modal" style="border: none; background: transparent;">
+                            <i class="ri-folder-6-fill" style="color: #F9BB36; font-size: 2.5rem;"></i>
+                        </button>`;
+            } else {
+                return '---';
+            }
         }
-        }
-      },
+      },     
       {
         targets: 10,
         render: function (data, type, full, meta) {
@@ -464,109 +464,76 @@ $(function () {
     });
   });
 
-    // Configuración CSRF para Laravel
-    $.ajaxSetup({
-      headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-    });
-  
-    // Eliminar registro
-    $(document).on('click', '.delete-record', function () {
-      var id_instalacion = $(this).data('id'),
-          dtrModal = $('.dtr-bs-modal.show');
-  
-      if (dtrModal.length) {
-        dtrModal.modal('hide');
-      }
-  
-      Swal.fire({
-        title: '¿Está seguro?',
-        text: "No podrá revertir este evento",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        customClass: {
-          confirmButton: 'btn btn-primary me-3',
-          cancelButton: 'btn btn-label-secondary'
-        },
-        buttonsStyling: false
-      }).then(function (result) {
-        if (result.value) {
-          $.ajax({
-            type: 'DELETE',
-            url: `${baseUrl}instalaciones/${id_instalacion}`, 
-            success: function () {
-              dt_instalaciones_table.ajax.reload();
-  
-              Swal.fire({
-                icon: 'success',
-                title: '¡Eliminado!',
-                text: '¡La Instalacion ha sido eliminada correctamente!',
-                customClass: {
-                  confirmButton: 'btn btn-success'
-                }
-              });
-            },
-            error: function (xhr, textStatus, errorThrown) {
-              console.error('Error al eliminar:', textStatus, errorThrown);
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Hubo un problema al eliminar el registro.',
-              });
-            }
-          });
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          Swal.fire({
-            title: 'Cancelado',
-            text: 'La Instalacion no ha sido eliminada',
-            icon: 'error',
-            customClass: {
-              confirmButton: 'btn btn-success'
-            }
-          });
-        }
-      });
-    });
-  
-
-    //Agregar
-    $('#fecha_emision').on('change', function() {
-      var fechaInicial = new Date($(this).val());
-      fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
-      var year = fechaInicial.getFullYear();
-      var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
-      var day = ('0' + fechaInicial.getDate()).slice(-2);
-      $('#fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
-    });
-  
-    $(document).on('change', '#tipo', function () {
-      var tipo = $(this).val(); 
-      
-      var hiddenIdDocumento = $('#certificado-otros').find('input[name="id_documento[]"]');
-      var hiddenNombreDocumento = $('#certificado-otros').find('input[name="nombre_documento[]"]');
-      var fileCertificado = $('#certificado-otros').find('input[type="file"]');
-      
-      if (tipo.includes("Productora")) {
-          hiddenIdDocumento.val('127');
-          hiddenNombreDocumento.val('Certificado de instalaciones');
-          fileCertificado.attr('id', 'file-127');
-      } else if (tipo.includes("Envasadora")) {
-          hiddenIdDocumento.val('128');
-          hiddenNombreDocumento.val('Certificado de envasadora');
-          fileCertificado.attr('id', 'file-128');
-      } else if (tipo.includes("Comercializadora") || tipo.includes("Almacen y bodega") || tipo.includes("Area de maduracion")) {
-          hiddenIdDocumento.val('129');
-          hiddenNombreDocumento.val('Certificado de comercializadora');
-          fileCertificado.attr('id', 'file-129');
-      } else {
-          hiddenIdDocumento.val('');
-          hiddenNombreDocumento.val('');
-          fileCertificado.removeAttr('id');
-      }
+  //Agregar
+  $('#fecha_emision').on('change', function() {
+    var fechaInicial = new Date($(this).val());
+    fechaInicial.setFullYear(fechaInicial.getFullYear() + 1);
+    var year = fechaInicial.getFullYear();
+    var month = ('0' + (fechaInicial.getMonth() + 1)).slice(-2);
+    var day = ('0' + fechaInicial.getDate()).slice(-2);
+    $('#fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
   });
-  
+
+  // Manejo de los tipos seleccionados
+  $(document).on('change', '#tipo', function () {
+    var tiposSeleccionados = $(this).val();
+    var certificadoContainer = $('#certificado-otros');
+    certificadoContainer.find('.file-input').remove();
+    var archivosCreados = new Set();
+    var primerCampoInsertado = false;
+
+    tiposSeleccionados.forEach(function(tipo) {
+        var archivoId = '';
+        var archivoNombre = '';
+
+        if (tipo === "Productora") {
+            archivoId = '127';
+            archivoNombre = 'Certificado de productora';
+        } else if (tipo === "Envasadora") {
+            archivoId = '128';
+            archivoNombre = 'Certificado de envasadora';
+        } else if (tipo === "Comercializadora") {
+            archivoId = '129';
+            archivoNombre = 'Certificado de comercializadora';
+        } else if (tipo === "Almacen y bodega") {
+            archivoId = '130'; 
+            archivoNombre = 'Certificado de almacén y bodega';
+        } else if (tipo === "Area de maduracion") {
+            archivoId = '131'; 
+            archivoNombre = 'Certificado de área de maduración';
+        }
+
+        // Asegurarse de que solo se agregue una vez cada archivo
+        if (!archivosCreados.has(archivoId)) {
+            if (!primerCampoInsertado) {
+                certificadoContainer.prepend(`
+                    <div class="col-md-12 mb-3 file-input" id="file-input-${archivoId}">
+                        <div class="form-floating form-floating-outline">
+                            <input class="form-control form-control-sm" type="file" id="file-${archivoId}" name="url[]" required>
+                            <input value="${archivoId}" class="form-control" type="hidden" name="id_documento[]">
+                            <input value="${archivoNombre}" class="form-control" type="hidden" name="nombre_documento[]">
+                            <label for="file-${archivoId}">${archivoNombre}</label>
+                        </div>
+                    </div>
+                `);
+                primerCampoInsertado = true; 
+            } else {
+                certificadoContainer.find('.file-input').last().after(`
+                    <div class="col-md-12 mb-3 file-input" id="file-input-${archivoId}">
+                        <div class="form-floating form-floating-outline">
+                            <input class="form-control form-control-sm" type="file" id="file-${archivoId}" name="url[]" required>
+                            <input value="${archivoId}" class="form-control" type="hidden" name="id_documento[]">
+                            <input value="${archivoNombre}" class="form-control" type="hidden" name="nombre_documento[]">
+                            <label for="file-${archivoId}">${archivoNombre}</label>
+                        </div>
+                    </div>
+                `);
+            }
+            archivosCreados.add(archivoId);
+        }
+    });
+  });
+
   $(document).ready(function () {
     const formAdd = document.getElementById('addNewInstalacionForm');
     const certificadoContainer = $('#certificado-otros');
@@ -1141,25 +1108,79 @@ $(document).ready(function () {
   });
 });
 
-$(document).on('click', '.pdf', function () {
-  var url = $(this).data('url');
-  var registro = $(this).data('registro');
 
-  // Actualiza el iframe y los textos del modal
-  $('#pdfViewerDictamen').attr('src', '../files/' + url);
-  $('#titulo_modal_Dictamen').text("Certificado de instalaciones");
-  $('#subtitulo_modal_Dictamen').text(registro);
-  $('#openPdfBtnDictamen').attr('href', '../files/' + url).show();
 
-  // Muestra el spinner 
-  $('#loading-spinner').show();
-  $('#pdfViewerDictamen').hide();
-  $('#PdfDictamenIntalaciones').modal('show');
+$(document).on('click', '.verDocumentosBtn', function () {
+  $('#modalEditInstalacion').modal('hide'); 
+  var urls = $(this).data('urls').split(','); 
+  var nombresDocumentos = $(this).data('nombres');
+  if (nombresDocumentos) {
+    nombresDocumentos = nombresDocumentos.split(','); 
+  } else {
+    nombresDocumentos = []; 
+  }
+
+  $('#modalVerDocumento').modal('hide'); 
+  var tablaContenido = '';
+  var baseFolder = '../files/'; 
+  var firstUrl = urls[0].trim();
+  var firstFolder = '';
+  if (firstUrl.includes('/')) {
+    firstFolder = firstUrl.split('/')[0] + '/';
+  }
+
+  urls.forEach(function (url, index) {
+    var fullUrl = (index === 0) ? baseFolder + url.trim() : baseFolder + firstFolder + url.trim();
+    var nombreDocumento = nombresDocumentos[index] ? nombresDocumentos[index].trim() : 'Documento sin nombre';  
+
+    tablaContenido += `
+    <tr>
+        <td style="text-align:left;">${nombreDocumento}</td>
+        <td>
+            <button class="verDocumentoBtn" data-url="${fullUrl}" data-registro="Registro ${index + 1}" style="border: none; background: transparent;">
+                <i class="ri-file-pdf-2-fill text-danger fs-1 cursor-pointer"></i>
+            </button>
+        </td>
+    </tr>`;
+  });
+
+  $('#documentosTableBody').html(tablaContenido);
+  $('#modalVerDocumento').modal('show');
 });
 
+// Al hacer clic en el botón "Ver Documento" dentro del modal
+$(document).on('click', '.verDocumentoBtn', function () {
+  var nombresDocumentos = $(this).data('nombres');
+  if (nombresDocumentos) {
+    nombresDocumentos = nombresDocumentos.split(','); 
+  } else {
+    nombresDocumentos = []; 
+  }
+
+  var url = $(this).data('url');
+  $('#loading-spinner').show();
+  $('#modalVerDocumento').modal('hide');
+  $('#PdfDictamenIntalaciones').modal('show'); 
+  $('#pdfViewerDictamen').attr('src', url);
+  $('#titulo_modal_Dictamen').text('Certificado Instalaciones');
+  var urlParts = url.split('/');
+  var lastPart = urlParts[urlParts.length - 1];
+  $('#subtitulo_modal_Dictamen').text(lastPart);
+  var openPdfBtn = $('#openPdfBtnDictamen');
+  openPdfBtn.attr('href', url);
+  openPdfBtn.show();
+});
+
+// Evento para ocultar el spinner y mostrar el iframe cuando el PDF haya cargado
 $('#pdfViewerDictamen').on('load', function () {
-  $('#loading-spinner').hide();
-  $('#pdfViewerDictamen').show();
+$('#loading-spinner').hide();
+$('#pdfViewerDictamen').show();
+});
+
+$('#PdfDictamenIntalaciones').on('hidden.bs.modal', function () {
+$('#pdfViewerDictamen').attr('src', '');
+console.log("Modal de PDF cerrado y iframe limpiado");
+$('#modalVerDocumento').modal('show');
 });
 
 //end

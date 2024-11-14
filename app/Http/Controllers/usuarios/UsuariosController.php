@@ -129,6 +129,7 @@ class UsuariosController extends Controller
         $nestedData['fake_id'] = ++$ids;
         $nestedData['name'] = $user->name;
         $nestedData['email'] = $user->email ;
+        $nestedData['telefono'] = $user->telefono;
         $nestedData['password_original'] = $user->password_original ;
         $nestedData['razon_social'] = $user->empresa->razon_social ;
 
@@ -177,7 +178,7 @@ class UsuariosController extends Controller
       // update the value
       $users = User::updateOrCreate(
         ['id' => $userID],
-        ['name' => $request->name, 'email' => $request->email]
+        ['name' => $request->name, 'email' => $request->email, 'telefono' => $request->telefono]
       );
 
       // user updated
@@ -191,7 +192,7 @@ class UsuariosController extends Controller
       if (empty($userEmail)) {
         $users = User::updateOrCreate(
           ['id' => $userID],
-          ['name' => $request->name, 'email' => $request->email, 'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa,'tipo'=>3]
+          ['name' => $request->name, 'email' => $request->email, 'telefono' => $request->telefono, 'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa,'tipo'=>3]
         );
 
         // user created

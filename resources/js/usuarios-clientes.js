@@ -42,6 +42,7 @@ $(function () {
         { data: 'id' },
         { data: 'name' },
         { data: 'email' },
+        { data: 'telefono' },
         { data: 'password_original' },
         { data: 'razon_social' },
         { data: 'id' },
@@ -112,8 +113,16 @@ $(function () {
           }
         },
         {
-          // contraseña
+          // User telefono
           targets: 4,
+          render: function (data, type, full, meta) {
+            var $tel = full['telefono'];
+            return '<span class="user-email">' + $tel + '</span>';
+          }
+        },
+        {
+          // contraseña
+          targets: 5,
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $pass = full['password_original'];
@@ -122,7 +131,7 @@ $(function () {
         },
         {
             // Razón social
-            targets: 5,
+            targets: 6,
             className: 'text-center',
             render: function (data, type, full, meta) {
               var $cliente = full['razon_social'];
@@ -131,7 +140,7 @@ $(function () {
           },
           {
             // email verify
-            targets: 6,
+            targets: 7,
             className: 'text-center',
             render: function (data, type, full, meta) {
               var $id = full['id_empresa'];
@@ -455,6 +464,7 @@ $(function () {
       $('#user_id').val(data.id);
       $('#add-user-fullname').val(data.name);
       $('#add-user-email').val(data.email);
+      $('#add-user-tel').val(data.telefono);
       $('#id_empresa').val(data.id_empresa).prop('selected', true).change();
     });
   });
@@ -486,6 +496,21 @@ $(function () {
           emailAddress: {
             message: 'Correo inválido'
           }
+        }
+      },
+      telefono: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor introduce un número de teléfono'
+          }
+        },stringLength: {
+          min: 10,
+          max: 15,
+          message: 'El teléfono debe tener entre 10 y 15 caracteres (incluidos espacios y otros caracteres)'
+        },
+        regexp: {
+          regexp: /^[0-9\s\-\(\)]+$/,
+          message: 'El teléfono debe contener solo números, espacios, guiones y paréntesis'
         }
       },
       id_empresa: {
