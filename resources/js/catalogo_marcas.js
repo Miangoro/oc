@@ -506,6 +506,7 @@ $(function () {
     });
   });
 
+  //Editar marcas
   $(document).ready(function () {
     $(document).on('click', '.edit-record', function () {
       var id_marca = $(this).data('id');

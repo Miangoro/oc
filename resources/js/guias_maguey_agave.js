@@ -733,7 +733,7 @@ $(document).on('click', '.ver-registros', function () {
                       </i>
                   </td>
                   <td>
-                      <a href="${pdfUrl}" target="_blank" class="open-pdf">
+                      <a href="${pdfUrl}" target="_blank" class="open-pdf" rel="noopener noreferrer">
                           <i class="ri-file-pdf-2-line text-danger ri-40px cursor-pointer"></i>
                       </a>
                   </td>
