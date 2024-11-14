@@ -354,104 +354,96 @@ $(function () {
     });
   
     const addNewMarca = document.getElementById('addNewMarca');
-    const fv = FormValidation.formValidation(addNewMarca, {
-      fields: {
-        cliente: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione el cliente'
-            }
-          }
-        },
-        id_norma: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una norma'
-            }
-          }
-        },
-        marca: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor introduzca el nombre de la marca'
-            }
-          }
-        }
-      },
-      plugins: {
-        trigger: new FormValidation.plugins.Trigger(),
-        bootstrap5: new FormValidation.plugins.Bootstrap5({
-          eleValidClass: '',
-          rowSelector: function (field, ele) {
-            return '.mb-5';
-          }
-        }),
-        submitButton: new FormValidation.plugins.SubmitButton(),
-        autoFocus: new FormValidation.plugins.AutoFocus()
-      }
-    }).on('core.form.valid', function (e) {
-      var formData = new FormData(addNewMarca);
-      $.ajax({
-        url: '/catalago-list',
-        type: 'POST',
-        data: formData,
-        processData: false, 
-        contentType: false, 
-        success: function (response) {
-          $('#addMarca').modal('hide');
+    let fv = null; // Inicializamos la variable del validador afuera para reutilizar
   
-          // Limpiar el formulario después de enviar los datos
-          addNewMarca.reset();
-          
-          // Recargar la tabla de DataTables
-          $('.datatables-users').DataTable().ajax.reload();
-  
-          // Mostrar alerta de éxito
-          Swal.fire({
-            icon: 'success',
-            title: '¡Éxito!',
-            text: response.success,
-            customClass: {
-              confirmButton: 'btn btn-success'
+    // Función para inicializar el validador
+    function initializeFormValidation() {
+      fv = FormValidation.formValidation(addNewMarca, {
+        fields: {
+          cliente: {
+            validators: {
+              notEmpty: {
+                message: 'Por favor seleccione el cliente'
+              }
             }
-          });
+          },
+          id_norma: {
+            validators: {
+              notEmpty: {
+                message: 'Por favor seleccione una norma'
+              }
+            }
+          },
+          marca: {
+            validators: {
+              notEmpty: {
+                message: 'Por favor introduzca el nombre de la marca'
+              }
+            }
+          }
         },
-        error: function (xhr) {
-          // Mostrar alerta de error
-          Swal.fire({
-            icon: 'error',
-            title: '¡Error!',
-            text: 'Error al agregar la marca',
-            customClass: {
-              confirmButton: 'btn btn-danger'
+        plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+            eleValidClass: '',
+            rowSelector: function (field, ele) {
+              return '.mb-5';
             }
-          });
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
         }
+      }).on('core.form.valid', function (e) {
+        var formData = new FormData(addNewMarca);
+        $.ajax({
+          url: '/catalago-list',
+          type: 'POST',
+          data: formData,
+          processData: false, 
+          contentType: false, 
+          success: function (response) {
+            $('#addMarca').modal('hide');
+            addNewMarca.reset();
+            $('.datatables-users').DataTable().ajax.reload();
+            Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.success,
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+            });
+          },
+          error: function (xhr) {
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al agregar la marca',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        });
       });
-    });
+    }
+  
+    initializeFormValidation(); // Inicializamos la validación al cargar
   
     // Revalidaciones
-    $('#cliente').on('change', function () {
-      if ($(this).val()) {
-        fv.revalidateField($(this).attr('name'));
-      }
-    });
-    $('#id_norma').on('change', function () {
-      if ($(this).val()) {
-        fv.revalidateField($(this).attr('name'));
-      }
-    });
-    $('#marca').on('change', function() {
+    $('#cliente, #id_norma, #marca').on('change', function () {
       fv.revalidateField($(this).attr('name'));
+    });
+  
+    // Limpiar campos y destruir el validador al cerrar el modal
+    $('#addMarca').on('hidden.bs.modal', function () {
+      addNewMarca.reset(); // Resetea el formulario
+      $('#cliente, #id_norma, #marca').val(null).trigger('change'); // Limpiar selects
+      fv.destroy(); // Destruye la validación actual
+      initializeFormValidation(); // Reinicia la validación para el próximo uso
     });
   });
   
-
-  // Limpiar campos al cerrar el modal
-  $('#addMarca').on('hidden.bs.modal', function () {
-    $('#cliente, #id_norma, #marca').val('');
-    $('#marca').prop('selected', true);
-  });
 
   initializeSelect2(select2Elements);
 
