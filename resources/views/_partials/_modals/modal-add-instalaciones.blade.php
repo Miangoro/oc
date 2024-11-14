@@ -74,12 +74,7 @@
                         <!-- Campos adicionales para "Certificado por otro organismo" -->
                                <div id="certificado-otros" class="d-none mt-4">
                                 <div class="col-md-12 mb-3">
-                                    <div class="form-floating form-floating-outline">
-                                        <input class="form-control form-control-sm" type="file" id="file" name="url[]">
-                                        <input value="0" class="form-control" type="hidden" name="id_documento[]">
-                                        <input value="Certificado de instalaciones" class="form-control" type="hidden" name="nombre_documento[]">
-                                        <label for="certificado_instalaciones">Adjuntar Certificado de instalaciones</label>
-                                    </div>
+                                    <div class="form-floating form-floating-outline"></div>
                                 </div>
 
                             <div class="form-floating form-floating-outline mb-3">

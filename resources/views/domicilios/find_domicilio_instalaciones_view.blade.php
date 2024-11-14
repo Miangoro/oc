@@ -11,7 +11,8 @@
     'resources/assets/vendor/libs/@form-validation/form-validation.scss',
     'resources/assets/vendor/libs/animate-css/animate.scss',
     'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
-    'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss'
+    'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss',
+    'resources/assets/vendor/libs/spinkit/spinkit.scss'
 ])
 @endsection
 
@@ -56,7 +57,7 @@
                     <th>Dirección</th>
                     <th>Folio</th>
                     <th>Organismo</th>
-                    <th>Certificado de instalaciones</th>
+                    <th>Certificados de instalaciones</th>
                     <th>Fecha Emisión</th>
                     <th>Fecha Vigencia</th>
                     <th>Acciones</th>

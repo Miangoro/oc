@@ -39,7 +39,8 @@ class DomiciliosController extends Controller
             7 => 'url',
             8 => 'fecha_emision',
             9 => 'fecha_vigencia',
-            10 => 'responsable'
+            10 => 'responsable',
+            11 => 'nombre_documento',
         ];
 
         $search = [];
@@ -72,10 +73,6 @@ class DomiciliosController extends Controller
                 ->get();
         } else {
             $search = $request->input('search.value');
-
-          
-
-        
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
@@ -150,6 +147,7 @@ class DomiciliosController extends Controller
                     '<b>Fecha de vigencia:</b>' . (Helpers::formatearFecha($instalacion->fecha_vigencia)) . '<br>';
                 $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; 
                 $nestedData['url'] = !empty($instalacion->documentos->pluck('url')->toArray()) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first() . '/' . implode(',', $instalacion->documentos->pluck('url')->toArray()) : '';
+                $nestedData['nombre_documento'] = !empty($instalacion->documentos->pluck('nombre_documento')->toArray()) ? implode(',', $instalacion->documentos->pluck('nombre_documento')->toArray()) : 'Documento sin nombre';
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($instalacion->fecha_vigencia);
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
@@ -305,7 +303,6 @@ class DomiciliosController extends Controller
         try {
             $instalacion = Instalaciones::findOrFail($id);
     
-            // Actualiza los datos de la instalación, incluyendo el responsable
             $instalacion->update([
                 'id_empresa' => $request->input('edit_id_empresa'),
                 'tipo' => $request->input('edit_tipo'),
@@ -322,12 +319,9 @@ class DomiciliosController extends Controller
             $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $request->input('edit_id_empresa'))->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
     
-            // Obtener los documentos relacionados a la instalación
             $documentacionUrls = Documentacion_url::where('id_relacion', $id)->get();
             
-            // Si hay documentos relacionados, los mantenemos intactos a menos que se suba un nuevo archivo
             if ($request->hasFile('edit_url')) {
-                // Si se sube un archivo nuevo, eliminamos los documentos antiguos
                 foreach ($documentacionUrls as $documentacionUrl) {
                     $filePath = 'uploads/' . $numeroCliente . '/' . $documentacionUrl->url;
                     if (Storage::disk('public')->exists($filePath)) {
@@ -336,7 +330,6 @@ class DomiciliosController extends Controller
                     $documentacionUrl->delete();
                 }
     
-                // Subir y guardar los nuevos documentos
                 $files = $request->file('edit_url');
                 $documentoIds = $request->input('edit_id_documento');
                 $documentoNombres = $request->input('edit_nombre_documento');
@@ -344,15 +337,10 @@ class DomiciliosController extends Controller
                 foreach ($files as $index => $file) {
                     $documentoId = $documentoIds[$index] ?? null;
                     $documentoNombre = $documentoNombres[$index] ?? 'Documento sin nombre';
-    
-                    // Crear el nombre de archivo y la ruta con el número de cliente
                     $filename = $documentoNombre . '_' . time() . '.' . $file->getClientOriginalExtension();
                     $directoryPath = 'uploads/' . $numeroCliente;
-    
-                    // Subir el archivo al subdirectorio correcto
                     $filePath = $file->storeAs($directoryPath, $filename, 'public');
     
-                    // Guardar el documento en la base de datos
                     Documentacion_url::create([
                         'id_relacion' => $id,
                         'id_documento' => $documentoId,
