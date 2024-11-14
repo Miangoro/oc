@@ -474,49 +474,65 @@ $(function () {
     $('#fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
   });
 
-// Manejo de los tipos seleccionados
-$(document).on('change', '#tipo', function () {
-  var tiposSeleccionados = $(this).val();
-  var certificadoContainer = $('#certificado-otros');
-  certificadoContainer.find('.file-input').remove();
-  var archivosCreados = new Set();
-  tiposSeleccionados.forEach(function(tipo) {
-      var archivoId = '';
-      var archivoNombre = '';
+  // Manejo de los tipos seleccionados
+  $(document).on('change', '#tipo', function () {
+    var tiposSeleccionados = $(this).val();
+    var certificadoContainer = $('#certificado-otros');
+    certificadoContainer.find('.file-input').remove();
+    var archivosCreados = new Set();
+    var primerCampoInsertado = false;
 
-      if (tipo === "Productora") {
-          archivoId = '127';
-          archivoNombre = 'Certificado de productora';
-      } else if (tipo === "Envasadora") {
-          archivoId = '128';
-          archivoNombre = 'Certificado de envasadora';
-      } else if (tipo === "Comercializadora") {
-          archivoId = '129';
-          archivoNombre = 'Certificado de comercializadora';
-      } else if (tipo === "Almacen y bodega") {
-          archivoId = '130'; 
-          archivoNombre = 'Certificado de almacén y bodega';
-      } else if (tipo === "Area de maduracion") {
-          archivoId = '131'; 
-          archivoNombre = 'Certificado de área de maduración';
-      }
+    tiposSeleccionados.forEach(function(tipo) {
+        var archivoId = '';
+        var archivoNombre = '';
 
-      if (!archivosCreados.has(archivoId)) {
-          certificadoContainer.prepend(`
-              <div class="col-md-12 mb-3 file-input" id="file-input-${archivoId}">
-                  <div class="form-floating form-floating-outline">
-                      <input class="form-control form-control-sm" type="file" id="file-${archivoId}" name="url[]" required>
-                      <input value="${archivoId}" class="form-control" type="hidden" name="id_documento[]">
-                      <input value="${archivoNombre}" class="form-control" type="hidden" name="nombre_documento[]">
-                      <label for="file-${archivoId}">${archivoNombre}</label>
-                  </div>
-              </div>
-          `);
+        if (tipo === "Productora") {
+            archivoId = '127';
+            archivoNombre = 'Certificado de productora';
+        } else if (tipo === "Envasadora") {
+            archivoId = '128';
+            archivoNombre = 'Certificado de envasadora';
+        } else if (tipo === "Comercializadora") {
+            archivoId = '129';
+            archivoNombre = 'Certificado de comercializadora';
+        } else if (tipo === "Almacen y bodega") {
+            archivoId = '130'; 
+            archivoNombre = 'Certificado de almacén y bodega';
+        } else if (tipo === "Area de maduracion") {
+            archivoId = '131'; 
+            archivoNombre = 'Certificado de área de maduración';
+        }
 
-          archivosCreados.add(archivoId);
-      }
+        // Asegurarse de que solo se agregue una vez cada archivo
+        if (!archivosCreados.has(archivoId)) {
+            if (!primerCampoInsertado) {
+                certificadoContainer.prepend(`
+                    <div class="col-md-12 mb-3 file-input" id="file-input-${archivoId}">
+                        <div class="form-floating form-floating-outline">
+                            <input class="form-control form-control-sm" type="file" id="file-${archivoId}" name="url[]" required>
+                            <input value="${archivoId}" class="form-control" type="hidden" name="id_documento[]">
+                            <input value="${archivoNombre}" class="form-control" type="hidden" name="nombre_documento[]">
+                            <label for="file-${archivoId}">${archivoNombre}</label>
+                        </div>
+                    </div>
+                `);
+                primerCampoInsertado = true; 
+            } else {
+                certificadoContainer.find('.file-input').last().after(`
+                    <div class="col-md-12 mb-3 file-input" id="file-input-${archivoId}">
+                        <div class="form-floating form-floating-outline">
+                            <input class="form-control form-control-sm" type="file" id="file-${archivoId}" name="url[]" required>
+                            <input value="${archivoId}" class="form-control" type="hidden" name="id_documento[]">
+                            <input value="${archivoNombre}" class="form-control" type="hidden" name="nombre_documento[]">
+                            <label for="file-${archivoId}">${archivoNombre}</label>
+                        </div>
+                    </div>
+                `);
+            }
+            archivosCreados.add(archivoId);
+        }
+    });
   });
-});
 
   $(document).ready(function () {
     const formAdd = document.getElementById('addNewInstalacionForm');
