@@ -346,13 +346,13 @@ $(function () {
     });
   });
 
-  // Registrar Aprobacion
   $(function () {
     $.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
+  
     const addNewMarca = document.getElementById('addNewMarca');
     const fv = FormValidation.formValidation(addNewMarca, {
       fields: {
@@ -399,8 +399,13 @@ $(function () {
         contentType: false, 
         success: function (response) {
           $('#addMarca').modal('hide');
+  
+          // Limpiar el formulario después de enviar los datos
+          addNewMarca.reset();
+          
           // Recargar la tabla de DataTables
           $('.datatables-users').DataTable().ajax.reload();
+  
           // Mostrar alerta de éxito
           Swal.fire({
             icon: 'success',
@@ -424,7 +429,7 @@ $(function () {
         }
       });
     });
-
+  
     // Revalidaciones
     $('#cliente').on('change', function () {
       if ($(this).val()) {
@@ -436,11 +441,11 @@ $(function () {
         fv.revalidateField($(this).attr('name'));
       }
     });
-
     $('#marca').on('change', function() {
       fv.revalidateField($(this).attr('name'));
+    });
   });
-  });
+  
 
   // Limpiar campos al cerrar el modal
   $('#addMarca').on('hidden.bs.modal', function () {
@@ -501,43 +506,49 @@ $(function () {
     });
   });
 
-  // Editar Registro Marca
+  //Editar marcas
   $(document).ready(function () {
     $(document).on('click', '.edit-record', function () {
       var id_marca = $(this).data('id');
+      
       // Limpiar campos y contenido residual del formulario de edición
       $('#editMarcaForm')[0].reset();
-      $('.existing-file').html(''); // Asegúrate de que todos los contenedores de archivos existentes estén vacíos
-      $('.existing-date').text(''); // Asegúrate de que todos los contenedores de fechas existentes estén vacíos
+      
+      // Limpiar todos los contenedores de archivos y fechas existentes
+      $('[id^=existing_file_]').html('');
+      $('[id^=Editdate]').val('');
+      $('[id^=existing_date_]').text('');
+  
       // Realizar la solicitud AJAX para obtener los datos de la marca
       $.get('/marcas-list/' + id_marca + '/edit', function (data) {
         var marca = data.marca;
         var documentacion_urls = data.documentacion_urls;
         var numCliente = data.numeroCliente;
+  
         // Rellenar el formulario con los datos obtenidos
         $('#edit_marca_id').val(marca.id_marca);
         $('#edit_marca_nombre').val(marca.marca);
         $('#edit_cliente').val(marca.id_empresa).trigger('change');
         $('#edit_id_norma').val(marca.id_norma).trigger('change');
-        // Mostrar archivos existentes en los mismos espacios de entrada de archivo
+  
+        // Mostrar archivos existentes en sus contenedores respectivos
         documentacion_urls.forEach(function (doc) {
-          console.log(doc.url);
-          var existingFileDivId = '#existing_file_' + doc.id_documento;
-          $(existingFileDivId).html(`<p>Archivo existente: <a href="../files/${numCliente}/${doc.url}" target="_blank">${doc.url}</a></p>`);
-
-          var existingDateId = '#existing_date_' + doc.id_documento;
-          $(existingDateId).text('Fecha de vigencia: ' + doc.fecha_vigencia);
-
-          var existingDateId = '#Editdate' + doc.id_documento;
-          $(existingDateId).val(doc.fecha_vigencia);
-
-          $('#date' + doc.id_documento).val(doc.fecha_vigencia);  // Rellenar la fecha existente en el campo de fecha
+          // Mostrar el nombre del archivo y el enlace en el contenedor del archivo correspondiente
+          $('#existing_file_' + doc.id_documento).html(`
+            <p>Archivo existente: <a href="../files/${numCliente}/${doc.url}" target="_blank">${doc.url}</a></p>
+          `);
+  
+          // Rellenar la fecha de vigencia en los campos específicos para el documento
+          $('#Editdate' + doc.id_documento).val(doc.fecha_vigencia); // Campo de fecha de edición
         });
-
+  
+        // Mostrar el modal de edición
         $('#editMarca').modal('show');
       });
     });
   });
+  
+  
 
   // Actualizar Registro Marca
   $('#editMarcaForm').submit(function (e) {

@@ -243,7 +243,7 @@ $(function () {
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#editLoteEnvasado" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i>Editar lotes envasado</a>` +
               `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit-reclasificacion"><i class="ri-id-card-fill ri-20px text-success"></i> Reclasificación SKU</a>` +
-              `<a data-id="${full['id_lote_envasado']}" data-bs-toggle="modal" data-bs-target="#reclasificacion" href="javascript:;" class="dropdown-item edit-reclasificacion"><i class="ri-git-repository-line ri-20px text-warning"></i> Trazabilidad</a>` +
+              `<a data-id="${full['']}" data-bs-toggle="modal" data-bs-target="#" href="javascript:;" class="dropdown-item "><i class="ri-git-repository-line ri-20px text-warning"></i> Trazabilidad</a>` +
               `<a data-id="${full['id_lote_envasado']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar lotes envasados</a>` +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               '<a href="' +
@@ -472,17 +472,17 @@ $(function () {
     });
   }
 
-    // Función para inicializar Select2 en elementos específicos
-    function initializeSelect2($elements) {
-      $elements.each(function () {
-        var $this = $(this);
-        select2Focus($this);
-        $this.wrap('<div class="position-relative"></div>').select2({
-          placeholder: 'Selecciona cliente',
-          dropdownParent: $this.parent()
-        });
+  // Función para inicializar Select2 en elementos específicos
+  function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+      select2Focus($this);
+      $this.wrap('<div class="position-relative"></div>').select2({
+        placeholder: 'Selecciona cliente',
+        dropdownParent: $this.parent()
       });
-    }
+    });
+  }
 
   // Registrar Lotes y validar
   $(function () {
@@ -770,32 +770,32 @@ $(function () {
     });
   });
 
-// Método para mostrar el modal de edición con los datos del lote envasado
-$(document).on('click', '.edit-record', function () {
-  var id_lote_envasado = $(this).data('id');
+  // Método para mostrar el modal de edición con los datos del lote envasado
+  $(document).on('click', '.edit-record', function () {
+    var id_lote_envasado = $(this).data('id');
 
-  // Realizar la solicitud AJAX para obtener los datos del lote envasado
-  $.get('/lotes-envasado/edit/' + id_lote_envasado, function (data) {
-    // Rellenar el formulario con los datos obtenidos
-    $('#edit_id_lote_envasado').val(data.id_lote_envasado);
-    $('#edit_cliente').val(data.id_empresa).trigger('change');
-    $('#edit_lote_granel').val(data.id_lote_granel).trigger('change');
-    $('#edit_nombre').val(data.nombre);
-    $('#edit_sku').val(data.inicial);
-    $('#edit_destino_lote').val(data.destino_lote);
-    $('#edit_cant_botellas').val(data.cant_botellas);
-    $('#edit_presentacion').val(data.presentacion);
-    $('#edit_unidad').val(data.unidad);
-    $('#edit_volumen_total').val(data.volumen_total);
-    $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
-    $('#edit_marca').val(data.id_marca).trigger('change');
+    // Realizar la solicitud AJAX para obtener los datos del lote envasado
+    $.get('/lotes-envasado/edit/' + id_lote_envasado, function (data) {
+      // Rellenar el formulario con los datos obtenidos
+      $('#edit_id_lote_envasado').val(data.id_lote_envasado);
+      $('#edit_cliente').val(data.id_empresa).trigger('change');
+      $('#edit_lote_granel').val(data.id_lote_granel).trigger('change');
+      $('#edit_nombre').val(data.nombre);
+      $('#edit_sku').val(data.inicial);
+      $('#edit_destino_lote').val(data.destino_lote);
+      $('#edit_cant_botellas').val(data.cant_botellas);
+      $('#edit_presentacion').val(data.presentacion);
+      $('#edit_unidad').val(data.unidad);
+      $('#edit_volumen_total').val(data.volumen_total);
+      $('#edit_Instalaciones').val(data.lugar_envasado).trigger('change');
+      $('#edit_marca').val(data.id_marca).trigger('change');
 
-    // Limpiar contenido previo de lotes de envasado de granel
-    $('#edit_contenidoGraneles').empty();
+      // Limpiar contenido previo de lotes de envasado de granel
+      $('#edit_contenidoGraneles').empty();
 
-    // Agregar las opciones y rellenar cada fila del lote
-    data.lotes_envasado_granel.forEach(function (lote, index) {
-      var newRow = `
+      // Agregar las opciones y rellenar cada fila del lote
+      data.lotes_envasado_granel.forEach(function (lote, index) {
+        var newRow = `
         <tr>
           <th>
             <button type="button" class="btn btn-danger remove-row">
@@ -812,31 +812,31 @@ $(document).on('click', '.edit-record', function () {
           </td>
         </tr>
       `;
-      $('#edit_contenidoGraneles').append(newRow);
+        $('#edit_contenidoGraneles').append(newRow);
 
-      // Inicializar select2 para el select en la fila recién añadida
-      $('#id_lote_granel' + index).select2({
-        dropdownParent: $('#editLoteEnvasado')
+        // Inicializar select2 para el select en la fila recién añadida
+        $('#id_lote_granel' + index).select2({
+          dropdownParent: $('#editLoteEnvasado')
+        });
+      });
+
+      // Mostrar el modal de edición
+      $('#editLoteEnvasado').modal('show');
+    }).fail(function () {
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al obtener los datos del lote envasado',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
       });
     });
-
-    // Mostrar el modal de edición
-    $('#editLoteEnvasado').modal('show');
-  }).fail(function () {
-    Swal.fire({
-      icon: 'error',
-      title: '¡Error!',
-      text: 'Error al obtener los datos del lote envasado',
-      customClass: {
-        confirmButton: 'btn btn-danger'
-      }
-    });
   });
-});
 
-// Agregar nueva fila en la tabla de edición
-$(document).on('click', '.add-row-edit', function () {
-  var newRow = `
+  // Agregar nueva fila en la tabla de edición
+  $(document).on('click', '.add-row-edit', function () {
+    var newRow = `
     <tr>
       <th>
         <button type="button" class="btn btn-danger remove-row">
@@ -854,26 +854,81 @@ $(document).on('click', '.add-row-edit', function () {
     </tr>
   `;
 
-  // Agregar la nueva fila al contenedor de filas
-  $('#edit_contenidoGraneles').append(newRow);
+    // Agregar la nueva fila al contenedor de filas
+    $('#edit_contenidoGraneles').append(newRow);
 
-  // Inicializar select2 para el nuevo select
-  $('#edit_contenidoGraneles').find('.select2-edit').last().select2({
-    dropdownParent: $('#editLoteEnvasado'),
-    width: '100%',
+    // Inicializar select2 para el nuevo select
+    $('#edit_contenidoGraneles').find('.select2-edit').last().select2({
+      dropdownParent: $('#editLoteEnvasado'),
+      width: '100%',
+    });
+
+    // Copiar las opciones del primer select al nuevo select
+    var options = $('#edit_contenidoGraneles tr:first-child .edit_lote_granel').html();
+    $('#edit_contenidoGraneles tr:last-child .edit_lote_granel').html(options);
   });
 
-  // Copiar las opciones del primer select al nuevo select
-  var options = $('#edit_contenidoGraneles tr:first-child .edit_lote_granel').html();
-  $('#edit_contenidoGraneles tr:last-child .edit_lote_granel').html(options);
-});
+  // Eliminar fila de la tabla
+  $(document).on('click', '.remove-row', function () {
+    $(this).closest('tr').remove();
+  });
 
-// Eliminar fila de la tabla
-$(document).on('click', '.remove-row', function () {
-  $(this).closest('tr').remove();
-});
+  //Añadir row
+  $(document).ready(function () {
+    $('.add-row').click(function () {
+      // Verificar si se ha seleccionado un cliente
+      if ($('#id_empresa').val() === '') {
+        // Mostrar la alerta de SweetAlert2
+        Swal.fire({
+          icon: 'warning',
+          title: 'Espere!',
+          text: 'Por favor, selecciona un cliente primero.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          },
+          buttonsStyling: false // Asegura que los estilos personalizados se apliquen
+        });
+        return;
+      }
 
-  
+      // Si el cliente está seleccionado, añade una nueva fila
+      var newRow = `
+          <tr>
+              <th>
+                  <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+              </th>
+              <td>
+                  <select class="id_lote_granel form-control select2-nuevo id_lote_granel" name="id_lote_granel[]">
+                  </select>
+              </td>
+              <td>
+                  <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
+              </td>
+          </tr>`;
+      $('#contenidoGraneles').append(newRow);
+
+      // Re-inicializar select2 en la nueva fila
+      $('#contenidoGraneles')
+        .find('.select2-nuevo')
+        .select2({
+          dropdownParent: $('#addlostesEnvasado'), // Asegúrate de que #myModal sea el id de tu modal
+          width: '100%',
+          dropdownCssClass: 'select2-dropdown'
+        });
+
+      $('.select2-dropdown').css('z-index', 9999);
+
+      // Copiar opciones del primer select al nuevo select
+      var options = $('#contenidoGraneles tr:first-child .id_lote_granel').html();
+      $('#contenidoGraneles tr:last-child .id_lote_granel').html(options);
+    });
+
+    // Función para eliminar una fila
+    $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+    });
+  });
+
 
   //update valiacion: en editar
   const editLoteEnvasadoForm = document.getElementById('editLoteEnvasadoForm');
@@ -998,7 +1053,6 @@ $(document).on('click', '.remove-row', function () {
 
   $(document).on('click', '.edit-reclasificacion', function () {
     var id_lote_envasado = $(this).data('id');
-    alert("entro");
     $('#reclasificacion').modal('show');
     $.get('/lotes-envasado/editSKU/' + id_lote_envasado, function (data) {
       // Rellenar el formulario con los datos obtenidos
@@ -1023,77 +1077,14 @@ $(document).on('click', '.remove-row', function () {
     });
   });
 
-
-
-  //Añadir row
-  $(document).ready(function () {
-    $('.add-row').click(function () {
-      // Verificar si se ha seleccionado un cliente
-      if ($('#id_empresa').val() === '') {
-        // Mostrar la alerta de SweetAlert2
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false // Asegura que los estilos personalizados se apliquen
-        });
-        return;
-      }
-
-      // Si el cliente está seleccionado, añade una nueva fila
-      var newRow = `
-            <tr>
-                <th>
-                    <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
-                </th>
-                <td>
-                    <select class="id_lote_granel form-control select2-nuevo id_lote_granel" name="id_lote_granel[]">
-                    </select>
-                </td>
-                <td>
-                    <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
-                </td>
-            </tr>`;
-      $('#contenidoGraneles').append(newRow);
-
-      // Re-inicializar select2 en la nueva fila
-      $('#contenidoGraneles')
-        .find('.select2-nuevo')
-        .select2({
-          dropdownParent: $('#addlostesEnvasado'), // Asegúrate de que #myModal sea el id de tu modal
-          width: '100%',
-          dropdownCssClass: 'select2-dropdown'
-        });
-
-      $('.select2-dropdown').css('z-index', 9999);
-
-      // Copiar opciones del primer select al nuevo select
-      var options = $('#contenidoGraneles tr:first-child .id_lote_granel').html();
-      $('#contenidoGraneles tr:last-child .id_lote_granel').html(options);
-    });
-
-    // Función para eliminar una fila
-    $(document).on('click', '.remove-row', function () {
-      $(this).closest('tr').remove();
-    });
-  });
-
-
-
-
-  //update valiacion: en editar
+    // Validación del formulario reclasificacion
   const reclasificacionForm = document.getElementById('reclasificacionForm');
-
-  // Validación del formulario
   const fv3 = FormValidation.formValidation(reclasificacionForm, {
     fields: {
       nuevo: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione SKU'
+            message: 'Por ingrese un nuevo SKU'
           }
         }
       },
@@ -1101,6 +1092,16 @@ $(document).on('click', '.remove-row', function () {
         validators: {
           notEmpty: {
             message: 'Por favor introduzca una cantidad'
+          },
+          between: {
+            min: 1,
+            max: Infinity,
+            message: 'El número debe ser superior a 0 y sin negativos'
+          },
+          regexp: {
+            // Expresión regular que asegura que el número no comience con 0 a menos que sea exactamente 0
+            regexp: /^(?!0)\d+$/,
+            message: 'El número no debe comenzar con 0'
           }
         }
       },
@@ -1152,7 +1153,7 @@ $(document).on('click', '.remove-row', function () {
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: 'Error al registrar el lote envasado',
+          text: 'Error al registrar la reclasificacion SKU',
           customClass: {
             confirmButton: 'btn btn-danger'
           }

@@ -703,27 +703,24 @@ $(function () {
     });
   });
 
-  //Ver guias y descargar
-  $(document).on('click', '.ver-registros', function () {
-    var run_folio = $(this).data('id');
+// Ver guías y descargar
+$(document).on('click', '.ver-registros', function () {
+  var run_folio = $(this).data('id');
 
-    $.get('/editGuias/' + run_folio, function (data) {
+  $.get('/editGuias/' + run_folio, function (data) {
       $('#tablita').empty();
 
       // Array para almacenar URLs y nombres de los PDFs
       var pdfFiles = [];
 
-      // Iterar sobre los datos y rellenar la tabla con los datos obtenidos
       data.forEach(function (item) {
-        var razon_social = item.empresa ? item.empresa.razon_social : 'Indefinido';
-        var pdfUrl = '../guia_de_translado/' + item.id_guia;
-        var filename = 'Guia_de_traslado_' + item.folio + '.pdf';
+          var razon_social = item.empresa ? item.empresa.razon_social : 'Indefinido';
+          var pdfUrl = '../guia_de_translado/' + item.id_guia;
+          var filename = 'Guia_de_traslado_' + item.folio + '.pdf';
 
-        // Agregar cada archivo PDF a la lista para el ZIP
-        pdfFiles.push({ url: pdfUrl, filename: filename });
+          pdfFiles.push({ url: pdfUrl, filename: filename });
 
-        // Agregar la fila a la tabla con el icono del PDF
-        var fila = `
+          var fila = `
               <tr>
                   <td>${item.folio}</td>
                   <td>
@@ -736,39 +733,46 @@ $(function () {
                       </i>
                   </td>
                   <td>
-                <button type="button" class="btn btn-info">
-                  <a href="javascript:;" class="edit-record" style="color:#FFF" 
-                    data-id="${item.id_guia}" 
-                    data-bs-toggle="modal" 
-                    data-bs-target="#editGuias">
-                    <i class="ri-book-marked-line"></i> Llenar guia
-                  </a>
-                </button>
-            </td>
+                      <a href="${pdfUrl}" target="_blank" class="open-pdf" rel="noopener noreferrer">
+                          <i class="ri-file-pdf-2-line text-danger ri-40px cursor-pointer"></i>
+                      </a>
+                  </td>
+                  <td>
+                      <button type="button" class="btn btn-info">
+                          <a href="javascript:;" class="edit-record" style="color:#FFF" 
+                              data-id="${item.id_guia}" 
+                              data-bs-toggle="modal" 
+                              data-bs-target="#editGuias">
+                              <i class="ri-book-marked-line"></i> Llenar guia
+                          </a>
+                      </button>
+                  </td>
               </tr>
           `;
-        $('#tablita').append(fila);
+          $('#tablita').append(fila);
       });
+
       $('#verGuiasRegistardas').modal('show');
-      // Evento para descargar todos los PDFs en un archivo ZIP
+
+      // Descargar todos los PDFs en un archivo ZIP
       $('#descargarPdfBtn')
-        .off('click')
-        .on('click', function (e) {
-          e.preventDefault();
-          downloadPdfsAsZip(pdfFiles, `Guias_de_traslado_${run_folio}.zip`);
-        });
-    }).fail(function (jqXHR, textStatus, errorThrown) {
+          .off('click')
+          .on('click', function (e) {
+              e.preventDefault();
+              downloadPdfsAsZip(pdfFiles, `Guias_de_traslado_${run_folio}.zip`);
+          });
+  }).fail(function (jqXHR, textStatus, errorThrown) {
       console.error('Error: ' + textStatus + ' - ' + errorThrown);
       Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al obtener los datos de la guía de traslado',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al obtener los datos de la guía de traslado',
+          customClass: {
+              confirmButton: 'btn btn-danger'
+          }
       });
-    });
   });
+});
 
   // Función para descargar múltiples PDFs en un archivo ZIP
   function downloadPdfsAsZip(pdfFiles, zipFileName) {

@@ -16,7 +16,7 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <select onchange="edit_obtenerDirecciones(); edit_obtenerMarcas(); edit_obtenerGraneles();"
                                     id="edit_cliente" name="edit_cliente" class="select2 form-select" required>
-                                    <option value="">Selecciona cliente</option>
+                                    <option value="" disabled>Selecciona cliente</option>
                                     @foreach ($clientes as $cliente)
                                         <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
                                     @endforeach
@@ -273,3 +273,4 @@
 
     
 </script>
+
