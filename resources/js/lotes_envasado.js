@@ -1084,7 +1084,7 @@ $(function () {
       nuevo: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione SKU'
+            message: 'Por ingrese un nuevo SKU'
           }
         }
       },
@@ -1092,6 +1092,16 @@ $(function () {
         validators: {
           notEmpty: {
             message: 'Por favor introduzca una cantidad'
+          },
+          between: {
+            min: 1,
+            max: Infinity,
+            message: 'El número debe ser superior a 0 y sin negativos'
+          },
+          regexp: {
+            // Expresión regular que asegura que el número no comience con 0 a menos que sea exactamente 0
+            regexp: /^(?!0)\d+$/,
+            message: 'El número no debe comenzar con 0'
           }
         }
       },
@@ -1143,7 +1153,7 @@ $(function () {
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: 'Error al registrar el lote envasado',
+          text: 'Error al registrar la reclasificacion SKU',
           customClass: {
             confirmButton: 'btn btn-danger'
           }
