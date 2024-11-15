@@ -369,33 +369,29 @@ $(function () {
 
   initializeSelect2(select2Elements);
 
-// Reciben los datos del PDF
-$(document).on('click', '.pdf3', function () {
-  var id = $(this).data('id');
-  var registro = $(this).data('registro');
-  var url = $(this).data('url'); // Aquí obtenemos la URL del certificado
-
-  var iframe = $('#pdfViewerDictamen1'); // El iframe donde se muestra el PDF
-
-  // Mostrar el spinner y ocultar el iframe
-  $('#loading-spinner1').show();
-  iframe.hide();
-
-  // Cargar el PDF en el iframe usando la URL
-  iframe.attr('src', url); // Usamos directamente la URL que pasaste en data-url
-  $("#titulo_modal_Dictamen1").text("Certificado de lote a granel");
-  $("#subtitulo_modal_Dictamen1").text(registro);
-
-  // Abrir el modal
-  $('#mostrarPdfDictamen1').modal('show');
-});
-
-// Ocultar el spinner cuando el PDF esté completamente cargado
-$('#pdfViewerDictamen1').on('load', function () {
-  $('#loading-spinner1').hide(); // Ocultar el spinner
-  $(this).show(); // Mostrar el iframe con el PDF
-});
-
+  // Reciben los datos del PDF
+  $(document).on('click', '.pdf3', function () {
+    var id = $(this).data('id');
+    var registro = $(this).data('registro');
+    var url = $(this).data('url'); // Aquí obtenemos la URL del certificado
+    var iframe = $('#pdfViewerDictamen1');
+    var openPdfBtn = $('#openPdfBtnDictamen1');
+    // Mostrar el spinner y ocultar el iframe
+    $('#loading-spinner1').show();
+    iframe.hide();
+    // Cargar el PDF en el iframe usando la URL
+    iframe.attr('src', url);
+    openPdfBtn.attr('href', url);
+    openPdfBtn.show();
+    $("#titulo_modal_Dictamen1").text("Certificado de lote a granel");
+    $("#subtitulo_modal_Dictamen1").text(registro);
+    $('#mostrarPdfDictamen1').modal('show');
+  });
+  // Ocultar el spinner cuando el PDF esté completamente cargado
+  $('#pdfViewerDictamen1').on('load', function () {
+    $('#loading-spinner1').hide(); // Ocultar el spinner
+    $(this).show(); // Mostrar el iframe con el PDF
+  });
 
   // Delete Record
   $(document).on('click', '.delete-record', function () {
@@ -648,37 +644,25 @@ $('#pdfViewerDictamen1').on('load', function () {
     });
 
 
-  // Al cambiar el valor del tipo de lote
-  $('#tipo_lote').change(function() {
-    var tipoLote = $(this).val();
+    // Al cambiar el valor del tipo de lote
+    $('#tipo_lote').change(function () {
+      var tipoLote = $(this).val();
 
-    // Verificar si la opción seleccionada es "Certificación por OC CIDAM"
-    if (tipoLote == '1') {
+      // Verificar si la opción seleccionada es "Certificación por OC CIDAM"
+      if (tipoLote == '1') {
         // Mostrar el campo de guías
         $('#mostrar_guias').removeClass('d-none');
 
         // Cambiar la clase y el id de volumen
         $('#volmen_in').removeClass('col-md-12').addClass('col-md-6').attr('id', 'volmen_in');
-
-        // Validar que las guías sean seleccionadas
-        fv.addField('id_guia[]', {
-            validators: {
-                notEmpty: {
-                    message: 'Por favor selecciona al menos una guía'
-                }
-            }
-        });
-    } else {
+      } else {
         // Ocultar el campo de guías
         $('#mostrar_guias').addClass('d-none');
 
         // Restaurar la clase y el id de volumen
         $('#volmen_in').removeClass('col-md-6').addClass('col-md-12').attr('id', 'volmen_in');
-
-        // Eliminar la validación de las guías
-        fv.removeField('id_guia[]');
-    }
-});
+      }
+    });
 
 
     const addNewLote = document.getElementById('loteForm');
@@ -847,15 +831,6 @@ $('#pdfViewerDictamen1').on('load', function () {
         edit_mostrarGuias.classList.remove('d-none');
         edit_volumenIn.classList.remove('col-md-12');
         edit_volumenIn.classList.add('col-md-6');
-
-        // Agregar la validación de las guías
-        fv.addField('id_guia[]', {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione al menos un folio de guía'
-            }
-          }
-        });
       }
       // Si el lote es certificado por otro organismo (Tipo 2)
       else if (selectedValue === '2') {
@@ -867,9 +842,6 @@ $('#pdfViewerDictamen1').on('load', function () {
         edit_mostrarGuias.classList.add('d-none');
         edit_volumenIn.classList.remove('col-md-6');
         edit_volumenIn.classList.add('col-md-12');
-
-        // Eliminar la validación de las guías
-        fv.removeField('id_guia[]');
       }
       // Si no hay tipo de lote seleccionado
       else {
@@ -879,19 +851,16 @@ $('#pdfViewerDictamen1').on('load', function () {
         edit_mostrarGuias.classList.add('d-none');
         edit_volumenIn.classList.remove('col-md-12');
         edit_volumenIn.classList.add('col-md-6');
-
-        // Eliminar la validación de las guías en caso de que no se seleccione un tipo de lote
-        fv.removeField('id_guia[]');
       }
     }
 
     var rowIndex = 0;
 
-// Inicializa rowIndex solo cuando es necesario, y no en cada acción
-function inicializarRowIndex() {
-  // Contamos las filas actuales para inicializar el índice
-  rowIndex = $('#contenidoGranelesEdit').children('tr').length;
-}
+    // Inicializa rowIndex solo cuando es necesario, y no en cada acción
+    function inicializarRowIndex() {
+      // Contamos las filas actuales para inicializar el índice
+      rowIndex = $('#contenidoGranelesEdit').children('tr').length;
+    }
 
 
     $(document).on('click', '.edit-record', function () {
@@ -945,32 +914,26 @@ function inicializarRowIndex() {
                 // Incrementa el índice global después de agregar la fila
                 rowIndex++;
               });
-
               $('#editLotesGranel').removeClass('d-none');
             } else {
               $('#editLotesGranel').addClass('d-none');
             }
-
             // Rellenar el modal con los datos del lote
             $('#edit_nombre_lote').val(lote.nombre_lote);
             $('#edit_id_empresa').val(lote.id_empresa).trigger('change');
             $('#edit_tipo_lote').val(lote.tipo_lote);
-            // Agrega manualmente las opciones usando los folios como el texto visible
-
             // Asigna los valores seleccionados (solo IDs)
             var guiasIds = guias.map(function (guia) { return guia.id; });
             $('#edit_id_guia').val(guiasIds).trigger('change');
-
             $('#edit_volumen').val(lote.volumen);
             $('#edit_cont_alc').val(lote.cont_alc);
             $('#edit_id_categoria').val(lote.id_categoria).trigger('change');
             $('#edit_clase_agave').val(lote.id_clase).trigger('change');
-             // Si es un array, asegúrate de usar `.val()` con un array de valores
             // Cargar las opciones estáticas (de $tipos)
             $.each(tipos, function (index, tipo) {
               var option = new Option(tipo.nombre, tipo.id_tipo);
               $('#edit_tipo_agave').append(option);
-          });
+            });
             // Asignar las opciones seleccionadas del lote
             $('#edit_tipo_agave').val(data.id_tipo).trigger('change');
             // Mostrar campos condicionales
@@ -979,18 +942,13 @@ function inicializarRowIndex() {
               $('#edit_otro_organismo_fields').addClass('d-none');
               $('#edit_ingredientes').val(lote.ingredientes);
               $('#edit_edad').val(lote.edad);
-
               // Mostrar las guías solo si el lote es CIDAM
               $('#edit_mostrar_guias').removeClass('d-none');
               $('#edit_volumen_in').removeClass('col-md-12').addClass('col-md-6');
-
               // Añadir guías al campo select de guías
               guias.forEach(function (guia) {
                 $('#edit_id_guia').append(new Option(guia.folio, guia.id));
               });
-
-              // Agregar validación para guías si es necesario
-
             } else if (lote.tipo_lote == '2') {
               $('#edit_otro_organismo_fields').removeClass('d-none');
               $('#edit_oc_cidam_fields').addClass('d-none');
@@ -999,15 +957,11 @@ function inicializarRowIndex() {
               $('#edit_fecha_emision').val(lote.fecha_emision);
               $('#edit_fecha_vigencia').val(lote.fecha_vigencia);
 
-                // Ocultar el campo de las guías si es tipo 2
-                  $('#edit_mostrar_guias').addClass('d-none');
-                  $('#edit_volumen_in').removeClass('col-md-6').addClass('col-md-12');
-
-                  // Eliminar las opciones de guías si es tipo 2
-                  $('#edit_id_guia').empty();
-
-                  // Eliminar validación de guías si es tipo 2
-
+              // Ocultar el campo de las guías si es tipo 2
+              $('#edit_mostrar_guias').addClass('d-none');
+              $('#edit_volumen_in').removeClass('col-md-6').addClass('col-md-12');
+              // Eliminar las opciones de guías si es tipo 2
+              $('#edit_id_guia').empty();
               // Mostrar enlace al archivo PDF si está disponible
               var archivoDisponible = false;
               var documentos = data.documentos;
@@ -1026,52 +980,66 @@ function inicializarRowIndex() {
               $('#edit_otro_organismo_fields').addClass('d-none');
             }
 
-            // Actualizar la tabla de documentos
-            var documentos = data.documentos;
-            if (documentos && documentos.length > 0) {
-              var documentoCompletoUrlAsignado = false; // Variable para controlar la asignación del documento completo
-              var documentoAjusteUrlAsignado = false;   // Variable para controlar la asignación del documento de ajuste
-              var ultimoDocumentoCompletoId = null;     // Variable para almacenar el último ID de documento completo
-              var ultimoDocumentoAjusteId = null;       // Variable para almacenar el último ID de documento de ajuste
+        // Actualizar la tabla de documentos
+        var documentos = data.documentos;
+        if (documentos && documentos.length > 0) {
+          var documentoCompletoUrlAsignado = false; // Variable para controlar la asignación del documento completo
+          var documentoAjusteUrlAsignado = false;   // Variable para controlar la asignación del documento de ajuste
+          var ultimoDocumentoCompletoId = null;     // Variable para almacenar el último ID de documento completo
+          var ultimoDocumentoAjusteId = null;       // Variable para almacenar el último ID de documento de ajuste
+  // Limpiar previamente los mensajes y valores en el modal antes de asignar nuevos documentos
+        documentos.forEach(function (documento) {
+          $('#archivo_url_display_completo_' + documento.id_documento).html(''); // Limpiar mensaje de "No hay archivo disponible"
+          $('#archivo_url_display_ajuste_' + documento.id_documento).html(''); // Limpiar mensaje de "No hay archivo disponible"
+          $('#folio_fq_completo_' + documento.id_documento).val(''); // Limpiar campo de folio completo
+          $('#folio_fq_ajuste_' + documento.id_documento).val(''); // Limpiar campo de folio ajuste
+        });
 
-              documentos.forEach(function (documento) {
-                var archivoUrlDisplayCompleto = $('#archivo_url_display_completo_' + documento.id_documento);
-                var archivoUrlDisplayAjuste = $('#archivo_url_display_ajuste_' + documento.id_documento);
-                var folioFqCompletoInput = $('#folio_fq_completo_' + documento.id_documento);
-                var folioFqAjusteInput = $('#folio_fq_ajuste_' + documento.id_documento);
+        documentos.forEach(function (documento) {
+          var archivoUrlDisplayCompleto = $('#archivo_url_display_completo_' + documento.id_documento);
+          var archivoUrlDisplayAjuste = $('#archivo_url_display_ajuste_' + documento.id_documento);
+          var folioFqCompletoInput = $('#folio_fq_completo_' + documento.id_documento);
+          var folioFqAjusteInput = $('#folio_fq_ajuste_' + documento.id_documento);
 
-                // Mostrar el documento completo
-                if (documento.tipo.includes('Análisis completo') && documento.url && !documentoCompletoUrlAsignado) {
-                  var fileNameCompleto = documento.url.split('/').pop();
-                  archivoUrlDisplayCompleto.html('Documento completo disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameCompleto + '</a>');
-                  folioFqCompletoInput.val(documento.nombre);
-                  documentoCompletoUrlAsignado = true; // Marcar como asignado
-                  ultimoDocumentoCompletoId = documento.id_documento; // Guardar el ID
-                }
+          var nombreExtraido = documento.nombre.split('-').pop().trim();
 
-                // Mostrar el documento de ajuste
-                if (documento.tipo.includes('Ajuste de grado') && documento.url && !documentoAjusteUrlAsignado) {
-                  var fileNameAjuste = documento.url.split('/').pop();
-                  archivoUrlDisplayAjuste.html('Documento ajuste disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameAjuste + '</a>');
-                  folioFqAjusteInput.val(documento.nombre);
-                  documentoAjusteUrlAsignado = true; // Marcar como asignado
-                  ultimoDocumentoAjusteId = documento.id_documento; // Guardar el ID
+          // Mostrar el documento completo
+          if (documento.tipo.includes('Análisis completo') && documento.url && !documentoCompletoUrlAsignado) {
+            var fileNameCompleto = documento.url.split('/').pop();
+            archivoUrlDisplayCompleto.html('Documento completo disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameCompleto + '</a>');
+            folioFqCompletoInput.val(nombreExtraido);
+            documentoCompletoUrlAsignado = true; // Marcar como asignado
+            ultimoDocumentoCompletoId = documento.id_documento; // Guardar el ID
+          }
 
-                }
-              });
+          // Mostrar el documento de ajuste
+          if (documento.tipo.includes('Ajuste de grado') && documento.url && !documentoAjusteUrlAsignado) {
+            var fileNameAjuste = documento.url.split('/').pop();
+            archivoUrlDisplayAjuste.html('Documento ajuste disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameAjuste + '</a>');
+            folioFqAjusteInput.val(nombreExtraido);
+            documentoAjusteUrlAsignado = true; // Marcar como asignado
+            ultimoDocumentoAjusteId = documento.id_documento; // Guardar el ID
+          }
+        });
 
-              // Si no se asignó un documento completo, mostrar un mensaje
-              if (!documentoCompletoUrlAsignado && ultimoDocumentoCompletoId !== null) {
-                $('#archivo_url_display_completo_' + ultimoDocumentoCompletoId).html('No hay archivo completo disponible.');
+        // Si no se asignó un documento completo, mostrar un mensaje
+        if (!documentoCompletoUrlAsignado && ultimoDocumentoCompletoId !== null) {
+          console.log('Mostrando mensaje de "No hay archivo completo disponible" para el ID: ', ultimoDocumentoCompletoId);
+          $('#archivo_url_display_completo_' + ultimoDocumentoCompletoId).html('No hay archivo completo disponible.');
+        }
 
-              }
-              // Si no se asignó un documento de ajuste, mostrar un mensaje
-              if (!documentoAjusteUrlAsignado && ultimoDocumentoAjusteId !== null) {
-                $('#archivo_url_display_ajuste_' + ultimoDocumentoAjusteId).html('No hay archivo de ajuste disponible.');
-              }
-            } else {
-              console.log('No hay documentos disponibles.');
-            }
+        // Si no se asignó un documento de ajuste, mostrar un mensaje
+        if (!documentoAjusteUrlAsignado && ultimoDocumentoAjusteId !== null) {
+          console.log('Mostrando mensaje de "No hay archivo de ajuste disponible" para el ID: ', ultimoDocumentoAjusteId);
+          $('#archivo_url_display_ajuste_' + ultimoDocumentoAjusteId).html('No hay archivo de ajuste disponible.');
+          $('input[id^="folio_fq_completo_"]').val(''); // Limpiar todos los inputs de folio completo
+          $('input[id^="folio_fq_ajuste_"]').val('');   // Limpiar todos los inputs de folio ajuste
+        }
+
+      } else {
+        console.log('No hay documentos disponibles.');
+        $('td[id^="archivo_url_display_"]').html('No hay documentos disponibles.');
+      }
 
             // Mostrar el modal
             $('#offcanvasEditLote').modal('show');
@@ -1180,7 +1148,7 @@ function inicializarRowIndex() {
 
 
     // Cargar lotes en los selects dentro de filas en modo edición
-// Cargar lotes en los selects dentro de filas en modo edición
+    // Cargar lotes en los selects dentro de filas en modo edición
     function cargarLotesEnSelectEdit() {
       $('.id_lote_granel').each(function () {
         var $select = $(this);
@@ -1338,11 +1306,11 @@ function inicializarRowIndex() {
       fv.revalidateField($(this).attr('name'));
     });
 
-// Inicializar la página con los valores correctos
-document.addEventListener('DOMContentLoaded', updateFieldsAndValidation);
+    // Inicializar la página con los valores correctos
+    document.addEventListener('DOMContentLoaded', updateFieldsAndValidation);
 
-// Añadir el listener para el cambio en el tipo de lote
-edit_tipoLoteSelect.addEventListener('change', updateFieldsAndValidation);
+    // Añadir el listener para el cambio en el tipo de lote
+    edit_tipoLoteSelect.addEventListener('change', updateFieldsAndValidation);
 
   });
 

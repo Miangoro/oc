@@ -478,6 +478,8 @@ class lotesGranelController extends Controller
           // Decodificar el campo JSON solo si no es nulo o vacío
           $lote_original_data = $lote->lote_original_id ? json_decode($lote->lote_original_id, true) : null;
 
+
+
           if ($lote_original_data && isset($lote_original_data['lotes']) && is_array($lote_original_data['lotes'])) {
               $lotes = $lote_original_data['lotes'];
               $volumenes = $lote_original_data['volumenes'];
@@ -497,6 +499,8 @@ class lotesGranelController extends Controller
             // Decodificar `id_tipo` si es JSON válido, o inicializarlo como array vacío
             $idTipoArray = $lote->id_tipo ? json_decode($lote->id_tipo, true) : [];
             $tipos = tipos::all();
+
+
             return response()->json([
                 'success' => true,
                 'lote' => $lote,

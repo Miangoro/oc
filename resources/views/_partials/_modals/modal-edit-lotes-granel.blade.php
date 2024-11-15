@@ -141,7 +141,8 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
-                                    <select id="edit_tipo_agave" name="id_tipo[]" class="select2 form-select" multiple>
+                                    <select id="edit_tipo_agave" name="id_tipo[]" class="select2 form-select"
+                                        multiple>
                                         @foreach ($tipos as $tipo)
                                             <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
                                         @endforeach
@@ -185,7 +186,7 @@
                                     <!-- Primer bloque para Análisis completo -->
                                     <tr id="documento-row-{{ $documento->id_documento }}">
                                         <td>
-                                          <span>Análisis completo</span>
+                                            <span>Análisis completo</span>
                                             <input hidden readonly value="Análisis completo" type="text"
                                                 class="form-control form-control-sm"
                                                 id="tipo_analisis_{{ $documento->id_documento }}"
@@ -216,7 +217,7 @@
                                     <!-- Segundo bloque para Ajuste de grado -->
                                     <tr id="documento-row-{{ $documento->id_documento }}-2">
                                         <td>
-                                          <span>Ajuste de grado</span>
+                                            <span>Ajuste de grado</span>
                                             <input hidden readonly value="Ajuste de grado" type="text"
                                                 class="form-control form-control-sm"
                                                 id="tipo_analisis_{{ $documento->id_documento }}-2"
@@ -234,7 +235,7 @@
                                             <input value="{{ $documento->id_documento }}" class="form-control"
                                                 type="hidden" name="id_documento[]">
                                             <input value="{{ $documento->nombre }}" class="form-control"
-                                                type="hidden" name="nombre_documento[]">
+                                                type="hidden" name="nombre_documento[]" >
                                         </td>
                                     </tr>
                                     <tr>
@@ -255,17 +256,19 @@
                     <div id="edit_otro_organismo_fields" class="section d-none">
                         <h6>Certificado por otro organismo</h6>
                         <div class="row">
-                          <div class="col-md-12">
-                              <div class="form-floating form-floating-outline mb-4">
-                                  <input type="file" id="edit_certificado_lote" name="url[]"
-                                      class="form-control" />
-                                  <label for="edit_certificado_lote">Adjuntar certificado de lote a granel</label>
-                                  <input value="59" class="form-control" type="hidden" name="id_documento[]"> <!-- ID del documento -->
-                                  <input value="Certificado de lote a granel" class="form-control" type="hidden" name="nombre_documento[]"> <!-- Nombre del documento -->
-                              </div>
-                              <div id="archivo_url_display_otro_organismo" class="mb-4"></div>
-                          </div>
-                      </div>
+                            <div class="col-md-12">
+                                <div class="form-floating form-floating-outline mb-4">
+                                    <input type="file" id="edit_certificado_lote" name="url[]"
+                                        class="form-control" />
+                                    <label for="edit_certificado_lote">Adjuntar certificado de lote a granel</label>
+                                    <input value="59" class="form-control" type="hidden" name="id_documento[]">
+                                    <!-- ID del documento -->
+                                    <input value="Certificado de lote a granel" class="form-control" type="hidden"
+                                        name="nombre_documento[]"> <!-- Nombre del documento -->
+                                </div>
+                                <div id="archivo_url_display_otro_organismo" class="mb-4"></div>
+                            </div>
+                        </div>
 
                         <div class="row">
                             <div class="col-md-6">
@@ -283,7 +286,8 @@
                                         <option value="" disabled selected>Selecciona el organismo de
                                             certificación</option>
                                         @foreach ($organismos as $organismo)
-                                            <option value="{{ $organismo->id_organismo }}">{{ $organismo->organismo }}
+                                            <option value="{{ $organismo->id_organismo }}">
+                                                {{ $organismo->organismo }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -321,115 +325,117 @@
 </div>
 
 <script>
-   function obtenerGuias1() {
-    var empresa = $("#edit_id_empresa").val();
-    // Verifica si el valor de empresa es válido
-    if (!empresa) {
-        return; // No hacer la petición si el valor es inválido
-    }
+    function obtenerGuias1() {
+        var empresa = $("#edit_id_empresa").val();
+        // Verifica si el valor de empresa es válido
+        if (!empresa) {
+            return; // No hacer la petición si el valor es inválido
+        }
 
-    // Guardar los valores seleccionados previamente
-    var selectedValues = $('#edit_id_guia').val() || [];
+        // Guardar los valores seleccionados previamente
+        var selectedValues = $('#edit_id_guia').val() || [];
 
-    // Hacer una petición AJAX para obtener los detalles de la empresa
-    $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function(response) {
-            var $select = $('#edit_id_guia');
+        // Hacer una petición AJAX para obtener los detalles de la empresa
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var $select = $('#edit_id_guia');
 
-            // Guardar las selecciones actuales antes de vaciar el select
-            var selectedGuiaValues = $select.val() || [];
+                // Guardar las selecciones actuales antes de vaciar el select
+                var selectedGuiaValues = $select.val() || [];
 
-            // Limpiar completamente el select antes de agregar las nuevas opciones
-            $select.empty();
+                // Limpiar completamente el select antes de agregar las nuevas opciones
+                $select.empty();
 
-            if (response.guias.length > 0) {
-                // Añadir nuevas opciones con las guías obtenidas
-                response.guias.forEach(function(guia) {
-                    var isSelected = selectedGuiaValues.includes(guia.id_guia.toString());
-                    $select.append(new Option(guia.folio, guia.id_guia, false, isSelected));
-                });
-
-                // Restaurar los valores seleccionados previamente si siguen siendo válidos
-                if (selectedGuiaValues.length > 0) {
-                    var validSelectedGuiaValues = selectedGuiaValues.filter(function(value) {
-                        return response.guias.some(function(guia) {
-                            return guia.id_guia == value;
-                        });
+                if (response.guias.length > 0) {
+                    // Añadir nuevas opciones con las guías obtenidas
+                    response.guias.forEach(function(guia) {
+                        var isSelected = selectedGuiaValues.includes(guia.id_guia.toString());
+                        $select.append(new Option(guia.folio, guia.id_guia, false, isSelected));
                     });
 
-                    if (validSelectedGuiaValues.length > 0) {
-                        $select.val(validSelectedGuiaValues).trigger('change');
-                    }
-                }
-            } else {
-                // Mostrar opción "Sin guías registradas" si no hay guías
-                $select.append('<option value="" disabled selected>Sin guías registradas</option>');
-            }
+                    // Restaurar los valores seleccionados previamente si siguen siendo válidos
+                    if (selectedGuiaValues.length > 0) {
+                        var validSelectedGuiaValues = selectedGuiaValues.filter(function(value) {
+                            return response.guias.some(function(guia) {
+                                return guia.id_guia == value;
+                            });
+                        });
 
-            // Asegurarse de que select2 esté inicializado
-            if (!$select.hasClass('select2-hidden-accessible')) {
-                $select.select2(); // Re-inicializar Select2 si no está inicializado
-            } else {
-                $select.trigger('change'); // Forzar el cambio si ya está inicializado
+                        if (validSelectedGuiaValues.length > 0) {
+                            $select.val(validSelectedGuiaValues).trigger('change');
+                        }
+                    }
+                } else {
+                    // Mostrar opción "Sin guías registradas" si no hay guías
+                    $select.append('<option value="" disabled selected>Sin guías registradas</option>');
+                }
+
+                // Asegurarse de que select2 esté inicializado
+                if (!$select.hasClass('select2-hidden-accessible')) {
+                    $select.select2(); // Re-inicializar Select2 si no está inicializado
+                } else {
+                    $select.trigger('change'); // Forzar el cambio si ya está inicializado
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error al cargar las guías:', error);
+                alert('Error al cargar las guías. Por favor, intenta nuevamente.');
             }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error al cargar las guías:', error);
-            alert('Error al cargar las guías. Por favor, intenta nuevamente.');
-        }
-    });
-}
+        });
+    }
 
 
 
     function obtenerLotesEdit() {
-    var empresa = $("#edit_id_empresa").val();
+        var empresa = $("#edit_id_empresa").val();
 
-    // Verifica si el valor de empresa es válido
-    if (!empresa) {
-        return; // No hacer la petición si el valor es inválido
-    }
-
-    // Hacer una petición AJAX para obtener los detalles de la empresa
-    $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function(response) {
-            var $selectLotesEdit = $('.id_lote_granel');
-
-            // Guardar las selecciones actuales antes de vaciar los selects
-            var selectedLotes = [];
-            $selectLotesEdit.each(function() {
-                selectedLotes.push($(this).val()); // Guardar el valor seleccionado en cada select
-            });
-
-            // Limpiar completamente los select antes de agregar las nuevas opciones
-            $selectLotesEdit.each(function(index) {
-                $(this).empty(); // Vaciar las opciones actuales
-
-                if (response.lotes_granel.length > 0) {
-                    // Añadir nuevas opciones con los lotes obtenidos
-                    response.lotes_granel.forEach(function(lote) {
-                        var isSelected = selectedLotes[index] == lote.id_lote_granel;
-                        $(this).append(new Option(lote.nombre_lote, lote.id_lote_granel, false, isSelected));
-                    }, this); // Usar 'this' para referirse al select actual
-
-                } else {
-                    // Mostrar opción "Sin lotes registrados" si no hay lotes
-                    $(this).append('<option value="" disabled selected>Sin lotes registrados</option>');
-                }
-
-                // Restaurar la selección anterior
-                $(this).val(selectedLotes[index]).trigger('change');
-            });
-        },
-        error: function(xhr, status, error) {
-            console.error('Error al cargar los lotes:', error);
-            alert('Error al cargar los lotes. Por favor, intenta nuevamente.');
+        // Verifica si el valor de empresa es válido
+        if (!empresa) {
+            return; // No hacer la petición si el valor es inválido
         }
-    });
-}
 
+        // Hacer una petición AJAX para obtener los detalles de la empresa
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var $selectLotesEdit = $('.id_lote_granel');
+
+                // Guardar las selecciones actuales antes de vaciar los selects
+                var selectedLotes = [];
+                $selectLotesEdit.each(function() {
+                    selectedLotes.push($(this)
+                .val()); // Guardar el valor seleccionado en cada select
+                });
+
+                // Limpiar completamente los select antes de agregar las nuevas opciones
+                $selectLotesEdit.each(function(index) {
+                    $(this).empty(); // Vaciar las opciones actuales
+
+                    if (response.lotes_granel.length > 0) {
+                        // Añadir nuevas opciones con los lotes obtenidos
+                        response.lotes_granel.forEach(function(lote) {
+                            var isSelected = selectedLotes[index] == lote.id_lote_granel;
+                            $(this).append(new Option(lote.nombre_lote, lote.id_lote_granel,
+                                false, isSelected));
+                        }, this); // Usar 'this' para referirse al select actual
+
+                    } else {
+                        // Mostrar opción "Sin lotes registrados" si no hay lotes
+                        $(this).append(
+                            '<option value="" disabled selected>Sin lotes registrados</option>');
+                    }
+
+                    // Restaurar la selección anterior
+                    $(this).val(selectedLotes[index]).trigger('change');
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error al cargar los lotes:', error);
+                alert('Error al cargar los lotes. Por favor, intenta nuevamente.');
+            }
+        });
+    }
 </script>
