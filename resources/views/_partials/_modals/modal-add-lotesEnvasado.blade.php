@@ -54,23 +54,20 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="number" placeholder="Ingrese un valor"
                                     id="cantidad_botellas" name="cant_botellas" min="1" required />
                                 <label for="cantidad_botellas">Cantidad de botellas</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="number" placeholder="Presentación de la botella"
                                     id="presentacion" name="presentacion" min="1" />
                                 <label for="presentacion">Presentación de la botella</label>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class=" form-select" id="unidad" name="unidad" aria-label="Unidad">
@@ -81,6 +78,9 @@
                                 <label for="unidad">Unidad</label>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control" type="number" step="0.01" placeholder="Volumen total"
@@ -88,14 +88,27 @@
                                 <label for="volumen_total">Volumen total en Litros</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                       <!-- <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class="select2 form-select id_instalacion" id="lugar_envasado"
                                     name="lugar_envasado" aria-label="Default select example">
                                 </select>
                                 <label for="lugar_envasado">Lugar de envasado</label>
                             </div>
+                        </div>-->
+                        <div class="col-md-8 mb-6">
+                            <div class="input-group">
+                                <select placeholder="Selecciona el cliente" class="form-select id_instalacion" id="lugar_envasado"
+                                    name="lugar_envasado" aria-label="Default select example">
+                                    <option value="" disabled selected>Seleccione un cliente</option>
+                                </select>
+                                <a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect" type="button"><i class="ri-add-circle-fill"></i> Registrar instalación de envasado</a>
+                              </div>
                         </div>
+                    </div>
+
+                    <div class="row">
+                        
                     </div>
 
                     <div id="datosOpcion2">
@@ -159,6 +172,7 @@
                 volumenTotal = ''; // Limpiar el campo si la unidad no es Litros ni Mililitros
             }
             document.getElementById('volumen_total').value = volumenTotal ? volumenTotal.toFixed(2) : '';
+            document.getElementById('volumen_parcial').value = volumenTotal ? volumenTotal.toFixed(2) : '';
         }
         document.getElementById('cantidad_botellas').addEventListener('input', calcularVolumenTotal);
         document.getElementById('presentacion').addEventListener('input', calcularVolumenTotal);

@@ -547,15 +547,15 @@ $(function () {
         success: function (response) {
           var contenido = "";
           for (let index = 0; index < response.instalaciones.length; index++) {
-            if (response.instalaciones[index].tipo === 'envasadora' || response.instalaciones[index]
-              .tipo === 'Envasadora') {
-              contenido += '<option value="' + response.instalaciones[index].id_instalacion +
-                '">' +
-                response.instalaciones[index].direccion_completa + '</option>';
+            // Verifica si la palabra 'Envasadora' está en la cadena
+            if (response.instalaciones[index].tipo.includes('Envasadora')) {
+                contenido += '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                    response.instalaciones[index].direccion_completa + '</option>';
             }
-          }
+        }
+        
           if (contenido === "") {
-            contenido = '<option value="">Sin lotes a granel registrados</option>';
+            contenido = '<option value="">Sin instalaciones de envasado registrados</option>';
           }
           $('.id_instalacion').html(contenido);
           fv.revalidateField('lugar_envasado');

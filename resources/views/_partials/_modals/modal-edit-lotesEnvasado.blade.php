@@ -64,23 +64,20 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <input class="form-control" type="number" placeholder="Ingrese un valor"
                                         id="edit_cant_botellas" name="edit_cant_botellas" min="0" />
                                     <label for="cantidad_botellas">Cantidad de botellas</label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <input class="form-control" type="number" placeholder="Presentación de la botella"
                                         id="edit_presentacion" name="edit_presentacion" min="0" />
                                     <label for="edit_presentacion">Presentación de la botella</label>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="row">
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <select class=" form-select" id="edit_unidad" name="edit_unidad"
@@ -92,6 +89,9 @@
                                     <label for="edit_unidad">Unidad</label>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <input class="form-control" type="number" step="0.01"
@@ -99,7 +99,7 @@
                                     <label for="edit_volumen_total">Volumen total</label>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                           <!-- <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <select class="select2 form-select edit_Instalaciones" id="edit_Instalaciones"
                                         name="edit_Instalaciones" aria-label="Default select example">
@@ -111,6 +111,15 @@
                                     </select>
                                     <label for="edit_Instalaciones">Lugar de envasado</label>
                                 </div>
+                            </div>-->
+                            <div class="col-md-8 mb-6">
+                                <div class="input-group">
+                                    <select placeholder="Selecciona el cliente" class="form-select edit_Instalaciones" id="edit_Instalaciones"
+                                        name="edit_Instalaciones" aria-label="Default select example">
+                                        <option value="" disabled selected>Seleccione un cliente</option>
+                                    </select>
+                                    <a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect" type="button"><i class="ri-add-circle-fill"></i> Registrar instalación de envasado</a>
+                                  </div>
                             </div>
                         </div>
 
