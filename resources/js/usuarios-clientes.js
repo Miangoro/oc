@@ -517,7 +517,7 @@ $(function () {
       id_empresa: {
         validators: {
           notEmpty: {
-            message: 'Please enter your email'
+            message: 'Por favor selecciona un cliente'
           }
         }
       }
