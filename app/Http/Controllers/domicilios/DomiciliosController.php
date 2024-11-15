@@ -61,7 +61,7 @@ class DomiciliosController extends Controller
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
-                })->where(function ($query) {
+                })->Orwhere(function ($query) {
                     $query->whereHas('documentos', function ($query) {
                         $query->whereIn('id_documento', [127, 128, 129]);
                     })
@@ -76,7 +76,7 @@ class DomiciliosController extends Controller
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
-                })->where(function ($query) {
+                })->Orwhere(function ($query) {
                     $query->whereHas('documentos', function ($query) {
                         $query->whereIn('id_documento', [127, 128, 129]);
                     })

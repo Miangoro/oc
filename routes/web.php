@@ -829,11 +829,8 @@ Route::resource('certificados/granel-list',Certificado_GranelController::class);
 Route::post('/certificados', [Certificado_GranelController::class, 'store']);
 Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCertificado'])->name('Pre-certificado');
 
-<<<<<<< HEAD
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
-=======
 
 
 //Eliminar Cliente Confirmado
 Route::delete('clientes-list/{id_empresa}', [clientesConfirmadosController::class, 'destroy'])->name('');
->>>>>>> 4551a89c795794824fc47f09b8a1bb9bef993233
