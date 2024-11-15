@@ -502,15 +502,16 @@ $(function () {
         validators: {
           notEmpty: {
             message: 'Por favor introduce un número de teléfono'
-          }
-        },stringLength: {
+          },
+        stringLength: {
           min: 10,
           max: 15,
           message: 'El teléfono debe tener entre 10 y 15 caracteres (incluidos espacios y otros caracteres)'
-        },
+          },
         regexp: {
           regexp: /^[0-9\s\-\(\)]+$/,
           message: 'El teléfono debe contener solo números, espacios, guiones y paréntesis'
+          }
         }
       },
       id_empresa: {
