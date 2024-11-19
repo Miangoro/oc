@@ -617,59 +617,18 @@ $(function () {
                   </div>
               </td>
           </tr>`;
-
       // Agregar la nueva sección al contenedor correspondiente (al final)
       $(container).append(newSection);
-
       // Inicializar Select2 en los nuevos campos
       $(container).find('.select2').select2();
       // Inicializar los elementos select2
       var select2Elements = $('.select2');
       initializeSelect2(select2Elements);
 
-      // Añadir validación a los nuevos campos
-      fv.addField('id_tipo[]', {
-        validators: {
-          notEmpty: {
-            message: 'Por favor selecciona el tipo de agave/maguey'
-          }
-        }
-      });
-      fv.addField('numero_plantas[]', {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingresa el número de plantas'
-          },
-          numeric: {
-            message: 'Por favor ingresa un valor numérico válido'
-          }
-        }
-      });
-      fv.addField('edad_plantacion[]', {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingresa la edad de la plantación'
-          },
-          numeric: {
-            message: 'Por favor ingresa un valor numérico válido'
-          }
-        }
-      });
-      fv.addField('tipo_plantacion[]', {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingresa el tipo de plantación'
-          }
-        }
-      });
-
       // Habilitar el botón de eliminación para las nuevas filas
       if ($(container).find('.plantacion-row').length > 1) {
         $(container).find('.remove-row-plantacion').not(':first').prop('disabled', false);
       }
-
-      // Revalidar el formulario completo para asegurar que todos los campos sean validados
-      fv.validate();
     }
 
     // Evento para agregar filas de plantación (para agregar, editar e inspección)
@@ -684,9 +643,7 @@ $(function () {
       } else if (isInspeccion) {
         container = containerInspeccion;
       }
-
       addRow(container);
-      fv.revalidateField('edad_plantacion[]');
     });
 
     // Evento para eliminar filas de plantación
@@ -702,9 +659,6 @@ $(function () {
       if (container.find('.plantacion-row').length <= 1) {
         container.find('.remove-row-plantacion').prop('disabled', true);
       }
-
-      // Revalidar el formulario después de eliminar
-      fv.validate();
     });
 
     // Deshabilitar el botón de eliminación en la primera fila de cada contenedor
@@ -745,29 +699,6 @@ $(function () {
                 </td>
             </tr>`;
       body.insertAdjacentHTML('beforeend', newRow);
-
-      // Añadir validación a los nuevos campos
-      fv.addField('latitud[]', {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingresa la latitud'
-          },
-          numeric: {
-            message: 'Por favor ingresa un valor numérico válido para la latitud'
-          }
-        }
-      });
-      fv.addField('longitud[]', {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingresa la longitud'
-          },
-          numeric: {
-            message: 'Por favor ingresa un valor numérico válido para la longitud'
-          }
-        }
-      });
-
       updateRemoveButtonState(body);
     }
 
@@ -809,10 +740,8 @@ $(function () {
     else {
       // Quitar validaciones antes de limpiar los campos
       $(coordenadasBody).find('input[name="latitud[]"]').each(function() {
-          fv.removeField($(this).attr('name'));
       });
       $(coordenadasBody).find('input[name="longitud[]"]').each(function() {
-          fv.removeField($(this).attr('name'));
       });
 
       coordenadasDiv.classList.add('d-none');
