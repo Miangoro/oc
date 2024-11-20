@@ -123,6 +123,7 @@
                         alt=""></span>
                 <!--<span class="app-brand-text demo text-heading fw-semibold">{{ config('variables.templateName') }}</span>-->
             </a>
+            <!-- /Logo -->
             <div class="authentication-inner row m-0">
                 <!-- /Left Section -->
                 <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center justify-content-center p-12 pb-2">
@@ -131,12 +132,16 @@
                         Tu navegador no soporta el formato de video
                     </video>
                 </div>
+                <!-- /Left Section -->
+    
+                <!-- Login -->
                 <div
                     class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-sm-12 px-12 py-6">
                     <div class="w-px-400 mx-auto pt-5 pt-lg-0">
                         <img height="150px" src="{{ asset('assets/img/branding/logo.png') }}" alt="">
                         <h4 class="mb-1">Bienvenido a {{ config('variables.templateName') }} </h4>
                         <p class="mb-5">Por favor, inicie sesión</p>
+    
                         @if (session('status'))
                             <div class="alert alert-success mb-3" role="alert">
                                 <div class="alert-body">
@@ -147,9 +152,8 @@
                         <form id="formAuthentication" class="mb-5" action="{{ route('login') }}" method="POST">
                             @csrf
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control @error('email') is-invalid @enderror"
-                                    id="login-email" name="email" placeholder="john@example.com" autofocus
-                                    value="{{ old('email') }}">
+                                <input type="text" class="form-control @error('email') is-invalid @enderror" id="login-email"
+                                    name="email" placeholder="john@example.com" autofocus value="{{ old('email') }}">
                                 <label for="login-email">Correo</label>
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -193,6 +197,7 @@
                                 Iniciar sesión
                             </button>
                         </form>
+    
                         <p class="text-center">
                             <span>¿No estás certificado?</span>
                             @if (Route::has('register'))
@@ -242,9 +247,9 @@
 
                         <form id="formAuthentication-mobile" action="{{ route('login') }}" method="POST">
                             @csrf
-                            <div class="form-floating mb-3">
+                            <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control @error('email') is-invalid @enderror"
-                                    id="login-email-mobile" name="email" placeholder="john@example.com"
+                                    id="login-email-mobile" name="email" placeholder="john@example.com" autofocus
                                     value="{{ old('email') }}">
                                 <label for="login-email-mobile">Correo</label>
                                 @error('email')
@@ -253,25 +258,29 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="form-password-toggle">
-                                <div class="input-group">
-                                    <div class="form-floating">
-                                        <input type="password" id="login-password-mobile"
-                                            class="form-control @error('password') is-invalid @enderror" name="password"
-                                            placeholder="Contraseña">
-                                        <label for="login-password-mobile">Contraseña</label>
-                                    </div>
-                                    <span class="input-group-text cursor-pointer" style=" height: 48px;">
-                                        <i class="ri-eye-off-line"></i>
-                                    </span>
+                            <div class="mb-5">
+                                <div class="form-password-toggle">
+                                    <div class="input-group input-group-merge @error('password') is-invalid @enderror">
+                                        <div class="form-floating form-floating-outline">
+                                            <input type="password" id="login-password-mobile"
+                                                class="form-control @error('password') is-invalid @enderror" name="password"
+                                                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                                                aria-describedby="password" />
+                                            <label for="login-password-mobile">Contraseña</label>
+                                        </div>
+                                        <span class="input-group-text cursor-pointer" style=" height: 48px;">
+                                            <i class="ri-eye-off-line"></i>
+                                        </span>                                    </div>
+                                    @error('password')
+                                        <span class="invalid-feedback" role="alert">
+                                            <span class="fw-medium">{{ $message }}</span>
+                                        </span>
+                                    @enderror
                                 </div>
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
-                                @enderror
                             </div>
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="remember-me-movil">
+                                    <input class="form-check-input" type="checkbox" id="remember-me-mobile">
                                     <label class="form-check-label" for="remember-me-mobile">Recuérdame</label>
                                 </div>
                                 @if (Route::has('password.request'))
