@@ -692,8 +692,10 @@ $(document).ready(function() {
           $('#edit_fecha_emision').val(data.fecha_emision);
           $('#edit_fecha_vigencia').val(data.fecha_vigencia);
           $('#edit_id_inspeccion').val(data.id_inspeccion).prop('selected', true).change();
-          $('#edit_categorias').val(data.categorias);
-        //$('#edit_categorias').val(data.categorias).trigger('change');
+          //$('#edit_categorias').val(data.categorias);
+          //$('#edit_clases').val(data.clases);
+          $('#edit_categorias').val(data.categorias).trigger('change');
+          $('#edit_clases').val(data.clases).trigger('change');
 
 
         
