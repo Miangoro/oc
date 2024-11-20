@@ -11,7 +11,7 @@
               <form id="editFormTipo10">
                   <div class="row">
                       <div class="col-md-6">
-                        <input type="" name="id_solicitud" id="edit_id_solicitud">
+                        <input type="hidden" name="id_solicitud" id="id_solicitud">
                         <input type="hidden" name="form_type" value="georreferenciacion">
                           <div class="form-floating form-floating-outline mb-6">
                               <select onchange="obtenerPredioss(this.value);" id="edit_id_empresa" name="id_empresa" class="select2 form-select id_empresa" required>
@@ -33,7 +33,7 @@
                   </div>
                   <div class="row">
                       <div class="form-floating form-floating-outline mb-5">
-                          <select onchange="obtenerDatosPredioss(this.value);" class="select2 form-select id_predio" id="edit_id_predio" name="id_predio" aria-label="id_predio"
+                          <select  class="select2 form-select id_predio" id="edit_id_predio" name="id_predio" aria-label="id_predio"
                               required>
                               <option value="" selected>Lista de predios</option>
                           </select>
@@ -67,6 +67,8 @@
 
 
 <script>
+
+
   function obtenerPredioss(empresa) {
       $.ajax({
           url: '/getDatos/' + empresa,
@@ -85,7 +87,7 @@
               }
                   $('.id_predio').html(contenido);
               if (response.predios.length != 0) {
-                  obtenerDatosPredioss($(".id_predio").val());
+
               }else{
                   $('.info_adicional').val("");
               }
@@ -96,22 +98,11 @@
       });
   }
 
-  function obtenerDatosPredioss(id_predio) {
-     $.ajax({
-         url: '/domicilios-predios/' + id_predio+'/edit',
-         method: 'GET',
-         success: function(response) {
-             console.log(response);
-             var info_adicional =
-                      'Predio: '+response.predio.nombre_predio + '. '+
-                      'Punto de referencia: '+response.predio.puntos_referencia + '. '+
-                      'Superficie: '+response.predio.superficie + 'H';
-             $('.info_adicional').val(info_adicional);
-         },
-         error: function() {
-         }
-     });
- }
+
+    // Llamar a obtenerDatosEmpresaEdicion cuando se selecciona la empresa
+    $('#edit_id_empresa').change(function() {
+  obtenerPredioss();
+});
 
 
 </script>

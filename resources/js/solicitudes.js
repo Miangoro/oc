@@ -11,7 +11,7 @@ $(function () {
       url: baseUrl + 'solicitudes-list',
       type: 'GET',
       dataSrc: function (json) {
-        console.log(json); // Ver los datos en la consola
+       /*  console.log(json); */ // Ver los datos en la consola
         return json.data;
       },
       error: function (xhr, error, thrown) {
@@ -448,12 +448,18 @@ $(function () {
           if (response.success) {
             // Rellenar campos según el tipo de modal
             const datos = response.data;
+
             if (id_tipo === 10) {
-              modal.find('#edit_id_solicitud').val(id_solicitud);
+              modal.find('#id_solicitud').val(id_solicitud);
               modal.find('#edit_id_empresa').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_predio').val(response.data.id_predio).trigger('change');
-              modal.find('#edit_punto_reunion').val(response.data.punto_reunion);
+                // Acceder al campo `punto_reunion` desde `caracteristicas`
+               if (response.caracteristicas && response.caracteristicas.punto_reunion) {
+                modal.find('#edit_punto_reunion').val(response.caracteristicas.punto_reunion);
+              } else {
+                modal.find('#edit_punto_reunion').val(''); // Si no existe, deja vacío
+              }
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
               // Otros campos específicos para tipo 10
             } else if (id_tipo === 14) {
@@ -535,7 +541,7 @@ $(function () {
 
     // Hacer la solicitud AJAX
     $.ajax({
-      url: '/actualizar-solicitudes/' + $('#edit_id_solicitud').val(),
+      url: '/actualizar-solicitudes/' + $('#id_solicitud').val(),
       type: 'POST',
       data: formData,
       processData: false,
@@ -622,10 +628,10 @@ $(function () {
 
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud').val(),
-          type: 'POST',
-          data: formData,
-          processData: false,
-          contentType: false,
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
           success: function (response) {
               $('#editSolicitudDictamen').modal('hide');
               $('#addEditSolicitud')[0].reset();
