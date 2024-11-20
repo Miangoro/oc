@@ -131,10 +131,15 @@ class solicitudesController extends Controller
         // Buscar los datos necesarios en la tabla "solicitudes"
         $solicitud = solicitudesModel::find($id_solicitud);
 
+        $caracteristicas = $solicitud->caracteristicas
+            ? json_decode($solicitud->caracteristicas, true)
+            : null;
+
         if ($solicitud) {
             return response()->json([
                 'success' => true,
                 'data' => $solicitud,
+                'caracteristicas' => $caracteristicas,
             ]);
         }
 
@@ -203,7 +208,7 @@ class solicitudesController extends Controller
         $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
         $solicitud->id_predio = $request->id_predio;
         $solicitud->info_adicional = $request->info_adicional;
-        $solicitud->punto_reunion = $request->punto_reunion;
+        /* $solicitud->punto_reunion = $request->punto_reunion; */
         $solicitud->save();
 
         $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
@@ -327,14 +332,14 @@ class solicitudesController extends Controller
     {
         // Encuentra la solicitud por ID
         $solicitud = solicitudesModel::find($id_solicitud);
-    
+
         if (!$solicitud) {
             return response()->json(['success' => false, 'message' => 'Solicitud no encontrada'], 404);
         }
-    
+
         // Verifica el tipo de formulario
         $formType = $request->input('form_type');
-    
+
         switch ($formType) {
             case 'georreferenciacion':
                 // Validar datos para georreferenciación
@@ -345,7 +350,14 @@ class solicitudesController extends Controller
                     'punto_reunion' => 'required|string|max:255',
                     'info_adicional' => 'required|string'
                 ]);
-    
+               // Preparar el JSON para guardar en `caracteristicas`
+                $caracteristicasJson = [
+                  'punto_reunion' => $request->punto_reunion,
+                  ];
+
+               // Convertir el array a JSON
+              $jsonContent = json_encode($caracteristicasJson);
+
                 // Actualizar datos específicos para georreferenciación
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
@@ -353,11 +365,12 @@ class solicitudesController extends Controller
                     'id_predio' => $request->id_predio,
                     'punto_reunion' => $request->punto_reunion,
                     'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => $jsonContent,
                 ]);
-        
+
                 break;
-                
-    
+
+
             case 'dictaminacion':
                 // Validar datos para dictaminación
                 $request->validate([
@@ -366,7 +379,7 @@ class solicitudesController extends Controller
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'required|string|max:5000',
                 ]);
-    
+
                 // Actualizar datos específicos para dictaminación
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
@@ -375,13 +388,13 @@ class solicitudesController extends Controller
                     'info_adicional' => $request->info_adicional,
                 ]);
                 break;
-    
+
             default:
                 return response()->json(['success' => false, 'message' => 'Tipo de solicitud no reconocido'], 400);
         }
-    
+
         return response()->json(['success' => true, 'message' => 'Solicitud actualizada correctamente']);
     }
-    
+
 
 }

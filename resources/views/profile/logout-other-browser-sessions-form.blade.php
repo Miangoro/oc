@@ -9,7 +9,7 @@
 
   <x-slot name="content">
     <x-action-message on="loggedOut">
-      {{ __('Done.') }}
+      {{ __('Hecho.') }}
     </x-action-message>
 
     <p class="card-text">
@@ -53,7 +53,7 @@
                   @if ($session->is_current_device)
                     <span class="text-success fw-medium">{{ __('Este dispositivo') }}</span>
                   @else
-                    {{ __('Last active') }} {{ $session->last_active }}
+                    {{ __('Última actividad') }} {{ $session->last_active }}
                   @endif
                 </div>
               </div>
