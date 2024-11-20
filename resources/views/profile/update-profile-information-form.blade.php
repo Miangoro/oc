@@ -1,16 +1,16 @@
 <x-form-section submit="updateProfileInformation">
   <x-slot name="title">
-    {{ __('Profile Information') }}
+    {{ __('Información del Perfil') }}
   </x-slot>
 
   <x-slot name="description">
-    {{ __('Update your account\'s profile information and email address.') }}
+    {{ __('Actualiza la información de tu perfil y la dirección de correo electrónico de tu cuenta.') }}
   </x-slot>
 
   <x-slot name="form">
 
     <x-action-message on="saved">
-      {{ __('Saved.') }}
+      {{ __('Guardado.') }}
     </x-action-message>
 
     <!-- Profile Photo -->
@@ -31,12 +31,12 @@
         </div>
 
         <x-secondary-button class="mt-2 me-2" type="button" x-on:click.prevent="$refs.photo.click()">
-          {{ __('Select A New Photo') }}
+          {{ __('seleccione una nueva foto') }}
         </x-secondary-button>
 
         @if ($this->user->profile_photo_path)
           <button type="button" class="btn btn-danger mt-2" wire:click="deleteProfilePhoto">
-            {{ __('Remove Photo') }}
+            {{ __('Eliminar foto') }}
           </button>
         @endif
 
@@ -64,7 +64,7 @@
   <x-slot name="actions">
     <div class="d-flex align-items-baseline">
       <x-button>
-        {{ __('Save') }}
+        {{ __('guardar') }}
       </x-button>
     </div>
   </x-slot>
