@@ -1364,7 +1364,21 @@ TemplateCustomizer.LANGUAGES = {
     content_label: 'Inhalt',
     layout_navbar_label: 'Art der Navigationsleiste',
     direction_label: 'Richtung'
+  },
+  es: {
+    panel_header: 'Personalizador de Plantillas',
+    panel_sub_header: 'Personaliza y previsualiza en tiempo real',
+    theming_header: 'Tematización',
+    style_label: 'Estilo (Modo)',
+    theme_label: 'Temas',
+    layout_header: 'Diseño',
+    layout_label: 'Menú (Navegación)',
+    layout_header_label: 'Tipos de Encabezado',
+    content_label: 'Contenido',
+    layout_navbar_label: 'Tipo de Barra de Navegación',
+    direction_label: 'Dirección'
   }
 }
+
 
 window.TemplateCustomizer = TemplateCustomizer
