@@ -109,7 +109,7 @@ class solicitudesController extends Controller
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</apan>'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['foto_inspector'] = $solicitud->inspector->profile_photo_path ?? ''; // Maneja el caso donde el organismo sea nulo
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</apan>';
-
+                $nestedData['id_tipo'] = $solicitud->tipo_solicitud->id_tipo  ?? 'N/A';
                 $nestedData['estatus'] = $solicitud->estatus ?? 'Vacío';
 
 
@@ -127,6 +127,23 @@ class solicitudesController extends Controller
         ]);
     }
 
+    public function obtenerDatosSolicitud($id_solicitud){
+        // Buscar los datos necesarios en la tabla "solicitudes"
+        $solicitud = solicitudesModel::find($id_solicitud);
+
+        if ($solicitud) {
+            return response()->json([
+                'success' => true,
+                'data' => $solicitud,
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Solicitud no encontrada.',
+        ], 404);
+
+    }
 
     public function store(Request $request)
     {
@@ -306,6 +323,65 @@ class solicitudesController extends Controller
     return response()->json(['hasSolicitud' => $exists]);
 }
 
-
+    public function actualizarSolicitudes(Request $request, $id_solicitud)
+    {
+        // Encuentra la solicitud por ID
+        $solicitud = solicitudesModel::find($id_solicitud);
+    
+        if (!$solicitud) {
+            return response()->json(['success' => false, 'message' => 'Solicitud no encontrada'], 404);
+        }
+    
+        // Verifica el tipo de formulario
+        $formType = $request->input('form_type');
+    
+        switch ($formType) {
+            case 'georreferenciacion':
+                // Validar datos para georreferenciación
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_visita' => 'required|date',
+                    'id_predio' => 'required|integer|exists:predios,id_predio',
+                    'punto_reunion' => 'required|string|max:255',
+                    'info_adicional' => 'required|string'
+                ]);
+    
+                // Actualizar datos específicos para georreferenciación
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_predio' => $request->id_predio,
+                    'punto_reunion' => $request->punto_reunion,
+                    'info_adicional' => $request->info_adicional,
+                ]);
+        
+                break;
+                
+    
+            case 'dictaminacion':
+                // Validar datos para dictaminación
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_visita' => 'required|date',
+                    'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                    'info_adicional' => 'required|string|max:5000',
+                ]);
+    
+                // Actualizar datos específicos para dictaminación
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_instalacion' => $request->id_instalacion,
+                    'info_adicional' => $request->info_adicional,
+                ]);
+                break;
+    
+            default:
+                return response()->json(['success' => false, 'message' => 'Tipo de solicitud no reconocido'], 400);
+        }
+    
+        return response()->json(['success' => true, 'message' => 'Solicitud actualizada correctamente']);
+    }
+    
 
 }

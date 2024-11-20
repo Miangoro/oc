@@ -1,10 +1,10 @@
 <x-form-section submit="updatePassword">
   <x-slot name="title">
-    {{ __('Update Password') }}
+    {{ __('Actualizar Contraseña') }}
   </x-slot>
 
   <x-slot name="description">
-    {{ __('Ensure your account is using a long, random password to stay secure.') }}
+    {{ __('Asegúrate de que tu cuenta utilice una contraseña larga y aleatoria para mantenerse segura.') }}
   </x-slot>
 
   <x-slot name="form">
@@ -35,7 +35,7 @@
 
   <x-slot name="actions">
     <x-button>
-      {{ __('Save') }}
+      {{ __('guardar') }}
     </x-button>
   </x-slot>
 </x-form-section>

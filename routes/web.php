@@ -766,7 +766,8 @@ Route::get('/solicitud_de_servicio/{id_solicitud}', [solicitudesController::clas
 Route::post('/registrar-solicitud-georeferenciacion', [solicitudesController::class, 'registrarSolicitudGeoreferenciacion'])->name('registrarSolicitudGeoreferenciacion');
 Route::post('/registrar-solicitud-muestreo-agave', [solicitudesController::class, 'registrarSolicitudMuestreoAgave'])->name('registrarSolicitudMuestreoAgave');
 Route::get('/verificar-solicitud', [solicitudesController::class, 'verificarSolicitud'])->name('verificarSolicitud');
-
+Route::get('/datos-solicitud/{id_solicitud}', [solicitudesController::class, 'obtenerDatosSolicitud'])->name('datos.solicitud');
+Route::post('/actualizar-solicitudes/{id_solicitud}', [SolicitudesController::class, 'actualizarSolicitudes']);
 
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
  */

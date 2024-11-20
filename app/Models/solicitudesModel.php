@@ -20,7 +20,8 @@ class solicitudesModel extends Model
         'fecha_solicitud',
         'fecha_visita',
         'id_instalacion',
-        'id_predio'
+        'id_predio',
+        'info_adicional',
     ];
 
     // Método para obtener el nombre del registro que sirve para la trazabilidad

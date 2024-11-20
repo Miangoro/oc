@@ -220,7 +220,9 @@
 
 
     @include('_partials._modals.modal-add-instalaciones')
-    
+    @include('_partials._modals.modal-edit-solicitudes-georeferenciacion')
+    @include('_partials._modals.modal-edit-solicitud-dictamen-instalaciones')
+
     <!-- /Modal -->
 
 </div>
@@ -228,7 +230,7 @@
 
 <script>
     function abrirModal(id_solicitud,tipo ,nombre_empresa) {
-   
+
    /* $.ajax({
         url: '/lista_empresas/' + id_empresa,
         method: 'GET',
@@ -240,7 +242,7 @@
             contenido = '<input value="'+response.normas[index].id_norma+'" type="hidden" name="id_norma[]"/><div class="col-12 col-md-12 col-sm-12"><div class="form-floating form-floating-outline"><input type="text" id="numero_cliente'+response.normas[index].id_norma+'" name="numero_cliente[]" class="form-control" placeholder="Introducir el número de cliente" /><label for="modalAddressFirstName">Número de cliente para la norma '+response.normas[index].norma+'</label></div></div><br>' + contenido;
             console.log(response.normas[index].norma);
           }
-           
+
             $('#expedienteServicio').modal('show');
         },
         error: function() {
@@ -254,7 +256,7 @@
   }
 
   function abrirModalValidarSolicitud(id_solicitud,tipo ,nombre_empresa) {
-   
+
    /* $.ajax({
         url: '/lista_empresas/' + id_empresa,
         method: 'GET',
@@ -266,7 +268,7 @@
             contenido = '<input value="'+response.normas[index].id_norma+'" type="hidden" name="id_norma[]"/><div class="col-12 col-md-12 col-sm-12"><div class="form-floating form-floating-outline"><input type="text" id="numero_cliente'+response.normas[index].id_norma+'" name="numero_cliente[]" class="form-control" placeholder="Introducir el número de cliente" /><label for="modalAddressFirstName">Número de cliente para la norma '+response.normas[index].norma+'</label></div></div><br>' + contenido;
             console.log(response.normas[index].norma);
           }
-           
+
             $('#expedienteServicio').modal('show');
         },
         error: function() {
@@ -298,7 +300,7 @@
             // Iterar sobre los logs y agregarlos al contenedor
             logs.forEach(function(log) {
                 logsContainer.append(`
-                    
+
                 <li class="timeline-item timeline-item-transparent">
                     <span class="timeline-point timeline-point-primary"></span>
                     <div class="timeline-event">
@@ -308,7 +310,7 @@
                         </div>
                         <p class="mb-2">  ${log.contenido}</p>
                         <div class="d-flex align-items-center mb-1">
-                        
+
                         </div>
                     </div>
                     </li><hr>
@@ -330,5 +332,5 @@
     $('#subirResultados').modal('show');
     }
 
-  
+
 </script>
