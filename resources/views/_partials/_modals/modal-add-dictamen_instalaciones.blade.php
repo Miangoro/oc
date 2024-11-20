@@ -159,6 +159,7 @@
                                     <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option>
                                     @endforeach
                             </select>
+                            {{-- <input class="form-control" type="text" id="edit_id_inspeccion" name="id_inspeccion"/> --}}
                             <label for="">No. de servicio</label>
                         </div>
                     </div>
@@ -201,7 +202,7 @@
 
 
 
-<script>
+{{-- <script>
         $(document).ready(function() {
             $('#edit_categorias').on('change', function() {
                 const selectedNormas = $(this).val(); // Obtener las normas seleccionadas
@@ -223,5 +224,5 @@
                 });
             });
         });
-</script>
+</script> --}}
       
