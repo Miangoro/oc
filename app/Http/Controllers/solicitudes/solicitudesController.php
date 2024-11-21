@@ -11,10 +11,12 @@ use App\Models\Instalaciones;
 use App\Models\organismos;
 use App\Models\LotesGranel;
 use App\Models\solicitudesModel;
+use App\Models\clases;
 use App\Models\solicitudTipo;
 use App\Models\User;
 use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\tipos;
 use Illuminate\Http\Request;
 
 class solicitudesController extends Controller
@@ -27,9 +29,13 @@ class solicitudesController extends Controller
         $organismos = organismos::all(); // Obtener todos los estados
         $LotesGranel = LotesGranel::all();
         $categorias = categorias::all();
+        $clases = clases::all();
+        $tipos = tipos::all();
+
+
 
         $inspectores = User::where('tipo','=','2')->get(); // Obtener todos los organismos
-        return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores','solicitudesTipos','organismos','LotesGranel','categorias'));
+        return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores','solicitudesTipos','organismos','LotesGranel','categorias', 'clases', 'tipos'));
     }
 
     public function index(Request $request)

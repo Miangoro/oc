@@ -14,7 +14,7 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select onchange="obtenerPredios2(this.value); obtenerGraneles(this.value)"
                                     name="id_empresa" class="select2 form-select id_empresa">
-                                    <option value="" disabled>Selecciona cliente</option>
+                                    <option value="" >Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
@@ -57,9 +57,9 @@
 
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="select form-select id_categoria" name="id_categoria"
+                                <select class="select form-select " id="id_categoria" name="id_categoria"
                                     aria-label="id_categoria">
-                                    <option value="" disabled>Lista de categorias</option>
+                                    <option value="" >Lista de categorias</option>
                                     @foreach ($categorias as $categoria)
                                         <option value="{{ $categoria->id_categoria }}">{{ $categoria->categoria }}
                                         </option>
@@ -74,23 +74,31 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select form-select id_clase" name="id_clase" aria-label="id_clase">
-                            <option value="" disabled>Lista de predios</option>
+                        <select class="select form-select " id="id_clase" name="id_clase" aria-label="id_clase">
+                            <option value="" >Lista de clases</option>
+                            @foreach ($clases as $clases)
+                            <option value="{{ $clases->id_clase }}">{{ $clases->clase }}
+                            </option>
+                        @endforeach
                         </select>
                         <label for="id_clase">Clase</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select form-select tipo_maguey" name="tipo_maguey" aria-label="tipo_maguey">
-                            <option value="" disabled>Lista de categorias</option>
+                        <select class="select form-select " id="id_tipo" name="id_tipo" aria-label="id_tipo">
+                            <option value="" >Lista de categorias</option>
+                            @foreach ($tipos as $tipos)
+                            <option value="{{ $tipos->id_tipo }}">{{ $tipos->nombre }} - {{$tipos->cientifico}}
+                            </option>
+                        @endforeach
                         </select>
-                        <label for="tipo_maguey">Ingresa tipo de Maguey</label>
+                        <label for="id_tipo">Ingresa tipo de Maguey</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="analisis" name=""
+                        <input type="text" class="form-control" id="analisis" name="analisis"
                             placeholder="Ingresa Análisis fisicoquímico" />
                         <label for="folio">Ingresa Análisis fisicoquímico</label>
                     </div>
@@ -99,9 +107,9 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="number" class="form-control" id="" name=""
+                        <input type="number" class="form-control" id="volumen" name="volumen"
                             placeholder="Ingresa el volumen" />
-                        <label for="folio">%Alc. Vol.</label>
+                        <label for="volumen">%Alc. Vol.</label>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -113,9 +121,9 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="number" class="form-control" id="" name=""
+                        <input type="number" class="form-control" id="id_guia" name="id_guia"
                             placeholder="Ingresa la cantidad de maguey" />
-                        <label for="folio">Kg. de maguey</label>
+                        <label for="id_guia">Kg. de maguey</label>
                     </div>
                 </div>
             </div>
@@ -192,19 +200,14 @@
             success: function(response) {
 
                 $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
+                $('#id_clase').val(response.lotes_granel.id_clase);
+                $('#id_tipo').val(response.lotes_granel.id_tipo);
 
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
 
 
                 $('#analisis').val(response.lotes_granel.folio_fq);
+                $('#volumen').val(response.lotes_granel.cont_alc)
+
             },
             error: function() {
                 alert('Error al cargar los lotes a granel.');
