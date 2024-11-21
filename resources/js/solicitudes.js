@@ -352,6 +352,17 @@ $(function () {
   }
   initializeSelect2(select2Elements);
 
+
+//Date picker
+  $(document).ready(function () {
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      todayHighlight: true,
+      language: 'es' // Configura el idioma a español
+    });
+  });
+
   // Configuración CSRF para Laravel
   $.ajaxSetup({
     headers: {
