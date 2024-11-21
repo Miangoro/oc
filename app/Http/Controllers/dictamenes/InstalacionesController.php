@@ -35,12 +35,14 @@ class InstalacionesController extends Controller
     public function index(Request $request)
     {
         $columns = [
+        //CAMPOS PARA LA TABLA DE INICIO "thead"
             1 => 'id_dictamen',
             2 => 'tipo_dictamen',
             3 => 'num_dictamen',
             4 => 'num_servicio',
             5 => 'fecha_emision',
-            6 => 'razon_social',
+            6 => 'razon_social',//este lugar lo ocupa fecha en find
+            7 => 'id_instalacion',
         ];
 
         $search = [];
@@ -63,15 +65,16 @@ class InstalacionesController extends Controller
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
+                
         } else {
             $search = $request->input('search.value');
-            dd($search);
-            $users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
+            //$users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
+            $users = Dictamen_instalaciones::join('inspecciones AS i', 'dictamenes_instalaciones.id_inspeccion', '=', 'i.id_inspeccion')
                 ->where('id_dictamen', 'LIKE', "%{$search}%")
                 ->orWhere('tipo_dictamen', 'LIKE', "%{$search}%")
                 ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-             
                 ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
+                ->orWhere('num_servicio', 'LIKE', "%{$search}%")
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
@@ -81,7 +84,6 @@ class InstalacionesController extends Controller
                 ->where('id_dictamen', 'LIKE', "%{$search}%")
                 ->orWhere('tipo_dictamen', 'LIKE', "%{$search}%")
                 ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-      
                 ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
                 ->count();
         }
@@ -92,7 +94,7 @@ class InstalacionesController extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-                
+            //MUESTRA LOS DATOS EN EL FIND
                 $nestedData['fake_id'] = ++$ids;
                 $nestedData['id_dictamen'] = $user->id_dictamen;
                 $nestedData['tipo_dictamen'] = $user->tipo_dictamen;

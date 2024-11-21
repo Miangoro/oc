@@ -621,6 +621,8 @@ Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name(
 Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('tipos.update');
 
 Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');
+Route::get('/getDatos2/{lote_granel}', [getFuncionesController::class, 'getDatos2'])->name('getDatos2');
+
 
 //Guias de agave o maguey
 Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('traslado-guias');
@@ -826,11 +828,13 @@ Route::post('/editar-respuestas', [RevisionPersonalController::class, 'editarRes
 //Certificado Granel
 Route::get('certificados/granel', [Certificado_GranelController::class, 'UserManagement'])->name('certificados-granel');
 Route::resource('certificados/granel-list',Certificado_GranelController::class);
-Route::post('/certificados', [Certificado_GranelController::class, 'store']);
+Route::post('/certificados/granel', [Certificado_GranelController::class, 'store']);
+Route::get('/edit-certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'edit']);
+Route::delete('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'destroy'])->name('certificados.destroy');
 Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCertificado'])->name('Pre-certificado');
+Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'update']);
 
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
-
 
 //Eliminar Cliente Confirmado
 Route::delete('clientes-list/{id_empresa}', [clientesConfirmadosController::class, 'destroy'])->name('');

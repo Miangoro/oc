@@ -64,6 +64,7 @@
 <!-- Modal -->
 @include('_partials/_modals/modal-pdfs-certificados')
 @include('_partials/_modals/modal-add-certificado-granel')
+@include('_partials/_modals/modal-edit-certificado-granel')
 <!-- /Modal -->
 
 @endsection
