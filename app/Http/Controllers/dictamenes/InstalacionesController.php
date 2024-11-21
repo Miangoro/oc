@@ -57,7 +57,8 @@ class InstalacionesController extends Controller
        
 
         if ( empty($request->input('search.value'))) {
-            $users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
+            //$users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
+            $users = Dictamen_instalaciones::join('inspecciones AS i', 'dictamenes_instalaciones.id_inspeccion', '=', 'i.id_inspeccion')
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
