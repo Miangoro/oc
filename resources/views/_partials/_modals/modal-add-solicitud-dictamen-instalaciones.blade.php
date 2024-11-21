@@ -13,9 +13,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_solicitud" onchange="obtenerInstalacion();"
-                                    name="id_empresa" class="id_empresa select2 form-select" required>
-                                    <option value="">Selecciona cliente</option>
+                                <select id="id_empresa_solicitud" onchange="obtenerInstalaciones();"
+                                    name="id_empresa" class="id_empresa_dic select2 form-select" required>
+                                    <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
@@ -37,8 +37,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select" id="id_instalacion" name="id_instalacion" aria-label="id_instalacion" required>
-                                    <option value="" selected>Lista de instalaciones</option>
+                                <select class=" form-select" id="id_instalacion_dic" name="id_instalacion" aria-label="id_instalacion">
+                                    <option value="" disabled selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
 
@@ -68,8 +68,9 @@
 
 
 <script>
-    function obtenerInstalacion() {
-        var empresa = $(".id_empresa").val();
+    function obtenerInstalaciones() {
+        var empresa = $(".id_empresa_dic").val();
+
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
@@ -90,7 +91,7 @@
                 }else{
 
                 }
-                $('#id_instalacion').html(contenido);
+                $('#id_instalacion_dic').html(contenido);
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');
