@@ -35,12 +35,14 @@ class InstalacionesController extends Controller
     public function index(Request $request)
     {
         $columns = [
+        //CAMPOS PARA LA TABLA DE INICIO "thead"
             1 => 'id_dictamen',
             2 => 'tipo_dictamen',
             3 => 'num_dictamen',
             4 => 'num_servicio',
             5 => 'fecha_emision',
-            6 => 'razon_social',
+            6 => 'razon_social',//este lugar lo ocupa fecha en find
+            7 => 'id_instalacion',
         ];
 
         $search = [];
@@ -57,20 +59,22 @@ class InstalacionesController extends Controller
        
 
         if ( empty($request->input('search.value'))) {
-            $users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
+            //$users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
+            $users = Dictamen_instalaciones::join('inspecciones AS i', 'dictamenes_instalaciones.id_inspeccion', '=', 'i.id_inspeccion')
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
+                
         } else {
             $search = $request->input('search.value');
-            dd($search);
-            $users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
+            //$users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
+            $users = Dictamen_instalaciones::join('inspecciones AS i', 'dictamenes_instalaciones.id_inspeccion', '=', 'i.id_inspeccion')
                 ->where('id_dictamen', 'LIKE', "%{$search}%")
                 ->orWhere('tipo_dictamen', 'LIKE', "%{$search}%")
                 ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-             
                 ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
+                ->orWhere('num_servicio', 'LIKE', "%{$search}%")
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
@@ -80,7 +84,6 @@ class InstalacionesController extends Controller
                 ->where('id_dictamen', 'LIKE', "%{$search}%")
                 ->orWhere('tipo_dictamen', 'LIKE', "%{$search}%")
                 ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-      
                 ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
                 ->count();
         }
@@ -91,7 +94,7 @@ class InstalacionesController extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-                
+            //MUESTRA LOS DATOS EN EL FIND
                 $nestedData['fake_id'] = ++$ids;
                 $nestedData['id_dictamen'] = $user->id_dictamen;
                 $nestedData['tipo_dictamen'] = $user->tipo_dictamen;
@@ -136,7 +139,7 @@ class InstalacionesController extends Controller
                 $var->num_dictamen = $request->num_dictamen;
                 $var->fecha_emision = $request->fecha_emision;
                 $var->fecha_vigencia = $request->fecha_vigencia;
-                $var->categorias =json_encode($request->categorias);
+                $var->categorias = json_encode($request->categorias);
                 $var->clases =  json_encode($request->clases);
                 $var->save();//guardar en BD
 
@@ -170,6 +173,7 @@ public function edit($id_dictamen)
         $var1 = Dictamen_instalaciones::findOrFail($id_dictamen);
 
         $categorias = json_decode($var1->categorias);  //Convertir array
+        $clases = json_decode($var1->clases);  //Convertir array
         //return response()->json($var1);
         return response()->json([
             'id_dictamen' => $var1->id_dictamen,
@@ -179,14 +183,14 @@ public function edit($id_dictamen)
             'fecha_vigencia' => $var1->fecha_vigencia,
             'id_inspeccion' => $var1->id_inspeccion,
             'categorias' => $categorias,
-            'clases' => $var1->clases
+            'clases' => $clases
         ]);
     } catch (\Exception $e) {
         return response()->json(['error' => 'Error al obtener el dictamen'], 500);
     }
 }
 
-// Función para EDITAR una clase existente
+// Función para EDITAR
     public function update(Request $request, $id_dictamen)
 {
     $request->validate([
@@ -194,15 +198,16 @@ public function edit($id_dictamen)
         'num_dictamen' => 'required|string|max:255',
         'fecha_emision' => 'nullable|date',
         'fecha_vigencia' => 'nullable|date',
-        'categorias' => 'required|string|max:100',
-        'clases' => 'required|string|max:100',
+        /*'categorias' => 'required|string|max:100',
+        'clases' => 'required|string|max:100',*/
+        'categorias' => 'required|array',
+        'clases' => 'required|array',  
         'id_inspeccion' => 'required|integer',
     ]);
     try {
         $var2 = Dictamen_instalaciones::findOrFail($id_dictamen);
         $var2->id_inspeccion = $request->id_inspeccion;
         $var2->tipo_dictamen = $request->tipo_dictamen;
-        //$var2->id_instalacion = 1;
         $var2->num_dictamen = $request->num_dictamen;
         $var2->fecha_emision = $request->fecha_emision;
         $var2->fecha_vigencia = $request->fecha_vigencia;

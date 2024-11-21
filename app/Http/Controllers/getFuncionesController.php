@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\empresa;
+use App\Models\LotesGranel;
+
 use App\Models\normas;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -66,7 +68,22 @@ class getFuncionesController extends Controller
         ]);
     }
 
+    public function getDatos2(LotesGranel $lote_granel)
+    {
+        return response()->json([
+            'instalaciones' => $lote_granel->empresa->obtenerInstalaciones(),
+            'lotes_granel' => $lote_granel, // Aquí retornas el objeto completo de lote_granel
+            'marcas' => $lote_granel->empresa->marcas(),
+            'guias' => $lote_granel->empresa->guias(),
+            'predios' => $lote_granel->empresa->predios(),
+            'predio_plantacion' => $lote_granel->empresa->predio_plantacion(),
+            'direcciones' => $lote_granel->empresa->direcciones(),
+            'lotes_envasado' => $lote_granel->lotesEnvasado, // Aquí también
+        ]);
+    }
+    
 
+    
 
     
 }

@@ -4,10 +4,12 @@ namespace App\Http\Controllers\solicitudes;
 
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
+use App\Models\categorias;
 use App\Models\empresa;
 use App\Models\estados;
 use App\Models\Instalaciones;
 use App\Models\organismos;
+use App\Models\LotesGranel;
 use App\Models\solicitudesModel;
 use App\Models\solicitudTipo;
 use App\Models\User;
@@ -23,9 +25,11 @@ class solicitudesController extends Controller
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = estados::all(); // Obtener todos los estados
         $organismos = organismos::all(); // Obtener todos los estados
+        $LotesGranel = LotesGranel::all();
+        $categorias = categorias::all();
 
         $inspectores = User::where('tipo','=','2')->get(); // Obtener todos los organismos
-        return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores','solicitudesTipos','organismos'));
+        return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores','solicitudesTipos','organismos','LotesGranel','categorias'));
     }
 
     public function index(Request $request)
@@ -109,7 +113,7 @@ class solicitudesController extends Controller
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</apan>'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['foto_inspector'] = $solicitud->inspector->profile_photo_path ?? ''; // Maneja el caso donde el organismo sea nulo
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</apan>';
-
+                $nestedData['id_tipo'] = $solicitud->tipo_solicitud->id_tipo  ?? 'N/A';
                 $nestedData['estatus'] = $solicitud->estatus ?? 'Vacío';
 
 
@@ -127,6 +131,31 @@ class solicitudesController extends Controller
         ]);
     }
 
+    public function obtenerDatosSolicitud($id_solicitud){
+        // Buscar los datos necesarios en la tabla "solicitudes"
+        $solicitud = solicitudesModel::find($id_solicitud);
+
+        $instalaciones = Instalaciones::where('id_empresa',$solicitud->id_empresa)->get();
+
+        $caracteristicas = $solicitud->caracteristicas
+            ? json_decode($solicitud->caracteristicas, true)
+            : null;
+
+        if ($solicitud) {
+            return response()->json([
+                'success' => true,
+                'data' => $solicitud,
+                'caracteristicas' => $caracteristicas,
+                'instalaciones' => $instalaciones,
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Solicitud no encontrada.',
+        ], 404);
+
+    }
 
     public function store(Request $request)
     {
@@ -186,7 +215,14 @@ class solicitudesController extends Controller
         $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
         $solicitud->id_predio = $request->id_predio;
         $solicitud->info_adicional = $request->info_adicional;
-        $solicitud->punto_reunion = $request->punto_reunion;
+       // Preparar el JSON para la columna `caracteristicas`
+        $caracteristicas = [
+          'punto_reunion' => $request->punto_reunion,
+      ];
+
+      // Convertir a JSON y asignarlo
+      $solicitud->caracteristicas = json_encode($caracteristicas);
+
         $solicitud->save();
 
         $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
@@ -306,6 +342,73 @@ class solicitudesController extends Controller
     return response()->json(['hasSolicitud' => $exists]);
 }
 
+    public function actualizarSolicitudes(Request $request, $id_solicitud)
+    {
+        // Encuentra la solicitud por ID
+        $solicitud = solicitudesModel::find($id_solicitud);
+
+        if (!$solicitud) {
+            return response()->json(['success' => false, 'message' => 'Solicitud no encontrada'], 404);
+        }
+
+        // Verifica el tipo de formulario
+        $formType = $request->input('form_type');
+
+        switch ($formType) {
+            case 'georreferenciacion':
+                // Validar datos para georreferenciación
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_visita' => 'required|date',
+                    'id_predio' => 'required|integer|exists:predios,id_predio',
+                    'punto_reunion' => 'required|string|max:255',
+                    'info_adicional' => 'required|string'
+                ]);
+               // Preparar el JSON para guardar en `caracteristicas`
+                $caracteristicasJson = [
+                  'punto_reunion' => $request->punto_reunion,
+                  ];
+
+               // Convertir el array a JSON
+              $jsonContent = json_encode($caracteristicasJson);
+
+                // Actualizar datos específicos para georreferenciación
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_predio' => $request->id_predio,
+                    'punto_reunion' => $request->punto_reunion,
+                    'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => $jsonContent,
+                ]);
+
+                break;
+
+
+            case 'dictaminacion':
+                // Validar datos para dictaminación
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_visita' => 'required|date',
+                    'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                    'info_adicional' => 'required|string|max:5000',
+                ]);
+
+                // Actualizar datos específicos para dictaminación
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_instalacion' => $request->id_instalacion,
+                    'info_adicional' => $request->info_adicional,
+                ]);
+                break;
+
+            default:
+                return response()->json(['success' => false, 'message' => 'Tipo de solicitud no reconocido'], 400);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Solicitud actualizada correctamente']);
+    }
 
 
 }
