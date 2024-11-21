@@ -131,6 +131,8 @@ class solicitudesController extends Controller
         // Buscar los datos necesarios en la tabla "solicitudes"
         $solicitud = solicitudesModel::find($id_solicitud);
 
+        $instalaciones = Instalaciones::where('id_empresa',$solicitud->id_empresa)->get();
+
         $caracteristicas = $solicitud->caracteristicas
             ? json_decode($solicitud->caracteristicas, true)
             : null;
@@ -140,6 +142,7 @@ class solicitudesController extends Controller
                 'success' => true,
                 'data' => $solicitud,
                 'caracteristicas' => $caracteristicas,
+                'instalaciones' => $instalaciones,
             ]);
         }
 
