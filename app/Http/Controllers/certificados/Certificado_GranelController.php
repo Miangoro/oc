@@ -79,7 +79,18 @@ class Certificado_GranelController extends Controller
         ]);
     }
 
-    // Método para agregar un certificado
+    public function destroy($id_dictamen)
+    {
+        try {
+            $eliminar = CertificadosGranel::findOrFail($id_dictamen);
+            $eliminar->delete();
+
+            return response()->json(['success' => 'Eliminado correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al eliminar'], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -102,6 +113,52 @@ class Certificado_GranelController extends Controller
             'message' => 'Certificado registrado exitosamente',
             'certificado' => $certificado
         ]);
+    }
+
+    public function edit($id_certificado)
+    {
+        $certificado = CertificadosGranel::findOrFail($id_certificado);
+        
+        return response()->json([
+            'id_certificado' => $certificado->id_certificado,
+            'id_firmante' => $certificado->id_firmante,
+            'id_dictamen' => $certificado->id_dictamen,
+            'num_certificado' => $certificado->num_certificado,
+            'fecha_vigencia' => $certificado->fecha_vigencia,
+            'fecha_vencimiento' => $certificado->fecha_vencimiento,
+        ]);
+    }
+    
+    public function update(Request $request, $id_certificado)
+    {
+        $validatedData = $request->validate([
+            'id_firmante' => 'required|integer',
+            'id_dictamen' => 'required|integer',
+            'num_certificado' => 'required|string',
+            'fecha_vigencia' => 'required|date',
+            'fecha_vencimiento' => 'required|date',
+        ]);
+
+        try {
+            $certificado = CertificadosGranel::findOrFail($id_certificado);
+            
+            $certificado->update([
+                'id_firmante' => $validatedData['id_firmante'],
+                'id_dictamen' => $validatedData['id_dictamen'],
+                'num_certificado' => $validatedData['num_certificado'],
+                'fecha_vigencia' => $validatedData['fecha_vigencia'],
+                'fecha_vencimiento' => $validatedData['fecha_vencimiento'],
+            ]);
+
+            return response()->json([
+                'message' => 'Certificado actualizado exitosamente',
+                'certificado' => $certificado
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Ocurrió un error al actualizar el certificado: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function PreCertificado($id_certificado)
