@@ -211,7 +211,14 @@ class solicitudesController extends Controller
         $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
         $solicitud->id_predio = $request->id_predio;
         $solicitud->info_adicional = $request->info_adicional;
-        /* $solicitud->punto_reunion = $request->punto_reunion; */
+       // Preparar el JSON para la columna `caracteristicas`
+        $caracteristicas = [
+          'punto_reunion' => $request->punto_reunion,
+      ];
+
+      // Convertir a JSON y asignarlo
+      $solicitud->caracteristicas = json_encode($caracteristicas);
+
         $solicitud->save();
 
         $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
