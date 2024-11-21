@@ -621,6 +621,8 @@ Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name(
 Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('tipos.update');
 
 Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');
+Route::get('/getDatos2/{lote_granel}', [getFuncionesController::class, 'getDatos2'])->name('getDatos2');
+
 
 //Guias de agave o maguey
 Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('traslado-guias');
