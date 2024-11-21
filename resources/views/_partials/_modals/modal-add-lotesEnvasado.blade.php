@@ -88,14 +88,7 @@
                                 <label for="volumen_total">Volumen total en Litros</label>
                             </div>
                         </div>
-                       <!-- <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <select class="select2 form-select id_instalacion" id="lugar_envasado"
-                                    name="lugar_envasado" aria-label="Default select example">
-                                </select>
-                                <label for="lugar_envasado">Lugar de envasado</label>
-                            </div>
-                        </div>-->
+
                         <div class="col-md-8 mb-6">
                             <div class="input-group">
                                 <select placeholder="Selecciona el cliente" class="form-select id_instalacion" id="lugar_envasado"

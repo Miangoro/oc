@@ -8,6 +8,7 @@ use App\Models\empresa;
 use App\Models\estados;
 use App\Models\Instalaciones;
 use App\Models\organismos;
+use App\Models\LotesGranel;
 use App\Models\solicitudesModel;
 use App\Models\solicitudTipo;
 use App\Models\User;
@@ -23,9 +24,10 @@ class solicitudesController extends Controller
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = estados::all(); // Obtener todos los estados
         $organismos = organismos::all(); // Obtener todos los estados
+        $LotesGranel = LotesGranel::all();
 
         $inspectores = User::where('tipo','=','2')->get(); // Obtener todos los organismos
-        return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores','solicitudesTipos','organismos'));
+        return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores','solicitudesTipos','organismos','LotesGranel'));
     }
 
     public function index(Request $request)
