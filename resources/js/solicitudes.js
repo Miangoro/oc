@@ -461,17 +461,17 @@ $(function () {
             const datos = response.data;
 
             if (id_tipo === 10) {
-              modal.find('#id_solicitud').val(id_solicitud);
-              modal.find('#edit_id_empresa').val(response.data.id_empresa).trigger('change');
-              modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
-              modal.find('#edit_id_predio').val(response.data.id_predio).trigger('change');
+              modal.find('#id_solicitud_geo').val(id_solicitud);
+              modal.find('#edit_id_empresa_geo').val(response.data.id_empresa).trigger('change');
+              modal.find('#edit_fecha_visita_geo').val(response.data.fecha_visita);
+              modal.find('#edit_id_predio_geo').data('selected', response.data.id_predio);
                 // Acceder al campo `punto_reunion` desde `caracteristicas`
                if (response.caracteristicas && response.caracteristicas.punto_reunion) {
-                modal.find('#edit_punto_reunion').val(response.caracteristicas.punto_reunion);
+                modal.find('#edit_punto_reunion_geo').val(response.caracteristicas.punto_reunion);
               } else {
-                modal.find('#edit_punto_reunion').val(''); // Si no existe, deja vacío
+                modal.find('#edit_punto_reunion_geo').val(''); // Si no existe, deja vacío
               }
-              modal.find('#edit_info_adicional').val(response.data.info_adicional);
+              modal.find('#edit_info_adicional_geo').val(response.data.info_adicional);
               // Otros campos específicos para tipo 10
             } else if (id_tipo === 14) {
               modal.find('#edit_id_solicitud').val(id_solicitud);
@@ -480,9 +480,9 @@ $(function () {
               modal.find('#edit_id_instalacion').val(response.data.id_instalacion).trigger('change');
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
 
-              
+
               modal.find('#instalacion_id').val(response.data.id_instalacion);
-              
+
 
 
               // Otros campos específicos para tipo 14
@@ -558,7 +558,7 @@ $(function () {
 
     // Hacer la solicitud AJAX
     $.ajax({
-      url: '/actualizar-solicitudes/' + $('#id_solicitud').val(),
+      url: '/actualizar-solicitudes/' + $('#id_solicitud_geo').val(),
       type: 'POST',
       data: formData,
       processData: false,
@@ -896,7 +896,7 @@ $(function () {
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
-            text: response.message,
+            text: 'Solicitud registrada correctamente',
             customClass: {
               confirmButton: 'btn btn-success'
             }
