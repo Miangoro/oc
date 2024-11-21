@@ -52,6 +52,7 @@
                     <th>Firmante</th>
                     <th>Fecha de Vigencia</th>
                     <th>Fecha de Vencimiento</th>
+                    <th>Revisor Asignado</th>
                     <th>Certificado</th>
                     <th>Acciones</th>
                 </tr>
@@ -65,6 +66,7 @@
 @include('_partials/_modals/modal-pdfs-certificados')
 @include('_partials/_modals/modal-add-certificado-granel')
 @include('_partials/_modals/modal-edit-certificado-granel')
+@include('_partials/_modals/modal-add-asignar-revisor')
 <!-- /Modal -->
 
 @endsection

@@ -12,7 +12,7 @@
           <!-- Revisión por parte de -->
           <div class="form-floating form-floating-outline mb-3">
             <select class="form-select" id="tipoRevisor" name="tipoRevisor" aria-label="Revisión por parte de" required>
-              <option value="">Seleccione una opción</option>
+              <option value="" disabled selected>Seleccione una opción</option>
               <option value="1">Personal del organismo certificador</option>
               <option value="2">Miembro del consejo para la decisión de la certificación</option>
             </select>

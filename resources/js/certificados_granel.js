@@ -43,8 +43,9 @@ initializeSelect2(select2Elements);
          { data: 'id_firmante' },      //3
          { data: 'fecha_vigencia' },   //4  
          { data: 'fecha_vencimiento' },//5  
-         { data: 'PDF' },              //6  
-         { data: 'actions'},           //6
+         { data: ''},                  //6
+         { data: 'PDF' },              //7  
+         { data: 'actions'},           //8
        ],
        columnDefs: [
          {
@@ -94,8 +95,40 @@ initializeSelect2(select2Elements);
             }
           }, 
           {
-            // Abre el pdf del certificado
             targets: 6,
+            render: function (data, type, full, meta) {
+                var id_revisor = full['id_revisor'];   // Obtener el id_revisor
+                var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
+        
+                // Mensajes para los revisores
+                var revisorPersonal, revisorMiembro;
+        
+                // Para el revisor personal
+                if (id_revisor !== 'Sin asignar') {
+                    revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Revisión OC:</strong> ${id_revisor}</span>`;
+                } else {
+                    revisorPersonal = `<span class="badge" style="background-color: transparent; color:  #676B7B;"><strong>Revisión OC:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
+                }
+        
+                // Para el revisor miembro
+                if (id_revisor2 !== 'Sin asignar') {
+                    revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Revisión Consejo:</strong> ${id_revisor2}</span>`;
+                } else {
+                    revisorMiembro = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Revisión Consejo:</strong> <strong style="color: red;">Sin asignar</strong></span>`;
+                }
+        
+                // Retorna los revisores en formato HTML
+                return `
+                    <div style="display: flex; flex-direction: column;">
+                        <div style="display: inline;">${revisorPersonal}</div>
+                        <div style="display: inline;">${revisorMiembro}</div>
+                    </div>
+                `;
+            }
+        },
+          {
+            // Abre el pdf del certificado
+            targets: 7,
             className: 'text-center',
             render: function (data, type, full, meta) {
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_certificado']}" data-dictamen="${full['id_dictamen']}"></i>`;
@@ -103,7 +136,7 @@ initializeSelect2(select2Elements);
           },
          {
            // Actions
-           targets: 7,
+           targets: 8,
            title: 'Acciones',
            searchable: false,
            orderable: false,
@@ -122,6 +155,10 @@ initializeSelect2(select2Elements);
                 `<a data-id="${full['id_certificado']}" class="dropdown-item delete-record waves-effect text-danger">` +
                 '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar' +
                 '</a>'+
+                // Botón adicional: Asignar revisor
+                `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-info">` +
+                '<i class="text-warning ri-user-search-fill"></i> <span class="text-warning">Asignar revisor</span>' +
+                '</a>' +
                 '</div>' +
               '</div>'
             );                                   
@@ -692,6 +729,39 @@ const fvEdit = FormValidation.formValidation(editForm, {
 // Revalidar campos dinámicamente al cambiar su valor
 $('#edit_num_dictamen, #edit_id_firmante, #edit_fecha_vigencia, #edit_fecha_vencimiento').on('change', function () {
   fvEdit.revalidateField($(this).attr('name'));
+});
+
+
+$(document).ready(function() {
+  $('#tipoRevisor').on('change', function() {
+      var tipoRevisor = $(this).val();
+
+      $('#nombreRevisor').empty().append('<option value="">Seleccione un nombre</option>');
+
+      if (tipoRevisor) {
+          var tipo = (tipoRevisor === '1') ? 1 : 4; 
+
+          $.ajax({
+              url: '/ruta-para-obtener-revisores',
+              type: 'GET',
+              data: { tipo: tipo },
+              success: function(response) {
+
+                  if (Array.isArray(response) && response.length > 0) {
+                      response.forEach(function(revisor) {
+                          $('#nombreRevisor').append('<option value="' + revisor.id + '">' + revisor.name + '</option>');
+                      });
+                  } else {
+                      $('#nombreRevisor').append('<option value="">No hay revisores disponibles</option>');
+                  }
+              },
+              error: function(xhr) {
+                  console.log('Error:', xhr.responseText);
+                  alert('Error al cargar los revisores. Inténtelo de nuevo.');
+              }
+          });
+      }
+  });
 });
 
 $(document).on('click', '.pdf', function () {
