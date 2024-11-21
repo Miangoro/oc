@@ -12,8 +12,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerPredios2(this.value);" name="id_empresa"
-                                    class="select2 form-select id_empresa">
+                                <select onchange="obtenerPredios2(this.value); obtenerGraneles(this.value)"
+                                    name="id_empresa" class="select2 form-select id_empresa">
                                     <option value="" disabled>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
@@ -43,25 +43,29 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="obtenerGraneles(); obtenerClase(); obtenerTipos();"
-                                    id="id_lote_granel" name="id_lote_granel" class="select2 form-select">
-                                    <option value="" >Selecciona cliente</option>
+                                <select onchange="obtenerDatosGraneles();" id="id_lote_granel" name="id_lote_granel"
+                                    class="select2 form-select">
+                                    <option value="">Selecciona cliente</option>
                                     @foreach ($LotesGranel as $lotesgra)
                                         <option value="{{ $lotesgra->id_lote_granel }}">{{ $lotesgra->nombre_lote }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="id_lote_granel">Cliente</label>
+                                <label for="id_lote_granel">Lote a granel</label>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="select form-select id_lote_granel" name="id_lote_granel"
-                                    aria-label="id_lote_granel">
+                                <select class="select form-select id_categoria" name="id_categoria"
+                                    aria-label="id_categoria">
                                     <option value="" disabled>Lista de categorias</option>
+                                    @foreach ($categorias as $categoria)
+                                        <option value="{{ $categoria->id_categoria }}">{{ $categoria->categoria }}
+                                        </option>
+                                    @endforeach
                                 </select>
-                                <label for="id_lote_granel">Categoria</label>
+                                <label for="id_categoria">Categoria</label>
                             </div>
                         </div>
                     </div>
@@ -78,16 +82,15 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select form-select tipo_maguey" name="tipo_maguey"
-                        aria-label="tipo_maguey">
-                        <option value="" disabled>Lista de categorias</option>
-                    </select>
+                        <select class="select form-select tipo_maguey" name="tipo_maguey" aria-label="tipo_maguey">
+                            <option value="" disabled>Lista de categorias</option>
+                        </select>
                         <label for="tipo_maguey">Ingresa tipo de Maguey</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="" name=""
+                        <input type="text" class="form-control" id="analisis" name=""
                             placeholder="Ingresa Análisis fisicoquímico" />
                         <label for="folio">Ingresa Análisis fisicoquímico</label>
                     </div>
@@ -175,115 +178,69 @@
 
 
 <script>
-function obtenerGraneles() {
-    var lote_granel_id = $("#id_lote_granel").val();  // Obtener el ID del lote_granel
+    function obtenerDatosGraneles() {
+        var lote_granel_id = $("#id_lote_granel").val();
 
-    if (!lote_granel_id) {
-        alert("Por favor, selecciona un lote a granel.");
-        return;
+        if (!lote_granel_id) {
+            alert("Por favor, selecciona un lote a granel.");
+            return;
+        }
+
+        $.ajax({
+            url: '/getDatos2/' + lote_granel_id,
+            method: 'GET',
+            success: function(response) {
+
+                $('#id_categoria').val(response.lotes_granel.id_categoria);
+                $('#id_categoria').val(response.lotes_granel.id_categoria);
+                $('#id_categoria').val(response.lotes_granel.id_categoria);
+                $('#id_categoria').val(response.lotes_granel.id_categoria);
+                $('#id_categoria').val(response.lotes_granel.id_categoria);
+                $('#id_categoria').val(response.lotes_granel.id_categoria);
+
+                $('#id_categoria').val(response.lotes_granel.id_categoria);
+                $('#id_categoria').val(response.lotes_granel.id_categoria);
+                $('#id_categoria').val(response.lotes_granel.id_categoria);
+                $('#id_categoria').val(response.lotes_granel.id_categoria);
+
+
+                $('#analisis').val(response.lotes_granel.folio_fq);
+            },
+            error: function() {
+                alert('Error al cargar los lotes a granel.');
+            }
+        });
     }
 
-    // Hacer una petición AJAX para obtener los detalles del lote_granel
-    $.ajax({
-        url: '/getDatos2/' + lote_granel_id,  // Usar el ID del lote_granel
-        method: 'GET',
-        success: function(response) {
-            // Cargar los detalles en el modal
-            var contenido = "";
-            
-            // Verificar si hay lotes_granel en la respuesta
-            if (response.lotes_granel) {
-                contenido = '<option value="' + response.lotes_granel.id_lote_granel + '">' +
-                            response.lotes_granel.id_categoria + '</option>';
+    //funciones iniciales
+    function obtenerGraneles(empresa) {
+
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var contenido = "";
+                for (let index = 0; index < response.lotes_granel.length; index++) {
+                    contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
+                        response
+                        .lotes_granel[index].nombre_lote + '</option>' + contenido;
+                }
+                if (response.lotes_granel.length == 0) {
+                    contenido = '<option value="">Sin lotes registrados</option>';
+                } else {
+
+                }
+                $('#id_lote_granel').html(contenido);
+            },
+            error: function() {
+
             }
-
-            // Si no hay lotes_granel registrados
-            if (!response.lotes_granel || response.lotes_granel.length == 0) {
-                contenido = '<option value="">Sin lotes a granel registrados</option>';
-            }
-
-            // Insertar las opciones al select
-            $('.id_lote_granel').html(contenido);
-        },
-        error: function() {
-            alert('Error al cargar los lotes a granel.');
-        }
-    });
-}
-
-
-function obtenerClase() {
-    var lote_granel_id = $("#id_lote_granel").val();  // Obtener el ID del lote_granel
-
-    if (!lote_granel_id) {
-        alert("Por favor, selecciona un lote a granel.");
-        return;
+        });
     }
 
-    // Hacer una petición AJAX para obtener los detalles del lote_granel
-    $.ajax({
-        url: '/getDatos2/' + lote_granel_id,  // Usar el ID del lote_granel
-        method: 'GET',
-        success: function(response) {
-            // Cargar los detalles en el modal
-            var contenido = "";
-            
-            // Verificar si hay lotes_granel en la respuesta
-            if (response.lotes_granel) {
-                contenido = '<option value="' + response.lotes_granel.id_lote_granel + '">' +
-                            response.lotes_granel.id_categoria + '</option>';
-            }
-
-            // Si no hay lotes_granel registrados
-            if (!response.lotes_granel || response.lotes_granel.length == 0) {
-                contenido = '<option value="">Sin lotes a granel registrados</option>';
-            }
-
-            // Insertar las opciones al select
-            $('.id_clase').html(contenido);
-        },
-        error: function() {
-            alert('Error al cargar las clases de lotes a granel.');
-        }
-    });
-}
 
 
-function obtenerTipos() {
-    var lote_granel_id = $("#id_lote_granel").val();  // Obtener el ID del lote_granel
 
-    if (!lote_granel_id) {
-        alert("Por favor, selecciona un lote a granel.");
-        return;
-    }
-
-    // Hacer una petición AJAX para obtener los detalles del lote_granel
-    $.ajax({
-        url: '/getDatos2/' + lote_granel_id,  // Usar el ID del lote_granel
-        method: 'GET',
-        success: function(response) {
-            // Cargar los detalles en el modal
-            var contenido = "";
-
-            // Verificar si hay lotes_granel en la respuesta
-            if (response.lotes_granel) {
-                contenido = '<option value="' + response.lotes_granel.id_lote_granel + '">' +
-                            response.lotes_granel.id_tipo + '</option>';
-            }
-
-            // Si no hay lotes_granel registrados
-            if (!response.lotes_granel || response.lotes_granel.length == 0) {
-                contenido = '<option value="">Sin lotes a granel registrados</option>';
-            }
-
-            // Insertar las opciones al select
-            $('.tipo_maguey').html(contenido);
-        },
-        error: function() {
-            alert('Error al cargar los tipos de maguey.');
-        }
-    });
-}
 
 
     //funciones iniciales
