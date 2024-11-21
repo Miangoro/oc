@@ -8,22 +8,22 @@
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="addEditSolicitud">
-                  @csrf
+                    @csrf
 
                     <div class="row">
                         <input type="hidden" name="id_solicitud" id="edit_id_solicitud">
                         <input type="hidden" name="form_type" value="dictaminacion">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                              <select onchange="obtenerDatosEmpresaEdicion()" id="edit_id_empresa" name="id_empresa"
-                              class="select2 form-select"
-                              data-error-message="por favor selecciona la empresa">
-                              <option value="" disabled selected>Selecciona la empresa</option>
-                              @foreach ($empresas as $empresa)
-                                  <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
-                                  </option>
-                              @endforeach
-                          </select>
+                                <select onchange="obtenerInstalacion()" id="edit_id_empresa" name="id_empresa"
+                                    class="select2 form-select edit_id_empresa"
+                                    data-error-message="por favor selecciona la empresa">
+                                    <option value="" disabled selected>Selecciona la empresa</option>
+                                    @foreach ($empresas as $empresa)
+                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
+                                        </option>
+                                    @endforeach
+                                </select>
                                 <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
@@ -40,7 +40,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select" id="edit_id_instalacion" name="id_instalacion" aria-label="id_instalacion" required>
+                                <select class=" form-select" id="edit_id_instalacion" name="id_instalacion"
+                                    aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
@@ -51,6 +52,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <input type="hidden" id="instalacion_id">
 
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
@@ -73,47 +76,38 @@
 
 
 <script>
-function obtenerDatosEmpresaEdicion() {
-    var empresa = $("#edit_id_empresa").val();
-    console.log("select empresa seleccionado:" + empresa);
+    function obtenerInstalacion() {
+        var empresa = $(".edit_id_empresa").val();
 
-    // Verifica si el valor de empresa es válido
-    if (!empresa) {
-      console.log("El valor de empresa es inválido");
-        return; // No hacer la petición si el valor es inválido
-    }
-    // Hacer una petición AJAX para obtener los detalles de la empresa
-    $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function(response) {
-            console.log('Datos de la respuesta:', response);  // Verifica qué datos se están recibiendo
-            var $selectInstalaciones = $('#edit_id_instalacion');
-            $selectInstalaciones.empty();
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var contenido = "";
+                let seleccionado = "";
+                var instalacion_id = $("#instalacion_id").val();
 
-            if (response.instalaciones && response.instalaciones.length > 0) {
-                response.instalaciones.forEach(function(instalacion) {
-                    $selectInstalaciones.append(
-                        `<option value="${instalacion.id_instalacion}">${instalacion.nombre_instalacion}</option>`
-                    );
-                });
-            } else {
-                $selectInstalaciones.append(
-                    '<option value="" disabled selected>Sin instalaciones registradas</option>'
-                );
-                console.log("Sin instalaciones registradas");
+                for (let index = 0; index < response.instalaciones.length; index++) {
+                    if (instalacion_id == response.instalaciones[index].id_instalacion) {
+                        seleccionado = "selected";
+                    }
+                    contenido = '<option ' + seleccionado + ' value="' + response.instalaciones[index]
+                        .id_instalacion + '">' + response
+                        .instalaciones[index].tipo + ' | ' + response
+                        .instalaciones[index].direccion_completa + '</option>' + contenido;
+
+                }
+                if (response.instalaciones.length == 0) {
+                    contenido = '<option value="">Sin instalaciones registradas</option>';
+
+                } else {
+
+                }
+                $('#edit_id_instalacion').html(contenido);
+            },
+            error: function() {
+                //alert('Error al cargar los lotes a granel.');
             }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error al cargar los datos de la empresa:', error);
-            alert('Error al cargar los datos. Por favor, intenta nuevamente.');
-        }
-    });
-}
-
-// Llamar a obtenerDatosEmpresaEdicion cuando se selecciona la empresa
-$('#edit_id_empresa').change(function() {
-    obtenerDatosEmpresaEdicion();
-});
-
+        });
+    }
 </script>

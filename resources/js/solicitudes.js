@@ -479,6 +479,12 @@ $(function () {
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion').val(response.data.id_instalacion).trigger('change');
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
+
+              
+              modal.find('#instalacion_id').val(response.data.id_instalacion);
+              
+
+
               // Otros campos específicos para tipo 14
             }
             // Muestra el modal después de rellenar los datos

@@ -15,6 +15,11 @@ $breadcrumbs = [['link' => 'home', 'name' => 'Home'], ['link' => 'javascript:voi
    </div>
   @endif
 
+  <div class="mb-6">
+    @include('profile.subir-firmas-perfil')
+</div>
+
+
   @if (Laravel\Fortify\Features::enabled(Laravel\Fortify\Features::updatePasswords()))
     <div class="mb-6">
       @livewire('profile.update-password-form')
