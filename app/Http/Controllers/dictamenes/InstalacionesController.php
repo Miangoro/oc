@@ -56,26 +56,58 @@ class InstalacionesController extends Controller
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
 
-       
 
         if ( empty($request->input('search.value'))) {
+        //ORDENAR EL BUSCADOR "thead"
             //$users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
             $users = Dictamen_instalaciones::join('inspecciones AS i', 'dictamenes_instalaciones.id_inspeccion', '=', 'i.id_inspeccion')
+            ->leftjoin('solicitudes AS s', 's.id_solicitud', '=', 'i.id_solicitud')
+            ->leftjoin('empresa AS e', 'e.id_empresa', '=', 's.id_empresa')
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
                 
         } else {
+        //BUSCADOR
             $search = $request->input('search.value');
+
+        //Definimos el nombre al valor de "tipo_dictamen"
+            $map = [
+                'productor' => 1,
+                'envasador' => 2,
+                'comercializador' => 3,
+                'almacén y bodega' => 4,
+                'área de maduración' => 5,
+                ];
+
+        // Verificar si la búsqueda es uno de los valores mapeados
+            $searchValue = strtolower(trim($search)); //minusculas
+            $searchType = null;
+
+        // Si el término es valor conocido, asignamos el valor corres
+            if (isset($map[$searchValue])) {
+                $searchType = $map[$searchValue];
+            }
+
+        // Consulta con filtros
             //$users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
-            $users = Dictamen_instalaciones::join('inspecciones AS i', 'dictamenes_instalaciones.id_inspeccion', '=', 'i.id_inspeccion')
-                ->where('id_dictamen', 'LIKE', "%{$search}%")
-                ->orWhere('tipo_dictamen', 'LIKE', "%{$search}%")
-                ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-                ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
-                ->orWhere('num_servicio', 'LIKE', "%{$search}%")
-                ->offset($start)
+            $query = Dictamen_instalaciones::join('inspecciones AS i', 'dictamenes_instalaciones.id_inspeccion', '=', 'i.id_inspeccion')
+                ->leftjoin('solicitudes AS s', 's.id_solicitud', '=', 'i.id_solicitud')
+                ->leftjoin('empresa AS e', 'e.id_empresa', '=', 's.id_empresa');
+
+        // Si se proporciona un tipo_dictamen válido, filtramos
+            if ($searchType !== null) {
+                $query->where('tipo_dictamen',  'LIKE', "%{$searchType}%");
+            } else {
+        // Si no se busca por tipo_dictamen, buscamos por otros campos
+                $query->where('id_dictamen', 'LIKE', "%{$search}%")
+                    ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
+                    ->orWhere('fecha_emision', 'LIKE', "%{$search}%")
+                    ->orWhere('num_servicio', 'LIKE', "%{$search}%")
+                    ->orWhere('razon_social', 'LIKE', "%{$search}%");
+            }
+            $users = $query->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
