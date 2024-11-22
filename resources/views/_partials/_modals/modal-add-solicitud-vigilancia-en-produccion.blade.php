@@ -12,8 +12,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerPredios2(this.value); obtenerGraneles(this.value)"
-                                    name="id_empresa" class="select2 form-select id_empresa">
+                                <select onchange="obtenerPredios2(this.value); obtenerGraneles(this.value);obtenerGraneles2(this.value);"
+                                    id="id_empresa_vigilancia" name="id_empresa" class="select2 form-select id_empresa">
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
@@ -31,12 +31,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-floating form-floating-outline mb-5">
-                        <select onchange="obtenerDatosPredios(this.value);" class="select2 form-select id_predio"
-                            name="id_predio" aria-label="id_predio">
-                            <option value="" disabled>Lista de predios</option>
-                        </select>
-                        <label for="id_predio">Domicilio del predio a inspeccionar</label>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline mb-6 input-group ">
+                                <select class=" form-select" id="id_instalacion_vigilancia" name="id_instalacion" aria-label="id_instalacion">
+                                    <option value="" disabled selected>Lista de instalaciones</option>
+                                    <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
+                                </select>
+
+                                <button type="button" class="btn btn-primary" id="modalVigilancia"><i class="ri-add-line"></i> Agregar nueva instalación</button>
+
+                            </div>
+                    </div>
                     </div>
 
                     {{-- mio --}}
@@ -269,6 +275,35 @@
     }
 
 
+    function obtenerGraneles2(empresa) {
+
+$.ajax({
+    url: '/getDatos/' + empresa,
+    method: 'GET',
+    success: function(response) {
+        var contenido = "";
+        for (let index = 0; index < response.instalaciones.length; index++) {
+                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                        response
+                        .instalaciones[index].tipo + ' | ' + response
+                        .instalaciones[index].direccion_completa + '</option>' + contenido;
+                    // console.log(response.normas[index].norma);
+                }
+                if (response.instalaciones.length == 0) {
+                    contenido = '<option value="">Sin instalaciones registradas</option>';
+
+                } else {
+
+        }
+        $('#id_instalacion_vigilancia').html(contenido);
+    },
+    error: function() {
+
+    }
+});
+}
+
+
 
 
 
@@ -307,21 +342,5 @@
 
 
 
-    function obtenerDatosPredios(id_predio) {
-        $.ajax({
-            url: '/domicilios-predios/' + id_predio + '/edit',
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
-                var info_adicional =
-                    'Predio: ' + response.predio.nombre_predio + '. ' +
-                    'Punto de referencia: ' + response.predio.puntos_referencia + '. ' +
-                    'Superficie: ' + response.predio.superficie + 'H';
-                $('.info_adicional').val(info_adicional);
-            },
-            error: function() {
 
-            }
-        });
-    }
 </script>
