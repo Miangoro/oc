@@ -137,8 +137,8 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="art" name="art"
-                            placeholder="Ingrese la cantidad de azúcares">
+                        <input type="number" class="form-control" id="art" name="art"
+                            placeholder="Ingrese la cantidad de azúcares" step="0.01">
                         <label for="art">% de azúcares ART totales</label>
                     </div>
                 </div>
