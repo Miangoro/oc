@@ -114,32 +114,32 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="date" class="form-control datepicker" id="" name=""
-                            placeholder="Ingresa el folio de solicitud" readonly />
-                        <label for="folio">Fecha de corte</label>
+                        <input type="date" class="form-control datepicker" id="fecha_corte" name="fecha_corte"
+                            placeholder="Ingresa la fecha de corte" readonly />
+                        <label for="fecha_corte">Fecha de corte</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="number" class="form-control" id="id_guia" name="id_guia"
+                        <input type="number" class="form-control" id="kg_maguey" name="kg_maguey"
                             placeholder="Ingresa la cantidad de maguey" />
-                        <label for="id_guia">Kg. de maguey</label>
+                        <label for="kg_maguey">Kg. de maguey</label>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="number" class="form-control" id="" name=""
-                            placeholder="Ingrese la cantidad">
-                        <label for="">Cantidad de piñas</label>
+                        <input type="number" class="form-control" id="cant_pinas" name="cant_pinas"
+                            placeholder="Ingrese la cantidad de piñas">
+                        <label for="cant_pinas">Cantidad de piñas</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="" name=""
-                            placeholder="Ingrese la cantidad">
-                        <label for="">% de azúcares ART totales</label>
+                        <input type="text" class="form-control" id="art" name="art"
+                            placeholder="Ingrese la cantidad de azúcares">
+                        <label for="art">% de azúcares ART totales</label>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -186,34 +186,48 @@
 
 
 <script>
-    function obtenerDatosGraneles() {
-        var lote_granel_id = $("#id_lote_granel").val();
+function obtenerDatosGraneles() {
+    var lote_granel_id = $("#id_lote_granel").val();
 
-        if (!lote_granel_id) {
-            alert("Por favor, selecciona un lote a granel.");
-            return;
-        }
-
-        $.ajax({
-            url: '/getDatos2/' + lote_granel_id,
-            method: 'GET',
-            success: function(response) {
-
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_clase').val(response.lotes_granel.id_clase);
-                $('#id_tipo').val(response.lotes_granel.id_tipo);
-
-
-
-                $('#analisis').val(response.lotes_granel.folio_fq);
-                $('#volumen').val(response.lotes_granel.cont_alc)
-
-            },
-            error: function() {
-                alert('Error al cargar los lotes a granel.');
-            }
-        });
+    if (!lote_granel_id) {
+        alert("Por favor, selecciona un lote a granel.");
+        return;
     }
+
+    $.ajax({
+        url: '/getDatos2/' + lote_granel_id,
+        method: 'GET',
+        success: function(response) {
+            // Rellenar los campos de lote_granel
+            $('#id_categoria').val(response.lotes_granel.id_categoria);
+            $('#id_clase').val(response.lotes_granel.id_clase);
+            $('#id_tipo').val(response.lotes_granel.id_tipo);
+            $('#analisis').val(response.lotes_granel.folio_fq);
+            $('#volumen').val(response.lotes_granel.cont_alc);
+
+            // Acceder a la primera guía y obtener kg_maguey
+            if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
+                $('#kg_maguey').val(response.lotes_granel_guias[0].guia.kg_maguey); // Accede al valor de kg_maguey
+            } else {
+                $('#kg_maguey').val(''); // Si no hay guías, limpia el campo
+            }
+
+            if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
+                $('#cant_pinas').val(response.lotes_granel_guias[0].guia.num_comercializadas); // Accede al valor de kg_maguey
+            } else {
+                $('#cant_pinas').val(''); // Si no hay guías, limpia el campo
+            }
+            if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
+                $('#art').val(response.lotes_granel_guias[0].guia.art); // Accede al valor de kg_maguey
+            } else {
+                $('#art').val(''); // Si no hay guías, limpia el campo
+            }
+        },
+        error: function() {
+            alert('Error al cargar los lotes a granel.');
+        }
+    });
+}
 
     //funciones iniciales
     function obtenerGraneles(empresa) {
