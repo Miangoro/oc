@@ -14,7 +14,7 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select onchange="obtenerPredios2(this.value); obtenerGraneles(this.value)"
                                     name="id_empresa" class="select2 form-select id_empresa">
-                                    <option value="" >Selecciona cliente</option>
+                                    <option value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
@@ -59,7 +59,7 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class="select form-select " id="id_categoria" name="id_categoria"
                                     aria-label="id_categoria">
-                                    <option value="" >Lista de categorias</option>
+                                    <option value="">Lista de categorias</option>
                                     @foreach ($categorias as $categoria)
                                         <option value="{{ $categoria->id_categoria }}">{{ $categoria->categoria }}
                                         </option>
@@ -75,11 +75,11 @@
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
                         <select class="select form-select " id="id_clase" name="id_clase" aria-label="id_clase">
-                            <option value="" >Lista de clases</option>
+                            <option value="">Lista de clases</option>
                             @foreach ($clases as $clases)
-                            <option value="{{ $clases->id_clase }}">{{ $clases->clase }}
-                            </option>
-                        @endforeach
+                                <option value="{{ $clases->id_clase }}">{{ $clases->clase }}
+                                </option>
+                            @endforeach
                         </select>
                         <label for="id_clase">Clase</label>
                     </div>
@@ -87,11 +87,11 @@
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
                         <select class="select form-select " id="id_tipo" name="id_tipo" aria-label="id_tipo">
-                            <option value="" >Lista de categorias</option>
+                            <option value="">Lista de categorias</option>
                             @foreach ($tipos as $tipos)
-                            <option value="{{ $tipos->id_tipo }}">{{ $tipos->nombre }} - {{$tipos->cientifico}}
-                            </option>
-                        @endforeach
+                                <option value="{{ $tipos->id_tipo }}">{{ $tipos->nombre }} - {{ $tipos->cientifico }}
+                                </option>
+                            @endforeach
                         </select>
                         <label for="id_tipo">Ingresa tipo de Maguey</label>
                     </div>
@@ -153,16 +153,16 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="" name=""
+                        <input type="text" class="form-control" id="folio" name="folio"
                             placeholder="Ingrese la guai de traslado">
-                        <label for="">No.guia de traslado</label>
+                        <label for="folio">No.guia de traslado</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="" name=""
+                        <input type="text" class="form-control" id="nombre_predio" name="nombre_predio"
                             placeholder="Ingrese el predio de procedencia">
-                        <label for="">Predio de la procedencia</label>
+                        <label for="nombre_predio">Predio de la procedencia</label>
                     </div>
                 </div>
             </div>
@@ -186,48 +186,61 @@
 
 
 <script>
-function obtenerDatosGraneles() {
-    var lote_granel_id = $("#id_lote_granel").val();
+    function obtenerDatosGraneles() {
+        var lote_granel_id = $("#id_lote_granel").val();
 
-    if (!lote_granel_id) {
-        alert("Por favor, selecciona un lote a granel.");
-        return;
-    }
-
-    $.ajax({
-        url: '/getDatos2/' + lote_granel_id,
-        method: 'GET',
-        success: function(response) {
-            // Rellenar los campos de lote_granel
-            $('#id_categoria').val(response.lotes_granel.id_categoria);
-            $('#id_clase').val(response.lotes_granel.id_clase);
-            $('#id_tipo').val(response.lotes_granel.id_tipo);
-            $('#analisis').val(response.lotes_granel.folio_fq);
-            $('#volumen').val(response.lotes_granel.cont_alc);
-
-            // Acceder a la primera guía y obtener kg_maguey
-            if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                $('#kg_maguey').val(response.lotes_granel_guias[0].guia.kg_maguey); // Accede al valor de kg_maguey
-            } else {
-                $('#kg_maguey').val(''); // Si no hay guías, limpia el campo
-            }
-
-            if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                $('#cant_pinas').val(response.lotes_granel_guias[0].guia.num_comercializadas); // Accede al valor de kg_maguey
-            } else {
-                $('#cant_pinas').val(''); // Si no hay guías, limpia el campo
-            }
-            if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                $('#art').val(response.lotes_granel_guias[0].guia.art); // Accede al valor de kg_maguey
-            } else {
-                $('#art').val(''); // Si no hay guías, limpia el campo
-            }
-        },
-        error: function() {
-            alert('Error al cargar los lotes a granel.');
+        if (!lote_granel_id) {
+            alert("Por favor, selecciona un lote a granel.");
+            return;
         }
-    });
-}
+
+        $.ajax({
+            url: '/getDatos2/' + lote_granel_id,
+            method: 'GET',
+            success: function(response) {
+                // Rellenar los campos de lote_granel
+                $('#id_categoria').val(response.lotes_granel.id_categoria);
+                $('#id_clase').val(response.lotes_granel.id_clase);
+                $('#id_tipo').val(response.lotes_granel.id_tipo);
+                $('#analisis').val(response.lotes_granel.folio_fq);
+                $('#volumen').val(response.lotes_granel.cont_alc);
+
+                // Acceder a la primera guía y obtener kg_maguey
+                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
+                    $('#kg_maguey').val(response.lotes_granel_guias[0].guia
+                    .kg_maguey); 
+                } else {
+                    $('#kg_maguey').val(''); 
+                }
+
+                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
+                    $('#cant_pinas').val(response.lotes_granel_guias[0].guia
+                    .num_comercializadas); 
+                } else {
+                    $('#cant_pinas').val(''); 
+                }
+                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
+                    $('#art').val(response.lotes_granel_guias[0].guia.art); 
+                } else {
+                    $('#art').val(''); 
+                }
+                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
+                    $('#folio').val(response.lotes_granel_guias[0].guia.folio); 
+                } else {
+                    $('#folio').val(''); 
+                }
+
+                // Acceder a id_predio y nombre_predio de la relación predios
+                if (response.lotes_granel_guias[0].guia.predios) {
+                    $('#nombre_predio').val(response.lotes_granel_guias[0].guia.predios
+                    .nombre_predio); // Nombre del predio
+                }
+            },
+            error: function() {
+                alert('Error al cargar los lotes a granel.');
+            }
+        });
+    }
 
     //funciones iniciales
     function obtenerGraneles(empresa) {
