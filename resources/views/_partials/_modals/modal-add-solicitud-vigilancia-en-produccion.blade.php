@@ -12,15 +12,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerPredios2(this.value); obtenerGraneles(this.value);obtenerGraneles2(this.value);"
+                                <select
+                                    onchange="obtenerPredios2(this.value); obtenerGraneles(this.value);obtenerGraneles2(this.value);"
                                     id="id_empresa_vigilancia" name="id_empresa" class="select2 form-select id_empresa">
-                                    <option value="">Selecciona cliente</option>
+                                    <option value="">Selecciona Empresa</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="id_empresa">Cliente</label>
+                                <label for="id_empresa">Empresa</label>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -34,15 +35,17 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select" id="id_instalacion_vigilancia" name="id_instalacion" aria-label="id_instalacion">
+                                <select class=" form-select" id="id_instalacion_vigilancia" name="id_instalacion"
+                                    aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
 
-                                <button type="button" class="btn btn-primary" id="modalVigilancia"><i class="ri-add-line"></i> Agregar nueva instalación</button>
+                                <button type="button" class="btn btn-primary" id="modalVigilancia"><i
+                                        class="ri-add-line"></i> Agregar nueva instalación</button>
 
                             </div>
-                    </div>
+                        </div>
                     </div>
 
                     {{-- mio --}}
@@ -214,32 +217,32 @@
                 // Acceder a la primera guía y obtener kg_maguey
                 if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
                     $('#kg_maguey').val(response.lotes_granel_guias[0].guia
-                    .kg_maguey); 
+                        .kg_maguey);
                 } else {
-                    $('#kg_maguey').val(''); 
+                    $('#kg_maguey').val('');
                 }
 
                 if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
                     $('#cant_pinas').val(response.lotes_granel_guias[0].guia
-                    .num_comercializadas); 
+                        .num_comercializadas);
                 } else {
-                    $('#cant_pinas').val(''); 
+                    $('#cant_pinas').val('');
                 }
                 if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                    $('#art').val(response.lotes_granel_guias[0].guia.art); 
+                    $('#art').val(response.lotes_granel_guias[0].guia.art);
                 } else {
-                    $('#art').val(''); 
+                    $('#art').val('');
                 }
                 if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                    $('#folio').val(response.lotes_granel_guias[0].guia.folio); 
+                    $('#folio').val(response.lotes_granel_guias[0].guia.folio);
                 } else {
-                    $('#folio').val(''); 
+                    $('#folio').val('');
                 }
 
                 // Acceder a id_predio y nombre_predio de la relación predios
                 if (response.lotes_granel_guias[0].guia.predios) {
                     $('#nombre_predio').val(response.lotes_granel_guias[0].guia.predios
-                    .nombre_predio); // Nombre del predio
+                        .nombre_predio); // Nombre del predio
                 }
             },
             error: function() {
@@ -248,9 +251,7 @@
         });
     }
 
-    //funciones iniciales
     function obtenerGraneles(empresa) {
-
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
@@ -269,55 +270,15 @@
                 $('#id_lote_granel').html(contenido);
             },
             error: function() {
-
             }
         });
     }
 
-
     function obtenerGraneles2(empresa) {
-
-$.ajax({
-    url: '/getDatos/' + empresa,
-    method: 'GET',
-    success: function(response) {
-        var contenido = "";
-        for (let index = 0; index < response.instalaciones.length; index++) {
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                        response
-                        .instalaciones[index].tipo + ' | ' + response
-                        .instalaciones[index].direccion_completa + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
-                }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
-
-                } else {
-
-        }
-        $('#id_instalacion_vigilancia').html(contenido);
-    },
-    error: function() {
-
-    }
-});
-}
-
-
-
-
-
-
-    //funciones iniciales
-    function obtenerPredios2() {
-        var empresa = $(".id_empresa").val();
-        // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
             success: function(response) {
-                console.log(response);
-                // Cargar los detalles en el modal
                 var contenido = "";
                 for (let index = 0; index < response.instalaciones.length; index++) {
                     contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
@@ -328,6 +289,32 @@ $.ajax({
                 }
                 if (response.instalaciones.length == 0) {
                     contenido = '<option value="">Sin instalaciones registradas</option>';
+                } else {
+                }
+                $('#id_instalacion_vigilancia').html(contenido);
+            },
+            error: function() {
+
+            }
+        });
+    }
+
+    function obtenerPredios2() {
+        var empresa = $(".id_empresa").val();
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                console.log(response);
+                var contenido = "";
+                for (let index = 0; index < response.instalaciones.length; index++) {
+                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                        response
+                        .instalaciones[index].tipo + ' | ' + response
+                        .instalaciones[index].direccion_completa + '</option>' + contenido;
+                }
+                if (response.instalaciones.length == 0) {
+                    contenido = '<option value="">Sin instalaciones registradas</option>';
 
                 } else {
 
@@ -335,12 +322,7 @@ $.ajax({
                 $('#id_instalacion').html(contenido);
             },
             error: function() {
-                //alert('Error al cargar los lotes a granel.');
             }
         });
     }
-
-
-
-
 </script>
