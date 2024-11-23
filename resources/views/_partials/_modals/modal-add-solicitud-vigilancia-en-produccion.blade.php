@@ -98,7 +98,7 @@
                         <select class="select form-select " id="id_tipo" name="id_tipo" aria-label="id_tipo">
                             <option value="">Lista de categorias</option>
                             @foreach ($tipos as $tipos)
-                                <option value="{{ $tipos->id_tipo }}">{{ $tipos->nombre }} - {{ $tipos->cientifico }}
+                                <option value="{{ $tipos->id_tipo }}">{{ $tipos->nombre }} | {{ $tipos->cientifico }}
                                 </option>
                             @endforeach
                         </select>
@@ -221,7 +221,6 @@
                 } else {
                     $('#kg_maguey').val('');
                 }
-
                 if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
                     $('#cant_pinas').val(response.lotes_granel_guias[0].guia
                         .num_comercializadas);
