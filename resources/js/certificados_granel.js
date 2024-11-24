@@ -764,6 +764,133 @@ $(document).ready(function() {
   });
 });
 
+// Agregar Revisor
+$.ajaxSetup({
+  headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+  }
+});
+
+$('#asignarRevisorForm').hide();
+
+const form = document.getElementById('asignarRevisorForm');
+const fv = FormValidation.formValidation(form, {
+  fields: {
+      'tipoRevisor': {
+          validators: {
+              notEmpty: {
+                  message: 'Debe seleccionar una opción para la revisión.'
+              }
+          }
+      },
+      'nombreRevisor': {
+          validators: {
+              notEmpty: {
+                  message: 'Debe seleccionar un nombre para el revisor.'
+              }
+          }
+      },
+      'numeroRevision': {
+          validators: {
+              notEmpty: {
+                  message: 'Debe seleccionar un número de revisión.'
+              }
+          }
+      }
+  },
+  plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.mb-3'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function (e) {
+  var formData = new FormData(form);
+  var id_certificado = $('#id_certificado').val();
+  var tipoRevisor = $('#tipoRevisor').val(); 
+  var revisorValue = $('#nombreRevisor').val(); 
+  
+  console.log('ID Certificado:', id_certificado);
+  console.log('Tipo de Revisor:', tipoRevisor);
+  console.log('Valor del Revisor:', revisorValue);
+
+  if (tipoRevisor == '1') { 
+      formData.append('id_revisor', revisorValue);
+      formData.append('id_revisor2', null); 
+  } else if (tipoRevisor == '2') {
+      formData.append('id_revisor2', revisorValue);
+      formData.append('id_revisor', null); 
+  }
+
+  // Añadir otros datos
+  formData.append('id_certificado', id_certificado);
+  var esCorreccion = $('#esCorreccion').is(':checked') ? 'si' : 'no';
+  formData.append('esCorreccion', esCorreccion);
+
+  console.log('FormData:', Array.from(formData.entries())); 
+
+  $.ajax({
+      url: '/asignar-revisor/granel',
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+          $('#asignarRevisorModal').modal('hide');
+          Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.message,
+              customClass: {
+                  confirmButton: 'btn btn-success'
+              }
+          }).then(function () {
+              form.reset();
+              $('#nombreRevisor').val(null).trigger('change');
+              $('#esCorreccion').prop('checked', false);
+              fv.resetForm();
+              $('.datatables-users').DataTable().ajax.reload();
+          });
+      },
+      error: function (xhr) {
+          $('#asignarRevisorModal').modal('hide');
+          Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: 'Revisor asignado exitosamente',
+              customClass: {
+                  confirmButton: 'btn btn-success'
+              }
+          }).then(function () {
+              form.reset();
+              $('#nombreRevisor').val(null).trigger('change');
+              $('#esCorreccion').prop('checked', false);
+              fv.resetForm();
+              $('.datatables-users').DataTable().ajax.reload();
+          });
+      }
+  });
+});
+
+$('#nombreRevisor').on('change', function () {
+  fv.revalidateField($(this).attr('name'));
+});
+
+$('#asignarRevisorModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget); 
+  var id_certificado = button.data('id'); 
+  $('#id_certificado').val(id_certificado);
+  console.log('ID Certificado al abrir modal:', id_certificado);
+  fv.resetForm();
+  form.reset();
+
+  $('#asignarRevisorForm').show();
+});
+
 $(document).on('click', '.pdf', function () {
   var id = $(this).data('id');
   var dictamen = $(this).data('dictamen');

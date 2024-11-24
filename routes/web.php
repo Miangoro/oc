@@ -833,6 +833,7 @@ Route::get('/edit-certificados/granel/{id_certificado}', [Certificado_GranelCont
 Route::delete('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'destroy'])->name('certificados.destroy');
 Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCertificado'])->name('Pre-certificado');
 Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'update']);
+Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor'); //Agregar
 
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
 

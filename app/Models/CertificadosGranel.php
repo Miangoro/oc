@@ -30,4 +30,8 @@ class CertificadosGranel extends Model
         return $this->belongsTo(User::class, 'id_firmante', 'id'); 
     }
 
+    public function revisor()
+    {
+        return $this->belongsTo(RevisorGranel::class, 'id_certificado', 'id_certificado');
+    }
 }
