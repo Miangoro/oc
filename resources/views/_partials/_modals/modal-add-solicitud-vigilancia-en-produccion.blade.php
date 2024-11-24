@@ -12,15 +12,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerPredios2(this.value); obtenerGraneles(this.value)"
-                                    name="id_empresa" class="select2 form-select id_empresa">
-                                    <option value="" disabled>Selecciona cliente</option>
+                                <select
+                                    onchange="obtenerPredios2(this.value); obtenerGraneles(this.value);obtenerGraneles2(this.value);"
+                                    id="id_empresa_vigilancia" name="id_empresa" class="select2 form-select id_empresa">
+                                    <option value="">Selecciona Empresa</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="id_empresa">Cliente</label>
+                                <label for="id_empresa">Empresa</label>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -31,12 +32,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-floating form-floating-outline mb-5">
-                        <select onchange="obtenerDatosPredios(this.value);" class="select2 form-select id_predio"
-                            name="id_predio" aria-label="id_predio">
-                            <option value="" disabled>Lista de predios</option>
-                        </select>
-                        <label for="id_predio">Domicilio del predio a inspeccionar</label>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline mb-6 input-group ">
+                                <select class=" form-select" id="id_instalacion_vigilancia" name="id_instalacion"
+                                    aria-label="id_instalacion">
+                                    <option value="" disabled selected>Lista de instalaciones</option>
+                                    <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
+                                </select>
+
+                                <button type="button" class="btn btn-primary" id="modalVigilancia"><i
+                                        class="ri-add-line"></i> Agregar nueva instalación</button>
+
+                            </div>
+                        </div>
                     </div>
 
                     {{-- mio --}}
@@ -57,9 +66,9 @@
 
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="select form-select id_categoria" name="id_categoria"
+                                <select class="select form-select " id="id_categoria" name="id_categoria"
                                     aria-label="id_categoria">
-                                    <option value="" disabled>Lista de categorias</option>
+                                    <option value="">Lista de categorias</option>
                                     @foreach ($categorias as $categoria)
                                         <option value="{{ $categoria->id_categoria }}">{{ $categoria->categoria }}
                                         </option>
@@ -74,23 +83,31 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select form-select id_clase" name="id_clase" aria-label="id_clase">
-                            <option value="" disabled>Lista de predios</option>
+                        <select class="select form-select " id="id_clase" name="id_clase" aria-label="id_clase">
+                            <option value="">Lista de clases</option>
+                            @foreach ($clases as $clases)
+                                <option value="{{ $clases->id_clase }}">{{ $clases->clase }}
+                                </option>
+                            @endforeach
                         </select>
                         <label for="id_clase">Clase</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select form-select tipo_maguey" name="tipo_maguey" aria-label="tipo_maguey">
-                            <option value="" disabled>Lista de categorias</option>
+                        <select class="select form-select " id="id_tipo" name="id_tipo" aria-label="id_tipo">
+                            <option value="">Lista de categorias</option>
+                            @foreach ($tipos as $tipos)
+                                <option value="{{ $tipos->id_tipo }}">{{ $tipos->nombre }} | {{ $tipos->cientifico }}
+                                </option>
+                            @endforeach
                         </select>
-                        <label for="tipo_maguey">Ingresa tipo de Maguey</label>
+                        <label for="id_tipo">Ingresa tipo de Maguey</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="analisis" name=""
+                        <input type="text" class="form-control" id="analisis" name="analisis"
                             placeholder="Ingresa Análisis fisicoquímico" />
                         <label for="folio">Ingresa Análisis fisicoquímico</label>
                     </div>
@@ -99,39 +116,39 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="number" class="form-control" id="" name=""
+                        <input type="number" class="form-control" id="volumen" name="volumen"
                             placeholder="Ingresa el volumen" />
-                        <label for="folio">%Alc. Vol.</label>
+                        <label for="volumen">%Alc. Vol.</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="date" class="form-control datepicker" id="" name=""
-                            placeholder="Ingresa el folio de solicitud" readonly />
-                        <label for="folio">Fecha de corte</label>
+                        <input type="date" class="form-control datepicker" id="fecha_corte" name="fecha_corte"
+                            placeholder="Ingresa la fecha de corte" readonly />
+                        <label for="fecha_corte">Fecha de corte</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="number" class="form-control" id="" name=""
+                        <input type="number" class="form-control" id="kg_maguey" name="kg_maguey"
                             placeholder="Ingresa la cantidad de maguey" />
-                        <label for="folio">Kg. de maguey</label>
+                        <label for="kg_maguey">Kg. de maguey</label>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="number" class="form-control" id="" name=""
-                            placeholder="Ingrese la cantidad">
-                        <label for="">Cantidad de piñas</label>
+                        <input type="number" class="form-control" id="cant_pinas" name="cant_pinas"
+                            placeholder="Ingrese la cantidad de piñas">
+                        <label for="cant_pinas">Cantidad de piñas</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="" name=""
-                            placeholder="Ingrese la cantidad">
-                        <label for="">% de azúcares ART totales</label>
+                        <input type="number" class="form-control" id="art" name="art"
+                            placeholder="Ingrese la cantidad de azúcares" step="0.01">
+                        <label for="art">% de azúcares ART totales</label>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -145,16 +162,16 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="" name=""
+                        <input type="text" class="form-control" id="folio" name="folio"
                             placeholder="Ingrese la guai de traslado">
-                        <label for="">No.guia de traslado</label>
+                        <label for="folio">No.guia de traslado</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="" name=""
+                        <input type="text" class="form-control" id="nombre_predio" name="nombre_predio"
                             placeholder="Ingrese el predio de procedencia">
-                        <label for="">Predio de la procedencia</label>
+                        <label for="nombre_predio">Predio de la procedencia</label>
                     </div>
                 </div>
             </div>
@@ -190,21 +207,42 @@
             url: '/getDatos2/' + lote_granel_id,
             method: 'GET',
             success: function(response) {
-
+                // Rellenar los campos de lote_granel
                 $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-
-
+                $('#id_clase').val(response.lotes_granel.id_clase);
+                $('#id_tipo').val(response.lotes_granel.id_tipo);
                 $('#analisis').val(response.lotes_granel.folio_fq);
+                $('#volumen').val(response.lotes_granel.cont_alc);
+
+                // Acceder a la primera guía y obtener kg_maguey
+                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
+                    $('#kg_maguey').val(response.lotes_granel_guias[0].guia
+                        .kg_maguey);
+                } else {
+                    $('#kg_maguey').val('');
+                }
+                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
+                    $('#cant_pinas').val(response.lotes_granel_guias[0].guia
+                        .num_comercializadas);
+                } else {
+                    $('#cant_pinas').val('');
+                }
+                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
+                    $('#art').val(response.lotes_granel_guias[0].guia.art);
+                } else {
+                    $('#art').val('');
+                }
+                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
+                    $('#folio').val(response.lotes_granel_guias[0].guia.folio);
+                } else {
+                    $('#folio').val('');
+                }
+
+                // Acceder a id_predio y nombre_predio de la relación predios
+                if (response.lotes_granel_guias[0].guia.predios) {
+                    $('#nombre_predio').val(response.lotes_granel_guias[0].guia.predios
+                        .nombre_predio); // Nombre del predio
+                }
             },
             error: function() {
                 alert('Error al cargar los lotes a granel.');
@@ -212,9 +250,7 @@
         });
     }
 
-    //funciones iniciales
     function obtenerGraneles(empresa) {
-
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
@@ -233,26 +269,15 @@
                 $('#id_lote_granel').html(contenido);
             },
             error: function() {
-
             }
         });
     }
 
-
-
-
-
-
-    //funciones iniciales
-    function obtenerPredios2() {
-        var empresa = $(".id_empresa").val();
-        // Hacer una petición AJAX para obtener los detalles de la empresa
+    function obtenerGraneles2(empresa) {
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
             success: function(response) {
-                console.log(response);
-                // Cargar los detalles en el modal
                 var contenido = "";
                 for (let index = 0; index < response.instalaciones.length; index++) {
                     contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
@@ -263,6 +288,32 @@
                 }
                 if (response.instalaciones.length == 0) {
                     contenido = '<option value="">Sin instalaciones registradas</option>';
+                } else {
+                }
+                $('#id_instalacion_vigilancia').html(contenido);
+            },
+            error: function() {
+
+            }
+        });
+    }
+
+    function obtenerPredios2() {
+        var empresa = $(".id_empresa").val();
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                console.log(response);
+                var contenido = "";
+                for (let index = 0; index < response.instalaciones.length; index++) {
+                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                        response
+                        .instalaciones[index].tipo + ' | ' + response
+                        .instalaciones[index].direccion_completa + '</option>' + contenido;
+                }
+                if (response.instalaciones.length == 0) {
+                    contenido = '<option value="">Sin instalaciones registradas</option>';
 
                 } else {
 
@@ -270,27 +321,6 @@
                 $('#id_instalacion').html(contenido);
             },
             error: function() {
-                //alert('Error al cargar los lotes a granel.');
-            }
-        });
-    }
-
-
-
-    function obtenerDatosPredios(id_predio) {
-        $.ajax({
-            url: '/domicilios-predios/' + id_predio + '/edit',
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
-                var info_adicional =
-                    'Predio: ' + response.predio.nombre_predio + '. ' +
-                    'Punto de referencia: ' + response.predio.puntos_referencia + '. ' +
-                    'Superficie: ' + response.predio.superficie + 'H';
-                $('.info_adicional').val(info_adicional);
-            },
-            error: function() {
-
             }
         });
     }

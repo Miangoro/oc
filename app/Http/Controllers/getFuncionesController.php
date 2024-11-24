@@ -70,17 +70,23 @@ class getFuncionesController extends Controller
 
     public function getDatos2(LotesGranel $lote_granel)
     {
+        // Obtén las guías asociadas al lote a granel con la relación 'guia'
+        $lotes_granel_guias = $lote_granel->lotesGuias()->with(['guia', 'guia.predios'])->get();
+        
         return response()->json([
             'instalaciones' => $lote_granel->empresa->obtenerInstalaciones(),
-            'lotes_granel' => $lote_granel, // Aquí retornas el objeto completo de lote_granel
+            'lotes_granel' => $lote_granel,
             'marcas' => $lote_granel->empresa->marcas(),
-            'guias' => $lote_granel->empresa->guias(),
+            'lotes_granel_guias' => $lotes_granel_guias, // Retorna las guías con el campo kg_maguey y predio
             'predios' => $lote_granel->empresa->predios(),
             'predio_plantacion' => $lote_granel->empresa->predio_plantacion(),
             'direcciones' => $lote_granel->empresa->direcciones(),
-            'lotes_envasado' => $lote_granel->lotesEnvasado, // Aquí también
+            'lotes_envasado' => $lote_granel->lotesEnvasado,
         ]);
     }
+    
+    
+    
     
 
     

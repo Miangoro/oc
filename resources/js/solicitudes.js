@@ -11,7 +11,7 @@ $(function () {
       url: baseUrl + 'solicitudes-list',
       type: 'GET',
       dataSrc: function (json) {
-       /*  console.log(json); */ // Ver los datos en la consola
+        /*  console.log(json); */ // Ver los datos en la consola
         return json.data;
       },
       error: function (xhr, error, thrown) {
@@ -353,7 +353,7 @@ $(function () {
   initializeSelect2(select2Elements);
 
 
-//Date picker
+  //Date picker
   $(document).ready(function () {
     $('.datepicker').datepicker({
       format: 'yyyy-mm-dd',
@@ -465,8 +465,8 @@ $(function () {
               modal.find('#edit_id_empresa_geo').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita_geo').val(response.data.fecha_visita);
               modal.find('#edit_id_predio_geo').data('selected', response.data.id_predio);
-                // Acceder al campo `punto_reunion` desde `caracteristicas`
-               if (response.caracteristicas && response.caracteristicas.punto_reunion) {
+              // Acceder al campo `punto_reunion` desde `caracteristicas`
+              if (response.caracteristicas && response.caracteristicas.punto_reunion) {
                 modal.find('#edit_punto_reunion_geo').val(response.caracteristicas.punto_reunion);
               } else {
                 modal.find('#edit_punto_reunion_geo').val(''); // Si no existe, deja vacío
@@ -500,146 +500,146 @@ $(function () {
     });
   });
 
-/* formulario para enviar los datos y actualizar */
-$(function () {
-  // Configuración CSRF para Laravel
-  $.ajaxSetup({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-  });
-
-  // Inicializar FormValidation para el formulario de actualización
-  const formUpdate = document.getElementById('editFormTipo10');
-  const fvUpdate = FormValidation.formValidation(formUpdate, {
-    fields: {
-      'id_empresa': {
-        validators: {
-          notEmpty: {
-            message: 'Selecciona el cliente.'
-          }
-        }
-      },
-      'fecha_visita': {
-        validators: {
-          notEmpty: {
-            message: 'Selecciona la fecha y hora para la inspección.'
-          }
-        }
-      },
-      'id_predio': {
-        validators: {
-          notEmpty: {
-            message: 'Selecciona un predio para la inspección.'
-          }
-        }
-      },
-      'punto_reunion': {
-        validators: {
-          notEmpty: {
-            message: 'Introduce la dirección para el punto de reunión.'
-          }
-        }
-      }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        eleInvalidClass: 'is-invalid',
-        rowSelector: '.form-floating'
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function (e) {
-    // Obtener los datos del formulario
-    var formData = new FormData(formUpdate);
-
-    // Hacer la solicitud AJAX
-    $.ajax({
-      url: '/actualizar-solicitudes/' + $('#id_solicitud_geo').val(),
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        $('#editClienteModalTipo10').modal('hide'); // Oculta el modal
-        $('#editFormTipo10')[0].reset(); // Resetea el formulario
-        $('.select2').val(null).trigger('change'); // Resetea los select2
-        $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
-        console.log(response);
-
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: response.message,
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function (xhr) {
-        console.log('Error:', xhr.responseText);
-
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al actualizar la solicitud',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
+  /* formulario para enviar los datos y actualizar */
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-  });
-});
-/*funcion para solicitud de dictaminacion  */
-$(function () {
-  // Configuración CSRF para Laravel
-  $.ajaxSetup({
-      headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      }
-  });
 
-  // Inicializar FormValidation para la solicitud de dictaminación
-  const formDictaminacion = document.getElementById('addEditSolicitud');
-  const fvDictaminacion = FormValidation.formValidation(formDictaminacion, {
+    // Inicializar FormValidation para el formulario de actualización
+    const formUpdate = document.getElementById('editFormTipo10');
+    const fvUpdate = FormValidation.formValidation(formUpdate, {
       fields: {
-          'id_empresa': {
-              validators: {
-                  notEmpty: {
-                      message: 'Selecciona el cliente.'
-                  }
-              }
-          },
-          'fecha_visita': {
-              validators: {
-                  notEmpty: {
-                      message: 'Selecciona la fecha sugerida para la inspección.'
-                  }
-              }
-          },
-          'id_instalacion': {
-              validators: {
-                  notEmpty: {
-                      message: 'Selecciona una instalación.'
-                  }
-              }
-          },
+        'id_empresa': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el cliente.'
+            }
+          }
+        },
+        'fecha_visita': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la fecha y hora para la inspección.'
+            }
+          }
+        },
+        'id_predio': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un predio para la inspección.'
+            }
+          }
+        },
+        'punto_reunion': {
+          validators: {
+            notEmpty: {
+              message: 'Introduce la dirección para el punto de reunión.'
+            }
+          }
+        }
       },
       plugins: {
-          trigger: new FormValidation.plugins.Trigger(),
-          bootstrap5: new FormValidation.plugins.Bootstrap5({
-              eleValidClass: '',
-              eleInvalidClass: 'is-invalid',
-              rowSelector: '.form-floating'
-          }),
-          submitButton: new FormValidation.plugins.SubmitButton(),
-          autoFocus: new FormValidation.plugins.AutoFocus()
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
       }
-  }).on('core.form.valid', function (e) {
+    }).on('core.form.valid', function (e) {
+      // Obtener los datos del formulario
+      var formData = new FormData(formUpdate);
+
+      // Hacer la solicitud AJAX
+      $.ajax({
+        url: '/actualizar-solicitudes/' + $('#id_solicitud_geo').val(),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#editClienteModalTipo10').modal('hide'); // Oculta el modal
+          $('#editFormTipo10')[0].reset(); // Resetea el formulario
+          $('.select2').val(null).trigger('change'); // Resetea los select2
+          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+          console.log(response);
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la solicitud',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+  });
+  /*funcion para solicitud de dictaminacion  */
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation para la solicitud de dictaminación
+    const formDictaminacion = document.getElementById('addEditSolicitud');
+    const fvDictaminacion = FormValidation.formValidation(formDictaminacion, {
+      fields: {
+        'id_empresa': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el cliente.'
+            }
+          }
+        },
+        'fecha_visita': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la fecha sugerida para la inspección.'
+            }
+          }
+        },
+        'id_instalacion': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona una instalación.'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(formDictaminacion);
 
@@ -649,38 +649,38 @@ $(function () {
         data: formData,
         processData: false,
         contentType: false,
-          success: function (response) {
-              $('#editSolicitudDictamen').modal('hide');
-              $('#addEditSolicitud')[0].reset();
-              $('.select2').val(null).trigger('change');
-              $('.datatables-solicitudes').DataTable().ajax.reload();
-              console.log(response);
+        success: function (response) {
+          $('#editSolicitudDictamen').modal('hide');
+          $('#addEditSolicitud')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+          console.log(response);
 
-              Swal.fire({
-                  icon: 'success',
-                  title: '¡Éxito!',
-                  text: response.message,
-                  customClass: {
-                      confirmButton: 'btn btn-success'
-                  }
-              });
-          },
-          error: function (xhr) {
-              console.log('Error:', xhr.responseText);
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
 
-              Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: 'Error al actualizar la solicitud',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
-          }
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la solicitud',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
       });
+    });
   });
-});
-/*  */
+  /*  */
 
   $(function () {
     // Configuración CSRF para Laravel
@@ -1326,9 +1326,40 @@ $(function () {
 
   });
 
+  //Vigilancia boton instalaciones
+  $(document).ready(function () {
+    let openedFromFirstModal = false;
 
+    $('#modalVigilancia').on('click', function () {
+      var clienteSeleccionado = $('.id_empresa').val();
+      // Verificar si hay una empresa seleccionada
+      if (!clienteSeleccionado) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Espere!',
+          text: 'Por favor, selecciona un cliente primero.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          },
+          buttonsStyling: false
+        });
+        return;
+      }
+      $('#addVigilanciaProduccion').modal('hide');
+      // Marcar que el nuevo modal fue abierto desde el anterior
+      openedFromFirstModal = true;
+      // Preseleccionar la empresa en el modal de nueva instalación
+      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
+      $('#modalAddInstalacion').modal('show');
+    });
+    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
+      if (openedFromFirstModal) {
+        $('#addVigilanciaProduccion').modal('show');
+        openedFromFirstModal = false;
+      }
+    });
+  });
 
-  //end
 });
 
 

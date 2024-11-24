@@ -148,7 +148,7 @@
                             <input class="form-control form-control-sm" type="file" name="url[]">
                             <input value="132" class="form-control" type="hidden" name="id_documento[]">
                             <input value="Resultados ART" class="form-control" type="hidden"
-                                name="nombre_documento[]">
+                                name="nombre_documento[]" step="0.01">
                             <label for="Resultados ART">Adjuntar resultados de ART</label>
                         </div>
                     </div>
