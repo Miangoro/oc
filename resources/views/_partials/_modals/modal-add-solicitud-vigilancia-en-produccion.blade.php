@@ -14,14 +14,14 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select
                                     onchange="obtenerPredios2(this.value); obtenerGraneles(this.value);obtenerGraneles2(this.value);"
-                                    id="id_empresa" name="id_empresa" class="select2 form-select id_empresa">
-                                    <option value="">Selecciona Empresa</option>
+                                    name="id_empresa" name="id_empresa" class="select2 form-select id_empresa" required>
+                                    <option value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="id_empresa">Empresa</label>
+                                <label for="id_empresa">Empresas</label>
                             </div>
                         </div>
                         <div class="col-md-6">
