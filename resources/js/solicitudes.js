@@ -1188,6 +1188,179 @@ $(function () {
   });
 
 
+  // Validación del formulario Vigilancia en produccion
+  //validacion en agregar activos
+  const addVigilanciaProduccionForm = document.getElementById('addVigilanciaProduccionForm');
+
+  // Validación del formulario
+  const fv5 = FormValidation.formValidation(addVigilanciaProduccionForm, {
+    fields: {
+      id_empresa: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una opción'
+          }
+        }
+      },
+      fecha_visita: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el nombre del lote'
+          }
+        }
+      },
+      id_instalacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una categoría'
+          }
+        }
+      },
+/*       id_lote_granel: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el número de análisis del laboratorio'
+          }
+        }
+      }, */
+      id_categoria: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione el contenido'
+          }
+        }
+      },
+
+      id_clase: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione la unidad'
+          }
+        }
+      },
+      id_tipo: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione la clase'
+          }
+        }
+      },
+      analisis: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el contenido'
+          }
+        }
+      },
+      volumen: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el número de lote envasado'
+          }
+        }
+      },
+      fecha_corte: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione el tipo'
+          }
+        }
+      },
+      kg_maguey: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el lugar de producción'
+          }
+        }
+      },
+      cant_pinas: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el lugar de envasado'
+          }
+        }
+      },
+      art: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el lugar de envasado'
+          }
+        }
+      },
+      etapa: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el lugar de envasado'
+          }
+        }
+      },
+      folio: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el lugar de envasado'
+          }
+        }
+      },
+      nombre_predio: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el lugar de envasado'
+          }
+        }
+      }
+
+
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        rowSelector: function (field, ele) {
+          return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+        }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function (e) {
+    //e.preventDefault();
+    var formData = new FormData(addVigilanciaProduccionForm);
+
+    $.ajax({
+      url: '/hologramas/storeVigilanciaProduccion', // Actualiza con la URL correcta
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        $('#addVigilanciaProduccion').modal('hide');
+        $('.datatables-users').DataTable().ajax.reload();
+
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.success,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function (xhr) {
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al activar los hologramas',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+  });
+
+
   // Manejar el cambio en el tipo de instalación
   $(document).on('change', '#edit_tipo', function () {
     var tipo = $(this).val();
