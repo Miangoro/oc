@@ -141,6 +141,7 @@
           <th>Domicilio fiscal</th>
           <th>Régimen</th>
           <th>Contrato para imprimir</th>
+          <th>Estatus</th>
           <th>Acciones</th>
         </tr>
       </thead>

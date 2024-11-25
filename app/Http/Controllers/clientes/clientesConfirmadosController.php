@@ -15,6 +15,7 @@ use App\Models\normas_catalo;
 use App\Models\User;
 use App\Models\catalogo_actividad_cliente;
 use App\Models\empresa_actividad;
+use App\Models\maquiladores_model;
 use App\Notifications\GeneralNotification;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -33,6 +34,7 @@ class clientesConfirmadosController extends Controller
         $estados = estados::all(); // Obtener todos los estados
         $normas = normas_catalo::where('id_norma', '!=', 3)->get();
         $actividadesClientes = catalogo_actividad_cliente::all();
+        $empresas_confirmadas = empresa::where('tipo', 2)->get();
 
         // $userCount = $empresas->count();
         $verified = 5;
@@ -44,6 +46,7 @@ class clientesConfirmadosController extends Controller
 
 
             'empresas' => $empresas,
+            'empresas_confirmadas' => $empresas_confirmadas,
             'fisicas' => $fisicas,
             'morales' => $morales,
             'usuarios' => $usuarios,
@@ -233,7 +236,7 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
         if (empty($request->input('search.value'))) {
             $users = empresa::join('empresa_num_cliente AS n', 'empresa.id_empresa', '=', 'n.id_empresa')
             ->leftjoin('empresa_contrato AS c', 'empresa.id_empresa', '=', 'c.id_empresa') // Nuevo join con empresa_contrato
-                ->select('c.id_contrato','empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
+                ->select('empresa.estatus','c.id_contrato','empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
                 ->where('tipo', 2)->offset($start)
                 ->groupBy('empresa.id_empresa', 'empresa.razon_social',  'empresa.rfc', 'empresa.regimen', 'empresa.domicilio_fiscal', 'empresa.representante')
                 ->limit($limit)
@@ -244,7 +247,7 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
 
             $users = empresa::join('empresa_num_cliente AS n', 'empresa.id_empresa', '=', 'n.id_empresa')
             ->leftjoin('empresa_contrato AS c', 'empresa.id_empresa', '=', 'c.id_empresa') // Nuevo join con empresa_contrato
-                ->select('c.id_contrato','empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
+                ->select('empresa.estatus','c.id_contrato','empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
                 ->where('tipo', 2)->where('empresa.id_empresa', 'LIKE', "%{$search}%")
                 ->orWhere('razon_social', 'LIKE', "%{$search}%")
                 ->orWhere('domicilio_fiscal', 'LIKE', "%{$search}%")
@@ -276,6 +279,7 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
                 $nestedData['domicilio_fiscal'] = $user->domicilio_fiscal;
                 $nestedData['regimen'] = $user->regimen;
                 $nestedData['id_contrato'] = $user->id_contrato;
+                $nestedData['estatus'] = $user->estatus;
 
                 $data[] = $nestedData;
             }
@@ -341,7 +345,7 @@ public function edit_cliente_confirmado($id_empresa)
 {
    
     try {
-        $empresa = empresa::with(['empresaNumClientes', 'catalogoActividades'])->where('id_empresa', $id_empresa)->get();
+        $empresa = empresa::with(['empresaNumClientes', 'catalogoActividades','maquiladora'])->where('id_empresa', $id_empresa)->get();
         if ($empresa->isEmpty()) {
             return response()->json(['error' => 'No se encontraron contratos para esta empresa.'], 404);
         }
@@ -366,6 +370,10 @@ public function editar_cliente_confirmado(Request $request)
         'id_contacto' => 'required|exists:users,id',
         'normas' => 'required|array',
         'numeros_clientes' => 'required|array', // Asegúrate de que sea un array
+        'registro_productor' => 'max:5',
+        'convenio_corresp' => 'max:5',
+        'es_maquilador' => '',
+        'estatus' => ''
       ]);
 
       // Crear una nueva instancia del modelo Dictamen_Granel
@@ -383,7 +391,10 @@ public function editar_cliente_confirmado(Request $request)
       $cliente->correo = $validatedData['correo'];
       $cliente->telefono = $validatedData['telefono'];
       $cliente->id_contacto = $validatedData['id_contacto'];
-
+      $cliente->registro_productor = $validatedData['registro_productor'];
+      $cliente->convenio_corresp = $validatedData['convenio_corresp'];
+      $cliente->es_maquilador = $validatedData['es_maquilador'];
+      $cliente->estatus = $validatedData['estatus'];
 
       $cliente->save();
 
@@ -417,6 +428,15 @@ public function editar_cliente_confirmado(Request $request)
               'id_actividad' => $id_actividad,
           ]);
       }
+
+      if($validatedData['es_maquilador']=='Si'){
+            maquiladores_model::where('id_maquilador', $id_empresa)->delete();
+                maquiladores_model::create([
+                'id_maquilador' => $id_empresa,
+                'id_maquiladora' => $request->id_maquiladora,
+            ]);
+      }
+      
 
 
       $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
@@ -521,6 +541,10 @@ public function actualizarRegistros(Request $request)
           'id_contacto' => 'required|exists:users,id',
           'normas' => 'required|array',
           'numeros_clientes' => 'required|array', // Asegúrate de que sea un array
+          'registro_productor' => 'max:5',
+            'convenio_corresp' => 'max:5',
+            'es_maquilador' => '',
+            'estatus' => ''
         ]);
 
         // Crear una nueva instancia del modelo Dictamen_Granel
@@ -538,8 +562,11 @@ public function actualizarRegistros(Request $request)
         $cliente->correo = $validatedData['correo'];
         $cliente->telefono = $validatedData['telefono'];
         $cliente->id_contacto = $validatedData['id_contacto'];
-
         $cliente->tipo = 2;
+        $cliente->registro_productor = $validatedData['registro_productor'];
+        $cliente->convenio_corresp = $validatedData['convenio_corresp'];
+        $cliente->es_maquilador = $validatedData['es_maquilador'];
+        $cliente->estatus = $validatedData['estatus'];
 
         $cliente->save();
 
@@ -574,6 +601,13 @@ public function actualizarRegistros(Request $request)
             empresa_actividad::create([
                 'id_empresa' => $cliente->id_empresa,
                 'id_actividad' => $id_actividad,
+            ]);
+        }
+
+        if($validatedData['es_maquilador']=='Si'){
+                maquiladores_model::create([
+                'id_maquilador' => $id_empresa,
+                'id_maquiladora' => $request->id_maquiladora,
             ]);
         }
 

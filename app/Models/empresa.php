@@ -107,6 +107,11 @@ class empresa extends Model
         return $this->belongsToMany(normas_catalo::class, 'empresa_num_cliente', 'id_empresa', 'id_norma');
     }
 
+    public function maquiladora()
+    {
+        return $this->belongsTo(maquiladores_model::class, 'id_empresa', 'id_maquilador');
+    }
+
     public function actividades()
     {
         // Relación con el modelo empresa_actividad
