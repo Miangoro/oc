@@ -127,7 +127,7 @@
                     <div class="form-floating form-floating-outline mb-5">
                         <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
                             id="edit_fecha_corte_vig" type="text" name="fecha_corte" />
-                        <label for="fecha_corte">Fecha y hora sugerida para la inspección</label>
+                        <label for="fecha_corte">Fecha de corte</label>
                     </div>
                 </div>
                 <div class="col-md-4">
