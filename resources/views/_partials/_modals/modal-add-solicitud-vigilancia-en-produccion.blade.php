@@ -13,7 +13,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select
-                                    onchange="obtenerPredios2(this.value); obtenerGraneles(this.value);obtenerGraneles2(this.value);"
+                                    onchange=" obtenerGraneles(this.value);obtenerGraneles2(this.value);"
                                     name="id_empresa" name="id_empresa" class="select2 form-select id_empresa" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -35,7 +35,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select select id_instalacion" id="id_instalacion"
+                                <select class=" form-select select " id="id_instalacion"
                                     name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
@@ -283,7 +283,7 @@
                 if (response.instalaciones.length == 0) {
                     contenido = '<option value="">Sin instalaciones registradas</option>';
                 } else {}
-                $('.id_instalacion').html(contenido);
+                $('#id_instalacion').html(contenido);
             },
             error: function() {
 
@@ -291,29 +291,5 @@
         });
     }
 
-    function obtenerPredios2() {
-        var empresa = $(".id_empresa").val();
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
-                var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                        response
-                        .instalaciones[index].tipo + ' | ' + response
-                        .instalaciones[index].direccion_completa + '</option>' + contenido;
-                }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
 
-                } else {
-
-                }
-                $('#id_instalacion').html(contenido);
-            },
-            error: function() {}
-        });
-    }
 </script>
