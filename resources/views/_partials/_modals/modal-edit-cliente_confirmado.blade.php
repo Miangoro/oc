@@ -144,7 +144,7 @@
                     <div class="col-md-6">
                         <div class="form-floating form-floating-outline mb-4">
                             <input maxlength="5" type="text" id="convenio_corresp_edit" name="convenio_corresp" class="form-control"
-                                autocomplete="off" placeholder="Número de Convenio de corresponsabilidad" required />
+                                autocomplete="off" placeholder="Número de Convenio de corresponsabilidad" />
                             <label for="convenio_corresp">Número de Convenio de corresponsabilidad</label>
                         </div>
                     </div>
