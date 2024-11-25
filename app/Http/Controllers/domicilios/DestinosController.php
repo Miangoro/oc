@@ -4,7 +4,7 @@ namespace App\Http\Controllers\domicilios;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Empresa;
+use App\Models\empresa;
 use App\Models\Destinos;
 use App\Notifications\GeneralNotification;
 use App\Models\User;
@@ -18,7 +18,7 @@ class DestinosController extends Controller
         $destinos = Destinos::with('empresa')->get();
 
         // Obtener solo las empresas tipo '2'
-        $empresas = Empresa::where('tipo', 2)->get();
+        $empresas = empresa::where('tipo', 2)->get();
 
         // Pasar los datos a la vista
         return view('domicilios.find_domicilio_destinos_view', [
