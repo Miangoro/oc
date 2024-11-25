@@ -42,7 +42,7 @@
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
 
-                                <button type="button" class="btn btn-primary" id="modalVigilancia"><i
+                                <button type="button" class="btn btn-primary" id="vigi"><i
                                         class="ri-add-line"></i> Agregar nueva instalación</button>
 
                             </div>
