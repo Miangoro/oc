@@ -54,6 +54,7 @@
                     <th>Fecha de Vencimiento</th>
                     <th>Revisor Asignado</th>
                     <th>Certificado</th>
+                    <th>Estatus</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -67,6 +68,7 @@
 @include('_partials/_modals/modal-add-certificado-granel')
 @include('_partials/_modals/modal-edit-certificado-granel')
 @include('_partials/_modals/modal-add-asignar-revisor')
+@include('_partials/_modals/modal-reexpedir-certificado-granel')
 <!-- /Modal -->
 
 @endsection

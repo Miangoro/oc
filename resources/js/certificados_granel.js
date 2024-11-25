@@ -5,16 +5,19 @@ var dt_user_table = $('.datatables-users'),
 select2Elements = $('.select2'),
 userView = baseUrl + 'app/user/view/account';
 
-function initializeSelect2($elements) {
-   $elements.each(function () {
-       var $this = $(this);
-       $this.wrap('<div class="position-relative"></div>').select2({
-           dropdownParent: $this.parent()
-       });
-   });
-}
+$('#addCertificadoForm .select2').each(function () {
+var $this = $(this);
+$this.select2({
+    dropdownParent: $this.closest('.form-floating')
+});
+});
 
-initializeSelect2(select2Elements);
+$('#asignarRevisorForm .select2').each(function () {
+var $this = $(this);
+$this.select2({
+  dropdownParent: $this.closest('.form-floating')
+});
+});
 
   $('.datepicker').datepicker({
       format: 'yyyy-mm-dd',
@@ -45,7 +48,8 @@ initializeSelect2(select2Elements);
          { data: 'fecha_vencimiento' },//5  
          { data: ''},                  //6
          { data: 'PDF' },              //7  
-         { data: 'actions'},           //8
+         { data: 'Estatus' },          //8  
+         { data: 'actions'},           //9
        ],
        columnDefs: [
          {
@@ -125,7 +129,7 @@ initializeSelect2(select2Elements);
                     </div>
                 `;
             }
-        },
+          },
           {
             // Abre el pdf del certificado
             targets: 7,
@@ -134,9 +138,37 @@ initializeSelect2(select2Elements);
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_certificado']}" data-dictamen="${full['id_dictamen']}"></i>`;
             }
           },
+          {
+            target: 8, // Suponiendo que este es el índice de la columna que quieres actualizar
+            render: function (data, type, full, meta) {
+                var estatus = full['estatus']; // Obtener el estatus del certificado
+                
+                // Determinar el texto y el color del badge según el estatus
+                var badgeText = '';
+                var colorEstatus = '';
+        
+                if (estatus == 1) {
+                    badgeText = 'Cancelado'; // Si el estatus es 1
+                    colorEstatus = 'danger'; // Cambia a color rojo
+                } else if (estatus == 2) {
+                    badgeText = 'Reexpedido'; // Si el estatus es 2
+                    colorEstatus = 'success'; // Cambia a color verde
+                } else {
+                    var id_revisor = full['id_revisor'];
+                    var id_revisor2 = full['id_revisor2'];
+        
+                    // Verificar si ambos revisores están vacíos o son nulos
+                    var isActive = (id_revisor && id_revisor !== 'Sin asignar') || (id_revisor2 && id_revisor2 !== 'Sin asignar'); 
+                    badgeText = isActive ? 'Vigente' : 'Sin asignar'; // Establecer el estatus
+                    colorEstatus = isActive ? 'success' : 'secondary'; // Color según el estatus
+                }
+        
+                return `<span class="badge rounded-pill bg-label-${colorEstatus}">${badgeText}</span>`;
+            }
+          }, 
          {
            // Actions
-           targets: 8,
+           targets: 9,
            title: 'Acciones',
            searchable: false,
            orderable: false,
@@ -158,6 +190,10 @@ initializeSelect2(select2Elements);
                 // Botón adicional: Asignar revisor
                 `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#asignarRevisorModal" class="dropdown-item waves-effect text-info">` +
                 '<i class="text-warning ri-user-search-fill"></i> <span class="text-warning">Asignar revisor</span>' +
+                '</a>' +
+                // Botón para reexpedir certificado de instalaciones
+                `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#modalReexpedirCertificadoGranel" class="dropdown-item reexpedir-record waves-effect text-info">` +
+                '<i class="ri-file-edit-fill"></i>Reexpedir certificado' +
                 '</a>' +
                 '</div>' +
               '</div>'
@@ -736,8 +772,6 @@ $(document).ready(function() {
   $('#tipoRevisor').on('change', function() {
       var tipoRevisor = $(this).val();
 
-      $('#nombreRevisor').empty().append('<option value="">Seleccione un nombre</option>');
-
       if (tipoRevisor) {
           var tipo = (tipoRevisor === '1') ? 1 : 4; 
 
@@ -879,6 +913,93 @@ const fv = FormValidation.formValidation(form, {
 $('#nombreRevisor').on('change', function () {
   fv.revalidateField($(this).attr('name'));
 });
+
+//Reexpedicion y Cancelacion
+$(document).on('click', '.reexpedir-record', function () {
+  var idCertificado = $(this).data('id');
+  console.log("ID del certificado para reexpedir:", idCertificado); 
+  $('#reexpedir_id_certificado').val(idCertificado);
+});
+
+$('#accion_reexpedir').on('change', function () {
+  var selectedValue = $(this).val(); 
+  var idCertificado = $('#reexpedir_id_certificado').val(); 
+  cargarDatos(idCertificado);
+  if (selectedValue == '2') { 
+      $('#campos_condicionales').slideDown();
+  } else {
+      $('#campos_condicionales').slideUp(); 
+  }
+});
+
+$('#addReexpedirCertificadoGranelForm').on('submit', function (e) {
+  e.preventDefault(); 
+  var formData = $(this).serialize(); 
+
+  $.ajax({
+      url: '/certificados/reexpedir/granel', 
+      type: 'POST',
+      data: formData,
+      success: function (response) {
+          console.log('Respuesta del servidor:', response);
+          Swal.fire({
+              icon: 'success',
+              title: 'Éxito',
+              text: response.message
+          });
+          $('#modalReexpedirCertificadoGranel').modal('hide');
+          $('#addReexpedirCertificadoGranelForm')[0].reset();
+          $('#campos_condicionales').slideUp();
+          dt_instalaciones_table.ajax.reload();
+      },
+      error: function (error) {
+          console.log(error);
+          Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: error.responseJSON.message || 'Hubo un problema al procesar el formulario.'
+          });
+      }
+  });
+});
+
+function cargarDatos(idCertificado) {
+  if (!idCertificado) {
+      console.warn("No se proporcionó un ID de certificado válido.");
+      return;
+  }
+
+  $.ajax({
+      url: `/edit-certificados/granel/${idCertificado}`,
+      type: 'GET',
+      success: function (response) {
+          console.log('Datos recibidos del servidor:', response);
+
+          // Llenar los campos con los datos obtenidos
+          $('#num_dictamen_rex').val(response.id_dictamen).trigger('change');
+          $('#id_firmante_rex').val(response.id_firmante).trigger('change');
+          $('#num_certificado_rex').val(response.num_certificado);
+          $('#fecha_vigencia_rex').val(response.fecha_vigencia);
+          $('#fecha_vencimiento_rex').val(response.fecha_vencimiento);
+          $('#observaciones_rex').val(response.observaciones);
+      },
+      error: function (error) {
+          console.log(error);
+          Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Hubo un problema al cargar los datos del certificado.'
+          });
+      }
+  });
+}
+
+// Reiniciar campos al cerrar el modal
+$('#modalReexpedirCertificadoGranel').on('hidden.bs.modal', function () {
+  $('#addReexpedirCertificadoGranelForm')[0].reset(); 
+  $('#campos_condicionales').slideUp();
+});
+
 
 $('#asignarRevisorModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget); 

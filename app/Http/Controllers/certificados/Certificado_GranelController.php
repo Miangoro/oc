@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\certificados;
 
 use App\Helpers\Helpers;
+use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -125,18 +126,16 @@ class Certificado_GranelController extends Controller
         ]);
     }
 
-    public function edit($id_certificado)
+    // Funcion para cargar
+    public function edit($id)
     {
-        $certificado = CertificadosGranel::findOrFail($id_certificado);
-        
-        return response()->json([
-            'id_certificado' => $certificado->id_certificado,
-            'id_firmante' => $certificado->id_firmante,
-            'id_dictamen' => $certificado->id_dictamen,
-            'num_certificado' => $certificado->num_certificado,
-            'fecha_vigencia' => $certificado->fecha_vigencia,
-            'fecha_vencimiento' => $certificado->fecha_vencimiento,
-        ]);
+        $certificado = CertificadosGranel::find($id);
+    
+        if ($certificado) {
+            return response()->json($certificado);
+        }
+
+        return response()->json(['error' => 'Certificado no encontrado'], 404);
     }
     
     public function update(Request $request, $id_certificado)
@@ -282,13 +281,60 @@ class Certificado_GranelController extends Controller
         }
     }
 
+    //Funcion para reexpedir certificado
+    public function reexpedir(Request $request)
+    {
+        try {
+            $request->validate([
+            'id_firmante' => 'required|integer',
+            'id_dictamen' => 'required|integer',
+            'num_certificado' => 'required|string',
+            'fecha_vigencia' => 'required|date',
+            'fecha_vencimiento' => 'required|date',
+            'observaciones' => 'nullable|string',
+            ]);
+    
+            $certificado = CertificadosGranel::findOrFail($request->id_certificado);
+    
+            if ($request->accion_reexpedir == '1') {
+                $certificado->estatus = 1; 
+                $certificado->observaciones = $request->observaciones; 
+                $certificado->save();
+            } elseif ($request->accion_reexpedir == '2') {
+                $certificado->estatus = 1;
+                $certificado->observaciones = $request->observaciones; 
+                $certificado->save(); 
+    
+                // Crear un nuevo registro de certificado (reexpedición)
+                $nuevoCertificado = new CertificadosGranel();
+                $nuevoCertificado->id_dictamen = $request->id_dictamen;
+                $nuevoCertificado->num_certificado = $request->num_certificado;
+                $nuevoCertificado->fecha_vigencia = $request->fecha_vigencia;
+                $nuevoCertificado->fecha_vencimiento = $request->fecha_vencimiento;
+                $nuevoCertificado->id_firmante = $request->id_firmante;
+                $nuevoCertificado->estatus = 2;
+                
+                // Guarda el nuevo certificado
+                $nuevoCertificado->save();
+            }
+    
+            return response()->json(['message' => 'Certificado procesado correctamente.']);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return response()->json(['message' => 'Error al procesar el certificado.', 'error' => $e->getMessage()], 500);
+        }
+    }
+
     public function PreCertificado($id_certificado)
     {
         $certificado = CertificadosGranel::with('dictamen.empresa')->findOrFail($id_certificado);
     
+        $watermarkText = $certificado->estatus === 1;
+
         $pdfData = [
             'num_certificado' => $certificado->num_certificado,
             'razon_social' => $certificado->dictamen->empresa->razon_social,
+            'watermarkText' =>  $watermarkText,
         ];
     
         $pdf = Pdf::loadView('pdfs.pre-certificado', $pdfData);
