@@ -22,14 +22,15 @@
           <!-- Selecciona el nombre del revisor -->
           <div class="form-floating form-floating-outline mb-3">
             <select class="select2 form-select" id="nombreRevisor" name="nombreRevisor" aria-label="Selecciona el nombre del revisor" required>
-              <option value="">Seleccione un nombre</option>
+              <option value="" disabled selected>Seleccione un revisor</option>
             </select>
+            <label for="formValidationSelect2">Selecciona un revisor</label>
           </div>
 
           <!-- Selecciona el número de revisión -->
           <div class="form-floating form-floating-outline mb-3">
             <select class="form-select" id="numeroRevision" name="numeroRevision" aria-label="Selecciona el número de revisión" required>
-              <option value="">Seleccione una opción</option>
+              <option value="" disabled selected>Seleccione una opción</option>
               <option value="1">Primera revisión</option>
               <option value="2">Segunda revisión</option>
             </select>

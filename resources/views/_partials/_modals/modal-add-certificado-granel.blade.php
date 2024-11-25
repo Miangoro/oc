@@ -3,7 +3,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addCertificadoGrenelModalLabel">Agregar Certificado</h5>
+                <h5 class="modal-title" id="addCertificadoGrenelModalLabel">Agregar certificado de lote a granel</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -16,6 +16,7 @@
                                 <option value="{{ $dictamen->id_dictamen }}">{{ $dictamen->num_dictamen }}</option>
                             @endforeach
                         </select>
+                        <label for="formValidationSelect2">Seleccione un dictamen</label>
                     </div>
 
                     <!-- Select para el firmante -->
@@ -26,6 +27,7 @@
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
+                        <label for="formValidationSelect2">Selecciona un firmante</label>
                     </div>
 
                     <!-- Campo de texto para num_dictamen -->
