@@ -225,7 +225,7 @@ class solicitudesController extends Controller
             'id_lote_granel' => $request->id_lote_granel,
             'id_categoria' => $request->id_categoria,
             'id_clase' => $request->id_clase,
-            'id_tipo_maguey' => $request->id_tipo_maguey,
+            'id_tipo' => $request->id_tipo,
             'analisis' => $request->analisis,
             'volumen' => $request->volumen,
             'fecha_corte' => $request->fecha_corte,
@@ -423,6 +423,46 @@ class solicitudesController extends Controller
         $formType = $request->input('form_type');
 
         switch ($formType) {
+            case 'vigilanciaenproduccion':
+                // Validar datos para georreferenciación
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_visita' => 'required|date',
+                    'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                    'info_adicional' => 'required|string'
+                ]);
+                // Preparar el JSON para guardar en `caracteristicas`
+                $caracteristicasJson = [
+                    'id_lote_granel' => $request->id_lote_granel,
+                    'id_categoria' => $request->id_categoria,
+                    'id_clase' => $request->id_clase,
+                    'id_tipo' => $request->id_tipo,
+                    'analisis' => $request->analisis,
+                    'volumen' => $request->volumen,
+                    'fecha_corte' => $request->fecha_corte,
+                    'kg_maguey' => $request->kg_maguey,
+                    'cant_pinas' => $request->cant_pinas,
+                    'art' => $request->art,
+                    'etapa' => $request->etapa,
+                    'folio' => $request->folio,
+                    'nombre_predio' => $request->nombre_predio,
+                ];
+
+                // Convertir el array a JSON
+                $jsonContent = json_encode($caracteristicasJson);
+
+                // Actualizar datos específicos para georreferenciación
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_instalacion' => $request->id_instalacion,
+                    'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => $jsonContent,
+                ]);
+
+                break;
+
+
             case 'georreferenciacion':
                 // Validar datos para georreferenciación
                 $request->validate([
