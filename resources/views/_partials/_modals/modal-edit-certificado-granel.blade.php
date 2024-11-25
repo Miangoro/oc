@@ -12,9 +12,22 @@
                     <div class="form-floating form-floating-outline mb-4">
                         <select class="form-select select2" id="edit_num_dictamen" name="id_dictamen" required>
                             <option value="" disabled selected>Seleccione un dictamen</option>
-                            @foreach($dictamenes as $dictamen)
-                                <option value="{{ $dictamen->id_dictamen }}">{{ $dictamen->num_dictamen }}</option>
-                            @endforeach
+                        @foreach($dictamenes as $dictamen)
+                            <option value="{{ $dictamen->id_dictamen }}">
+                                {{ $dictamen->num_dictamen }}
+                                @if($dictamen->lote_granel && $dictamen->lote_granel->nombre_lote)
+                                    - {{ $dictamen->lote_granel->nombre_lote }}
+                                @else
+                                    - (sin nombre de lote)
+                                @endif
+                        
+                                @if($dictamen->inspeccion && $dictamen->inspeccion->num_servicio)
+                                    - {{ $dictamen->inspeccion->num_servicio }}
+                                @else
+                                    - (sin número de servicio)
+                                @endif
+                            </option>
+                        @endforeach
                         </select>
                         <label for="formValidationSelect2">Seleccione un dictamen</label>
                     </div>
