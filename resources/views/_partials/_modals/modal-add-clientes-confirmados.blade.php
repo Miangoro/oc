@@ -132,6 +132,55 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input maxlength="5" type="text" id="registro_productor_edit" name="registro_productor" class="form-control"
+                                    autocomplete="off" placeholder="Registro de Productor Autorizado (Uso de la DOM)" />
+                                <label for="registro_productor">Registro de Productor Autorizado (Uso de la DOM)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input maxlength="5" type="text" id="convenio_corresp_edit" name="convenio_corresp" class="form-control"
+                                    autocomplete="off" placeholder="Número de Convenio de corresponsabilidad" required />
+                                <label for="convenio_corresp">Número de Convenio de corresponsabilidad</label>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select onchange="maquilador(this.value)"  name="es_maquilador" class="form-select" required>
+                                        <option value="No">No</option>
+                                        <option value="Si">Si</option>
+                                </select>
+                                <label for="es_maquilador">¿Es un maquilador?</label>
+                            </div>
+                        </div>
+                        <div style="display: none" class="col-md-6 maquiladora">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select name="id_maquiladora" class="select2 form-select" required>
+                                    @foreach ($empresas_confirmadas as $empresa)
+                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="id_maquiladora">Empresa maquiladora</label>
+                            </div>
+                        </div>
+                      </div>
+    
+                      <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select name="estatus" class="form-select" required>
+                                        <option value="1">Activo</option>
+                                        <option value="2">Inactivo</option>
+                                </select>
+                                <label for="id_contacto">Estatus</label>
+                            </div>
+                        </div>
+                      </div>
                     <!-- Botones -->
                     <div class="d-flex justify-content-center mt-3">
                         <button type="submit" class="btn btn-primary me-2">Registrar</button>
