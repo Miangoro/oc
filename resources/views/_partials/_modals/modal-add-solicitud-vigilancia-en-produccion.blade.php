@@ -14,7 +14,7 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select
                                     onchange="obtenerPredios2(this.value); obtenerGraneles(this.value);obtenerGraneles2(this.value);"
-                                    id="id_empresa_vigilancia" name="id_empresa" class="select2 form-select id_empresa">
+                                    id="id_empresa" name="id_empresa" class="select2 form-select id_empresa">
                                     <option value="">Selecciona Empresa</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
@@ -26,8 +26,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" id="fecha_visita" type="text"
-                                    name="fecha_visita" />
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
+                                    id="fecha_visita" type="text" name="fecha_visita" />
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -35,8 +35,8 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select select id_instalacion" id="id_instalacion" name="id_instalacion"
-                                    aria-label="id_instalacion">
+                                <select class=" form-select select id_instalacion" id="id_instalacion"
+                                    name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
@@ -109,7 +109,7 @@
                     <div class="form-floating form-floating-outline mb-5">
                         <input type="text" class="form-control" id="analisis" name="analisis"
                             placeholder="Ingresa Análisis fisicoquímico" />
-                        <label for="folio">Ingresa Análisis fisicoquímico</label>
+                        <label for="analisis">Ingresa Análisis fisicoquímico</label>
                     </div>
                 </div>
             </div>
@@ -123,8 +123,8 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" id="fecha_corte" type="text"
-                            name="fecha_corte" />
+                        <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" id="fecha_corte"
+                            type="text" name="fecha_corte" />
                         <label for="fecha_corte">Fecha de corte</label>
                     </div>
                 </div>
@@ -191,7 +191,7 @@
         </div>
     </div>
 </div>
-</div>
+
 
 
 <script>
@@ -241,8 +241,7 @@
                         .nombre_predio); // Nombre del predio
                 }
             },
-            error: function() {
-            }
+            error: function() {}
         });
     }
 
@@ -264,8 +263,7 @@
                 }
                 $('#id_lote_granel').html(contenido);
             },
-            error: function() {
-            }
+            error: function() {}
         });
     }
 
@@ -284,8 +282,7 @@
                 }
                 if (response.instalaciones.length == 0) {
                     contenido = '<option value="">Sin instalaciones registradas</option>';
-                } else {
-                }
+                } else {}
                 $('.id_instalacion').html(contenido);
             },
             error: function() {
@@ -316,8 +313,7 @@
                 }
                 $('#id_instalacion').html(contenido);
             },
-            error: function() {
-            }
+            error: function() {}
         });
     }
 </script>

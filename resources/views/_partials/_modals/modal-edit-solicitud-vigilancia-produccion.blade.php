@@ -14,7 +14,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select
-                                    onchange="obtenerPredios2edit(this.value); obtenerGranelesedit(this.value);obtenerGraneles2edit(this.value);"
+                                    onchange="obtenerPredios2edit(this.value); obtenerGranelesedit(this.value);obtenerGraneles2(this.value);"
                                     id="edit_id_empresa_vig" name="id_empresa" class="select2 form-select id_empresa">
                                     <option value="">Selecciona Empresa</option>
                                     @foreach ($empresas as $empresa)
@@ -36,7 +36,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select select edit_id_instalacion" id="edit_id_instalacion_vig"
+                                <select class=" form-select select id_instalacion" id="edit_id_instalacion_vig"
                                     name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
@@ -111,7 +111,7 @@
                     <div class="form-floating form-floating-outline mb-5">
                         <input type="text" class="form-control" id="edit_analisis_vig" name="analisis"
                             placeholder="Ingresa Análisis fisicoquímico" />
-                        <label for="folio">Ingresa Análisis fisicoquímico</label>
+                        <label for="analisis">Ingresa Análisis fisicoquímico</label>
                     </div>
                 </div>
             </div>
@@ -271,29 +271,7 @@
         });
     }
 
-    function obtenerGraneles2edit(empresa) {
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                        response
-                        .instalaciones[index].tipo + ' | ' + response
-                        .instalaciones[index].direccion_completa + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
-                }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
-                } else {}
-                $('.edit_id_instalacion').html(contenido);
-            },
-            error: function() {
 
-            }
-        });
-    }
 
     function obtenerPredios2edit() {
         var empresa = $(".id_empresa").val();

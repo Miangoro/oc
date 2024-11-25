@@ -1359,141 +1359,125 @@ $(function () {
 
 
   // Validación del formulario Vigilancia en produccion
-  //validacion en agregar activos
   const addVigilanciaProduccionForm = document.getElementById('addVigilanciaProduccionForm');
-
-  // Validación del formulario
   const fv5 = FormValidation.formValidation(addVigilanciaProduccionForm, {
     fields: {
       id_empresa: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione una opción'
+            message: 'Por favor seleccione una empresa.'
           }
         }
       },
       fecha_visita: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el nombre del lote'
+            message: 'Por favor ingrese la fecha y hora de visita.'
           }
         }
       },
       id_instalacion: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione una categoría'
+            message: 'Por favor seleccione una instalación.'
           }
         }
       },
-      /*       id_lote_granel: {
-              validators: {
-                notEmpty: {
-                  message: 'Por favor ingrese el número de análisis del laboratorio'
-                }
-              }
-            }, */
       id_categoria: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione el contenido'
+            message: 'Por favor seleccione una categoría.'
           }
         }
       },
-
       id_clase: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione la unidad'
+            message: 'Por favor seleccione una clase.'
           }
         }
       },
       id_tipo: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione la clase'
+            message: 'Por favor seleccione un tipo de maguey.'
           }
         }
       },
       analisis: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el contenido'
+            message: 'Por favor ingrese el análisis fisicoquímico.'
           }
         }
       },
       volumen: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el número de lote envasado'
+            message: 'Por favor ingrese el porcentaje de alcohol (% Alc. Vol.).'
           }
         }
       },
       fecha_corte: {
         validators: {
           notEmpty: {
-            message: 'Por favor seleccione el tipo'
+            message: 'Por favor ingrese la fecha de corte.'
           }
         }
       },
       kg_maguey: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el lugar de producción'
+            message: 'Por favor ingrese la cantidad de maguey en kg.'
           }
         }
       },
       cant_pinas: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el lugar de envasado'
+            message: 'Por favor ingrese la cantidad de piñas.'
           }
         }
       },
       art: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el lugar de envasado'
+            message: 'Por favor ingrese el porcentaje de azúcares ART totales.'
           }
         }
       },
       etapa: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el lugar de envasado'
+            message: 'Por favor ingrese la etapa del proceso.'
           }
         }
       },
       folio: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el lugar de envasado'
+            message: 'Por favor ingrese el número de guía de traslado.'
           }
         }
       },
       nombre_predio: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el lugar de envasado'
+            message: 'Por favor ingrese el nombre del predio.'
           }
         }
       }
-
-
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
       bootstrap5: new FormValidation.plugins.Bootstrap5({
         eleValidClass: '',
-        rowSelector: function (field, ele) {
-          return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
-        }
+        rowSelector: '.mb-4, .mb-5, .mb-6' // Ajusta según las clases de tus elementos
       }),
       submitButton: new FormValidation.plugins.SubmitButton(),
       autoFocus: new FormValidation.plugins.AutoFocus()
     }
-  }).on('core.form.valid', function (e) {
-    //e.preventDefault();
+  }).on('core.form.valid', function () {
     var formData = new FormData(addVigilanciaProduccionForm);
 
     $.ajax({
@@ -1516,12 +1500,12 @@ $(function () {
           }
         });
       },
-      error: function (xhr) {
+      error: function () {
         // Mostrar alerta de error
         Swal.fire({
           icon: 'error',
           title: '¡Error!',
-          text: 'Error al activar los hologramas',
+          text: 'Error al registrar la vigilancia en producción.',
           customClass: {
             confirmButton: 'btn btn-danger'
           }

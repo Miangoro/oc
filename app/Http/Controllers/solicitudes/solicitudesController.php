@@ -217,6 +217,7 @@ class solicitudesController extends Controller
         $VigilanciaProdu->folio = Helpers::generarFolioSolicitud();
         $VigilanciaProdu->id_empresa = $request->id_empresa;
         $VigilanciaProdu->id_tipo = 2;
+        $VigilanciaProdu->id_predio = 0;
         $VigilanciaProdu->fecha_visita = $request->fecha_visita;
         $VigilanciaProdu->id_instalacion = $request->id_instalacion;
         $VigilanciaProdu->info_adicional = $request->info_adicional;
