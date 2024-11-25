@@ -1,4 +1,4 @@
-<!-- Add New Address Modal -->
+<!-- Add New Address Modal
 <div class="modal fade" id="mostrarPdf" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-simple">
     <div class="modal-content">
@@ -7,10 +7,35 @@
         <div class="text-center mb-6">
           <h4 id="titulo_modal" class="address-title mb-2"></h4>
           <p id="subtitulo_modal" class="address-subtitle"></p>
+        </div>-->
+<div class="modal fade" id="mostrarPdf" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-simple">
+    <div class="modal-content">
+    <a id="" href="#" target="_blank" class="btn btn-primary btn-sm ms-auto" style="display: none;">Abrir PDF en nueva pestaña</a>
+      <!-- Botón de cierre alineado a la derecha -->
+      <button type="button" class="btn-close btn-sm ml-auto" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-body p-0 d-flex flex-column justify-content-center align-items-center">
+        <div class="text-center mb-6">
+          <h4 id="titulo_modal" class="address-title mb-2"></h4>
+          <p id="subtitulo_modal" class="address-subtitle"></p>
         </div>
-        <div class="row">
+        <div id="cargando" class="text-center my-3" style="display: flex; height: 70vh; justify-content: center; align-items: center;">
+          <div class="sk-circle-fade sk-primary" style="width: 4rem; height: 4rem;">
+            <div class="sk-circle-fade-dot"></div>
+            <div class="sk-circle-fade-dot"></div>
+            <div class="sk-circle-fade-dot"></div>
+            <div class="sk-circle-fade-dot"></div>
+            <div class="sk-circle-fade-dot"></div>
+            <div class="sk-circle-fade-dot"></div>
+            <div class="sk-circle-fade-dot"></div>
+            <div class="sk-circle-fade-dot"></div>
+            <div class="sk-circle-fade-dot"></div>
+            <div class="sk-circle-fade-dot"></div>
+            <div class="sk-circle-fade-dot"></div>
+            <div class="sk-circle-fade-dot"></div>
+          </div>
+        </div>
         <iframe src="" id="pdfViewer"  width="100%" height="800px" style="border: none;"></iframe>
-        </div>
       </div>
     </div>
   </div>
