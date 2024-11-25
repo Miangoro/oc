@@ -46,9 +46,9 @@ class Dictamen_Granel extends Model
     {
         return $this->belongsTo(LotesGranel::class, 'id_lote_granel');
     }
+
     public function inspectores()
     {
         return $this->belongsTo(User::class, 'id_firmante', 'id');
     }
-  
 }
