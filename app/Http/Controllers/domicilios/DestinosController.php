@@ -4,7 +4,7 @@ namespace App\Http\Controllers\domicilios;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Empresa;
+use App\Models\empresa;
 use App\Models\Destinos;
 use App\Notifications\GeneralNotification;
 use App\Models\User;
