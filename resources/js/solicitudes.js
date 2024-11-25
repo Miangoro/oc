@@ -1487,8 +1487,11 @@ $(function () {
       processData: false,
       contentType: false,
       success: function (response) {
+
         $('#addVigilanciaProduccion').modal('hide');
-        $('.datatables-users').DataTable().ajax.reload();
+        $('#addVigilanciaProduccionForm')[0].reset();
+        $('.select2').val(null).trigger('change');
+        $('.datatables-solicitudes').DataTable().ajax.reload();
 
         // Mostrar alerta de éxito
         Swal.fire({
