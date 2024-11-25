@@ -14,7 +14,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select
-                                    onchange="obtenerPredios2edit(this.value); obtenerGranelesedit(this.value);obtenerGraneles2(this.value);"
+                                    onchange=" obtenerGranelesedit(this.value);obtenerGraneles2(this.value);"
                                     id="edit_id_empresa_vig" name="id_empresa" class="select2 form-select id_empresa">
                                     <option value="">Selecciona Empresa</option>
                                     @foreach ($empresas as $empresa)
@@ -273,29 +273,38 @@
 
 
 
-    function obtenerPredios2edit() {
-        var empresa = $(".id_empresa").val();
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
-                var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                        response
-                        .instalaciones[index].tipo + ' | ' + response
-                        .instalaciones[index].direccion_completa + '</option>' + contenido;
-                }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
+    function obtenerGraneles2(empresa) {
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            var contenido = "";
+            for (let index = 0; index < response.instalaciones.length; index++) {
+                contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                    response.instalaciones[index].tipo + ' | ' +
+                    response.instalaciones[index].direccion_completa +
+                    '</option>' + contenido;
+            }
 
-                } else {
+            if (response.instalaciones.length == 0) {
+                contenido = '<option value="">Sin instalaciones registradas</option>';
+            }
 
-                }
-                $('#edit_id_instalacion_vig').html(contenido);
-            },
-            error: function() {}
-        });
-    }
+            // Actualizar las opciones del select
+            $('#edit_id_instalacion_vig').html(contenido);
+
+            // Restaurar el valor previamente seleccionado
+            const idInstalacionSeleccionada = $('#edit_id_instalacion_vig').data('selected');
+            if (idInstalacionSeleccionada) {
+                $('#edit_id_instalacion_vig')
+                    .val(idInstalacionSeleccionada) // Selecciona el valor previo
+                    .trigger('change'); // Propaga el cambio al select
+            }
+        },
+        error: function() {
+            console.error("Error al cargar las instalaciones.");
+        }
+    });
+}
+
 </script>

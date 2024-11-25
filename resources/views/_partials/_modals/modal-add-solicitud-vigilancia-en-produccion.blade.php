@@ -12,16 +12,15 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select
-                                    onchange="obtenerPredios2(this.value); obtenerGraneles(this.value);obtenerGraneles2(this.value);"
-                                    name="id_empresa" name="id_empresa" class="select2 form-select id_empresa" required>
-                                    <option value="">Selecciona cliente</option>
+                                <select onchange="obtenerPredios2(this.value); obtenerGraneles(this.value);obtenerGranelesInstalaciones(this.value);"
+                                    id="id_empresa" name="id_empresa" class="select2 form-select id_empresa" required>
+                                    <option value="">Selecciona Empresa</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="id_empresa">Empresas</label>
+                                <label for="id_empresa">Empresa</label>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -195,6 +194,7 @@
 
 
 <script>
+    
     function obtenerDatosGraneles() {
         var lote_granel_id = $("#id_lote_granel").val();
 
@@ -267,7 +267,7 @@
         });
     }
 
-    function obtenerGraneles2(empresa) {
+    function obtenerGranelesInstalaciones(empresa) {
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',

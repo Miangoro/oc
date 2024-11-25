@@ -466,7 +466,8 @@ $(function () {
               modal.find('#edit_id_solicitud_vig').val(id_solicitud);
               modal.find('#edit_id_empresa_vig').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita_vig').val(response.data.fecha_visita);
-              modal.find('#edit_id_instalacion_vig').val(response.data.id_instalacion).trigger('change');
+              modal.find('#edit_id_instalacion_vig').data('selected', response.data.id_instalacion);
+
               // Acceder al campo `punto_reunion` desde `caracteristicas`
               if (response.caracteristicas && response.caracteristicas.id_lote_granel) {
                 modal.find('#edit_id_lote_granel_vig').val(response.caracteristicas.id_lote_granel);
@@ -1487,8 +1488,11 @@ $(function () {
       processData: false,
       contentType: false,
       success: function (response) {
+
         $('#addVigilanciaProduccion').modal('hide');
-        $('.datatables-users').DataTable().ajax.reload();
+        $('#addVigilanciaProduccionForm')[0].reset();
+        $('.select2').val(null).trigger('change');
+        $('.datatables-solicitudes').DataTable().ajax.reload();
 
         // Mostrar alerta de éxito
         Swal.fire({
