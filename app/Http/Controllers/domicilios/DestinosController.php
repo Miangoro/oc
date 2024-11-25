@@ -18,7 +18,7 @@ class DestinosController extends Controller
         $destinos = Destinos::with('empresa')->get();
 
         // Obtener solo las empresas tipo '2'
-        $empresas = empresa::where('tipo', 2)->get();
+        $empresas = Empresa::where('tipo', 2)->get();
 
         // Pasar los datos a la vista
         return view('domicilios.find_domicilio_destinos_view', [
