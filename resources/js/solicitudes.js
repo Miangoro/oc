@@ -441,7 +441,9 @@ $(function () {
       let modal = null;
 
       // Validamos el tipo y configuramos el modal correspondiente
-      if (id_tipo === 10) {
+      if (id_tipo === 2) {
+        modal = $('#editVigilanciaProduccion');
+      } else if (id_tipo === 10) {
         modal = $('#editClienteModalTipo10');
       } else if (id_tipo === 14) {
         modal = $('#editSolicitudDictamen');
@@ -460,7 +462,78 @@ $(function () {
             // Rellenar campos según el tipo de modal
             const datos = response.data;
 
-            if (id_tipo === 10) {
+            if (id_tipo === 2) {
+              modal.find('#edit_id_solicitud_vig').val(id_solicitud);
+              modal.find('#edit_id_empresa_vig').val(response.data.id_empresa).trigger('change');
+              modal.find('#edit_fecha_visita_vig').val(response.data.fecha_visita);
+              modal.find('#edit_id_instalacion_vig').val(response.data.id_instalacion).trigger('change');
+              // Acceder al campo `punto_reunion` desde `caracteristicas`
+              if (response.caracteristicas && response.caracteristicas.id_lote_granel) {
+                modal.find('#edit_id_lote_granel_vig').val(response.caracteristicas.id_lote_granel);
+              } else {
+                modal.find('#edit_id_lote_granel_vig').val(''); // Si no existe, deja vacío
+              }
+              if (response.caracteristicas && response.caracteristicas.id_categoria) {
+                modal.find('#edit_id_categoria_vig').val(response.caracteristicas.id_categoria);
+              } else {
+                modal.find('#edit_id_categoria_vig').val(''); // Si no existe, deja vacío
+              } if (response.caracteristicas && response.caracteristicas.id_clase) {
+                modal.find('#edit_id_clase_vig').val(response.caracteristicas.id_clase);
+              } else {
+                modal.find('#edit_id_clase_vig').val(''); // Si no existe, deja vacío
+              } if (response.caracteristicas && response.caracteristicas.id_tipo) {
+                modal.find('#edit_id_tipo_vig').val(response.caracteristicas.id_tipo);
+              } else {
+                modal.find('#edit_id_tipo_vig').val(''); // Si no existe, deja vacío
+              }
+              if (response.caracteristicas && response.caracteristicas.analisis) {
+                modal.find('#edit_analisis_vig').val(response.caracteristicas.analisis);
+              } else {
+                modal.find('#edit_analisis_vig').val(''); // Si no existe, deja vacío
+              }
+              if (response.caracteristicas && response.caracteristicas.volumen) {
+                modal.find('#edit_volumen_vig').val(response.caracteristicas.volumen);
+              } else {
+                modal.find('#edit_volumen_vig').val(''); // Si no existe, deja vacío
+              }
+              if (response.caracteristicas && response.caracteristicas.fecha_corte) {
+                modal.find('#edit_fecha_corte_vig').val(response.caracteristicas.fecha_corte);
+              } else {
+                modal.find('#edit_fecha_corte_vig').val(''); // Si no existe, deja vacío
+              }
+              if (response.caracteristicas && response.caracteristicas.kg_maguey) {
+                modal.find('#edit_kg_maguey_vig').val(response.caracteristicas.kg_maguey);
+              } else {
+                modal.find('#edit_kg_maguey_vig').val(''); // Si no existe, deja vacío
+              }
+              if (response.caracteristicas && response.caracteristicas.cant_pinas) {
+                modal.find('#edit_cant_pinas_vig').val(response.caracteristicas.cant_pinas);
+              } else {
+                modal.find('#edit_cant_pinas_vig').val(''); // Si no existe, deja vacío
+              }
+              if (response.caracteristicas && response.caracteristicas.art) {
+                modal.find('#edit_art_vig').val(response.caracteristicas.art);
+              } else {
+                modal.find('#edit_art_vig').val(''); // Si no existe, deja vacío
+              }
+              if (response.caracteristicas && response.caracteristicas.etapa) {
+                modal.find('#edit_etapa_vig').val(response.caracteristicas.etapa);
+              } else {
+                modal.find('#edit_etapa_vig').val(''); // Si no existe, deja vacío
+              }
+              if (response.caracteristicas && response.caracteristicas.folio) {
+                modal.find('#edit_folio_vig').val(response.caracteristicas.folio);
+              } else {
+                modal.find('#edit_folio_vig').val(''); // Si no existe, deja vacío
+              }
+              if (response.caracteristicas && response.caracteristicas.nombre_predio) {
+                modal.find('#edit_nombre_predio_vig').val(response.caracteristicas.nombre_predio);
+              } else {
+                modal.find('#edit_nombre_predio_vig').val(''); // Si no existe, deja vacío
+              }
+              modal.find('#edit_info_adicional_vig').val(response.data.info_adicional);
+              // Otros campos específicos para tipo 10
+            } else if (id_tipo === 10) {
               modal.find('#id_solicitud_geo').val(id_solicitud);
               modal.find('#edit_id_empresa_geo').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita_geo').val(response.data.fecha_visita);
@@ -681,7 +754,104 @@ $(function () {
     });
   });
   /*  */
+  /* formulario para enviar los datos y actualizar */
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
 
+    // Inicializar FormValidation para el formulario de actualización
+    const formUpdate = document.getElementById('editVigilanciaProduccionForm');
+    const fvUpdate = FormValidation.formValidation(formUpdate, {
+      fields: {
+        'id_empresa': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el cliente.'
+            }
+          }
+        },
+        'fecha_visita': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la fecha y hora para la inspección.'
+            }
+          }
+        },
+        'id_predio': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un predio para la inspección.'
+            }
+          }
+        },
+        'punto_reunion': {
+          validators: {
+            notEmpty: {
+              message: 'Introduce la dirección para el punto de reunión.'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      // Obtener los datos del formulario
+      var formData = new FormData(formUpdate);
+
+      // Hacer la solicitud AJAX
+      $.ajax({
+        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_vig').val(),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#editVigilanciaProduccion').modal('hide'); // Oculta el modal
+          $('#editVigilanciaProduccionForm')[0].reset(); // Resetea el formulario
+          $('.select2').val(null).trigger('change'); // Resetea los select2
+          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+          console.log(response);
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la solicitud',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+  });
+
+
+
+  ///
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -1185,6 +1355,163 @@ $(function () {
     $('#edit_id_organismo').val('').trigger('change');
     $('#edit_fecha_emision').val('');
     $('#edit_fecha_vigencia').val('');
+  });
+
+
+  // Validación del formulario Vigilancia en produccion
+  const addVigilanciaProduccionForm = document.getElementById('addVigilanciaProduccionForm');
+  const fv5 = FormValidation.formValidation(addVigilanciaProduccionForm, {
+    fields: {
+      id_empresa: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una empresa.'
+          }
+        }
+      },
+      fecha_visita: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la fecha y hora de visita.'
+          }
+        }
+      },
+      id_instalacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una instalación.'
+          }
+        }
+      },
+      id_categoria: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una categoría.'
+          }
+        }
+      },
+      id_clase: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una clase.'
+          }
+        }
+      },
+      id_tipo: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un tipo de maguey.'
+          }
+        }
+      },
+      analisis: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el análisis fisicoquímico.'
+          }
+        }
+      },
+      volumen: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el porcentaje de alcohol (% Alc. Vol.).'
+          }
+        }
+      },
+      fecha_corte: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la fecha de corte.'
+          }
+        }
+      },
+      kg_maguey: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la cantidad de maguey en kg.'
+          }
+        }
+      },
+      cant_pinas: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la cantidad de piñas.'
+          }
+        }
+      },
+      art: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el porcentaje de azúcares ART totales.'
+          }
+        }
+      },
+      etapa: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la etapa del proceso.'
+          }
+        }
+      },
+      folio: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el número de guía de traslado.'
+          }
+        }
+      },
+      nombre_predio: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el nombre del predio.'
+          }
+        }
+      }
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        rowSelector: '.mb-4, .mb-5, .mb-6' // Ajusta según las clases de tus elementos
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+    var formData = new FormData(addVigilanciaProduccionForm);
+
+    $.ajax({
+      url: '/hologramas/storeVigilanciaProduccion', // Actualiza con la URL correcta
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        $('#addVigilanciaProduccion').modal('hide');
+        $('.datatables-users').DataTable().ajax.reload();
+
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: response.success,
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function () {
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al registrar la vigilancia en producción.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
   });
 
 

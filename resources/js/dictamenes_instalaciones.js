@@ -179,8 +179,9 @@ $('#edit_fecha_emision').on('change', function() {
             // Abre el pdf del dictamen
             targets: 7,
             className: 'text-center',
+            //searchable: false, orderable: false, //Inhabilita "thead" busqueda/orden
             render: function (data, type, full, meta) {
-              var $id = full['id_guia'];
+              var $id = full['id_dictamen'];
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['razon_social']} "></i>`;
             }
           },
@@ -633,44 +634,49 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
 
 
   
-//Reciben los datos del pdf del dictamen
+//RECIBE LOS DATOS DEL PDF
 $(document).on('click', '.pdf', function () {
-  var id = $(this).data('id');
-  var registro = $(this).data('registro');
-      var iframe = $('#pdfViewer');
+  var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en opciones
+  var registro = $(this).data('registro');//ID de razon social "data-registro"
+  var tipo = $(this).data('tipo');
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
 
-      var tipo = $(this).data('tipo');
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+      spinner.show();
+      iframe.hide();
 
       if(tipo == 1){ // Productor
         var tipo_dictamen = '../dictamen_productor/'+id;
         var titulo = "Dictamen de productor";
       }
-
       if(tipo == 2){ // Envasador
         var tipo_dictamen = '../dictamen_envasador/'+id;
         var titulo = "Dictamen de envasador";
       }
-
       if(tipo == 3){ // Comercializador
         var tipo_dictamen = '../dictamen_comercializador/'+id;
         var titulo = "Dictamen de comercializador";
       }
-
       if(tipo == 4){ // Almacén y bodega
         var tipo_dictamen = '../dictamen_almacen/'+id;
         var titulo = "Dictamen de almacén y bodega";
       }
-
       if(tipo == 5){ // Área de maduración
         var tipo_dictamen = '../dictamen_maduracion/'+id;
         var titulo = "Dictamen de área de maduración de mezcal";
       }
       
-
       iframe.attr('src', tipo_dictamen);
 
       $("#titulo_modal").text(titulo);
       $("#subtitulo_modal").text(registro);  
+
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+      iframe.on('load', function () {
+        spinner.hide();
+        iframe.show();
+      });
 });
 
 

@@ -25,7 +25,8 @@ $(function () {
         { data: 'domicilio_fiscal' },
         { data: 'regimen' },
         { data: 'id_empresa' },
-        { data: '' },
+        { data: ''},
+        { data: ''},
         { data: 'action' }
       ],
       columnDefs: [
@@ -127,6 +128,25 @@ $(function () {
             }else{
               return "<span class='badge rounded-pill bg-warning'>Sin contrato<span>";
             }
+          }
+        },
+        {
+          targets: 7,
+          className: 'text-center',
+          render: function (data, type, full, meta) {
+            var $verified = full['estatus'];
+            let estatus = '';
+            if ($verified == '1') {
+              var $colorRegimen = 'success';
+              estatus = 'Activo';
+            } else {
+              var $colorRegimen = 'danger';
+              estatus = 'Inactivo';
+            }
+            return `${$verified
+              ? '<span class="badge rounded-pill  bg-' + $colorRegimen + '">'+estatus+'</span>'
+              : '<span class="badge rounded-pill  bg-' + $colorRegimen + '">'+estatus+'</span>'
+              }`;
           }
         },
         {
@@ -967,7 +987,22 @@ $(document).ready(function() {
                   $('#rfc_edit').val(dato.rfc);
                   $('#correo_edit').val(dato.correo);
                   $('#telefono_edit').val(dato.telefono);
-                   $('#id_contacto_edit').val(dato.id_contacto).trigger('change');
+                  $('#id_contacto_edit').val(dato.id_contacto).trigger('change');
+                  $('#registro_productor_edit').val(dato.registro_productor);
+                  $('#convenio_corresp_edit').val(dato.convenio_corresp);
+                  $('#es_maquilador').val(dato.es_maquilador);
+
+                  maquilador(dato.es_maquilador);
+                  if (dato?.maquiladora?.id_maquiladora) {
+                    $('#id_maquiladora').val(dato.maquiladora.id_maquiladora).trigger('change');
+                  }else{
+                    const firstOptionValue = $('#id_maquiladora option:first').val();
+                    $('#id_maquiladora').val(firstOptionValue).trigger('change');
+                  }
+                  
+                  $('#estatus').val(dato.estatus).trigger('change');
+                 
+                 
 
                   $('#EditClientesConfirmados').modal('show');
               } else {

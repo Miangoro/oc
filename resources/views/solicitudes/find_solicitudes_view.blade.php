@@ -222,6 +222,7 @@
     @include('_partials._modals.modal-add-instalaciones')
     @include('_partials._modals.modal-edit-solicitudes-georeferenciacion')
     @include('_partials._modals.modal-edit-solicitud-dictamen-instalaciones')
+    @include('_partials._modals.modal-edit-solicitud-vigilancia-produccion')
 
     <!-- /Modal -->
 

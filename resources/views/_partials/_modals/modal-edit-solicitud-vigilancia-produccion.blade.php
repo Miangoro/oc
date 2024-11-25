@@ -1,33 +1,34 @@
-<!-- Add New Lote Envasado Modal -->
-<div class="modal fade" id="addVigilanciaProduccion" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="editVigilanciaProduccion" tabindex="-1">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Vigilancia en producción de lote</h4>
+                    <h4 class="address-title mb-2">Editar Vigilancia en producción de lote</h4>
                     <p class="address-subtitle"></p>
                 </div>
-                <form id="addVigilanciaProduccionForm">
+                <form id="editVigilanciaProduccionForm">
+                    <input type="hidden" name="id_solicitud" id="edit_id_solicitud_vig">
+                    <input type="hidden" name="form_type" value="vigilanciaenproduccion">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select
-                                    onchange="obtenerPredios2(this.value); obtenerGraneles(this.value);obtenerGraneles2(this.value);"
-                                    name="id_empresa" name="id_empresa" class="select2 form-select id_empresa" required>
-                                    <option value="">Selecciona cliente</option>
+                                    onchange="obtenerPredios2edit(this.value); obtenerGranelesedit(this.value);obtenerGraneles2(this.value);"
+                                    id="edit_id_empresa_vig" name="id_empresa" class="select2 form-select id_empresa">
+                                    <option value="">Selecciona Empresa</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="id_empresa">Empresas</label>
+                                <label for="id_empresa">Empresa</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
-                                    id="fecha_visita" type="text" name="fecha_visita" />
+                                    id="edit_fecha_visita_vig" type="text" name="fecha_visita" />
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -35,13 +36,13 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select select id_instalacion" id="id_instalacion"
+                                <select class=" form-select select id_instalacion" id="edit_id_instalacion_vig"
                                     name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
 
-                                <button type="button" class="btn btn-primary" id="modalVigilancia"><i
+                                <button type="button" class="btn btn-primary" id="vigi"><i
                                         class="ri-add-line"></i> Agregar nueva instalación</button>
 
                             </div>
@@ -52,8 +53,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="obtenerDatosGraneles();" id="id_lote_granel" name="id_lote_granel"
-                                    class="select2 form-select">
+                                <select onchange="obtenerDatosGranelesedit();" id="edit_id_lote_granel_vig"
+                                    name="id_lote_granel" class="select2 form-select">
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($LotesGranel as $lotesgra)
                                         <option value="{{ $lotesgra->id_lote_granel }}">{{ $lotesgra->nombre_lote }}
@@ -66,7 +67,7 @@
 
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select class="select form-select " id="id_categoria" name="id_categoria"
+                                <select class="select form-select " id="edit_id_categoria_vig" name="id_categoria"
                                     aria-label="id_categoria">
                                     <option value="">Lista de categorias</option>
                                     @foreach ($categorias as $categoria)
@@ -83,7 +84,8 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select form-select " id="id_clase" name="id_clase" aria-label="id_clase">
+                        <select class="select form-select " id="edit_id_clase_vig" name="id_clase"
+                            aria-label="id_clase">
                             <option value="">Lista de clases</option>
                             @foreach ($clases as $clases)
                                 <option value="{{ $clases->id_clase }}">{{ $clases->clase }}
@@ -95,7 +97,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select form-select " id="id_tipo" name="id_tipo" aria-label="id_tipo">
+                        <select class="select form-select " id="edit_id_tipo_vig" name="id_tipo" aria-label="id_tipo">
                             <option value="">Lista de categorias</option>
                             @foreach ($tipos as $tipos)
                                 <option value="{{ $tipos->id_tipo }}">{{ $tipos->nombre }} | {{ $tipos->cientifico }}
@@ -107,7 +109,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="analisis" name="analisis"
+                        <input type="text" class="form-control" id="edit_analisis_vig" name="analisis"
                             placeholder="Ingresa Análisis fisicoquímico" />
                         <label for="analisis">Ingresa Análisis fisicoquímico</label>
                     </div>
@@ -116,21 +118,21 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="number" class="form-control" id="volumen" name="volumen"
+                        <input type="number" class="form-control" id="edit_volumen_vig" name="volumen"
                             placeholder="Ingresa el volumen" />
                         <label for="volumen">%Alc. Vol.</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" id="fecha_corte"
-                            type="text" name="fecha_corte" />
+                        <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime"
+                            id="edit_fecha_corte_vig" type="text" name="fecha_corte" />
                         <label for="fecha_corte">Fecha de corte</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="number" class="form-control" id="kg_maguey" name="kg_maguey"
+                        <input type="number" class="form-control" id="edit_kg_maguey_vig" name="kg_maguey"
                             placeholder="Ingresa la cantidad de maguey" />
                         <label for="kg_maguey">Kg. de maguey</label>
                     </div>
@@ -139,21 +141,21 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="number" class="form-control" id="cant_pinas" name="cant_pinas"
+                        <input type="number" class="form-control" id="edit_cant_pinas_vig" name="cant_pinas"
                             placeholder="Ingrese la cantidad de piñas">
                         <label for="cant_pinas">Cantidad de piñas</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="number" class="form-control" id="art" name="art"
+                        <input type="number" class="form-control" id="edit_art_vig" name="art"
                             placeholder="Ingrese la cantidad de azúcares" step="0.01">
                         <label for="art">% de azúcares ART totales</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="etapa" name="etapa"
+                        <input type="text" class="form-control" id="edit_etapa_vig" name="etapa"
                             placeholder="Ingrese la etapa de proceso">
                         <label for="etapa">Etapa de proceso en la que se encuentra</label>
                     </div>
@@ -162,14 +164,14 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="folio" name="folio"
+                        <input type="text" class="form-control" id="edit_folio_vig" name="folio"
                             placeholder="Ingrese la guai de traslado">
                         <label for="folio">No.guia de traslado</label>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="nombre_predio" name="nombre_predio"
+                        <input type="text" class="form-control" id="edit_nombre_predio_vig" name="nombre_predio"
                             placeholder="Ingrese el predio de procedencia">
                         <label for="nombre_predio">Predio de la procedencia</label>
                     </div>
@@ -195,7 +197,7 @@
 
 
 <script>
-    function obtenerDatosGraneles() {
+    function obtenerDatosGranelesedit() {
         var lote_granel_id = $("#id_lote_granel").val();
 
 
@@ -241,11 +243,13 @@
                         .nombre_predio); // Nombre del predio
                 }
             },
-            error: function() {}
+            error: function() {
+
+            }
         });
     }
 
-    function obtenerGraneles(empresa) {
+    function obtenerGranelesedit(empresa) {
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
@@ -261,37 +265,15 @@
                 } else {
 
                 }
-                $('#id_lote_granel').html(contenido);
+                $('#edit_id_lote_granel_vig').html(contenido);
             },
             error: function() {}
         });
     }
 
-    function obtenerGraneles2(empresa) {
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                        response
-                        .instalaciones[index].tipo + ' | ' + response
-                        .instalaciones[index].direccion_completa + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
-                }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
-                } else {}
-                $('.id_instalacion').html(contenido);
-            },
-            error: function() {
 
-            }
-        });
-    }
 
-    function obtenerPredios2() {
+    function obtenerPredios2edit() {
         var empresa = $(".id_empresa").val();
         $.ajax({
             url: '/getDatos/' + empresa,
@@ -311,7 +293,7 @@
                 } else {
 
                 }
-                $('#id_instalacion').html(contenido);
+                $('#edit_id_instalacion_vig').html(contenido);
             },
             error: function() {}
         });
