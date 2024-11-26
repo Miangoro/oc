@@ -1691,6 +1691,37 @@ $(function () {
     });
   });
 
+
+      //Vigilancia boton instalaciones EDIT
+      $(document).ready(function () {
+        let openedFromEditModal = false;
+        $('#vigi').on('click', function () {
+            var clienteSeleccionado = $('#edit_id_empresa_vig').val();
+            if (!clienteSeleccionado) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Espere!',
+                    text: 'Por favor, selecciona un cliente primero.',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                });
+                return;
+            }
+            $('#editVigilanciaProduccion').modal('hide');
+            openedFromEditModal = true;
+            $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
+            $('#modalAddInstalacion').modal('show');
+        });
+        $('#modalAddInstalacion').on('hidden.bs.modal', function () {
+            if (openedFromEditModal) {
+                $('#editVigilanciaProduccion').modal('show');
+                openedFromEditModal = false;
+            }
+        });
+    });
+
 });
 
 

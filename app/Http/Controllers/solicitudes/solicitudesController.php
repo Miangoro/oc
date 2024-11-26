@@ -70,37 +70,39 @@ class solicitudesController extends Controller
 
 
         if (empty($request->input('search.value'))) {
+          $solicitudes = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
+              ->offset($start)
+              ->limit($limit)
+              ->orderBy($order, $dir)
+              ->get();
+      } else {
+          $search = $request->input('search.value');
 
+          $solicitudes = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
+              ->where(function ($query) use ($search) {
+                  $query->where('id_solicitud', 'LIKE', "%{$search}%")
+                      ->orWhere('folio', 'LIKE', "%{$search}%") // Agregar búsqueda por folio
+                      ->orWhere('estatus', 'LIKE', "%{$search}%") // Agregar búsqueda por estatus
+                      ->orWhereHas('empresa', function ($q) use ($search) {
+                          $q->where('razon_social', 'LIKE', "%{$search}%"); // Buscar en la relación empresa
+                      });
+              })
+              ->offset($start)
+              ->limit($limit)
+              ->orderBy($order, $dir)
+              ->get();
 
-            $solicitudes = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-        } else {
-            $search = $request->input('search.value');
-
-
-
-
-            $solicitudes = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
-                ->where(function ($query) use ($search) {
-                    $query->where('id_solicitud', 'LIKE', "%{$search}%")
-                        ->orWhere('razon_social', 'LIKE', "%{$search}%");
-                })
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-
-            $totalFiltered =  solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
-                ->where(function ($query) use ($search) {
-                    $query->where('id_solicitud', 'LIKE', "%{$search}%")
-                        ->orWhere('razon_social', 'LIKE', "%{$search}%");
-                })
-                ->count();
-        }
-
+          $totalFiltered =  solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
+              ->where(function ($query) use ($search) {
+                  $query->where('id_solicitud', 'LIKE', "%{$search}%")
+                      ->orWhere('folio', 'LIKE', "%{$search}%") // Agregar búsqueda por folio
+                      ->orWhere('estatus', 'LIKE', "%{$search}%") // Agregar búsqueda por estatus
+                      ->orWhereHas('empresa', function ($q) use ($search) {
+                          $q->where('razon_social', 'LIKE', "%{$search}%"); // Buscar en la relación empresa
+                      });
+              })
+              ->count();
+      }
         $data = [];
 
         if (!empty($solicitudes)) {

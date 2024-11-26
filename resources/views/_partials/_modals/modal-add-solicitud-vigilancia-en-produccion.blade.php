@@ -12,15 +12,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerPredios2(this.value); obtenerGraneles(this.value);obtenerGranelesInstalaciones(this.value);"
-                                    id="id_empresa" name="id_empresa" class="select2 form-select id_empresa" required>
-                                    <option value="">Selecciona Empresa</option>
+                                <select
+                                    onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);"
+                                    name="id_empresa" name="id_empresa" class="select2 form-select id_empresa" required>
+                                    <option value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="id_empresa">Empresa</label>
+                                <label for="id_empresa">Empresas</label>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -194,7 +195,6 @@
 
 
 <script>
-    
     function obtenerDatosGraneles() {
         var lote_granel_id = $("#id_lote_granel").val();
 
@@ -267,7 +267,7 @@
         });
     }
 
-    function obtenerGranelesInstalaciones(empresa) {
+    function obtenerGranelesInsta(empresa) {
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
@@ -291,29 +291,5 @@
         });
     }
 
-    function obtenerPredios2() {
-        var empresa = $(".id_empresa").val();
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
-                var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                        response
-                        .instalaciones[index].tipo + ' | ' + response
-                        .instalaciones[index].direccion_completa + '</option>' + contenido;
-                }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
 
-                } else {
-
-                }
-                $('#id_instalacion').html(contenido);
-            },
-            error: function() {}
-        });
-    }
 </script>

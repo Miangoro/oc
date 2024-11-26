@@ -21,7 +21,7 @@ class empresa extends Model
 
       public function getLogName2(): string
       {
-          return 'empresa'; // Devuelve el nombre que desees
+          return 'cliente'; // Devuelve el nombre que desees
       }
 
       public function empresaNumClientes()
