@@ -334,18 +334,39 @@ class Certificado_GranelController extends Controller
 
     public function PreCertificado($id_certificado)
     {
-        $certificado = CertificadosGranel::with('dictamen.empresa')->findOrFail($id_certificado);
+        $certificado = CertificadosGranel::with('dictamen.empresa.instalaciones', 'dictamen.lote_granel.clase')->findOrFail($id_certificado);
     
+        $direccionCompleta = $certificado->dictamen->empresa->instalaciones->first()->direccion_completa ?? 'N/A';
+        $clase = $certificado->dictamen->lote_granel->clase->clase ?? 'N/A';
+        $ingredientes = $certificado->dictamen->lote_granel->ingredientes ?? 'N/A';
+        $volumen = $certificado->dictamen->lote_granel->volumen ?? 'N/A';
+        $edad = $certificado->dictamen->lote_granel->edad ?? 'N/A';
+        $cont_alc = $certificado->dictamen->lote_granel->cont_alc ?? 'N/A';
         $watermarkText = $certificado->estatus === 1;
-
+    
+        // Datos para el PDF
         $pdfData = [
+            // Tabla #1
             'num_certificado' => $certificado->num_certificado,
             'razon_social' => $certificado->dictamen->empresa->razon_social,
-            'watermarkText' =>  $watermarkText,
+            'representante' => $certificado->dictamen->empresa->representante,
+            'domicilio_fiscal' => $certificado->dictamen->empresa->domicilio_fiscal,
+            'rfc' => $certificado->dictamen->empresa->rfc,
+            'direccion_completa' => $direccionCompleta,
+            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+            'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
+            'watermarkText' => $watermarkText,
+    
+            // Tabla #2
+            'nombre_lote' => $clase,
+            'ingredientes' => $ingredientes,
+            'volumen' => $volumen,
+            'edad' => $edad,
+            'cont_alc' => $cont_alc,
         ];
     
-        $pdf = Pdf::loadView('pdfs.pre-certificado', $pdfData);
-        return $pdf->stream("Pre-certificado CIDAM C-GRA-{$certificado->id_certificado}.pdf");
+        // Generar y mostrar el PDF
+        return Pdf::loadView('pdfs.pre-certificado', $pdfData)->stream("Pre-certificado.pdf");
     }
     
 }

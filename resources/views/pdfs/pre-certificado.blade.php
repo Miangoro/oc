@@ -254,7 +254,7 @@
 		
         <tr> 
 			<td class="columna">Representante Legal</td>
-			<td class="columna">Salvador Rentería Jasso</td>
+			<td class="columna">{{ $representante }}</td>
 			<td class="columna">Número de Certificado</td>
 			<td class="columna">{{ $num_certificado }}</td>
 		</tr>
@@ -263,20 +263,20 @@
 			<td class="columna">Dirección</td>
 
             <td class="columna-text">
-                <span class="negrita">Domicilio Fiscal:</span> Av. Las Palmas, Otra No Especificada En El Catalogo, C.P. 68228, Magdalena Apasco, Oaxaca.
+                <span class="negrita">Domicilio Fiscal:</span> {{ $domicilio_fiscal }}
                 <br>
-                <span class="negrita">Domicilio de Instalaciones:</span> Av. Las Palmas, Agencia de Lache, Barrio de Lache C.P. 68220, Magdalena Apasco, Oaxaca.
+                <span class="negrita">Domicilio de Instalaciones:</span> {{ $direccion_completa }}
             </td>
 
             <td class="columna">Fecha de emisión </td>
-			<td class="columna-norm">23/Agosto/2024</td>
+			<td class="columna-norm">{{ $fecha_vigencia }}</td>
 		</tr>
 
 		<tr>
 			<td class="columna">RFC</td>
-			<td class="columna">MBE180712Q57 </td>
+			<td class="columna">{{ $rfc }}</td>
 			<td class="columna">Fecha de Vencimiento </td>
-			<td class="columna-norm">23/Agosto/2025</td>
+			<td class="columna-norm">{{ $fecha_vencimiento }}</td>
 		</tr>
 	</tbody>
 </table>
@@ -290,27 +290,27 @@
 		</tr>
 		<tr>
 			<td class="columna" style="white-space: nowrap;">Categoría y clase</td>
-			<td class="columna-norm">Artesanal Blanco o Joven</td>
+			<td class="columna-norm">{{ $nombre_lote }}</td>
 			<td class="columna">No. de lote</td>
-			<td class="columna-norm">2408ESPSN</td>
+			<td class="columna-norm">----</td>
 			<td class="columna">No. de análisis</td>
-            <td class="columna-norm" style="white-space: nowrap;">OTR-A 015861.2</td>
+            <td class="columna-norm" style="white-space: nowrap;">----</td>
 		</tr>
 		<tr>
 			<td class="columna">Ingredientes</td>
-			<td class="columna-norm">-----</td>
+			<td class="columna-norm">{{ $ingredientes }}</td>
 			<td class="columna" style="white-space: nowrap;">Volumen de lote</td>
-			<td class="columna-norm">5279 L</td>
+			<td class="columna-norm">{{ $volumen }}</td>
 			<td class="columna">Contenido Alcohólico</td>
-			<td class="columna-norm" style="white-space: nowrap;">51.0% Alc. Vol</td>
+			<td class="columna-norm" style="white-space: nowrap;">{{ $cont_alc }}</td>
 		</tr>
 		<tr>
 			<td class="columna">Tipo de maguey</td>
 			<td class="columna-norm">Espadín (A. angustifolia)</td>
 			<td class="columna">Edad</td>
-			<td class="columna-norm">-----</td>
+			<td class="columna-norm">{{ $edad }}</td>
 			<td class="columna">No. de dictamen</td>
-			<td class="columna-norm" style="white-space: nowrap;">UMG-210/2024</td>
+			<td class="columna-norm" style="white-space: nowrap;">----</td>
 		</tr>
 	</tbody>
 </table>

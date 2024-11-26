@@ -1362,6 +1362,13 @@ $(function () {
   });
 
 
+  $(function () {
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+  
   // Validación del formulario Vigilancia en produccion
   const addVigilanciaProduccionForm = document.getElementById('addVigilanciaProduccionForm');
   const fv5 = FormValidation.formValidation(addVigilanciaProduccionForm, {
@@ -1384,6 +1391,13 @@ $(function () {
         validators: {
           notEmpty: {
             message: 'Por favor seleccione una instalación.'
+          }
+        }
+      },
+      id_lote_granel: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un lote agranel.'
           }
         }
       },
@@ -1415,17 +1429,26 @@ $(function () {
           }
         }
       },
-      volumen: {
+      art: {
         validators: {
           notEmpty: {
             message: 'Por favor ingrese el porcentaje de alcohol (% Alc. Vol.).'
+          },
+          between: {
+            min: 1,
+            max: Infinity,
+            message: 'El número debe ser superior a 0 y sin negativos'
+          },
+          regexp: {
+            regexp: /^(?!0)\d+$/,
+            message: 'El número no debe comenzar con 0'
           }
         }
       },
       fecha_corte: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese la fecha de corte.'
+            message: 'Por favor ingrese la fecha y hora de visita.'
           }
         }
       },
@@ -1446,10 +1469,19 @@ $(function () {
       art: {
         validators: {
           notEmpty: {
-            message: 'Por favor ingrese el porcentaje de azúcares ART totales.'
+            message: 'Por favor ingrese el número art'
+          },
+          between: {
+            min: 1,
+            max: Infinity,
+            message: 'El número debe ser superior a 0 y sin negativos'
+          },
+          regexp: {
+            regexp: /^(?!0)\d+$/,
+            message: 'El número no debe comenzar con 0'
           }
         }
-      },
+      },      
       etapa: {
         validators: {
           notEmpty: {
@@ -1476,7 +1508,10 @@ $(function () {
       trigger: new FormValidation.plugins.Trigger(),
       bootstrap5: new FormValidation.plugins.Bootstrap5({
         eleValidClass: '',
-        rowSelector: '.mb-4, .mb-5, .mb-6' // Ajusta según las clases de tus elementos
+        rowSelector: function (field, ele) {
+          return '.mb-4, .mb-5, .mb-6';
+        }
+        
       }),
       submitButton: new FormValidation.plugins.SubmitButton(),
       autoFocus: new FormValidation.plugins.AutoFocus()
@@ -1501,7 +1536,7 @@ $(function () {
         Swal.fire({
           icon: 'success',
           title: '¡Éxito!',
-          text: response.success,
+          text: 'Solicitud vigilancia registrado exitosamente.',
           customClass: {
             confirmButton: 'btn btn-success'
           }
@@ -1520,7 +1555,7 @@ $(function () {
       }
     });
   });
-
+});
 
   // Manejar el cambio en el tipo de instalación
   $(document).on('change', '#edit_tipo', function () {
