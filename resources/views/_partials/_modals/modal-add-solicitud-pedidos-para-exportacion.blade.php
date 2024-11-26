@@ -1,14 +1,4 @@
-<!-- Add New Lote Envasado Modal -->
-<style>
-  #caracteristicas_Ex .btn-danger {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  z-index: 1;
-}
 
-
-</style>
 
 <div class="modal fade" id="addPedidoExportacion" tabindex="-1">
   <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
@@ -174,11 +164,18 @@
                             </div>
                         </div>
                     </div>
+                                   <!-- Botón -->
+                        <button id="add-characteristics" class="btn btn-primary btn-sm mt-1">
+                            <i class="ri-add-line"></i> Agregar Tabla
+                        </button>
+                        <button id="delete-characteristics" class="btn btn-danger btn-sm mt-1 float-end">
+                            <i class="ri-delete-bin-6-fill"></i> Eliminar tabla
+                        </button>
+
                 </div>
-                <!-- Botón -->
-                <button id="add-characteristics" class="btn btn-primary mt-1">
-                    <i class="ri-add-line"></i> Agregar Tabla
-                </button>
+
+
+
 
 
                   <div class="row">
@@ -269,52 +266,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-// Clonar toda la sección de Características del Producto
-document.getElementById('add-characteristics').addEventListener('click', function (e) {
-    e.preventDefault();
-
-    // Seleccionar la sección original
-    const original = document.querySelector('#caracteristicas_Ex');
-    if (!original) return; // Si no hay una sección inicial, salir
-
-    // Clonar toda la sección
-    const clon = original.cloneNode(true);
-
-    // Resetear los valores del clon
-    const selects = clon.querySelectorAll('select');
-    selects.forEach(select => select.value = '');
-
-    const inputs = clon.querySelectorAll('input');
-    inputs.forEach(input => input.value = '');
-
-    // Crear un botón de eliminar para la nueva sección
-    const btnDelete = document.createElement('button');
-    btnDelete.className = 'btn btn-danger mt-2'; // Estilos
-    btnDelete.textContent = 'Eliminar Características';
-    btnDelete.addEventListener('click', function () {
-        // Eliminar la sección y su separador
-        const hr = clon.previousElementSibling; // El separador `<hr>`
-        if (hr && hr.tagName === 'HR') hr.remove(); // Eliminar el separador si existe
-        clon.remove(); // Eliminar la sección
-    });
-
-    // Insertar el botón de eliminar al final de la sección clonada
-    clon.appendChild(btnDelete);
-
-    // Insertar el clon y un separador después de la última sección
-    const hrElement = document.createElement('hr'); // Separador
-    const parentElement = original.parentNode;
-    parentElement.appendChild(hrElement); // Agregar separador
-    parentElement.appendChild(clon); // Agregar la sección clonada
-
-    // Reaplicar select2 a los nuevos selects (si estás usando select2)
-    selects.forEach(select => {
-        if (typeof Select2 !== 'undefined') {
-            $(select).select2(); // Esto requiere que uses Select2
-        }
-    });
-});
 
 
 
