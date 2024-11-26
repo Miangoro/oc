@@ -12,10 +12,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select
-                                    onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);"
+                                <select onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);"
                                     name="id_empresa" name="id_empresa" class="select2 form-select id_empresa" required>
-                                    <option value="">Selecciona cliente</option>
+                                    <option value="" selected disabled>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
@@ -38,16 +37,13 @@
                                 <select class=" form-select select id_instalacion" id="id_instalacion"
                                     name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
-                                    <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
-
+                                <label for="id_instalacion">instalaciones</label>
                                 <button type="button" class="btn btn-primary" id="modalVigilancia"><i
                                         class="ri-add-line"></i> Agregar nueva instalación</button>
-
                             </div>
                         </div>
                     </div>
-
                     {{-- mio --}}
                     <div class="row">
                         <div class="col-md-6">
@@ -63,7 +59,6 @@
                                 <label for="id_lote_granel">Lote a granel</label>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class="select form-select " id="id_categoria" name="id_categoria"
@@ -79,7 +74,6 @@
                         </div>
                     </div>
             </div>
-
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
@@ -96,7 +90,7 @@
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
                         <select class="select form-select " id="id_tipo" name="id_tipo" aria-label="id_tipo">
-                            <option value="">Lista de categorias</option>
+                            <option value="">Lista de tipos maguey</option>
                             @foreach ($tipos as $tipos)
                                 <option value="{{ $tipos->id_tipo }}">{{ $tipos->nombre }} | {{ $tipos->cientifico }}
                                 </option>
@@ -177,7 +171,7 @@
             </div>
             <div class="col-md-12">
                 <div class="form-floating form-floating-outline mb-5">
-                    <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional_vig"
+                    <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional"
                         placeholder="Observaciones..."></textarea>
                     <label for="info_adicional">Información adicional sobre la actividad</label>
                 </div>
@@ -192,26 +186,18 @@
     </div>
 </div>
 
-
-
 <script>
     function obtenerDatosGraneles() {
         var lote_granel_id = $("#id_lote_granel").val();
-
-
-
         $.ajax({
             url: '/getDatos2/' + lote_granel_id,
             method: 'GET',
             success: function(response) {
-                // Rellenar los campos de lote_granel
                 $('#id_categoria').val(response.lotes_granel.id_categoria);
                 $('#id_clase').val(response.lotes_granel.id_clase);
                 $('#id_tipo').val(response.lotes_granel.id_tipo);
                 $('#analisis').val(response.lotes_granel.folio_fq);
                 $('#volumen').val(response.lotes_granel.cont_alc);
-
-                // Acceder a la primera guía y obtener kg_maguey
                 if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
                     $('#kg_maguey').val(response.lotes_granel_guias[0].guia
                         .kg_maguey);
@@ -234,7 +220,6 @@
                 } else {
                     $('#folio').val('');
                 }
-
                 // Acceder a id_predio y nombre_predio de la relación predios
                 if (response.lotes_granel_guias[0].guia.predios) {
                     $('#nombre_predio').val(response.lotes_granel_guias[0].guia.predios
@@ -258,9 +243,7 @@
                 }
                 if (response.lotes_granel.length == 0) {
                     contenido = '<option value="">Sin lotes registrados</option>';
-                } else {
-
-                }
+                } else {}
                 $('#id_lote_granel').html(contenido);
             },
             error: function() {}
@@ -278,18 +261,13 @@
                         response
                         .instalaciones[index].tipo + ' | ' + response
                         .instalaciones[index].direccion_completa + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
                 }
                 if (response.instalaciones.length == 0) {
                     contenido = '<option value="">Sin instalaciones registradas</option>';
                 } else {}
                 $('.id_instalacion').html(contenido);
             },
-            error: function() {
-
-            }
+            error: function() {}
         });
     }
-
-
 </script>
