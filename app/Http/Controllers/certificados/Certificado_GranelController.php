@@ -90,15 +90,22 @@ class Certificado_GranelController extends Controller
         ]);
     }
 
-    public function destroy($id_dictamen)
+    // Funcion de eliminar
+    public function destroy($id_certificado)
     {
         try {
-            $eliminar = CertificadosGranel::findOrFail($id_dictamen);
-            $eliminar->delete();
-
-            return response()->json(['success' => 'Eliminado correctamente']);
+            // Buscar el certificado
+            $certificado = CertificadosGranel::findOrFail($id_certificado);
+    
+            // Eliminar todos los revisores asociados al certificado en la tabla certificados_revision
+            RevisorGranel::where('id_certificado', $id_certificado)->delete();
+    
+            // Luego, eliminar el certificado
+            $certificado->delete();
+    
+            return response()->json(['success' => 'Certificado y revisores eliminados correctamente']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al eliminar'], 500);
+            return response()->json(['error' => 'Ocurrió un error al eliminar el certificado y los revisores: ' . $e->getMessage()], 500);
         }
     }
 
@@ -327,18 +334,38 @@ class Certificado_GranelController extends Controller
 
     public function PreCertificado($id_certificado)
     {
-        $certificado = CertificadosGranel::with('dictamen.empresa')->findOrFail($id_certificado);
+        // Aseguramos de cargar también la relación 'lote_granel.clase' si es necesario
+        $certificado = CertificadosGranel::with('dictamen.empresa.instalaciones', 'dictamen.lote_granel.clase')->findOrFail($id_certificado);
     
-        $watermarkText = $certificado->estatus === 1;
-
+        // Obtener la dirección completa de la primera instalación
+        $direccionCompleta = $certificado->dictamen->empresa->instalaciones->first()->direccion_completa ?? 'Dirección no disponible';
+    
+        // Obtener el valor de la clase si está disponible
+        $clase = $certificado->dictamen->lote_granel->clase->clase ?? 'Clase no disponible';
+    
+        // Verificar el watermark
+        $watermarkText = $certificado->estatus === 1 ? 'Certificado válido' : 'Certificado no válido';
+    
+        // Datos para el PDF
         $pdfData = [
+            // Tabla #1
             'num_certificado' => $certificado->num_certificado,
             'razon_social' => $certificado->dictamen->empresa->razon_social,
-            'watermarkText' =>  $watermarkText,
+            'representante' => $certificado->dictamen->empresa->representante,
+            'domicilio_fiscal' => $certificado->dictamen->empresa->domicilio_fiscal,
+            'rfc' => $certificado->dictamen->empresa->rfc,
+            'direccion_completa' => $direccionCompleta,
+            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+            'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
+    
+            // Agregar la clase al PDF
+            'nombre_lote' => $clase,
+    
+            'watermarkText' => $watermarkText,
         ];
     
-        $pdf = Pdf::loadView('pdfs.pre-certificado', $pdfData);
-        return $pdf->stream("Pre-certificado CIDAM C-GRA-{$certificado->id_certificado}.pdf");
+        // Generar y mostrar el PDF
+        return Pdf::loadView('pdfs.pre-certificado', $pdfData)->stream("Pre-certificado.pdf");
     }
     
 }

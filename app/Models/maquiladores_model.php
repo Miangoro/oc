@@ -14,4 +14,5 @@ class maquiladores_model extends Model
         'id_maquilador',
         'id_maquiladora'
     ];
+    
 }
