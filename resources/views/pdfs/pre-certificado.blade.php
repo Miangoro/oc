@@ -292,25 +292,25 @@
 			<td class="columna" style="white-space: nowrap;">Categoría y clase</td>
 			<td class="columna-norm">{{ $nombre_lote }}</td>
 			<td class="columna">No. de lote</td>
-			<td class="columna-norm">2408ESPSN</td>
+			<td class="columna-norm">----</td>
 			<td class="columna">No. de análisis</td>
-            <td class="columna-norm" style="white-space: nowrap;">OTR-A 015861.2</td>
+            <td class="columna-norm" style="white-space: nowrap;">----</td>
 		</tr>
 		<tr>
 			<td class="columna">Ingredientes</td>
-			<td class="columna-norm">-----</td>
+			<td class="columna-norm">{{ $ingredientes }}</td>
 			<td class="columna" style="white-space: nowrap;">Volumen de lote</td>
-			<td class="columna-norm">5279 L</td>
+			<td class="columna-norm">{{ $volumen }}</td>
 			<td class="columna">Contenido Alcohólico</td>
-			<td class="columna-norm" style="white-space: nowrap;">51.0% Alc. Vol</td>
+			<td class="columna-norm" style="white-space: nowrap;">{{ $cont_alc }}</td>
 		</tr>
 		<tr>
 			<td class="columna">Tipo de maguey</td>
 			<td class="columna-norm">Espadín (A. angustifolia)</td>
 			<td class="columna">Edad</td>
-			<td class="columna-norm">-----</td>
+			<td class="columna-norm">{{ $edad }}</td>
 			<td class="columna">No. de dictamen</td>
-			<td class="columna-norm" style="white-space: nowrap;">UMG-210/2024</td>
+			<td class="columna-norm" style="white-space: nowrap;">----</td>
 		</tr>
 	</tbody>
 </table>
