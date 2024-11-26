@@ -452,7 +452,7 @@ $('#editCertificadoForm .select2').each(function () {
         Swal.fire({
           icon: 'success',
           title: '¡Eliminado!',
-          text: '¡La solicitud ha sido eliminada correctamente!',
+          text: '¡Certificado eliminado correctamente!',
           customClass: {
             confirmButton: 'btn btn-success'
           }
@@ -929,31 +929,80 @@ $(document).on('click', '.reexpedir-record', function () {
 });
 
 $('#accion_reexpedir').on('change', function () {
-  var selectedValue = $(this).val(); 
-  var idCertificado = $('#reexpedir_id_certificado').val(); 
+  var selectedValue = $(this).val();
+  var idCertificado = $('#reexpedir_id_certificado').val();
   cargarDatos(idCertificado);
+
   if (selectedValue == '2') { 
       $('#campos_condicionales').slideDown();
+
+      formValidation.addField('num_certificado', {
+          validators: {
+              notEmpty: {
+                  message: 'El número de certificado es obligatorio.'
+              }
+          }
+      });
+
   } else {
-      $('#campos_condicionales').slideUp(); 
+      // Ocultar los campos condicionales
+      $('#campos_condicionales').slideUp();
+
+      // Eliminar la validación para el campo
+      formValidation.removeField('num_certificado');
   }
 });
 
-$('#addReexpedirCertificadoGranelForm').on('submit', function (e) {
-  e.preventDefault(); 
-  var formData = $(this).serialize(); 
+const formularioReexpedir = document.getElementById('addReexpedirCertificadoGranelForm');
+const formValidation = FormValidation.formValidation(formularioReexpedir, {
+  fields: {
+    'accion_reexpedir': {
+        validators: {
+            notEmpty: {
+                message: 'Debe seleccionar una opción para la revisión.'
+            }
+        }
+    },
+    'observaciones': {
+      validators: {
+          notEmpty: {
+              message: 'Debe ingresar observaciones.'
+          }
+      }
+  },
+},
+plugins: {
+  trigger: new FormValidation.plugins.Trigger(),
+  bootstrap5: new FormValidation.plugins.Bootstrap5({
+      eleValidClass: '',
+      eleInvalidClass: 'is-invalid',
+      rowSelector: '.form-floating'
+  }),
+  submitButton: new FormValidation.plugins.SubmitButton(),
+  autoFocus: new FormValidation.plugins.AutoFocus()
+}
+}).on('core.form.valid', function (e) {
+  var formData = new FormData(formularioReexpedir);
+  var accionReexpedir = $('#accion_reexpedir').val();
+  console.log('Acción de reexpedir:', accionReexpedir);
+  formData.append('accion_reexpedir', accionReexpedir);
 
   $.ajax({
       url: '/certificados/reexpedir/granel', 
       type: 'POST',
       data: formData,
+      processData: false,
+      contentType: false,
       success: function (response) {
           console.log('Respuesta del servidor:', response);
           Swal.fire({
-              icon: 'success',
-              title: 'Éxito',
-              text: response.message
-          });
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+                confirmButton: 'btn btn-success'
+            }
+        });
           $('#modalReexpedirCertificadoGranel').modal('hide');
           $('#addReexpedirCertificadoGranelForm')[0].reset();
           $('#campos_condicionales').slideUp();
@@ -968,6 +1017,11 @@ $('#addReexpedirCertificadoGranelForm').on('submit', function (e) {
           });
       }
   });
+});
+
+// Validar el campo "accion_reexpedir" cuando cambie
+$('#accion_reexpedir, #observaciones').on('change', function () {
+  formValidation.revalidateField($(this).attr('name'));
 });
 
 function cargarDatos(idCertificado) {
@@ -1006,7 +1060,6 @@ $('#modalReexpedirCertificadoGranel').on('hidden.bs.modal', function () {
   $('#addReexpedirCertificadoGranelForm')[0].reset(); 
   $('#campos_condicionales').slideUp();
 });
-
 
 $('#asignarRevisorModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget); 
