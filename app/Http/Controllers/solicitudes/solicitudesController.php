@@ -72,50 +72,67 @@ class solicitudesController extends Controller
           ->leftJoin('empresa', 'solicitudes.id_empresa', '=', 'empresa.id_empresa')
           ->leftJoin('solicitudes_tipo', 'solicitudes.id_tipo', '=', 'solicitudes_tipo.id_tipo')
           ->leftJoin('instalaciones', 'solicitudes.id_instalacion', '=', 'instalaciones.id_instalacion')
-          ->select('solicitudes.*', 'empresa.razon_social', 'solicitudes_tipo.tipo', 'instalaciones.direccion_completa', 'solicitudes.estatus')
-          ->orderBy($order, $dir)
+          ->leftJoin('inspecciones', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+          ->leftJoin('users', 'inspecciones.id_inspector', '=', 'users.id') // Unir con la tabla users
+          ->select('solicitudes.*',
+                   'empresa.razon_social',
+                   'solicitudes_tipo.tipo',
+                   'instalaciones.direccion_completa',
+                   'solicitudes.estatus',
+                   'inspecciones.num_servicio',
+                   'inspecciones.fecha_servicio',
+                   'users.name as inspector_name') // Seleccionar el nombre del inspector
+          ->orderBy($order === 'inspector' ? 'inspector_name' : $order, $dir) // Ordenar por el nombre del inspector
           ->offset($start)
           ->limit($limit)
           ->get();
       } else {
-          $search = $request->input('search.value');
+        $search = $request->input('search.value');
 
-          $solicitudes = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
-              ->where(function ($query) use ($search) {
-                  $query->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
-                      ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
-                      ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
-                      ->orWhereHas('empresa', function ($q) use ($search) {
-                          $q->where('razon_social', 'LIKE', "%{$search}%");
-                      })
-                      ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
-                          $q->where('tipo', 'LIKE', "%{$search}%");
-                      })
-                      ->orWhereHas('instalacion', function ($q) use ($search) {
-                          $q->where('direccion_completa', 'LIKE', "%{$search}%");
-                      });
-              })
-              ->offset($start)
-              ->limit($limit)
-              ->orderBy($order, $dir)
-              ->get();
+        $solicitudes = solicitudesModel::with(['tipo_solicitud', 'empresa', 'inspeccion', 'instalacion'])
+            ->leftJoin('inspecciones', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+            ->leftJoin('users', 'inspecciones.id_inspector', '=', 'users.id') // Unir con la tabla users
+            ->where(function ($query) use ($search) {
+                $query->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
+                    ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+                    ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
+                    ->orWhereHas('empresa', function ($q) use ($search) {
+                        $q->where('razon_social', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
+                        $q->where('tipo', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('instalacion', function ($q) use ($search) {
+                        $q->where('direccion_completa', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%") // Buscar por número de servicio
+                    ->orWhere('users.name', 'LIKE', "%{$search}%"); // Buscar por nombre del inspector
+            })
+            ->offset($start)
+            ->limit($limit)
+            ->orderBy("solicitudes.id_solicitud", $dir) // Especifica la tabla para evitar ambigüedad
+            ->get();
 
-          $totalFiltered = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
-              ->where(function ($query) use ($search) {
-                  $query->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%") 
-                      ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
-                      ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
-                      ->orWhereHas('empresa', function ($q) use ($search) {
-                          $q->where('razon_social', 'LIKE', "%{$search}%");
-                      })
-                      ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
-                          $q->where('tipo', 'LIKE', "%{$search}%");
-                      })
-                      ->orWhereHas('instalacion', function ($q) use ($search) {
-                          $q->where('direccion_completa', 'LIKE', "%{$search}%");
-                      });
-              })
-              ->count();
+        $totalFiltered = solicitudesModel::with(['tipo_solicitud', 'empresa', 'inspeccion', 'instalacion'])
+            ->leftJoin('inspecciones', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+            ->leftJoin('users', 'inspecciones.id_inspector', '=', 'users.id') // Unir con la tabla users
+            ->where(function ($query) use ($search) {
+                $query->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
+                    ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+                    ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
+                    ->orWhereHas('empresa', function ($q) use ($search) {
+                        $q->where('razon_social', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
+                        $q->where('tipo', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('instalacion', function ($q) use ($search) {
+                        $q->where('direccion_completa', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%") // Buscar por número de servicio
+                    ->orWhere('users.name', 'LIKE', "%{$search}%"); // Buscar por nombre del inspector
+            })
+            ->count();
       }
         $data = [];
 
