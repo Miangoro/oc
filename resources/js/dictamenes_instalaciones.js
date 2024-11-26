@@ -146,8 +146,6 @@ $('#edit_fecha_emision').on('change', function() {
               return '<span class="text-warning">Área de maduración</span>';
             }
 
-             
-            
              //return $name;
            }
          },
@@ -552,7 +550,6 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
     });
   });
 
-  
 
 
 
@@ -633,7 +630,8 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
 });
 
 
-  
+
+
 //RECIBE LOS DATOS DEL PDF
 $(document).on('click', '.pdf', function () {
   var id = $(this).data('id');//Obtén el ID desde el atributo "data-id" en opciones
@@ -642,9 +640,7 @@ $(document).on('click', '.pdf', function () {
     var iframe = $('#pdfViewer');
     var spinner = $('#cargando');
 
-    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-      spinner.show();
-      iframe.hide();
+    
 
       if(tipo == 1){ // Productor
         var tipo_dictamen = '../dictamen_productor/'+id;
@@ -667,7 +663,14 @@ $(document).on('click', '.pdf', function () {
         var titulo = "Dictamen de área de maduración de mezcal";
       }
       
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    
+    //Cargar el PDF con el ID
       iframe.attr('src', tipo_dictamen);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+      $("#NewPestana").attr('href', tipo_dictamen).show();
 
       $("#titulo_modal").text(titulo);
       $("#subtitulo_modal").text(registro);  
@@ -704,7 +707,6 @@ $(document).ready(function() {
           $('#edit_clases').val(data.clases).trigger('change');
 
 
-        
           // Mostrar el modal de edición
           $('#editDictamen').modal('show');
       }).fail(function() {

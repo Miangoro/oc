@@ -1,4 +1,4 @@
-<!-- Add New Address Modal
+<!--MODAL DICTAMEN INSTALACIONES PDF
 <div class="modal fade" id="mostrarPdf" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-simple">
     <div class="modal-content">
@@ -11,7 +11,7 @@
 <div class="modal fade" id="mostrarPdf" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-simple">
     <div class="modal-content">
-    <a id="" href="#" target="_blank" class="btn btn-primary btn-sm ms-auto" style="display: none;">Abrir PDF en nueva pestaña</a>
+    <a id="NewPestana" href="#" target="_blank" class="btn btn-primary btn-sm ms-auto" style="display: none;">Abrir PDF en nueva pestaña</a>
       <!-- Botón de cierre alineado a la derecha -->
       <button type="button" class="btn-close btn-sm ml-auto" data-bs-dismiss="modal" aria-label="Close"></button>
       <div class="modal-body p-0 d-flex flex-column justify-content-center align-items-center">
