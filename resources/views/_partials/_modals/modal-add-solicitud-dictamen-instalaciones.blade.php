@@ -13,7 +13,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_solicitud" onchange="obtenerInstalaciones();"
+                                <select id="id_empresa_solicitudes" onchange="obtenerInstalaciones();"
                                     name="id_empresa" class="id_empresa_dic select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
