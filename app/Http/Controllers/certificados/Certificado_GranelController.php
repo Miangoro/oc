@@ -90,15 +90,22 @@ class Certificado_GranelController extends Controller
         ]);
     }
 
-    public function destroy($id_dictamen)
+    // Funcion de eliminar
+    public function destroy($id_certificado)
     {
         try {
-            $eliminar = CertificadosGranel::findOrFail($id_dictamen);
-            $eliminar->delete();
-
-            return response()->json(['success' => 'Eliminado correctamente']);
+            // Buscar el certificado
+            $certificado = CertificadosGranel::findOrFail($id_certificado);
+    
+            // Eliminar todos los revisores asociados al certificado en la tabla certificados_revision
+            RevisorGranel::where('id_certificado', $id_certificado)->delete();
+    
+            // Luego, eliminar el certificado
+            $certificado->delete();
+    
+            return response()->json(['success' => 'Certificado y revisores eliminados correctamente']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al eliminar'], 500);
+            return response()->json(['error' => 'Ocurrió un error al eliminar el certificado y los revisores: ' . $e->getMessage()], 500);
         }
     }
 
