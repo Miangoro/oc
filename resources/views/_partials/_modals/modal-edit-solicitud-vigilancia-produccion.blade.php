@@ -13,8 +13,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select
-                                    onchange=" obtenerGranelesedit(this.value);obtenerGraneles2(this.value);"
+                                <select onchange=" obtenerGranelesedit(this.value);obtenerGraneles2(this.value);"
                                     id="edit_id_empresa_vig" name="id_empresa" class="select2 form-select id_empresa">
                                     <option value="">Selecciona Empresa</option>
                                     @foreach ($empresas as $empresa)
@@ -39,16 +38,13 @@
                                 <select class=" form-select select id_instalacion" id="edit_id_instalacion_vig"
                                     name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
-                                    <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
-
+                                <label for="id_instalacion">instalaciones</label>
                                 <button type="button" class="btn btn-primary" id="vigi"><i
                                         class="ri-add-line"></i> Agregar nueva instalación</button>
-
                             </div>
                         </div>
                     </div>
-
                     {{-- mio --}}
                     <div class="row">
                         <div class="col-md-6">
@@ -64,7 +60,6 @@
                                 <label for="id_lote_granel">Lote a granel</label>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select class="select form-select " id="edit_id_categoria_vig" name="id_categoria"
@@ -80,7 +75,6 @@
                         </div>
                     </div>
             </div>
-
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
@@ -194,57 +188,54 @@
     </div>
 </div>
 
-
-
 <script>
     function obtenerDatosGranelesedit() {
-        var lote_granel_id = $("#id_lote_granel").val();
+        var lote_granel_id = $("#edit_id_lote_granel_vig").val(); // Asegúrate de que el ID coincide
 
-
+        if (!lote_granel_id) {
+            console.error("No se seleccionó un lote a granel.");
+            return;
+        }
 
         $.ajax({
-            url: '/getDatos2/' + lote_granel_id,
+            url: `/getDatos2/${lote_granel_id}`, // Ruta dinámica
             method: 'GET',
             success: function(response) {
-                // Rellenar los campos de lote_granel
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_clase').val(response.lotes_granel.id_clase);
-                $('#id_tipo').val(response.lotes_granel.id_tipo);
-                $('#analisis').val(response.lotes_granel.folio_fq);
-                $('#volumen').val(response.lotes_granel.cont_alc);
-
-                // Acceder a la primera guía y obtener kg_maguey
-                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                    $('#kg_maguey').val(response.lotes_granel_guias[0].guia
-                        .kg_maguey);
-                } else {
-                    $('#kg_maguey').val('');
-                }
-                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                    $('#cant_pinas').val(response.lotes_granel_guias[0].guia
-                        .num_comercializadas);
-                } else {
-                    $('#cant_pinas').val('');
-                }
-                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                    $('#art').val(response.lotes_granel_guias[0].guia.art);
-                } else {
-                    $('#art').val('');
-                }
-                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                    $('#folio').val(response.lotes_granel_guias[0].guia.folio);
-                } else {
-                    $('#folio').val('');
+                // Validar que response y sus objetos existan antes de acceder
+                if (response && response.lotes_granel) {
+                    $('#edit_id_categoria_vig').val(response.lotes_granel.id_categoria || '');
+                    $('#edit_id_clase_vig').val(response.lotes_granel.id_clase || '');
+                    $('#edit_id_tipo_vig').val(response.lotes_granel.id_tipo || '');
+                    $('#edit_analisis_vig').val(response.lotes_granel.folio_fq || '');
+                    $('#edit_volumen_vig').val(response.lotes_granel.cont_alc || '');
                 }
 
-                // Acceder a id_predio y nombre_predio de la relación predios
-                if (response.lotes_granel_guias[0].guia.predios) {
-                    $('#nombre_predio').val(response.lotes_granel_guias[0].guia.predios
-                        .nombre_predio); // Nombre del predio
+                // Validar si hay guías relacionadas
+                if (response && response.lotes_granel_guias && response.lotes_granel_guias.length > 0) {
+                    var primeraGuia = response.lotes_granel_guias[0].guia || {};
+                    $('#edit_kg_maguey_vig').val(primeraGuia.kg_maguey || '');
+                    $('#edit_cant_pinas_vig').val(primeraGuia.num_comercializadas || '');
+                    $('#edit_art_vig').val(primeraGuia.art || '');
+                    $('#edit_folio_vig').val(primeraGuia.folio || '');
+
+                    // Validar si hay predios relacionados
+                    if (primeraGuia.predios) {
+                        $('#edit_nombre_predio_vig').val(primeraGuia.predios.nombre_predio || '');
+                    } else {
+                        $('#edit_nombre_predio_vig').val('');
+                    }
+                } else {
+                    // Resetear campos si no hay guías
+                    $('#edit_kg_maguey_vig').val('');
+                    $('#edit_cant_pinas_vig').val('');
+                    $('#edit_art_vig').val('');
+                    $('#edit_folio_vig').val('');
+                    $('#edit_nombre_predio_vig').val('');
                 }
             },
-            error: function() {
-
+            error: function(xhr, status, error) {
+                console.error("Error al obtener datos del lote a granel:", error);
+                alert("No se pudieron obtener los datos del lote a granel. Intenta nuevamente.");
             }
         });
     }
@@ -263,7 +254,6 @@
                 if (response.lotes_granel.length == 0) {
                     contenido = '<option value="">Sin lotes registrados</option>';
                 } else {
-
                 }
                 $('#edit_id_lote_granel_vig').html(contenido);
             },
@@ -271,40 +261,34 @@
         });
     }
 
-
-
     function obtenerGraneles2(empresa) {
-    $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function(response) {
-            var contenido = "";
-            for (let index = 0; index < response.instalaciones.length; index++) {
-                contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                    response.instalaciones[index].tipo + ' | ' +
-                    response.instalaciones[index].direccion_completa +
-                    '</option>' + contenido;
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var contenido = "";
+                for (let index = 0; index < response.instalaciones.length; index++) {
+                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                        response.instalaciones[index].tipo + ' | ' +
+                        response.instalaciones[index].direccion_completa +
+                        '</option>' + contenido;
+                }
+                if (response.instalaciones.length == 0) {
+                    contenido = '<option value="">Sin instalaciones registradas</option>';
+                }
+                // Actualizar las opciones del select
+                $('#edit_id_instalacion_vig').html(contenido);
+                // Restaurar el valor previamente seleccionado
+                const idInstalacionSeleccionada = $('#edit_id_instalacion_vig').data('selected');
+                if (idInstalacionSeleccionada) {
+                    $('#edit_id_instalacion_vig')
+                        .val(idInstalacionSeleccionada) // Selecciona el valor previo
+                        .trigger('change'); // Propaga el cambio al select
+                }
+            },
+            error: function() {
+                console.error("Error al cargar las instalaciones.");
             }
-
-            if (response.instalaciones.length == 0) {
-                contenido = '<option value="">Sin instalaciones registradas</option>';
-            }
-
-            // Actualizar las opciones del select
-            $('#edit_id_instalacion_vig').html(contenido);
-
-            // Restaurar el valor previamente seleccionado
-            const idInstalacionSeleccionada = $('#edit_id_instalacion_vig').data('selected');
-            if (idInstalacionSeleccionada) {
-                $('#edit_id_instalacion_vig')
-                    .val(idInstalacionSeleccionada) // Selecciona el valor previo
-                    .trigger('change'); // Propaga el cambio al select
-            }
-        },
-        error: function() {
-            console.error("Error al cargar las instalaciones.");
-        }
-    });
-}
-
+        });
+    }
 </script>
