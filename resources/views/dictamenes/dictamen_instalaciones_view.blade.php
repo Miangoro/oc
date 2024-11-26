@@ -13,7 +13,8 @@
   'resources/assets/vendor/libs/animate-css/animate.scss',
   'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
   'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss',
-
+//Animacion "loading"
+  'resources/assets/vendor/libs/spinkit/spinkit.scss'
 ])
 @endsection
 
