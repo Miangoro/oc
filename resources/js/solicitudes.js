@@ -20,6 +20,7 @@ $(function () {
           icon: 'error',
           title: 'Error',
           text: 'Hubo un problema al cargar los datos.',
+          showCancelButton: false,
         });
       }
     },
@@ -27,14 +28,14 @@ $(function () {
       { data: '' },
       { data: '' },
       { data: 'folio' },
-      { data: 'num_servicio' },
+      { data: 'num_servicio', orderable: false},
       { data: 'razon_social' },
       { data: 'fecha_solicitud' },
       { data: 'tipo' },
       { data: 'direccion_completa' },
       { data: 'fecha_visita' },
-      { data: 'inspector' },
-      { data: 'fecha_servicio' },
+      { data: 'inspector', orderable: false},
+      { data: 'fecha_servicio' ,orderable: false},
       { data: '' },
       { data: 'estatus' },
       { data: 'action' }
@@ -97,6 +98,8 @@ $(function () {
 
         targets: 11,
         className: 'text-center',
+        searchable: false,
+        orderable: false,
         render: function (data, type, full, meta) {
 
 
@@ -1690,37 +1693,6 @@ $(function () {
       }
     });
   });
-
-
-      //Vigilancia boton instalaciones EDIT
-      $(document).ready(function () {
-        let openedFromEditModal = false;
-        $('#vigi').on('click', function () {
-            var clienteSeleccionado = $('#edit_id_empresa_vig').val();
-            if (!clienteSeleccionado) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Espere!',
-                    text: 'Por favor, selecciona un cliente primero.',
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    },
-                    buttonsStyling: false
-                });
-                return;
-            }
-            $('#editVigilanciaProduccion').modal('hide');
-            openedFromEditModal = true;
-            $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-            $('#modalAddInstalacion').modal('show');
-        });
-        $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-            if (openedFromEditModal) {
-                $('#editVigilanciaProduccion').modal('show');
-                openedFromEditModal = false;
-            }
-        });
-    });
 
 });
 
