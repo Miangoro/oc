@@ -50,13 +50,17 @@ class insertar_datos_bd extends Controller
                     if($solicitud['id_subtipo']==40){
                         $solicitud['id_subtipo'] = 14;
                     }
-                    solicitudesModel::create([
-                        'id_empresa'             => $solicitud['id_cliente'],
-                        'folio'             => $solicitud['folio'],
-                        'fecha_solicitud'   => $solicitud['fecha_solicitud'],
-                        'fecha_visita'   => $solicitud['fecha_visita'].' '.$solicitud['hora_visita'],
-                        'id_tipo'             => $solicitud['id_subtipo'],
-                    ]);
+
+                    if($solicitud['id_subtipo']!= 30){
+                        solicitudesModel::create([
+                            'id_empresa'             => $solicitud['id_cliente'],
+                            'folio'             => $solicitud['folio'],
+                            'fecha_solicitud'   => $solicitud['fecha_solicitud'],
+                            'fecha_visita'   => $solicitud['fecha_visita'].' '.$solicitud['hora_visita'],
+                            'id_tipo'             => $solicitud['id_subtipo'],
+                        ]);
+
+                    }
                 }
 
                 return response()->json(['message' => 'Solicitudes insertadas correctamente']);
