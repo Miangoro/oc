@@ -14,7 +14,7 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);"
                                     name="id_empresa" name="id_empresa" class="select2 form-select id_empresa" required>
-                                    <option value="">Selecciona cliente</option>
+                                    <option value="" selected disabled>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
@@ -90,7 +90,7 @@
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
                         <select class="select form-select " id="id_tipo" name="id_tipo" aria-label="id_tipo">
-                            <option value="">Lista de categorias</option>
+                            <option value="">Lista de tipos maguey</option>
                             @foreach ($tipos as $tipos)
                                 <option value="{{ $tipos->id_tipo }}">{{ $tipos->nombre }} | {{ $tipos->cientifico }}
                                 </option>
@@ -171,7 +171,7 @@
             </div>
             <div class="col-md-12">
                 <div class="form-floating form-floating-outline mb-5">
-                    <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional_vig"
+                    <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional"
                         placeholder="Observaciones..."></textarea>
                     <label for="info_adicional">Información adicional sobre la actividad</label>
                 </div>

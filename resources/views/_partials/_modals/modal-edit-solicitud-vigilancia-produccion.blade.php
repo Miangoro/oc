@@ -15,7 +15,7 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select onchange=" obtenerGranelesedit(this.value);obtenerGraneles2(this.value);"
                                     id="edit_id_empresa_vig" name="id_empresa" class="select2 form-select id_empresa">
-                                    <option value="">Selecciona Empresa</option>
+                                    <option value="" selected disabled>Selecciona Empresa</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
