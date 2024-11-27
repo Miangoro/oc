@@ -19,7 +19,7 @@ class documentacionController extends Controller
     $documentos = Documentacion::where('subtipo', '=', 'Todas')->get();
     $productor_agave = Documentacion::where('subtipo', '=', 'Generales Productor')->get();
 
-    $empresas = empresa::where('tipo', '=', 2)->get();
+    $empresas = Empresa::with('empresaNumClientes')->where('tipo', 2)->get();
     $instalaciones = Instalaciones::where('tipo', '=', 2)->get();
 
     return view("documentacion.documentacion_view", ["documentos" => $documentos, "productor_agave" => $productor_agave, "empresas" => $empresas]);
@@ -341,7 +341,7 @@ print_r($instalaciones->getBindings());*/
                   <table class="table table-sm table-bordered">
                     <thead class="bg-secondary text-white">
                       <tr>
-                        <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3">Marca: <b>' . $marca->marca . '</b></th>
+                        <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3">Marca: <b><span class="badge bg-warning">' . $marca->marca . '</span></b></th>
                       </tr>
                       <tr>
                         <th class="bg-transparent border-bottom">#</th>
