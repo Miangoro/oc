@@ -1641,31 +1641,40 @@ $(function () {
   });
 
 
+
+
+//RECIBE LOS DATOS DEL PDF
   $(document).on('click', '.pdf2', function () {
     alert("entro");
     var url = $(this).data('url');
     var registro = $(this).data('registro');
     var id_solicitud = $(this).data('id');
-    var iframe = $('#pdfViewer');
-    var spinner = $('#cargando');
+      var iframe = $('#pdfViewer');
+      var spinner = $('#cargando');
 
-    spinner.show();
-    iframe.hide();
-   
-
-    $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
-    $("#subtitulo_modal").text(registro);
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+      spinner.show();
+      iframe.hide();
+    //Cargar el PDF con el ID
+      iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+      $("#NewPestana").attr('href', 'solicitud_de_servicio/' + id_solicitud).show();
+    //Titulos
+      $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
+      $("#subtitulo_modal").text(registro);
 
       iframe.on('load', function () {
         spinner.hide();
         iframe.show();
-        iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
+        //iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
       });
-});
   });
 
-  var openedFromFirstModal = false;
+});
 
+
+
+  var openedFromFirstModal = false;
 
 
   $('#abrirModalInstalaciones').on('click', function () {
@@ -1740,6 +1749,6 @@ $(function () {
     });
   });
 
-});
+//});
 
 

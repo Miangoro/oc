@@ -448,18 +448,36 @@ $(function () {
   });
 
 
+
+
+//RECIBE LOS DATOS DEL PDF
   $(document).on('click', '.pdf', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
-        var iframe = $('#pdfViewer');
-        iframe.attr('src', '../pdf_asignacion_usuario/'+id);
-
-        $("#titulo_modal").text("Carta de asignación de usuario y contraseña para plataforma del OC");
-        $("#subtitulo_modal").text(registro);
+      var iframe = $('#pdfViewer');//contenido
+      var spinner = $('#cargando');
+      
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+      spinner.show();
+      iframe.hide();
+    //Cargar el PDF con el ID
+      iframe.attr('src', '../pdf_asignacion_usuario/'+id);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+      $("#NewPestana").attr('href', '../pdf_asignacion_usuario/'+id).show();
+    //Titulos
+      $("#titulo_modal").text("Carta de asignación de usuario y contraseña para plataforma del OC");
+      $("#subtitulo_modal").text(registro);
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+      iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+      });
 });
 
 
-  // edit record
+
+
+//EDIT record
   $(document).on('click', '.edit-record', function () {
     var user_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
