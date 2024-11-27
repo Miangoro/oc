@@ -103,7 +103,7 @@ $(function () {
         render: function (data, type, full, meta) {
 
 
-          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf"  data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['id_solicitud']}">sadasdasdasd</i>dfsdfsdf`;
+          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf"  data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['id_solicitud']}"></i>`;
 
         }
       },
