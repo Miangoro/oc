@@ -466,7 +466,7 @@ class solicitudesController extends Controller
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
-                    'info_adicional' => 'required|string'
+                    'info_adicional' => 'nullable|string'
                 ]);
                 // Preparar el JSON para guardar en `caracteristicas`
                 $caracteristicasJson = [
@@ -507,7 +507,7 @@ class solicitudesController extends Controller
                     'fecha_visita' => 'required|date',
                     'id_predio' => 'required|integer|exists:predios,id_predio',
                     'punto_reunion' => 'required|string|max:255',
-                    'info_adicional' => 'required|string'
+                    'info_adicional' => 'nullable|string'
                 ]);
                 // Preparar el JSON para guardar en `caracteristicas`
                 $caracteristicasJson = [
@@ -536,7 +536,7 @@ class solicitudesController extends Controller
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
-                    'info_adicional' => 'required|string|max:5000',
+                    'info_adicional' => 'nullable|string|max:5000',
                 ]);
 
                 // Actualizar datos específicos para dictaminación

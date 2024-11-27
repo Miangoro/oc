@@ -5,7 +5,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Registrar nueva solicitud de dictamen de instalaciones</h4>
+                    <h4 class="address-title mb-2">Registrar nueva solicitud de dictaminación de instalaciones</h4>
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="addRegistrarSolicitud">
