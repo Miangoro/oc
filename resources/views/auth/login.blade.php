@@ -256,7 +256,7 @@
                             </a>
                         </div>
                         <div style="text-align: center">
-                            <p>👇¡Síguenos en nuestra redes sociales!👇</p>
+                            <p>👇¡Síguenos en nuestras redes sociales!👇</p>
                         </div>
                         <div class="flex-container">
                             <a href="https://www.facebook.com/organismo.certificador.CIDAM" target="_blank">
@@ -375,7 +375,7 @@
                             </a>
                         </div>
                         <div style="text-align: center">
-                            <p>👇¡Síguenos en nuestra redes sociales!👇</p>
+                            <p>👇¡Síguenos en nuestras redes sociales!👇</p>
                         </div>
                         <div class="flex-container">
                             <a href="https://www.facebook.com/organismo.certificador.CIDAM" target="_blank">
