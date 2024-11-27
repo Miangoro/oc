@@ -103,7 +103,7 @@ $(function () {
         render: function (data, type, full, meta) {
 
 
-          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"  data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['id_solicitud']}">sadasdasdasd</i>dfsdfsdf`;
+          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf"  data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['id_solicitud']}">sadasdasdasd</i>dfsdfsdf`;
 
         }
       },
@@ -1645,8 +1645,8 @@ $(function () {
 
 //RECIBE LOS DATOS DEL PDF
   $(document).on('click', '.pdf2', function () {
-    alert("entro");
-    var url = $(this).data('url');
+    //alert("entro");
+    //var url = $(this).data('url');
     var registro = $(this).data('registro');
     var id_solicitud = $(this).data('id');
       var iframe = $('#pdfViewer');
