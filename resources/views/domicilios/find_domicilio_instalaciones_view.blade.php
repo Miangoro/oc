@@ -58,8 +58,7 @@
                     <th>Folio</th>
                     <th>Organismo</th>
                     <th>Certificados de instalaciones</th>
-                    <th>Fecha Emisión</th>
-                    <th>Fecha Vigencia</th>
+                    <th>Fechas</th>
                     <th>Acciones</th>
                 </tr>
             </thead>

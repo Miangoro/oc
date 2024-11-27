@@ -210,7 +210,7 @@ class DomiciliosController extends Controller
         ]);
     
         try {
-            Instalaciones::create([
+            $instalacion = Instalaciones::create([
                 'id_empresa' => $request->input('id_empresa'),
                 'tipo' => json_encode($request->input('tipo')), 
                 'estado' => $request->input('estado'),
@@ -225,8 +225,6 @@ class DomiciliosController extends Controller
     
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->input('id_empresa'))->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-            $aux = $request->hasFile('url');            
-            $ultimaInstalacion = Instalaciones::latest()->first();
     
             if ($request->hasFile('url')) {
                 $directory = 'uploads/' . $numeroCliente;
@@ -237,26 +235,32 @@ class DomiciliosController extends Controller
                 }
     
                 foreach ($request->file('url') as $index => $file) {
-                    $filename = $request->nombre_documento[$index] ?? 'documento_' . time(); 
-                    $filename .= '.' . $file->getClientOriginalExtension();
-                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+                    // Obtener el nombre base sin sufijos ni extensión
+                    $nombreDocumento = $request->nombre_documento[$index] ?? 'documento';
+                    $nombreDocumento = pathinfo($nombreDocumento, PATHINFO_FILENAME); // Remover extensión si existe
     
-                    if ($request->nombre_documento[$index] || $file) {
-                        $documentacion_url = new Documentacion_url();
-                        $documentacion_url->id_relacion = $ultimaInstalacion->id_instalacion;
-                        $documentacion_url->id_documento = $request->id_documento[$index] ?? null;
-                        $documentacion_url->nombre_documento = $request->nombre_documento[$index] ?? null;
-                        $documentacion_url->url = $filename;
-                        $documentacion_url->id_empresa = $request->input('id_empresa');
-                        $documentacion_url->save();
-                    }
+                    // Generar un nombre único para el archivo
+                    $filename = $nombreDocumento . '_' . $instalacion->id_instalacion . '_' . $index . '.' . $file->getClientOriginalExtension();
+    
+                    // Guardar el archivo en el directorio
+                    $filePath = $file->storeAs($directory, $filename, 'public');
+    
+                    // Guardar en la base de datos
+                    $documentacion_url = new Documentacion_url();
+                    $documentacion_url->id_relacion = $instalacion->id_instalacion;
+                    $documentacion_url->id_documento = $request->id_documento[$index] ?? null;
+                    $documentacion_url->nombre_documento = $nombreDocumento;  // Solo el nombre base
+                    $documentacion_url->url = $filename;  // Nombre del archivo con sufijos
+                    $documentacion_url->id_empresa = $request->input('id_empresa');
+                    $documentacion_url->save();
                 }
             }
-            return response()->json(['code' => 200, 'message' => 'Instalación registrada correctamente.', 'aux' => $aux]);
+    
+            return response()->json(['code' => 200, 'message' => 'Instalación registrada correctamente.']);
         } catch (\Exception $e) {
-            return response()->json(['code' => 500, 'message' => 'Error al registrar la instalación.']);
+            return response()->json(['code' => 500, 'message' => 'Error al registrar la instalación.', 'error' => $e->getMessage()]);
         }
-    }
+    }    
     
     public function edit($id_instalacion)
     {
@@ -354,6 +358,32 @@ class DomiciliosController extends Controller
             return response()->json(['code' => 200, 'message' => 'Instalación actualizada correctamente.']);
         } catch (\Exception $e) {
             return response()->json(['code' => 500, 'message' => 'Error al actualizar la instalación.', 'error' => $e->getMessage()]);
+        }
+    }
+
+    public function getDocumentosPorInstalacion(Request $request)
+    {
+        $request->validate([
+            'id_instalacion' => 'required|exists:instalaciones,id_instalacion',
+        ]);
+    
+        try {
+            $instalacion = Instalaciones::with('empresa.empresaNumClientes', 'documentos')->findOrFail($request->id_instalacion);
+            $documentos = $instalacion->documentos;
+            $numeroCliente = $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first();
+    
+            return response()->json([
+                'success' => true,
+                'documentos' => $documentos,
+                'numero_cliente' => $numeroCliente,
+            ]);
+
+        } catch (\Exception $e) {
+            // Manejo de errores
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener los documentos.',
+            ], 500);
         }
     }
 
