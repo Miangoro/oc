@@ -71,7 +71,7 @@ class solicitudHolograma extends Controller
 
         $searchValue = $request->input('search.value');
 
-        $query = ModelsSolicitudHolograma::with(['empresa', 'user', 'marcas']);
+        $query = ModelsSolicitudHolograma::with(['empresa.empresaNumClientes', 'user', 'marcas']);
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
@@ -81,6 +81,10 @@ class solicitudHolograma extends Controller
 
                 $q->orWhereHas('empresa', function ($Nombre) use ($searchValue) {
                     $Nombre->where('razon_social', 'LIKE', "%{$searchValue}%");
+                });
+
+                $q->orWhereHas('empresa.empresaNumClientes', function ($q) use ($searchValue) {
+                    $q->where('numero_cliente', 'LIKE', "%{$searchValue}%");
                 });
 
                 $q->orWhereHas('user', function ($Solicitante) use ($searchValue) {
