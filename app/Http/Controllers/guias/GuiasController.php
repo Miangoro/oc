@@ -72,7 +72,7 @@ class GuiasController  extends Controller
 
         $searchValue = $request->input('search.value');
 
-        $query = Guias::with(['empresa', 'predios'])
+        $query = Guias::with(['empresa.empresaNumClientes', 'predios'])
             ->groupBy('run_folio');
 
         if (!empty($searchValue)) {
@@ -83,6 +83,10 @@ class GuiasController  extends Controller
 
                 $q->orWhereHas('empresa', function ($Nombre) use ($searchValue) {
                     $Nombre->where('razon_social', 'LIKE', "%{$searchValue}%");
+                });
+
+                $q->orWhereHas('empresa.empresaNumClientes', function ($q) use ($searchValue) {
+                    $q->where('numero_cliente', 'LIKE', "%{$searchValue}%");
                 });
 
                 $q->orWhereHas('predios', function ($Predio) use ($searchValue) {
