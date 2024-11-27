@@ -17,11 +17,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+
 class solicitudHolograma extends Controller
 {
     public function UserManagement()
     {
-        $Empresa = empresa::where('tipo', '=', '2')->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $Empresa = Empresa::with('empresaNumClientes')->where('tipo', 2)->get();
         $inspeccion = inspecciones::all();
         $categorias = categorias::all();
         $tipos = tipos::all();
@@ -104,26 +105,25 @@ class solicitudHolograma extends Controller
 
         if ($users->isNotEmpty()) {
             $ids = $start;
-
+        
             foreach ($users as $user) {
-                //$numero_cliente = \App\Models\Empresa::where('id_empresa', $user->id_empresa)->value('razon_social');
                 $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
-
                 $marca = \App\Models\marcas::where('id_marca', $user->id_marca)->value('marca');
                 $direccion = \App\Models\direcciones::where('id_direccion', $user->id_direccion)->value('direccion');
-
-                //el segundo es el nombre de la variable del usuario
                 $name = \App\Models\User::where('id', $user->id_solicitante)->value('name');
-
-
+        
+                $razon_social = $user->empresa ? $user->empresa->razon_social : '';
+        
+                // Concatenar razon_social y numero_cliente
+                $razonSocialFormatted = '<b>' . $numero_cliente . '</b><br>' . $razon_social;
+        
                 $nestedData = [
                     'fake_id' => ++$ids,
                     'id_solicitud' => $user->id_solicitud,
                     'folio' => $user->folio,
-                    'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
                     'id_empresa' => $user->id_empresa,
                     'id_solicitante' => $name,
-                    'id_marca' => $marca, // Asignar el nombre de la marca a id_marca
+                    'id_marca' => $marca, 
                     'cantidad_hologramas' => $user->cantidad_hologramas,
                     'id_direccion' => $direccion,
                     'comentarios' => $user->comentarios,
@@ -137,10 +137,12 @@ class solicitudHolograma extends Controller
                     'activados' => $user->cantidadActivados($user->id_solicitud),
                     'restantes' => max(0, ($user->cantidad_hologramas - $user->cantidadActivados($user->id_solicitud) - $user->cantidadMermas($user->id_solicitud))),
                     'mermas' => $user->cantidadMermas($user->id_solicitud),
+                    'razon_social' => $razonSocialFormatted, // Aquí asignamos la clave correctamente
                 ];
                 $data[] = $nestedData;
             }
         }
+        
 
         return response()->json([
             'draw' => intval($request->input('draw')),
@@ -529,7 +531,7 @@ class solicitudHolograma extends Controller
             ]);
             // Guardar los cambios en la base de datos
             $loteEnvasado->save();
-            
+
             return response()->json(['success' => 'Hologramas activos actualizado correctamente']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar los hologramas activos'], 500);
