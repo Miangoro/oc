@@ -21,7 +21,7 @@
                                 <select id="id_empresa" name="id_empresa" class="select2 form-select" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($Empresa as $cliente)
-                                        <option value="{{ $cliente->id_empresa }}">{{ $cliente->razon_social }}</option>
+                                    <option value="{{ $cliente->id_empresa }}">{{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }} | {{ $cliente->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>

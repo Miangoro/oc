@@ -58,17 +58,21 @@
         }
 
         /* Responsive adjustments for smaller screens */
-        @media (max-width: 768px) {
+        @media (max-width: 1700px) {
             video {
                 min-width: 150%;
             }
 
-            /* Reduce bat size on smaller screens */
             .bat {
                 width: 20px !important;
-                /* Asegúrate de que no exceda 20px */
                 max-width: 37px !important;
-                /* No más de 20px */
+            }
+
+            .flex-container {
+                gap: 20px;
+                justify-content: space-evenly;
+                flex-wrap: wrap;
+
             }
         }
 
@@ -113,13 +117,43 @@
                 padding: 0.75rem;
             }
         }
+
+        .flex-container {
+            display: flex;
+            width: auto;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .flex-container-cel {
+            display: flex;
+            flex-wrap: wrap;
+            width: auto;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+
+        }
+
+        .imagenes {
+            width: 190px;
+            height: auto;
+        }
+
+        .redes {
+            width: 60px;
+            height: auto;
+        }
     </style>
 
     <div id="desktop-view" class="d-none">
         <div class="authentication-wrapper authentication-cover">
             <!-- Logo -->
             <a href="{{ url('/') }}" class="auth-cover-brand d-flex align-items-center gap-2">
-                <span class="app-brand-logo demo"><img height="150px" src="{{ asset('assets/img/branding/logo_oc.png') }}"
+                <span class="app-brand-logo demo"><img height="135px" src="{{ asset('assets/img/branding/logo_oc.png') }}"
                         alt=""></span>
                 <!--<span class="app-brand-text demo text-heading fw-semibold">{{ config('variables.templateName') }}</span>-->
             </a>
@@ -133,7 +167,7 @@
                     </video>
                 </div>
                 <!-- /Left Section -->
-    
+
                 <!-- Login -->
                 <div
                     class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-sm-12 px-12 py-6">
@@ -141,7 +175,7 @@
                         <img height="150px" src="{{ asset('assets/img/branding/logo.png') }}" alt="">
                         <h4 class="mb-1">Bienvenido a {{ config('variables.templateName') }} </h4>
                         <p class="mb-5">Por favor, inicie sesión</p>
-    
+
                         @if (session('status'))
                             <div class="alert alert-success mb-3" role="alert">
                                 <div class="alert-body">
@@ -152,8 +186,9 @@
                         <form id="formAuthentication" class="mb-5" action="{{ route('login') }}" method="POST">
                             @csrf
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control @error('email') is-invalid @enderror" id="login-email"
-                                    name="email" placeholder="john@example.com" autofocus value="{{ old('email') }}">
+                                <input type="text" class="form-control @error('email') is-invalid @enderror"
+                                    id="login-email" name="email" placeholder="john@example.com" autofocus
+                                    value="{{ old('email') }}">
                                 <label for="login-email">Correo</label>
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -197,7 +232,7 @@
                                 Iniciar sesión
                             </button>
                         </form>
-    
+
                         <p class="text-center">
                             <span>¿No estás certificado?</span>
                             @if (Route::has('register'))
@@ -206,6 +241,33 @@
                                 </a>
                             @endif
                         </p>
+                        <div class="flex-container">
+                            <a href="https://cidam.org/sitio/empresas_certificadas.php" target="_blank">
+                                <img src="{{ asset('assets/img/branding/empresas_certificadas_cidam.png') }}"
+                                    alt="imagen de empresa certificado" class="imagenes">
+                            </a>
+                            <a href="https://cidam.org/sitio/autenticidad_certificados.php" target="_blank">
+                                <img src="{{ asset('assets/img/branding/validacion_certificados_cidam.png') }}"
+                                    alt="imagen de calidacion certificado" class="imagenes">
+                            </a>
+                            <a href="https://cidam.org/sitio/autenticidad_hologramas.php" target="_blank">
+                                <img src="{{ asset('assets/img/branding/validacion_hologramas_cidam.png') }}"
+                                    alt=" imagen de" class="imagenes">
+                            </a>
+                        </div>
+                        <div style="text-align: center">
+                            <p>👇¡Síguenos en nuestras redes sociales!👇</p>
+                        </div>
+                        <div class="flex-container">
+                            <a href="https://www.facebook.com/organismo.certificador.CIDAM" target="_blank">
+                                <img src="{{ asset('assets/img/branding/facebook_logo.png') }}" alt=""
+                                    class="redes">
+                            </a>
+                            <a href="https://www.instagram.com/oc_cidam/" target="_blank">
+                                <img src="{{ asset('assets/img/branding/instagram_logo.png') }}" alt=""
+                                    class="redes">
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -217,8 +279,8 @@
         <div class="authentication-wrapper authentication-cover">
             <a href="{{ url('/') }}"
                 class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center justify-content-center p-12 pb-2">
-                <span class="app-brand-logo demo"><img height="150px" src="{{ asset('assets/img/branding/logo_oc.png') }}"
-                        alt=""></span>
+                <span class="app-brand-logo demo"><img height="135px"
+                        src="{{ asset('assets/img/branding/logo_oc.png') }}" alt=""></span>
                 <!--<span class="app-brand-text demo text-heading fw-semibold">{{ config('variables.templateName') }}</span>-->
             </a>
             <div class="authentication-inner row m-0">
@@ -232,8 +294,8 @@
                 <div
                     class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-6 px-4">
                     <div class="w-100 mx-auto">
-                        <img class="d-block mx-auto mb-3" height="100px" src="{{ asset('assets/img/branding/logo.png') }}"
-                            alt="">
+                        <img class="d-block mx-auto mb-3" height="100px"
+                            src="{{ asset('assets/img/branding/logo.png') }}" alt="">
                         <h4 class="text-center mb-1">Bienvenido a {{ config('variables.templateName') }} </h4>
                         <p class="text-center mb-4">Por favor, inicie sesión</p>
 
@@ -263,14 +325,16 @@
                                     <div class="input-group input-group-merge @error('password') is-invalid @enderror">
                                         <div class="form-floating form-floating-outline">
                                             <input type="password" id="login-password-mobile"
-                                                class="form-control @error('password') is-invalid @enderror" name="password"
+                                                class="form-control @error('password') is-invalid @enderror"
+                                                name="password"
                                                 placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                                                 aria-describedby="password" />
                                             <label for="login-password-mobile">Contraseña</label>
                                         </div>
                                         <span class="input-group-text cursor-pointer" style=" height: 48px;">
                                             <i class="ri-eye-off-line"></i>
-                                        </span>                                    </div>
+                                        </span>
+                                    </div>
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
                                             <span class="fw-medium">{{ $message }}</span>
@@ -296,6 +360,33 @@
                                 <a href="{{ route('solicitud-cliente') }}" class="text-info">¡Quiero certificarme!</a>
                             @endif
                         </p>
+                        <div class="flex-container-cel">
+                            <a href="https://cidam.org/sitio/empresas_certificadas.php" target="_blank">
+                                <img src="{{ asset('assets/img/branding/empresas_certificadas_cidam.png') }}"
+                                    alt="imagen de empresa certificado" class="imagenes">
+                            </a>
+                            <a href="https://cidam.org/sitio/autenticidad_certificados.php" target="_blank">
+                                <img src="{{ asset('assets/img/branding/validacion_certificados_cidam.png') }}"
+                                    alt="imagen de calidacion certificado" class="imagenes">
+                            </a>
+                            <a href="https://cidam.org/sitio/autenticidad_hologramas.php" target="_blank">
+                                <img src="{{ asset('assets/img/branding/validacion_hologramas_cidam.png') }}"
+                                    alt=" imagen de" class="imagenes">
+                            </a>
+                        </div>
+                        <div style="text-align: center">
+                            <p>👇¡Síguenos en nuestras redes sociales!👇</p>
+                        </div>
+                        <div class="flex-container">
+                            <a href="https://www.facebook.com/organismo.certificador.CIDAM" target="_blank">
+                                <img src="{{ asset('assets/img/branding/facebook_logo.png') }}" alt=""
+                                    class="redes">
+                            </a>
+                            <a href="https://www.instagram.com/oc_cidam/" target="_blank">
+                                <img src="{{ asset('assets/img/branding/instagram_logo.png') }}" alt=""
+                                    class="redes">
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

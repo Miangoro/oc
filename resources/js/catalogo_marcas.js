@@ -330,7 +330,6 @@ $(function () {
       var $this = $(this);
       select2Focus($this);
       $this.wrap('<div class="position-relative"></div>').select2({
-        placeholder: 'Selecciona cliente',
         dropdownParent: $this.parent()
       });
     });

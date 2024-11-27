@@ -502,7 +502,7 @@ $(function () {
           var contenido = "";
           for (let index = 0; index < response.lotes_granel.length; index++) {
             contenido = '<option value="' + response.lotes_granel[index].id_empresa + '">' +
-              response.lotes_granel[index].id_categoria + '</option>' + contenido;
+              response.lotes_granel[index].nombre_lote + '</option>' + contenido;
           }
           if (response.lotes_granel.length == 0) {
             contenido = '<option value="">Sin lotes a granel registrados</option>';

@@ -68,19 +68,33 @@ class solicitudesController extends Controller
 
 
         if (empty($request->input('search.value'))) {
+          // Consulta sin búsqueda
           $solicitudes = solicitudesModel::with(['tipo_solicitud', 'empresa', 'instalacion'])
-          ->leftJoin('empresa', 'solicitudes.id_empresa', '=', 'empresa.id_empresa')
-          ->leftJoin('solicitudes_tipo', 'solicitudes.id_tipo', '=', 'solicitudes_tipo.id_tipo')
-          ->leftJoin('instalaciones', 'solicitudes.id_instalacion', '=', 'instalaciones.id_instalacion')
-          ->select('solicitudes.*', 'empresa.razon_social', 'solicitudes_tipo.tipo', 'instalaciones.direccion_completa', 'solicitudes.estatus')
-          ->orderBy($order, $dir)
-          ->offset($start)
-          ->limit($limit)
-          ->get();
+              ->leftJoin('empresa', 'solicitudes.id_empresa', '=', 'empresa.id_empresa')
+              ->leftJoin('solicitudes_tipo', 'solicitudes.id_tipo', '=', 'solicitudes_tipo.id_tipo')
+              ->leftJoin('instalaciones', 'solicitudes.id_instalacion', '=', 'instalaciones.id_instalacion')
+              ->leftJoin('inspecciones', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+              ->leftJoin('users', 'inspecciones.id_inspector', '=', 'users.id')
+              ->select('solicitudes.*',
+                       'empresa.razon_social',
+                       'solicitudes_tipo.tipo',
+                       'instalaciones.direccion_completa',
+                       'solicitudes.estatus',
+                       'inspecciones.num_servicio',
+                       'inspecciones.fecha_servicio',
+                       'users.name as inspector_name')
+              ->orderBy($order === 'inspector' ? 'inspector_name' : $order, $dir)
+              ->offset($start)
+              ->limit($limit)
+              ->get();
       } else {
+          // Consulta con búsqueda
           $search = $request->input('search.value');
 
-          $solicitudes = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
+          $solicitudes = solicitudesModel::with(['tipo_solicitud', 'empresa', 'inspeccion', 'instalacion'])
+              ->leftJoin('inspecciones', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+              ->leftJoin('users', 'inspecciones.id_inspector', '=', 'users.id')
+              ->leftJoin('empresa', 'solicitudes.id_empresa', '=', 'empresa.id_empresa') // Asegúrate de unir la tabla empresa aquí
               ->where(function ($query) use ($search) {
                   $query->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
                       ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
@@ -93,29 +107,35 @@ class solicitudesController extends Controller
                       })
                       ->orWhereHas('instalacion', function ($q) use ($search) {
                           $q->where('direccion_completa', 'LIKE', "%{$search}%");
-                      });
+                      })
+                      ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+                      ->orWhere('users.name', 'LIKE', "%{$search}%");
               })
               ->offset($start)
               ->limit($limit)
-              ->orderBy($order, $dir)
+              ->orderBy("solicitudes.id_solicitud", $dir)
               ->get();
 
-          $totalFiltered = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
-              ->where(function ($query) use ($search) {
-                  $query->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%") 
-                      ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
-                      ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
-                      ->orWhereHas('empresa', function ($q) use ($search) {
-                          $q->where('razon_social', 'LIKE', "%{$search}%");
-                      })
-                      ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
-                          $q->where('tipo', 'LIKE', "%{$search}%");
-                      })
-                      ->orWhereHas('instalacion', function ($q) use ($search) {
-                          $q->where('direccion_completa', 'LIKE', "%{$search}%");
-                      });
-              })
-              ->count();
+        $totalFiltered = solicitudesModel::with(['tipo_solicitud', 'empresa', 'inspeccion', 'instalacion'])
+            ->leftJoin('inspecciones', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
+            ->leftJoin('users', 'inspecciones.id_inspector', '=', 'users.id')
+            ->where(function ($query) use ($search) {
+                $query->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
+                    ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
+                    ->orWhere('solicitudes.estatus', 'LIKE', "%{$search}%")
+                    ->orWhereHas('empresa', function ($q) use ($search) {
+                        $q->where('razon_social', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
+                        $q->where('tipo', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('instalacion', function ($q) use ($search) {
+                        $q->where('direccion_completa', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
+                    ->orWhere('users.name', 'LIKE', "%{$search}%");
+            })
+            ->count();
       }
         $data = [];
 
@@ -446,7 +466,7 @@ class solicitudesController extends Controller
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
-                    'info_adicional' => 'required|string'
+                    'info_adicional' => 'nullable|string'
                 ]);
                 // Preparar el JSON para guardar en `caracteristicas`
                 $caracteristicasJson = [
@@ -487,7 +507,7 @@ class solicitudesController extends Controller
                     'fecha_visita' => 'required|date',
                     'id_predio' => 'required|integer|exists:predios,id_predio',
                     'punto_reunion' => 'required|string|max:255',
-                    'info_adicional' => 'required|string'
+                    'info_adicional' => 'nullable|string'
                 ]);
                 // Preparar el JSON para guardar en `caracteristicas`
                 $caracteristicasJson = [
@@ -516,7 +536,7 @@ class solicitudesController extends Controller
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
-                    'info_adicional' => 'required|string|max:5000',
+                    'info_adicional' => 'nullable|string|max:5000',
                 ]);
 
                 // Actualizar datos específicos para dictaminación

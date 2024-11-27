@@ -276,7 +276,7 @@ class lotesGranelController extends Controller
             'id_lote_granel.*' => 'nullable|integer',
             'volumen_parcial.*' => 'nullable|numeric',
             ] + ($request->input('tipo_lote') == 1 ? [
-              'id_guia' => 'required|array',
+              'id_guia' => 'nullable|array',
               'id_guia.*' => 'integer|exists:guias,id_guia',
           ] : [
               'id_guia' => 'nullable|array',
