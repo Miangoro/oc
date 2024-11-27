@@ -24,7 +24,7 @@
                     <div class="col-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <select id="id_norma" name="id_norma" class="select2 form-select" required>
-                                <option value="">Selecciona uan norma</option>
+                                <option value=""disabled selected>Selecciona una norma</option>
                                 @foreach ($catalogo_norma_certificar as $normas)
                                     <option value="{{ $normas->id_norma }}">{{ $normas->norma }}</option>
                                 @endforeach
