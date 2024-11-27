@@ -154,7 +154,7 @@ class marcasCatalogoController extends Controller
             $marca->id_empresa = $request->cliente;
             $marca->marca = $request->marca;
             $marca->id_norma = $request->id_norma;
-            $marca->folio = Helpers::generarFolioMarca($request->cliente);
+            //$marca->folio = Helpers::generarFolioMarca($request->cliente);
             $marca->save();
 
             // Actualizar documentos existentes o agregar nuevos
