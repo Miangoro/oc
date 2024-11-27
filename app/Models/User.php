@@ -28,6 +28,8 @@ class User extends Authenticatable
         'name',
         'email',
         'telefono',
+        'puesto',
+        'id_contacto',
         'password',
         'id_empresa',
         'password_original',

@@ -1,7 +1,6 @@
 /**
  * Page User List
  */
-
 'use strict';
 
 // Datatable (jquery)
@@ -12,14 +11,28 @@ $(function () {
     userView = baseUrl + 'app/user/view/account',
     offCanvasForm = $('#offcanvasAddUser');
 
-  if (select2.length) {
+//SELECT UNICO
+  /*if (select2.length) {
     var $this = select2;
     select2Focus($this);
     $this.wrap('<div class="position-relative"></div>').select2({
       placeholder: 'Seleccione el cliente',
       dropdownParent: $this.parent()
     });
-  }
+  }*/
+//FUNSION PARA INICIALIZAR VARIOS SELECT2
+  var select2Elements = $('.select2');
+    function initializeSelect2($elements) {
+      $elements.each(function () {
+        var $this = $(this);
+        select2Focus($this);
+        $this.wrap('<div class="position-relative"></div>').select2({
+          dropdownParent: $this.parent()
+        });
+      });
+    }
+  initializeSelect2(select2Elements);
+
 
   // ajax setup
   $.ajaxSetup({
@@ -434,6 +447,7 @@ $(function () {
     });
   });
 
+
   $(document).on('click', '.pdf', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
@@ -442,9 +456,8 @@ $(function () {
 
         $("#titulo_modal").text("Carta de asignación de usuario y contraseña para plataforma del OC");
         $("#subtitulo_modal").text(registro);
-        
-      
 });
+
 
   // edit record
   $(document).on('click', '.edit-record', function () {
@@ -465,7 +478,9 @@ $(function () {
       $('#add-user-fullname').val(data.name);
       $('#add-user-email').val(data.email);
       $('#add-user-tel').val(data.telefono);
-      $('#id_empresa').val(data.id_empresa).prop('selected', true).change();
+      //$('#id_empresa').val(data.id_empresa).prop('selected', true).change();
+      $('#id_empresa').val(data.id_empresa).trigger('change');
+      $('#id_contacto').val(data.id_contacto).trigger('change');
     });
   });
 
@@ -520,7 +535,14 @@ $(function () {
             message: 'Por favor selecciona un cliente'
           }
         }
-      }
+      },
+      id_contacto: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un contacto'
+          }
+        }
+      },
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),

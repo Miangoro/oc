@@ -443,6 +443,7 @@ $(function () {
       $('#user_id').val(data.id);
       $('#add-user-fullname').val(data.name);
       $('#add-user-email').val(data.email);
+      $('#add-puesto').val(data.puesto);
       $('#id_empresa').val(data.id_empresa).prop('selected', true).change();
     });
   });
@@ -473,6 +474,13 @@ $(function () {
           },
           emailAddress: {
             message: 'Correo inválido'
+          }
+        }
+      },
+      puesto: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor introduce el puesto'
           }
         }
       }

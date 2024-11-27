@@ -169,16 +169,23 @@
         </div>
        
         <div class="form-floating form-floating-outline mb-5">
-          <select name="id_empresa" id="id_empresa" class="select2 form-select">
-            <option value="">Select</option>
-            
-            @foreach ($empresas as $empresa)
-            <option value="{{$empresa->id_empresa}}">{{$empresa->razon_social}}</option>
-            @endforeach
-          
-         
+          <select name="id_empresa" id="id_empresa" class="select2 form-select" data-placeholder="Seleccione el cliente">
+            <option value="" disabled selected>NULL</option>
+              @foreach ($empresas as $empresa)
+              <option value="{{$empresa->id_empresa}}">{{$empresa->razon_social}}</option>
+              @endforeach
           </select>
           <label for="country">Cliente</label>
+        </div>
+
+        <div class="form-floating form-floating-outline mb-5">
+          <select id="id_contacto" name="id_contacto" data-placeholder="Selecciona una persona de contacto" class="select2 form-select" aria-label="Default select example" >
+              <option value="" disabled selected>NULL</option>
+              @foreach ($usuarios as $usuario)
+                  <option value="{{ $usuario->id }}">{{ $usuario->name }}</option>
+              @endforeach
+          </select>
+          <label for="id_contacto">Persona de contacto CIDAM</label>
         </div>
         
         <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>

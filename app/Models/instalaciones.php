@@ -23,7 +23,8 @@ class Instalaciones extends Model
         'folio',
         'id_organismo',
         'fecha_emision',
-        'fecha_vigencia'
+        'fecha_vigencia',
+        'eslabon'
     ];
 
     public function empresa()
