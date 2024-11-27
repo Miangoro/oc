@@ -103,7 +103,7 @@ $(function () {
         render: function (data, type, full, meta) {
 
 
-          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['id_solicitud']}"></i>`;
+          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"  data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['id_solicitud']}">sadasdasdasd</i>dfsdfsdf`;
 
         }
       },
@@ -1642,14 +1642,26 @@ $(function () {
 
 
   $(document).on('click', '.pdf2', function () {
+    alert("entro");
     var url = $(this).data('url');
     var registro = $(this).data('registro');
     var id_solicitud = $(this).data('id');
     var iframe = $('#pdfViewer');
-    iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
+    var spinner = $('#cargando');
+
+    spinner.show();
+    iframe.hide();
+   
 
     $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
     $("#subtitulo_modal").text(registro);
+
+      iframe.on('load', function () {
+        spinner.hide();
+        iframe.show();
+        iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
+      });
+});
   });
 
   var openedFromFirstModal = false;
