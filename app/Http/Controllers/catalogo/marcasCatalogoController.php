@@ -25,7 +25,7 @@ class marcasCatalogoController extends Controller
     public function UserManagement()
     {
         // Obtener listado de clientes (empresas)
-        $clientes = Empresa::where('tipo', 2)->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
+        $clientes = Empresa::with('empresaNumClientes')->where('tipo', 2)->get();
         $documentos = Documentacion::where('id_documento', '=', '82')
             ->orWhere('id_documento', '=', '80')
             ->orWhere('id_documento', '=', '121')
@@ -93,10 +93,19 @@ class marcasCatalogoController extends Controller
         } else {
             $search = $request->input('search.value');
 
-            $users = marcas::with('empresa') // Incluye la relación empresa
+            $users = marcas::with('empresa.empresaNumClientes','catalogo_norma_certificar') // Incluye la relación empresa
                 ->where('id_marca', 'LIKE', "%{$search}%")
                 ->orWhere('folio', 'LIKE', "%{$search}%")
                 ->orWhere('marca', 'LIKE', "%{$search}%")
+                ->orWhereHas('empresa', function ($q) use ($search) {
+                    $q->where('razon_social', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('empresa.empresaNumClientes', function ($q) use ($search) {
+                    $q->where('numero_cliente', 'LIKE', "%{$search}%");
+                })
+                ->orWhereHas('catalogo_norma_certificar', function ($q) use ($search) {
+                    $q->where('norma', 'LIKE', "%{$search}%");
+                })
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
@@ -115,15 +124,23 @@ class marcasCatalogoController extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-                $id_norma = \App\Models\catalogo_norma_certificar::where('id_norma', $user->id_norma)->value('norma');
+              
 
                 $nestedData['id_marca'] = $user->id_marca;
                 $nestedData['fake_id'] = ++$ids;
                 $nestedData['folio'] = $user->folio;
                 $nestedData['marca'] = $user->marca;
                 $nestedData['id_empresa'] = $user->id_empresa;
-                $nestedData['id_norma'] = $id_norma;
-                $nestedData['razon_social'] = $user->empresa ? $user->empresa->razon_social : ''; // Obtiene la razón social
+                $nestedData['id_norma'] = $user->catalogo_norma_certificar->norma ?? 'Sin norma';
+                $numeroCliente = 
+                $user->empresa->empresaNumClientes[0]->numero_cliente ?? 
+                $user->empresa->empresaNumClientes[1]->numero_cliente ?? 
+                $user->empresa->empresaNumClientes[2]->numero_cliente;
+
+            $razonSocial = $user->empresa ? $user->empresa->razon_social : '';
+
+            $nestedData['razon_social'] = '<b>'.$numeroCliente . '</b><br>' . $razonSocial;
+
 
                 $data[] = $nestedData;
             }
