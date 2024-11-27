@@ -49,6 +49,16 @@
                         </div>
                     </div>
 
+                    <div class="form-floating form-floating-outline mb-3 d-none" id="edit_eslabon-select">
+                        <select class="form-select" id="edit_eslabon" name="edit_eslabon">
+                            <option value="" disabled selected>Seleccione una opción</option>
+                            <option value="Productora">Productora</option>
+                            <option value="Envasadora">Envasadora</option>
+                            <option value="Comercializadora">Comercializadora</option>
+                        </select>
+                        <label for="eslabon">Elige el eslabón al que pertenece</label>
+                    </div>     
+
                     <!-- Input de Dirección Completa -->
                     <div class="form-floating form-floating-outline mb-3">
                         <input type="text" class="form-control" id="edit_direccion" placeholder="Ingrese la dirección completa" name="edit_direccion" aria-label="Dirección Completa" required>

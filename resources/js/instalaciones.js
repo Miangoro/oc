@@ -879,6 +879,7 @@ $(document).on('change', '#edit_tipo', function () {
       fileCertificado.removeAttr('id');
   }
 });
+
 $(document).ready(function () {
   let instalacionData = {};
   let archivo = false; // Variable para manejar la existencia del archivo
@@ -1064,70 +1065,76 @@ $(document).ready(function () {
   fvEdit.disableValidator('edit_fecha_emision');
   fvEdit.disableValidator('edit_fecha_vigencia');
   fvEdit.disableValidator('edit_url[]');
-
+  
   $(document).on('click', '.edit-record', function () {
-      var id_instalacion = $(this).data('id');
-      var url = baseUrl + 'domicilios/edit/' + id_instalacion;
+    var id_instalacion = $(this).data('id');
+    var url = baseUrl + 'domicilios/edit/' + id_instalacion;
 
-      $.get(url, function (data) {
-          if (data.success) {
-              var instalacion = data.instalacion;
+    $.get(url, function (data) {
+        if (data.success) {
+            var instalacion = data.instalacion;
+            var tipoParsed = JSON.parse(instalacion.tipo); 
 
-              // Parsear el tipo (JSON) a un array
-              var tipoParsed = JSON.parse(instalacion.tipo); // Convertir el string JSON a un array
+            instalacionData = {
+                folio: instalacion.folio || '',
+                id_organismo: instalacion.id_organismo || '',
+                fecha_emision: instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '',
+                fecha_vigencia: instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '',
+                archivoUrl: data.archivo_url || '',
+                numeroCliente: data.numeroCliente || ''
+            };
 
-              instalacionData = {
-                  folio: instalacion.folio || '',
-                  id_organismo: instalacion.id_organismo || '',
-                  fecha_emision: instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '',
-                  fecha_vigencia: instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '',
-                  archivoUrl: data.archivo_url || '',
-                  numeroCliente: data.numeroCliente || ''
-              };
+            $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
+            $('#edit_tipo').val(tipoParsed).trigger('change');
+            $('#edit_estado').val(instalacion.estado).trigger('change');
+            $('#edit_direccion').val(instalacion.direccion_completa);
+            $('#edit_responsable').val(instalacion.responsable || '').trigger('change');
 
-              // Asignar los valores a los campos del formulario
-              $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
-              
-              // Asignar el array de tipo al select
-              $('#edit_tipo').val(tipoParsed).trigger('change');
+            // Establecer el valor del select y mostrar los campos adicionales si corresponde
+            $('#edit_certificacion').val(instalacion.certificacion).trigger('change');
+            toggleCamposCertificacion(instalacion.certificacion);
 
-              $('#edit_estado').val(instalacion.estado).trigger('change');
-              $('#edit_direccion').val(instalacion.direccion_completa);
+            // Mostrar el campo edit_eslabon si el tipo incluye "Área de maduración" o "Almacén y bodega"
+            if (tipoParsed.includes('Area de maduracion') || tipoParsed.includes('Almacen y bodega')) {
+                $('#edit_eslabon-select').removeClass('d-none');
+                $('#edit_eslabon').val(instalacion.eslabon || '').trigger('change');
+                console.log("entra")
+            } else {
+                $('#eslabon-select').addClass('d-none');
+                $('#edit_eslabon-select').val('');
+            }
 
-              // Asignar el responsable al campo correspondiente
-              $('#edit_responsable').val(instalacion.responsable || '').trigger('change');
+            // Asignar el id_instalacion al atributo data-id del formulario
+            $('#editInstalacionForm').data('id', id_instalacion);
+            $('#modalEditInstalacion').modal('show');
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo cargar los datos de la instalación',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
+                }
+            });
+        }
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        console.error('Error en la solicitud:', textStatus, errorThrown);
 
-              // Establecer el valor del select y mostrar los campos adicionales si corresponde
-              $('#edit_certificacion').val(instalacion.certificacion).trigger('change');
-              toggleCamposCertificacion(instalacion.certificacion);
-
-              // Asignar el id_instalacion al atributo data-id del formulario
-              $('#editInstalacionForm').data('id', id_instalacion);
-
-              $('#modalEditInstalacion').modal('show');
-          } else {
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Error',
-                  text: 'No se pudo cargar los datos de la instalación',
-                  customClass: {
-                      confirmButton: 'btn btn-primary'
-                  }
-              });
-          }
-      }).fail(function (jqXHR, textStatus, errorThrown) {
-          console.error('Error en la solicitud:', textStatus, errorThrown);
-
-          Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Error en la solicitud. Inténtalo de nuevo.',
-              customClass: {
-                  confirmButton: 'btn btn-primary'
-              }
-          });
-      });
-  });
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error en la solicitud. Inténtalo de nuevo.',
+            customClass: {
+                confirmButton: 'btn btn-primary'
+            }
+        });
+    });
+});
+$('#modalEditInstalacion').on('hidden.bs.modal', function () {
+  console.log('Se ocultó');
+  $('#edit_eslabon').val('');
+  $('#edit_eslabon-select').addClass('d-none');
+});
 });
 
 $(document).on('click', '.verDocumentosBtn', function () {

@@ -296,6 +296,7 @@ class DomiciliosController extends Controller
             'edit_id_organismo' => 'nullable|exists:catalogo_organismos,id_organismo',
             'edit_fecha_emision' => 'nullable|date',
             'edit_fecha_vigencia' => 'nullable|date',
+            'edit_eslabon' => 'nullable|string|in:Productora,Envasadora,Comercializadora',
             'edit_certificacion' => 'nullable|string',
             'edit_url' => 'nullable|array',
             'edit_url.*' => 'file|mimes:jpg,jpeg,png,pdf', 
@@ -319,6 +320,7 @@ class DomiciliosController extends Controller
                 'fecha_emision' => $request->input('edit_fecha_emision', null),
                 'fecha_vigencia' => $request->input('edit_fecha_vigencia', null),
                 'certificacion' => $request->input('edit_certificacion'),
+                'eslabon' => $request->input('edit_eslabon'), 
             ]);
     
             $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $request->input('edit_id_empresa'))->first();
