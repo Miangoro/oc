@@ -153,7 +153,7 @@
         <div class="authentication-wrapper authentication-cover">
             <!-- Logo -->
             <a href="{{ url('/') }}" class="auth-cover-brand d-flex align-items-center gap-2">
-                <span class="app-brand-logo demo"><img height="150px" src="{{ asset('assets/img/branding/logo_oc.png') }}"
+                <span class="app-brand-logo demo"><img height="135px" src="{{ asset('assets/img/branding/logo_oc.png') }}"
                         alt=""></span>
                 <!--<span class="app-brand-text demo text-heading fw-semibold">{{ config('variables.templateName') }}</span>-->
             </a>
@@ -279,7 +279,7 @@
         <div class="authentication-wrapper authentication-cover">
             <a href="{{ url('/') }}"
                 class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center justify-content-center p-12 pb-2">
-                <span class="app-brand-logo demo"><img height="150px"
+                <span class="app-brand-logo demo"><img height="135px"
                         src="{{ asset('assets/img/branding/logo_oc.png') }}" alt=""></span>
                 <!--<span class="app-brand-text demo text-heading fw-semibold">{{ config('variables.templateName') }}</span>-->
             </a>
