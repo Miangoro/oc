@@ -63,7 +63,7 @@ class lotesEnvasadoController extends Controller
 
         $searchValue = $request->input('search.value');
 
-        $query = lotes_envasado::with(['empresa', 'marca', 'Instalaciones']); // Cargar relaciones necesarias
+        $query = lotes_envasado::with(['empresa.empresaNumClientes', 'marca', 'Instalaciones']); // Cargar relaciones necesarias
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
@@ -81,6 +81,11 @@ class lotesEnvasadoController extends Controller
 
                 $q->orWhereHas('empresa', function ($qEmpresa) use ($searchValue) {
                     $qEmpresa->where('razon_social', 'LIKE', "%{$searchValue}%");
+                });
+
+                
+                $q->orWhereHas('empresa.empresaNumClientes', function ($q) use ($searchValue) {
+                    $q->where('numero_cliente', 'LIKE', "%{$searchValue}%");
                 });
             });
         }
