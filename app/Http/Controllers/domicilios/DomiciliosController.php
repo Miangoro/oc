@@ -207,9 +207,11 @@ class DomiciliosController extends Controller
             'url.*' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
             'nombre_documento.*' => 'nullable|string', 
             'id_documento.*' => 'nullable|integer', 
+            'eslabon' => 'nullable|string|in:Productora,Envasadora,Comercializadora', // Validación del campo eslabon
         ]);
     
         try {
+            // Crear la instalación
             $instalacion = Instalaciones::create([
                 'id_empresa' => $request->input('id_empresa'),
                 'tipo' => json_encode($request->input('tipo')), 
@@ -221,36 +223,34 @@ class DomiciliosController extends Controller
                 'fecha_emision' => $request->input('fecha_emision', null),
                 'fecha_vigencia' => $request->input('fecha_vigencia', null),
                 'certificacion' => $request->input('certificacion', null),
+                'eslabon' => $request->input('eslabon', null),  // Guardar el campo eslabon
             ]);
     
+            // Obtener información de la empresa
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->input('id_empresa'))->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
     
+            // Manejo de archivos si se suben
             if ($request->hasFile('url')) {
                 $directory = 'uploads/' . $numeroCliente;
-    
                 $path = storage_path('app/public/' . $directory);
                 if (!file_exists($path)) {
                     mkdir($path, 0777, true); 
                 }
     
                 foreach ($request->file('url') as $index => $file) {
-                    // Obtener el nombre base sin sufijos ni extensión
                     $nombreDocumento = $request->nombre_documento[$index] ?? 'documento';
-                    $nombreDocumento = pathinfo($nombreDocumento, PATHINFO_FILENAME); // Remover extensión si existe
+                    $nombreDocumento = pathinfo($nombreDocumento, PATHINFO_FILENAME);
     
-                    // Generar un nombre único para el archivo
                     $filename = $nombreDocumento . '_' . $instalacion->id_instalacion . '_' . $index . '.' . $file->getClientOriginalExtension();
     
-                    // Guardar el archivo en el directorio
                     $filePath = $file->storeAs($directory, $filename, 'public');
     
-                    // Guardar en la base de datos
                     $documentacion_url = new Documentacion_url();
                     $documentacion_url->id_relacion = $instalacion->id_instalacion;
                     $documentacion_url->id_documento = $request->id_documento[$index] ?? null;
-                    $documentacion_url->nombre_documento = $nombreDocumento;  // Solo el nombre base
-                    $documentacion_url->url = $filename;  // Nombre del archivo con sufijos
+                    $documentacion_url->nombre_documento = $nombreDocumento;  
+                    $documentacion_url->url = $filename;  
                     $documentacion_url->id_empresa = $request->input('id_empresa');
                     $documentacion_url->save();
                 }
@@ -260,7 +260,8 @@ class DomiciliosController extends Controller
         } catch (\Exception $e) {
             return response()->json(['code' => 500, 'message' => 'Error al registrar la instalación.', 'error' => $e->getMessage()]);
         }
-    }    
+    }
+    
     
     public function edit($id_instalacion)
     {
