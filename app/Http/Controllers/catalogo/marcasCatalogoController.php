@@ -88,7 +88,7 @@ class marcasCatalogoController extends Controller
             $users = marcas::with('empresa') // Incluye la relación empresa
                 ->offset($start)
                 ->limit($limit)
-                ->orderBy($order, $dir)
+              //  ->orderBy($order, $dir)
                 ->get();
         } else {
             $search = $request->input('search.value');
@@ -108,7 +108,7 @@ class marcasCatalogoController extends Controller
                 })
                 ->offset($start)
                 ->limit($limit)
-                ->orderBy($order, $dir)
+              //  ->orderBy($order, $dir)
                 ->get();
 
             $totalFiltered = marcas::where('id_marca', 'LIKE', "%{$search}%")
