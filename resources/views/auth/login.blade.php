@@ -62,10 +62,12 @@
             video {
                 min-width: 150%;
             }
+
             .bat {
                 width: 20px !important;
                 max-width: 37px !important;
             }
+
             .flex-container {
                 gap: 20px;
                 justify-content: space-evenly;
@@ -102,12 +104,15 @@
             video {
                 display: none;
             }
+
             .authentication-inner {
                 padding: 1rem;
             }
+
             .form-floating {
                 margin-bottom: 1rem;
             }
+
             .btn {
                 padding: 0.75rem;
             }
@@ -250,6 +255,9 @@
                                     alt=" imagen de" class="imagenes">
                             </a>
                         </div>
+                        <div style="text-align: center">
+                            <p>👇¡Síguenos en nuestra redes sociales!👇</p>
+                        </div>
                         <div class="flex-container">
                             <a href="https://www.facebook.com/organismo.certificador.CIDAM" target="_blank">
                                 <img src="{{ asset('assets/img/branding/facebook_logo.png') }}" alt=""
@@ -365,6 +373,9 @@
                                 <img src="{{ asset('assets/img/branding/validacion_hologramas_cidam.png') }}"
                                     alt=" imagen de" class="imagenes">
                             </a>
+                        </div>
+                        <div style="text-align: center">
+                            <p>👇¡Síguenos en nuestra redes sociales!👇</p>
                         </div>
                         <div class="flex-container">
                             <a href="https://www.facebook.com/organismo.certificador.CIDAM" target="_blank">
