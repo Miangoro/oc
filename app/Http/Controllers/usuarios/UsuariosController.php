@@ -24,6 +24,7 @@ class UsuariosController extends Controller
   {
     $empresas = empresa::where('tipo', 2)->get();
     // dd('UserManagement');
+    $usuarios = User::where("tipo",1)->get();
     $users = User::with('empresa')
     ->offset(1)
     ->limit(10)
@@ -41,6 +42,7 @@ class UsuariosController extends Controller
       'userDuplicates' => $userDuplicates,
       'empresas' => $empresas,
       'users' => $users,
+      'usuarios' => $usuarios,
     ]);
   }
 
@@ -178,7 +180,9 @@ class UsuariosController extends Controller
       // update the value
       $users = User::updateOrCreate(
         ['id' => $userID],
-        ['name' => $request->name, 'email' => $request->email, 'telefono' => $request->telefono]
+        ['name' => $request->name, 'email' => $request->email, 
+        'telefono' => $request->telefono, 'id_contacto' => $request->id_contacto,
+        'id_empresa' => $request->id_empresa]
       );
 
       // user updated
@@ -192,7 +196,9 @@ class UsuariosController extends Controller
       if (empty($userEmail)) {
         $users = User::updateOrCreate(
           ['id' => $userID],
-          ['name' => $request->name, 'email' => $request->email, 'telefono' => $request->telefono, 'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa,'tipo'=>3]
+          ['name' => $request->name, 'email' => $request->email, 
+          'telefono' => $request->telefono, 'id_contacto' => $request->id_contacto,
+           'password_original' => $pass, 'password' => bcrypt($pass), 'id_empresa' => $request->id_empresa,'tipo'=>3]
         );
 
         // user created
