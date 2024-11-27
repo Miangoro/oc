@@ -17,7 +17,7 @@
                                     id="edit_id_empresa_vig" name="id_empresa" class="select2 form-select id_empresa">
                                     <option value="" selected disabled>Selecciona Empresa</option>
                                     @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
+                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
                                         </option>
                                     @endforeach
                                 </select>
