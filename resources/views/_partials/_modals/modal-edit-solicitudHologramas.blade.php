@@ -22,7 +22,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select onchange="editobtenerMarcas(); editobtenerDirecciones();" id="edit_id_empresa" name="edit_id_empresa" class="select2 form-select" required>
-                                    <option value="">Selecciona cliente</option>
+                                    <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($Empresa as $cliente)
                                     <option value="{{ $cliente->id_empresa }}">{{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }} | {{ $cliente->razon_social }}</option>
                                     @endforeach
