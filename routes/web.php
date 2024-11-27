@@ -563,6 +563,7 @@ Route::delete('instalaciones/{id_instalacion}', [DomiciliosController::class, 'd
 Route::post('/instalaciones', [DomiciliosController::class, 'store']);
 Route::get('domicilios/edit/{id_instalacion}', [DomiciliosController::class, 'edit'])->name('domicilios.edit');
 Route::put('instalaciones/{id_instalacion}', [DomiciliosController::class, 'update']);
+Route::get('/getDocumentosPorInstalacion', [DomiciliosController::class, 'getDocumentosPorInstalacion']);
 
 //Domicilio predios
 Route::get('/domicilios/predios', [PrediosController::class, 'UserManagement'])->name('domicilios-predios');
