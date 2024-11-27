@@ -334,17 +334,15 @@ class Certificado_GranelController extends Controller
 
     public function PreCertificado($id_certificado)
     {
-        // Aseguramos de cargar también la relación 'lote_granel.clase' si es necesario
         $certificado = CertificadosGranel::with('dictamen.empresa.instalaciones', 'dictamen.lote_granel.clase')->findOrFail($id_certificado);
     
-        // Obtener la dirección completa de la primera instalación
-        $direccionCompleta = $certificado->dictamen->empresa->instalaciones->first()->direccion_completa ?? 'Dirección no disponible';
-    
-        // Obtener el valor de la clase si está disponible
-        $clase = $certificado->dictamen->lote_granel->clase->clase ?? 'Clase no disponible';
-    
-        // Verificar el watermark
-        $watermarkText = $certificado->estatus === 1 ? 'Certificado válido' : 'Certificado no válido';
+        $direccionCompleta = $certificado->dictamen->empresa->instalaciones->first()->direccion_completa ?? 'N/A';
+        $clase = $certificado->dictamen->lote_granel->clase->clase ?? 'N/A';
+        $ingredientes = $certificado->dictamen->lote_granel->ingredientes ?? 'N/A';
+        $volumen = $certificado->dictamen->lote_granel->volumen ?? 'N/A';
+        $edad = $certificado->dictamen->lote_granel->edad ?? 'N/A';
+        $cont_alc = $certificado->dictamen->lote_granel->cont_alc ?? 'N/A';
+        $watermarkText = $certificado->estatus === 1;
     
         // Datos para el PDF
         $pdfData = [
@@ -357,11 +355,14 @@ class Certificado_GranelController extends Controller
             'direccion_completa' => $direccionCompleta,
             'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
             'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
-    
-            // Agregar la clase al PDF
-            'nombre_lote' => $clase,
-    
             'watermarkText' => $watermarkText,
+    
+            // Tabla #2
+            'nombre_lote' => $clase,
+            'ingredientes' => $ingredientes,
+            'volumen' => $volumen,
+            'edad' => $edad,
+            'cont_alc' => $cont_alc,
         ];
     
         // Generar y mostrar el PDF

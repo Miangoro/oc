@@ -93,14 +93,23 @@ class inspeccionesController extends Controller
         } else {
             $search = $request->input('search.value');
 
-            $query = solicitudesModel::with('empresa');
-            dd($query->toSql());
-
 
             $solicitudes = solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
                 ->where(function ($query) use ($search) {
                     $query->where('id_solicitud', 'LIKE', "%{$search}%")
-                        ->orWhere('razon_social', 'LIKE', "%{$search}%");
+                    ->orWhereHas('empresa', function ($q) use ($search) {
+                        $q->where('razon_social', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('inspeccion', function ($q) use ($search) {
+                        $q->where('num_servicio', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
+                        $q->where('tipo', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('inspector', function ($q) use ($search) {
+                        $q->where('name', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('folio', 'LIKE', "%{$search}%");
                 })
                 ->offset($start)
                 ->limit($limit)
@@ -110,7 +119,19 @@ class inspeccionesController extends Controller
             $totalFiltered =  solicitudesModel::with('tipo_solicitud', 'empresa', 'inspeccion', 'inspector', 'instalacion')
                 ->where(function ($query) use ($search) {
                     $query->where('id_solicitud', 'LIKE', "%{$search}%")
-                        ->orWhere('razon_social', 'LIKE', "%{$search}%");
+                    ->orWhereHas('empresa', function ($q) use ($search) {
+                        $q->where('razon_social', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('inspeccion', function ($q) use ($search) {
+                        $q->where('num_servicio', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('tipo_solicitud', function ($q) use ($search) {
+                        $q->where('tipo', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('inspector', function ($q) use ($search) {
+                        $q->where('name', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('folio', 'LIKE', "%{$search}%");
                 })
                 ->count();
         }

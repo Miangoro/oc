@@ -28,14 +28,14 @@ $(function () {
       { data: '' },
       { data: '' },
       { data: 'folio' },
-      { data: 'num_servicio', orderable: false},
+      { data: 'num_servicio'},
       { data: 'razon_social' },
       { data: 'fecha_solicitud' },
       { data: 'tipo' },
       { data: 'direccion_completa' },
       { data: 'fecha_visita' },
-      { data: 'inspector', orderable: false},
-      { data: 'fecha_servicio' ,orderable: false},
+      { data: 'inspector'},
+      { data: 'fecha_servicio'},
       { data: '' },
       { data: 'estatus' },
       { data: 'action' }
@@ -1368,7 +1368,7 @@ $(function () {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-  
+
   // Validación del formulario Vigilancia en produccion
   const addVigilanciaProduccionForm = document.getElementById('addVigilanciaProduccionForm');
   const fv5 = FormValidation.formValidation(addVigilanciaProduccionForm, {
@@ -1481,7 +1481,7 @@ $(function () {
             message: 'El número no debe comenzar con 0'
           }
         }
-      },      
+      },
       etapa: {
         validators: {
           notEmpty: {
@@ -1511,7 +1511,7 @@ $(function () {
         rowSelector: function (field, ele) {
           return '.mb-4, .mb-5, .mb-6';
         }
-        
+
       }),
       submitButton: new FormValidation.plugins.SubmitButton(),
       autoFocus: new FormValidation.plugins.AutoFocus()
@@ -1657,14 +1657,13 @@ $(function () {
 
 
   $('#abrirModalInstalaciones').on('click', function () {
-    var clienteSeleccionado = $('#id_empresa_solicitud').val();
+    var clienteSeleccionado = $('#id_empresa_solicitudes').val();
 
     openedFromFirstModal = true;
     $('#addSolicitudDictamen').modal('hide');
     $('#id_empresa option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
     $('#id_empresa').trigger('change');
     $('#modalAddInstalacion').modal('show');
-
 
   });
 
@@ -1683,8 +1682,8 @@ $(function () {
       openedFromFirstModal = false;
       // $('#modalAddInstalacion').modal('hide');
 
-      $('#id_empresa_solicitud option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
-      $('#id_empresa_solicitud').trigger('change');
+      $('#id_empresa_solicitudes option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
+      $('#id_empresa_solicitudes').trigger('change');
       obtenerInstalacion();
       alert(clienteSeleccionado);
 
