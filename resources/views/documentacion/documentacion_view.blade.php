@@ -57,7 +57,7 @@
                 
                
                 </select>
-                <label for="country">Cliente</label>
+                
               </div>
 
               <!-- Contenedor para la barra de progreso -->
