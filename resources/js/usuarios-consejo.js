@@ -395,9 +395,9 @@ $(function () {
         Swal.fire({
           title: 'Cancelado',
           text: '¡El usuario no ha sido eliminado!',
-          icon: 'error',
+          icon: 'info',
           customClass: {
-            confirmButton: 'btn btn-success'
+            confirmButton: 'btn btn-primary'
           }
         });
       }
@@ -428,6 +428,7 @@ $(function () {
 
     // changing the title of offcanvas
     $('#offcanvasAddUserLabel').html('Editar usuario');
+    $('#registrar-editar').html('Editar');
 
     // get data
     $.get(`${baseUrl}consejo-list\/${user_id}\/edit`, function (data) {
@@ -442,6 +443,7 @@ $(function () {
   $('.add-new').on('click', function () {
     $('#user_id').val(''); //reseting input field
     $('#offcanvasAddUserLabel').html('Agregar usuario');
+    $('#registrar-editar').html('Registrar');
   });
 
   // validating form and updating user's data
@@ -496,7 +498,7 @@ $(function () {
         // sweetalert
         Swal.fire({
           icon: 'success',
-          title: `Correctamente ${status}!`,
+          title: `¡Correctamente ${status}!`,
           text: `Usuario ${status} correctamente.`,
           customClass: {
             confirmButton: 'btn btn-success'
