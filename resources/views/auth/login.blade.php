@@ -138,14 +138,20 @@
 
         }
 
-        .imagenes {
+        .imagenes,
+        .redes {
             width: 190px;
             height: auto;
+            transition: transform 0.3s ease;
         }
 
         .redes {
             width: 60px;
-            height: auto;
+        }
+
+        .imagenes:hover,
+        .redes:hover {
+            transform: scale(1.1);
         }
     </style>
 
