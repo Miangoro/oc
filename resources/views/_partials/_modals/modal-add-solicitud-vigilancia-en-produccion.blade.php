@@ -89,7 +89,8 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select2 form-select " id="id_tipo" name="id_tipo[]" aria-label="id_tipo" multiple>
+                        <select class="select form-select " id="id_tipo" name="id_tipo" aria-label="id_tipo">
+                            <option value="">Lista de tipos maguey</option>
                             @foreach ($tipos as $tipos)
                                 <option value="{{ $tipos->id_tipo }}">{{ $tipos->nombre }} | {{ $tipos->cientifico }}
                                 </option>
@@ -194,7 +195,7 @@
             success: function(response) {
                 $('#id_categoria').val(response.lotes_granel.id_categoria);
                 $('#id_clase').val(response.lotes_granel.id_clase);
-                $('#id_tipo').val(response.lotes_granel.id_tipo).trigger('change');
+                $('#id_tipo').val(response.lotes_granel.id_tipo);
                 $('#analisis').val(response.lotes_granel.folio_fq);
                 $('#volumen').val(response.lotes_granel.cont_alc);
                 if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
