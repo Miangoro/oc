@@ -267,22 +267,24 @@ class DomiciliosController extends Controller
     {
         try {
             $instalacion = Instalaciones::findOrFail($id_instalacion);
+            
+            // Obtener todos los archivos relacionados con la instalación
             $documentacion_urls = Documentacion_url::where('id_relacion', $id_instalacion)->get();
-            $archivo_url = $documentacion_urls->isNotEmpty() ? $documentacion_urls->first()->url : '';
-
+            $archivos_urls = $documentacion_urls->pluck('url'); // Obtener todos los URLs de los archivos
+    
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $instalacion->id_empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-
+    
             return response()->json([
                 'success' => true,
                 'instalacion' => $instalacion,
-                'archivo_url' => $archivo_url,
+                'archivo_urls' => $archivos_urls, // Enviar todos los archivos
                 'numeroCliente' => $numeroCliente
             ]);
         } catch (ModelNotFoundException $e) {
             return response()->json(['success' => false], 404);
         }
-    }
+    }    
     
     public function update(Request $request, $id)
     {
