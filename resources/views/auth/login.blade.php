@@ -27,7 +27,7 @@
             z-index: -2;
         }
 
-        /* Murciélago */
+        /* Halloween */
         .bat {
             position: absolute;
             top: -50px;
@@ -40,7 +40,6 @@
             /* No más de 20px */
         }
 
-        /* animacion de vuelo */
         @keyframes flyDown {
             0% {
                 opacity: 0;
@@ -54,25 +53,6 @@
             100% {
                 opacity: 0;
                 transform: translateY(100vh) scale(1.5);
-            }
-        }
-
-        /* Responsive adjustments for smaller screens */
-        @media (max-width: 1700px) {
-            video {
-                min-width: 150%;
-            }
-
-            .bat {
-                width: 20px !important;
-                max-width: 37px !important;
-            }
-
-            .flex-container {
-                gap: 20px;
-                justify-content: space-evenly;
-                flex-wrap: wrap;
-
             }
         }
 
@@ -99,7 +79,31 @@
             }
         }
 
-        /*Celular responsive*/
+        /*Celular responsive y pc*/
+        @media (max-width: 1700px) {
+            video {
+                min-width: 150%;
+            }
+
+            .bat {
+                width: 20px !important;
+                max-width: 37px !important;
+            }
+
+            .flex-container {
+                gap: 20px;
+                justify-content: space-evenly;
+                flex-wrap: wrap;
+
+            }
+        }
+
+        @media (max-width: 990px) {
+            .img-logo{
+                visibility: hidden;
+            }
+        }
+
         @media (max-width: 768px) {
             video {
                 display: none;
@@ -146,7 +150,7 @@
         }
 
         .redes {
-            width: 60px;
+            width: 50px;
         }
 
         .imagenes:hover,
@@ -157,23 +161,18 @@
 
     <div id="desktop-view" class="d-none">
         <div class="authentication-wrapper authentication-cover">
-            <!-- Logo -->
             <a href="{{ url('/') }}" class="auth-cover-brand d-flex align-items-center gap-2">
-                <span class="app-brand-logo demo"><img height="135px" src="{{ asset('assets/img/branding/logo_oc.png') }}"
+                <span class="app-brand-logo demo img-logo"><img height="135px" src="{{ asset('assets/img/branding/logo_oc.png') }}"
                         alt=""></span>
                 <!--<span class="app-brand-text demo text-heading fw-semibold">{{ config('variables.templateName') }}</span>-->
             </a>
-            <!-- /Logo -->
             <div class="authentication-inner row m-0">
-                <!-- /Left Section -->
                 <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center justify-content-center p-12 pb-2">
                     <video autoplay muted loop>
                         <source src="{{ asset('video/fondo.mp4') }}" type="video/mp4">
                         Tu navegador no soporta el formato de video
                     </video>
                 </div>
-                <!-- /Left Section -->
-
                 <!-- Login -->
                 <div
                     class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-sm-12 px-12 py-6">
@@ -181,7 +180,6 @@
                         <img height="150px" src="{{ asset('assets/img/branding/logo.png') }}" alt="">
                         <h4 class="mb-1">Bienvenido a {{ config('variables.templateName') }} </h4>
                         <p class="mb-5">Por favor, inicie sesión</p>
-
                         @if (session('status'))
                             <div class="alert alert-success mb-3" role="alert">
                                 <div class="alert-body">
@@ -238,7 +236,6 @@
                                 Iniciar sesión
                             </button>
                         </form>
-
                         <p class="text-center">
                             <span>¿No estás certificado?</span>
                             @if (Route::has('register'))
@@ -269,6 +266,7 @@
                                 <img src="{{ asset('assets/img/branding/facebook_logo.png') }}" alt=""
                                     class="redes">
                             </a>
+                            <div style="gap: 10px"></div>
                             <a href="https://www.instagram.com/oc_cidam/" target="_blank">
                                 <img src="{{ asset('assets/img/branding/instagram_logo.png') }}" alt=""
                                     class="redes">
@@ -296,7 +294,6 @@
                         Tu navegador no soporta el formato de video
                     </video>
                 </div>
-
                 <div
                     class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-6 px-4">
                     <div class="w-100 mx-auto">
@@ -312,7 +309,6 @@
                                 </div>
                             </div>
                         @endif
-
                         <form id="formAuthentication-mobile" action="{{ route('login') }}" method="POST">
                             @csrf
                             <div class="form-floating form-floating-outline mb-5">
@@ -359,7 +355,6 @@
                             </div>
                             <button class="btn btn-primary w-100 mb-3">Iniciar sesión</button>
                         </form>
-
                         <p class="text-center">
                             <span>¿No estás certificado?</span>
                             @if (Route::has('register'))
@@ -388,6 +383,7 @@
                                 <img src="{{ asset('assets/img/branding/facebook_logo.png') }}" alt=""
                                     class="redes">
                             </a>
+                            <div style="gap: 10px"></div>
                             <a href="https://www.instagram.com/oc_cidam/" target="_blank">
                                 <img src="{{ asset('assets/img/branding/instagram_logo.png') }}" alt=""
                                     class="redes">
@@ -397,7 +393,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 @endsection
 
@@ -410,17 +405,13 @@
             const desktopView = document.getElementById('desktop-view');
 
             if (window.innerWidth <= 768) {
-                // Mostrar vista móvil
                 mobileView.classList.remove('d-none');
                 desktopView.classList.add('d-none');
             } else {
-                // Mostrar vista escritorio
                 desktopView.classList.remove('d-none');
                 mobileView.classList.add('d-none');
             }
         }
-
-        // Llamar a la función al cargar la página y al cambiar el tamaño de la ventana
         toggleView();
         window.addEventListener('resize', toggleView);
     });
@@ -471,14 +462,14 @@
     //vavidad
     function isChristmasSeason() {
         const today = new Date();
-        const month = today.getMonth(); // Obtiene el mes actual (0 = enero, 10 = noviembre)
-        return month === 11; // Solo retorna true si el mes es noviembre (10)
+        const month = today.getMonth(); 
+        return month === 11; 
     }
 
     function createSnowflake() {
         const snowflake = document.createElement("span");
         snowflake.classList.add("snowflake");
-        snowflake.textContent = "❄"; // Puedes cambiar el símbolo del copo de nieve aquí
+        snowflake.textContent = "❄"; 
         snowflake.style.left = Math.random() * 100 + "vw";
         snowflake.style.animationDuration = Math.random() * 3 + 2 + "s"; // Duración de caída de 2 a 5 segundos
         snowflake.style.fontSize = Math.random() * 10 + 10 + "px"; // Tamaño entre 10px y 20px
