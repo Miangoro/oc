@@ -773,6 +773,8 @@ Route::get('/datos-solicitud/{id_solicitud}', [solicitudesController::class, 'ob
 Route::post('/actualizar-solicitudes/{id_solicitud}', [SolicitudesController::class, 'actualizarSolicitudes']);
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
  */
+Route::get('/marcas/{id_empresa}', [SolicitudesController::class, 'obtenerMarcasPorEmpresa']);
+
 //catalago equipos
 Route::get('/catalogo/equipos', [catalogoEquiposController::class, 'UserManagement'])->name('catalogo-equipos');
 Route::resource('/equipos-list', catalogoEquiposController::class);
