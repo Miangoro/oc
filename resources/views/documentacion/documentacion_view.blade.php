@@ -65,7 +65,12 @@
             
            
                 <div class="" id="contenido"></div>
-                <button type="submit" class="btn btn-primary waves-effect waves-light">Subir documentación</button>
+                
+                <div class="row m-4">
+                  <div class="col-md-3">
+                  <button type="submit" class="btn btn-primary waves-effect waves-light">Subir documentación</button>
+                </div>
+                </div>
                
             </form>
 
@@ -150,8 +155,11 @@ Swal.fire({
             <b>0%</b>
         `,
         allowOutsideClick: false,
-        showCancelButton: false,
-        showDenyButton: false, 
+        customClass: {
+                    showCancelButton: false,
+                    confirmButtonText: 'Salir',
+                    confirmButton: 'btn btn-success'
+        },
         didOpen: () => {
             Swal.showLoading();
 
@@ -174,7 +182,10 @@ Swal.fire({
                 icon: 'success',
                 title: '¡Carga exitosa!',
                 text: 'Tus documentos se han subido con éxito.',
-                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButtonText: 'Salir',
+                    confirmButton: 'btn btn-success'
+                  },
                 showCancelButton: false,
                 showDenyButton: false, 
             });
@@ -183,7 +194,10 @@ Swal.fire({
                 icon: 'error',
                 title: '¡Carga falló!',
                 text: 'Hubo un error al subir tus documentos.',
-                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButtonText: 'Salir',
+                    confirmButton: 'btn btn-danger'
+                  },
                 showCancelButton: false,
                 showDenyButton: false, 
             });

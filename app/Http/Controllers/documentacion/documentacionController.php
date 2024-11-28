@@ -342,11 +342,21 @@ print_r($instalaciones->getBindings());*/
 
       if ($act_instalacion == 'Comercializadora') {
 
-
+        
         foreach ($marcas as $indexII => $marca) {
-          $contenidoMarcas =  $contenidoMarcas . '
+        
+          $id_relacion_array = ''; // Inicializar la cadena para los inputs en cada iteración
+
+          // Generar los inputs para `id_relacion` por cada `documento3`
+          //foreach ($documentos3 as $documento) {
+              $id_relacion_array .= '<input type="hidden" name="id_relacion[]" value="' . htmlspecialchars($marca->id_marca) . '">';
+         // }
+
+          $contenidoMarcas =  $contenidoMarcas . ' 
            
             <div class="table-responsive text-nowrap col-md-6 mb-5 ">
+
+           
                   <table class="table table-sm table-bordered">
                     <thead class="bg-secondary text-white">
                       <tr>
@@ -361,6 +371,7 @@ print_r($instalaciones->getBindings());*/
                       </tr>
                     </thead>
                     <tbody class="table-border-bottom-0" style="font-size:12px">
+                    ' . $id_relacion_array . '
                         ' . $contenidoDocumentosMarcas . '
                     </tbody>
                   </table>
@@ -485,20 +496,25 @@ print_r($instalaciones->getBindings());*/
   public function upload(Request $request)
   {
 
+  
+
     if ($request->hasFile('url')) {
       $numeroCliente = $request->numCliente;
+      $i = 0;
       foreach ($request->file('url') as $index => $file) {
         $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
         $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
 
         $documentacion_url = new Documentacion_url();
-        $documentacion_url->id_relacion = 0;
+        $documentacion_url->id_relacion = isset($request->id_relacion[$i]) ? $request->id_relacion[$i] : 0;
+
         $documentacion_url->id_documento = $request->id_documento[$index];
         $documentacion_url->nombre_documento = $request->nombre_documento[$index];
         $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
         $documentacion_url->id_empresa = $request->id_empresa;
         $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index] ?? null; // Usa null si no hay fecha
         $documentacion_url->save();
+        $i++;
       }
     }
 
