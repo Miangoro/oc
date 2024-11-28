@@ -509,7 +509,7 @@ print_r($instalaciones->getBindings());*/
       $numeroCliente = $request->numCliente;
       $i = 0;
       foreach ($request->file('url') as $index => $file) {
-        $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+        $filename = $request->nombre_documento[$index] . '_' . time().$i. '.' . $file->getClientOriginalExtension();
         $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
 
         $documentacion_url = new Documentacion_url();
