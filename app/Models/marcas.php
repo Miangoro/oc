@@ -33,7 +33,7 @@ class marcas extends Model
 
       public function catalogo_norma_certificar()
       {
-          return $this->hasMany(catalogo_norma_certificar::class, 'id_norma', 'id_norma');
+          return $this->belongsTo(catalogo_norma_certificar::class, 'id_norma', 'id_norma');
       }
           // Relación con la tabla de solicitudes
     public function solicitudes()

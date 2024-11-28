@@ -54,8 +54,7 @@ $(function () {
       { data: 'folio' },             //7
       { data: 'organismo' },         //8
       { data: 'PDF' },               //9
-      { data: 'fecha_emision' },     //10
-      { data: 'fecha_vigencia' },    //11
+      { data: 'fechas' },            //10
       { data: 'actions' }            //12
     ],
     columnDefs: [
@@ -109,12 +108,12 @@ $(function () {
             tipos.forEach(function(tipo) {
                 tipo = tipo.trim();
                 const config = tipoConfig[tipo] || { color: 'secondary', nombre: 'Desconocido' }; 
-                badges += `<span class="badge rounded-pill bg-label-${config.color}">${config.nombre}</span> `;
+                badges += `<span class="badge rounded-pill bg-${config.color}">${config.nombre}</span> `;
             });
     
-            return badges || '<span class="badge rounded-pill bg-label-secondary">N/A</span>';
+            return badges || '<span class="badge rounded-pill bg-secondary">N/A</span>';
         }
-      },      
+    },        
       {
         targets: 4,
         render: function (data, type, full, meta) {
@@ -155,7 +154,7 @@ $(function () {
         className: 'text-center',
         render: function (data, type, full, meta) {
             if (full['url'] && full['url'].trim() !== '') {
-                return `<button class="verDocumentosBtn" data-urls="${full['url']}" data-nombres="${full['nombre_documento']}" data-bs-toggle="modal" data-bs-target="#modalVerDocumento" data-bs-dismiss="modal" style="border: none; background: transparent;">
+                return `<button class="verDocumentosBtn" data-urls="${full['url']}" data-nombres="${full['nombre_documento']}" data-id="${full['id_instalacion']}" data-bs-toggle="modal" data-bs-target="#modalVerDocumento" data-bs-dismiss="modal" style="border: none; background: transparent;">
                             <i class="ri-folder-6-fill" style="color: #F9BB36; font-size: 2.5rem;"></i>
                         </button>`;
             } else {
@@ -164,22 +163,27 @@ $(function () {
         }
       },     
       {
-        targets: 10,
+        targets: 10, // Suponiendo que este es el índice de la columna que quieres actualizar
         render: function (data, type, full, meta) {
-          var $fecha_emision = full['fecha_emision'] ?? 'N/A';
-          return '<span class="user-email">' + $fecha_emision + '</span>';
+            var $fecha_emision = full['fecha_emision'] ?? 'N/A'; // Obtener la fecha de emisión
+            var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A'; // Obtener la fecha de vigencia
+    
+            // Definir los mensajes de fecha con formato
+            var fechaEmisionMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Emisión:</strong> ${$fecha_emision}</span>`;
+            var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:</strong> ${$fecha_vigencia}</span>`;
+    
+            // Retorna las fechas en formato de columnas
+            return `
+                <div style="display: flex; flex-direction: column;">
+                    <div style="display: inline;">${fechaEmisionMessage}</div>
+                    <div style="display: inline;">${fechaVigenciaMessage}</div>
+                </div>
+            `;
         }
-      },
-      {
-        targets:11,
-        render: function (data, type, full, meta) {
-          var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A';
-          return '<span class="user-email">' + $fecha_vigencia + '</span>';
-        }
-      },
+      },    
       {
         // Actions
-        targets: 12,
+        targets: 11,
         title: 'Acciones',
         searchable: false,
         orderable: false,
@@ -474,66 +478,6 @@ $(function () {
     $('#fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
   });
 
-  // Manejo de los tipos seleccionados
-  $(document).on('change', '#tipo', function () {
-    var tiposSeleccionados = $(this).val();
-    var certificadoContainer = $('#certificado-otros');
-    certificadoContainer.find('.file-input').remove();
-    var archivosCreados = new Set();
-    var primerCampoInsertado = false;
-
-    tiposSeleccionados.forEach(function(tipo) {
-        var archivoId = '';
-        var archivoNombre = '';
-
-        if (tipo === "Productora") {
-            archivoId = '127';
-            archivoNombre = 'Certificado de productora';
-        } else if (tipo === "Envasadora") {
-            archivoId = '128';
-            archivoNombre = 'Certificado de envasadora';
-        } else if (tipo === "Comercializadora") {
-            archivoId = '129';
-            archivoNombre = 'Certificado de comercializadora';
-        } else if (tipo === "Almacen y bodega") {
-            archivoId = '130'; 
-            archivoNombre = 'Certificado de almacén y bodega';
-        } else if (tipo === "Area de maduracion") {
-            archivoId = '131'; 
-            archivoNombre = 'Certificado de área de maduración';
-        }
-
-        // Asegurarse de que solo se agregue una vez cada archivo
-        if (!archivosCreados.has(archivoId)) {
-            if (!primerCampoInsertado) {
-                certificadoContainer.prepend(`
-                    <div class="col-md-12 mb-3 file-input" id="file-input-${archivoId}">
-                        <div class="form-floating form-floating-outline">
-                            <input class="form-control form-control-sm" type="file" id="file-${archivoId}" name="url[]" required>
-                            <input value="${archivoId}" class="form-control" type="hidden" name="id_documento[]">
-                            <input value="${archivoNombre}" class="form-control" type="hidden" name="nombre_documento[]">
-                            <label for="file-${archivoId}">${archivoNombre}</label>
-                        </div>
-                    </div>
-                `);
-                primerCampoInsertado = true; 
-            } else {
-                certificadoContainer.find('.file-input').last().after(`
-                    <div class="col-md-12 mb-3 file-input" id="file-input-${archivoId}">
-                        <div class="form-floating form-floating-outline">
-                            <input class="form-control form-control-sm" type="file" id="file-${archivoId}" name="url[]" required>
-                            <input value="${archivoId}" class="form-control" type="hidden" name="id_documento[]">
-                            <input value="${archivoNombre}" class="form-control" type="hidden" name="nombre_documento[]">
-                            <label for="file-${archivoId}">${archivoNombre}</label>
-                        </div>
-                    </div>
-                `);
-            }
-            archivosCreados.add(archivoId);
-        }
-    });
-  });
-
   $(document).ready(function () {
     const formAdd = document.getElementById('addNewInstalacionForm');
     const certificadoContainer = $('#certificado-otros');
@@ -582,7 +526,14 @@ $(function () {
                     message: 'El nombre del responsable de la instalación es obligatorio.'
                 }
             }
-        }
+        },
+        'eslabon': { 
+          validators: {
+              notEmpty: {
+                  message: 'Es obligatorio seleccionar un eslabón al que pertenece.'
+              }
+          }
+      }
         },
         plugins: {
             trigger: new FormValidation.plugins.Trigger(),
@@ -813,6 +764,77 @@ $(function () {
           }
         });
     });
+
+  // Manejo de los tipos seleccionados
+  $(document).on('change', '#tipo', function () {
+    var tiposSeleccionados = $(this).val();
+    var certificadoContainer = $('#certificado-otros');
+    certificadoContainer.find('.file-input').remove();
+    var archivosCreados = new Set();
+    var primerCampoInsertado = false;
+
+    tiposSeleccionados.forEach(function(tipo) {
+        var archivoId = '';
+        var archivoNombre = '';
+
+        if (tipo === "Productora") {
+            archivoId = '127';
+            archivoNombre = 'Certificado de productora';
+        } else if (tipo === "Envasadora") {
+            archivoId = '128';
+            archivoNombre = 'Certificado de envasadora';
+        } else if (tipo === "Comercializadora") {
+            archivoId = '129';
+            archivoNombre = 'Certificado de comercializadora';
+        } else if (tipo === "Almacen y bodega") {
+            archivoId = '130'; 
+            archivoNombre = 'Certificado de almacén y bodega';
+        } else if (tipo === "Area de maduracion") {
+            archivoId = '131'; 
+            archivoNombre = 'Certificado de área de maduración';
+        }
+
+       // Mostrar u ocultar el select según las opciones seleccionadas
+          if (tiposSeleccionados.includes('Almacen y bodega') || tiposSeleccionados.includes('Area de maduracion')) {
+            $('#eslabon-select').removeClass('d-none'); 
+            fv.enableValidator('eslabon');
+        } else {
+            $('#eslabon-select').addClass('d-none');
+            $('#eslabon').val(''); 
+            fv.disableValidator('eslabon');
+        }
+
+        // Asegurarse de que solo se agregue una vez cada archivo
+        if (!archivosCreados.has(archivoId)) {
+            if (!primerCampoInsertado) {
+                certificadoContainer.prepend(`
+                    <div class="col-md-12 mb-3 file-input" id="file-input-${archivoId}">
+                        <div class="form-floating form-floating-outline">
+                            <input class="form-control form-control-sm" type="file" id="file-${archivoId}" name="url[]" required>
+                            <input value="${archivoId}" class="form-control" type="hidden" name="id_documento[]">
+                            <input value="${archivoNombre}" class="form-control" type="hidden" name="nombre_documento[]">
+                            <label for="file-${archivoId}">${archivoNombre}</label>
+                        </div>
+                    </div>
+                `);
+                primerCampoInsertado = true; 
+            } else {
+                certificadoContainer.find('.file-input').last().after(`
+                    <div class="col-md-12 mb-3 file-input" id="file-input-${archivoId}">
+                        <div class="form-floating form-floating-outline">
+                            <input class="form-control form-control-sm" type="file" id="file-${archivoId}" name="url[]" required>
+                            <input value="${archivoId}" class="form-control" type="hidden" name="id_documento[]">
+                            <input value="${archivoNombre}" class="form-control" type="hidden" name="nombre_documento[]">
+                            <label for="file-${archivoId}">${archivoNombre}</label>
+                        </div>
+                    </div>
+                `);
+            }
+            archivosCreados.add(archivoId);
+        }
+    });
+  });
+
 });
 
 
@@ -857,6 +879,7 @@ $(document).on('change', '#edit_tipo', function () {
       fileCertificado.removeAttr('id');
   }
 });
+
 $(document).ready(function () {
   let instalacionData = {};
   let archivo = false; // Variable para manejar la existencia del archivo
@@ -1042,130 +1065,141 @@ $(document).ready(function () {
   fvEdit.disableValidator('edit_fecha_emision');
   fvEdit.disableValidator('edit_fecha_vigencia');
   fvEdit.disableValidator('edit_url[]');
-
+  
   $(document).on('click', '.edit-record', function () {
-      var id_instalacion = $(this).data('id');
-      var url = baseUrl + 'domicilios/edit/' + id_instalacion;
+    var id_instalacion = $(this).data('id');
+    var url = baseUrl + 'domicilios/edit/' + id_instalacion;
 
-      $.get(url, function (data) {
-          if (data.success) {
-              var instalacion = data.instalacion;
+    $.get(url, function (data) {
+        if (data.success) {
+            var instalacion = data.instalacion;
+            var tipoParsed = JSON.parse(instalacion.tipo); 
 
-              // Parsear el tipo (JSON) a un array
-              var tipoParsed = JSON.parse(instalacion.tipo); // Convertir el string JSON a un array
+            instalacionData = {
+                folio: instalacion.folio || '',
+                id_organismo: instalacion.id_organismo || '',
+                fecha_emision: instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '',
+                fecha_vigencia: instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '',
+                archivoUrl: data.archivo_url || '',
+                numeroCliente: data.numeroCliente || ''
+            };
 
-              instalacionData = {
-                  folio: instalacion.folio || '',
-                  id_organismo: instalacion.id_organismo || '',
-                  fecha_emision: instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '',
-                  fecha_vigencia: instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '',
-                  archivoUrl: data.archivo_url || '',
-                  numeroCliente: data.numeroCliente || ''
-              };
+            $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
+            $('#edit_tipo').val(tipoParsed).trigger('change');
+            $('#edit_estado').val(instalacion.estado).trigger('change');
+            $('#edit_direccion').val(instalacion.direccion_completa);
+            $('#edit_responsable').val(instalacion.responsable || '').trigger('change');
 
-              // Asignar los valores a los campos del formulario
-              $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
-              
-              // Asignar el array de tipo al select
-              $('#edit_tipo').val(tipoParsed).trigger('change');
+            // Establecer el valor del select y mostrar los campos adicionales si corresponde
+            $('#edit_certificacion').val(instalacion.certificacion).trigger('change');
+            toggleCamposCertificacion(instalacion.certificacion);
 
-              $('#edit_estado').val(instalacion.estado).trigger('change');
-              $('#edit_direccion').val(instalacion.direccion_completa);
+            // Mostrar el campo edit_eslabon si el tipo incluye "Área de maduración" o "Almacén y bodega"
+            if (tipoParsed.includes('Area de maduracion') || tipoParsed.includes('Almacen y bodega')) {
+                $('#edit_eslabon-select').removeClass('d-none');
+                $('#edit_eslabon').val(instalacion.eslabon || '').trigger('change');
+                console.log("entra")
+            } else {
+                $('#eslabon-select').addClass('d-none');
+                $('#edit_eslabon-select').val('');
+            }
 
-              // Asignar el responsable al campo correspondiente
-              $('#edit_responsable').val(instalacion.responsable || '').trigger('change');
+            // Asignar el id_instalacion al atributo data-id del formulario
+            $('#editInstalacionForm').data('id', id_instalacion);
+            $('#modalEditInstalacion').modal('show');
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo cargar los datos de la instalación',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
+                }
+            });
+        }
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        console.error('Error en la solicitud:', textStatus, errorThrown);
 
-              // Establecer el valor del select y mostrar los campos adicionales si corresponde
-              $('#edit_certificacion').val(instalacion.certificacion).trigger('change');
-              toggleCamposCertificacion(instalacion.certificacion);
-
-              // Asignar el id_instalacion al atributo data-id del formulario
-              $('#editInstalacionForm').data('id', id_instalacion);
-
-              $('#modalEditInstalacion').modal('show');
-          } else {
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Error',
-                  text: 'No se pudo cargar los datos de la instalación',
-                  customClass: {
-                      confirmButton: 'btn btn-primary'
-                  }
-              });
-          }
-      }).fail(function (jqXHR, textStatus, errorThrown) {
-          console.error('Error en la solicitud:', textStatus, errorThrown);
-
-          Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Error en la solicitud. Inténtalo de nuevo.',
-              customClass: {
-                  confirmButton: 'btn btn-primary'
-              }
-          });
-      });
-  });
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error en la solicitud. Inténtalo de nuevo.',
+            customClass: {
+                confirmButton: 'btn btn-primary'
+            }
+        });
+    });
 });
-
-
+$('#modalEditInstalacion').on('hidden.bs.modal', function () {
+  console.log('Se ocultó');
+  $('#edit_eslabon').val('');
+  $('#edit_eslabon-select').addClass('d-none');
+});
+});
 
 $(document).on('click', '.verDocumentosBtn', function () {
-  $('#modalEditInstalacion').modal('hide'); 
-  var urls = $(this).data('urls').split(','); 
-  var nombresDocumentos = $(this).data('nombres');
-  if (nombresDocumentos) {
-    nombresDocumentos = nombresDocumentos.split(','); 
-  } else {
-    nombresDocumentos = []; 
-  }
+  var idInstalacion = $(this).data('id');
+  console.log('ID de Instalación:', idInstalacion);
 
-  $('#modalVerDocumento').modal('hide'); 
-  var tablaContenido = '';
-  var baseFolder = '../files/'; 
-  var firstUrl = urls[0].trim();
-  var firstFolder = '';
-  if (firstUrl.includes('/')) {
-    firstFolder = firstUrl.split('/')[0] + '/';
-  }
-
-  urls.forEach(function (url, index) {
-    var fullUrl = (index === 0) ? baseFolder + url.trim() : baseFolder + firstFolder + url.trim();
-    var nombreDocumento = nombresDocumentos[index] ? nombresDocumentos[index].trim() : 'Documento sin nombre';  
-
-    tablaContenido += `
-    <tr>
-        <td style="text-align:left;">${nombreDocumento}</td>
-        <td>
-            <button class="verDocumentoBtn" data-url="${fullUrl}" data-registro="Registro ${index + 1}" style="border: none; background: transparent;">
-                <i class="ri-file-pdf-2-fill text-danger fs-1 cursor-pointer"></i>
-            </button>
-        </td>
-    </tr>`;
-  });
-
-  $('#documentosTableBody').html(tablaContenido);
+  $('#modalEditInstalacion').modal('hide');
+  $('#modalVerDocumento').modal('hide');
+  $('#documentosTableBody').html('<tr><td colspan="2" class="text-center">Cargando documentos...</td></tr>');
   $('#modalVerDocumento').modal('show');
+
+  $.ajax({
+      url: '/getDocumentosPorInstalacion', 
+      method: 'GET',
+      data: { id_instalacion: idInstalacion },
+      success: function (response) {
+          if (response.success) {
+              var documentos = response.documentos; 
+              var numeroCliente = response.numero_cliente;
+              var tablaContenido = '';
+
+              documentos.forEach(function (doc, index) {
+                  var fullUrl = `../files/${numeroCliente}/${doc.url}`;
+                  var nombreDocumento = doc.nombre_documento || 'Documento sin nombre';
+
+                  tablaContenido += `
+                  <tr>
+                      <td style="text-align:left;">${nombreDocumento}</td>
+                      <td>
+                          <button 
+                              class="verDocumentoBtn" 
+                              data-url="${fullUrl}" 
+                              data-nombre="${nombreDocumento}" 
+                              data-registro="Registro ${index + 1}" 
+                              style="border: none; background: transparent;">
+                              <i class="ri-file-pdf-2-fill text-danger fs-1 cursor-pointer"></i>
+                          </button>
+                      </td>
+                  </tr>`;
+              });
+
+              $('#documentosTableBody').html(tablaContenido);
+          } else {
+              $('#documentosTableBody').html('<tr><td colspan="2" class="text-center">No se encontraron documentos.</td></tr>');
+          }
+      },
+      error: function () {
+          $('#documentosTableBody').html('<tr><td colspan="2" class="text-center">Error al cargar los documentos.</td></tr>');
+      }
+  });
 });
 
-// Al hacer clic en el botón "Ver Documento" dentro del modal
+// Al hacer clic en el botón "Ver Documento"
 $(document).on('click', '.verDocumentoBtn', function () {
-  var nombresDocumentos = $(this).data('nombres');
-  if (nombresDocumentos) {
-    nombresDocumentos = nombresDocumentos.split(','); 
-  } else {
-    nombresDocumentos = []; 
-  }
+  var nombreDocumento = $(this).data('nombre'); 
+  var url = $(this).data('url'); 
 
-  var url = $(this).data('url');
   $('#loading-spinner').show();
   $('#modalVerDocumento').modal('hide');
   $('#PdfDictamenIntalaciones').modal('show'); 
+
   $('#pdfViewerDictamen').attr('src', url);
   $('#titulo_modal_Dictamen').text('Certificado Instalaciones');
-  var urlParts = url.split('/');
-  var lastPart = urlParts[urlParts.length - 1];
-  $('#subtitulo_modal_Dictamen').text(lastPart);
+  $('#subtitulo_modal_Dictamen').text(nombreDocumento); 
+
   var openPdfBtn = $('#openPdfBtnDictamen');
   openPdfBtn.attr('href', url);
   openPdfBtn.show();
@@ -1173,8 +1207,8 @@ $(document).on('click', '.verDocumentoBtn', function () {
 
 // Evento para ocultar el spinner y mostrar el iframe cuando el PDF haya cargado
 $('#pdfViewerDictamen').on('load', function () {
-$('#loading-spinner').hide();
-$('#pdfViewerDictamen').show();
+  $('#loading-spinner').hide();
+  $('#pdfViewerDictamen').show();
 });
 
 $('#PdfDictamenIntalaciones').on('hidden.bs.modal', function () {

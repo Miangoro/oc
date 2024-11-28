@@ -17,9 +17,9 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select onchange="editobtenerNombrePredio(); editobtenerPlantacionPredio();"
                                     id="edit_id_empresa" name="empresa" class="select2 form-select" required>
-                                    <option value="">Selecciona cliente</option>
+                                    <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresa as $id_cliente)
-                                        <option value="{{ $id_cliente->id_empresa }}">{{ $id_cliente->razon_social }}
+                                    <option value="{{ $id_cliente->id_empresa }}">{{ $id_cliente->empresaNumClientes[0]->numero_cliente ?? $id_cliente->empresaNumClientes[1]->numero_cliente }} | {{ $id_cliente->razon_social }}</option>
                                         </option>
                                     @endforeach
                                 </select>

@@ -93,6 +93,7 @@ class UsuariosPersonalController extends Controller
         $nestedData['fake_id'] = ++$ids;
         $nestedData['name'] = $user->name;
         $nestedData['email'] = $user->email;
+        $nestedData['puesto'] = $user->puesto;
         $nestedData['password_original'] = $user->password_original;
         $nestedData['razon_social'] = 'No aplica';
         $nestedData['foto_usuario'] = $user->profile_photo_path ?? '';
@@ -143,7 +144,11 @@ class UsuariosPersonalController extends Controller
       // update the value
       $users = User::updateOrCreate(
         ['id' => $userID],
-        ['name' => $request->name, 'email' => $request->email]
+        ['name' => $request->name, 
+        'email' => $request->email, 
+        'puesto' => $request->puesto,
+
+        ]
       );
 
       // user updated
@@ -157,7 +162,9 @@ class UsuariosPersonalController extends Controller
       if (empty($userEmail)) {
         $users = User::updateOrCreate(
           ['id' => $userID],
-          ['name' => $request->name, 'email' => $request->email, 'password_original' => $pass, 'password' => bcrypt($pass), 'tipo' => 1]
+          ['name' => $request->name, 'email' => $request->email, 
+          'puesto' => $request->puesto,
+          'password_original' => $pass, 'password' => bcrypt($pass), 'tipo' => 1]
         );
 
         // user created

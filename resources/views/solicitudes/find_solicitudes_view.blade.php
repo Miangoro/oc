@@ -15,7 +15,8 @@
   'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss',
   'resources/assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.scss',
   'resources/assets/vendor/libs/jquery-timepicker/jquery-timepicker.scss',
-  'resources/assets/vendor/libs/pickr/pickr-themes.scss'
+    'resources/assets/vendor/libs/pickr/pickr-themes.scss',
+   'resources/assets/vendor/libs/spinkit/spinkit.scss'
 ])
 
 @endsection

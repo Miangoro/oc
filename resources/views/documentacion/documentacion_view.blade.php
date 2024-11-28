@@ -7,7 +7,8 @@
   'resources/assets/vendor/libs/apex-charts/apex-charts.scss',
   'resources/assets/vendor/libs/@form-validation/form-validation.scss',
     'resources/assets/vendor/libs/animate-css/animate.scss',
-  'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss'
+  'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
+  'resources/assets/vendor/libs/select2/select2.scss'
 ])
 @endsection
 
@@ -19,7 +20,8 @@
   'resources/assets/vendor/libs/@form-validation/popular.js',
   'resources/assets/vendor/libs/@form-validation/bootstrap5.js',
   'resources/assets/vendor/libs/@form-validation/auto-focus.js',
-    'resources/assets/vendor/libs/sweetalert2/sweetalert2.js'
+    'resources/assets/vendor/libs/sweetalert2/sweetalert2.js',
+    'resources/assets/vendor/libs/select2/select2.js'
 ])
 @endsection
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -49,13 +51,13 @@
               <div class="form-floating form-floating-outline m-5 col-md-6">
                 <select name="id_empresa" id="id_empresa" class="select2 form-select">
                   
-                  @foreach ($empresas as $empresa)
-                  <option value="{{$empresa->id_empresa}}">{{$empresa->razon_social}}</option>
-                  @endforeach
+                  @foreach ($empresas as $cliente)
+                  <option value="{{ $cliente->id_empresa }}">{{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }} | {{ $cliente->razon_social }}</option>
+              @endforeach
                 
                
                 </select>
-                <label for="country">Cliente</label>
+                
               </div>
 
               <!-- Contenedor para la barra de progreso -->
@@ -83,6 +85,9 @@ window.Helpers.initCustomOptionCheck();
 
 <script>
 $(document).ready(function() {
+
+  
+  initializeSelect2($('.select2'));
     // Función para cargar los datos de la normativa
     function cargarNormas(clienteId) {
         if (clienteId) {
@@ -197,6 +202,17 @@ Swal.fire({
     // Envía la solicitud
     xhr.send(formData);
 });
+
+function initializeSelect2($elements) {
+    $elements.each(function () {
+      var $this = $(this);
+   
+      $this.wrap('<div class="position-relative"></div>').select2({
+        dropdownParent: $this.parent()
+      });
+    });
+  }
+
 
 
 </script>

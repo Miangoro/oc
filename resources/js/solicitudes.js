@@ -1731,6 +1731,7 @@ $(function () {
   });
 
   /* seccion para exportacion */
+
   $(document).ready(function () {
     // Obtener el select y las secciones
     var $tipoSolicitud = $('#tipo_solicitud');
@@ -1753,53 +1754,43 @@ $(function () {
   });
 
   $(document).ready(function () {
-    // Contador para asignar IDs únicos
-    let sectionCount = 1;
+    let sectionCount = 0;
 
-    // Manejar el evento de clic en el botón "Agregar Tabla"
     $('#add-characteristics').click(function () {
         sectionCount++;
-        // Clonar la sección original
         let newSection = $('#caracteristicas_Ex').clone();
-        // Cambiar el ID de la nueva sección
         newSection.attr('id', 'caracteristicas_Ex_' + sectionCount);
-
-        // Limpiar los valores de los inputs en la nueva sección
         newSection.find('input').val('');
         newSection.find('select').prop('selectedIndex', 0);
-
-        // Asignar un índice único a los nombres de los inputs y selects
-        newSection.find('input, select').each(function() {
+        newSection.find('input, select').each(function () {
             let name = $(this).attr('name');
             if (name) {
-                // Cambiar el nombre para incluir el índice
-                $(this).attr('name', name.replace(/\[\]/, '[' + (sectionCount - 1) + ']'));
+                $(this).attr('name', name.replace(/\[\d+\]/, '[' + sectionCount + ']'));
             }
         });
-
-        // Agregar la nueva sección al contenedor
         newSection.appendTo('#sections-container');
+
     });
 
-    // Manejar el evento de clic en el botón "Eliminar tabla"
     $('#delete-characteristics').click(function () {
-        // Verificar si hay más de una sección
-        if (sectionCount > 1) {
+        if (sectionCount > 0) {
             $('#caracteristicas_Ex_' + sectionCount).remove();
             sectionCount--;
         } else {
-            // Usar SweetAlert para mostrar el mensaje
             Swal.fire({
                 icon: 'warning',
                 title: 'Advertencia',
                 text: 'No se puede eliminar la sección original.',
                 customClass: {
-                  confirmButton: 'btn btn-warning'
-              }
+                    confirmButton: 'btn btn-warning'
+                }
             });
         }
     });
 });
+
+
+
 
 });
 

@@ -19,7 +19,7 @@ class documentacionController extends Controller
     $documentos = Documentacion::where('subtipo', '=', 'Todas')->get();
     $productor_agave = Documentacion::where('subtipo', '=', 'Generales Productor')->get();
 
-    $empresas = empresa::where('tipo', '=', 2)->get();
+    $empresas = Empresa::with('empresaNumClientes')->where('tipo', 2)->get();
     $instalaciones = Instalaciones::where('tipo', '=', 2)->get();
 
     return view("documentacion.documentacion_view", ["documentos" => $documentos, "productor_agave" => $productor_agave, "empresas" => $empresas]);
@@ -67,6 +67,14 @@ class documentacionController extends Controller
       WHERE a.id_norma = ? AND na.id_empresa = ?
     ", [$norma->id_norma, $id_empresa]);
 
+    $logo = [
+      'Productor de Agave' => 'Productor de agave.png',
+      'Productor de Mezcal' => 'Productor de mezcal.png',
+      'Envasador de Mezcal' => 'Envasador de mezcal.png',
+      'Comercializador de Mezcal' => 'Comercializador de mezcal.png',
+    
+  ];
+
       foreach ($actividades as $indexA => $actividad) {
 
         $activeClassA = $indexA == 0 ? 'active' : '';
@@ -82,18 +90,19 @@ class documentacionController extends Controller
             <li class="nav-item">
                 <a style="width: 100% !important;" href="javascript:void(0);" class="nav-link btn active d-flex flex-column align-items-center justify-content-center" role="tab" data-bs-toggle="tab" data-bs-target="#navs-orders-id-0" aria-controls="navs-orders-id-0" aria-selected="true">
                   <div>
-                    <img src="' . asset('assets/img/products/apple-iMac-3k.png') . '" alt="Mobile" class="img-fluid">
+                    <img style="height:45px" src="' . asset('assets/img/modulo_documentacion/Documentos generales.png') . '" alt=" Documentos Generales" class="img-fluid">
                   </div>
                   Documentos Generales
                 </a>
               </li>';
+              
 
 
         $tabsActividades = $tabsActividades . '
             <li class="nav-item">
                 <a style="width: 100% !important;" href="javascript:void(0);" class="nav-link btn d-flex flex-column align-items-center justify-content-center" role="tab" data-bs-toggle="tab" data-bs-target="#navs-orders-id-' . $actividad->id_actividad . '" aria-controls="navs-orders-id-' . $actividad->id_actividad . '" aria-selected="true">
                   <div>
-                    <img src="' . asset('assets/img/products/apple-iMac-3k.png') . '" alt="Mobile" class="img-fluid">
+                    <img  style="height:45px" src="' . asset('assets/img/modulo_documentacion/'.$logo[$actividad->actividad]) . '" alt="Mobile" class="img-fluid">
                   </div>
                   ' . $actividad->actividad . '
                 </a>
@@ -341,7 +350,7 @@ print_r($instalaciones->getBindings());*/
                   <table class="table table-sm table-bordered">
                     <thead class="bg-secondary text-white">
                       <tr>
-                        <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3">Marca: <b>' . $marca->marca . '</b></th>
+                        <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3">Marca: <b><span class="badge bg-warning">' . $marca->marca . '</span></b></th>
                       </tr>
                       <tr>
                         <th class="bg-transparent border-bottom">#</th>

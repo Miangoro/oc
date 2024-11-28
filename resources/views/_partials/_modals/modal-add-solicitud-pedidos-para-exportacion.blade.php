@@ -29,13 +29,7 @@
                                     class="select2 form-select">
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">
-                                            {{ isset($empresa->empresaNumClientes[0])
-                                                ? $empresa->empresaNumClientes[0]->numero_cliente
-                                                : (isset($empresa->empresaNumClientes[1])
-                                                    ? $empresa->empresaNumClientes[1]->numero_cliente
-                                                    : 'Sin número') }}
-                                            | {{ $empresa->razon_social }}
+                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
                                         </option>
                                     @endforeach
                                 </select>
@@ -152,7 +146,7 @@
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select id="evasado_export" name="lote_envasado[0]"
-                                                class="select2 form-select">
+                                                class=" form-select">
                                                 <option value="" disabled selected>Selecciona un lote envasado
                                                 </option>
                                                 <!-- Opciones dinámicas -->
@@ -163,7 +157,7 @@
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select id="lotes_granel_export" name="lote_granel[0]"
-                                                class="select2 form-select">
+                                                class=" form-select">
                                                 <option value="" disabled selected>Selecciona un lote a granel
                                                 </option>
                                                 <!-- Opciones dinámicas -->
@@ -188,7 +182,7 @@
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <input type="text" class="form-control" name="presentacion[0]"
-                                                placeholder="Ej. 750ml">
+                                                placeholder="Ej. 750">
                                             <label for="presentacion">Presentación</label>
                                         </div>
                                     </div>
