@@ -20,7 +20,9 @@ $(function () {
           icon: 'error',
           title: 'Error',
           text: 'Hubo un problema al cargar los datos.',
-          showCancelButton: false,
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
         });
       }
     },
@@ -28,14 +30,14 @@ $(function () {
       { data: '' },
       { data: '' },
       { data: 'folio' },
-      { data: 'num_servicio'},
+      { data: 'num_servicio' },
       { data: 'razon_social' },
       { data: 'fecha_solicitud' },
       { data: 'tipo' },
       { data: 'direccion_completa' },
       { data: 'fecha_visita' },
-      { data: 'inspector'},
-      { data: 'fecha_servicio'},
+      { data: 'inspector' },
+      { data: 'fecha_servicio' },
       { data: '' },
       { data: 'estatus' },
       { data: 'action' }
@@ -103,7 +105,7 @@ $(function () {
         render: function (data, type, full, meta) {
 
 
-          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf"  data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['id_solicitud']}"></i>`;
+          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['id_solicitud']}"></i>`;
 
         }
       },
@@ -1369,193 +1371,193 @@ $(function () {
       }
     });
 
-  // Validación del formulario Vigilancia en produccion
-  const addVigilanciaProduccionForm = document.getElementById('addVigilanciaProduccionForm');
-  const fv5 = FormValidation.formValidation(addVigilanciaProduccionForm, {
-    fields: {
-      id_empresa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una empresa.'
+    // Validación del formulario Vigilancia en produccion
+    const addVigilanciaProduccionForm = document.getElementById('addVigilanciaProduccionForm');
+    const fv5 = FormValidation.formValidation(addVigilanciaProduccionForm, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una empresa.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha y hora de visita.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una instalación.'
+            }
+          }
+        },
+        id_lote_granel: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un lote agranel.'
+            }
+          }
+        },
+        id_categoria: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una categoría.'
+            }
+          }
+        },
+        id_clase: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una clase.'
+            }
+          }
+        },
+        id_tipo: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un tipo de maguey.'
+            }
+          }
+        },
+        analisis: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el análisis fisicoquímico.'
+            }
+          }
+        },
+        art: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el porcentaje de alcohol (% Alc. Vol.).'
+            },
+            between: {
+              min: 1,
+              max: Infinity,
+              message: 'El número debe ser superior a 0 y sin negativos'
+            },
+            regexp: {
+              regexp: /^(?!0)\d+$/,
+              message: 'El número no debe comenzar con 0'
+            }
+          }
+        },
+        fecha_corte: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha y hora de visita.'
+            }
+          }
+        },
+        kg_maguey: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad de maguey en kg.'
+            }
+          }
+        },
+        cant_pinas: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la cantidad de piñas.'
+            }
+          }
+        },
+        art: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el número art'
+            },
+            between: {
+              min: 1,
+              max: Infinity,
+              message: 'El número debe ser superior a 0 y sin negativos'
+            },
+            regexp: {
+              regexp: /^(?!0)\d+$/,
+              message: 'El número no debe comenzar con 0'
+            }
+          }
+        },
+        etapa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la etapa del proceso.'
+            }
+          }
+        },
+        folio: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el número de guía de traslado.'
+            }
+          }
+        },
+        nombre_predio: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el nombre del predio.'
+            }
           }
         }
       },
-      fecha_visita: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha y hora de visita.'
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-4, .mb-5, .mb-6';
           }
-        }
-      },
-      id_instalacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una instalación.'
-          }
-        }
-      },
-      id_lote_granel: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un lote agranel.'
-          }
-        }
-      },
-      id_categoria: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una categoría.'
-          }
-        }
-      },
-      id_clase: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una clase.'
-          }
-        }
-      },
-      id_tipo: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un tipo de maguey.'
-          }
-        }
-      },
-      analisis: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el análisis fisicoquímico.'
-          }
-        }
-      },
-      art: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el porcentaje de alcohol (% Alc. Vol.).'
-          },
-          between: {
-            min: 1,
-            max: Infinity,
-            message: 'El número debe ser superior a 0 y sin negativos'
-          },
-          regexp: {
-            regexp: /^(?!0)\d+$/,
-            message: 'El número no debe comenzar con 0'
-          }
-        }
-      },
-      fecha_corte: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha y hora de visita.'
-          }
-        }
-      },
-      kg_maguey: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la cantidad de maguey en kg.'
-          }
-        }
-      },
-      cant_pinas: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la cantidad de piñas.'
-          }
-        }
-      },
-      art: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el número art'
-          },
-          between: {
-            min: 1,
-            max: Infinity,
-            message: 'El número debe ser superior a 0 y sin negativos'
-          },
-          regexp: {
-            regexp: /^(?!0)\d+$/,
-            message: 'El número no debe comenzar con 0'
-          }
-        }
-      },
-      etapa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la etapa del proceso.'
-          }
-        }
-      },
-      folio: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el número de guía de traslado.'
-          }
-        }
-      },
-      nombre_predio: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el nombre del predio.'
-          }
-        }
+
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
       }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          return '.mb-4, .mb-5, .mb-6';
+    }).on('core.form.valid', function () {
+      var formData = new FormData(addVigilanciaProduccionForm);
+
+      $.ajax({
+        url: '/hologramas/storeVigilanciaProduccion', // Actualiza con la URL correcta
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+
+          $('#addVigilanciaProduccion').modal('hide');
+          $('#addVigilanciaProduccionForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'Solicitud vigilancia registrado exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function () {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al registrar la vigilancia en producción.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
         }
-
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    var formData = new FormData(addVigilanciaProduccionForm);
-
-    $.ajax({
-      url: '/hologramas/storeVigilanciaProduccion', // Actualiza con la URL correcta
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-
-        $('#addVigilanciaProduccion').modal('hide');
-        $('#addVigilanciaProduccionForm')[0].reset();
-        $('.select2').val(null).trigger('change');
-        $('.datatables-solicitudes').DataTable().ajax.reload();
-
-        // Mostrar alerta de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'Solicitud vigilancia registrado exitosamente.',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function () {
-        // Mostrar alerta de error
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Error al registrar la vigilancia en producción.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      }
+      });
     });
   });
-});
 
   // Manejar el cambio en el tipo de instalación
   $(document).on('change', '#edit_tipo', function () {
@@ -1641,40 +1643,19 @@ $(function () {
   });
 
 
-
-
-//RECIBE LOS DATOS DEL PDF
   $(document).on('click', '.pdf2', function () {
-    //alert("entro");
-    //var url = $(this).data('url');
+    var url = $(this).data('url');
     var registro = $(this).data('registro');
     var id_solicitud = $(this).data('id');
-      var iframe = $('#pdfViewer');
-      var spinner = $('#cargando');
+    var iframe = $('#pdfViewer');
+    iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
 
-    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-      spinner.show();
-      iframe.hide();
-    //Cargar el PDF con el ID
-      iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
-    //Configurar el botón para abrir el PDF en una nueva pestaña
-      $("#NewPestana").attr('href', 'solicitud_de_servicio/' + id_solicitud).show();
-    //Titulos
-      $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
-      $("#subtitulo_modal").text(registro);
-
-      iframe.on('load', function () {
-        spinner.hide();
-        iframe.show();
-        //iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
-      });
+    $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
+    $("#subtitulo_modal").text(registro);
   });
 
-});
-
-
-
   var openedFromFirstModal = false;
+
 
 
   $('#abrirModalInstalaciones').on('click', function () {
@@ -1749,6 +1730,68 @@ $(function () {
     });
   });
 
-//});
+  /* seccion para exportacion */
+
+  $(document).ready(function () {
+    // Obtener el select y las secciones
+    var $tipoSolicitud = $('#tipo_solicitud');
+    var $pedidosEx = $('#pedidos_Ex');
+    var $etiquetasEx = $('#etiquetas_Ex');
+
+    // Manejar el evento de cambio
+    $tipoSolicitud.on('change', function () {
+      var valorSeleccionado = $tipoSolicitud.val();
+      if (valorSeleccionado === '2') {
+        // Ocultar secciones
+        $pedidosEx.hide();
+        $etiquetasEx.hide();
+      } else {
+        // Mostrar secciones
+        $pedidosEx.show();
+        $etiquetasEx.show();
+      }
+    });
+  });
+
+  $(document).ready(function () {
+    let sectionCount = 0;
+
+    $('#add-characteristics').click(function () {
+        sectionCount++;
+        let newSection = $('#caracteristicas_Ex').clone();
+        newSection.attr('id', 'caracteristicas_Ex_' + sectionCount);
+        newSection.find('input').val('');
+        newSection.find('select').prop('selectedIndex', 0);
+        newSection.find('input, select').each(function () {
+            let name = $(this).attr('name');
+            if (name) {
+                $(this).attr('name', name.replace(/\[\d+\]/, '[' + sectionCount + ']'));
+            }
+        });
+        newSection.appendTo('#sections-container');
+
+    });
+
+    $('#delete-characteristics').click(function () {
+        if (sectionCount > 0) {
+            $('#caracteristicas_Ex_' + sectionCount).remove();
+            sectionCount--;
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Advertencia',
+                text: 'No se puede eliminar la sección original.',
+                customClass: {
+                    confirmButton: 'btn btn-warning'
+                }
+            });
+        }
+    });
+});
+
+
+
+
+});
 
 
