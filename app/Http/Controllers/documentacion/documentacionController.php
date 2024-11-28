@@ -183,9 +183,7 @@ class documentacionController extends Controller
                     </tr>';
         }
 
-        $documentos3 = Documentacion::where('tipo', 'Marcas')
-          ->with('documentacionUrls') // Eager loading de la relación
-          ->get();
+       
 
         $empresa = empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
@@ -193,40 +191,7 @@ class documentacionController extends Controller
 
 
 
-        foreach ($documentos3 as $indexD => $documento) {
-
-          $urlPrimera = $documento->documentacionUrls->first();
-
-          $url = '';
-
-          if (!empty($urlPrimera)) {
-            $url = $urlPrimera->url;
-          }
-
-
-          if (!empty($url)) {
-            $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
-          } else {
-            $mostrarDocumento = '---';
-          }
-
-
-          $contenidoDocumentosMarcas = $contenidoDocumentosMarcas . '<tr>
-                      <td>' . ($indexD + 1) . '</td>
-                      <td class="text-wrap text-break"><b>' . $documento->nombre . '</b></td>
-                      <td class="text-end">
-                          <input class="form-control form-control-sm" type="file" id="file' . $documento->id_documento . '" data-id="' . $documento->id_documento . '" name="url[]">
-                                <input value="' . $documento->id_documento . '" class="form-control" type="hidden" name="id_documento[]">
-                                <input value="' . $documento->nombre . '" class="form-control" type="hidden" name="nombre_documento[]">
-                      </td>
-                      <td class="text-end fw-medium">   
-                      
-                         ' . $mostrarDocumento . '
-                      
-                     </td>
-                      <td class="text-success fw-medium text-end">----</td>
-                    </tr>';
-        }
+        
 
 
         $documentos = Documentacion::where('subtipo', $documentosActividad)
@@ -344,6 +309,48 @@ print_r($instalaciones->getBindings());*/
 
         
         foreach ($marcas as $indexII => $marca) {
+
+          $documentos3 = Documentacion::where('tipo', 'Marcas')
+          ->with(['documentacionUrls' => function ($query) use ($marca) {
+              $query->where('id_relacion', $marca->id_marca); // Filtrar registros de la relación
+          }])
+          ->get();
+      
+          $contenidoDocumentosMarcas = '';
+          foreach ($documentos3 as $indexD => $documento) {
+
+            $urlPrimera = $documento->documentacionUrls->first();
+  
+            $url = '';
+  
+            if (!empty($urlPrimera)) {
+              $url = $urlPrimera->url;
+            }
+  
+  
+            if (!empty($url)) {
+              $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
+            } else {
+              $mostrarDocumento = '---';
+            }
+  
+  
+            $contenidoDocumentosMarcas = $contenidoDocumentosMarcas . '<tr>
+                        <td>' . ($indexD + 1) . '</td>
+                        <td class="text-wrap text-break"><b>' . $documento->nombre . '</b></td>
+                        <td class="text-end">
+                            <input class="form-control form-control-sm" type="file" id="file' . $documento->id_documento . '" data-id="' . $documento->id_documento . '" name="url[]">
+                                  <input value="' . $documento->id_documento . '" class="form-control" type="hidden" name="id_documento[]">
+                                  <input value="' . $documento->nombre . '" class="form-control" type="hidden" name="nombre_documento[]">
+                        </td>
+                        <td class="text-end fw-medium">   
+                        
+                           ' . $mostrarDocumento . '
+                        
+                       </td>
+                        <td class="text-success fw-medium text-end">----</td>
+                      </tr>';
+          }
         
           $id_relacion_array = ''; // Inicializar la cadena para los inputs en cada iteración
 
