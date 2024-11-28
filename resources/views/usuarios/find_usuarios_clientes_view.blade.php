@@ -11,7 +11,9 @@
   'resources/assets/vendor/libs/select2/select2.scss',
   'resources/assets/vendor/libs/@form-validation/form-validation.scss',
   'resources/assets/vendor/libs/animate-css/animate.scss',
-  'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss'
+  'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
+//Animacion "loading"
+  'resources/assets/vendor/libs/spinkit/spinkit.scss'
 ])
 @endsection
 
@@ -149,7 +151,7 @@
   <!-- Offcanvas to add new user -->
   <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
     <div class="offcanvas-header border-bottom">
-      <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Registrar Usuario</h5>
+      <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Titulo Agregar</h5>
       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body mx-0 flex-grow-0 h-100">
@@ -188,7 +190,7 @@
           <label for="id_contacto">Persona de contacto CIDAM</label>
         </div>
         
-        <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
+        <button type="submit" id="registrar-editar" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
       </form>
     </div>

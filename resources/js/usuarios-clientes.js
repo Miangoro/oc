@@ -401,7 +401,7 @@ $(function () {
 
     // sweetalert for confirmation of delete
     Swal.fire({
-      title: '¿Está seguro de eliminar ese usuario?',
+      title: '¿Está seguro de eliminar este usuario?',
       text: "¡No podrá revertirlo!",
       icon: 'warning',
       showCancelButton: true,
@@ -438,9 +438,9 @@ $(function () {
         Swal.fire({
           title: 'Cancelado',
           text: '¡El usuario no ha sido eliminado!',
-          icon: 'error',
+          icon: 'info',
           customClass: {
-            confirmButton: 'btn btn-success'
+            confirmButton: 'btn btn-primary'
           }
         });
       }
@@ -448,18 +448,36 @@ $(function () {
   });
 
 
+
+
+//RECIBE LOS DATOS DEL PDF
   $(document).on('click', '.pdf', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
-        var iframe = $('#pdfViewer');
-        iframe.attr('src', '../pdf_asignacion_usuario/'+id);
-
-        $("#titulo_modal").text("Carta de asignación de usuario y contraseña para plataforma del OC");
-        $("#subtitulo_modal").text(registro);
+      var iframe = $('#pdfViewer');//contenido
+      var spinner = $('#cargando');
+      
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+      spinner.show();
+      iframe.hide();
+    //Cargar el PDF con el ID
+      iframe.attr('src', '../pdf_asignacion_usuario/'+id);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+      $("#NewPestana").attr('href', '../pdf_asignacion_usuario/'+id).show();
+    //Titulos
+      $("#titulo_modal").text("Carta de asignación de usuario y contraseña para plataforma del OC");
+      $("#subtitulo_modal").text(registro);
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+      iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+      });
 });
 
 
-  // edit record
+
+
+//EDIT record
   $(document).on('click', '.edit-record', function () {
     var user_id = $(this).data('id'),
       dtrModal = $('.dtr-bs-modal.show');
@@ -471,6 +489,7 @@ $(function () {
 
     // changing the title of offcanvas
     $('#offcanvasAddUserLabel').html('Editar usuario');
+    $('#registrar-editar').html('Editar');
 
     // get data
     $.get(`${baseUrl}user-list\/${user_id}\/edit`, function (data) {
@@ -488,6 +507,7 @@ $(function () {
   $('.add-new').on('click', function () {
     $('#user_id').val(''); //reseting input field
     $('#offcanvasAddUserLabel').html('Agregar usuario');
+    $('#registrar-editar').html('Registrar');
   });
 
   // validating form and updating user's data
@@ -572,7 +592,7 @@ $(function () {
         // sweetalert
         Swal.fire({
           icon: 'success',
-          title: `Correctamente ${status}!`,
+          title: `¡Correctamente ${status}!`,
           text: `Usuario ${status} correctamente.`,
           customClass: {
             confirmButton: 'btn btn-success'

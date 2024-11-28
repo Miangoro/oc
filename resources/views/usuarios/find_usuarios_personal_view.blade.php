@@ -80,7 +80,7 @@
         </div>
        
         
-        <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
+        <button type="submit" id="registrar-editar" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
       </form>
     </div>
