@@ -43,6 +43,7 @@ $(function () {
         { data: 'name' },
         { data: 'email' },
         { data: 'password_original' },
+        { data: 'puesto' },
         { data: 'action' }
       ],
       columnDefs: [

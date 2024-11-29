@@ -8,7 +8,8 @@
   'resources/assets/vendor/libs/@form-validation/form-validation.scss',
     'resources/assets/vendor/libs/animate-css/animate.scss',
   'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
-  'resources/assets/vendor/libs/select2/select2.scss'
+  'resources/assets/vendor/libs/select2/select2.scss',
+  'resources/assets/vendor/libs/spinkit/spinkit.scss'
 ])
 @endsection
 
@@ -127,10 +128,25 @@ $(document).ready(function() {
     var id = $(this).data('id');
         var registro = $(this).data('registro');
             var iframe = $('#pdfViewer');
-            iframe.attr('src', ''+url);
+           
+            var spinner = $('#cargando');
+         
+          spinner.show();
+          iframe.hide();
+    
+    //Cargar el PDF con el ID
+        iframe.attr('src', url);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+      $("#NewPestana").attr('href', url).show();
 
-            //$("#titulo_modal").text("Solicitud de información del cliente");
-            //$("#subtitulo_modal").text(registro);
+      /*$("#titulo_modal").text(titulo);
+      $("#subtitulo_modal").text(registro); */ 
+
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+      iframe.on('load', function () {
+        spinner.hide();
+        iframe.show();
+      });
   }
 
   document.getElementById('uploadForm').addEventListener('submit', function(e) {

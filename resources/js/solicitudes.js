@@ -26,6 +26,7 @@ $(function () {
         });
       }
     },
+
     columns: [
       { data: '' },
       { data: '' },
@@ -41,11 +42,8 @@ $(function () {
       { data: '' },
       { data: 'estatus' },
       { data: 'action' }
-
-
-
-
     ],
+
     columnDefs: [
       {
         // For Responsive
@@ -342,6 +340,9 @@ $(function () {
       }
     }
   });
+
+
+
 
   var dt_user_table = $('.datatables-solicitudes'),
     select2Elements = $('.select2')
@@ -1648,17 +1649,31 @@ $(function () {
     var url = $(this).data('url');
     var registro = $(this).data('registro');
     var id_solicitud = $(this).data('id');
-    var iframe = $('#pdfViewer');
-    iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
+      var iframe = $('#pdfViewer');
+      var spinner = $('#cargando');
 
-    $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
-    $("#subtitulo_modal").text(registro);
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+      spinner.show();
+      iframe.hide();
+    //Cargar el PDF con el ID
+      iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+      $("#NewPestana").attr('href', 'solicitud_de_servicio/' + id_solicitud).show();
+  
+      $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
+      $("#subtitulo_modal").text(registro);  
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+      iframe.on('load', function () {
+        spinner.hide();
+        iframe.show();
+      });
   });
+
+
 
   var openedFromFirstModal = false;
 
-
-
+  
   $('#abrirModalInstalaciones').on('click', function () {
     var clienteSeleccionado = $('#id_empresa_solicitudes').val();
 

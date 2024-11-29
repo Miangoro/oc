@@ -110,6 +110,7 @@ class documentacionController extends Controller
 
         if ($actividad->id_actividad == 1) {
           $documentosActividad = "Generales Productor";
+          $act_instalacion = "";
         }
 
         if ($actividad->id_actividad == 2) {
@@ -145,6 +146,7 @@ class documentacionController extends Controller
         $empresa = empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
         $razonSocial = $empresa->razon_social;
+        $direccion_fiscal = $empresa->domicilio_fiscal;
 
 
 
@@ -188,6 +190,7 @@ class documentacionController extends Controller
         $empresa = empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
         $razonSocial = $empresa->razon_social;
+        $direccion_fiscal = $empresa->domicilio_fiscal;
 
 
 
@@ -244,7 +247,7 @@ class documentacionController extends Controller
 
 
 
-        $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)->where('tipo', 'like', '%'.$act_instalacion.'%')->get();
+        $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)->where('tipo', 'like', '%'.$act_instalacion.'%')->get(); //Se va a ocultar los tipo 1 que son para predios
 
 
         $contenidoInstalacionesGenerales = '
@@ -253,7 +256,7 @@ class documentacionController extends Controller
               <table class="table table-sm table-bordered">
                 <thead class="bg-secondary text-white">
                   <tr>
-                    <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3"><b>Documentación general</b></th>
+                    <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3"><b>Documentación general</b><br><b style="font-size:12px" class="badge bg-primary">'.$direccion_fiscal.'</b></th>
                   </tr>
                   <tr>
                     <th class="bg-transparent border-bottom">#</th>
@@ -429,7 +432,7 @@ print_r($instalaciones->getBindings());*/
   <!-- Top Referral Source Mobile  -->
   <div class="col-xxl-12">
     <div class="card"> 
-      <img src="' . asset('assets/img/branding/banner_documentos.png') . '" alt="timeline-image" class="card-img-top h-px-100" style="object-fit: cover;">
+      <img src="' . asset('assets/img/branding/banner_documentos.png') . '" alt="timeline-image" class="card-img-top h-px-200" style="object-fit: cover;">
       <div class="card-header d-flex justify-content-between">
         <div>
           <h5 class="card-title mb-1">' . $numeroCliente . ' ' . $razonSocial . ' (' . $norma . ')</h5>
