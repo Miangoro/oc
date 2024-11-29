@@ -235,21 +235,22 @@ $(function () {
             }
           },
           {
-            extend: 'excel',
-            title: 'Solicitudes',
+            extend: 'excel',//extension a descargar
+            title: 'Solicitudes de servicio',
             text: '<i class="ri-file-excel-line me-1"></i>Excel',
             className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            exportOptions: { //define como se exportan los datos
+              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], //N°. de columnas a exportar
+              modifier: { //Incluye todos los datos
+                page: 'all', //Exporta todos los datos de todas las páginas
+                //order: 'current' //Mantiene el orden actual
+                },
               format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 8 || columnIndex === 11) {
+                body: function (inner, rowIndex, columnIndex) {//Personaliza el contenido de las celdas
+                  /*if (columnIndex === 8 || columnIndex === 11) { //Reemplaza el contenido de la celda con la cadena return
                     return 'ViewSuspend';
-                  }
-                  if (columnIndex === 1) { // Asegúrate de que el índice de columna es el correcto para el ID
-                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
-                  }
-                  return inner;
+                  }*/
+                  return inner.replace(/<[^>]*>/g, '');//Elimina todas las etiquetas HTML de las columnas      
                 }
               }
             }
