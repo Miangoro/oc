@@ -60,7 +60,10 @@ class solicitudesModel extends Model
     {
         return $this->hasOne(solicitudTipo::class, 'id_tipo', 'id_tipo');
     }
-
+    public function marcas()
+    {
+        return $this->hasMany(marcas::class, 'id_empresa', 'id_empresa');
+    }
 
 
 }

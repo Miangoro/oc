@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\tipos;
+use App\Models\marcas;
 use Illuminate\Http\Request;
 
 class solicitudesController extends Controller
@@ -25,14 +26,13 @@ class solicitudesController extends Controller
     {
         $solicitudesTipos = solicitudTipo::all();
         $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
-        $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = estados::all(); // Obtener todos los estados
+        $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $organismos = organismos::all(); // Obtener todos los estados
         $LotesGranel = LotesGranel::all();
         $categorias = categorias::all();
         $clases = clases::all();
         $tipos = tipos::all();
-
 
 
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
@@ -554,4 +554,40 @@ class solicitudesController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Solicitud actualizada correctamente']);
     }
+
+    public function obtenerMarcasPorEmpresa($id_empresa)
+    {
+        $marcas = marcas::where('id_empresa', $id_empresa)->get();
+
+        foreach ($marcas as $marca) {
+            // Decodificar el JSON y manejar posibles errores
+            $etiquetado = json_decode($marca->etiquetado, true);
+
+            // Verificar si la decodificación fue exitosa
+            if (is_null($etiquetado)) {
+                // Manejar el caso donde el JSON es inválido
+                $marca->tipo_nombre = [];
+                $marca->clase_nombre = [];
+                $marca->categoria_nombre = [];
+                continue; // O puedes lanzar un error si prefieres
+            }
+
+            // Verificar la existencia de las claves antes de acceder a ellas
+            $tipos = isset($etiquetado['id_tipo']) ? tipos::whereIn('id_tipo', $etiquetado['id_tipo'])->pluck('nombre')->toArray() : [];
+            $clases = isset($etiquetado['id_clase']) ? clases::whereIn('id_clase', $etiquetado['id_clase'])->pluck('clase')->toArray() : [];
+            $categorias = isset($etiquetado['id_categoria']) ? categorias::whereIn('id_categoria', $etiquetado['id_categoria'])->pluck('categoria')->toArray() : [];
+
+            // Añadir los nombres a la marca
+            $marca->tipo_nombre = $tipos;
+            $marca->clase_nombre = $clases;
+            $marca->categoria_nombre = $categorias;
+        }
+
+        return response()->json($marcas);
+    }
+
+
+
+
+
 }

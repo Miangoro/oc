@@ -9,7 +9,7 @@ class marcas extends Model
 {
 
       use HasFactory;
-  
+
       protected $table = 'marcas';
       protected $primaryKey = 'id_marca';
       protected $fillable = [
@@ -20,7 +20,7 @@ class marcas extends Model
           'id_norma',
           'etiquetado'
       ];
-  
+
       public function empresa()
       {
           return $this->belongsTo(empresa::class, 'id_empresa');
@@ -35,5 +35,25 @@ class marcas extends Model
       {
           return $this->belongsTo(catalogo_norma_certificar::class, 'id_norma', 'id_norma');
       }
-      
+          // Relación con la tabla de solicitudes
+    public function solicitudes()
+    {
+        return $this->hasMany(solicitudesModel::class, 'id_empresa', 'id_empresa');
+    }
+    // Definir las relaciones con las tablas de tipos, clases y categorías
+    public function tipos()
+    {
+        return $this->hasMany(tipos::class, 'id_tipo', 'id_tipo');
+    }
+
+    public function clases()
+    {
+        return $this->hasMany(clases::class, 'id_clase', 'id_clase');
+    }
+
+    public function categorias()
+    {
+        return $this->hasMany(categorias::class, 'id_categoria', 'id_categoria');
+    }
+
 }
