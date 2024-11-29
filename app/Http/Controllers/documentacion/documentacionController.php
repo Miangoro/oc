@@ -284,7 +284,7 @@ print_r($instalaciones->getBindings());*/
             <table class="table table-sm table-bordered">
               <thead class="bg-secondary text-white">
                 <tr>
-                  <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-4"><span class="fs-6">Instalación:</span><br> <b class="badge bg-primary">' . $instalacion->direccion_completa . '</b></th>
+                  <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-4"><span class="fs-6">Instalación:</span><br> <b style="font-size:12px" class="badge bg-primary">' . $instalacion->direccion_completa . '</b></th>
                 </tr>
                 <tr>
                   <th class="bg-transparent border-bottom">#</th>
@@ -367,7 +367,7 @@ print_r($instalaciones->getBindings());*/
                   <table class="table table-sm table-bordered">
                     <thead class="bg-secondary text-white">
                       <tr>
-                        <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3">Marca: <b><span class="badge bg-warning">' . $marca->marca . '</span></b></th>
+                        <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-6">Marca:<br><b><span style="font-size:12px" class="badge bg-warning">' . $marca->marca . '</span></b></th>
                       </tr>
                       <tr>
                         <th class="bg-transparent border-bottom">#</th>
