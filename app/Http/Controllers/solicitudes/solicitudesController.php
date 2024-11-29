@@ -262,7 +262,7 @@ class solicitudesController extends Controller
             'id_lote_granel' => $request->id_lote_granel,
             'id_categoria' => $request->id_categoria,
             'id_clase' => $request->id_clase,
-            'id_tipo' => $request->id_tipo,
+            'id_tipo_maguey' => $request->id_tipo_maguey,
             'analisis' => $request->analisis,
             'volumen' => $request->volumen,
             'fecha_corte' => $request->fecha_corte,

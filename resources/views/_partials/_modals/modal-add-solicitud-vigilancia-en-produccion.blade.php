@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12 mb-6">
+                        <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6 input-group ">
                                 <select class=" form-select select id_instalacion" id="id_instalacion"
                                     name="id_instalacion" aria-label="id_instalacion">
@@ -89,11 +89,12 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select2 form-select " id="id_tipo_maguey" name="id_tipo_maguey[]" aria-label="id_tipo_maguey" multiple>
-                            @foreach ($tipos as $tipos)
-                                <option value="{{ $tipos->id_tipo }}">{{ $tipos->nombre }} | {{ $tipos->cientifico }}
-                                </option>
-                            @endforeach
+                        <select class="select2 form-select " id="id_tipo_maguey" name="id_tipo_maguey[]" aria-label="" multiple>
+                            <option value="Productora">Productora</option>
+                            <option value="Envasadora">Envasadora</option>
+                            <option value="Comercializadora">Comercializadora</option>
+                            <option value="Almacen y bodega">Almacén y bodega</option>
+                            <option value="Area de maduracion">Área de maduración</option>
                         </select>
                         <label for="id_tipo_maguey">Ingresa tipo de Maguey</label>
                     </div>
@@ -194,7 +195,6 @@
             success: function(response) {
                 $('#id_categoria').val(response.lotes_granel.id_categoria);
                 $('#id_clase').val(response.lotes_granel.id_clase);
-                $('#id_tipo_maguey').val(response.lotes_granel.id_tipo).trigger('change');
                 $('#analisis').val(response.lotes_granel.folio_fq);
                 $('#volumen').val(response.lotes_granel.cont_alc);
                 if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
