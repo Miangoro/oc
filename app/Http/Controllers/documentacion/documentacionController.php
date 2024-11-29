@@ -244,7 +244,7 @@ class documentacionController extends Controller
 
 
 
-        $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)->where('tipo', 'like', $act_instalacion)->get();
+        $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)->where('tipo', 'like', '%'.$act_instalacion.'%')->get();
 
 
         $contenidoInstalacionesGenerales = '
@@ -269,8 +269,8 @@ class documentacionController extends Controller
               </table>
             </div>';
 
-        /*  $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)
-                ->where('tipo', '=', $act_instalacion);
+       /*  $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)
+                ->where('tipo', 'like', $act_instalacion);
 
 $instalaciones->toSql();
 
