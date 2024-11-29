@@ -52,6 +52,7 @@
           <th>Usuario</th>
           <th>Correo</th>
           <th>Contraseña</th>
+          <th>Puesto</th>
           <th>Acciones</th>
         </tr>
       </thead>
