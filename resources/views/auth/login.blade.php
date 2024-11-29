@@ -177,8 +177,9 @@
                 <div
                     class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-sm-12 px-12 py-6">
                     <div class="w-px-400 mx-auto pt-5 pt-lg-0">
+                        <h4 class="text-center">¡Bienvenido!</h4>
+
                         <img height="150px" src="{{ asset('assets/img/branding/logo.png') }}" alt="">
-                        <h4 class="mb-1">Bienvenido a {{ config('variables.templateName') }} </h4>
                         <p class="mb-5">Por favor, inicie sesión</p>
                         @if (session('status'))
                             <div class="alert alert-success mb-3" role="alert">
@@ -297,9 +298,9 @@
                 <div
                     class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-6 px-4">
                     <div class="w-100 mx-auto">
+                        <h4 class="text-center">¡Bienvenido!</h4>
                         <img class="d-block mx-auto mb-3" height="100px"
                             src="{{ asset('assets/img/branding/logo.png') }}" alt="">
-                        <h4 class="text-center mb-1">Bienvenido a {{ config('variables.templateName') }} </h4>
                         <p class="text-center mb-4">Por favor, inicie sesión</p>
 
                         @if (session('status'))

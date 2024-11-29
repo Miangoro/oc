@@ -597,7 +597,7 @@ $(function () {
             }
           }
         },
-        presentacion: {
+/*         presentacion: {
           validators: {
             notEmpty: {
               message: 'Por favor introduzca una cantidad'
@@ -613,7 +613,7 @@ $(function () {
               message: 'El número no debe comenzar con 0'
             }
           }
-        },
+        }, */
         destino_lote: {
           validators: {
             notEmpty: {
@@ -621,7 +621,7 @@ $(function () {
             }
           }
         },
-        cant_botellas: {
+/*         cant_botellas: {
           validators: {
             notEmpty: {
               message: 'Por favor introduzca una cantidad'
@@ -637,7 +637,7 @@ $(function () {
               message: 'El número no debe comenzar con 0'
             }
           }
-        },
+        }, */
 
         lugar_envasado: {
           validators: {

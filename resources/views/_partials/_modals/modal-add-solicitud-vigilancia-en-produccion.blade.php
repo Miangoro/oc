@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-12 mb-6">
                             <div class="form-floating form-floating-outline mb-6 input-group ">
                                 <select class=" form-select select id_instalacion" id="id_instalacion"
                                     name="id_instalacion" aria-label="id_instalacion">

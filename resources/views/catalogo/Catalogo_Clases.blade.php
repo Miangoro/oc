@@ -42,7 +42,7 @@
 <!-- Users List Table -->
 <div class="card">
   <div class="card-header pb-0">
-    <h3 class="card-title mb-0">Catalago Clases</h3>
+    <h3 class="card-title mb-0">Catálogos Clases</h3>
   </div>
   <div class="card-datatable table-responsive">
     <table class="datatables-users table">
