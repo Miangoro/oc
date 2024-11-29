@@ -110,6 +110,7 @@ class documentacionController extends Controller
 
         if ($actividad->id_actividad == 1) {
           $documentosActividad = "Generales Productor";
+          $act_instalacion = "";
         }
 
         if ($actividad->id_actividad == 2) {
@@ -246,7 +247,7 @@ class documentacionController extends Controller
 
 
 
-        $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)->where('tipo', 'like', '%'.$act_instalacion.'%')->get();
+        $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)->where('tipo', 'like', '%'.$act_instalacion.'%')->get(); //Se va a ocultar los tipo 1 que son para predios
 
 
         $contenidoInstalacionesGenerales = '

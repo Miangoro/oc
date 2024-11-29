@@ -43,12 +43,11 @@
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="me-1">
-              <p class="text-heading mb-1">Clientes</p>
+              <p class="text-heading mb-1">Clientes activos</p>
               <div class="d-flex align-items-center">
                 <h4 class="mb-1 me-2">{{$empresas}}</h4>
-                <p class="text-success mb-1">(100%)</p>
+                <p class="text-success mb-1">({{ $porcentaje_activas }}%)</p>
               </div>
-              <small class="mb-0">Clientes totales</small>
             </div>
             <div class="avatar">
               <div class="avatar-initial bg-label-primary rounded-3">
@@ -67,9 +66,9 @@
               <p class="text-heading mb-1">Personas físicas</p>
               <div class="d-flex align-items-center">
                 <h4 class="mb-1 me-1">{{$fisicas}}</h4>
-                <p class="text-success mb-1">(+95%)</p>
+                <p class="text-success mb-1"></p>
               </div>
-              <small class="mb-0">Recent analytics</small>
+              
             </div>
             <div class="avatar">
               <div class="avatar-initial bg-label-success rounded-3">
@@ -88,9 +87,9 @@
               <p class="text-heading mb-1">Personas morales</p>
               <div class="d-flex align-items-center">
                 <h4 class="mb-1 me-1">{{$morales}}</h4>
-                <p class="text-danger mb-1">(0%)</p>
+                <p class="text-danger mb-1"></p>
               </div>
-              <small class="mb-0">Recent analytics</small>
+             
             </div>
             <div class="avatar">
               <div class="avatar-initial bg-label-danger rounded-3">
@@ -106,12 +105,12 @@
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="me-1">
-              <p class="text-heading mb-1">Verification Pending</p>
+              <p class="text-heading mb-1">Clientes inactivos</p>
               <div class="d-flex align-items-center">
-                <h4 class="mb-1 me-1">{{$empresas}}</h4>
-                <p class="text-success mb-1">(+6%)</p>
+                <h4 class="mb-1 me-1">{{$empresas_inactivas}}</h4>
+                <p class="text-success mb-1">({{ $porcentaje_inactivas }}%)</p>
               </div>
-              <small class="mb-0">Recent analytics</small>
+            
             </div>
             <div class="avatar">
               <div class="avatar-initial bg-label-warning rounded-3">

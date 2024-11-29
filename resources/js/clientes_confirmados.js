@@ -70,26 +70,12 @@ $(function () {
           targets: 3,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
-            var $name = full['razon_social'];
-            /*ANTERIOR
-            var stateNum = Math.floor(Math.random() * 6);
-            var states = ['success', 'danger', 'warning', 'info', 'dark', 'primary', 'secondary'];
-            var $state = states[stateNum];
-            var $row_output =
-              '<div class="d-flex justify-content-start align-items-center user-name">' +
-              '<div class="avatar-wrapper">' +
-              '<div class="avatar avatar-sm me-3">' +
-              '</div>' +
-              '</div>' +
-              '<div class="d-flex flex-column">' +
-              '<a href="' +
-              userView +
-              '" class="text-truncate text-heading"><span class="fw-medium">' +
-              $name +
-              '</span></a>' +
-              '</div>' +
-              '</div>';
-            return $row_output;*/
+            var $name = '';
+            if(full['es_maquilador']=='Si'){
+              $name = '<span class="small badge bg-primary" style="background: linear-gradient(90deg, #007bff, #00c6ff); font-size:10px; color: white; font-weight: bold;border-radius: 0.25rem;padding: 0.5em 1em;">Es maquilador</span><br>'+full['razon_social'];
+            }else{
+              $name = full['razon_social'];
+            }
             return $name;
           }
         },
