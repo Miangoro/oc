@@ -1001,7 +1001,7 @@ $(document).ready(function () {
           }
         }
       },
-      edit_cant_botellas: {
+/*       edit_cant_botellas: {
         validators: {
           notEmpty: {
             message: 'Por favor ingrese una cantidad'
@@ -1014,7 +1014,7 @@ $(document).ready(function () {
             message: 'Por favor ingrese una cantidad'
           }
         }
-      },
+      }, */
 
       edit_unidad: {
         validators: {
@@ -1024,13 +1024,13 @@ $(document).ready(function () {
         }
       },
 
-      edit_volumen_total: {
+/*       edit_volumen_total: {
         validators: {
           notEmpty: {
             message: 'Por favor llene los campos de detino lote y cantidad de botellas'
           }
         }
-      }
+      } */
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
