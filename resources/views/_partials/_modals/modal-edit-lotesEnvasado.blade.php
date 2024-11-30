@@ -56,9 +56,14 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
-                                    <input class="form-control" type="text" placeholder="Destino lote"
-                                        id="edit_destino_lote" name="edit_destino_lote" />
+                                    <select id="edit_destino_lote" name="edit_destino_lote" class="form-select">
+                                        <option value="" disabled selected>Selecciona el destino del lote</option>
+                                        <option value="1">Nacional</option>
+                                        <option value="2">Exportación</option>
+                                        <option value="3">Stock</option>
+                                    </select>
                                     <label for="edit_destino_lote">Destino lote</label>
+
                                 </div>
                             </div>
                         </div>

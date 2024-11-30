@@ -628,8 +628,9 @@ $(function () {
 
 
         // Obtenemos los documentos correspondientes por id_doc
-        var documento_etiquetas = documentos.find(doc => doc.nombre_documento === 'Etiquetas' && doc.id_doc === (index + 1));
-        var documento_corrugado = documentos.find(doc => doc.nombre_documento === 'Corrugado' && doc.id_doc === (index + 1));
+        var documento_etiquetas = documentos.find(doc => doc.nombre_documento === 'Etiquetas' && (!doc.id_doc || doc.id_doc === (index + 1)));
+        var documento_corrugado = documentos.find(doc => doc.nombre_documento === 'Corrugado' && (!doc.id_doc || doc.id_doc === (index + 1)));
+        
 
         var newRow = `
                   <tr>
@@ -668,7 +669,7 @@ $(function () {
                           <div style="display: flex; align-items: center;">
                               <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
                               ${documento_etiquetas ?
-            `<a href="/storage/uploads/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank" style="margin-left: 10px;">
+            `<a href="/files/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank" style="margin-left: 10px;">
                                       <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
                                   </a>`
             : ''}
@@ -680,7 +681,7 @@ $(function () {
                           <div style="display: flex; align-items: center;">
                               <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
                               ${documento_corrugado ?
-            `<a href="/storage/uploads/${data.numeroCliente}/${documento_corrugado.url}" target="_blank" style="margin-left: 10px;">
+            `<a href="/files/${data.numeroCliente}/${documento_corrugado.url}" target="_blank" style="margin-left: 10px;">
                                       <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
                                   </a>`
             : ''}
