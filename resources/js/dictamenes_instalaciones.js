@@ -95,11 +95,11 @@ $('#edit_fecha_emision').on('change', function() {
        columns: [
          // columns according to JSON
          { data: '' },
-         { data: '' },
          { data: 'tipo_dictamen' },
          { data: 'num_dictamen' },
          { data: 'num_servicio' },
          { data: 'razon_social' },
+         { data: 'direccion_completa' },
          { data: 'fecha_emision' },
          { data: '' },
          { data: 'action' }

@@ -60,6 +60,7 @@
                     <th>No. dictamen</th>
                     <th>No. Servicio</th>
                     <th>Cliente</th>
+                    <th>Domicilio de Instalacion</th>
                     <th>Fecha de emisión</th>
                     <th>Dictamen</th>
                     <th>ACCIONES</th>
