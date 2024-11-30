@@ -162,28 +162,24 @@ $(function () {
           render: function (data, type, row) {
             var inicial = '';
             var nuevo = '';
-
-            if (row.inicial != 'N/A') {
+        
+            if (row.inicial && row.inicial !== 'N/A') {
               inicial =
                 '<br><span class="fw-bold text-dark small">SKU inicial:</span><span class="small"> ' +
                 row.inicial +
                 '</span>';
             }
-            if (row.nuevo != 'N/A') {
+            if (row.nuevo && row.nuevo !== 'N/A') {
               nuevo =
                 '<br><span class="fw-bold text-dark small">SKU nuevo:</span><span class="small"> ' +
                 row.nuevo +
                 '</span>';
             }
-
-            return (
-              '<span class="fw-bold text-dark small">Inicial:</span> <span class="small"> ' +
-              row.inicial +
-              '</span><br><span class="fw-bold text-dark small">Nuevo:</span><span class="small"> ' +
-              row.nuevo
-            );
+        
+            return inicial + nuevo;
           }
-        },
+        }
+,        
         { data: 'estatus' }, //status
         { data: 'action' }
       ],
