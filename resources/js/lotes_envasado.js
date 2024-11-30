@@ -873,61 +873,64 @@ $(function () {
     $(this).closest('tr').remove();
   });
 
-  //Añadir row
-  $(document).ready(function () {
-    $('.add-row').click(function () {
-      // Verificar si se ha seleccionado un cliente
-      if ($('#id_empresa').val() === '') {
-        // Mostrar la alerta de SweetAlert2
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false // Asegura que los estilos personalizados se apliquen
-        });
-        return;
-      }
+//Añadir row
+$(document).ready(function () {
+  $('.add-row').click(function () {
+    // Verificar si se ha seleccionado un cliente
+    if ($('#id_empresa').val() === '') {
+      // Mostrar la alerta de SweetAlert2
+      Swal.fire({
+        icon: 'warning',
+        title: 'Espere!',
+        text: 'Por favor, selecciona un cliente primero.',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        },
+        buttonsStyling: false // Asegura que los estilos personalizados se apliquen
+      });
+      return;
+    }
 
-      // Si el cliente está seleccionado, añade una nueva fila
-      var newRow = `
-          <tr>
-              <th>
-                  <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
-              </th>
-              <td>
-                  <select class="id_lote_granel form-control select2-nuevo id_lote_granel" name="id_lote_granel[]">
-                  </select>
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
-              </td>
-          </tr>`;
-      $('#contenidoGraneles').append(newRow);
+    // Obtener el valor de volumen_parcial calculado
+    var volumenParcial = document.getElementById('volumen_parcial').value;
 
-      // Re-inicializar select2 en la nueva fila
-      $('#contenidoGraneles')
-        .find('.select2-nuevo')
-        .select2({
-          dropdownParent: $('#addlostesEnvasado'), // Asegúrate de que #myModal sea el id de tu modal
-          width: '100%',
-          dropdownCssClass: 'select2-dropdown'
-        });
+    // Si el valor de volumen_parcial no está vacío, añade una nueva fila
+    var newRow = `
+        <tr>
+            <th>
+                <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+            </th>
+            <td>
+                <select class="id_lote_granel form-control select2-nuevo id_lote_granel" name="id_lote_granel[]">
+                </select>
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm " name="volumen_parcial[]" value="${volumenParcial}">
+            </td>
+        </tr>`;
+    $('#contenidoGraneles').append(newRow);
 
-      $('.select2-dropdown').css('z-index', 9999);
+    // Re-inicializar select2 en la nueva fila
+    $('#contenidoGraneles')
+      .find('.select2-nuevo')
+      .select2({
+        dropdownParent: $('#addlostesEnvasado'), // Asegúrate de que #myModal sea el id de tu modal
+        width: '100%',
+        dropdownCssClass: 'select2-dropdown'
+      });
 
-      // Copiar opciones del primer select al nuevo select
-      var options = $('#contenidoGraneles tr:first-child .id_lote_granel').html();
-      $('#contenidoGraneles tr:last-child .id_lote_granel').html(options);
-    });
+    $('.select2-dropdown').css('z-index', 9999);
 
-    // Función para eliminar una fila
-    $(document).on('click', '.remove-row', function () {
-      $(this).closest('tr').remove();
-    });
+    // Copiar opciones del primer select al nuevo select
+    var options = $('#contenidoGraneles tr:first-child .id_lote_granel').html();
+    $('#contenidoGraneles tr:last-child .id_lote_granel').html(options);
   });
+
+  // Función para eliminar una fila
+  $(document).on('click', '.remove-row', function () {
+    $(this).closest('tr').remove();
+  });
+});
 
 
   //update valiacion: en editar
