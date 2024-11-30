@@ -152,8 +152,39 @@ $(function () {
             );
           }
         },
-        { data: 'destino_lote' },
-
+        {
+          data: 'destino_lote',
+          className: 'text-center',
+          render: function (data, type, full, meta) {
+            var destinoText = '';
+            var colorClass = '';
+        
+            switch (data) {
+              case 1:
+                destinoText = 'Nacional';
+                colorClass = 'info'; // Azul
+                break;
+              case 2:
+                destinoText = 'Exportación';
+                colorClass = 'success'; // Verde
+                break;
+              case 3:
+                destinoText = 'Stock';
+                colorClass = 'warning'; // Amarillo
+                break;
+              default:
+                destinoText = 'Desconocido';
+                colorClass = 'secondary'; // Gris
+            }
+        
+            return `
+              <span class="badge rounded-pill bg-label-${colorClass}">
+                ${destinoText}
+              </span>
+            `;
+          }
+        }
+        ,        
         { data: 'lugar_envasado' },
         {
           data: null,
