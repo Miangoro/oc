@@ -46,12 +46,11 @@
          { data: 'num_dictamen' },     //3
          { data: 'num_certificado' },  //4
          { data: 'maestro_mezcalero' },//5
-         { data: 'fecha_vigencia' },   //6
-         { data: 'fecha_vencimiento' },//7
-         { data: 'id_revisor' },       //8
-         { data: 'Certificado' },      //9
-         { data: 'estatus' },          //10
-         { data: 'actions'},           //11
+         { data: 'fechas' },           //6
+         { data: 'id_revisor' },       //7
+         { data: 'Certificado' },      //8
+         { data: 'estatus' },          //9
+         { data: 'actions'},           //10
        ],
        columnDefs: [
          {
@@ -132,21 +131,28 @@
             }
           },
           {
-            targets: 6,
+            targets: 6, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
-              var $fecha_vigencia = full['fecha_vigencia'];
-              return '<span class="user-email">' + $fecha_vigencia + '</span>';
+        
+                // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
+                var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A'; // Fecha de vigencia
+                var $fecha_vencimiento = full['fecha_vencimiento'] ?? 'N/A'; // Fecha de vencimiento
+        
+                // Definir los mensajes de fecha con formato
+                var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:</strong> ${$fecha_vigencia}</span>`;
+                var fechaVencimientoMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vencimiento:</strong> ${$fecha_vencimiento}</span>`;
+        
+                // Retorna las fechas en formato de columnas
+                return `
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                        <div>${fechaVigenciaMessage}</div>
+                        <div>${fechaVencimientoMessage}</div>
+                    </div>
+                `;
             }
-          },
+          },   
           {
             targets: 7,
-            render: function (data, type, full, meta) {
-              var $fecha_vencimiento = full['fecha_vencimiento'];
-              return '<span class="user-email">' + $fecha_vencimiento + '</span>';
-            }
-          },
-          {
-            targets: 8,
             render: function (data, type, full, meta) {
                 var id_revisor = full['id_revisor'];   // Obtener el id_revisor
                 var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
@@ -176,17 +182,17 @@
                     </div>
                 `;
             }
-        },
+          },
           {
             // Abre el pdf del certificado
-            targets: 9,
+            targets: 8,
             className: 'text-center',
             render: function (data, type, full, meta) {
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
             }
           },
           {
-            target: 10, // Suponiendo que este es el índice de la columna que quieres actualizar
+            target: 9, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
                 var estatus = full['estatus']; // Obtener el estatus del certificado
                 
@@ -215,7 +221,7 @@
         },  
          {
            // Actions
-           targets: 11,
+           targets: 10,
            title: 'Acciones',
            searchable: false,
            orderable: false,
