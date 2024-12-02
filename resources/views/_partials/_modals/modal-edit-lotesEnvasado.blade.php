@@ -172,60 +172,56 @@
 
 
 <script>
-
-    
-    function edit_obtenerGraneles() {
-        var empresa = $("#edit_cliente").val();
-        // Hacer una petición AJAX para obtener los detalles de la empresa
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                // Cargar los detalles en el modal
+function edit_obtenerGraneles() {
+    var empresa = $("#edit_cliente").val();
+    // Hacer una petición AJAX para obtener los detalles de la empresa
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            // Iterar por cada select de lotes granel en el modal
+            $('.edit_lote_granel').each(function () {
+                var selectElement = $(this);
+                var selectedValue = selectElement.val(); // Obtener el valor seleccionado actual
+                // Construir las opciones del select
                 var contenido = "";
-                for (let index = 0; index < response.lotes_granel.length; index++) {
-                    contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                        response.lotes_granel[index].nombre_lote + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
-                }
-
-                if (response.lotes_granel.length == 0) {
+                response.lotes_granel.forEach(function (lote) {
+                    contenido += `<option value="${lote.id_lote_granel}" 
+                        ${lote.id_lote_granel == selectedValue ? "selected" : ""}>
+                        ${lote.nombre_lote}</option>`;
+                });
+                if (response.lotes_granel.length === 0) {
                     contenido = '<option value="">Sin lotes a granel registrados</option>';
                 }
-                $('.edit_lote_granel').html(contenido);
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
-            }
-        });
-    }
+                // Actualizar el contenido del select sin perder la selección
+                selectElement.html(contenido).trigger('change');
+            });
+        },
+        error: function() {
+        }
+    });
+}
+
 
     function edit_obtenerMarcas() {
-
-       
         var empresa = $("#edit_cliente").val();
-        // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
             success: function(response) {
-                // Cargar los detalles en el modal
                 var contenido = "";
                 var selected = "";
                 for (let index = 0; index < response.marcas.length; index++) {
                    
                     contenido = '<option value="' + response.marcas[index].id_marca + '">' + response
                         .marcas[index].marca + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
                 }
-
                 if (response.marcas.length == 0) {
                     contenido = '<option value="">Sin marcas registradas</option>';
                 }
                 $('#edit_marca').html(contenido);
             },
             error: function() {
-                //alert('Error al cargar los lotes a granel.');
             }
         });
     }
@@ -233,17 +229,14 @@
 
     function edit_obtenerDirecciones() {
         var empresa = $("#edit_cliente").val();
-        // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
             success: function(response) {
-                // Cargar los detalles en el modal
                 var contenido = "";
                 for (let index = 0; index < response.instalaciones.length; index++) {
                     contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
                         response.instalaciones[index].direccion_completa + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
                 }
 
                 if (response.instalaciones.length == 0) {
@@ -252,20 +245,16 @@
                 $('.edit_Instalaciones').html(contenido);
             },
             error: function() {
-                //alert('Error al cargar los lotes a granel.');
             }
         });
     }
-
 
     document.addEventListener('DOMContentLoaded', function () {
         function calcularVolumenTotal() {
             var cantidadBotellas = parseFloat(document.getElementById('edit_cant_botellas').value) || 0;
             var edit_presentacion = parseFloat(document.getElementById('edit_presentacion').value) || 0;
             var edit_unidad = document.getElementById('edit_unidad').value;
-
             var volumenTotal;
-
             if (edit_unidad === "Litros") {
                 volumenTotal = cantidadBotellas * edit_presentacion;
             } else if (edit_unidad === "Mililitros") {
@@ -275,16 +264,12 @@
             } else {
                 volumenTotal = ''; // Limpiar el campo si la unidad no es Litros ni Mililitros
             }
-
             document.getElementById('edit_volumen_total').value = volumenTotal ? volumenTotal.toFixed(2) : '';
         }
-
         // Añadir eventos de cambio a los campos relevantes
         document.getElementById('edit_cant_botellas').addEventListener('input', calcularVolumenTotal);
         document.getElementById('edit_presentacion').addEventListener('input', calcularVolumenTotal);
         document.getElementById('edit_unidad').addEventListener('change', calcularVolumenTotal);
-    });
-
-    
+    });    
 </script>
 
