@@ -56,4 +56,11 @@ class marcas extends Model
         return $this->hasMany(categorias::class, 'id_categoria', 'id_categoria');
     }
 
+
+    public function documentos()
+{
+    return $this->hasMany(Documentacion_url::class, 'id_empresa', 'id_marca');
+}
+
+
 }

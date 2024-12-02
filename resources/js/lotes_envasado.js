@@ -158,7 +158,7 @@ $(function () {
           render: function (data, type, full, meta) {
             var destinoText = '';
             var colorClass = '';
-        
+
             switch (data) {
               case 1:
                 destinoText = 'Nacional';
@@ -183,7 +183,7 @@ $(function () {
             `;
           }
         }
-        ,        
+        ,
         { data: 'lugar_envasado' },
         {
           data: null,
@@ -192,7 +192,7 @@ $(function () {
           render: function (data, type, row) {
             var inicial = '';
             var nuevo = '';
-        
+
             if (row.inicial && row.inicial !== 'N/A') {
               inicial =
                 '<br><span class="fw-bold text-dark small">SKU inicial:</span><span class="small"> ' +
@@ -207,7 +207,7 @@ $(function () {
             }
             return inicial + nuevo;
           }
-        },        
+        },
         { data: 'estatus' }, //status
         { data: 'action' }
       ],
@@ -573,11 +573,11 @@ $(function () {
           for (let index = 0; index < response.instalaciones.length; index++) {
             // Verifica si la palabra 'Envasadora' está en la cadena
             if (response.instalaciones[index].tipo.includes('Envasadora')) {
-                contenido += '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                    response.instalaciones[index].direccion_completa + '</option>';
+              contenido += '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                response.instalaciones[index].direccion_completa + '</option>';
             }
-        }
-        
+          }
+
           if (contenido === "") {
             contenido = '<option value="">Sin instalaciones de envasado registrados</option>';
           }
@@ -588,7 +588,47 @@ $(function () {
         error: function () { }
       });
     }
+    //Obtener documentos etiqeutas
+    $('#id_marca').on('change', function () {
+      var idMarca = $(this).val();
 
+      if (idMarca) {
+        $.ajax({
+          url: '/obtenerDocumentos/' + idMarca,
+          method: 'GET',
+          success: function (response) {
+            if (response.success) {
+              var contenido = '';
+              if (response.documentos.length > 0) {
+                response.// Supongamos que `documentos` es un array con los documentos obtenidos del servidor
+                  documentos.forEach(documento => {
+                    if (documento.nombre_documento === "Etiquetas") {
+                      contenido += `
+                      <li style="display: flex; align-items: center; margin-bottom: 5px;">
+                      <a href="/storage/uploads/${documento.url}" target="_blank" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+                          <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true" style="margin-right: 10px;"></i>
+                          <span style="color: green;">${documento.nombre_documento}</span>
+                      </a>
+                      </li>`;
+                    }
+                  });
+
+              } else {
+                contenido = '<li>No hay documentos disponibles.</li>';
+              }
+              $('#listaDocumentos').html(contenido);
+            } else {
+              console.error(response.message);
+            }
+          },
+          error: function () {
+            console.error('Error al obtener documentos.');
+          }
+        });
+      } else {
+        $('#listaDocumentos').html('<li>Selecciona una marca primero.</li>');
+      }
+    });
 
     $('#id_empresa').on('change', function () {
       obtenerGraneles();  // Cargar las marcas
@@ -621,23 +661,23 @@ $(function () {
             }
           }
         },
-/*         presentacion: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor introduzca una cantidad'
-            },
-            between: {
-              min: 1,
-              max: Infinity,
-              message: 'El número debe ser superior a 0 y sin negativos'
-            },
-            regexp: {
-              // Expresión regular que asegura que el número no comience con 0 a menos que sea exactamente 0
-              regexp: /^(?!0)\d+$/,
-              message: 'El número no debe comenzar con 0'
-            }
-          }
-        }, */
+        /*         presentacion: {
+                  validators: {
+                    notEmpty: {
+                      message: 'Por favor introduzca una cantidad'
+                    },
+                    between: {
+                      min: 1,
+                      max: Infinity,
+                      message: 'El número debe ser superior a 0 y sin negativos'
+                    },
+                    regexp: {
+                      // Expresión regular que asegura que el número no comience con 0 a menos que sea exactamente 0
+                      regexp: /^(?!0)\d+$/,
+                      message: 'El número no debe comenzar con 0'
+                    }
+                  }
+                }, */
         destino_lote: {
           validators: {
             notEmpty: {
@@ -645,23 +685,23 @@ $(function () {
             }
           }
         },
-/*         cant_botellas: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor introduzca una cantidad'
-            },
-            between: {
-              min: 1,
-              max: Infinity,
-              message: 'El número debe ser superior a 0 y sin negativos'
-            },
-            regexp: {
-              // Expresión regular que asegura que el número no comience con 0 a menos que sea exactamente 0
-              regexp: /^(?!0)\d+$/,
-              message: 'El número no debe comenzar con 0'
-            }
-          }
-        }, */
+        /*         cant_botellas: {
+                  validators: {
+                    notEmpty: {
+                      message: 'Por favor introduzca una cantidad'
+                    },
+                    between: {
+                      min: 1,
+                      max: Infinity,
+                      message: 'El número debe ser superior a 0 y sin negativos'
+                    },
+                    regexp: {
+                      // Expresión regular que asegura que el número no comience con 0 a menos que sea exactamente 0
+                      regexp: /^(?!0)\d+$/,
+                      message: 'El número no debe comenzar con 0'
+                    }
+                  }
+                }, */
 
         lugar_envasado: {
           validators: {
@@ -897,29 +937,29 @@ $(function () {
     $(this).closest('tr').remove();
   });
 
-//Añadir row
-$(document).ready(function () {
-  $('.add-row').click(function () {
-    // Verificar si se ha seleccionado un cliente
-    if ($('#id_empresa').val() === '') {
-      // Mostrar la alerta de SweetAlert2
-      Swal.fire({
-        icon: 'warning',
-        title: 'Espere!',
-        text: 'Por favor, selecciona un cliente primero.',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        },
-        buttonsStyling: false // Asegura que los estilos personalizados se apliquen
-      });
-      return;
-    }
+  //Añadir row
+  $(document).ready(function () {
+    $('.add-row').click(function () {
+      // Verificar si se ha seleccionado un cliente
+      if ($('#id_empresa').val() === '') {
+        // Mostrar la alerta de SweetAlert2
+        Swal.fire({
+          icon: 'warning',
+          title: 'Espere!',
+          text: 'Por favor, selecciona un cliente primero.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          },
+          buttonsStyling: false // Asegura que los estilos personalizados se apliquen
+        });
+        return;
+      }
 
-    // Obtener el valor de volumen_parcial calculado
-    var volumenParcial = document.getElementById('volumen_parcial').value;
+      // Obtener el valor de volumen_parcial calculado
+      var volumenParcial = document.getElementById('volumen_parcial').value;
 
-    // Si el valor de volumen_parcial no está vacío, añade una nueva fila
-    var newRow = `
+      // Si el valor de volumen_parcial no está vacío, añade una nueva fila
+      var newRow = `
         <tr>
             <th>
                 <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
@@ -932,29 +972,29 @@ $(document).ready(function () {
                 <input type="text" class="form-control form-control-sm " name="volumen_parcial[]" value="${volumenParcial}">
             </td>
         </tr>`;
-    $('#contenidoGraneles').append(newRow);
+      $('#contenidoGraneles').append(newRow);
 
-    // Re-inicializar select2 en la nueva fila
-    $('#contenidoGraneles')
-      .find('.select2-nuevo')
-      .select2({
-        dropdownParent: $('#addlostesEnvasado'), // Asegúrate de que #myModal sea el id de tu modal
-        width: '100%',
-        dropdownCssClass: 'select2-dropdown'
-      });
+      // Re-inicializar select2 en la nueva fila
+      $('#contenidoGraneles')
+        .find('.select2-nuevo')
+        .select2({
+          dropdownParent: $('#addlostesEnvasado'), // Asegúrate de que #myModal sea el id de tu modal
+          width: '100%',
+          dropdownCssClass: 'select2-dropdown'
+        });
 
-    $('.select2-dropdown').css('z-index', 9999);
+      $('.select2-dropdown').css('z-index', 9999);
 
-    // Copiar opciones del primer select al nuevo select
-    var options = $('#contenidoGraneles tr:first-child .id_lote_granel').html();
-    $('#contenidoGraneles tr:last-child .id_lote_granel').html(options);
+      // Copiar opciones del primer select al nuevo select
+      var options = $('#contenidoGraneles tr:first-child .id_lote_granel').html();
+      $('#contenidoGraneles tr:last-child .id_lote_granel').html(options);
+    });
+
+    // Función para eliminar una fila
+    $(document).on('click', '.remove-row', function () {
+      $(this).closest('tr').remove();
+    });
   });
-
-  // Función para eliminar una fila
-  $(document).on('click', '.remove-row', function () {
-    $(this).closest('tr').remove();
-  });
-});
 
 
   //update valiacion: en editar
@@ -998,20 +1038,20 @@ $(document).ready(function () {
           }
         }
       },
-/*       edit_cant_botellas: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese una cantidad'
-          }
-        }
-      },
-      edit_presentacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese una cantidad'
-          }
-        }
-      }, */
+      /*       edit_cant_botellas: {
+              validators: {
+                notEmpty: {
+                  message: 'Por favor ingrese una cantidad'
+                }
+              }
+            },
+            edit_presentacion: {
+              validators: {
+                notEmpty: {
+                  message: 'Por favor ingrese una cantidad'
+                }
+              }
+            }, */
 
       edit_unidad: {
         validators: {
@@ -1021,13 +1061,13 @@ $(document).ready(function () {
         }
       },
 
-/*       edit_volumen_total: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor llene los campos de detino lote y cantidad de botellas'
-          }
-        }
-      } */
+      /*       edit_volumen_total: {
+              validators: {
+                notEmpty: {
+                  message: 'Por favor llene los campos de detino lote y cantidad de botellas'
+                }
+              }
+            } */
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -1104,7 +1144,7 @@ $(document).ready(function () {
     });
   });
 
-    // Validación del formulario reclasificacion
+  // Validación del formulario reclasificacion
   const reclasificacionForm = document.getElementById('reclasificacionForm');
   const fv3 = FormValidation.formValidation(reclasificacionForm, {
     fields: {
