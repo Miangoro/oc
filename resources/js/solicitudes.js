@@ -244,7 +244,7 @@ $(function () {
               modifier: { //Incluye todos los datos
                 page: 'all', //Exporta todos los datos de todas las páginas
                 //order: 'current' //Mantiene el orden actual
-                },
+              },
               format: {
                 body: function (inner, rowIndex, columnIndex) {//Personaliza el contenido de las celdas
                   /*if (columnIndex === 8 || columnIndex === 11) { //Reemplaza el contenido de la celda con la cadena return
@@ -554,19 +554,35 @@ $(function () {
               }
               modal.find('#edit_info_adicional_geo').val(response.data.info_adicional);
               // Otros campos específicos para tipo 10
-            } else if (id_tipo === 14) {
+            } else if (id_tipo === 14) { // Aquí va el tipo correspondiente para tu caso
+              // Llenar los campos del modal con los datos de la solicitud
               modal.find('#edit_id_solicitud').val(id_solicitud);
               modal.find('#edit_id_empresa').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion').val(response.data.id_instalacion).trigger('change');
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
-
-
               modal.find('#instalacion_id').val(response.data.id_instalacion);
 
-
-
-              // Otros campos específicos para tipo 14
+              // Aquí vamos a manejar las características (clases, categorías, renovacion)
+              if (response.caracteristicas) {
+                  // Llenar las categorías si están presentes
+                  if (response.caracteristicas.categorias) {
+                      modal.find('#edit_categoria_in').val(response.caracteristicas.categorias).trigger('change');
+                  }
+                  // Llenar las clases si están presentes
+                  if (response.caracteristicas.clases) {
+                      modal.find('#edit_clases_in').val(response.caracteristicas.clases).trigger('change');
+                  }
+                  // Llenar la renovación si está presente
+                  if (response.caracteristicas.renovacion) {
+                      modal.find('#edit_renovacion_in').val(response.caracteristicas.renovacion).trigger('change');
+                  }
+              } else {
+                  // Si no hay características, vaciar los campos correspondientes
+                  modal.find('#edit_categoria_in').val([]).trigger('change');
+                  modal.find('#edit_clases_in').val([]).trigger('change');
+                  modal.find('#edit_renovacion_in').val('').trigger('change');
+              }
             }
             // Muestra el modal después de rellenar los datos
             modal.modal('show');
@@ -953,17 +969,45 @@ $(function () {
         'id_empresa': {
           validators: {
             notEmpty: {
-              message: 'Selecciona el cliente.'
+              message: 'Selecciona el cliente'
             }
           }
         },
         'fecha_visita': {
           validators: {
             notEmpty: {
-              message: 'Selecciona la fecha sugerida para la inspección.'
+              message: 'Selecciona la fecha sugerida para la inspección'
             }
           }
         },
+        'id_instalacion': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la instalación'
+            }
+          }
+        },
+        'renovacion': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la opción'
+            }
+          }
+        },
+        'clases[]': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la clase'
+            }
+          }
+        },
+        'categorias[]': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la clase'
+            }
+          }
+        }
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -1016,6 +1060,12 @@ $(function () {
         }
       });
     });
+    // Inicializar select2 y manejar eventos de cambio por "name"
+    $('select[name="clases[]"], select[name="categorias[]"], select[name="id_instalacion"], select[name="id_empresa"]').on('change', function () {
+      // Revalidar el campo cuando se cambia el valor del select2
+      fv.revalidateField($(this).attr('name'));
+    });
+
 
     // Inicializar FormValidation para la solicitud de georeferenciacion
     const form2 = document.getElementById('addRegistrarSolicitudGeoreferenciacion');
@@ -1649,24 +1699,24 @@ $(function () {
     var url = $(this).data('url');
     var registro = $(this).data('registro');
     var id_solicitud = $(this).data('id');
-      var iframe = $('#pdfViewer');
-      var spinner = $('#cargando');
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
 
     //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
-      spinner.show();
-      iframe.hide();
+    spinner.show();
+    iframe.hide();
     //Cargar el PDF con el ID
-      iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
+    iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
     //Configurar el botón para abrir el PDF en una nueva pestaña
-      $("#NewPestana").attr('href', 'solicitud_de_servicio/' + id_solicitud).show();
+    $("#NewPestana").attr('href', 'solicitud_de_servicio/' + id_solicitud).show();
 
-      $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
-      $("#subtitulo_modal").text(registro);
+    $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
+    $("#subtitulo_modal").text(registro);
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
-      iframe.on('load', function () {
-        spinner.hide();
-        iframe.show();
-      });
+    iframe.on('load', function () {
+      spinner.hide();
+      iframe.show();
+    });
   });
 
 
@@ -1774,229 +1824,229 @@ $(function () {
 
     // Agregar una nueva sección dinámica
     $('#add-characteristics').click(function () {
-        // Validar que se haya seleccionado una empresa
-        let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val();
-        if (!empresaSeleccionada) {
-            // Mostrar alerta si no se seleccionó ninguna empresa
-            Swal.fire({
-                icon: 'warning',
-                title: 'Advertencia',
-                text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
-                customClass: {
-                    confirmButton: 'btn btn-warning'
-                }
-            });
-            return; // Salir del evento si no se seleccionó una empresa
-        }
-
-        // Clonar la sección original
-        let newSection = $('#caracteristicas_Ex').clone();
-
-        // Cambiar el ID de la nueva sección para hacerlo único
-        newSection.attr('id', 'caracteristicas_Ex_' + sectionCount);
-
-        // Limpiar los valores de los inputs y selects en la nueva sección
-        newSection.find('input').val('');
-        newSection.find('select').prop('selectedIndex', 0);
-
-        // Actualizar el atributo "name" de inputs y selects para incluir un índice único
-        newSection.find('input, select').each(function () {
-            let name = $(this).attr('name');
-            if (name) {
-                // Reemplazar el índice dinámico con el contador actual
-                $(this).attr('name', name.replace(/\[\d*\]/, '[' + sectionCount + ']'));
-            }
+      // Validar que se haya seleccionado una empresa
+      let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val();
+      if (!empresaSeleccionada) {
+        // Mostrar alerta si no se seleccionó ninguna empresa
+        Swal.fire({
+          icon: 'warning',
+          title: 'Advertencia',
+          text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
+          customClass: {
+            confirmButton: 'btn btn-warning'
+          }
         });
+        return; // Salir del evento si no se seleccionó una empresa
+      }
 
-        // Agregar la nueva sección al contenedor
-        newSection.appendTo('#sections-container');
+      // Clonar la sección original
+      let newSection = $('#caracteristicas_Ex').clone();
 
-        // Incrementar el contador para la próxima sección dinámica
-        sectionCount++;
+      // Cambiar el ID de la nueva sección para hacerlo único
+      newSection.attr('id', 'caracteristicas_Ex_' + sectionCount);
+
+      // Limpiar los valores de los inputs y selects en la nueva sección
+      newSection.find('input').val('');
+      newSection.find('select').prop('selectedIndex', 0);
+
+      // Actualizar el atributo "name" de inputs y selects para incluir un índice único
+      newSection.find('input, select').each(function () {
+        let name = $(this).attr('name');
+        if (name) {
+          // Reemplazar el índice dinámico con el contador actual
+          $(this).attr('name', name.replace(/\[\d*\]/, '[' + sectionCount + ']'));
+        }
+      });
+
+      // Agregar la nueva sección al contenedor
+      newSection.appendTo('#sections-container');
+
+      // Incrementar el contador para la próxima sección dinámica
+      sectionCount++;
     });
 
     // Eliminar la última sección dinámica agregada
     $('#delete-characteristics').click(function () {
-        // Solo eliminar si hay más de una sección dinámica
-        if (sectionCount > 1) {
-            $('#caracteristicas_Ex_' + (sectionCount - 1)).remove();
-            sectionCount--; // Reducir el contador
-        } else {
-            // Mensaje de advertencia con SweetAlert
-            Swal.fire({
-                icon: 'warning',
-                title: 'Advertencia',
-                text: 'No se puede eliminar la sección original.',
-                customClass: {
-                    confirmButton: 'btn btn-warning'
-                }
-            });
-        }
+      // Solo eliminar si hay más de una sección dinámica
+      if (sectionCount > 1) {
+        $('#caracteristicas_Ex_' + (sectionCount - 1)).remove();
+        sectionCount--; // Reducir el contador
+      } else {
+        // Mensaje de advertencia con SweetAlert
+        Swal.fire({
+          icon: 'warning',
+          title: 'Advertencia',
+          text: 'No se puede eliminar la sección original.',
+          customClass: {
+            confirmButton: 'btn btn-warning'
+          }
+        });
+      }
     });
-});
-
-/* Enviar formulario store add exportacion */
-$(function () {
-  // Configuración de CSRF para las solicitudes AJAX
-  $.ajaxSetup({
-    headers: {
-      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
   });
 
-  // Validación del formulario Pedido de Exportación
-  const addPedidoExportacionForm = document.getElementById('addPedidoExportacionForm');
-  const fv = FormValidation.formValidation(addPedidoExportacionForm, {
-    fields: {
-      tipo_solicitud: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un tipo de solicitud.'
-          }
-        }
-      },
-      id_empresa: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un cliente.'
-          }
-        }
-      },
-      fecha_visita: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha y hora de la visita.'
-          }
-        }
-      },
-      id_instalacion: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una instalación.'
-          }
-        }
-      },
-      fecha_estimada_visita: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la fecha estimada de la visita.'
-          }
-        }
-      },
-/*       factura_proforma: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la factura'
-          }
-        }
-      }, */
-/*       factura_proforma_cont: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la factura'
-          }
-        }
-      }, */
-      direccion_destinatario: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione una dirección del destinatario.'
-          }
-        }
-      },
-      aduana_salida: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese la aduana de salida.'
-          }
-        }
-      },
-      no_pedido: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el número de pedido.'
-          }
-        }
+  /* Enviar formulario store add exportacion */
+  $(function () {
+    // Configuración de CSRF para las solicitudes AJAX
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
-    },
-    plugins: {
-      trigger: new FormValidation.plugins.Trigger(),
-      bootstrap5: new FormValidation.plugins.Bootstrap5({
-        eleValidClass: '',
-        rowSelector: function (field, ele) {
-          return '.mb-4, .mb-5, .mb-6';
+    });
+
+    // Validación del formulario Pedido de Exportación
+    const addPedidoExportacionForm = document.getElementById('addPedidoExportacionForm');
+    const fv = FormValidation.formValidation(addPedidoExportacionForm, {
+      fields: {
+        tipo_solicitud: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un tipo de solicitud.'
+            }
+          }
+        },
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione un cliente.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha y hora de la visita.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una instalación.'
+            }
+          }
+        },
+        fecha_estimada_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la fecha estimada de la visita.'
+            }
+          }
+        },
+        /*       factura_proforma: {
+                validators: {
+                  notEmpty: {
+                    message: 'Por favor ingrese la factura'
+                  }
+                }
+              }, */
+        /*       factura_proforma_cont: {
+                validators: {
+                  notEmpty: {
+                    message: 'Por favor ingrese la factura'
+                  }
+                }
+              }, */
+        direccion_destinatario: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor seleccione una dirección del destinatario.'
+            }
+          }
+        },
+        aduana_salida: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la aduana de salida.'
+            }
+          }
+        },
+        no_pedido: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese el número de pedido.'
+            }
+          }
         }
-      }),
-      submitButton: new FormValidation.plugins.SubmitButton(),
-      autoFocus: new FormValidation.plugins.AutoFocus()
-    }
-  }).on('core.form.valid', function () {
-    // Recolectar el resto de los datos del formulario
-    const formData = new FormData(addPedidoExportacionForm);
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          rowSelector: function (field, ele) {
+            return '.mb-4, .mb-5, .mb-6';
+          }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      // Recolectar el resto de los datos del formulario
+      const formData = new FormData(addPedidoExportacionForm);
 
-    // Construir las características como un JSON completo
-    const caracteristicas = {
-      tipo_solicitud: $('#tipo_solicitud').val(),
-      fecha_estimada_visita: $('[name="fecha_estimada_visita"]').val(),
-      direccion_destinatario: $('#direccion_destinatario_ex').val(),
-      aduana_salida: $('[name="aduana_salida"]').val(),
-      no_pedido: $('[name="no_pedido"]').val(),
-      factura_proforma: $('[name="factura_proforma"]')[0].files[0], // Archivo
-      factura_proforma_cont: $('[name="factura_proforma_cont"]')[0].files[0], // Archivo
-      detalles: [] // Aquí van las filas de la tabla de características
-    };
+      // Construir las características como un JSON completo
+      const caracteristicas = {
+        tipo_solicitud: $('#tipo_solicitud').val(),
+        fecha_estimada_visita: $('[name="fecha_estimada_visita"]').val(),
+        direccion_destinatario: $('#direccion_destinatario_ex').val(),
+        aduana_salida: $('[name="aduana_salida"]').val(),
+        no_pedido: $('[name="no_pedido"]').val(),
+        factura_proforma: $('[name="factura_proforma"]')[0].files[0], // Archivo
+        factura_proforma_cont: $('[name="factura_proforma_cont"]')[0].files[0], // Archivo
+        detalles: [] // Aquí van las filas de la tabla de características
+      };
 
-    // Agregar cada fila de la tabla dinámica al JSON
-    $('#tabla-marcas tbody tr').each(function () {
-      const row = $(this);
-      caracteristicas.detalles.push({
-        lote_envasado: row.find('.lote-envasado').val(),
-        lote_granel: row.find('.lote-granel').val(),
-        cantidad_botellas: row.find('.cantidad-botellas').val(),
-        cantidad_cajas: row.find('.cantidad-cajas').val(),
-        presentacion: row.find('.presentacion').val()
+      // Agregar cada fila de la tabla dinámica al JSON
+      $('#tabla-marcas tbody tr').each(function () {
+        const row = $(this);
+        caracteristicas.detalles.push({
+          lote_envasado: row.find('.lote-envasado').val(),
+          lote_granel: row.find('.lote-granel').val(),
+          cantidad_botellas: row.find('.cantidad-botellas').val(),
+          cantidad_cajas: row.find('.cantidad-cajas').val(),
+          presentacion: row.find('.presentacion').val()
+        });
+      });
+
+      // Añadir el JSON al FormData como string
+      formData.append('caracteristicas', JSON.stringify(caracteristicas));
+
+      $.ajax({
+        url: '/exportaciones/storePedidoExportacion', // Actualiza con la URL correcta
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          // Reiniciar el formulario
+          $('#addPedidoExportacionForm')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+          $('#addPedidoExportacion').modal('hide');
+          // Mostrar alerta de éxito
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: 'El pedido de exportación se registró exitosamente.',
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function () {
+          // Mostrar alerta de error
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Hubo un error al registrar el pedido de exportación.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
       });
     });
-
-    // Añadir el JSON al FormData como string
-    formData.append('caracteristicas', JSON.stringify(caracteristicas));
-
-    $.ajax({
-      url: '/exportaciones/storePedidoExportacion', // Actualiza con la URL correcta
-      type: 'POST',
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function (response) {
-        // Reiniciar el formulario
-        $('#addPedidoExportacionForm')[0].reset();
-        $('.select2').val(null).trigger('change');
-        $('.datatables-solicitudes').DataTable().ajax.reload();
-        $('#addPedidoExportacion').modal('hide');
-        // Mostrar alerta de éxito
-        Swal.fire({
-          icon: 'success',
-          title: '¡Éxito!',
-          text: 'El pedido de exportación se registró exitosamente.',
-          customClass: {
-            confirmButton: 'btn btn-success'
-          }
-        });
-      },
-      error: function () {
-        // Mostrar alerta de error
-        Swal.fire({
-          icon: 'error',
-          title: '¡Error!',
-          text: 'Hubo un error al registrar el pedido de exportación.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          }
-        });
-      }
-    });
   });
-});
 
 
 
