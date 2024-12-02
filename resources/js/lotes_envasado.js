@@ -176,7 +176,6 @@ $(function () {
                 destinoText = 'Desconocido';
                 colorClass = 'secondary'; // Gris
             }
-        
             return `
               <span class="badge rounded-pill bg-label-${colorClass}">
                 ${destinoText}
@@ -206,11 +205,9 @@ $(function () {
                 row.nuevo +
                 '</span>';
             }
-        
             return inicial + nuevo;
           }
-        }
-,        
+        },        
         { data: 'estatus' }, //status
         { data: 'action' }
       ],
