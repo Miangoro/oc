@@ -10,6 +10,9 @@ use App\Models\Instalaciones;
 use App\Http\Controllers\Controller;
 use App\Models\lotes_envasado_granel;
 use Illuminate\Http\Request;
+use App\Models\Documentacion_url;
+use App\Models\Exception;
+use Exception as GlobalException;
 
 class lotesEnvasadoController extends Controller
 {
@@ -318,6 +321,29 @@ class lotesEnvasadoController extends Controller
         } catch (\Exception $e) {
             // Maneja cualquier error que ocurra durante el proceso
             return response()->json(['error' => 'Error al actualizar la solicitud de envió'], 500);
+        }
+    }
+
+    //Metodo obtener etiquetas
+    public function obtenerDocumentosPorMarca(Request $request, $id_marca)
+    {
+        try {
+            $marca = Marcas::findOrFail($id_marca);
+
+            // Obtener los documentos asociados al id_empresa de la marca
+            $documentos = Documentacion_url::where('id_empresa', $marca->id_empresa)
+                ->where('id_relacion', $id_marca)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'documentos' => $documentos
+            ]);
+        } catch (GlobalException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener documentos: ' . $e->getMessage()
+            ]);
         }
     }
 }

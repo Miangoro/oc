@@ -25,7 +25,7 @@ class InstalacionesController extends Controller
         $dictamenes = Dictamen_instalaciones::all(); // Obtener todos los datos
         $clases = clases::all();
         $categoria = categorias::all();
-        $inspeccion = inspecciones::all();
+        $inspeccion = inspecciones::with('solicitud.instalacion')  ->orderBy('created_at', 'desc')->get();
         $empresa = empresa::all();
         $soli = solicitudesModel::all();
         return view('dictamenes.dictamen_instalaciones_view', compact('dictamenes', 'clases', 'categoria', 'inspeccion'));

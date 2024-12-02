@@ -592,24 +592,18 @@ $(function () {
       var clase = data.clases;
       var categoria = data.categorias;
       var direccion = data.direcciones;
-
       var documentos = data.documentacion_urls; // Documentos asociados
-
       // Rellenar el campo con el ID de la marca obtenida
       $('#etiqueta_marca').val(marca.id_marca);
-
       $('#contenidoRango').empty();
-
       var tipos = "";
       tipo.forEach(function (item) {
         tipos += "<option value='" + item.id_tipo + "'>" + item.nombre + "</option>";
       });
-
       var clases = "";
       clase.forEach(function (item) {
         clases += "<option value='" + item.id_clase + "'>" + item.clase + "</option>";
       });
-
       var categorias = "";
       categoria.forEach(function (item) {
         categorias += "<option value='" + item.id_categoria + "'>" + item.categoria + "</option>";
@@ -625,13 +619,9 @@ $(function () {
         var id_clase = marca.id_clase[index];
         var id_categoria = marca.id_categoria[index];
         var id_direccion = marca.id_direccion[index];
-
-
         // Obtenemos los documentos correspondientes por id_doc
         var documento_etiquetas = documentos.find(doc => doc.nombre_documento === 'Etiquetas' && (!doc.id_doc || doc.id_doc === (index + 1)));
         var documento_corrugado = documentos.find(doc => doc.nombre_documento === 'Corrugado' && (!doc.id_doc || doc.id_doc === (index + 1)));
-        
-
         var newRow = `
                   <tr>
                       <th>
@@ -690,22 +680,18 @@ $(function () {
                           <input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]">
                       </td>
                   </tr>`;
-
+                  
         $('#contenidoRango').append(newRow);
-
         // Inicializar select2 y establecer el valor seleccionado
         $('#id_direccion' + index).select2({
           dropdownParent: $('#etiquetas')
         }).val(id_direccion).trigger('change'); // Establecer el valor correcto
-        
         $('#id_tipo' + index).select2({
           dropdownParent: $('#etiquetas')
         }).val(id_tipo).trigger('change'); // Establecer el valor correcto
-
         $('#id_clase' + index).select2({
           dropdownParent: $('#etiquetas')
         }).val(id_clase).trigger('change');
-
         $('#id_categoria' + index).select2({
           dropdownParent: $('#etiquetas')
         }).val(id_categoria).trigger('change');

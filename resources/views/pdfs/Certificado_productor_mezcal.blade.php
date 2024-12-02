@@ -100,7 +100,6 @@
             font-size: 20px;
             text-align: center;
             font-weight: bold;
-            line-height: 0.5;
         }
 
         table {
@@ -224,7 +223,7 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
 
 <p class="title">CERTIFICADO NOM</p>
 <p class="title2">COMO PRODUCTOR DE MEZCAL A</p>
-<p class="title3">"MEZCAL BUENAVISTA S.P.R. DE R.L."</p>
+<p class="title3">"{{ strtoupper(str_replace(['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú'], ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'], $razon_social)) }}"</p>
 
 <table>
     <tbody>
