@@ -28,6 +28,11 @@ class LotesGranel extends Model
         return 'lotes a granel'; // Devuelve el nombre que desees
     }
 
+    public function lotesEnvasadoGranel()
+    {
+        return $this->hasMany(lotes_envasado_granel::class, 'id_lote_granel');
+    }
+    
 
     public function empresa()
     {
