@@ -264,13 +264,25 @@
                 for (let index = 0; index < response.lotes_envasado.length; index++) {
                     contenidoLotes += '<option value="' + response.lotes_envasado[index].id_lote_envasado +
                         '">' +
-                        response.lotes_envasado[index].nombre_lote + '</option>';
+                        response.lotes_envasado[index].nombre + '</option>';
                 }
                 if (response.lotes_envasado.length == 0) {
                     contenidoLotes =
                         '<option value="" disabled selected>Sin lotes envasados registrados</option>';
                 }
                 $('#evasado_export').html(contenidoLotes);
+                //lotes graneles
+                var contenidoLotesGraneles = "";
+                for (let index = 0; index < response.lotes_granel.length; index++) {
+                    contenidoLotesGraneles += '<option value="' + response.lotes_granel[index].id_lote_granel +
+                        '">' +
+                        response.lotes_granel[index].nombre_lote + '</option>';
+                }
+                if (response.lotes_granel.length == 0) {
+                    contenidoLotesGraneles =
+                        '<option value="" disabled selected>Sin lotes granel registrados</option>';
+                }
+                $('#lotes_granel_export').html(contenidoLotesGraneles);
             },
             error: function() {
                 // Manejar el error

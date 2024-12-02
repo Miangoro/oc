@@ -76,38 +76,53 @@
 
 
 <script>
-    function obtenerInstalacion() {
-        var empresa = $(".edit_id_empresa").val();
+function obtenerInstalacion() {
+    var empresa = $(".edit_id_empresa").val();
 
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                var contenido = "";
-                let seleccionado = "";
-                var instalacion_id = $("#instalacion_id").val();
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            var contenido = "";
+            let seleccionado = "";
+            var instalacion_id = $("#instalacion_id").val();
 
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    if (instalacion_id == response.instalaciones[index].id_instalacion) {
-                        seleccionado = "selected";
-                    }
-                    contenido = '<option ' + seleccionado + ' value="' + response.instalaciones[index]
-                        .id_instalacion + '">' + response
-                        .instalaciones[index].tipo + ' | ' + response
-                        .instalaciones[index].direccion_completa + '</option>' + contenido;
+            for (let index = 0; index < response.instalaciones.length; index++) {
+                // Limpia el campo tipo usando la función limpiarTipo
+                var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
 
-                }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
-
+                if (instalacion_id == response.instalaciones[index].id_instalacion) {
+                    seleccionado = "selected";
                 } else {
-
+                    seleccionado = ""; // Asegúrate de limpiar este valor si no coincide
                 }
-                $('#edit_id_instalacion').html(contenido);
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
+
+                contenido = '<option ' + seleccionado + ' value="' + response.instalaciones[index]
+                    .id_instalacion + '">' + 
+                    tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa + 
+                    '</option>' + contenido;
             }
-        });
+
+            if (response.instalaciones.length == 0) {
+                contenido = '<option value="">Sin instalaciones registradas</option>';
+            }
+
+            $('#edit_id_instalacion').html(contenido);
+        },
+        error: function() {
+            console.error('Error al cargar las instalaciones.');
+        }
+    });
+}
+
+// Reutiliza la función limpiarTipo
+function limpiarTipo(tipo) {
+    try {
+        // Convierte el JSON string a un array y únelos en una cadena limpia
+        return JSON.parse(tipo).join(', ');
+    } catch (e) {
+        // Si no es JSON válido, regresa el valor original
+        return tipo;
     }
+}
 </script>

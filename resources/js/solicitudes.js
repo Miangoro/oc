@@ -250,7 +250,7 @@ $(function () {
                   /*if (columnIndex === 8 || columnIndex === 11) { //Reemplaza el contenido de la celda con la cadena return
                     return 'ViewSuspend';
                   }*/
-                  return inner.replace(/<[^>]*>/g, '');//Elimina todas las etiquetas HTML de las columnas      
+                  return inner.replace(/<[^>]*>/g, '');//Elimina todas las etiquetas HTML de las columnas
                 }
               }
             }
@@ -1659,9 +1659,9 @@ $(function () {
       iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
     //Configurar el botón para abrir el PDF en una nueva pestaña
       $("#NewPestana").attr('href', 'solicitud_de_servicio/' + id_solicitud).show();
-  
+
       $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
-      $("#subtitulo_modal").text(registro);  
+      $("#subtitulo_modal").text(registro);
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
       iframe.on('load', function () {
         spinner.hide();
@@ -1673,7 +1673,7 @@ $(function () {
 
   var openedFromFirstModal = false;
 
-  
+
   $('#abrirModalInstalaciones').on('click', function () {
     var clienteSeleccionado = $('#id_empresa_solicitudes').val();
 
@@ -1833,6 +1833,169 @@ $(function () {
             });
         }
     });
+});
+
+/* Enviar formulario store add exportacion */
+$(function () {
+  // Configuración de CSRF para las solicitudes AJAX
+  $.ajaxSetup({
+    headers: {
+      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+  });
+
+  // Validación del formulario Pedido de Exportación
+  const addPedidoExportacionForm = document.getElementById('addPedidoExportacionForm');
+  const fv = FormValidation.formValidation(addPedidoExportacionForm, {
+    fields: {
+      tipo_solicitud: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un tipo de solicitud.'
+          }
+        }
+      },
+      id_empresa: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un cliente.'
+          }
+        }
+      },
+      fecha_visita: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la fecha y hora de la visita.'
+          }
+        }
+      },
+      id_instalacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una instalación.'
+          }
+        }
+      },
+      fecha_estimada_visita: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la fecha estimada de la visita.'
+          }
+        }
+      },
+/*       factura_proforma: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la factura'
+          }
+        }
+      }, */
+/*       factura_proforma_cont: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la factura'
+          }
+        }
+      }, */
+      direccion_destinatario: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una dirección del destinatario.'
+          }
+        }
+      },
+      aduana_salida: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la aduana de salida.'
+          }
+        }
+      },
+      no_pedido: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el número de pedido.'
+          }
+        }
+      }
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        rowSelector: function (field, ele) {
+          return '.mb-4, .mb-5, .mb-6';
+        }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+    // Recolectar el resto de los datos del formulario
+    const formData = new FormData(addPedidoExportacionForm);
+
+    // Construir las características como un JSON completo
+    const caracteristicas = {
+      tipo_solicitud: $('#tipo_solicitud').val(),
+      fecha_estimada_visita: $('[name="fecha_estimada_visita"]').val(),
+      direccion_destinatario: $('#direccion_destinatario_ex').val(),
+      aduana_salida: $('[name="aduana_salida"]').val(),
+      no_pedido: $('[name="no_pedido"]').val(),
+      factura_proforma: $('[name="factura_proforma"]')[0].files[0], // Archivo
+      factura_proforma_cont: $('[name="factura_proforma_cont"]')[0].files[0], // Archivo
+      detalles: [] // Aquí van las filas de la tabla de características
+    };
+
+    // Agregar cada fila de la tabla dinámica al JSON
+    $('#tabla-marcas tbody tr').each(function () {
+      const row = $(this);
+      caracteristicas.detalles.push({
+        lote_envasado: row.find('.lote-envasado').val(),
+        lote_granel: row.find('.lote-granel').val(),
+        cantidad_botellas: row.find('.cantidad-botellas').val(),
+        cantidad_cajas: row.find('.cantidad-cajas').val(),
+        presentacion: row.find('.presentacion').val()
+      });
+    });
+
+    // Añadir el JSON al FormData como string
+    formData.append('caracteristicas', JSON.stringify(caracteristicas));
+
+    $.ajax({
+      url: '/exportaciones/storePedidoExportacion', // Actualiza con la URL correcta
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // Reiniciar el formulario
+        $('#addPedidoExportacionForm')[0].reset();
+        $('.select2').val(null).trigger('change');
+        $('.datatables-solicitudes').DataTable().ajax.reload();
+        $('#addPedidoExportacion').modal('hide');
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'El pedido de exportación se registró exitosamente.',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function () {
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Hubo un error al registrar el pedido de exportación.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+  });
 });
 
 
