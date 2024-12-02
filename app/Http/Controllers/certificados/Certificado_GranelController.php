@@ -75,6 +75,7 @@ class Certificado_GranelController extends Controller
                 'id_firmante' => $certificado->user->name ?? 'N/A',
                 'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
                 'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
+                'num_certificado' => $certificado->num_certificado,
                 'id_revisor' => $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar',
                 'id_revisor2' => $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar',
                 'estatus' => $certificado->estatus
