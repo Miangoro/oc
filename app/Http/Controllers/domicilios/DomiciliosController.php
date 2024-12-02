@@ -58,7 +58,7 @@ class DomiciliosController extends Controller
         $dir = $request->input('order.0.dir');
 
         if (empty($request->input('search.value'))) {
-            $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
+            $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
                 })
@@ -68,7 +68,7 @@ class DomiciliosController extends Controller
                 ->get();
         } else {
             $search = $request->input('search.value');
-            $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
+            $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
                 })
@@ -97,14 +97,9 @@ class DomiciliosController extends Controller
                 ->orderBy($order, $dir)
                 ->get();
 
-            $totalFiltered = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
+            $totalFiltered = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
-                })->where(function ($query) {
-                    $query->whereHas('documentos', function ($query) {
-                        $query->whereIn('id_documento', [127, 128, 129]);
-                    })
-                        ->orWhereDoesntHave('documentos');
                 })
                 ->where(function ($query) use ($search) {
                     $query->where('id_instalacion', 'LIKE', "%{$search}%")
@@ -145,8 +140,8 @@ class DomiciliosController extends Controller
                     '<b>Fecha de emisión:</b>' . (Helpers::formatearFecha($instalacion->fecha_emision)) . '<br>' .
                     '<b>Fecha de vigencia:</b>' . (Helpers::formatearFecha($instalacion->fecha_vigencia)) . '<br>';
                 $nestedData['organismo'] = $instalacion->organismos->organismo ?? 'OC CIDAM'; 
-                $nestedData['url'] = !empty($instalacion->documentos->pluck('url')->toArray()) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first() . '/' . implode(',', $instalacion->documentos->pluck('url')->toArray()) : '';
-                $nestedData['nombre_documento'] = !empty($instalacion->documentos->pluck('nombre_documento')->toArray()) ? implode(',', $instalacion->documentos->pluck('nombre_documento')->toArray()) : 'Documento sin nombre';
+                $nestedData['url'] = !empty($instalacion->documentos_certificados_instalaciones->pluck('url')->toArray()) ? $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first() . '/' . implode(',', $instalacion->documentos_certificados_instalaciones->pluck('url')->toArray()) : '';
+                $nestedData['nombre_documento'] = !empty($instalacion->documentos_certificados_instalaciones->pluck('nombre_documento')->toArray()) ? implode(',', $instalacion->documentos_certificados_instalaciones->pluck('nombre_documento')->toArray()) : 'Documento sin nombre';
                 $nestedData['fecha_emision'] = Helpers::formatearFecha($instalacion->fecha_emision);
                 $nestedData['fecha_vigencia'] = Helpers::formatearFecha($instalacion->fecha_vigencia);
                 $nestedData['actions'] = '<button class="btn btn-danger btn-sm delete-record" data-id="' . $instalacion->id_instalacion . '">Eliminar</button>';
