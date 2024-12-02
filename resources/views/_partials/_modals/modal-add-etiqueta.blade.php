@@ -1,12 +1,9 @@
 <style>
     .modal-custom-size {
         max-width: 100%;
-        /* Ajusta este valor para hacerlo más grande */
         width: auto%;
-        /* Ajusta según tus necesidades */
     }
 </style>
-<!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="etiquetas" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-custom-size modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -19,9 +16,7 @@
                 <form id="etiquetasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
                         <input type="hidden" id="etiqueta_marca" name="id_marca">
-
                         <div class="table-responsive">
-
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -93,7 +88,6 @@
                                                 name="id_documento[]">
                                             <input value="Etiquetas" class="form-control" type="hidden"
                                                 name="nombre_documento[]">
-
                                         </td>
                                         <td>
                                             <input class="form-control form-control-sm" type="file" name="url[]">
@@ -101,17 +95,11 @@
                                                 name="id_documento[]">
                                             <input value="Corrugado" class="form-control" type="hidden"
                                                 name="nombre_documento[]">
-
                                         </td>
-
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-
-
-
-
                         <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                             <button type="submit" class="btn btn-primary">Registrar</button>
                             <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
@@ -126,13 +114,11 @@
 
 <script>
     $(document).ready(function() {
-        // Inicializa select2 cuando el modal se muestra
         $('#etiquetas').on('shown.bs.modal', function() {
             $('#contenidoRango .select2').select2({
                 dropdownParent: $('#etiquetas')
             });
         });
-
         //Agregar o eliminar filas en la tabla
         var i = 0;
         $('.add-row-add').click(function() {
@@ -141,27 +127,23 @@
                 <option value="{{ $nombre->id_tipo }}">{{ $nombre->nombre }}</option>
             @endforeach
         `;
-
             let opciones2 = `
             @foreach ($clases as $clase)
                 <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
             @endforeach
         `;
-
             let opciones3 = `
             @foreach ($categorias as $categoria)
                 <option value="{{ $categoria->id_categoria }}">{{ $categoria->categoria }}</option>
             @endforeach
         `;
-
             let opciones4 = `
-                                                @foreach ($direcciones as $direccion)
-                                                    <option value="{{ $direccion->id_direccion }}">
-                                                        {{ $direccion->direccion }}
-                                                    </option>
-                                                @endforeach
+            @foreach ($direcciones as $direccion)
+                <option value="{{ $direccion->id_direccion }}">
+                    {{ $direccion->direccion }}
+                </option>
+            @endforeach
         `;
-
             var newRow = `
             <tr>
                 <th>
@@ -169,28 +151,23 @@
                 </th>
                                                 <td><select class="form-control select2" name="id_direccion[]">` +
                 opciones4 + `</select></td>
-
                 <td><input type="text" class="form-control form-control-sm" name="sku[]" id="sku"></td>
                 <td><select class="form-control select2" name="id_tipo[]">` + opciones + `</select></td>
                 <td><input type="number" class="form-control form-control-sm" name="presentacion[]" step="0.01" min="0"></td>
                 <td><select class="form-control select2" name="id_clase[]">` + opciones2 + `</select></td>
                 <td><select class="form-control select2" name="id_categoria[]">` + opciones3 + `</select></td>
-
                 <td><input class="form-control form-control-sm" type="file" name="url[]"><input value="60" class="form-control" type="hidden" name="id_documento[]"><input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]"></td>
                 <td><input class="form-control form-control-sm" type="file" name="url[]"><input value="75" class="form-control" type="hidden" name="id_documento[]"><input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]"></td>
             </tr>`;
 
             $('#contenidoRango').append(newRow);
-
             // Reinicializa select2 en todos los selects agregados
             $('#contenidoRango .select2').select2({
                 dropdownParent: $('#etiquetas')
             });
-
             i++;
         });
 
-        // Función para eliminar una fila
         $(document).on('click', '.remove-row', function() {
             $(this).closest('tr').remove();
         });

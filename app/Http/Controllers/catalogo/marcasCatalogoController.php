@@ -95,7 +95,6 @@ class marcasCatalogoController extends Controller
                 ->get();
         } else {
             $search = $request->input('search.value');
-
             $users = marcas::with('empresa.empresaNumClientes','catalogo_norma_certificar') // Incluye la relación empresa
                 ->where('id_marca', 'LIKE', "%{$search}%")
                 ->orWhere('folio', 'LIKE', "%{$search}%")
@@ -113,7 +112,6 @@ class marcasCatalogoController extends Controller
                 ->limit($limit)
               //  ->orderBy($order, $dir)
                 ->get();
-
             $totalFiltered = marcas::where('id_marca', 'LIKE', "%{$search}%")
                 ->orWhere('folio', 'LIKE', "%{$search}%")
                 ->orWhere('marca', 'LIKE', "%{$search}%")
@@ -127,8 +125,6 @@ class marcasCatalogoController extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-              
-
                 $nestedData['id_marca'] = $user->id_marca;
                 $nestedData['fake_id'] = ++$ids;
                 $nestedData['folio'] = $user->folio;
@@ -139,12 +135,8 @@ class marcasCatalogoController extends Controller
                 $user->empresa->empresaNumClientes[0]->numero_cliente ?? 
                 $user->empresa->empresaNumClientes[1]->numero_cliente ?? 
                 $user->empresa->empresaNumClientes[2]->numero_cliente;
-
             $razonSocial = $user->empresa ? $user->empresa->razon_social : '';
-
             $nestedData['razon_social'] = '<b>'.$numeroCliente . '</b><br>' . $razonSocial;
-
-
                 $data[] = $nestedData;
             }
         }
@@ -162,9 +154,6 @@ class marcasCatalogoController extends Controller
     /*Metodo para actualizar*/
     public function store(Request $request)
     {
-
-
-
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->cliente)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
@@ -189,12 +178,10 @@ class marcasCatalogoController extends Controller
                         if ($request->hasFile('url') && isset($request->file('url')[$index])) {
                             // Eliminar el archivo anterior
                             Storage::disk('public')->delete('uploads/' . $numeroCliente . '/' . $documento->url);
-
                             // Subir el nuevo archivo
                             $file = $request->file('url')[$index];
                             $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
                             $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
-
                             // Actualizar en la base de datos
                             $documento->url = $filename;
                         }
@@ -231,13 +218,11 @@ class marcasCatalogoController extends Controller
             $marca->id_norma = $request->id_norma;
             $marca->folio = Helpers::generarFolioMarca($request->cliente);
             $marca->save();
-
             // Almacenar nuevos documentos solo si se envían
             if ($request->hasFile('url')) {
                 foreach ($request->file('url') as $index => $file) {
                     $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
                     $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
-
                     $documentacion_url = new Documentacion_url();
                     $documentacion_url->id_relacion = $marca->id_marca;
                     $documentacion_url->id_documento = $request->id_documento[$index];
@@ -249,24 +234,16 @@ class marcasCatalogoController extends Controller
                 }
             }
         }
-
         return response()->json(['success' => 'Marca registrada exitosamente.']);
     }
-
-
-
 
     //Metodo para editar las marcas
     public function edit($id)
     {
-
         $marca = Marcas::findOrFail($id);
         $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get(); // Obtener los documentos asociados a la marca
-
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-
-
 
         return response()->json([
             'marca' => $marca,
@@ -274,12 +251,6 @@ class marcasCatalogoController extends Controller
             'numeroCliente' => $numeroCliente
         ]);
     }
-
-
-
-
-
-
 
     // Método para actualizar una marca existente
     public function update(Request $request)
@@ -309,20 +280,13 @@ class marcasCatalogoController extends Controller
         return view('catalogo.find_catalago_marcas', compact('opciones', 'clientes'));
     }
 
-
-
-
     //funcion para eliminar
     public function destroy($id_marca)
     {
         $clase = marcas::findOrFail($id_marca);
         $clase->delete();
-
         return response()->json(['success' => 'Clase eliminada correctamente']);
     }
-
-
-
 
     public function updateEtiquetas(Request $request)
     {
@@ -336,15 +300,11 @@ class marcasCatalogoController extends Controller
                 'presentacion' => $request->presentacion,
                 'id_clase' => $request->id_clase,
                 'id_categoria' => $request->id_categoria,
-
-
             ]);
             $loteEnvasado->save();
-
             //metodo para guardar pdf
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $loteEnvasado->id_empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-
             foreach ($request->id_documento as $index => $id_documento) {
                 // Agregar nuevo documento si no existe
                 if ($request->hasFile('url') && isset($request->file('url')[$index])) {
@@ -361,27 +321,20 @@ class marcasCatalogoController extends Controller
                     $documentacion_url->save();
                 }
             }
-
-            // Retornar respuesta exitosa
-
             return response()->json(['success' => 'Etiquetas cargadas correctamente']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar la etiqueta'], 500);
         }
     }
 
-
-
     public function editEtiquetas($id)
     {
-
         $marca = Marcas::findOrFail($id);
         $tipos = tipos::all();
         $clases = clases::all();
         $direcciones = direcciones::all();
         $categorias = categorias::all();
         $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get();
-
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
