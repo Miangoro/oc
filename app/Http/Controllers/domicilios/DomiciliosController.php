@@ -78,6 +78,9 @@ class DomiciliosController extends Controller
                         ->orWhereHas('empresa', function ($subQuery) use ($search) {
                             $subQuery->where('razon_social', 'LIKE', "%{$search}%");
                         })
+                        ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
+                            $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
+                        })
                         ->orWhereHas('estados', function ($subQuery) use ($search) {
                             $subQuery->where('nombre', 'LIKE', "%{$search}%");
                         })
