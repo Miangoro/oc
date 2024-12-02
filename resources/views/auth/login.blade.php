@@ -223,6 +223,42 @@
             transition: transform 0.3s ease-in-out;
         }
 
+        /* Estilo de Santa Claus */
+        .santa {
+            position: absolute;
+            top: 0;
+            left: -100px;
+            /* Empieza fuera de la pantalla */
+            width: 120px;
+            height: 120px;
+            background-image: url('{{ asset('assets/img/branding/santa.png') }}');
+            /* Reemplaza con la URL de la imagen de Santa Claus */
+            background-size: cover;
+            animation: volar 12s linear infinite;
+        }
+
+        /* Animación de Santa Claus volando */
+        @keyframes volar {
+            0% {
+                transform: translateX(-100px) translateY(0);
+            }
+
+            25% {
+                transform: translateX(25vw) translateY(15vh);
+            }
+
+            50% {
+                transform: translateX(50vw) translateY(0);
+            }
+
+            75% {
+                transform: translateX(75vw) translateY(15vh);
+            }
+
+            100% {
+                transform: translateX(80vw) translateY(0);
+            }
+        }
     </style>
 
     <div id="desktop-view" class="d-none">
@@ -230,9 +266,10 @@
             <a href="{{ url('/') }}" class="auth-cover-brand d-flex align-items-center gap-2">
                 <span class="app-brand-logo demo img-logo"><img height="135px"
                         src="{{ asset('assets/img/branding/logo_oc.png') }}" alt=""></span>
-                <!--<span class="app-brand-text demo text-heading fw-semibold">{{ config('variables.templateName') }}</span>-->
             </a>
             <div class="authentication-inner row m-0">
+                <div class="santa"></div>
+
                 <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center justify-content-center p-12 pb-2">
                     <video autoplay muted loop>
                         <source src="{{ asset('video/fondo.mp4') }}" type="video/mp4">
@@ -352,7 +389,6 @@
                 class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center justify-content-center p-12 pb-2">
                 <span class="app-brand-logo demo"><img height="135px"
                         src="{{ asset('assets/img/branding/logo_oc.png') }}" alt=""></span>
-                <!--<span class="app-brand-text demo text-heading fw-semibold">{{ config('variables.templateName') }}</span>-->
             </a>
             <div class="authentication-inner row m-0">
                 <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center justify-content-center p-12 pb-2">
@@ -485,12 +521,11 @@
         window.addEventListener('resize', toggleView);
     });
 
-
-    let batCount = 0; // Contador de murciélagos en pantalla
+    //Halloween
+    let batCount = 0;
     const maxBats = 10; // Máximo número de murciélagos
     const maxWidth = 768; // Ancho máximo para considerar el diseño responsive
 
-    // Función para verificar si la fecha actual está dentro del rango deseado
     function isHalloweenSeason() {
         const today = new Date();
         const startDate = new Date(today.getFullYear(), 9, 1); // 1 de octubre
@@ -500,9 +535,8 @@
 
     function createBat() {
         if (batCount < maxBats && window.innerWidth >
-            maxWidth) { // Limita el número de murciélagos visibles y se asegura de que no sea en pantallas pequeñas
+            maxWidth) {
             const bat = document.createElement("img");
-            // Selecciona aleatoriamente entre las tres imágenes
             const batImages = [
                 "{{ asset('assets/img/branding/murcielago.png') }}",
                 "{{ asset('assets/img/branding/calabazin.png') }}",
@@ -514,17 +548,13 @@
             bat.style.width = Math.random() * 30 + 20 + "px"; // Tamaño entre 20px y 50px
             document.body.appendChild(bat);
             batCount++;
-
             bat.addEventListener("animationend", () => {
                 bat.remove();
                 batCount--; // Reduce el contador al terminar la animación
             });
         }
     }
-
-    // Ejecutar el intervalo solo si estamos en la temporada de Halloween
     if (isHalloweenSeason()) {
-        // Intervalo para crear murciélagos cada segundo
         setInterval(createBat, 1000);
     }
 
@@ -549,10 +579,18 @@
             snowflake.remove();
         });
     }
-
-    // Activar el efecto de nieve solo en noviembre
     if (isChristmasSeason()) {
-        // Crear un copo de nieve cada 500 milisegundos
         setInterval(createSnowflake, 500);
+    }
+
+    function isDecember() {
+        const today = new Date();
+        const month = today.getMonth();
+        return month === 11;
+    }
+    if (isDecember()) {
+        document.getElementById("santa").style.display = "block";
+    } else {
+        document.getElementById("santa").style.display = "none";
     }
 </script>

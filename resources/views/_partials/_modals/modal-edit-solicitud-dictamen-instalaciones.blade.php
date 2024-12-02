@@ -52,8 +52,45 @@
                             </div>
                         </div>
                     </div>
-
                     <input type="hidden" id="instalacion_id">
+
+                    <div class="row">
+                      <div class="col-md-4">
+                        <div class="form-floating form-floating-outline mb-6 select2-primary">
+                            <select id="edit_categoria_in" name="categorias[]" class="form-select select2"
+                                data-placeholder="Seleccione una o más categorias" multiple>
+                                @foreach ($categorias as $cate)
+                                    <option value="{{ $cate->id_categoria }}">{{ $cate->categoria }}</option>
+                                @endforeach
+                            </select>
+                            <label for="">Categorías de mezcal</label>
+                        </div>
+                      </div>
+
+                      <div class="col-md-4">
+                        <div class="form-floating form-floating-outline mb-4 select2-primary">
+                            <select id="edit_clases_in" name="clases[]" class="form-select select2"
+                                data-placeholder="Seleccione una o más clases" multiple>
+                                @foreach ($clases as $clase)
+                                    <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
+                                @endforeach
+                            </select>
+                            <label for="">Clases de agave</label>
+                        </div>
+                      </div>
+
+                      <!-- Nuevo select para renovación -->
+                      <div class="col-md-4">
+                        <div class="form-floating form-floating-outline mb-4">
+                            <select id="edit_renovacion_in" name="renovacion" id="renovacion" class="form-select">
+                                <option value="" disabled selected>Seleccione una opción</option>
+                                <option value="si">Sí</option>
+                                <option value="no">No</option>
+                            </select>
+                            <label for="renovacion">¿Es renovación?</label>
+                        </div>
+                      </div>
+                    </div>
 
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
@@ -98,8 +135,8 @@ function obtenerInstalacion() {
                 }
 
                 contenido = '<option ' + seleccionado + ' value="' + response.instalaciones[index]
-                    .id_instalacion + '">' + 
-                    tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa + 
+                    .id_instalacion + '">' +
+                    tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
                     '</option>' + contenido;
             }
 
