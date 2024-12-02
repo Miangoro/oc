@@ -1,4 +1,3 @@
-<!-- Edit Lote Envasado Modal -->
 <div class="modal fade" id="editLoteEnvasado" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-edit-address">
         <div class="modal-content">
@@ -9,35 +8,35 @@
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="editLoteEnvasadoForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
-
                     <input type="hidden" id="edit_id_lote_envasado" name="id">
                     <div class="row">
                         <div class="col-12">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="edit_obtenerDirecciones(); edit_obtenerMarcas(); edit_obtenerGraneles();"
+                                <select
+                                    onchange="edit_obtenerDirecciones(); edit_obtenerMarcas(); edit_obtenerGraneles();"
                                     id="edit_cliente" name="edit_cliente" class="select2 form-select" required>
                                     <option value="" disabled>Selecciona cliente</option>
                                     @foreach ($clientes as $cliente)
-                                    <option value="{{ $cliente->id_empresa }}">{{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }} | {{ $cliente->razon_social }}</option>
+                                        <option value="{{ $cliente->id_empresa }}">
+                                            {{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $cliente->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="edit_cliente">Cliente</label>
                             </div>
                         </div>
-
-                        <!-- Datos a mostrar para la opción 1 -->
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control" id="edit_nombre"
                                 placeholder="Introduce el nombre del lote" name="edit_nombre"
                                 aria-label="Nombre del lote" required />
                             <label for="name">Nombre del lote</label>
                         </div>
-
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-5">
                                     <input type="text" id="edit_sku" class="form-control"
-                                        placeholder="No. de pedido/SKU" aria-label="No. de pedido/SKU" name="edit_sku" />
+                                        placeholder="No. de pedido/SKU" aria-label="No. de pedido/SKU"
+                                        name="edit_sku" />
                                     <label for="edit_sku">No. de pedido/SKU</label>
                                 </div>
                             </div>
@@ -52,7 +51,6 @@
                                     </select>
                                     <label for="edit_marca">Marca</label>
                                 </div>
-
                             </div>
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
@@ -63,11 +61,9 @@
                                         <option value="3">Stock</option>
                                     </select>
                                     <label for="edit_destino_lote">Destino lote</label>
-
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
@@ -95,113 +91,95 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-6">
                                     <input class="form-control" type="number" step="0.01"
-                                        placeholder="Volumen total" id="edit_volumen_total" name="edit_volumen_total" readonly/>
+                                        placeholder="Volumen total" id="edit_volumen_total" name="edit_volumen_total"
+                                        readonly />
                                     <label for="edit_volumen_total">Volumen total</label>
                                 </div>
                             </div>
-                           <!-- <div class="col-md-4">
-                                <div class="form-floating form-floating-outline mb-6">
-                                    <select class="select2 form-select edit_Instalaciones" id="edit_Instalaciones"
-                                        name="edit_Instalaciones" aria-label="Default select example">
-                                        <option value="" selected>Lote Granel</option>
-                                        @foreach ($Instalaciones as $Instalacion)
-                                            <option value="{{ $Instalacion->id_instalacion }}">
-                                                {{ $Instalacion->direccion_completa }}</option>
-                                        @endforeach
-                                    </select>
-                                    <label for="edit_Instalaciones">Lugar de envasado</label>
-                                </div>
-                            </div>-->
                             <div class="col-md-8 mb-6">
                                 <div class="input-group">
-                                    <select placeholder="Selecciona el cliente" class="form-select edit_Instalaciones" id="edit_Instalaciones"
-                                        name="edit_Instalaciones" aria-label="Default select example">
+                                    <select placeholder="Selecciona el cliente" class="form-select edit_Instalaciones"
+                                        id="edit_Instalaciones" name="edit_Instalaciones"
+                                        aria-label="Default select example">
                                         <option value="" disabled selected>Seleccione un cliente</option>
                                     </select>
-                                    <a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect" type="button"><i class="ri-add-circle-fill"></i> Registrar instalación de envasado</a>
-                                  </div>
+                                    <a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect"
+                                        type="button"><i class="ri-add-circle-fill"></i> Registrar instalación de
+                                        envasado</a>
+                                </div>
                             </div>
                         </div>
-
-                    <div id="edit_datosOpcion2">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th><button type="button" class="btn btn-primary add-row-edit"> <i class="ri-add-line"></i> </button></th>
-                                    <th>Lote a granel</th>
-                                    <th>Volumen parcial</th>
-                                </tr>
-                            </thead>
-                            <tbody id="edit_contenidoGraneles">
-                                <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-danger remove-row" > <i class="ri-delete-bin-5-fill"></i> </button>
-                                    </th>
-                                    <td>
-                                        <select class="edit_lote_granel form-control select2" name="edit_lote_granel[]" id="edit_lote_granel">
-                                            <!-- Opciones -->
-                                            
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control form-control-sm" name="edit_volumen_parcial[]">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        
-                    </div>
-
-
-                    <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Actualizar</button>
-                        <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
-                    </div>
+                        <div id="edit_datosOpcion2">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th><button type="button" class="btn btn-primary add-row-edit"> <i
+                                                    class="ri-add-line"></i> </button></th>
+                                        <th>Lote a granel</th>
+                                        <th>Volumen parcial</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="edit_contenidoGraneles">
+                                    <tr>
+                                        <th>
+                                            <button type="button" class="btn btn-danger remove-row"> <i
+                                                    class="ri-delete-bin-5-fill"></i> </button>
+                                        </th>
+                                        <td>
+                                            <select class="edit_lote_granel form-control select2"
+                                                name="edit_lote_granel[]" id="edit_lote_granel">
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="form-control form-control-sm"
+                                                name="edit_volumen_parcial[]">
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
+                            <button type="submit" class="btn btn-primary">Actualizar</button>
+                            <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                                aria-label="Close">Cancelar</button>
+                        </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-
-
 <script>
-function edit_obtenerGraneles() {
-    var empresa = $("#edit_cliente").val();
-    // Hacer una petición AJAX para obtener los detalles de la empresa
-    $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function(response) {
-            // Iterar por cada select de lotes granel en el modal
-            $('.edit_lote_granel').each(function () {
-                var selectElement = $(this);
-                var selectedValue = selectElement.val(); // Obtener el valor seleccionado actual
-                // Construir las opciones del select
-                var contenido = "";
-                response.lotes_granel.forEach(function (lote) {
-                    contenido += `<option value="${lote.id_lote_granel}" 
+    function edit_obtenerGraneles() {
+        var empresa = $("#edit_cliente").val();
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                // Iterar por cada select de lotes granel en el modal
+                $('.edit_lote_granel').each(function() {
+                    var selectElement = $(this);
+                    var selectedValue = selectElement.val(); // Obtener el valor seleccionado actual
+                    var contenido = "";
+                    response.lotes_granel.forEach(function(lote) {
+                        contenido += `<option value="${lote.id_lote_granel}" 
                         ${lote.id_lote_granel == selectedValue ? "selected" : ""}>
                         ${lote.nombre_lote}</option>`;
+                    });
+                    if (response.lotes_granel.length === 0) {
+                        contenido = '<option value="">Sin lotes a granel registrados</option>';
+                    }
+                    // Actualizar el contenido del select sin perder la selección
+                    selectElement.html(contenido).trigger('change');
                 });
-                if (response.lotes_granel.length === 0) {
-                    contenido = '<option value="">Sin lotes a granel registrados</option>';
-                }
-                // Actualizar el contenido del select sin perder la selección
-                selectElement.html(contenido).trigger('change');
-            });
-        },
-        error: function() {
-        }
-    });
-}
-
+            },
+            error: function() {}
+        });
+    }
 
     function edit_obtenerMarcas() {
         var empresa = $("#edit_cliente").val();
@@ -212,7 +190,6 @@ function edit_obtenerGraneles() {
                 var contenido = "";
                 var selected = "";
                 for (let index = 0; index < response.marcas.length; index++) {
-                   
                     contenido = '<option value="' + response.marcas[index].id_marca + '">' + response
                         .marcas[index].marca + '</option>' + contenido;
                 }
@@ -221,11 +198,9 @@ function edit_obtenerGraneles() {
                 }
                 $('#edit_marca').html(contenido);
             },
-            error: function() {
-            }
+            error: function() {}
         });
     }
-
 
     function edit_obtenerDirecciones() {
         var empresa = $("#edit_cliente").val();
@@ -238,18 +213,16 @@ function edit_obtenerGraneles() {
                     contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
                         response.instalaciones[index].direccion_completa + '</option>' + contenido;
                 }
-
                 if (response.instalaciones.length == 0) {
                     contenido = '<option value="">Sin lotes a granel registrados</option>';
                 }
                 $('.edit_Instalaciones').html(contenido);
             },
-            error: function() {
-            }
+            error: function() {}
         });
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         function calcularVolumenTotal() {
             var cantidadBotellas = parseFloat(document.getElementById('edit_cant_botellas').value) || 0;
             var edit_presentacion = parseFloat(document.getElementById('edit_presentacion').value) || 0;
@@ -270,6 +243,5 @@ function edit_obtenerGraneles() {
         document.getElementById('edit_cant_botellas').addEventListener('input', calcularVolumenTotal);
         document.getElementById('edit_presentacion').addEventListener('input', calcularVolumenTotal);
         document.getElementById('edit_unidad').addEventListener('change', calcularVolumenTotal);
-    });    
+    });
 </script>
-
