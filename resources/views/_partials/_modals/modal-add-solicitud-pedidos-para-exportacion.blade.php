@@ -29,7 +29,13 @@
                                     class="select2 form-select">
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ isset($empresa->empresaNumClientes[0])
+                                                ? $empresa->empresaNumClientes[0]->numero_cliente
+                                                : (isset($empresa->empresaNumClientes[1])
+                                                    ? $empresa->empresaNumClientes[1]->numero_cliente
+                                                    : 'Sin número') }}
+                                            | {{ $empresa->razon_social }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -121,7 +127,7 @@
                             <table class="table table-striped" id="tabla_marcas">
                                 <thead>
                                     <tr>
-                                        <th>Seleccionar</th>
+                                      <th>Seleccionar</th>
                                         <th>ID Doc</th>
                                         <th>SKU</th>
                                         <th>Tipo</th>
@@ -146,7 +152,7 @@
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select id="evasado_export" name="lote_envasado[0]"
-                                                class=" form-select">
+                                                class="select2 form-select">
                                                 <option value="" disabled selected>Selecciona un lote envasado
                                                 </option>
                                                 <!-- Opciones dinámicas -->
@@ -157,7 +163,7 @@
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <select id="lotes_granel_export" name="lote_granel[0]"
-                                                class=" form-select">
+                                                class="select2 form-select">
                                                 <option value="" disabled selected>Selecciona un lote a granel
                                                 </option>
                                                 <!-- Opciones dinámicas -->
@@ -182,7 +188,7 @@
                                     <div class="col-md-4">
                                         <div class="form-floating form-floating-outline mb-4">
                                             <input type="text" class="form-control" name="presentacion[0]"
-                                                placeholder="Ej. 750">
+                                                placeholder="Ej. 750ml">
                                             <label for="presentacion">Presentación</label>
                                         </div>
                                     </div>
@@ -258,28 +264,13 @@
                 for (let index = 0; index < response.lotes_envasado.length; index++) {
                     contenidoLotes += '<option value="' + response.lotes_envasado[index].id_lote_envasado +
                         '">' +
-                        response.lotes_envasado[index].nombre + '</option>';
+                        response.lotes_envasado[index].nombre_lote + '</option>';
                 }
                 if (response.lotes_envasado.length == 0) {
                     contenidoLotes =
                         '<option value="" disabled selected>Sin lotes envasados registrados</option>';
                 }
                 $('#evasado_export').html(contenidoLotes);
-                //lotes granel
-                var contenidoLotesGranel = "";
-                for (let index = 0; index < response.lotes_granel.length; index++) {
-                    contenidoLotesGranel += '<option value="' + response.lotes_granel[index].id_lote_granel +
-                        '">' +
-                        response.lotes_granel[index].nombre_lote + '</option>';
-                }
-                if (response.lotes_granel.length == 0) {
-                    contenidoLotesGranel =
-                        '<option value="" disabled selected>Sin lotes granel registrados</option>';
-                }
-                $('#lotes_granel_export').html(contenidoLotesGranel);
-
-
-
             },
             error: function() {
                 // Manejar el error
@@ -288,58 +279,45 @@
         });
     }
 
-
     function cargarMarcas() {
     var id_empresa = $('#id_empresa_solicitud_exportacion').val();
-
-    // Limpiar la tabla antes de cargar nuevos datos
-    $('#tabla_marcas tbody').html('<tr><td colspan="7" class="text-center">Cargando...</td></tr>');
 
     if (id_empresa) {
         $.ajax({
             url: '/marcas/' + id_empresa,
             method: 'GET',
-            success: function(marcas) {
+            success: function (marcas) {
                 var tbody = '';
 
-                // Filtrar marcas que tienen datos de etiquetado
-                marcas.forEach(function(marca) {
-                    var etiquetado = marca.etiquetado ? JSON.parse(marca.etiquetado) : null;
+                marcas.forEach(function (marca) {
+    if (marca.etiquetado && typeof marca.etiquetado === 'object' && Object.keys(marca.etiquetado).length > 0) {
+        for (var i = 0; i < marca.etiquetado.sku.length; i++) {
+            tbody += '<tr>';
+            tbody += `
+                <td>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="marcaSeleccionada" id="radio_${marca.etiquetado.sku[i]}" value="${marca.etiquetado.sku[i]}" />
+                    </div>
+                </td>
+            `;
+            tbody += `<td>${marca.etiquetado.id_doc[i] || 'N/A'}</td>`;
+            tbody += `<td>${marca.etiquetado.sku[i] || 'N/A'}</td>`;
+            tbody += `<td>${marca.etiquetado.tipo_nombre[i] || 'N/A'}</td>`; // Tipo
+            tbody += `<td>${marca.etiquetado.presentacion[i] || 'N/A'}</td>`;
+            tbody += `<td>${marca.etiquetado.clase_nombre[i] || 'N/A'}</td>`; // Clase
+            tbody += `<td>${marca.etiquetado.categoria_nombre[i] || 'N/A'}</td>`; // Categoría
+            tbody += '</tr>';
+        }
+    }
+});
 
-                    // Solo procesar marcas que tienen datos de etiquetado
-                    if (etiquetado && typeof etiquetado === 'object' && Object.keys(etiquetado).length > 0) {
-                        // Añadir mensaje de disponibilidad de datos de etiquetado
-                        tbody += `<tr><td colspan="7" class="text-center">Datos de etiquetado disponibles para la marca "${marca.marca}"</td></tr>`;
-
-                        // Iterar sobre los datos de etiquetado
-                        for (var i = 0; i < etiquetado.sku.length; i++) {
-                            tbody += '<tr>';
-                            tbody += `
-                                <td>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="marcaSeleccionada" id="radio_${etiquetado.sku[i]}" value="${etiquetado.sku[i]}" />
-                                    </div>
-                                </td>
-                            `;
-                            tbody += `<td>${etiquetado.id_doc ? etiquetado.id_doc[i] : 'N/A'}</td>`;
-                            tbody += `<td>${etiquetado.sku[i] || 'N/A'}</td>`;
-                            tbody += `<td>${marca.tipo_nombre[i] || 'N/A'}</td>`; // Tipo
-                            tbody += `<td>${etiquetado.presentacion[i] || 'N/A'}</td>`;
-                            tbody += `<td>${marca.clase_nombre[i] || 'N/A'}</td>`; // Clase
-                            tbody += `<td>${marca.categoria_nombre[i] || 'N/A'}</td>`; // Categoría
-                            tbody += '</tr>';
-                        }
-                    }
-                });
-
-                // Si no se generó tbody, muestra un mensaje predeterminado
                 if (!tbody) {
-                    tbody = '<tr><td colspan="7" class="text-center">No hay marcas disponibles con datos de etiquetado.</td></tr>';
+                    tbody = '<tr><td colspan="7" class="text-center">No hay datos de etiquetado disponibles.</td></tr>';
                 }
 
                 $('#tabla_marcas tbody').html(tbody);
             },
-            error: function(xhr) {
+            error: function (xhr) {
                 console.error('Error al obtener marcas:', xhr);
                 $('#tabla_marcas tbody').html('<tr><td colspan="7">Error al cargar los datos</td></tr>');
             }
@@ -348,4 +326,7 @@
         $('#tabla_marcas tbody').html('<tr><td colspan="7">Seleccione una empresa para ver los datos</td></tr>');
     }
 }
+
+
+
 </script>

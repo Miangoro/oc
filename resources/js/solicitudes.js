@@ -1731,7 +1731,6 @@ $(function () {
   });
 
   /* seccion para exportacion */
-
   $(document).ready(function () {
     // Obtener el select y las secciones
     var $tipoSolicitud = $('#tipo_solicitud');
@@ -1754,29 +1753,60 @@ $(function () {
   });
 
   $(document).ready(function () {
-    let sectionCount = 0;
+    // Contador que inicia en 1 porque el lote[0] es estático en el HTML
+    let sectionCount = 1;
 
+    // Agregar una nueva sección dinámica
     $('#add-characteristics').click(function () {
-        sectionCount++;
+        // Validar que se haya seleccionado una empresa
+        let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val();
+        if (!empresaSeleccionada) {
+            // Mostrar alerta si no se seleccionó ninguna empresa
+            Swal.fire({
+                icon: 'warning',
+                title: 'Advertencia',
+                text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
+                customClass: {
+                    confirmButton: 'btn btn-warning'
+                }
+            });
+            return; // Salir del evento si no se seleccionó una empresa
+        }
+
+        // Clonar la sección original
         let newSection = $('#caracteristicas_Ex').clone();
+
+        // Cambiar el ID de la nueva sección para hacerlo único
         newSection.attr('id', 'caracteristicas_Ex_' + sectionCount);
+
+        // Limpiar los valores de los inputs y selects en la nueva sección
         newSection.find('input').val('');
         newSection.find('select').prop('selectedIndex', 0);
+
+        // Actualizar el atributo "name" de inputs y selects para incluir un índice único
         newSection.find('input, select').each(function () {
             let name = $(this).attr('name');
             if (name) {
-                $(this).attr('name', name.replace(/\[\d+\]/, '[' + sectionCount + ']'));
+                // Reemplazar el índice dinámico con el contador actual
+                $(this).attr('name', name.replace(/\[\d*\]/, '[' + sectionCount + ']'));
             }
         });
+
+        // Agregar la nueva sección al contenedor
         newSection.appendTo('#sections-container');
 
+        // Incrementar el contador para la próxima sección dinámica
+        sectionCount++;
     });
 
+    // Eliminar la última sección dinámica agregada
     $('#delete-characteristics').click(function () {
-        if (sectionCount > 0) {
-            $('#caracteristicas_Ex_' + sectionCount).remove();
-            sectionCount--;
+        // Solo eliminar si hay más de una sección dinámica
+        if (sectionCount > 1) {
+            $('#caracteristicas_Ex_' + (sectionCount - 1)).remove();
+            sectionCount--; // Reducir el contador
         } else {
+            // Mensaje de advertencia con SweetAlert
             Swal.fire({
                 icon: 'warning',
                 title: 'Advertencia',
@@ -1788,7 +1818,6 @@ $(function () {
         }
     });
 });
-
 
 
 
