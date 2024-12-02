@@ -725,6 +725,27 @@ $(function () {
             }
           }
         },
+        'clases[]':{
+          validators: {
+            notEmpty: {
+              message: 'Selecciona al menos una clase.'
+            }
+          }
+        },
+        'categorias[]':{
+          validators: {
+            notEmpty: {
+              message: 'Selecciona al menos una categoria.'
+            }
+          }
+        },
+        'renovacion':{
+          validators: {
+            notEmpty: {
+              message: 'Selecciona si es renovación o no.'
+            }
+          }
+        }
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
