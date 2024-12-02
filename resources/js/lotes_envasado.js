@@ -152,8 +152,39 @@ $(function () {
             );
           }
         },
-        { data: 'destino_lote' },
-
+        {
+          data: 'destino_lote',
+          className: 'text-center',
+          render: function (data, type, full, meta) {
+            var destinoText = '';
+            var colorClass = '';
+        
+            switch (data) {
+              case 1:
+                destinoText = 'Nacional';
+                colorClass = 'info'; // Azul
+                break;
+              case 2:
+                destinoText = 'Exportación';
+                colorClass = 'success'; // Verde
+                break;
+              case 3:
+                destinoText = 'Stock';
+                colorClass = 'warning'; // Amarillo
+                break;
+              default:
+                destinoText = 'Desconocido';
+                colorClass = 'secondary'; // Gris
+            }
+        
+            return `
+              <span class="badge rounded-pill bg-label-${colorClass}">
+                ${destinoText}
+              </span>
+            `;
+          }
+        }
+        ,        
         { data: 'lugar_envasado' },
         {
           data: null,
@@ -162,28 +193,24 @@ $(function () {
           render: function (data, type, row) {
             var inicial = '';
             var nuevo = '';
-
-            if (row.inicial != 'N/A') {
+        
+            if (row.inicial && row.inicial !== 'N/A') {
               inicial =
                 '<br><span class="fw-bold text-dark small">SKU inicial:</span><span class="small"> ' +
                 row.inicial +
                 '</span>';
             }
-            if (row.nuevo != 'N/A') {
+            if (row.nuevo && row.nuevo !== 'N/A') {
               nuevo =
                 '<br><span class="fw-bold text-dark small">SKU nuevo:</span><span class="small"> ' +
                 row.nuevo +
                 '</span>';
             }
-
-            return (
-              '<span class="fw-bold text-dark small">Inicial:</span> <span class="small"> ' +
-              row.inicial +
-              '</span><br><span class="fw-bold text-dark small">Nuevo:</span><span class="small"> ' +
-              row.nuevo
-            );
+        
+            return inicial + nuevo;
           }
-        },
+        }
+,        
         { data: 'estatus' }, //status
         { data: 'action' }
       ],
@@ -597,7 +624,7 @@ $(function () {
             }
           }
         },
-        presentacion: {
+/*         presentacion: {
           validators: {
             notEmpty: {
               message: 'Por favor introduzca una cantidad'
@@ -613,7 +640,7 @@ $(function () {
               message: 'El número no debe comenzar con 0'
             }
           }
-        },
+        }, */
         destino_lote: {
           validators: {
             notEmpty: {
@@ -621,7 +648,7 @@ $(function () {
             }
           }
         },
-        cant_botellas: {
+/*         cant_botellas: {
           validators: {
             notEmpty: {
               message: 'Por favor introduzca una cantidad'
@@ -637,7 +664,7 @@ $(function () {
               message: 'El número no debe comenzar con 0'
             }
           }
-        },
+        }, */
 
         lugar_envasado: {
           validators: {
@@ -873,61 +900,64 @@ $(function () {
     $(this).closest('tr').remove();
   });
 
-  //Añadir row
-  $(document).ready(function () {
-    $('.add-row').click(function () {
-      // Verificar si se ha seleccionado un cliente
-      if ($('#id_empresa').val() === '') {
-        // Mostrar la alerta de SweetAlert2
-        Swal.fire({
-          icon: 'warning',
-          title: 'Espere!',
-          text: 'Por favor, selecciona un cliente primero.',
-          customClass: {
-            confirmButton: 'btn btn-danger'
-          },
-          buttonsStyling: false // Asegura que los estilos personalizados se apliquen
-        });
-        return;
-      }
+//Añadir row
+$(document).ready(function () {
+  $('.add-row').click(function () {
+    // Verificar si se ha seleccionado un cliente
+    if ($('#id_empresa').val() === '') {
+      // Mostrar la alerta de SweetAlert2
+      Swal.fire({
+        icon: 'warning',
+        title: 'Espere!',
+        text: 'Por favor, selecciona un cliente primero.',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        },
+        buttonsStyling: false // Asegura que los estilos personalizados se apliquen
+      });
+      return;
+    }
 
-      // Si el cliente está seleccionado, añade una nueva fila
-      var newRow = `
-          <tr>
-              <th>
-                  <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
-              </th>
-              <td>
-                  <select class="id_lote_granel form-control select2-nuevo id_lote_granel" name="id_lote_granel[]">
-                  </select>
-              </td>
-              <td>
-                  <input type="text" class="form-control form-control-sm" name="volumen_parcial[]">
-              </td>
-          </tr>`;
-      $('#contenidoGraneles').append(newRow);
+    // Obtener el valor de volumen_parcial calculado
+    var volumenParcial = document.getElementById('volumen_parcial').value;
 
-      // Re-inicializar select2 en la nueva fila
-      $('#contenidoGraneles')
-        .find('.select2-nuevo')
-        .select2({
-          dropdownParent: $('#addlostesEnvasado'), // Asegúrate de que #myModal sea el id de tu modal
-          width: '100%',
-          dropdownCssClass: 'select2-dropdown'
-        });
+    // Si el valor de volumen_parcial no está vacío, añade una nueva fila
+    var newRow = `
+        <tr>
+            <th>
+                <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+            </th>
+            <td>
+                <select class="id_lote_granel form-control select2-nuevo id_lote_granel" name="id_lote_granel[]">
+                </select>
+            </td>
+            <td>
+                <input type="text" class="form-control form-control-sm " name="volumen_parcial[]" value="${volumenParcial}">
+            </td>
+        </tr>`;
+    $('#contenidoGraneles').append(newRow);
 
-      $('.select2-dropdown').css('z-index', 9999);
+    // Re-inicializar select2 en la nueva fila
+    $('#contenidoGraneles')
+      .find('.select2-nuevo')
+      .select2({
+        dropdownParent: $('#addlostesEnvasado'), // Asegúrate de que #myModal sea el id de tu modal
+        width: '100%',
+        dropdownCssClass: 'select2-dropdown'
+      });
 
-      // Copiar opciones del primer select al nuevo select
-      var options = $('#contenidoGraneles tr:first-child .id_lote_granel').html();
-      $('#contenidoGraneles tr:last-child .id_lote_granel').html(options);
-    });
+    $('.select2-dropdown').css('z-index', 9999);
 
-    // Función para eliminar una fila
-    $(document).on('click', '.remove-row', function () {
-      $(this).closest('tr').remove();
-    });
+    // Copiar opciones del primer select al nuevo select
+    var options = $('#contenidoGraneles tr:first-child .id_lote_granel').html();
+    $('#contenidoGraneles tr:last-child .id_lote_granel').html(options);
   });
+
+  // Función para eliminar una fila
+  $(document).on('click', '.remove-row', function () {
+    $(this).closest('tr').remove();
+  });
+});
 
 
   //update valiacion: en editar
@@ -971,7 +1001,7 @@ $(function () {
           }
         }
       },
-      edit_cant_botellas: {
+/*       edit_cant_botellas: {
         validators: {
           notEmpty: {
             message: 'Por favor ingrese una cantidad'
@@ -984,7 +1014,7 @@ $(function () {
             message: 'Por favor ingrese una cantidad'
           }
         }
-      },
+      }, */
 
       edit_unidad: {
         validators: {
@@ -994,13 +1024,13 @@ $(function () {
         }
       },
 
-      edit_volumen_total: {
+/*       edit_volumen_total: {
         validators: {
           notEmpty: {
             message: 'Por favor llene los campos de detino lote y cantidad de botellas'
           }
         }
-      }
+      } */
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),

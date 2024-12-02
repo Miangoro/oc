@@ -42,7 +42,7 @@ class InstalacionesController extends Controller
             4 => 'num_servicio',
             5 => 'fecha_emision',
             6 => 'razon_social',//este lugar lo ocupa fecha en find
-            7 => 'id_instalacion',
+            7 => 'direccion_completa'
         ];
 
         $search = [];
@@ -134,6 +134,7 @@ class InstalacionesController extends Controller
                 $nestedData['num_dictamen'] = $user->num_dictamen;
                 $nestedData['num_servicio'] = $user->inspeccione->num_servicio;
                 $nestedData['fecha_emision'] = $user->fecha_emision;
+                $nestedData['direccion_completa'] = $user->inspeccione->solicitud->instalacion->direccion_completa;
 
                 $data[] = $nestedData;
             }

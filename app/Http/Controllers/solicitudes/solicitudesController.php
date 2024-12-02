@@ -258,6 +258,7 @@ class solicitudesController extends Controller
         $VigilanciaProdu->id_instalacion = $request->id_instalacion;
         $VigilanciaProdu->info_adicional = $request->info_adicional;
 
+        
         $VigilanciaProdu->caracteristicas = json_encode([
             'id_lote_granel' => $request->id_lote_granel,
             'id_categoria' => $request->id_categoria,

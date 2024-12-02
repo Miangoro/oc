@@ -28,6 +28,7 @@
                                         <th><button type="button" class="btn btn-primary add-row-add"> <i
                                                     class="ri-add-line"></i>
                                             </button></th>
+                                        <th>Destino de exportación</th>
                                         <th>SKU</th>
                                         <th>Tipo Maguey</th>
                                         <th>Presentación</th>
@@ -35,6 +36,7 @@
                                         <th>Categoria</th>
                                         <th>Etiqueta</th>
                                         <th>Corrugado</th>
+
                                     </tr>
                                 </thead>
                                 <tbody id="contenidoRango">
@@ -43,6 +45,16 @@
                                             <button type="button" class="btn btn-danger remove-row" disabled> <i
                                                     class="ri-delete-bin-5-fill"></i> </button>
                                         </th>
+                                        <td>
+                                            <select class=" form-control select2" name="id_direccion[]"
+                                                id="id_direccion">
+                                                @foreach ($direcciones as $direccion)
+                                                    <option value="{{ $direccion->id_direccion }}">
+                                                        {{ $direccion->direccion }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
                                         <td>
                                             <input type="text" class="form-control form-control-sm" name="sku[]"
                                                 id="sku">
@@ -67,7 +79,8 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <select class="form-control select2" name="id_categoria[]" id="id_categoria">
+                                            <select class="form-control select2" name="id_categoria[]"
+                                                id="id_categoria">
                                                 @foreach ($categorias as $categoria)
                                                     <option value="{{ $categoria->id_categoria }}">
                                                         {{ $categoria->categoria }}</option>
@@ -90,6 +103,7 @@
                                                 name="nombre_documento[]">
 
                                         </td>
+
                                     </tr>
                                 </tbody>
                             </table>
@@ -111,63 +125,74 @@
 
 
 <script>
-$(document).ready(function() {
-    // Inicializa select2 cuando el modal se muestra
-    $('#etiquetas').on('shown.bs.modal', function() {
-        $('#contenidoRango .select2').select2({
-            dropdownParent: $('#etiquetas')
+    $(document).ready(function() {
+        // Inicializa select2 cuando el modal se muestra
+        $('#etiquetas').on('shown.bs.modal', function() {
+            $('#contenidoRango .select2').select2({
+                dropdownParent: $('#etiquetas')
+            });
         });
-    });
 
-    //Agregar o eliminar filas en la tabla
-    var i = 0;
-    $('.add-row-add').click(function() {
-        let opciones = `
+        //Agregar o eliminar filas en la tabla
+        var i = 0;
+        $('.add-row-add').click(function() {
+            let opciones = `
             @foreach ($tipos as $nombre)
                 <option value="{{ $nombre->id_tipo }}">{{ $nombre->nombre }}</option>
             @endforeach
         `;
 
-        let opciones2 = `
+            let opciones2 = `
             @foreach ($clases as $clase)
                 <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
             @endforeach
         `;
 
-        let opciones3 = `
+            let opciones3 = `
             @foreach ($categorias as $categoria)
                 <option value="{{ $categoria->id_categoria }}">{{ $categoria->categoria }}</option>
             @endforeach
         `;
 
-        var newRow = `
+            let opciones4 = `
+                                                @foreach ($direcciones as $direccion)
+                                                    <option value="{{ $direccion->id_direccion }}">
+                                                        {{ $direccion->direccion }}
+                                                    </option>
+                                                @endforeach
+        `;
+
+            var newRow = `
             <tr>
                 <th>
                     <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
                 </th>
+                                                <td><select class="form-control select2" name="id_direccion[]">` +
+                opciones4 + `</select></td>
+
                 <td><input type="text" class="form-control form-control-sm" name="sku[]" id="sku"></td>
                 <td><select class="form-control select2" name="id_tipo[]">` + opciones + `</select></td>
                 <td><input type="number" class="form-control form-control-sm" name="presentacion[]" step="0.01" min="0"></td>
                 <td><select class="form-control select2" name="id_clase[]">` + opciones2 + `</select></td>
                 <td><select class="form-control select2" name="id_categoria[]">` + opciones3 + `</select></td>
+
                 <td><input class="form-control form-control-sm" type="file" name="url[]"><input value="60" class="form-control" type="hidden" name="id_documento[]"><input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]"></td>
                 <td><input class="form-control form-control-sm" type="file" name="url[]"><input value="75" class="form-control" type="hidden" name="id_documento[]"><input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]"></td>
             </tr>`;
-        
-        $('#contenidoRango').append(newRow);
 
-        // Reinicializa select2 en todos los selects agregados
-        $('#contenidoRango .select2').select2({
-            dropdownParent: $('#etiquetas')
+            $('#contenidoRango').append(newRow);
+
+            // Reinicializa select2 en todos los selects agregados
+            $('#contenidoRango .select2').select2({
+                dropdownParent: $('#etiquetas')
+            });
+
+            i++;
         });
 
-        i++;
+        // Función para eliminar una fila
+        $(document).on('click', '.remove-row', function() {
+            $(this).closest('tr').remove();
+        });
     });
-
-    // Función para eliminar una fila
-    $(document).on('click', '.remove-row', function() {
-        $(this).closest('tr').remove();
-    });
-});
-
 </script>

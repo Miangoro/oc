@@ -99,7 +99,7 @@
         }
 
         @media (max-width: 990px) {
-            .img-logo{
+            .img-logo {
                 visibility: hidden;
             }
         }
@@ -153,17 +153,83 @@
             width: 50px;
         }
 
+        /* Efecto de rebote */
+        @keyframes rebote {
+            0% {
+                transform: scale(1.1) translateY(0);
+            }
+
+            30% {
+                transform: scale(1.15) translateY(-10px);
+            }
+
+            50% {
+                transform: scale(1.1) translateY(0);
+            }
+
+            70% {
+                transform: scale(1.15) translateY(-5px);
+            }
+
+            100% {
+                transform: scale(1.15) translateY(0);
+            }
+        }
+
         .imagenes:hover,
         .redes:hover {
-            transform: scale(1.1);
+            animation: rebote 0.6s ease;
         }
+
+        .imagenes,
+        .redes {
+            transform: scale(1);
+        }
+
+        .imagenes:hover,
+        .redes:hover {
+            transform: scale(1.15);
+        }
+
+        .border-effect {
+            border-radius: 50%;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .face-effect:hover {
+            box-shadow: 0 0 15px dodgerblue,
+                0 0 45px dodgerblue,
+                0 0 75px dodgerblue,
+                0 0 90px dodgerblue;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .insta-effect:hover {
+            box-shadow: 0 0 15px #a04293,
+                0 0 45px #a04293,
+                0 0 75px #a04293,
+                0 0 90px #a04293;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .btn {
+            position: relative;
+            border-radius: 10px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .border-effect:hover {
+            transform: scale(1.07);
+            transition: transform 0.3s ease-in-out;
+        }
+
     </style>
 
     <div id="desktop-view" class="d-none">
         <div class="authentication-wrapper authentication-cover">
             <a href="{{ url('/') }}" class="auth-cover-brand d-flex align-items-center gap-2">
-                <span class="app-brand-logo demo img-logo"><img height="135px" src="{{ asset('assets/img/branding/logo_oc.png') }}"
-                        alt=""></span>
+                <span class="app-brand-logo demo img-logo"><img height="135px"
+                        src="{{ asset('assets/img/branding/logo_oc.png') }}" alt=""></span>
                 <!--<span class="app-brand-text demo text-heading fw-semibold">{{ config('variables.templateName') }}</span>-->
             </a>
             <div class="authentication-inner row m-0">
@@ -177,8 +243,9 @@
                 <div
                     class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-sm-12 px-12 py-6">
                     <div class="w-px-400 mx-auto pt-5 pt-lg-0">
+                        <h4 class="text-center">¡Bienvenido!</h4>
+
                         <img height="150px" src="{{ asset('assets/img/branding/logo.png') }}" alt="">
-                        <h4 class="mb-1">Bienvenido a {{ config('variables.templateName') }} </h4>
                         <p class="mb-5">Por favor, inicie sesión</p>
                         @if (session('status'))
                             <div class="alert alert-success mb-3" role="alert">
@@ -232,7 +299,7 @@
                                     </a>
                                 @endif
                             </div>
-                            <button class="btn btn-primary d-grid w-100">
+                            <button class="btn btn-primary d-grid w-100 border-effect">
                                 Iniciar sesión
                             </button>
                         </form>
@@ -264,12 +331,12 @@
                         <div class="flex-container">
                             <a href="https://www.facebook.com/organismo.certificador.CIDAM" target="_blank">
                                 <img src="{{ asset('assets/img/branding/facebook_logo.png') }}" alt=""
-                                    class="redes">
+                                    class="redes border-effect face-effect">
                             </a>
                             <div style="gap: 10px"></div>
                             <a href="https://www.instagram.com/oc_cidam/" target="_blank">
                                 <img src="{{ asset('assets/img/branding/instagram_logo.png') }}" alt=""
-                                    class="redes">
+                                    class="redes border-effect insta-effect">
                             </a>
                         </div>
                     </div>
@@ -297,9 +364,9 @@
                 <div
                     class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-6 px-4">
                     <div class="w-100 mx-auto">
+                        <h4 class="text-center">¡Bienvenido!</h4>
                         <img class="d-block mx-auto mb-3" height="100px"
                             src="{{ asset('assets/img/branding/logo.png') }}" alt="">
-                        <h4 class="text-center mb-1">Bienvenido a {{ config('variables.templateName') }} </h4>
                         <p class="text-center mb-4">Por favor, inicie sesión</p>
 
                         @if (session('status'))
@@ -353,7 +420,9 @@
                                     <a href="{{ route('password.request') }}" class="text-end">¿Olvidó su contraseña?</a>
                                 @endif
                             </div>
-                            <button class="btn btn-primary w-100 mb-3">Iniciar sesión</button>
+                            <button class="btn btn-primary d-grid w-100 border-effect">
+                                Iniciar sesión
+                            </button>
                         </form>
                         <p class="text-center">
                             <span>¿No estás certificado?</span>
@@ -381,12 +450,12 @@
                         <div class="flex-container">
                             <a href="https://www.facebook.com/organismo.certificador.CIDAM" target="_blank">
                                 <img src="{{ asset('assets/img/branding/facebook_logo.png') }}" alt=""
-                                    class="redes">
+                                    class="redes border-effect face-effect">
                             </a>
                             <div style="gap: 10px"></div>
                             <a href="https://www.instagram.com/oc_cidam/" target="_blank">
                                 <img src="{{ asset('assets/img/branding/instagram_logo.png') }}" alt=""
-                                    class="redes">
+                                    class="redes border-effect insta-effect">
                             </a>
                         </div>
                     </div>
@@ -462,14 +531,14 @@
     //vavidad
     function isChristmasSeason() {
         const today = new Date();
-        const month = today.getMonth(); 
-        return month === 11; 
+        const month = today.getMonth();
+        return month === 11;
     }
 
     function createSnowflake() {
         const snowflake = document.createElement("span");
         snowflake.classList.add("snowflake");
-        snowflake.textContent = "❄"; 
+        snowflake.textContent = "❄";
         snowflake.style.left = Math.random() * 100 + "vw";
         snowflake.style.animationDuration = Math.random() * 3 + 2 + "s"; // Duración de caída de 2 a 5 segundos
         snowflake.style.fontSize = Math.random() * 10 + 10 + "px"; // Tamaño entre 10px y 20px

@@ -26,6 +26,7 @@ $(function () {
         });
       }
     },
+
     columns: [
       { data: '' },
       { data: '' },
@@ -41,11 +42,8 @@ $(function () {
       { data: '' },
       { data: 'estatus' },
       { data: 'action' }
-
-
-
-
     ],
+
     columnDefs: [
       {
         // For Responsive
@@ -237,21 +235,22 @@ $(function () {
             }
           },
           {
-            extend: 'excel',
-            title: 'Solicitudes',
+            extend: 'excel',//extension a descargar
+            title: 'Solicitudes de servicio',
             text: '<i class="ri-file-excel-line me-1"></i>Excel',
             className: 'dropdown-item',
-            exportOptions: {
-              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+            exportOptions: { //define como se exportan los datos
+              columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], //N°. de columnas a exportar
+              modifier: { //Incluye todos los datos
+                page: 'all', //Exporta todos los datos de todas las páginas
+                //order: 'current' //Mantiene el orden actual
+                },
               format: {
-                body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 8 || columnIndex === 11) {
+                body: function (inner, rowIndex, columnIndex) {//Personaliza el contenido de las celdas
+                  /*if (columnIndex === 8 || columnIndex === 11) { //Reemplaza el contenido de la celda con la cadena return
                     return 'ViewSuspend';
-                  }
-                  if (columnIndex === 1) { // Asegúrate de que el índice de columna es el correcto para el ID
-                    return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
-                  }
-                  return inner;
+                  }*/
+                  return inner.replace(/<[^>]*>/g, '');//Elimina todas las etiquetas HTML de las columnas      
                 }
               }
             }
@@ -341,6 +340,9 @@ $(function () {
       }
     }
   });
+
+
+
 
   var dt_user_table = $('.datatables-solicitudes'),
     select2Elements = $('.select2')
@@ -1647,17 +1649,31 @@ $(function () {
     var url = $(this).data('url');
     var registro = $(this).data('registro');
     var id_solicitud = $(this).data('id');
-    var iframe = $('#pdfViewer');
-    iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
+      var iframe = $('#pdfViewer');
+      var spinner = $('#cargando');
 
-    $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
-    $("#subtitulo_modal").text(registro);
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+      spinner.show();
+      iframe.hide();
+    //Cargar el PDF con el ID
+      iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+      $("#NewPestana").attr('href', 'solicitud_de_servicio/' + id_solicitud).show();
+  
+      $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
+      $("#subtitulo_modal").text(registro);  
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+      iframe.on('load', function () {
+        spinner.hide();
+        iframe.show();
+      });
   });
+
+
 
   var openedFromFirstModal = false;
 
-
-
+  
   $('#abrirModalInstalaciones').on('click', function () {
     var clienteSeleccionado = $('#id_empresa_solicitudes').val();
 

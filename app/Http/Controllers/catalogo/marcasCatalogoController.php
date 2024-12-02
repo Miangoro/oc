@@ -12,7 +12,7 @@ use App\Models\catalogo_norma_certificar;
 use App\Models\tipos;
 use App\Models\clases;
 use App\Models\categorias;
-
+use App\Models\direcciones;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Storage;
@@ -37,6 +37,7 @@ class marcasCatalogoController extends Controller
 
         // Otros datos que puedas querer pasar a la vista
         $marcas = marcas::all();
+        $direcciones = direcciones::all();
         $catalogo_norma_certificar = catalogo_norma_certificar::all();
         $tipos = tipos::all();
         $clases = clases::all();
@@ -57,6 +58,8 @@ class marcasCatalogoController extends Controller
             'tipos' => $tipos,
             'clases' => $clases,
             'categorias' => $categorias,
+            'direcciones' => $direcciones,
+
 
 
 
@@ -327,6 +330,7 @@ class marcasCatalogoController extends Controller
             // Crear nuevo registro en la base de datos
             $loteEnvasado = marcas::findOrFail($request->input('id_marca'));
             $loteEnvasado->etiquetado = json_encode([
+                'id_direccion' => $request->id_direccion,
                 'sku' => $request->sku,
                 'id_tipo' => $request->id_tipo,
                 'presentacion' => $request->presentacion,
@@ -374,6 +378,7 @@ class marcasCatalogoController extends Controller
         $marca = Marcas::findOrFail($id);
         $tipos = tipos::all();
         $clases = clases::all();
+        $direcciones = direcciones::all();
         $categorias = categorias::all();
         $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get();
 
@@ -381,6 +386,7 @@ class marcasCatalogoController extends Controller
         $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
         $etiquetado = json_decode($marca->etiquetado, true);
+        $marca->id_direccion = $etiquetado['id_direccion'] ?? null;
         $marca->sku = $etiquetado['sku'] ?? null;
         $marca->id_tipo = $etiquetado['id_tipo'] ?? null;
         $marca->presentacion = $etiquetado['presentacion'] ?? null;
@@ -388,6 +394,7 @@ class marcasCatalogoController extends Controller
         $marca->id_categoria = $etiquetado['id_categoria'] ?? null;
 
         return response()->json([
+            'direcciones' => $direcciones,
             'marca' => $marca,
             'tipos' => $tipos,
             'clases' => $clases,

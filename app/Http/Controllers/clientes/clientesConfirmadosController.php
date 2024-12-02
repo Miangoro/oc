@@ -26,7 +26,7 @@ class clientesConfirmadosController extends Controller
     public function UserManagement()
     {
 
-        $empresas = empresa::where('tipo', 2)->count();
+        $empresas = empresa::where('tipo', 2)->where('estatus',1)->count();
         $fisicas = empresa::where('tipo', 2)->where('regimen', 'Persona física')->count();
         $morales = empresa::where('tipo', 2)->where('regimen', 'Persona moral')->count();
         //$usuarios = User::all();
@@ -34,18 +34,25 @@ class clientesConfirmadosController extends Controller
         $estados = estados::all(); // Obtener todos los estados
         $normas = normas_catalo::where('id_norma', '!=', 3)->get();
         $actividadesClientes = catalogo_actividad_cliente::all();
+        $empresas_inactivas = empresa::where('tipo', 2)->where('estatus',2)->count();
         $empresas_confirmadas = empresa::where('tipo', 2)->get();
 
-        // $userCount = $empresas->count();
-        $verified = 5;
-        $notVerified = 10;
-        // $usersUnique = $empresas->unique(['estado']);
-        $userDuplicates = 40;
+        // Total de empresas
+        $total_empresas = $empresas + $empresas_inactivas;
+
+        // Evitar división por cero
+        if ($total_empresas > 0) {
+            $porcentaje_activas = ($empresas / $total_empresas) * 100;
+            $porcentaje_inactivas = ($empresas_inactivas / $total_empresas) * 100;
+        } else {
+            $porcentaje_activas = $porcentaje_inactivas = 0;
+        }
 
         return view('clientes.find_clientes_confirmados_view', [
 
 
             'empresas' => $empresas,
+            'empresas_inactivas' => $empresas_inactivas,
             'empresas_confirmadas' => $empresas_confirmadas,
             'fisicas' => $fisicas,
             'morales' => $morales,
@@ -53,6 +60,8 @@ class clientesConfirmadosController extends Controller
             'estados' => $estados,
             'normas' => $normas,
             'actividadesClientes' => $actividadesClientes,
+            'porcentaje_activas' => round($porcentaje_activas, 2),
+            'porcentaje_inactivas' => round($porcentaje_inactivas, 2),
 
         ]);
     }
@@ -220,6 +229,7 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
             3 => 'razon_social',
             4 => 'domicilio_fiscal',
             5 => 'regimen',
+            6 => 'es_maquilador'
         ];
 
         $search = [];
@@ -236,7 +246,7 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
         if (empty($request->input('search.value'))) {
             $users = empresa::join('empresa_num_cliente AS n', 'empresa.id_empresa', '=', 'n.id_empresa')
             ->leftjoin('empresa_contrato AS c', 'empresa.id_empresa', '=', 'c.id_empresa') // Nuevo join con empresa_contrato
-                ->select('empresa.estatus','c.id_contrato','empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
+                ->select('empresa.es_maquilador','empresa.estatus','c.id_contrato','empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
                 ->where('tipo', 2)->offset($start)
                 ->groupBy('empresa.id_empresa', 'empresa.razon_social',  'empresa.rfc', 'empresa.regimen', 'empresa.domicilio_fiscal', 'empresa.representante')
                 ->limit($limit)
@@ -247,7 +257,7 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
 
             $users = empresa::join('empresa_num_cliente AS n', 'empresa.id_empresa', '=', 'n.id_empresa')
             ->leftjoin('empresa_contrato AS c', 'empresa.id_empresa', '=', 'c.id_empresa') // Nuevo join con empresa_contrato
-                ->select('empresa.estatus','c.id_contrato','empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
+                ->select('empresa.es_maquilador','empresa.estatus','c.id_contrato','empresa.razon_social', 'empresa.id_empresa', 'empresa.rfc', 'empresa.domicilio_fiscal', 'empresa.representante', 'empresa.regimen', DB::raw('GROUP_CONCAT(distinct CONCAT(n.numero_cliente, ",", n.id_norma) SEPARATOR "<br>") as numero_cliente'))
                 ->where('tipo', 2)->where('empresa.id_empresa', 'LIKE', "%{$search}%")
                 ->orWhere('razon_social', 'LIKE', "%{$search}%")
                 ->orWhere('domicilio_fiscal', 'LIKE', "%{$search}%")
@@ -280,6 +290,7 @@ $fecha_vigencia = !empty($res[0]->fecha_vigencia) ? Helpers::formatearFecha($res
                 $nestedData['regimen'] = $user->regimen;
                 $nestedData['id_contrato'] = $user->id_contrato;
                 $nestedData['estatus'] = $user->estatus;
+                $nestedData['es_maquilador'] = $user->es_maquilador;
 
                 $data[] = $nestedData;
             }
