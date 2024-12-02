@@ -19,6 +19,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\tipos;
 use App\Models\marcas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class solicitudesController extends Controller
 {
@@ -587,8 +588,57 @@ class solicitudesController extends Controller
         return response()->json($marcas);
     }
 
+    public function storePedidoExportacion(Request $request)
+    {
+        // Validación de datos del formulario
+        $validated = $request->validate([
+            'id_empresa' => 'required|integer',
+            'fecha_visita' => 'required|date',
+            'id_instalacion' => 'required|integer',
+            'direccion_destinatario' => 'required|integer',
+            'aduana_salida' => 'required|string|max:255',
+            'no_pedido' => 'required|string|max:255',
+            'info_adicional' => 'nullable|string|max:500',
+        ]);
+    
+        // Procesar características
+        $data = json_decode($request->input('caracteristicas'), true);
+    
+        // Incluir los demás campos dentro del JSON de 'caracteristicas'
+        $data['tipo_solicitud'] = $validated['tipo_solicitud'] ?? $data['tipo_solicitud'];  // Solo si es enviado
+        $data['fecha_estimada_visita'] = $validated['fecha_estimada_visita'] ?? $data['fecha_estimada_visita'];  // Solo si es enviado
+        $data['no_pedido'] = $validated['no_pedido'];  // Solo si es enviado
+        $data['aduana_salida'] = $validated['aduana_salida'];  // Solo si es enviado
+        $data['direccion_destinatario'] = $validated['direccion_destinatario'];  // Solo si es enviado
+      
+        // Guardar la solicitud
+        $pedido = new solicitudesModel();
+        $pedido->folio = Helpers::generarFolioSolicitud();
+        $pedido->id_empresa = $validated['id_empresa'];
+        $pedido->fecha_visita = $validated['fecha_visita'];
+        $pedido->id_tipo = 11; 
+        $pedido->id_instalacion = $validated['id_instalacion'];
+        $pedido->info_adicional = $validated['info_adicional']; 
+        $pedido->caracteristicas = json_encode($data);  // Guardar el JSON completo con las características (incluyendo facturas)
+        $pedido->save();
+                // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
+                $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
 
-
-
-
+                // Notificación 1
+                $data1 = [
+                    'title' => 'Nuevo registro de solicitud',
+                    'message' => $pedido->folio . " " . $pedido->tipo_solicitud->tipo,
+                    'url' => 'solicitudes-historial',
+                ];
+        
+                // Iterar sobre cada usuario y enviar la notificación
+                foreach ($users as $user) {
+                    $user->notify(new GeneralNotification($data1));
+                }
+    
+        return response()->json(['success' => true, 'message' => 'Pedido registrado.']);
+    }
+    
+    
+    
 }

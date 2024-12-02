@@ -65,5 +65,8 @@ class solicitudesModel extends Model
         return $this->hasMany(marcas::class, 'id_empresa', 'id_empresa');
     }
 
-
+    public function instalaciones()
+    {
+        return $this->belongsTo(Instalaciones::class, 'id_instalacion', 'id_instalacion');
+    }
 }

@@ -77,27 +77,35 @@
             method: 'GET',
             success: function(response) {
                 console.log(response);
-                // Cargar los detalles en el modal
                 var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' + response
-                        .instalaciones[index].tipo + ' | ' + response
-                        .instalaciones[index].direccion_completa + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
-                }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
+            for (let index = 0; index < response.instalaciones.length; index++) {
+                // Limpia el campo tipo usando la función limpiarTipo
+                var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
 
-                }else{
-
-                }
-                $('#id_instalacion_dic').html(contenido);
+                contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' + 
+                    tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa + '</option>' + 
+                    contenido;
+            }
+            if (response.instalaciones.length == 0) {
+                contenido = '<option value="">Sin instalaciones registradas</option>';
+            }
+            $('#id_instalacion_dic').html(contenido);
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');
             }
         });
     }
+    // Función para limpiar el campo tipo
+function limpiarTipo(tipo) {
+    try {
+        // Convierte el JSON string a un array y únelos en una cadena limpia
+        return JSON.parse(tipo).join(', ');
+    } catch (e) {
+        // Si no es JSON válido, regresa el valor original
+        return tipo;
+    }
+}
 
 
 </script>
