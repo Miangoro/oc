@@ -91,11 +91,11 @@ class marcasCatalogoController extends Controller
             $users = marcas::with('empresa') // Incluye la relación empresa
                 ->offset($start)
                 ->limit($limit)
-              //  ->orderBy($order, $dir)
+                //  ->orderBy($order, $dir)
                 ->get();
         } else {
             $search = $request->input('search.value');
-            $users = marcas::with('empresa.empresaNumClientes','catalogo_norma_certificar') // Incluye la relación empresa
+            $users = marcas::with('empresa.empresaNumClientes', 'catalogo_norma_certificar') // Incluye la relación empresa
                 ->where('id_marca', 'LIKE', "%{$search}%")
                 ->orWhere('folio', 'LIKE', "%{$search}%")
                 ->orWhere('marca', 'LIKE', "%{$search}%")
@@ -110,7 +110,7 @@ class marcasCatalogoController extends Controller
                 })
                 ->offset($start)
                 ->limit($limit)
-              //  ->orderBy($order, $dir)
+                //  ->orderBy($order, $dir)
                 ->get();
             $totalFiltered = marcas::where('id_marca', 'LIKE', "%{$search}%")
                 ->orWhere('folio', 'LIKE', "%{$search}%")
@@ -131,12 +131,12 @@ class marcasCatalogoController extends Controller
                 $nestedData['marca'] = $user->marca;
                 $nestedData['id_empresa'] = $user->id_empresa;
                 $nestedData['id_norma'] = $user->catalogo_norma_certificar->norma ?? 'Sin norma';
-                $numeroCliente = 
-                $user->empresa->empresaNumClientes[0]->numero_cliente ?? 
-                $user->empresa->empresaNumClientes[1]->numero_cliente ?? 
-                $user->empresa->empresaNumClientes[2]->numero_cliente;
-            $razonSocial = $user->empresa ? $user->empresa->razon_social : '';
-            $nestedData['razon_social'] = '<b>'.$numeroCliente . '</b><br>' . $razonSocial;
+                $numeroCliente =
+                    $user->empresa->empresaNumClientes[0]->numero_cliente ??
+                    $user->empresa->empresaNumClientes[1]->numero_cliente ??
+                    $user->empresa->empresaNumClientes[2]->numero_cliente;
+                $razonSocial = $user->empresa ? $user->empresa->razon_social : '';
+                $nestedData['razon_social'] = '<b>' . $numeroCliente . '</b><br>' . $razonSocial;
                 $data[] = $nestedData;
             }
         }
@@ -288,6 +288,7 @@ class marcasCatalogoController extends Controller
         return response()->json(['success' => 'Clase eliminada correctamente']);
     }
 
+    //Actualizar etiquetas
     public function updateEtiquetas(Request $request)
     {
         try {
@@ -326,7 +327,8 @@ class marcasCatalogoController extends Controller
             return response()->json(['error' => 'Error al actualizar la etiqueta'], 500);
         }
     }
-
+    
+    //Editar etiquetas
     public function editEtiquetas($id)
     {
         $marca = Marcas::findOrFail($id);
