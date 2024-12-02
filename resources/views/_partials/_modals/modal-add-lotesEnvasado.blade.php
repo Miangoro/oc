@@ -1,4 +1,3 @@
-<!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="addlostesEnvasado" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -12,21 +11,21 @@
                     <div class="col-12">
                         <div class="form-floating form-floating-outline mb-4">
                             <select id="id_empresa" name="id_empresa" class="select2 form-select">
-                                <option value="" selected disabled>Selecciona cliente</option>
+                                <option value="">Selecciona cliente</option>
                                 @foreach ($clientes as $cliente)
-                                <option value="{{ $cliente->id_empresa }}">{{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }} | {{ $cliente->razon_social }}</option>
+                                    <option value="{{ $cliente->id_empresa }}">
+                                        {{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }}
+                                        | {{ $cliente->razon_social }}</option>
                                 @endforeach
                             </select>
                             <label for="id_empresa">Cliente</label>
                         </div>
                     </div>
-
                     <div class="form-floating form-floating-outline mb-5">
                         <input type="text" class="form-control" id="nombre"
                             placeholder="Introduce el nombre del lote" name="nombre" aria-label="Nombre del lote" />
                         <label for="nombre">Nombre del lote</label>
                     </div>
-
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
@@ -53,11 +52,9 @@
                                     <option value="3">Stock</option>
                                 </select>
                                 <label for="destino_lote">Destino lote</label>
-
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
@@ -84,7 +81,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
@@ -93,22 +89,18 @@
                                 <label for="volumen_total">Volumen total en Litros</label>
                             </div>
                         </div>
-
                         <div class="col-md-8 mb-6">
                             <div class="input-group">
-                                <select placeholder="Selecciona el cliente" class="form-select id_instalacion" id="lugar_envasado"
-                                    name="lugar_envasado" aria-label="Default select example">
+                                <select placeholder="Selecciona el cliente" class="form-select id_instalacion"
+                                    id="lugar_envasado" name="lugar_envasado" aria-label="Default select example">
                                     <option value="" disabled selected>Seleccione un cliente</option>
                                 </select>
-                                <a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect" type="button"><i class="ri-add-circle-fill"></i> Registrar instalación de envasado</a>
-                              </div>
+                                <a href="/domicilios/instalaciones" class="btn btn-outline-primary waves-effect"
+                                    type="button"><i class="ri-add-circle-fill"></i> Registrar instalación de
+                                    envasado</a>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="row">
-                        
-                    </div>
-
                     <div id="datosOpcion2">
                         <table class="table table-bordered">
                             <thead>
@@ -138,7 +130,6 @@
                             </tbody>
                         </table>
                     </div>
-
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
@@ -151,7 +142,6 @@
 </div>
 
 <script>
-    //Metodo para calcular Volumen en litros
     document.addEventListener('DOMContentLoaded', function() {
         function calcularVolumenTotal() {
             var cantidadBotellas = parseFloat(document.getElementById('cantidad_botellas').value) || 0;

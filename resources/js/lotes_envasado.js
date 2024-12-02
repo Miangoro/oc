@@ -176,7 +176,6 @@ $(function () {
                 destinoText = 'Desconocido';
                 colorClass = 'secondary'; // Gris
             }
-        
             return `
               <span class="badge rounded-pill bg-label-${colorClass}">
                 ${destinoText}
@@ -206,11 +205,9 @@ $(function () {
                 row.nuevo +
                 '</span>';
             }
-        
             return inicial + nuevo;
           }
-        }
-,        
+        },        
         { data: 'estatus' }, //status
         { data: 'action' }
       ],
@@ -528,7 +525,7 @@ $(function () {
         success: function (response) {
           var contenido = "";
           for (let index = 0; index < response.lotes_granel.length; index++) {
-            contenido = '<option value="' + response.lotes_granel[index].id_empresa + '">' +
+            contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
               response.lotes_granel[index].nombre_lote + '</option>' + contenido;
           }
           if (response.lotes_granel.length == 0) {

@@ -772,6 +772,7 @@ Route::post('/hologramas/storeVigilanciaProduccion', [solicitudesController::cla
 Route::get('/verificar-solicitud', [solicitudesController::class, 'verificarSolicitud'])->name('verificarSolicitud');
 Route::get('/datos-solicitud/{id_solicitud}', [solicitudesController::class, 'obtenerDatosSolicitud'])->name('datos.solicitud');
 Route::post('/actualizar-solicitudes/{id_solicitud}', [SolicitudesController::class, 'actualizarSolicitudes']);
+Route::post('/exportaciones/storePedidoExportacion', [SolicitudesController::class, 'storePedidoExportacion'])->name('exportaciones.storePedidoExportacion');
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
  */
 Route::get('/marcas/{id_empresa}', [SolicitudesController::class, 'obtenerMarcasPorEmpresa']);
