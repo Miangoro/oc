@@ -83,7 +83,7 @@ class lotesEnvasadoController extends Controller
                     $qEmpresa->where('razon_social', 'LIKE', "%{$searchValue}%");
                 });
 
-                
+
                 $q->orWhereHas('empresa.empresaNumClientes', function ($q) use ($searchValue) {
                     $q->where('numero_cliente', 'LIKE', "%{$searchValue}%");
                 });
@@ -106,7 +106,6 @@ class lotesEnvasadoController extends Controller
                 // Obtener la dirección completa de la instalación mediante el id_empresa
                 $instalacion = Instalaciones::where('id_instalacion', $user->lugar_envasado)->first();
                 $direccion_completa = $instalacion ? $instalacion->direccion_completa : '';
-
                 // Obtener el numero_cliente de la tabla empresa_num_cliente
                 $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
                 // Obtener la marca de la tabla marcas mediante el id_marca
@@ -115,15 +114,15 @@ class lotesEnvasadoController extends Controller
                 $inicial = isset($sku['inicial']) ? $sku['inicial'] : 0; // Obtén el valor de 'inicial' del JSON
                 $nuevo = isset($sku['nuevo']) ? $sku['nuevo'] : 0; // Obtén el valor de 'inicial' del JSON
                 $cantt_botellas = isset($sku['cantt_botellas']) ? $sku['cantt_botellas'] : $user->cant_botellas;
-                $lotes_granel = \App\Models\LotesGranel::where('id_empresa', $user->id_empresa)->value('nombre_lote');
-                // Obtener los ids de lote granel asociados al id de envasado
+                // Obtener los IDs de lotes a granel asociados al envasado
                 $id_lote_granel = lotes_envasado_granel::where('id_lote_envasado', $user->id_lote_envasado)->pluck('id_lote_granel');
-                // Usar esos IDs para obtener los nombres de los lotes en la tabla `lotes_granel`
+                // Obtener los nombres de los lotes a granel
                 $nombres_lote = LotesGranel::whereIn('id_lote_granel', $id_lote_granel)->pluck('nombre_lote');
                 $nombres_lote = lotes_envasado_granel::where('id_lote_envasado', $user->id_lote_envasado)
-                    ->with('loteGranel')
+                    ->with('loteGranel') // Carga la relación
                     ->get()
-                    ->pluck('loteGranel.nombre_lote');
+                    ->pluck('loteGranel.nombre_lote'); // Obtén los nombres de los lotes
+
 
 
                 $nestedData = [
@@ -132,8 +131,6 @@ class lotesEnvasadoController extends Controller
                     'id_empresa' => $numero_cliente,
                     'id_marca' => $marca,
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
-                    'lotes_granel' => $lotes_granel,
-                    //nada
                     'nombre' => $user->nombre,
                     'cant_botellas' => $user->cant_botellas,
                     'presentacion' => $user->presentacion,
@@ -147,7 +144,6 @@ class lotesEnvasadoController extends Controller
                     'cantt_botellas' => $cantt_botellas,
                     'estatus' => $user->estatus,
                     'id_lote_granel' => $nombres_lote,
-
 
                 ];
                 $data[] = $nestedData;

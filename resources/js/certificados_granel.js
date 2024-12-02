@@ -49,11 +49,11 @@ $('#editCertificadoForm .select2').each(function () {
        columns: [
          { data: '#' },                //0
          { data: 'fake_id' },          //1
-         { data: 'id_dictamen' },      //2       
-         { data: 'id_firmante' },      //3
-         { data: 'fecha_vigencia' },   //4  
-         { data: 'fecha_vencimiento' },//5  
-         { data: ''},                  //6
+         { data: 'certificado'},       //2  
+         { data: 'id_dictamen' },      //3       
+         { data: 'id_firmante' },      //4
+         { data: 'fechas' },           //5  
+         { data: 'Revisores'},         //6
          { data: 'PDF' },              //7  
          { data: 'Estatus' },          //8  
          { data: 'actions'},           //9
@@ -78,33 +78,47 @@ $('#editCertificadoForm .select2').each(function () {
            }
          },
          {
-            targets: 2,
+          targets: 2,
+          render: function (data, type, full, meta) {
+            var $num_certificado = full['num_certificado'];
+            return '<span class="user-email">' + $num_certificado + '</span>';
+          }
+        }, 
+         {
+            targets: 3,
             render: function (data, type, full, meta) {
               var $id_dictamen = full['id_dictamen'];
               return '<span class="fw-bold">' + $id_dictamen + '</span>';
             }
           }, 
           {
-            targets: 3,
+            targets: 4,
             render: function (data, type, full, meta) {
               var $id_firmante = full['id_firmante'];
               return '<span class="user-email">' + $id_firmante + '</span>';
             }
           }, 
           {
-            targets: 4,
+            targets: 5, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
-              var $fecha_vigencia = full['fecha_vigencia'];
-              return '<span class="user-email">' + $fecha_vigencia + '</span>';
+        
+                // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
+                var $fecha_vigencia = full['fecha_vigencia'] ?? 'N/A'; // Fecha de vigencia
+                var $fecha_vencimiento = full['fecha_vencimiento'] ?? 'N/A'; // Fecha de vencimiento
+        
+                // Definir los mensajes de fecha con formato
+                var fechaVigenciaMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vigencia:</strong> ${$fecha_vigencia}</span>`;
+                var fechaVencimientoMessage = `<span class="badge" style="background-color: transparent; color: #676B7B;"><strong>Vencimiento:</strong> ${$fecha_vencimiento}</span>`;
+        
+                // Retorna las fechas en formato de columnas
+                return `
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                        <div>${fechaVigenciaMessage}</div>
+                        <div>${fechaVencimientoMessage}</div>
+                    </div>
+                `;
             }
-          }, 
-          {
-            targets: 5,
-            render: function (data, type, full, meta) {
-              var $fecha_vencimiento = full['fecha_vencimiento'];
-              return '<span class="user-email">' + $fecha_vencimiento + '</span>';
-            }
-          }, 
+          },        
           {
             targets: 6,
             render: function (data, type, full, meta) {

@@ -48,10 +48,10 @@
                 <tr>
                     <th>#</th>
                     <th>ID</th>
+                    <th>No. Certificado</th>
                     <th>No. Dictamen</th>
                     <th>Firmante</th>
-                    <th>Fecha de Vigencia</th>
-                    <th>Fecha de Vencimiento</th>
+                    <th>Fechas</th>
                     <th>Revisor Asignado</th>
                     <th>Certificado</th>
                     <th>Estatus</th>

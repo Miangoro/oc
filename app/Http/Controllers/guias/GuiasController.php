@@ -16,7 +16,6 @@ class GuiasController  extends Controller
 {
     public function UserManagement()
     {
-
         $guias = Guias::all();
         $empresa = empresa::where('tipo', 2)->get(); // Esto depende de cómo tengas configurado tu modelo Empresa
         $predios = Predios::all();
@@ -33,7 +32,6 @@ class GuiasController  extends Controller
             'guias' => $guias,
             'empresa' => $empresa,
             'predios' => $predios,
-
         ]);
     }
 
@@ -60,8 +58,6 @@ class GuiasController  extends Controller
             18 => 'fecha_ingreso',
             19 => 'domicilio',
             20 => 'run_folio'
-
-
         ];
 
         $limit = $request->input('length');
@@ -109,9 +105,7 @@ class GuiasController  extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-                //$numero_cliente = \App\Models\Empresa::where('id_empresa', $user->id_empresa)->value('razon_social');
                 $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
-
 
                 $nestedData = [
                     'id_guia' => $user->id_guia,
@@ -136,10 +130,7 @@ class GuiasController  extends Controller
                     'fecha_ingreso' => $user->fecha_ingreso,
                     'domicilio' => $user->domicilio,
                     'numero_guias' => $user->numero_guias,
-
-
                 ];
-
                 $data[] = $nestedData;
             }
         }
@@ -158,7 +149,6 @@ class GuiasController  extends Controller
     {
         $clase = guias::findOrFail($id_guia);
         $clase->delete();
-
         return response()->json(['success' => 'Clase eliminada correctamente']);
     }
 
@@ -175,11 +165,9 @@ class GuiasController  extends Controller
             'mermas' => 'nullable|numeric',
             'plantas' => 'nullable|numeric',
         ]);
-
         // Obtener el valor de plantas actuales y num_anterior
         $plantasActuales = $request->input('plantas');
         $numAnterior = $request->input('anterior');
-
         // Verificar si plantasActuales no es null
         if ($plantasActuales !== null) {
             // Calcular el valor a actualizar en predio_plantacion
@@ -188,10 +176,8 @@ class GuiasController  extends Controller
             // Si plantas es null, no modificamos predio_plantacion
             $plantasNuevas = null;
         }
-
         // Obtener el último run_folio creado
         $ultimoFolio = \App\Models\Guias::latest('run_folio')->first();
-
         // Extraer el número del último run_folio y calcular el siguiente número
         if ($ultimoFolio) {
             $ultimoNumero = intval(substr($ultimoFolio->run_folio, 9, 6)); // Extrae 000001 de SOL-GUIA-000001/24
@@ -199,10 +185,8 @@ class GuiasController  extends Controller
         } else {
             $nuevoNumero = 1;
         }
-
         // Formatear el nuevo run_folio
         $nuevoFolio = sprintf('SOL-GUIA-%06d-24', $nuevoNumero);
-
         // Procesar la creación de las guías
         for ($i = 0; $i < $request->input('numero_guias'); $i++) {
             // Crear una nueva instancia del modelo Guia
@@ -219,31 +203,19 @@ class GuiasController  extends Controller
             $guia->numero_plantas = $plantasActuales;
             $guia->save();
         }
-
         // Actualizar la cantidad de plantas en la tabla predio_plantacion si es necesario
         if ($plantasNuevas !== null) {
             $predioPlantacion = \App\Models\predio_plantacion::where('id_predio', $request->input('predios'))
                 ->where('id_plantacion', $request->input('plantacion'))
                 ->first();
-
             if ($predioPlantacion) {
                 $predioPlantacion->num_plantas = $predioPlantacion->num_plantas + $plantasNuevas;
                 $predioPlantacion->save();
             }
         }
-
         // Responder con éxito
         return response()->json(['success' => 'Guía registrada correctamente']);
     }
-
-
-
-
-
-
-
-
-
 
     // Método para obtener una guía por ID
     public function edit($id_guia)
@@ -255,24 +227,18 @@ class GuiasController  extends Controller
             return response()->json(['error' => 'Error al obtener la guía'], 500);
         }
     }
-
-
+    //Metodo par aeditar guias
     public function editGuias($run_folio)
     {
         $guias = Guias::where('run_folio', $run_folio)
             ->with('empresa') // Suponiendo que `razon_social` está en la tabla `empresas`
             ->get();
-
         return response()->json($guias);
     }
-
-
 
     // Método para actualizar una guía existente
     public function update(Request $request)
     {
-
-
         try {
             $guia = guias::findOrFail($request->id_guia);
             $guia->id_empresa = $request->input('empresa');
@@ -293,7 +259,6 @@ class GuiasController  extends Controller
             $guia->no_cliente = $request->input('no_cliente');
             $guia->fecha_ingreso = $request->input('fecha_ingreso');
             $guia->domicilio = $request->input('domicilio');
-
             $guia->save();
 
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
@@ -315,35 +280,14 @@ class GuiasController  extends Controller
                     $documentacion_url->save();
                 }
             }
-
             return response()->json(['success' => 'Guía actualizada correctamente']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al actualizar la guía'], 500);
         }
     }
 
-
-
-
     //Metodo para llenar el pdf
     public function guiasTranslado($id_guia)
-    {
-        $res = DB::select('SELECT f.numero_cliente, p.nombre_productor, a.razon_social, p.nombre_predio, p.num_predio, a.razon_social, t.nombre, t.cientifico, s.num_plantas, s.anio_plantacion, e.id_guia, e.folio, e.id_empresa, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas,
-            e.art,e.kg_maguey,e.no_lote_pedido,e.fecha_corte, e.edad, e.nombre_cliente,e.no_cliente,e.fecha_ingreso,e.domicilio
-            FROM guias e 
-            JOIN predios p ON (e.id_predio = p.id_predio) 
-            JOIN predio_plantacion s ON (e.id_plantacion = s.id_plantacion) 
-            JOIN catalogo_tipo_agave t ON (t.id_tipo = s.id_tipo) 
-            JOIN empresa a ON (a.id_empresa = e.id_empresa) 
-            JOIN empresa_num_cliente f ON (f.id_empresa = e.id_empresa) 
-            WHERE e.id_guia=' . $id_guia);
-        $pdf = Pdf::loadView('pdfs.GuiaDeTranslado', ['datos' => $res]);
-        return $pdf->stream('539G005_Guia_de_traslado_de_maguey_o_agave.pdf');
-    }
-
-
-    //Metodo para llenar el pdf
-    public function guiasTransladoDescargar($id_guia)
     {
         $res = DB::select('SELECT f.numero_cliente, p.nombre_productor, a.razon_social, p.nombre_predio, p.num_predio, a.razon_social, t.nombre, t.cientifico, s.num_plantas, s.anio_plantacion, e.id_guia, e.folio, e.id_empresa, e.numero_plantas, e.num_anterior, e.num_comercializadas, e.mermas_plantas,
             e.art,e.kg_maguey,e.no_lote_pedido,e.fecha_corte, e.edad, e.nombre_cliente,e.no_cliente,e.fecha_ingreso,e.domicilio

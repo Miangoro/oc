@@ -15,7 +15,7 @@
                             <select id="id_empresa" name="id_empresa" class="form-select select2" required>
                                 <option value="" disabled selected>Selecciona la empresa</option>
                                 @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
+                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
                                 @endforeach
                             </select>
                             <label for="id_empresa">Empresa</label>

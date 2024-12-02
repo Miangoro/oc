@@ -20,7 +20,7 @@ class DomiciliosController extends Controller
     public function UserManagement()
     {
         $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
-        $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+        $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = estados::all(); // Obtener todos los estados
         $organismos = organismos::all(); // Obtener todos los organismos
        
@@ -61,11 +61,6 @@ class DomiciliosController extends Controller
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
-                })->Orwhere(function ($query) {
-                    $query->whereHas('documentos', function ($query) {
-                        $query->whereIn('id_documento', [127, 128, 129]);
-                    })
-                        ->orWhereDoesntHave('documentos');
                 })
                 ->offset($start)
                 ->limit($limit)
@@ -76,17 +71,15 @@ class DomiciliosController extends Controller
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
-                })->Orwhere(function ($query) {
-                    $query->whereHas('documentos', function ($query) {
-                        $query->whereIn('id_documento', [127, 128, 129]);
-                    })
-                        ->orWhereDoesntHave('documentos');
                 })
                 ->where(function ($query) use ($search) {
                     
-                    $query->where('id_instalacion', 'LIKE', "%{$search}%")
+                    $query->where('responsable', 'LIKE', "%{$search}%")
                         ->orWhereHas('empresa', function ($subQuery) use ($search) {
                             $subQuery->where('razon_social', 'LIKE', "%{$search}%");
+                        })
+                        ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
+                            $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
                         })
                         ->orWhereHas('estados', function ($subQuery) use ($search) {
                             $subQuery->where('nombre', 'LIKE', "%{$search}%");
@@ -134,7 +127,13 @@ class DomiciliosController extends Controller
             foreach ($instalaciones as $instalacion) {
                 $nestedData['id_instalacion'] = $instalacion->id_instalacion ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids  ?? 'N/A';
-                $nestedData['razon_social'] = $instalacion->empresa->razon_social  ?? 'N/A';
+                $razonSocial = $instalacion->empresa ? $instalacion->empresa->razon_social : '';
+                $numeroCliente = 
+                $instalacion->empresa->empresaNumClientes[0]->numero_cliente ?? 
+                $instalacion->empresa->empresaNumClientes[1]->numero_cliente ?? 
+                $instalacion->empresa->empresaNumClientes[2]->numero_cliente;
+
+                $nestedData['razon_social'] = '<b>'.$numeroCliente . '</b><br>' . $razonSocial;
                 $tipo = json_decode($instalacion->tipo, true); if (!is_array($tipo)) { $tipo = [];}
                 $nestedData['tipo'] = !empty($tipo) ? implode(', ', array_map('htmlspecialchars', $tipo)) : 'N/A';
                 $nestedData['responsable'] = $instalacion->responsable ?? 'N/A';
