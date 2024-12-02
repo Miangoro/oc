@@ -20,7 +20,7 @@ class DomiciliosController extends Controller
     public function UserManagement()
     {
         $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
-        $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+        $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = estados::all(); // Obtener todos los estados
         $organismos = organismos::all(); // Obtener todos los organismos
        
