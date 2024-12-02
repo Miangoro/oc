@@ -61,11 +61,6 @@ class DomiciliosController extends Controller
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
-                })->Orwhere(function ($query) {
-                    $query->whereHas('documentos', function ($query) {
-                        $query->whereIn('id_documento', [127, 128, 129]);
-                    })
-                        ->orWhereDoesntHave('documentos');
                 })
                 ->offset($start)
                 ->limit($limit)
@@ -76,15 +71,10 @@ class DomiciliosController extends Controller
             $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
-                })->Orwhere(function ($query) {
-                    $query->whereHas('documentos', function ($query) {
-                        $query->whereIn('id_documento', [127, 128, 129]);
-                    })
-                        ->orWhereDoesntHave('documentos');
                 })
                 ->where(function ($query) use ($search) {
                     
-                    $query->where('id_instalacion', 'LIKE', "%{$search}%")
+                    $query->where('responsable', 'LIKE', "%{$search}%")
                         ->orWhereHas('empresa', function ($subQuery) use ($search) {
                             $subQuery->where('razon_social', 'LIKE', "%{$search}%");
                         })
