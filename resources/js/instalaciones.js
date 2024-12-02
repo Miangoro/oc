@@ -78,6 +78,7 @@ $(function () {
       },
       {
         targets: 2,
+        responsivePriority: 1,
         render: function (data, type, full, meta) {
           var $razon_social = full['razon_social'] ?? 'N/A';
           return '<span class="user-email">' + $razon_social + '</span>';
