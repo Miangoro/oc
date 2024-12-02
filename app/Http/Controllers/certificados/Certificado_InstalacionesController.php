@@ -198,72 +198,122 @@ class Certificado_InstalacionesController extends Controller
         }
     }
     
-    public function pdf_certificado_productor($id_certificado)
+    public function pdf_certificado_productor($id_certificado)       
     {
-        $datos = Certificados::with(['dictamen.inspeccione.solicitud.empresa.empresaNumClientes','dictamen.instalaciones','dictamen.inspeccione.inspector','firmante'])->findOrFail($id_certificado);
-    
-        $empresa = $datos->dictamen->inspeccione->solicitud->empresa;
+        $datos = Certificados::with([
+            'dictamen.inspeccione.solicitud.empresa', 
+            'dictamen.instalaciones',                
+            'dictamen.inspeccione.inspector',          
+            'firmante'                                 
+        ])->findOrFail($id_certificado);
+
+        $empresa = $datos->dictamen->instalaciones->empresa;
         $numero_cliente = $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente;
-    
         $watermarkText = $datos->estatus === 1;
 
+        // Preparar los datos para el PDF
         $pdfData = [
-            'datos' => $datos,'num_certificado' => $datos->num_certificado,'num_autorizacion' => $datos->num_autorizacion,'num_dictamen' => $datos->dictamen->num_dictamen,'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
-            'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),'fecha_vencimiento' => Helpers::formatearFecha($datos->fecha_vencimiento),'domicilio_fiscal' => $empresa->domicilio_fiscal,'rfc' => $empresa->rfc,
-            'telefono' => $empresa->telefono,'correo' => $empresa->correo,
-            'watermarkText' =>  $watermarkText,
+            'datos' => $datos,
+            'num_certificado' => $datos->num_certificado,
+            'num_autorizacion' => $datos->num_autorizacion,
+            'num_dictamen' => $datos->dictamen->num_dictamen,
+            'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
+            'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),
+            'fecha_vencimiento' => Helpers::formatearFecha($datos->fecha_vencimiento),
+            'domicilio_fiscal' => $empresa->domicilio_fiscal,
+            'rfc' => $empresa->rfc,
+            'telefono' => $empresa->telefono,
+            'correo' => $empresa->correo,
+            'watermarkText' => $watermarkText,
             'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa,
-            'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------','numero_cliente' => $numero_cliente,'nombre_firmante' => $datos->firmante->name
+            'razon_social' => $empresa->razon_social,  
+            'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
+            'numero_cliente' => $numero_cliente,
+            'nombre_firmante' => $datos->firmante->name,
         ];
-        
-        $pdf = Pdf::loadView('pdfs.Certificado_productor_mezcal', $pdfData);    
-        return $pdf->stream('Certificado de productor de mezcal.pdf');
+
+        // Generar y retornar el PDF
+        return Pdf::loadView('pdfs.Certificado_productor_mezcal', $pdfData)->stream('Certificado de productor de mezcal.pdf');
     }
-    
-    
+
     public function pdf_certificado_envasador($id_certificado)
     {
-        $datos = Certificados::with(['dictamen.inspeccione.solicitud.empresa.empresaNumClientes','dictamen.instalaciones','dictamen.inspeccione.inspector','firmante' ])->findOrFail($id_certificado);
+        $datos = Certificados::with([
+            'dictamen.inspeccione.solicitud.instalaciones.empresa',  
+            'dictamen.inspeccione.solicitud.empresa', 
+            'dictamen.instalaciones',
+            'dictamen.inspeccione.inspector',
+            'firmante'
+        ])->findOrFail($id_certificado);
     
-        $empresa = $datos->dictamen->inspeccione->solicitud->empresa;
+        $empresa = $datos->dictamen->instalaciones->empresa;
         $numero_cliente = $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente;
-
         $watermarkText = $datos->estatus === 1;
     
+        // Preparar los datos para el PDF
         $pdfData = [
-            'datos' => $datos,'num_certificado' => $datos->num_certificado,'num_autorizacion' => $datos->num_autorizacion,'num_dictamen' => $datos->dictamen->num_dictamen,
-            'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),'fecha_vencimiento' => Helpers::formatearFecha($datos->fecha_vencimiento),
-            'domicilio_fiscal' => $empresa->domicilio_fiscal,'rfc' => $empresa->rfc,
-            'watermarkText' =>  $watermarkText,
-            'telefono' => $empresa->telefono,'correo' => $empresa->correo,'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa,
-            'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------','numero_cliente' => $numero_cliente,'nombre_firmante' => $datos->firmante->name
+            'datos' => $datos,
+            'num_certificado' => $datos->num_certificado,
+            'num_autorizacion' => $datos->num_autorizacion,
+            'num_dictamen' => $datos->dictamen->num_dictamen,
+            'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
+            'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),
+            'fecha_vencimiento' => Helpers::formatearFecha($datos->fecha_vencimiento),
+            'domicilio_fiscal' => $empresa->domicilio_fiscal,
+            'rfc' => $empresa->rfc,
+            'watermarkText' => $watermarkText,
+            'telefono' => $empresa->telefono,
+            'correo' => $empresa->correo,
+            'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa,
+            'razon_social' => $empresa->razon_social, 
+            'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
+            'numero_cliente' => $numero_cliente,
+            'nombre_firmante' => $datos->firmante->name,
         ];
     
-        $pdf = Pdf::loadView('pdfs.Certificado_envasador_mezcal', $pdfData);    
-        return $pdf->stream('Certificado de envasador de mezcal.pdf');
+        // Generar y retornar el PDF
+        return Pdf::loadView('pdfs.Certificado_envasador_mezcal', $pdfData)->stream('Certificado de envasador de mezcal.pdf');
     }
-
+    
     public function pdf_certificado_comercializador($id_certificado)
     {
-        $datos = Certificados::with(['dictamen.inspeccione.solicitud.empresa.empresaNumClientes','dictamen.instalaciones','dictamen.inspeccione.inspector','firmante'])->findOrFail($id_certificado);
-
-        $empresa = $datos->dictamen->inspeccione->solicitud->empresa;
+        $datos = Certificados::with([
+            'dictamen.inspeccione.solicitud.empresa',  
+            'dictamen.instalaciones',                  
+            'dictamen.inspeccione.inspector',          
+            'firmante'                             
+        ])->findOrFail($id_certificado);
+    
+        $empresa = $datos->dictamen->instalaciones->empresa;
         $numero_cliente = $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente;
-
         $watermarkText = $datos->estatus === 1;
-
-         $pdfData = [
-            'datos' => $datos,'num_certificado' => $datos->num_certificado,'num_autorizacion' => $datos->num_autorizacion,'num_dictamen' => $datos->dictamen->num_dictamen,'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
-            'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),'fecha_vencimiento' => Helpers::formatearFecha($datos->fecha_vencimiento),'domicilio_fiscal' => $empresa->domicilio_fiscal,'rfc' => $empresa->rfc,
-            'telefono' => $empresa->telefono,'correo' => $empresa->correo,
-            'watermarkText' =>  $watermarkText,
-            'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa,'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
-            'numero_cliente' => $numero_cliente,'nombre_firmante' => $datos->firmante->name ?? 'Nombre del firmante no disponible'
-    ];
-
+    
+        // Preparar los datos para el PDF
+        $pdfData = [
+            'datos' => $datos,
+            'num_certificado' => $datos->num_certificado,
+            'num_autorizacion' => $datos->num_autorizacion,
+            'num_dictamen' => $datos->dictamen->num_dictamen,
+            'fecha_emision' => Helpers::formatearFecha($datos->fecha_emision),
+            'fecha_vigencia' => Helpers::formatearFecha($datos->fecha_vigencia),
+            'fecha_vencimiento' => Helpers::formatearFecha($datos->fecha_vencimiento),
+            'domicilio_fiscal' => $empresa->domicilio_fiscal,
+            'rfc' => $empresa->rfc,
+            'telefono' => $empresa->telefono,
+            'correo' => $empresa->correo,
+            'watermarkText' => $watermarkText,
+            'direccion_completa' => $datos->dictamen->instalaciones->direccion_completa,
+            'razon_social' => $empresa->razon_social, 
+            'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
+            'numero_cliente' => $numero_cliente,
+            'nombre_firmante' => $datos->firmante->name ?? 'Nombre del firmante no disponible',
+        ];
+    
+        // Generar y retornar el PDF
         $pdf = Pdf::loadView('pdfs.Certificado_comercializador', $pdfData);
         return $pdf->stream('Certificado de comercializador.pdf');
     }
+    
 
     // Funcion LLenar Select
     public function obtenerRevisores(Request $request)

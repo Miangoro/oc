@@ -11,7 +11,7 @@
                     <div class="col-12">
                         <div class="form-floating form-floating-outline mb-4">
                             <select id="id_empresa" name="id_empresa" class="select2 form-select">
-                                <option value="" selected disabled>Selecciona cliente</option>
+                                <option value="">Selecciona cliente</option>
                                 @foreach ($clientes as $cliente)
                                     <option value="{{ $cliente->id_empresa }}">
                                         {{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }}
@@ -101,7 +101,13 @@
                             </div>
                         </div>
                     </div>
-                    <div id="datosOpcion2">
+                    <div class="mb-4">
+                        <label for="listaDocumentos">Documentos asociados:</label>
+                        <ul id="listaDocumentos">
+                            <li>Selecciona una marca para ver los documentos.</li>
+                        </ul>
+                    </div>
+                    <div >
                         <table class="table table-bordered">
                             <thead>
                                 <tr>

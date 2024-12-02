@@ -550,6 +550,7 @@ Route::get('/lotes-envasado/edit/{id}', [lotesEnvasadoController::class, 'edit']
 Route::post('/lotes-envasado/update/', [lotesEnvasadoController::class, 'update']);
 Route::get('/lotes-envasado/editSKU/{id}', [lotesEnvasadoController::class, 'editSKU']);
 Route::post('/lotes-envasado/updateSKU/', [lotesEnvasadoController::class, 'updateSKU']);
+Route::get('/obtenerDocumentos/{id_marca}', [LotesEnvasadoController::class, 'obtenerDocumentosPorMarca']);
 
 
 
@@ -772,6 +773,7 @@ Route::post('/hologramas/storeVigilanciaProduccion', [solicitudesController::cla
 Route::get('/verificar-solicitud', [solicitudesController::class, 'verificarSolicitud'])->name('verificarSolicitud');
 Route::get('/datos-solicitud/{id_solicitud}', [solicitudesController::class, 'obtenerDatosSolicitud'])->name('datos.solicitud');
 Route::post('/actualizar-solicitudes/{id_solicitud}', [SolicitudesController::class, 'actualizarSolicitudes']);
+Route::post('/exportaciones/storePedidoExportacion', [SolicitudesController::class, 'storePedidoExportacion'])->name('exportaciones.storePedidoExportacion');
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
  */
 Route::get('/marcas/{id_empresa}', [SolicitudesController::class, 'obtenerMarcasPorEmpresa']);
