@@ -56,9 +56,9 @@
                     <th>Estado</th>
                     <th>Dirección</th>
                     <th>Folio</th>
-                    <th>Organismo</th>
+                    <!--<th>Organismo</th>-->
                     <th>Certificados de instalaciones</th>
-                    <th>Fechas</th>
+                    <!--<th>Fechas</th>-->
                     <th>Acciones</th>
                 </tr>
             </thead>

@@ -124,7 +124,13 @@ class DomiciliosController extends Controller
             foreach ($instalaciones as $instalacion) {
                 $nestedData['id_instalacion'] = $instalacion->id_instalacion ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids  ?? 'N/A';
-                $nestedData['razon_social'] = $instalacion->empresa->razon_social  ?? 'N/A';
+                $razonSocial = $instalacion->empresa ? $instalacion->empresa->razon_social : '';
+                $numeroCliente = 
+                $instalacion->empresa->empresaNumClientes[0]->numero_cliente ?? 
+                $instalacion->empresa->empresaNumClientes[1]->numero_cliente ?? 
+                $instalacion->empresa->empresaNumClientes[2]->numero_cliente;
+
+                $nestedData['razon_social'] = '<b>'.$numeroCliente . '</b><br>' . $razonSocial;
                 $tipo = json_decode($instalacion->tipo, true); if (!is_array($tipo)) { $tipo = [];}
                 $nestedData['tipo'] = !empty($tipo) ? implode(', ', array_map('htmlspecialchars', $tipo)) : 'N/A';
                 $nestedData['responsable'] = $instalacion->responsable ?? 'N/A';

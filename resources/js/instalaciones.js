@@ -52,9 +52,9 @@ $(function () {
       { data: 'estado' },            //5
       { data: 'direccion_completa' },//6
       { data: 'folio' },             //7
-      { data: 'organismo' },         //8
+     // { data: 'organismo' },         //8
       { data: 'PDF' },               //9
-      { data: 'fechas' },            //10
+     // { data: 'fechas' },            //10
       { data: 'actions' }            //12
     ],
     columnDefs: [
@@ -98,7 +98,7 @@ $(function () {
     
             const tipoConfig = {
                 'Productora': { color: 'primary', nombre: 'Productora' },                // Azul
-                'Envasadora': { color: 'success', nombre: 'Envasadora' },                // Verde
+                'Envasadora': { color: 'dark', nombre: 'Envasadora' },                // Verde
                 'Comercializadora': { color: 'info', nombre: 'Comercializadora' },       // Celeste
                 'Almacen y bodega': { color: 'danger', nombre: 'Almacén y bodega' },     // Rojo
                 'Area de maduracion': { color: 'warning', nombre: 'Área de maduración' } // Amarillo
@@ -108,10 +108,10 @@ $(function () {
             tipos.forEach(function(tipo) {
                 tipo = tipo.trim();
                 const config = tipoConfig[tipo] || { color: 'secondary', nombre: 'Desconocido' }; 
-                badges += `<span class="badge rounded-pill bg-${config.color}">${config.nombre}</span> `;
+                badges += `<span  style="font-size:11px" class="small badge bg-${config.color}">${config.nombre}</span><br>`;
             });
     
-            return badges || '<span class="badge rounded-pill bg-secondary">N/A</span>';
+            return badges || '<span class="badge  bg-secondary">N/A</span>';
         }
     },        
       {
@@ -142,15 +142,15 @@ $(function () {
           return '<span class="user-email">' + $folio + '</span>';
         }
       },
-      {
+    /*  {
         targets: 8,
         render: function (data, type, full, meta) {
           var $organismo = full['organismo'] ?? 'N/A';
           return '<span class="user-email">' + $organismo + '</span>';
         }
-      },
+      },*/
       {
-        targets: 9,
+        targets: 8,
         className: 'text-center',
         render: function (data, type, full, meta) {
             if (full['url'] && full['url'].trim() !== '') {
@@ -162,7 +162,7 @@ $(function () {
             }
         }
       },     
-      {
+   /*   {
         targets: 10, // Suponiendo que este es el índice de la columna que quieres actualizar
         render: function (data, type, full, meta) {
             var $fecha_emision = full['fecha_emision'] ?? 'N/A'; // Obtener la fecha de emisión
@@ -180,10 +180,10 @@ $(function () {
                 </div>
             `;
         }
-      },    
+      },   */ 
       {
         // Actions
-        targets: 11,
+        targets: 9,
         title: 'Acciones',
         searchable: false,
         orderable: false,
