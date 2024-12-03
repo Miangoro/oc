@@ -11,6 +11,8 @@ use App\Http\Controllers\Controller;
 use App\Models\lotes_envasado_granel;
 use Illuminate\Http\Request;
 use App\Models\Documentacion_url;
+use App\Models\empresaNumCliente;
+
 use App\Models\Exception;
 use Exception as GlobalException;
 
@@ -328,16 +330,22 @@ class lotesEnvasadoController extends Controller
     public function obtenerDocumentosPorMarca(Request $request, $id_marca)
     {
         try {
+            // Obtener la marca
             $marca = Marcas::findOrFail($id_marca);
-
+            // Obtener la empresa relacionada con la marca
+            $empresa = Empresa::findOrFail($marca->id_empresa);
+            // Obtener el numero_cliente desde la tabla empresa_num_cliente
+            $empresaNumCliente = empresaNumCliente::where('id_empresa', $marca->id_empresa)->first();
+            $numeroCliente = $empresaNumCliente ? $empresaNumCliente->numero_cliente : null;
             // Obtener los documentos asociados al id_empresa de la marca
             $documentos = Documentacion_url::where('id_empresa', $marca->id_empresa)
                 ->where('id_relacion', $id_marca)
                 ->get();
-
+            // Devolver los documentos junto con el numero_cliente
             return response()->json([
                 'success' => true,
-                'documentos' => $documentos
+                'documentos' => $documentos,
+                'numero_cliente' => $numeroCliente // Añadir el numero_cliente a la respuesta
             ]);
         } catch (GlobalException $e) {
             return response()->json([

@@ -144,59 +144,52 @@
                     </div>
 
                     <div id="sections-container">
-                        <!-- Sección original: Características del Producto -->
-                        <div class="card mt-4" id="caracteristicas_Ex">
-                            <div class="card-body">
-                                <h5>Características del Producto</h5>
-                                <div class="row caracteristicas-row">
-                                    <div class="col-md-6">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <select id="evasado_export" name="lote_envasado[0]"
-                                                class="select2 form-select">
-                                                <option value="" disabled selected>Selecciona un lote envasado
-                                                </option>
-                                                <!-- Opciones dinámicas -->
-                                            </select>
-                                            <label for="lote_envasado">Selecciona el lote envasado</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <select id="lotes_granel_export" name="lote_granel[0]"
-                                                class="select2 form-select">
-                                                <option value="" disabled selected>Selecciona un lote a granel
-                                                </option>
-                                                <!-- Opciones dinámicas -->
-                                            </select>
-                                            <label for="lote_granel">Selecciona el lote a granel</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" class="form-control" name="cantidad_botellas[0]"
-                                                placeholder="Cantidad de botellas">
-                                            <label for="cantidad_botellas">Cantidad de botellas</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <input type="number" class="form-control" name="cantidad_cajas[0]"
-                                                placeholder="Cantidad de cajas">
-                                            <label for="cantidad_cajas">Cantidad de cajas</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-floating form-floating-outline mb-4">
-                                            <input type="text" class="form-control" name="presentacion[0]"
-                                                placeholder="Ej. 750ml">
-                                            <label for="presentacion">Presentación</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
+                      <!-- Sección original: Características del Producto -->
+                      <div class="card mt-4" id="caracteristicas_Ex">
+                          <div class="card-body">
+                              <h5>Características del Producto</h5>
+                              <div class="row caracteristicas-row">
+                                  <div class="col-md-6">
+                                      <div class="form-floating form-floating-outline mb-4">
+                                          <select name="lote_envasado[0]" class="select2 form-select evasado_export">
+                                              <option value="" disabled selected>Selecciona un lote envasado</option>
+                                              <!-- Opciones dinámicas -->
+                                          </select>
+                                          <label for="lote_envasado">Selecciona el lote envasado</label>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                      <div class="form-floating form-floating-outline mb-4">
+                                          <select name="lote_granel[0]" class="select2 form-select lotes_granel_export">
+                                              <option value="" disabled selected>Selecciona un lote a granel</option>
+                                              <!-- Opciones dinámicas -->
+                                          </select>
+                                          <label for="lote_granel">Selecciona el lote a granel</label>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                      <div class="form-floating form-floating-outline mb-4">
+                                          <input type="number" class="form-control" name="cantidad_botellas[0]" placeholder="Cantidad de botellas">
+                                          <label for="cantidad_botellas">Cantidad de botellas</label>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                      <div class="form-floating form-floating-outline mb-4">
+                                          <input type="number" class="form-control" name="cantidad_cajas[0]" placeholder="Cantidad de cajas">
+                                          <label for="cantidad_cajas">Cantidad de cajas</label>
+                                      </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                      <div class="form-floating form-floating-outline mb-4">
+                                          <input type="text" class="form-control" name="presentacion[0]" placeholder="Ej. 750ml">
+                                          <label for="presentacion">Presentación</label>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <hr>
                     <!-- Botones -->
                     <button type="button" id="add-characteristics" class="btn btn-primary btn-sm mt-1">
                         <i class="ri-add-line"></i> Agregar Tabla
@@ -227,69 +220,66 @@
 
 
 <script>
-    function cargarDatosCliente() {
-        var empresa = $("#id_empresa_solicitud_exportacion").val();
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
-                //instalaciones
-                var contenidoInstalaciones = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    contenidoInstalaciones += '<option value="' + response.instalaciones[index]
-                        .id_instalacion + '">' +
-                        response.instalaciones[index].tipo + ' | ' + response.instalaciones[index]
-                        .direccion_completa + '</option>';
-                }
-                if (response.instalaciones.length == 0) {
-                    contenidoInstalaciones =
-                        '<option value="" disabled selected>Sin instalaciones registradas</option>';
-                }
-                $('#id_instalacion_exportacion').html(contenidoInstalaciones);
-                //direcciones
-                var contenidoDirecciones = "";
-                for (let index = 0; index < response.direcciones.length; index++) {
-                    contenidoDirecciones += '<option value="' + response.direcciones[index].id_direccion +
-                        '">' +
-                        response.direcciones[index].direccion + '</option>';
-                }
-                if (response.direcciones.length == 0) {
-                    contenidoDirecciones =
-                        '<option value="" disabled selected>Sin direcciones registradas</option>';
-                }
-                $('#direccion_destinatario_ex').html(contenidoDirecciones);
-                //lotes
-                var contenidoLotes = "";
-                for (let index = 0; index < response.lotes_envasado.length; index++) {
-                    contenidoLotes += '<option value="' + response.lotes_envasado[index].id_lote_envasado +
-                        '">' +
-                        response.lotes_envasado[index].nombre + '</option>';
-                }
-                if (response.lotes_envasado.length == 0) {
-                    contenidoLotes =
-                        '<option value="" disabled selected>Sin lotes envasados registrados</option>';
-                }
-                $('#evasado_export').html(contenidoLotes);
-                //lotes graneles
-                var contenidoLotesGraneles = "";
-                for (let index = 0; index < response.lotes_granel.length; index++) {
-                    contenidoLotesGraneles += '<option value="' + response.lotes_granel[index].id_lote_granel +
-                        '">' +
-                        response.lotes_granel[index].nombre_lote + '</option>';
-                }
-                if (response.lotes_granel.length == 0) {
-                    contenidoLotesGraneles =
-                        '<option value="" disabled selected>Sin lotes granel registrados</option>';
-                }
-                $('#lotes_granel_export').html(contenidoLotesGraneles);
-            },
-            error: function() {
-                // Manejar el error
-                console.error('Error al cargar los datos.');
-            }
-        });
-    }
+ function cargarDatosCliente() {
+     var empresa = $("#id_empresa_solicitud_exportacion").val();
+     $.ajax({
+         url: '/getDatos/' + empresa,
+         method: 'GET',
+         success: function(response) {
+             console.log(response);
+
+             // Instalaciones
+             var contenidoInstalaciones = "";
+             for (let index = 0; index < response.instalaciones.length; index++) {
+                 contenidoInstalaciones += '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                     response.instalaciones[index].tipo + ' | ' + response.instalaciones[index].direccion_completa + '</option>';
+             }
+             if (response.instalaciones.length == 0) {
+                 contenidoInstalaciones = '<option value="" disabled selected>Sin instalaciones registradas</option>';
+             }
+             $('#id_instalacion_exportacion').html(contenidoInstalaciones);
+
+             // Direcciones
+             var contenidoDirecciones = "";
+             for (let index = 0; index < response.direcciones.length; index++) {
+                 contenidoDirecciones += '<option value="' + response.direcciones[index].id_direccion + '">' +
+                     response.direcciones[index].direccion + '</option>';
+             }
+             if (response.direcciones.length == 0) {
+                 contenidoDirecciones = '<option value="" disabled selected>Sin direcciones registradas</option>';
+             }
+             $('#direccion_destinatario_ex').html(contenidoDirecciones);
+
+             // Lotes envasado
+             var contenidoLotes = "";
+             for (let index = 0; index < response.lotes_envasado.length; index++) {
+                 contenidoLotes += '<option value="' + response.lotes_envasado[index].id_lote_envasado + '">' +
+                     response.lotes_envasado[index].nombre + '</option>';
+             }
+             if (response.lotes_envasado.length == 0) {
+                 contenidoLotes = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
+             }
+             $('.evasado_export').html(contenidoLotes);
+
+             // Lotes graneles
+             var contenidoLotesGraneles = "";
+             for (let index = 0; index < response.lotes_granel.length; index++) {
+                 contenidoLotesGraneles += '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
+                     response.lotes_granel[index].nombre_lote + '</option>';
+             }
+             if (response.lotes_granel.length == 0) {
+                 contenidoLotesGraneles = '<option value="" disabled selected>Sin lotes granel registrados</option>';
+             }
+             $('.lotes_granel_export').html(contenidoLotesGraneles);
+
+         },
+         error: function() {
+             console.error('Error al cargar los datos.');
+         }
+     });
+ }
+
+
 
     function cargarMarcas() {
     var id_empresa = $('#id_empresa_solicitud_exportacion').val();

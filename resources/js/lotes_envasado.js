@@ -589,6 +589,7 @@ $(function () {
       });
     }
     //Obtener documentos etiqeutas
+    // Obtener documentos por marca
     $('#id_marca').on('change', function () {
       var idMarca = $(this).val();
 
@@ -600,19 +601,20 @@ $(function () {
             if (response.success) {
               var contenido = '';
               if (response.documentos.length > 0) {
-                response.// Supongamos que `documentos` es un array con los documentos obtenidos del servidor
-                  documentos.forEach(documento => {
-                    if (documento.nombre_documento === "Etiquetas") {
-                      contenido += `
-                      <li style="display: flex; align-items: center; margin-bottom: 5px;">
-                      <a href="/storage/uploads/${documento.url}" target="_blank" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
-                          <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true" style="margin-right: 10px;"></i>
-                          <span style="color: green;">${documento.nombre_documento}</span>
-                      </a>
-                      </li>`;
-                    }
-                  });
+                response.documentos.forEach(documento => {
+                  if (documento.nombre_documento === "Etiquetas") {
+                    // Usar el numero_cliente para formar la URL correcta
+                    var rutaArchivo = '/files/' + response.numero_cliente + '/' + documento.url;
 
+                    contenido += `
+                              <li style="display: flex; align-items: center; margin-bottom: 5px;">
+                              <a href="${rutaArchivo}" target="_blank" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
+                                  <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true" style="margin-right: 10px;"></i>
+                                  <span style="color: green;">${documento.nombre_documento}</span>
+                              </a>
+                              </li>`;
+                  }
+                });
               } else {
                 contenido = '<li>No hay documentos disponibles.</li>';
               }
@@ -629,6 +631,7 @@ $(function () {
         $('#listaDocumentos').html('<li>Selecciona una marca primero.</li>');
       }
     });
+
 
     $('#id_empresa').on('change', function () {
       obtenerGraneles();  // Cargar las marcas

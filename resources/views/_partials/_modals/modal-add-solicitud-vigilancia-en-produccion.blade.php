@@ -1,4 +1,3 @@
-<!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="addVigilanciaProduccion" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -13,10 +12,12 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);"
-                                    name="id_empresa" name="id_empresa" class="select2 form-select id_empresa" required>
+                                    id="id_empresa" name="id_empresa" class="select2 form-select id_empresa" required>
                                     <option value="" selected disabled>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                         </option>
                                     @endforeach
                                 </select>
@@ -44,7 +45,6 @@
                             </div>
                         </div>
                     </div>
-                    {{-- mio --}}
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
@@ -89,12 +89,12 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select2 form-select " id="id_tipo" name="id_tipo[]" aria-label="id_tipo" multiple>
-                            @foreach ($tipos as $tipos)
-                                <option value="{{ $tipos->id_tipo }}">{{ $tipos->nombre }} | {{ $tipos->cientifico }}
-                                </option>
+                        <select class="select2 form-select" id="id_tipo_maguey" name="id_tipo_maguey[]" aria-label="id_tipo" multiple>
+                            @foreach ($tipos as $tipo)
+                                <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} | {{ $tipo->cientifico }}</option>
                             @endforeach
                         </select>
+                        
                         <label for="id_tipo">Ingresa tipo de Maguey</label>
                     </div>
                 </div>
@@ -170,8 +170,7 @@
             </div>
             <div class="col-md-12">
                 <div class="form-floating form-floating-outline mb-5">
-                    <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional"
-                        placeholder="Observaciones..."></textarea>
+                    <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."></textarea>
                     <label for="info_adicional">Información adicional sobre la actividad</label>
                 </div>
             </div>
@@ -194,7 +193,7 @@
             success: function(response) {
                 $('#id_categoria').val(response.lotes_granel.id_categoria);
                 $('#id_clase').val(response.lotes_granel.id_clase);
-                $('#id_tipo').val(response.lotes_granel.id_tipo).trigger('change');
+                $('#id_tipo_maguey').val(response.lotes_granel.id_tipo).trigger('change');
                 $('#analisis').val(response.lotes_granel.folio_fq);
                 $('#volumen').val(response.lotes_granel.cont_alc);
                 if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
@@ -250,32 +249,34 @@
     }
 
     function obtenerGranelesInsta(empresa) {
-    $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function(response) {
-            var contenido = "";
-            for (let index = 0; index < response.instalaciones.length; index++) {
-                var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-                contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                    tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa + '</option>' +
-                    contenido;
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var contenido = "";
+                for (let index = 0; index < response.instalaciones.length; index++) {
+                    var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                        tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                        '</option>' +
+                        contenido;
+                }
+                if (response.instalaciones.length == 0) {
+                    contenido = '<option value="">Sin instalaciones registradas</option>';
+                }
+                $('.id_instalacion').html(contenido);
+            },
+            error: function() {
+                console.error('Error al obtener las instalaciones.');
             }
-            if (response.instalaciones.length == 0) {
-                contenido = '<option value="">Sin instalaciones registradas</option>';
-            }
-            $('.id_instalacion').html(contenido);
-        },
-        error: function() {
-            console.error('Error al obtener las instalaciones.');
-        }
-    });
-}
-function limpiarTipo(tipo) {
-    try {
-        return JSON.parse(tipo).join(', ');
-    } catch (e) {
-        return tipo;
+        });
     }
-}
+
+    function limpiarTipo(tipo) {
+        try {
+            return JSON.parse(tipo).join(', ');
+        } catch (e) {
+            return tipo;
+        }
+    }
 </script>
