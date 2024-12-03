@@ -1,6 +1,6 @@
 <!-- Modal para editar un certificado -->
 <div class="modal fade" id="editCertificadoGranelModal" tabindex="-1" aria-labelledby="editCertificadoGranelModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editCertificadoGranelModalLabel">Editar certificado de lote a granel</h5>
@@ -16,15 +16,15 @@
                             <option value="{{ $dictamen->id_dictamen }}">
                                 {{ $dictamen->num_dictamen }}
                                 @if($dictamen->lote_granel && $dictamen->lote_granel->nombre_lote)
-                                    - {{ $dictamen->lote_granel->nombre_lote }}
+                                    | {{ $dictamen->lote_granel->nombre_lote }}
                                 @else
-                                    - (sin nombre de lote)
+                                    | (sin nombre de lote)
                                 @endif
                         
                                 @if($dictamen->inspeccion && $dictamen->inspeccion->num_servicio)
-                                    - {{ $dictamen->inspeccion->num_servicio }}
+                                    | {{ $dictamen->inspeccion->num_servicio }}
                                 @else
-                                    - (sin número de servicio)
+                                    | (sin número de servicio)
                                 @endif
                             </option>
                         @endforeach
