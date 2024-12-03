@@ -16,15 +16,15 @@
                             <option value="{{ $dictamen->id_dictamen }}">
                                 {{ $dictamen->num_dictamen }}
                                 @if($dictamen->lote_granel && $dictamen->lote_granel->nombre_lote)
-                                    - {{ $dictamen->lote_granel->nombre_lote }}
+                                    | {{ $dictamen->lote_granel->nombre_lote }}
                                 @else
-                                    - (sin nombre de lote)
+                                    | (sin nombre de lote)
                                 @endif
                         
                                 @if($dictamen->inspeccion && $dictamen->inspeccion->num_servicio)
-                                    - {{ $dictamen->inspeccion->num_servicio }}
+                                    | {{ $dictamen->inspeccion->num_servicio }}
                                 @else
-                                    - (sin número de servicio)
+                                    | (sin número de servicio)
                                 @endif
                             </option>
                         @endforeach

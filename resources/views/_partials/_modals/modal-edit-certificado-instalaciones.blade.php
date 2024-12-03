@@ -19,7 +19,7 @@
                             <option value="" disabled selected>Seleccione un dictamen</option>
                             @foreach($dictamenes as $dictamen)
                                 <option value="{{ $dictamen->id_dictamen }}" data-tipo-dictamen="{{ $dictamen->tipo_dictamen }}">
-                                    {{ $dictamen->num_dictamen }} - 
+                                    {{ $dictamen->num_dictamen }} | 
                                     @if((string) $dictamen->tipo_dictamen === '1')
                                                 Productor
                                     @elseif((string) $dictamen->tipo_dictamen === '2')
