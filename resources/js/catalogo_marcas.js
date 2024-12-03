@@ -623,8 +623,8 @@ $(function () {
         var id_categoria = marca.id_categoria[index];
         var id_direccion = marca.id_direccion[index];
         // Obtenemos los documentos correspondientes por id_doc
-        var documento_etiquetas = documentos.find(doc => doc.nombre_documento === 'Etiquetas' && (!doc.id_doc || doc.id_doc === (index + 1)));
-        var documento_corrugado = documentos.find(doc => doc.nombre_documento === 'Corrugado' && (!doc.id_doc || doc.id_doc === (index + 1)));
+        var documento_etiquetas = documentos.find(doc => doc.nombre_documento === 'Etiquetas' && (!doc.id_doc || doc.id_doc === id_unico));
+        var documento_corrugado = documentos.find(doc => doc.nombre_documento === 'Corrugado' && (!doc.id_doc || doc.id_doc === id_unico));
         var newRow = `
                   <tr>
                       <th>
