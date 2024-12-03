@@ -588,37 +588,50 @@ $(function () {
         error: function () { }
       });
     }
-    //Obtener documentos etiqeutas
-    // Obtener documentos por marca
+
+    //llenar etiquetas
     $('#id_marca').on('change', function () {
       var idMarca = $(this).val();
-
       if (idMarca) {
         $.ajax({
           url: '/obtenerDocumentos/' + idMarca,
           method: 'GET',
           success: function (response) {
             if (response.success) {
-              var contenido = '';
-              if (response.documentos.length > 0) {
-                response.documentos.forEach(documento => {
+              var contenidoTabla = '';
+
+              // Agregar documentos y etiquetado a la tabla
+              if (response.documentos.length > 0 || response.etiquetado) {
+                response.documentos.forEach((documento, index) => {
                   if (documento.nombre_documento === "Etiquetas") {
-                    // Usar el numero_cliente para formar la URL correcta
                     var rutaArchivo = '/files/' + response.numero_cliente + '/' + documento.url;
 
-                    contenido += `
-                              <li style="display: flex; align-items: center; margin-bottom: 5px;">
-                              <a href="${rutaArchivo}" target="_blank" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
-                                  <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true" style="margin-right: 10px;"></i>
-                                  <span style="color: green;">${documento.nombre_documento}</span>
-                              </a>
-                              </li>`;
+                    contenidoTabla += `
+                  <tr>
+                    <td>
+                      <br />
+                      <a href="${rutaArchivo}" target="_blank" class="btn btn-sm btn-primary">
+                    <i class="ri-file-pdf-2-fill"></i> Visualizar                      
+                    </a>
+                    </td>
+                    <td>${response.etiquetado?.id_direccion || (index === 0 ? 'N/A' : '')}</td>
+                    <td>${response.etiquetado?.sku || (index === 0 ? 'N/A' : '')}</td>
+                    <td>${response.etiquetado?.id_tipo || (index === 0 ? 'N/A' : '')}</td>
+                    <td>${response.etiquetado?.presentacion || (index === 0 ? 'N/A' : '')}</td>
+                    <td>${response.etiquetado?.id_clase || (index === 0 ? 'N/A' : '')}</td>
+                    <td>${response.etiquetado?.id_categoria || (index === 0 ? 'N/A' : '')}</td>
+                  </tr>`;
                   }
                 });
               } else {
-                contenido = '<li>No hay documentos disponibles.</li>';
+                contenidoTabla = `
+              <tr>
+                <td colspan="8">No hay documentos ni datos de etiquetado disponibles.</td>
+              </tr>`;
               }
-              $('#listaDocumentos').html(contenido);
+
+              $('#tablaDocumentos tbody').html(contenidoTabla);
+
             } else {
               console.error(response.message);
             }
@@ -628,9 +641,16 @@ $(function () {
           }
         });
       } else {
-        $('#listaDocumentos').html('<li>Selecciona una marca primero.</li>');
+        $('#tablaDocumentos tbody').html(`
+      <tr>
+        <td colspan="8">Selecciona una marca para ver los documentos y datos de etiquetado.</td>
+      </tr>`);
       }
     });
+
+
+
+
 
 
     $('#id_empresa').on('change', function () {

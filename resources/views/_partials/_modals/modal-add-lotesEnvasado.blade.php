@@ -101,12 +101,27 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-4">
-                        <label for="listaDocumentos">Documentos asociados:</label>
-                        <ul id="listaDocumentos">
-                            <li>Selecciona una marca para ver los documentos.</li>
-                        </ul>
-                    </div>
+                    <table class="table table-bordered" id="tablaDocumentos">
+                        <thead>
+                          <tr>
+                            <th>Etiquetas</th>
+                            <th>ID Dirección</th>
+                            <th>SKU</th>
+                            <th>ID Tipo</th>
+                            <th>Presentación</th>
+                            <th>ID Clase</th>
+                            <th>ID Categoría</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td colspan="8">Selecciona una marca para ver los documentos y datos de etiquetado.</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      
+                      
+                      
                     <div >
                         <table class="table table-bordered">
                             <thead>
