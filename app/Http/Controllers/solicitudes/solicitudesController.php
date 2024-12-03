@@ -613,6 +613,12 @@ class solicitudesController extends Controller
             'aduana_salida' => 'required|string|max:255',
             'no_pedido' => 'required|string|max:255',
             'info_adicional' => 'nullable|string|max:500',
+            /*  */
+            'lote_envasado' => 'array',  // Asegurarse de que los lotes sean arrays
+            'lote_granel' => 'array',    // Asegurarse de que los lotes sean arrays
+            'cantidad_botellas' => 'array',  // Asegurarse de que las cantidades sean arrays
+            'cantidad_cajas' => 'array',  // Asegurarse de que las cantidades sean arrays
+            'presentacion' => 'array',  // Asegurarse de que las presentaciones sean arrays
         ]);
 
         // Procesar características
@@ -624,6 +630,23 @@ class solicitudesController extends Controller
         $data['no_pedido'] = $validated['no_pedido'];  // Solo si es enviado
         $data['aduana_salida'] = $validated['aduana_salida'];  // Solo si es enviado
         $data['direccion_destinatario'] = $validated['direccion_destinatario'];  // Solo si es enviado
+        // Preparar los detalles
+        $detalles = [];
+        $totalLotes = count($validated['lote_envasado']);  // Suponiendo que todos los arrays tienen el mismo tamaño
+
+        for ($i = 0; $i < $totalLotes; $i++) {
+            // Crear el detalle para cada conjunto de datos de lote
+            $detalles[] = [
+                'lote_envasado' => (int)$validated['lote_envasado'][$i],
+                'lote_granel' => (int)$validated['lote_granel'][$i],
+                'cantidad_botellas' => (int)$validated['cantidad_botellas'][$i],
+                'cantidad_cajas' => (int)$validated['cantidad_cajas'][$i],
+                'presentacion' => (int)$validated['presentacion'][$i],
+            ];
+        }
+
+        // Incluir los detalles dentro de las características
+        $data['detalles'] = $detalles;
 
         // Guardar la solicitud
         $pedido = new solicitudesModel();
