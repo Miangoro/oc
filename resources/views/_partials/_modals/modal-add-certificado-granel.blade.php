@@ -1,6 +1,6 @@
 <!-- Modal para agregar un nuevo certificado -->
 <div class="modal fade" id="addCertificadoGrenelModal" tabindex="-1" aria-labelledby="addCertificadoGrenelModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addCertificadoGrenelModalLabel">Agregar certificado de lote a granel</h5>

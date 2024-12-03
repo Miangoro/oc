@@ -1,9 +1,7 @@
 'use strict';
 
  $(function () {
-var dt_user_table = $('.datatables-users'),
-select2Elements = $('.select2'),
-userView = baseUrl + 'app/user/view/account';
+var dt_user_table = $('.datatables-users');
 
 $('#addCertificadoForm .select2').each(function () {
 var $this = $(this);
@@ -49,14 +47,15 @@ $('#editCertificadoForm .select2').each(function () {
        columns: [
          { data: '#' },                //0
          { data: 'fake_id' },          //1
-         { data: 'certificado'},       //2  
-         { data: 'id_dictamen' },      //3       
-         { data: 'id_firmante' },      //4
-         { data: 'fechas' },           //5  
-         { data: 'Revisores'},         //6
-         { data: 'PDF' },              //7  
-         { data: 'Estatus' },          //8  
-         { data: 'actions'},           //9
+         { data: 'Cliente'},           //2
+         { data: 'certificado'},       //3  
+         { data: 'id_dictamen' },      //4       
+         { data: 'id_firmante' },      //5
+         { data: 'fechas' },           //6  
+         { data: 'Revisores'},         //7
+         { data: 'PDF' },              //8  
+         { data: 'Estatus' },          //9  
+         { data: 'actions'},           //10
        ],
        columnDefs: [
          {
@@ -80,26 +79,39 @@ $('#editCertificadoForm .select2').each(function () {
          {
           targets: 2,
           render: function (data, type, full, meta) {
+            var $numero_cliente = full['numero_cliente'];
+            var $razon_social = full['razon_social'];
+            return `
+              <div>
+                <span class="fw-bold">${$numero_cliente}</span><br>
+                <small  class="user-email">${$razon_social}</small>
+              </div>
+            `;
+          }
+        },
+         {
+          targets: 3,
+          render: function (data, type, full, meta) {
             var $num_certificado = full['num_certificado'];
             return '<span class="user-email">' + $num_certificado + '</span>';
           }
         }, 
          {
-            targets: 3,
+            targets: 4,
             render: function (data, type, full, meta) {
               var $id_dictamen = full['id_dictamen'];
               return '<span class="fw-bold">' + $id_dictamen + '</span>';
             }
           }, 
           {
-            targets: 4,
+            targets: 5,
             render: function (data, type, full, meta) {
               var $id_firmante = full['id_firmante'];
               return '<span class="user-email">' + $id_firmante + '</span>';
             }
           }, 
           {
-            targets: 5, // Suponiendo que este es el índice de la columna que quieres actualizar
+            targets: 6, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
         
                 // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
@@ -120,7 +132,7 @@ $('#editCertificadoForm .select2').each(function () {
             }
           },        
           {
-            targets: 6,
+            targets: 7,
             render: function (data, type, full, meta) {
                 var id_revisor = full['id_revisor'];   // Obtener el id_revisor
                 var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
@@ -153,14 +165,14 @@ $('#editCertificadoForm .select2').each(function () {
           },
           {
             // Abre el pdf del certificado
-            targets: 7,
+            targets: 8,
             className: 'text-center',
             render: function (data, type, full, meta) {
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_certificado']}" data-dictamen="${full['id_dictamen']}"></i>`;
             }
           },
           {
-            target: 8, // Suponiendo que este es el índice de la columna que quieres actualizar
+            target: 9, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
                 var estatus = full['estatus']; // Obtener el estatus del certificado
                 
@@ -189,7 +201,7 @@ $('#editCertificadoForm .select2').each(function () {
           }, 
          {
            // Actions
-           targets: 9,
+           targets: 10,
            title: 'Acciones',
            searchable: false,
            orderable: false,
