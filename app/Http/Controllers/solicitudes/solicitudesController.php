@@ -573,32 +573,35 @@ class solicitudesController extends Controller
 
     public function obtenerMarcasPorEmpresa($id_empresa)
     {
+        // Obtén las marcas relacionadas con la empresa
         $marcas = marcas::where('id_empresa', $id_empresa)->get();
 
         foreach ($marcas as $marca) {
-            // Decodificar el JSON y manejar posibles errores
-            $etiquetado = json_decode($marca->etiquetado, true);
+            // Decodificar el campo 'etiquetado'
+            $etiquetado = is_string($marca->etiquetado) ? json_decode($marca->etiquetado, true) : $marca->etiquetado;
 
-            // Verificar si la decodificación fue exitosa
-            if (is_null($etiquetado)) {
-                // Manejar el caso donde el JSON es inválido
+            // Si el campo etiquetado no es válido o no puede ser decodificado
+            if (is_null($etiquetado) || !is_array($etiquetado)) {
                 $marca->tipo_nombre = [];
                 $marca->clase_nombre = [];
                 $marca->categoria_nombre = [];
-                continue; // O puedes lanzar un error si prefieres
+                $marca->etiquetado = [];
+                continue;
             }
 
-            // Verificar la existencia de las claves antes de acceder a ellas
+            // Verificar la existencia de claves antes de procesar las relaciones
             $tipos = isset($etiquetado['id_tipo']) ? tipos::whereIn('id_tipo', $etiquetado['id_tipo'])->pluck('nombre')->toArray() : [];
             $clases = isset($etiquetado['id_clase']) ? clases::whereIn('id_clase', $etiquetado['id_clase'])->pluck('clase')->toArray() : [];
             $categorias = isset($etiquetado['id_categoria']) ? categorias::whereIn('id_categoria', $etiquetado['id_categoria'])->pluck('categoria')->toArray() : [];
 
-            // Añadir los nombres a la marca
+            // Agregar los datos procesados al resultado
             $marca->tipo_nombre = $tipos;
             $marca->clase_nombre = $clases;
             $marca->categoria_nombre = $categorias;
+            $marca->etiquetado = $etiquetado; // Incluye el JSON decodificado para referencia
         }
 
+        // Retornar las marcas como respuesta JSON
         return response()->json($marcas);
     }
 

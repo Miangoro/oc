@@ -128,7 +128,7 @@
                                 <thead>
                                     <tr>
                                       <th>Seleccionar</th>
-                                        <th>ID Doc</th>
+                                        <th>dirección</th>
                                         <th>SKU</th>
                                         <th>Tipo</th>
                                         <th>Presentación</th>
@@ -280,8 +280,7 @@
  }
 
 
-
-    function cargarMarcas() {
+ function cargarMarcas() {
     var id_empresa = $('#id_empresa_solicitud_exportacion').val();
 
     if (id_empresa) {
@@ -292,42 +291,49 @@
                 var tbody = '';
 
                 marcas.forEach(function (marca) {
-    if (marca.etiquetado && typeof marca.etiquetado === 'object' && Object.keys(marca.etiquetado).length > 0) {
-        for (var i = 0; i < marca.etiquetado.sku.length; i++) {
-            tbody += '<tr>';
-            tbody += `
-                <td>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="marcaSeleccionada" id="radio_${marca.etiquetado.sku[i]}" value="${marca.etiquetado.sku[i]}" />
-                    </div>
-                </td>
-            `;
-            tbody += `<td>${marca.etiquetado.id_doc[i] || 'N/A'}</td>`;
-            tbody += `<td>${marca.etiquetado.sku[i] || 'N/A'}</td>`;
-            tbody += `<td>${marca.etiquetado.tipo_nombre[i] || 'N/A'}</td>`; // Tipo
-            tbody += `<td>${marca.etiquetado.presentacion[i] || 'N/A'}</td>`;
-            tbody += `<td>${marca.etiquetado.clase_nombre[i] || 'N/A'}</td>`; // Clase
-            tbody += `<td>${marca.etiquetado.categoria_nombre[i] || 'N/A'}</td>`; // Categoría
-            tbody += '</tr>';
-        }
-    }
-});
+                    // Verifica que 'etiquetado' sea un objeto válido
+                    if (marca.etiquetado && typeof marca.etiquetado === 'object') {
+                        // Iterar sobre los SKU en 'etiquetado'
+                        for (var i = 0; i < marca.etiquetado.sku.length; i++) {
+                            tbody += '<tr>';
+                            tbody += `
+                                <td>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="marcaSeleccionada" id="radio_${marca.etiquetado.sku[i]}" value="${marca.etiquetado.sku[i]}" />
+                                    </div>
+                                </td>
+                            `;
+                            tbody += `<td>${marca.etiquetado.id_direccion[i] || 'N/A'}</td>`; // SKU
+                            tbody += `<td>${marca.etiquetado.sku[i] || 'N/A'}</td>`; // SKU
+                            tbody += `<td>${marca.tipo_nombre[i] || 'N/A'}</td>`; // Nombre del Tipo
+                            tbody += `<td>${marca.etiquetado.presentacion[i] || 'N/A'}</td>`; // Presentación
+                            tbody += `<td>${marca.clase_nombre[i] || 'N/A'}</td>`; // Nombre de la Clase
+                            tbody += `<td>${marca.categoria_nombre[i] || 'N/A'}</td>`; // Nombre de la Categoría
+                            tbody += '</tr>';
+                        }
+                    } else {
+                        tbody += '<tr><td colspan="6" class="text-center">Datos de etiquetado no disponibles.</td></tr>';
+                    }
+                });
 
+                // Si no hay filas, mostrar mensaje
                 if (!tbody) {
-                    tbody = '<tr><td colspan="7" class="text-center">No hay datos de etiquetado disponibles.</td></tr>';
+                    tbody = '<tr><td colspan="6" class="text-center">No hay datos disponibles.</td></tr>';
                 }
 
+                // Agregar las filas a la tabla
                 $('#tabla_marcas tbody').html(tbody);
             },
             error: function (xhr) {
                 console.error('Error al obtener marcas:', xhr);
-                $('#tabla_marcas tbody').html('<tr><td colspan="7">Error al cargar los datos</td></tr>');
+                $('#tabla_marcas tbody').html('<tr><td colspan="6">Error al cargar los datos</td></tr>');
             }
         });
     } else {
-        $('#tabla_marcas tbody').html('<tr><td colspan="7">Seleccione una empresa para ver los datos</td></tr>');
+        $('#tabla_marcas tbody').html('<tr><td colspan="6">Seleccione una empresa para ver los datos</td></tr>');
     }
 }
+
 
 
 
