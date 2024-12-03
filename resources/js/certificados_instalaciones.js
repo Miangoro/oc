@@ -42,15 +42,16 @@
        columns: [
          { data: '#' },                //0
          { data: 'fake_id' },          //1
-         { data: 'tipo_dictamen' },    //2 
-         { data: 'num_dictamen' },     //3
-         { data: 'num_certificado' },  //4
-         { data: 'maestro_mezcalero' },//5
-         { data: 'fechas' },           //6
-         { data: 'id_revisor' },       //7
-         { data: 'Certificado' },      //8
-         { data: 'estatus' },          //9
-         { data: 'actions'},           //10
+         { data: 'Cliente' },          //2 
+         { data: 'tipo_dictamen' },    //3 
+         { data: 'num_dictamen' },     //4
+         { data: 'num_certificado' },  //5
+         { data: 'maestro_mezcalero' },//6
+         { data: 'fechas' },           //7
+         { data: 'id_revisor' },       //8
+         { data: 'Certificado' },      //9
+         { data: 'estatus' },          //10
+         { data: 'actions'},           //11
        ],
        columnDefs: [
          {
@@ -73,6 +74,20 @@
          },
          {
           targets: 2,
+          render: function (data, type, full, meta) {
+            var $numero_cliente = full['numero_cliente'];
+            var $razon_social = full['razon_social'];
+            return `
+              <div>
+                <span class="fw-bold">${$numero_cliente}</span><br>
+                <small  class="user-email">${$razon_social}</small>
+              </div>
+            `;
+          }
+        },
+             
+         {
+          targets: 3,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $tipoDictamen = parseInt(full['tipo_dictamen']);
@@ -110,28 +125,28 @@
           }     
         },
           {
-           targets: 3,
+           targets: 4,
            render: function (data, type, full, meta) {
              var $num_dictamen = full['num_dictamen'];
              return '<span class="fw-bold">' + $num_dictamen + '</span>';
            }
          }, 
          {
-            targets: 4,
+            targets: 5,
             render: function (data, type, full, meta) {
               var $num_servicio = full['num_certificado'];
               return '<span class="user-email">' + $num_servicio + '</span>';
             }
           },
           {
-            targets: 5,
+            targets: 6,
             render: function (data, type, full, meta) {
               var $maestro_mezcalero = full['maestro_mezcalero'] ?? 'N/A';
               return '<span class="user-email">' + $maestro_mezcalero + '</span>';
             }
           },
           {
-            targets: 6, // Suponiendo que este es el índice de la columna que quieres actualizar
+            targets: 7, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
         
                 // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
@@ -152,7 +167,7 @@
             }
           },   
           {
-            targets: 7,
+            targets: 8,
             render: function (data, type, full, meta) {
                 var id_revisor = full['id_revisor'];   // Obtener el id_revisor
                 var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
@@ -185,14 +200,14 @@
           },
           {
             // Abre el pdf del certificado
-            targets: 8,
+            targets: 9,
             className: 'text-center',
             render: function (data, type, full, meta) {
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
             }
           },
           {
-            target: 9, // Suponiendo que este es el índice de la columna que quieres actualizar
+            target: 10, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
                 var estatus = full['estatus']; // Obtener el estatus del certificado
                 
@@ -221,7 +236,7 @@
         },  
          {
            // Actions
-           targets: 10,
+           targets: 11,
            title: 'Acciones',
            searchable: false,
            orderable: false,
