@@ -1194,9 +1194,6 @@ let isLoadingData = false;
 let fieldsValidated = []; 
 
 $(document).ready(function () {
-    $('#campos_productor').hide(); 
-    $('#campos_condicionales').hide(); 
-
     $(document).on('click', '.reexpedir-record', function () {
         var id_certificado = $(this).data('id');
         console.log('ID Certificado para reexpedir:', id_certificado);
@@ -1223,11 +1220,10 @@ $(document).ready(function () {
             cargarDatosReexpedicion(id_certificado);
         }
 
-        $('#campos_condicionales').hide();
-        $('#campos_productor').hide();
-
         if (accionSeleccionada === '2') {
-            $('#campos_condicionales').show();
+            $('#campos_condicionales').slideDown();
+        }else {
+            $('#campos_condicionales').slideUp();
         }
     });
 
@@ -1265,11 +1261,12 @@ $(document).ready(function () {
         cargarDatosReexpedicion(id_certificado);
     }
 
-    $('#campos_condicionales').hide();
     $('#campos_productor').hide(); 
 
     if (accionSeleccionada === '2') {
-        $('#campos_condicionales').show();
+      $('#campos_condicionales').slideDown();
+    }else {
+        $('#campos_condicionales').slideUp();
     }
 
     const tipoDictamen = $('#id_dictamen_rex option:selected').data('tipo-dictamen');

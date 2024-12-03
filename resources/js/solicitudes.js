@@ -1840,71 +1840,154 @@ $(function () {
   });
 
   $(document).ready(function () {
-    // Contador que inicia en 1 porque el lote[0] es estático en el HTML
+    // Contador para las secciones dinámicas
     let sectionCount = 1;
 
-    // Agregar una nueva sección dinámica
+    // Función para agregar una nueva sección dinámica
     $('#add-characteristics').click(function () {
-      // Validar que se haya seleccionado una empresa
-      let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val();
-      if (!empresaSeleccionada) {
-        // Mostrar alerta si no se seleccionó ninguna empresa
-        Swal.fire({
-          icon: 'warning',
-          title: 'Advertencia',
-          text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
-          customClass: {
-            confirmButton: 'btn btn-warning'
-          }
-        });
-        return; // Salir del evento si no se seleccionó una empresa
-      }
-
-      // Clonar la sección original
-      let newSection = $('#caracteristicas_Ex').clone();
-
-      // Cambiar el ID de la nueva sección para hacerlo único
-      newSection.attr('id', 'caracteristicas_Ex_' + sectionCount);
-
-      // Limpiar los valores de los inputs y selects en la nueva sección
-      newSection.find('input').val('');
-      newSection.find('select').prop('selectedIndex', 0);
-
-      // Actualizar el atributo "name" de inputs y selects para incluir un índice único
-      newSection.find('input, select').each(function () {
-        let name = $(this).attr('name');
-        if (name) {
-          // Reemplazar el índice dinámico con el contador actual
-          $(this).attr('name', name.replace(/\[\d*\]/, '[' + sectionCount + ']'));
+        // Validar que se haya seleccionado una empresa
+        let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val();
+        if (!empresaSeleccionada) {
+            // Mostrar alerta si no se seleccionó ninguna empresa
+            Swal.fire({
+                icon: 'warning',
+                title: 'Advertencia',
+                text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
+                customClass: {
+                    confirmButton: 'btn btn-warning'
+                }
+            });
+            return; // Salir del evento si no se seleccionó una empresa
         }
-      });
 
-      // Agregar la nueva sección al contenedor
-      newSection.appendTo('#sections-container');
+        // Crear una nueva sección dinámica
+        var newSection = `
+            <div class="card mt-4" id="caracteristicas_Ex_${sectionCount}">
+                <div class="card-body">
+                    <h5>Características del Producto</h5>
+                    <div class="row caracteristicas-row">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select name="lote_envasado[${sectionCount}]" class="select2 form-select evasado_export">
+                                    <option value="" disabled selected>Selecciona un lote envasado</option>
+                                    <!-- Opciones dinámicas -->
+                                </select>
+                                <label for="lote_envasado">Selecciona el lote envasado</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select name="lote_granel[${sectionCount}]" class="select2 form-select lotes_granel_export">
+                                    <option value="" disabled selected>Selecciona un lote a granel</option>
+                                    <!-- Opciones dinámicas -->
+                                </select>
+                                <label for="lote_granel">Selecciona el lote a granel</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input type="number" class="form-control" name="cantidad_botellas[${sectionCount}]" placeholder="Cantidad de botellas">
+                                <label for="cantidad_botellas">Cantidad de botellas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input type="number" class="form-control" name="cantidad_cajas[${sectionCount}]" placeholder="Cantidad de cajas">
+                                <label for="cantidad_cajas">Cantidad de cajas</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <input type="text" class="form-control" name="presentacion[${sectionCount}]" placeholder="Ej. 750ml">
+                                <label for="presentacion">Presentación</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
 
-      // Incrementar el contador para la próxima sección dinámica
-      sectionCount++;
+        // Agregar la nueva sección al contenedor
+        $('#sections-container').append(newSection);
+
+        // Cargar opciones dinámicas para los selects de la nueva sección
+        cargarLotes(empresaSeleccionada, sectionCount);
+
+        // Inicializar Select2 en los nuevos selects
+        // Inicializar los elementos select2
+        var select2Elements = $('.select2');
+        initializeSelect2(select2Elements);
+
+        // Incrementar el contador para la siguiente sección
+        sectionCount++;
     });
 
-    // Eliminar la última sección dinámica agregada
-    $('#delete-characteristics').click(function () {
-      // Solo eliminar si hay más de una sección dinámica
-      if (sectionCount > 1) {
-        $('#caracteristicas_Ex_' + (sectionCount - 1)).remove();
-        sectionCount--; // Reducir el contador
-      } else {
-        // Mensaje de advertencia con SweetAlert
-        Swal.fire({
-          icon: 'warning',
-          title: 'Advertencia',
-          text: 'No se puede eliminar la sección original.',
-          customClass: {
-            confirmButton: 'btn btn-warning'
+    // Función para cargar los lotes dinámicamente en la nueva sección
+    function cargarLotes(empresaSeleccionada, sectionCount) {
+        $.ajax({
+            url: '/getDatos/' + empresaSeleccionada, // Usa la empresa seleccionada para cargar los lotes
+            method: 'GET',
+            success: function(response) {
+                // Lote envasado
+                var contenidoLotesEnvasado = "";
+                for (let index = 0; index < response.lotes_envasado.length; index++) {
+                    contenidoLotesEnvasado += `<option value="${response.lotes_envasado[index].id_lote_envasado}">
+                        ${response.lotes_envasado[index].nombre}</option>`;
+                }
+                if (response.lotes_envasado.length == 0) {
+                    contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
+                }
+                $('#caracteristicas_Ex_' + sectionCount + ' .evasado_export').html(contenidoLotesEnvasado);
+
+                // Lote granel
+                var contenidoLotesGranel = "";
+                for (let index = 0; index < response.lotes_granel.length; index++) {
+                    contenidoLotesGranel += `<option value="${response.lotes_granel[index].id_lote_granel}">
+                        ${response.lotes_granel[index].nombre_lote}</option>`;
+                }
+                if (response.lotes_granel.length == 0) {
+                    contenidoLotesGranel = '<option value="" disabled selected>Sin lotes granel registrados</option>';
+                }
+                $('#caracteristicas_Ex_' + sectionCount + ' .lotes_granel_export').html(contenidoLotesGranel);
+            },
+            error: function() {
+              console.error('Error al cargar los lotes.');
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error al cargar los datos',
+                  text: 'Hubo un problema al intentar cargar los lotes. Intenta nuevamente más tarde.',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
           }
         });
+    }
+
+    // Eliminar la última sección
+    $('#delete-characteristics').click(function () {
+      var totalSections = $('#sections-container .card').length; // Total de secciones en el contenedor
+      var lastSection = $('#sections-container .card').last(); // Última sección
+
+      // Solo eliminar si hay más de una sección (no borrar la sección original)
+      if (totalSections > 1) {
+          lastSection.remove(); // Eliminar la última sección
+          sectionCount--; // Decrementar el contador
+      } else {
+          // Mensaje de advertencia con SweetAlert
+          Swal.fire({
+              icon: 'warning',
+              title: 'Advertencia',
+              text: 'No se puede eliminar la sección original.',
+              customClass: {
+                  confirmButton: 'btn btn-warning'
+              }
+          });
       }
-    });
   });
+
+});
+
+
 
   /* Enviar formulario store add exportacion */
   $(function () {

@@ -573,32 +573,35 @@ class solicitudesController extends Controller
 
     public function obtenerMarcasPorEmpresa($id_empresa)
     {
+        // Obtén las marcas relacionadas con la empresa
         $marcas = marcas::where('id_empresa', $id_empresa)->get();
 
         foreach ($marcas as $marca) {
-            // Decodificar el JSON y manejar posibles errores
-            $etiquetado = json_decode($marca->etiquetado, true);
+            // Decodificar el campo 'etiquetado'
+            $etiquetado = is_string($marca->etiquetado) ? json_decode($marca->etiquetado, true) : $marca->etiquetado;
 
-            // Verificar si la decodificación fue exitosa
-            if (is_null($etiquetado)) {
-                // Manejar el caso donde el JSON es inválido
+            // Si el campo etiquetado no es válido o no puede ser decodificado
+            if (is_null($etiquetado) || !is_array($etiquetado)) {
                 $marca->tipo_nombre = [];
                 $marca->clase_nombre = [];
                 $marca->categoria_nombre = [];
-                continue; // O puedes lanzar un error si prefieres
+                $marca->etiquetado = [];
+                continue;
             }
 
-            // Verificar la existencia de las claves antes de acceder a ellas
+            // Verificar la existencia de claves antes de procesar las relaciones
             $tipos = isset($etiquetado['id_tipo']) ? tipos::whereIn('id_tipo', $etiquetado['id_tipo'])->pluck('nombre')->toArray() : [];
             $clases = isset($etiquetado['id_clase']) ? clases::whereIn('id_clase', $etiquetado['id_clase'])->pluck('clase')->toArray() : [];
             $categorias = isset($etiquetado['id_categoria']) ? categorias::whereIn('id_categoria', $etiquetado['id_categoria'])->pluck('categoria')->toArray() : [];
 
-            // Añadir los nombres a la marca
+            // Agregar los datos procesados al resultado
             $marca->tipo_nombre = $tipos;
             $marca->clase_nombre = $clases;
             $marca->categoria_nombre = $categorias;
+            $marca->etiquetado = $etiquetado; // Incluye el JSON decodificado para referencia
         }
 
+        // Retornar las marcas como respuesta JSON
         return response()->json($marcas);
     }
 
@@ -613,6 +616,12 @@ class solicitudesController extends Controller
             'aduana_salida' => 'required|string|max:255',
             'no_pedido' => 'required|string|max:255',
             'info_adicional' => 'nullable|string|max:500',
+            /*  */
+            'lote_envasado' => 'array',  // Asegurarse de que los lotes sean arrays
+            'lote_granel' => 'array',    // Asegurarse de que los lotes sean arrays
+            'cantidad_botellas' => 'array',  // Asegurarse de que las cantidades sean arrays
+            'cantidad_cajas' => 'array',  // Asegurarse de que las cantidades sean arrays
+            'presentacion' => 'array',  // Asegurarse de que las presentaciones sean arrays
         ]);
 
         // Procesar características
@@ -624,6 +633,23 @@ class solicitudesController extends Controller
         $data['no_pedido'] = $validated['no_pedido'];  // Solo si es enviado
         $data['aduana_salida'] = $validated['aduana_salida'];  // Solo si es enviado
         $data['direccion_destinatario'] = $validated['direccion_destinatario'];  // Solo si es enviado
+        // Preparar los detalles
+        $detalles = [];
+        $totalLotes = count($validated['lote_envasado']);  // Suponiendo que todos los arrays tienen el mismo tamaño
+
+        for ($i = 0; $i < $totalLotes; $i++) {
+            // Crear el detalle para cada conjunto de datos de lote
+            $detalles[] = [
+                'lote_envasado' => (int)$validated['lote_envasado'][$i],
+                'lote_granel' => (int)$validated['lote_granel'][$i],
+                'cantidad_botellas' => (int)$validated['cantidad_botellas'][$i],
+                'cantidad_cajas' => (int)$validated['cantidad_cajas'][$i],
+                'presentacion' => (int)$validated['presentacion'][$i],
+            ];
+        }
+
+        // Incluir los detalles dentro de las características
+        $data['detalles'] = $detalles;
 
         // Guardar la solicitud
         $pedido = new solicitudesModel();
