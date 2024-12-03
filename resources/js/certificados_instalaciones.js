@@ -17,6 +17,13 @@
     });
   });
 
+  $('#editCertificadoModal .select2').each(function () {
+    var $this = $(this);
+    $this.select2({
+      dropdownParent: $this.closest('.form-floating')
+    });
+  });
+
   $('.datepicker').datepicker({
       format: 'yyyy-mm-dd',
       autoclose: true,
