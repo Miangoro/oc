@@ -16,6 +16,7 @@ use App\Models\direcciones;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\Helpers;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 
 
@@ -155,7 +156,9 @@ class marcasCatalogoController extends Controller
     public function store(Request $request)
     {
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->cliente)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
 
         if ($request->id) {
             // Actualizar marca existente
@@ -243,7 +246,9 @@ class marcasCatalogoController extends Controller
         $marca = Marcas::findOrFail($id);
         $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get(); // Obtener los documentos asociados a la marca
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
 
         return response()->json([
             'marca' => $marca,
@@ -292,9 +297,19 @@ class marcasCatalogoController extends Controller
     public function updateEtiquetas(Request $request)
     {
         try {
-            // Crear nuevo registro en la base de datos
+            // Generar IDs únicos si es necesario
+            $direcciones = $request->id_direccion;
+            $totalElementos = count($direcciones);
+            $idUnico = $request->id_unico ?? []; // Recibir IDs únicos desde el formulario si es edición
+        
+            for ($i = count($idUnico); $i < $totalElementos; $i++) {
+                $idUnico[] = Str::uuid();
+            }
+        
+            // Actualizar el etiquetado en la base de datos
             $loteEnvasado = marcas::findOrFail($request->input('id_marca'));
             $loteEnvasado->etiquetado = json_encode([
+                'id_unico' => $idUnico,
                 'id_direccion' => $request->id_direccion,
                 'sku' => $request->sku,
                 'id_tipo' => $request->id_tipo,
@@ -303,29 +318,70 @@ class marcasCatalogoController extends Controller
                 'id_categoria' => $request->id_categoria,
             ]);
             $loteEnvasado->save();
-            //metodo para guardar pdf
+        
+            // Obtener información de la empresa
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $loteEnvasado->id_empresa)->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-            foreach ($request->id_documento as $index => $id_documento) {
-                // Agregar nuevo documento si no existe
-                if ($request->hasFile('url') && isset($request->file('url')[$index])) {
-                    $file = $request->file('url')[$index];
-                    $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
-
-                    $documentacion_url = new Documentacion_url();
-                    $documentacion_url->id_relacion = $loteEnvasado->id_marca;
-                    $documentacion_url->id_documento = $id_documento;
-                    $documentacion_url->nombre_documento = $request->nombre_documento[$index];
-                    $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
-                    $documentacion_url->id_empresa = $loteEnvasado->id_empresa;
-                    $documentacion_url->save();
-                }
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
+        
+            $documentosActuales = Documentacion_url::where('id_relacion', $loteEnvasado->id_marca)
+                ->where('id_documento', 60)
+                ->pluck('id_doc')
+                ->toArray();
+        
+            // Eliminar documentos que no están en el request
+            $documentosAEliminar = array_diff($documentosActuales, $idUnico);
+            if (!empty($documentosAEliminar)) {
+                Documentacion_url::whereIn('id_doc', $documentosAEliminar)->delete();
             }
-            return response()->json(['success' => 'Etiquetas cargadas correctamente']);
+            $i = 0;
+            foreach ($request->id_documento as $index => $id_documento) {
+                $documentacionExistente = Documentacion_url::where('id_doc', $idUnico[$index] ?? null)->first();
+        
+                // Si el documento ya existe, actualizar
+                if ($documentacionExistente) {
+                    $documentacionExistente->nombre_documento = $request->nombre_documento[$index];
+                    if ($request->hasFile('url') && isset($request->file('url')[$index])) {
+                        $file = $request->file('url')[$index];
+                        $filename = $request->nombre_documento[$index] . '_' . time() .$i. '.' . $file->getClientOriginalExtension();
+                        $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+                        $documentacionExistente->url = $filename; // Actualiza la URL si se subió un nuevo archivo
+                    }
+                    $documentacionExistente->save();
+                    $i++;
+                } else {
+                    // Crear nuevo documento
+                    if ($request->hasFile('url') && isset($request->file('url')[$index])) {
+                        $file = $request->file('url')[$index];
+                        $filename = $request->nombre_documento[$index] . '_' . time() .$i. '.' . $file->getClientOriginalExtension();
+                        $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+        
+                        $documentacion_url = new Documentacion_url();
+                        $documentacion_url->id_relacion = $loteEnvasado->id_marca;
+                        $documentacion_url->id_doc = $idUnico[$i];
+                        $documentacion_url->id_documento = $id_documento;
+                        $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+                        $documentacion_url->url = $filename;
+                        $documentacion_url->id_empresa = $loteEnvasado->id_empresa;
+                        $documentacion_url->save();
+                        $i++;
+                    }
+                }
+
+               
+            }
+        
+            return response()->json(['success' => 'Etiquetas actualizadas correctamente']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al actualizar la etiqueta'], 500);
+            return response()->json([
+                'error' => 'Error al actualizar las etiquetas',
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ], 500);
         }
+        
     }
     
     //Editar etiquetas
@@ -338,7 +394,9 @@ class marcasCatalogoController extends Controller
         $categorias = categorias::all();
         $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get();
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
 
         $etiquetado = json_decode($marca->etiquetado, true);
         $marca->id_direccion = $etiquetado['id_direccion'] ?? null;
@@ -347,6 +405,7 @@ class marcasCatalogoController extends Controller
         $marca->presentacion = $etiquetado['presentacion'] ?? null;
         $marca->id_clase = $etiquetado['id_clase'] ?? null;
         $marca->id_categoria = $etiquetado['id_categoria'] ?? null;
+        $marca->id_unico = $etiquetado['id_unico'] ?? null;
 
         return response()->json([
             'direcciones' => $direcciones,

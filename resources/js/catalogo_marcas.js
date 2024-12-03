@@ -591,6 +591,7 @@ $(function () {
       var tipo = data.tipos;
       var clase = data.clases;
       var categoria = data.categorias;
+     
       var direccion = data.direcciones;
       var documentos = data.documentacion_urls; // Documentos asociados
       // Rellenar el campo con el ID de la marca obtenida
@@ -616,6 +617,8 @@ $(function () {
       marca.sku.forEach(function (sku, index) {
         var id_tipo = marca.id_tipo[index];
         var presentacion = marca.presentacion[index];
+        var id_unico = marca.id_unico[index]; 
+       
         var id_clase = marca.id_clase[index];
         var id_categoria = marca.id_categoria[index];
         var id_direccion = marca.id_direccion[index];
@@ -634,8 +637,9 @@ $(function () {
                               ${direcciones}
                           </select>
                       </td>
-                      <td>
-                          <input type="text" class="form-control form-control-sm" name="sku[]" min="0" value="${sku}">
+                      <td>   <input type="hidden" class="form-control form-control-sm"  value="${id_unico}" name="id_unico[]"
+                                            id="id_unico">
+                          <input type="text" class="form-control form-control-sm" name="sku[]" min="0" value="${sku !== null ? sku : ''}">
                       </td>
                       <td>
                           <select class="form-control select2" name="id_tipo[]" id="id_tipo${index}">
