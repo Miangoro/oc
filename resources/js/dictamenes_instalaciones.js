@@ -116,17 +116,17 @@ $('#edit_fecha_emision').on('change', function() {
              return '';
            }
          },
-         {//Tabla 1
+         /*{//Tabla 1
            searchable: false,
            orderable: false,
            targets: 1,
            render: function (data, type, full, meta) {
              return `<span>${full.fake_id}</span>`;
            }
-         },
+         },*/
          {
            // Tabla 2
-           targets: 2,
+           targets: 1,
            responsivePriority: 4,
            render: function (data, type, full, meta) {
              var $name = full['tipo_dictamen'];
@@ -151,7 +151,7 @@ $('#edit_fecha_emision').on('change', function() {
          },
           {
            // Tabla 3
-           targets: 3,
+           targets: 2,
            render: function (data, type, full, meta) {
              var $num_dictamen = full['num_dictamen'];
              return '<span class="fw-bold">' + $num_dictamen + '</span>';
@@ -159,7 +159,7 @@ $('#edit_fecha_emision').on('change', function() {
          }, 
          {
             // Tabla 4
-            targets: 4,
+            targets: 3,
             render: function (data, type, full, meta) {
               var $num_servicio = full['num_servicio'];
               return '<span class="user-email">' + $num_servicio + '</span>';
@@ -169,8 +169,12 @@ $('#edit_fecha_emision').on('change', function() {
             // Tabla 5
             targets: 6,
             render: function (data, type, full, meta) {
-              var $fecha = full['fecha_emision'];
-              return '<span class="user-email">' + $fecha + '</span>';
+              var $fechaE = full['fecha_emision'];
+              var $fechaV = full['fecha_vigencia'];
+              /*return '<span ><b>Fecha Emisión:</b>' + $fechaE + '<br>' +
+              '<b>Fecha Vigencia:</b>' + $fechaE + '</span>';*/
+              return '<span class="fw-bold text-dark small">Fecha Emisión:</span> <span class="small">' + $fechaE + '</span> <br>' +
+              '<span class="fw-bold text-dark small">Fecha Vigencia:</span> <span class="small">' + $fechaV + '</span>';
             }
           },
           {
@@ -400,7 +404,8 @@ $('#edit_fecha_emision').on('change', function() {
            display: $.fn.dataTable.Responsive.display.modal({
              header: function (row) {
                var data = row.data();
-               return 'Detalles de ' + data['id_inspeccion'];
+               return 'Detalles de ' + data['inspeccion'];
+               //return 'Detalles del ' + 'Dictamen';
              }
            }),
            type: 'column',

@@ -250,23 +250,32 @@
     }
 
     function obtenerGranelesInsta(empresa) {
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                        response
-                        .instalaciones[index].tipo + ' | ' + response
-                        .instalaciones[index].direccion_completa + '</option>' + contenido;
-                }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
-                } else {}
-                $('.id_instalacion').html(contenido);
-            },
-            error: function() {}
-        });
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            var contenido = "";
+            for (let index = 0; index < response.instalaciones.length; index++) {
+                var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+                contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                    tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa + '</option>' +
+                    contenido;
+            }
+            if (response.instalaciones.length == 0) {
+                contenido = '<option value="">Sin instalaciones registradas</option>';
+            }
+            $('.id_instalacion').html(contenido);
+        },
+        error: function() {
+            console.error('Error al obtener las instalaciones.');
+        }
+    });
+}
+function limpiarTipo(tipo) {
+    try {
+        return JSON.parse(tipo).join(', ');
+    } catch (e) {
+        return tipo;
     }
+}
 </script>

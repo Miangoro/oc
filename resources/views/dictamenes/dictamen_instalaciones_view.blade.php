@@ -55,13 +55,12 @@
             <thead class="table-dark">
                 <tr>
                     <th></th>
-                    <th>No.</th>
                     <th>Tipo de dictamen</th>
                     <th>No. dictamen</th>
                     <th>No. Servicio</th>
                     <th>Cliente</th>
                     <th>Domicilio de Instalacion</th>
-                    <th>Fecha de emisión</th>
+                    <th>Fecha</th>
                     <th>Dictamen</th>
                     <th>ACCIONES</th>
                 </tr>

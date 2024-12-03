@@ -179,43 +179,32 @@ class solicitudesController extends Controller
         // Buscar los datos necesarios en la tabla "solicitudes"
         $solicitud = solicitudesModel::find($id_solicitud);
 
+        if (!$solicitud) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Solicitud no encontrada.',
+            ], 404);
+        }
+
+        // Obtener instalaciones relacionadas con la empresa de la solicitud
         $instalaciones = Instalaciones::where('id_empresa', $solicitud->id_empresa)->get();
 
+        // Obtener las características decodificadas (si existen)
         $caracteristicas = $solicitud->caracteristicas
             ? json_decode($solicitud->caracteristicas, true)
             : null;
 
-        if ($solicitud) {
-            return response()->json([
-                'success' => true,
-                'data' => $solicitud,
-                'caracteristicas' => $caracteristicas,
-                'instalaciones' => $instalaciones,
-            ]);
-        }
-
         return response()->json([
-            'success' => false,
-            'message' => 'Solicitud no encontrada.',
-        ], 404);
+            'success' => true,
+            'data' => $solicitud,
+            'caracteristicas' => $caracteristicas,
+            'instalaciones' => $instalaciones,
+        ]);
     }
+
 
     public function store(Request $request)
     {
-
-
-        // Validar los datos recibidos del formulario
-        /*   $request->validate([
-            'folio' => 'required|string|max:255',
-            'id_empresa' => 'required|integer',
-            'id_marca' => 'required|integer',
-            'cantidad_hologramas' => 'required|integer',
-            'id_direccion' => 'required|integer',
-            'comentarios' => 'nullable|string|max:1000',
-        ]);*/
-
-
-
         $solicitud = new solicitudesModel();
         $solicitud->folio = Helpers::generarFolioSolicitud();
         $solicitud->id_empresa = $request->id_empresa;
@@ -225,6 +214,22 @@ class solicitudesController extends Controller
         $solicitud->id_instalacion = $request->id_instalacion;
         $solicitud->info_adicional = $request->info_adicional;
         // Guardar el nuevo registro en la base de datos
+
+      // Verificar si los campos tienen valores
+      $clases = $request->input('clases', []);
+      $categorias = $request->input('categorias', []);
+      $renovacion = $request->input('renovacion', null);
+
+      if (!empty($clases) || !empty($categorias) || $renovacion !== null) {
+          $caracteristicas = [
+              'clases' => $clases,
+              'categorias' => $categorias,
+              'renovacion' => $renovacion,
+          ];
+          // Convertir el array a JSON y guardarlo en la columna 'caracteristicas'
+          $solicitud->caracteristicas = json_encode($caracteristicas);
+      }
+
         $solicitud->save();
 
         // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
@@ -259,7 +264,7 @@ class solicitudesController extends Controller
         $VigilanciaProdu->id_instalacion = $request->id_instalacion;
         $VigilanciaProdu->info_adicional = $request->info_adicional;
 
-        
+
         $VigilanciaProdu->caracteristicas = json_encode([
             'id_lote_granel' => $request->id_lote_granel,
             'id_categoria' => $request->id_categoria,
@@ -540,13 +545,22 @@ class solicitudesController extends Controller
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string|max:5000',
                 ]);
+                // Preparar el JSON para guardar en `caracteristicas`
+                $caracteristicasJson = [
+                  'clases' => $request->clases,
+                  'categorias' => $request->categorias,
+                  'renovacion' => $request->renovacion,
+              ];
 
+              // Convertir el array a JSON
+              $jsonContent = json_encode($caracteristicasJson);
                 // Actualizar datos específicos para dictaminación
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => $jsonContent,
                 ]);
                 break;
 
@@ -600,25 +614,25 @@ class solicitudesController extends Controller
             'no_pedido' => 'required|string|max:255',
             'info_adicional' => 'nullable|string|max:500',
         ]);
-    
+
         // Procesar características
         $data = json_decode($request->input('caracteristicas'), true);
-    
+
         // Incluir los demás campos dentro del JSON de 'caracteristicas'
         $data['tipo_solicitud'] = $validated['tipo_solicitud'] ?? $data['tipo_solicitud'];  // Solo si es enviado
         $data['fecha_estimada_visita'] = $validated['fecha_estimada_visita'] ?? $data['fecha_estimada_visita'];  // Solo si es enviado
         $data['no_pedido'] = $validated['no_pedido'];  // Solo si es enviado
         $data['aduana_salida'] = $validated['aduana_salida'];  // Solo si es enviado
         $data['direccion_destinatario'] = $validated['direccion_destinatario'];  // Solo si es enviado
-      
+
         // Guardar la solicitud
         $pedido = new solicitudesModel();
         $pedido->folio = Helpers::generarFolioSolicitud();
         $pedido->id_empresa = $validated['id_empresa'];
         $pedido->fecha_visita = $validated['fecha_visita'];
-        $pedido->id_tipo = 11; 
+        $pedido->id_tipo = 11;
         $pedido->id_instalacion = $validated['id_instalacion'];
-        $pedido->info_adicional = $validated['info_adicional']; 
+        $pedido->info_adicional = $validated['info_adicional'];
         $pedido->caracteristicas = json_encode($data);  // Guardar el JSON completo con las características (incluyendo facturas)
         $pedido->save();
                 // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
@@ -630,15 +644,15 @@ class solicitudesController extends Controller
                     'message' => $pedido->folio . " " . $pedido->tipo_solicitud->tipo,
                     'url' => 'solicitudes-historial',
                 ];
-        
+
                 // Iterar sobre cada usuario y enviar la notificación
                 foreach ($users as $user) {
                     $user->notify(new GeneralNotification($data1));
                 }
-    
+
         return response()->json(['success' => true, 'message' => 'Pedido registrado.']);
     }
-    
-    
-    
+
+
+
 }

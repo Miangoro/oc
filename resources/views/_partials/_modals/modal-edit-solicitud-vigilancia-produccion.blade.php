@@ -262,33 +262,43 @@
     }
 
     function obtenerGraneles2(empresa) {
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                        response.instalaciones[index].tipo + ' | ' +
-                        response.instalaciones[index].direccion_completa +
-                        '</option>' + contenido;
-                }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
-                }
-                // Actualizar las opciones del select
-                $('#edit_id_instalacion_vig').html(contenido);
-                // Restaurar el valor previamente seleccionado
-                const idInstalacionSeleccionada = $('#edit_id_instalacion_vig').data('selected');
-                if (idInstalacionSeleccionada) {
-                    $('#edit_id_instalacion_vig')
-                        .val(idInstalacionSeleccionada) // Selecciona el valor previo
-                        .trigger('change'); // Propaga el cambio al select
-                }
-            },
-            error: function() {
-                console.error("Error al cargar las instalaciones.");
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            var contenido = "";
+            for (let index = 0; index < response.instalaciones.length; index++) {
+                var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+
+                contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                    tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                    '</option>' + contenido;
             }
-        });
+            if (response.instalaciones.length == 0) {
+                contenido = '<option value="">Sin instalaciones registradas</option>';
+            }
+            // Actualizar las opciones del select
+            $('#edit_id_instalacion_vig').html(contenido);
+            // Restaurar el valor previamente seleccionado
+            const idInstalacionSeleccionada = $('#edit_id_instalacion_vig').data('selected');
+            if (idInstalacionSeleccionada) {
+                $('#edit_id_instalacion_vig')
+                    .val(idInstalacionSeleccionada) // Selecciona el valor previo
+                    .trigger('change'); // Propaga el cambio al select
+            }
+        },
+        error: function() {
+            console.error("Error al cargar las instalaciones.");
+        }
+    });
+}
+
+function limpiarTipo(tipo) {
+    try {
+        return JSON.parse(tipo).join(', ');
+    } catch (e) {
+        return tipo;
     }
+}
+
 </script>

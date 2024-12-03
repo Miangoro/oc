@@ -42,7 +42,8 @@ class InstalacionesController extends Controller
             4 => 'num_servicio',
             5 => 'fecha_emision',
             6 => 'razon_social',//este lugar lo ocupa fecha en find
-            7 => 'direccion_completa'
+            7 => 'direccion_completa',
+            8 => 'fecha_vigencia'
         ];
 
         $search = [];
@@ -127,13 +128,14 @@ class InstalacionesController extends Controller
 
             foreach ($users as $user) {
             //MUESTRA LOS DATOS EN EL FIND
-                $nestedData['fake_id'] = ++$ids;
+                //$nestedData['fake_id'] = ++$ids;
                 $nestedData['id_dictamen'] = $user->id_dictamen;
                 $nestedData['tipo_dictamen'] = $user->tipo_dictamen;
                 $nestedData['razon_social'] = $user->inspeccione->solicitud->empresa->razon_social;
                 $nestedData['num_dictamen'] = $user->num_dictamen;
                 $nestedData['num_servicio'] = $user->inspeccione->num_servicio;
                 $nestedData['fecha_emision'] = $user->fecha_emision;
+                $nestedData['fecha_vigencia'] = $user->fecha_vigencia;
                 $nestedData['direccion_completa'] = $user->inspeccione->solicitud->instalacion->direccion_completa;
 
                 $data[] = $nestedData;

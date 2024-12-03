@@ -101,7 +101,13 @@
                             </div>
                         </div>
                     </div>
-                    <div id="datosOpcion2">
+                    <div class="mb-4">
+                        <label for="listaDocumentos">Documentos asociados:</label>
+                        <ul id="listaDocumentos">
+                            <li>Selecciona una marca para ver los documentos.</li>
+                        </ul>
+                    </div>
+                    <div >
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
