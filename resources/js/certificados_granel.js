@@ -1,9 +1,7 @@
 'use strict';
 
  $(function () {
-var dt_user_table = $('.datatables-users'),
-select2Elements = $('.select2'),
-userView = baseUrl + 'app/user/view/account';
+var dt_user_table = $('.datatables-users');
 
 $('#addCertificadoForm .select2').each(function () {
 var $this = $(this);

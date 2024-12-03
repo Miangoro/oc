@@ -1,23 +1,21 @@
 'use strict';
 
  $(function () {
- 
-   var dt_user_table = $('.datatables-users'),
-     select2 = $('.select2'),
-     userView = baseUrl + 'app/user/view/account',
-     offCanvasForm = $('#offcanvasAddUser');
- 
-     var select2Elements = $('.select2');
+  var dt_user_table = $('.datatables-users');
 
-     function initializeSelect2($elements) {
-    $elements.each(function () {
-      var $this = $(this);
-      select2Focus($this);
-      $this.wrap('<div class="position-relative"></div>').select2({
-        dropdownParent: $this.parent()
-      });
+  $('#asignarRevisorForm .select2').each(function () {
+    var $this = $(this);
+    $this.select2({
+      dropdownParent: $this.closest('.form-floating')
     });
-  }
+  });
+
+  $('#addCertificadoModal .select2').each(function () {
+    var $this = $(this);
+    $this.select2({
+      dropdownParent: $this.closest('.form-floating')
+    });
+  });
 
   $('.datepicker').datepicker({
       format: 'yyyy-mm-dd',
@@ -532,22 +530,6 @@
 
 //Agregar
   $(document).ready(function () {
-
-    var dt_user_table = $('.datatables-users'),
-        select2Elements = $('.select2'),
-        userView = baseUrl + 'app/user/view/account';
-
-    function initializeSelect2($elements) {
-        $elements.each(function () {
-            var $this = $(this);
-            $this.wrap('<div class="position-relative"></div>').select2({
-                dropdownParent: $this.parent()
-            });
-        });
-    }
-
-    initializeSelect2(select2Elements);
-
     const formAddCertificado = document.getElementById('addCertificadoForm');
     const dictamenSelect = $('#id_dictamen');
     const maestroMezcaleroContainer = document.getElementById('maestroMezcaleroContainer');
