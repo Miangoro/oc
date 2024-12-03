@@ -33,6 +33,7 @@
                                 </option>
                             @endforeach
                         </select>
+                        <label for="formValidationSelect2">Seleccione un dictamen</label>
                     </div>
 
                     <!-- Firmante -->
@@ -43,6 +44,7 @@
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
+                        <label for="formValidationSelect2">Seleccione un firmante</label>
                     </div>
 
                     <!-- Número de Certificado -->
@@ -64,17 +66,21 @@
                     </div>
 
                     <!-- Fechas -->
-                    <div class="d-flex justify-content-between mb-3">
-                        <div class="form-floating form-floating-outline flex-fill me-2">
-                            <input class="form-control datepicker" id="fecha_vigencia" placeholder="yyyy-mm-dd" name="fecha_vigencia" aria-label="Fecha de Vigencia" autocomplete="off" required>
-                            <label for="fecha_vigencia">Fecha de Inicio Vigencia</label>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline">
+                                <input type="date" class="form-control datepicker" id="fecha_vigencia" name="fecha_vigencia" aria-label="Fecha de Inicio Vigencia" readonly>
+                                <label for="fecha_vigencia">Fecha de Inicio Vigencia</label>
+                            </div>
                         </div>
-                        <div class="form-floating form-floating-outline flex-fill ms-2">
-                            <input class="form-control datepicker" id="fecha_vencimiento" placeholder="yyyy-mm-dd" name="fecha_vencimiento" aria-label="Fecha de Vencimiento" autocomplete="off" required>
-                            <label for="fecha_vencimiento">Fecha de Vencimiento</label>
+                        <div class="col-md-6">
+                            <div class="form-floating form-floating-outline">
+                                <input type="date" class="form-control datepicker" id="fecha_vencimiento" name="fecha_vencimiento" aria-label="Fecha de Vencimiento" readonly>
+                                <label for="fecha_vencimiento">Fecha de Vencimiento</label>
+                            </div>
                         </div>
                     </div>
-
+        
                     <!-- Botones -->
                     <div class="d-flex justify-content-end mt-3">
                         <button type="submit" class="btn btn-primary me-2">Registrar</button>

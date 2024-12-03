@@ -48,6 +48,7 @@
                 <tr>
                     <th>#</th>
                     <th>ID</th>
+                    <th>Cliente</th>
                     <th>No. Certificado</th>
                     <th>No. Dictamen</th>
                     <th>Firmante</th>

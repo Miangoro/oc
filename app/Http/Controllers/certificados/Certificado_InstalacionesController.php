@@ -39,7 +39,13 @@ class Certificado_InstalacionesController extends Controller
         ];
     
         $search = $request->input('search.value');
-        $totalData = Certificados::with(['dictamen', 'firmante', 'revisor'])->count();
+        $totalData = Certificados::with([
+            'dictamen.inspeccione.solicitud.instalaciones.empresa.empresaNumClientes',
+            'dictamen.instalaciones',
+            'dictamen.inspeccione.inspector',
+            'firmante'
+        ])->count();
+    
         $totalFiltered = $totalData;
         $limit = $request->input('length');
         $start = $request->input('start');
@@ -49,17 +55,22 @@ class Certificado_InstalacionesController extends Controller
         $order = $columns[$orderIndex] ?? 'num_certificado';
         $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
     
-        $query = Certificados::with(['dictamen', 'firmante', 'revisor.user']) 
-        ->when($search, function($q, $search) {
-                $q->where('num_certificado', 'LIKE', "%{$search}%")
-                  ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
-                  ->orWhereHas('firmante', function($q) use ($search) {
-                      $q->where('name', 'LIKE', "%{$search}%");
-                  });
-            })
-            ->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir);
+        $query = Certificados::with([
+            'dictamen.inspeccione.solicitud.instalaciones.empresa.empresaNumClientes',
+            'dictamen.instalaciones',
+            'dictamen.inspeccione.inspector',
+            'firmante'
+        ])
+        ->when($search, function ($q, $search) {
+            $q->where('num_certificado', 'LIKE', "%{$search}%")
+              ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
+              ->orWhereHas('firmante', function ($q) use ($search) {
+                  $q->where('name', 'LIKE', "%{$search}%");
+              });
+        })
+        ->offset($start)
+        ->limit($limit)
+        ->orderBy($order, $dir);
     
         $certificados = $query->get();
     
@@ -67,30 +78,38 @@ class Certificado_InstalacionesController extends Controller
             $totalFiltered = Certificados::with('dictamen')
                 ->where('num_certificado', 'LIKE', "%{$search}%")
                 ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
-                ->orWhereHas('firmante', function($q) use ($search) {
+                ->orWhereHas('firmante', function ($q) use ($search) {
                     $q->where('name', 'LIKE', "%{$search}%");
                 })
                 ->count();
         }
-
+    
         $data = $certificados->map(function ($certificado) use (&$start) {
+            $empresa = $certificado->dictamen->instalaciones->empresa ?? null;
+            $razon_social = $empresa->razon_social ?? 'N/A';
+            $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                ? $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente ?? 'N/A'
+                : 'N/A';
+    
             return [
                 'id_certificado' => $certificado->id_certificado,
                 'fake_id' => ++$start,
                 'num_certificado' => $certificado->num_certificado,
+                'razon_social' => $razon_social,
+                'numero_cliente' => $numero_cliente,
                 'num_autorizacion' => $certificado->num_autorizacion ?? 'N/A',
                 'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
                 'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
                 'maestro_mezcalero' => $certificado->maestro_mezcalero ?? 'N/A',
                 'num_dictamen' => $certificado->dictamen->num_dictamen,
                 'tipo_dictamen' => $certificado->dictamen->tipo_dictamen,
-                'id_firmante' => $certificado->firmante->name,
+                'id_firmante' => $certificado->firmante->name ?? 'Sin asignar',
                 'id_revisor' => $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar',
                 'id_revisor2' => $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar',
-                'estatus' => $certificado->estatus
+                'estatus' => $certificado->estatus,
             ];
         });
-
+    
         return response()->json([
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),

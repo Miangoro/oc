@@ -36,7 +36,7 @@ class Certificado_GranelController extends Controller
             3 => 'fecha_vigencia',
             4 => 'fecha_vencimiento',
         ];
-
+    
         $search = $request->input('search.value');
         $totalData = CertificadosGranel::count();
         $totalFiltered = $totalData;
@@ -44,30 +44,34 @@ class Certificado_GranelController extends Controller
         $start = $request->input('start');
         $orderIndex = $request->input('order.0.column');
         $orderDir = $request->input('order.0.dir');
-
+    
         $order = $columns[$orderIndex] ?? 'id_dictamen';
         $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
-
-        $query = CertificadosGranel::with('dictamen')
-            ->when($search, function($q, $search) {
-                $q->orWhere('id_firmante', 'LIKE', "%{$search}%")
-                  ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%")
-                  ->orWhere('fecha_vencimiento', 'LIKE', "%{$search}%");
-            })
-            ->offset($start)
-            ->limit($limit)
-            ->orderBy($order, $dir);
-
+    
+        $query = CertificadosGranel::with([
+            'dictamen.empresa' 
+        ])
+        ->when($search, function($q, $search) {
+            $q->orWhere('id_firmante', 'LIKE', "%{$search}%")
+              ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%")
+              ->orWhere('fecha_vencimiento', 'LIKE', "%{$search}%");
+        })
+        ->offset($start)
+        ->limit($limit)
+        ->orderBy($order, $dir);
+    
         $certificados = $query->get();
-
+    
         if ($search) {
             $totalFiltered = CertificadosGranel::where('id_firmante', 'LIKE', "%{$search}%")
                 ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%")
                 ->orWhere('fecha_vencimiento', 'LIKE', "%{$search}%")
                 ->count();
         }
-
+    
         $data = $certificados->map(function ($certificado) use (&$start) {
+            $empresa = $certificado->dictamen->empresa;
+            $numero_cliente = $empresa ? $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente : 'N/A';  
             return [
                 'fake_id' => ++$start,
                 'id_certificado' => $certificado->id_certificado,
@@ -76,12 +80,14 @@ class Certificado_GranelController extends Controller
                 'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
                 'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
                 'num_certificado' => $certificado->num_certificado,
+                'razon_social' => $empresa->razon_social ?? 'N/A',
+                'numero_cliente' => $numero_cliente,  
                 'id_revisor' => $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar',
                 'id_revisor2' => $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar',
                 'estatus' => $certificado->estatus
             ];
         });
-
+    
         return response()->json([
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
@@ -90,7 +96,7 @@ class Certificado_GranelController extends Controller
             'data' => $data,
         ]);
     }
-
+    
     // Funcion de eliminar
     public function destroy($id_certificado)
     {

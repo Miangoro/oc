@@ -36,6 +36,7 @@
                                 </option>
                             @endforeach
                         </select>
+                        <label for="formValidationSelect2">Seleccione un dictamen</label>
                     </div>
 
                                         <!-- Firmante -->
@@ -46,6 +47,7 @@
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
+                        <label for="formValidationSelect2">Seleccione un firmante</label>
                     </div>
 
                     <!-- Número de Certificado -->

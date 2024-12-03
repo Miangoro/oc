@@ -190,18 +190,11 @@
 
 <script>
     function obtenerDatosGranelesedit() {
-        var lote_granel_id = $("#edit_id_lote_granel_vig").val(); // Asegúrate de que el ID coincide
-
-        if (!lote_granel_id) {
-            console.error("No se seleccionó un lote a granel.");
-            return;
-        }
-
+        var lote_granel_id = $("#edit_id_lote_granel_vig").val(); 
         $.ajax({
-            url: `/getDatos2/${lote_granel_id}`, // Ruta dinámica
+            url: `/getDatos2/${lote_granel_id}`, 
             method: 'GET',
             success: function(response) {
-                // Validar que response y sus objetos existan antes de acceder
                 if (response && response.lotes_granel) {
                     $('#edit_id_categoria_vig').val(response.lotes_granel.id_categoria || '');
                     $('#edit_id_clase_vig').val(response.lotes_granel.id_clase || '');
@@ -209,23 +202,18 @@
                     $('#edit_analisis_vig').val(response.lotes_granel.folio_fq || '');
                     $('#edit_volumen_vig').val(response.lotes_granel.cont_alc || '');
                 }
-
-                // Validar si hay guías relacionadas
                 if (response && response.lotes_granel_guias && response.lotes_granel_guias.length > 0) {
                     var primeraGuia = response.lotes_granel_guias[0].guia || {};
                     $('#edit_kg_maguey_vig').val(primeraGuia.kg_maguey || '');
                     $('#edit_cant_pinas_vig').val(primeraGuia.num_comercializadas || '');
                     $('#edit_art_vig').val(primeraGuia.art || '');
                     $('#edit_folio_vig').val(primeraGuia.folio || '');
-
-                    // Validar si hay predios relacionados
                     if (primeraGuia.predios) {
                         $('#edit_nombre_predio_vig').val(primeraGuia.predios.nombre_predio || '');
                     } else {
                         $('#edit_nombre_predio_vig').val('');
                     }
                 } else {
-                    // Resetear campos si no hay guías
                     $('#edit_kg_maguey_vig').val('');
                     $('#edit_cant_pinas_vig').val('');
                     $('#edit_art_vig').val('');
@@ -262,33 +250,43 @@
     }
 
     function obtenerGraneles2(empresa) {
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                        response.instalaciones[index].tipo + ' | ' +
-                        response.instalaciones[index].direccion_completa +
-                        '</option>' + contenido;
-                }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
-                }
-                // Actualizar las opciones del select
-                $('#edit_id_instalacion_vig').html(contenido);
-                // Restaurar el valor previamente seleccionado
-                const idInstalacionSeleccionada = $('#edit_id_instalacion_vig').data('selected');
-                if (idInstalacionSeleccionada) {
-                    $('#edit_id_instalacion_vig')
-                        .val(idInstalacionSeleccionada) // Selecciona el valor previo
-                        .trigger('change'); // Propaga el cambio al select
-                }
-            },
-            error: function() {
-                console.error("Error al cargar las instalaciones.");
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            var contenido = "";
+            for (let index = 0; index < response.instalaciones.length; index++) {
+                var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+
+                contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                    tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                    '</option>' + contenido;
             }
-        });
+            if (response.instalaciones.length == 0) {
+                contenido = '<option value="">Sin instalaciones registradas</option>';
+            }
+            // Actualizar las opciones del select
+            $('#edit_id_instalacion_vig').html(contenido);
+            // Restaurar el valor previamente seleccionado
+            const idInstalacionSeleccionada = $('#edit_id_instalacion_vig').data('selected');
+            if (idInstalacionSeleccionada) {
+                $('#edit_id_instalacion_vig')
+                    .val(idInstalacionSeleccionada) // Selecciona el valor previo
+                    .trigger('change'); // Propaga el cambio al select
+            }
+        },
+        error: function() {
+            console.error("Error al cargar las instalaciones.");
+        }
+    });
+}
+
+function limpiarTipo(tipo) {
+    try {
+        return JSON.parse(tipo).join(', ');
+    } catch (e) {
+        return tipo;
     }
+}
+
 </script>

@@ -136,7 +136,7 @@
                                         </td>
                                         <td>
                                             <input type="text" class="form-control form-control-sm"
-                                                name="edit_volumen_parcial[]">
+                                                name="edit_volumen_parcial[]" id="edit_volumen_parcial">
                                         </td>
                                     </tr>
                                 </tbody>
