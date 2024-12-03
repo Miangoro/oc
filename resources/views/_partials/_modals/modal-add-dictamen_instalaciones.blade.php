@@ -27,7 +27,6 @@
                         </div>
 
                     </div>
-
                     <div class="row">
 
                         <div class="col-md-6">
@@ -53,9 +52,6 @@
                             </div>
                         </div>
 
-                        
-
-
                        <!-- <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6 select2-primary">
                                 <select id="categorias" name="categorias[]" class="form-select select2"
@@ -79,9 +75,10 @@
                                 <label for="">Clases de agave</label>
                             </div>
                         </div>-->
-                    </div>
 
+                    </div>
                     <div class="row">
+
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input type="date" class="form-control datepicker" id="fecha_emision"
@@ -90,7 +87,6 @@
                             </div>
                         </div>
 
-
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control datepicker" type="date" placeholder="vigencia"
@@ -98,6 +94,7 @@
                                 <label for="">Vigencia hasta</label>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
@@ -106,7 +103,6 @@
                             aria-label="Close">Cancelar</button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
@@ -116,7 +112,7 @@
 
 <!-- Offcanvas EDITAR -->
 <div class="modal fade" id="editDictamen" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
+    <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
         <div class="modal-content">
 
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -128,7 +124,22 @@
                 <form id="EditarDictamen">
                     <div class="row">
                         <input type="hidden" name="id_dictamen" id="edit_id_dictamen" value="">
-                        <div class="col-md-3">
+
+                        <div class="col-md-12">
+                            <div class="form-floating form-floating-outline mb-6">
+                                <select id="edit_id_inspeccion" name="id_inspeccion" class="form-select select2"
+                                    aria-label="Default select example">
+                                    @foreach ($inspeccion as $insp)
+                                        {{-- <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option> --}}
+                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}</option>
+                                    @endforeach
+                                </select>
+                                {{-- <input class="form-control" type="text" id="edit_id_inspeccion" name="id_inspeccion"/> --}}
+                                <label for="">No. de servicio</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select class="form-select" id="edit_tipo_dictamen" name="tipo_dictamen"
                                     aria-label="Default select example">
@@ -142,7 +153,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input type="text" class="form-control" id="edit_num_dictamen"
                                     placeholder="no. dictamen" name="num_dictamen" aria-label="Nombre" required>
@@ -150,7 +161,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input type="date" class="form-control datepicker" id="edit_fecha_emision"
                                     placeholder="fecha" name="fecha_emision" aria-label="Nombre" required readonly>
@@ -158,31 +169,18 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <input class="form-control datepicker" type="date" placeholder="vigencia"
                                     id="edit_fecha_vigencia" name="fecha_vigencia" required readonly />
                                 <label for="">Vigencia hasta</label>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                     <div class="row">
 
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <select id="edit_id_inspeccion" name="id_inspeccion" class="form-select select2"
-                                    aria-label="Default select example">
-                                    @foreach ($inspeccion as $insp)
-                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option>
-                                    @endforeach
-                                </select>
-                                {{-- <input class="form-control" type="text" id="edit_id_inspeccion" name="id_inspeccion"/> --}}
-                                <label for="">No. de servicio</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
+                        <!--<div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6 select2-primary">
                                 <select id="edit_categorias" name="categorias[]" class="form-select select2"
                                     data-placeholder="Seleccione una o más categorias"
@@ -208,16 +206,15 @@
                                 {{-- <input type="text" class="form-control" id="edit_clases" name="clases"> --}}
                                 <label for="edit_clases">Clases de agave</label>
                             </div>
-                        </div>
-                    </div>
+                        </div>-->
 
+                    </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Editar</button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
                             aria-label="Close">Cancelar</button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
