@@ -85,7 +85,6 @@
             `;
           }
         },
-             
          {
           targets: 3,
           responsivePriority: 4,
