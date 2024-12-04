@@ -110,8 +110,8 @@ public function index(Request $request)
                     ->orWhere('dictamenes_instalaciones.fecha_emision', 'LIKE', "%{$search}%")
                     ->orWhere('dictamenes_instalaciones.fecha_vigencia', 'LIKE', "%{$search}%")
                     ->orWhere('num_servicio', 'LIKE', "%{$search}%")
-                    ->orWhere('razon_social', 'LIKE', "%{$search}%");
-                    //->orWhere('direccion_completa', 'LIKE', "%{$search}%");
+                    ->orWhere('razon_social', 'LIKE', "%{$search}%")
+                    ->orWhere('direccion_completa', 'LIKE', "%{$search}%");
             }
             $users = $query->offset($start)
                 ->limit($limit)

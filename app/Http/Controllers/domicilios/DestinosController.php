@@ -35,7 +35,7 @@ class DestinosController extends Controller
                 3 => 'id_empresa',
                 4 => 'direccion',
                 5 => 'destinatario',
-                6 => 'aduana',
+                //6 => 'aduana',
                 7 => 'pais_destino',
                 8 => 'nombre_recibe',
                 9 => 'correo_recibe',
@@ -78,7 +78,7 @@ class DestinosController extends Controller
                         })
                             ->orWhere('direccion', 'LIKE', "%{$search}%")
                             ->orWhere('destinatario', 'LIKE', "%{$search}%")
-                            ->orWhere('aduana', 'LIKE', "%{$search}%")
+                            //->orWhere('aduana', 'LIKE', "%{$search}%")
                             ->orWhere('pais_destino', 'LIKE', "%{$search}%")
                             ->orWhere('nombre_recibe', 'LIKE', "%{$search}%")
                             ->orWhere('correo_recibe', 'LIKE', "%{$search}%")
@@ -99,7 +99,7 @@ class DestinosController extends Controller
                         })
                             ->orWhere('direccion', 'LIKE', "%{$search}%")
                             ->orWhere('destinatario', 'LIKE', "%{$search}%")
-                            ->orWhere('aduana', 'LIKE', "%{$search}%")
+                            //->orWhere('aduana', 'LIKE', "%{$search}%")
                             ->orWhere('pais_destino', 'LIKE', "%{$search}%")
                             ->orWhere('nombre_recibe', 'LIKE', "%{$search}%")
                             ->orWhere('correo_recibe', 'LIKE', "%{$search}%")
@@ -140,7 +140,6 @@ class DestinosController extends Controller
                     $nestedData['nombre_recibe'] = $destino->nombre_recibe ?? 'N/A';
                     $nestedData['correo_recibe'] = $destino->correo_recibe ?? 'N/A';
                     $nestedData['celular_recibe'] = $destino->celular_recibe ?? 'N/A';
-                    //$nestedData['numero_cliente'] = $destino->empresa->empresaNumClientes->numero_cliente;
 
                     $data[] = $nestedData;
                 }
@@ -177,7 +176,7 @@ class DestinosController extends Controller
                     'id_empresa' => 'required|exists:empresa,id_empresa',
                     'direccion' => 'required|string',
                     'destinatario' => 'nullable|string',
-                    'aduana' => 'nullable|string',
+                    //'aduana' => 'nullable|string',
                     'pais_destino' => 'nullable|string',
                     'nombre_recibe' => 'nullable|string',
                     'correo_recibe' => 'nullable|email',
@@ -190,7 +189,7 @@ class DestinosController extends Controller
                 $destino->id_empresa = $validated['id_empresa'];
                 $destino->direccion = $validated['direccion'];
                 $destino->destinatario = $validated['destinatario'];
-                $destino->aduana = $validated['aduana'];
+                //$destino->aduana = $validated['aduana'];
                 $destino->pais_destino = $validated['pais_destino'];
                 $destino->nombre_recibe = $validated['nombre_recibe'];
                 $destino->correo_recibe = $validated['correo_recibe'];
@@ -254,7 +253,7 @@ class DestinosController extends Controller
                 'id_empresa' => 'required|exists:empresa,id_empresa',
                 'direccion' => 'required|string',
                 'destinatario' => 'nullable|string',
-                'aduana' => 'nullable|string',
+                //'aduana' => 'nullable|string',
                 'pais_destino' => 'nullable|string',
                 'nombre_recibe' => 'nullable|string',
                 'correo_recibe' => 'nullable|email',
@@ -269,7 +268,7 @@ class DestinosController extends Controller
                 'id_empresa' => $validated['id_empresa'],
                 'direccion' => $validated['direccion'],
                 'destinatario' => $validated['destinatario'],
-                'aduana' => $validated['aduana'],
+                //'aduana' => $validated['aduana'],
                 'pais_destino' => $validated['pais_destino'],
                 'nombre_recibe' => $validated['nombre_recibe'],
                 'correo_recibe' => $validated['correo_recibe'],

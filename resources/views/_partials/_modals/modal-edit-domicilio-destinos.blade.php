@@ -53,23 +53,25 @@
                             <div id="exportacionFieldsEdit" style="display: none;">
                                 <div class="row mb-4">
                                     <!-- Nombre del Destinatario -->
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="edit_destinatario"
                                                 name="destinatario" placeholder="Nombre del destinatario"  autocomplete="off">
                                             <label for="destinatario">Nombre del Destinatario</label>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row mb-4">
+                                {{-- </div>
+
+                                <div class="row mb-4"> --}}
                                     <!-- Aduana de Despacho -->
-                                    <div class="col-md-6">
+                                    {{-- <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="edit_aduana" name="aduana"
                                                 placeholder="Aduana de despacho"  autocomplete="off">
                                             <label for="aduana">Aduana de Despacho</label>
                                         </div>
-                                    </div>
+                                    </div> --}}
+
                                     <!-- País de Destino -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
@@ -78,8 +80,8 @@
                                             <label for="pais_destino">País de Destino</label>
                                         </div>
                                     </div>
-                                </div>
 
+                                </div>
                             </div>
 
                             <!-- Campos adicionales para envío de hologramas -->
