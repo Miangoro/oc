@@ -35,7 +35,7 @@
                                             @foreach ($empresas as $empresa)
                                                 @if ($empresa->tipo == 2)
                                                     <option value="{{ $empresa->id_empresa }}">
-                                                        {{ $empresa->razon_social }}</option>
+                                                        {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
                                                 @endif
                                             @endforeach
                                         </select>

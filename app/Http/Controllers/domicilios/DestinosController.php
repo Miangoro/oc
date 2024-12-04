@@ -124,7 +124,15 @@ class DestinosController extends Controller
                     $nestedData['id_direccion'] = $destino->id_direccion;
                     $nestedData['fake_id'] = ++$ids;
                     $nestedData['tipo_direccion'] = $tipoDireccionMap[$destino->tipo_direccion] ?? 'Desconocido';
-                    $nestedData['id_empresa'] = $destino->empresa->razon_social;
+                    
+                    //$nestedData['id_empresa'] = $destino->empresa->razon_social;
+                    $numeroCliente =
+                    $destino->empresa->empresaNumClientes[0]->numero_cliente ??
+                    $destino->empresa->empresaNumClientes[1]->numero_cliente ??
+                    $destino->empresa->empresaNumClientes[2]->numero_cliente;
+                    $razonSocial = $destino->empresa->razon_social;
+                    $nestedData['id_empresa'] = '<b>' . $numeroCliente . '</b><br>' . $razonSocial;
+
                     $nestedData['direccion'] = $destino->direccion;
                     $nestedData['destinatario'] = $destino->destinatario ?? 'N/A';
                     $nestedData['aduana'] = $destino->aduana ?? 'N/A';
@@ -132,6 +140,8 @@ class DestinosController extends Controller
                     $nestedData['nombre_recibe'] = $destino->nombre_recibe ?? 'N/A';
                     $nestedData['correo_recibe'] = $destino->correo_recibe ?? 'N/A';
                     $nestedData['celular_recibe'] = $destino->celular_recibe ?? 'N/A';
+                    //$nestedData['numero_cliente'] = $destino->empresa->empresaNumClientes->numero_cliente;
+
                     $data[] = $nestedData;
                 }
             }
