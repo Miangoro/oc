@@ -100,7 +100,7 @@ $('#edit_fecha_emision').on('change', function() {
          { data: 'num_servicio' },
          { data: 'razon_social' },
          { data: 'direccion_completa' },
-         { data: 'fecha_emision' },
+         { data: 'fechas' },
          { data: '' },
          { data: 'action' }
  
@@ -165,17 +165,24 @@ $('#edit_fecha_emision').on('change', function() {
               return '<span class="user-email">' + $num_servicio + '</span>';
             }
           }, 
-          {
+          /*{
             // Tabla 5
             targets: 6,
             render: function (data, type, full, meta) {
               var $fechaE = full['fecha_emision'];
               var $fechaV = full['fecha_vigencia'];
-              /*return '<span ><b>Fecha Emisión:</b>' + $fechaE + '<br>' +
-              '<b>Fecha Vigencia:</b>' + $fechaE + '</span>';*/
+              //return '<span ><b>Fecha Emisión:</b>' + $fechaE + '<br>' + '<b>Fecha Vigencia:</b>' + $fechaE + '</span>';
               return '<span class="fw-bold text-dark small">Fecha Emisión:</span> <span class="small">' + $fechaE + '</span> <br>' +
               '<span class="fw-bold text-dark small">Fecha Vigencia:</span> <span class="small">' + $fechaV + '</span>';
             }
+          },*/
+          {
+            // Tabla 5
+            targets: 6,
+            render: function (data, type, full, meta) {
+              var $fech = full['fechas'];
+              return '<span class="small">' + $fech + '</span>';
+              }
           },
           {
             // Abre el pdf del dictamen
@@ -404,7 +411,7 @@ $('#edit_fecha_emision').on('change', function() {
            display: $.fn.dataTable.Responsive.display.modal({
              header: function (row) {
                var data = row.data();
-               return 'Detalles de ' + data['inspeccion'];
+               return 'Detalles de ' + data['id_dictamen'];
                //return 'Detalles del ' + 'Dictamen';
              }
            }),
