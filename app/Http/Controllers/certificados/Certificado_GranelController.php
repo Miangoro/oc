@@ -349,6 +349,8 @@ class Certificado_GranelController extends Controller
         $volumen = $certificado->dictamen->lote_granel->volumen ?? 'N/A';
         $edad = $certificado->dictamen->lote_granel->edad ?? 'N/A';
         $cont_alc = $certificado->dictamen->lote_granel->cont_alc ?? 'N/A';
+        $folio_fq = $certificado->dictamen->lote_granel->folio_fq ?? 'N/A';
+        $num_dictamen = $certificado->dictamen->num_dictamen ?? 'N/A';
         $watermarkText = $certificado->estatus === 1;
     
         // Datos para el PDF
@@ -370,6 +372,8 @@ class Certificado_GranelController extends Controller
             'volumen' => $volumen,
             'edad' => $edad,
             'cont_alc' => $cont_alc,
+            'folio_fq' => $folio_fq,
+            'num_dictamen' => $num_dictamen, // Incluir el número de dictamen
         ];
     
         // Generar y mostrar el PDF

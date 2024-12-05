@@ -294,7 +294,7 @@
 			<td class="columna">No. de lote</td>
 			<td class="columna-norm">----</td>
 			<td class="columna">No. de análisis</td>
-            <td class="columna-norm" style="white-space: nowrap;">----</td>
+            <td class="columna-norm" style="white-space: nowrap;">{{ $folio_fq }}</td>
 		</tr>
 		<tr>
 			<td class="columna">Ingredientes</td>
@@ -310,7 +310,7 @@
 			<td class="columna">Edad</td>
 			<td class="columna-norm">{{ $edad }}</td>
 			<td class="columna">No. de dictamen</td>
-			<td class="columna-norm" style="white-space: nowrap;">----</td>
+			<td class="columna-norm" style="white-space: nowrap;">{{ $num_dictamen }}</td>
 		</tr>
 	</tbody>
 </table>
