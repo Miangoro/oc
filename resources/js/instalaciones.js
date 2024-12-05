@@ -856,12 +856,14 @@ $('#edit_fecha_emision').on('change', function() {
 });
 
 $(document).on('change', '#edit_tipo', function () {
-  var tipo = $(this).val(); 
-  
+  var tipo = $(this).val();
+
+  // Referencias a los campos relacionados con documentos
   var hiddenIdDocumento = $('#edit_certificado_otros').find('input[name="edit_id_documento[]"]');
   var hiddenNombreDocumento = $('#edit_certificado_otros').find('input[name="edit_nombre_documento[]"]');
   var fileCertificado = $('#edit_certificado_otros').find('input[type="file"]');
-  
+
+  // Manejo de documentos basado en el tipo seleccionado
   if (tipo.includes("Productora")) {
       hiddenIdDocumento.val('127');
       hiddenNombreDocumento.val('Certificado de instalaciones');
@@ -878,6 +880,18 @@ $(document).on('change', '#edit_tipo', function () {
       hiddenIdDocumento.val('');
       hiddenNombreDocumento.val('');
       fileCertificado.removeAttr('id');
+  }
+
+  // Mostrar u ocultar el campo `#edit_eslabon` dependiendo del tipo seleccionado
+  if (tipo.includes('Almacen y bodega') || tipo.includes('Area de maduracion')) {
+      $('#edit_eslabon-select').removeClass('d-none');
+      // Suponiendo que existe una variable `instalacion` global que contiene los datos
+      $('#edit_eslabon').val(instalacion.eslabon || '').trigger('change');
+      console.log("Mostrando el campo #edit_eslabon-select");
+  } else {
+      $('#edit_eslabon-select').addClass('d-none');
+      $('#edit_eslabon').val(''); // Limpiar el valor
+      console.log("Ocultando el campo #edit_eslabon-select");
   }
 });
 
@@ -1094,16 +1108,6 @@ $(document).ready(function () {
             // Establecer el valor del select y mostrar los campos adicionales si corresponde
             $('#edit_certificacion').val(instalacion.certificacion).trigger('change');
             toggleCamposCertificacion(instalacion.certificacion);
-
-            // Mostrar el campo edit_eslabon si el tipo incluye "Área de maduración" o "Almacén y bodega"
-            if (tipoParsed.includes('Area de maduracion') || tipoParsed.includes('Almacen y bodega')) {
-                $('#edit_eslabon-select').removeClass('d-none');
-                $('#edit_eslabon').val(instalacion.eslabon || '').trigger('change');
-                console.log("entra")
-            } else {
-                $('#eslabon-select').addClass('d-none');
-                $('#edit_eslabon-select').val('');
-            }
 
             // Asignar el id_instalacion al atributo data-id del formulario
             $('#editInstalacionForm').data('id', id_instalacion);
