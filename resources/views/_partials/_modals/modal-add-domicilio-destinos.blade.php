@@ -35,7 +35,7 @@
                                             @foreach ($empresas as $empresa)
                                                 @if ($empresa->tipo == 2)
                                                     <option value="{{ $empresa->id_empresa }}">
-                                                        {{ $empresa->razon_social }}</option>
+                                                        {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -52,23 +52,25 @@
                             <div id="exportacionFields" style="display: none;">
                                 <div class="row mb-4">
                                     <!-- Nombre del Destinatario -->
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="destinatario"  autocomplete="off"
                                                 name="destinatario" placeholder="Nombre del destinatario">
                                             <label for="destinatario">Nombre del Destinatario</label>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row mb-4">
+                                {{-- </div>
+
+                                <div class="row mb-4"> --}}
                                     <!-- Aduana de Despacho -->
-                                    <div class="col-md-6">
+                                    {{-- <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
                                             <input type="text" class="form-control" id="aduana" name="aduana"  autocomplete="off"
                                                 placeholder="Aduana de despacho">
                                             <label for="aduana">Aduana de Despacho</label>
                                         </div>
-                                    </div>
+                                    </div> --}}
+
                                     <!-- País de Destino -->
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline">
@@ -77,8 +79,8 @@
                                             <label for="pais_destino">País de Destino</label>
                                         </div>
                                     </div>
+                                    
                                 </div>
-
                             </div>
 
                             <!-- Campos adicionales para envío de hologramas -->

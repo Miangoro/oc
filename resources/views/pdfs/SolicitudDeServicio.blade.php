@@ -141,7 +141,7 @@
         <tr>
             <td class="con-negra" colspan="2">Domicilio de inspección:</td>
             
-            <td colspan="4">{{ $datos->instalacion ? ($datos->instalacion->direccion_completa ? '-----------------' : '----------------') : $datos->predios->ubicacion_predio }}</td>
+            <td colspan="4">{{ $datos->instalacion->direccion_completa ?? ($datos->predios->ubicacion_predio ?? '-----------------') }}</td>
         </tr>
 
         <tr>

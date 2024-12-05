@@ -588,51 +588,74 @@ $(function () {
         error: function () { }
       });
     }
-    //Obtener documentos etiqeutas
-    // Obtener documentos por marca
+
+    //llenar etiquetas
     $('#id_marca').on('change', function () {
       var idMarca = $(this).val();
-
+      
       if (idMarca) {
-        $.ajax({
-          url: '/obtenerDocumentos/' + idMarca,
-          method: 'GET',
-          success: function (response) {
-            if (response.success) {
-              var contenido = '';
-              if (response.documentos.length > 0) {
-                response.documentos.forEach(documento => {
-                  if (documento.nombre_documento === "Etiquetas") {
-                    // Usar el numero_cliente para formar la URL correcta
-                    var rutaArchivo = '/files/' + response.numero_cliente + '/' + documento.url;
-
-                    contenido += `
-                              <li style="display: flex; align-items: center; margin-bottom: 5px;">
-                              <a href="${rutaArchivo}" target="_blank" style="text-decoration: none; color: inherit; display: flex; align-items: center;">
-                                  <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true" style="margin-right: 10px;"></i>
-                                  <span style="color: green;">${documento.nombre_documento}</span>
-                              </a>
-                              </li>`;
+          $.ajax({
+              url: '/obtenerDocumentos/' + idMarca,
+              method: 'GET',
+              success: function (response) {
+                  var contenidoTabla = '';
+  
+                  // Verificar si la respuesta tiene éxito
+                  if (response.success) {
+                      // Agregar documentos y etiquetado a la tabla
+                      if (response.documentos.length > 0 || response.etiquetado) {
+                          response.documentos.forEach((documento) => {
+                              if (documento.nombre_documento === "Etiquetas") {
+                                  var rutaArchivo = '/files/' + response.numero_cliente + '/' + documento.url;
+  
+                                  contenidoTabla += `
+                                      <tr>
+                                          <td>
+                                              <a href="${rutaArchivo}" target="_blank" class="btn btn-sm btn-primary">
+                                                  <i class="ri-file-pdf-2-fill"></i> Visualizar
+                                              </a>
+                                          </td>
+                                          <td>${response.etiquetado?.id_direccion || 'N/A'}</td>
+                                          <td>${response.etiquetado?.sku || 'N/A'}</td>
+                                          <td>${response.etiquetado?.id_tipo || 'N/A'}</td>
+                                          <td>${response.etiquetado?.presentacion || 'N/A'}</td>
+                                          <td>${response.etiquetado?.id_clase || 'N/A'}</td>
+                                          <td>${response.etiquetado?.id_categoria || 'N/A'}</td>
+                                      </tr>`;
+                              }
+                          });
+                      } else {
+                          contenidoTabla = `
+                              <tr>
+                                  <td colspan="8">No hay documentos ni datos de etiquetado disponibles.</td>
+                              </tr>`;
+                      }
+                  } else {
+                      contenidoTabla = `
+                          <tr>
+                              <td colspan="8">${response.message || 'Ocurrió un error al obtener los datos.'}</td>
+                          </tr>`;
                   }
-                });
-              } else {
-                contenido = '<li>No hay documentos disponibles.</li>';
+  
+                  $('#tablaDocumentos tbody').html(contenidoTabla);
+              },
+              error: function () {
+                  console.error('Error al obtener documentos.');
+                  $('#tablaDocumentos tbody').html(`
+                      <tr>
+                          <td colspan="8">Error al cargar los documentos.</td>
+                      </tr>`);
               }
-              $('#listaDocumentos').html(contenido);
-            } else {
-              console.error(response.message);
-            }
-          },
-          error: function () {
-            console.error('Error al obtener documentos.');
-          }
-        });
+          });
       } else {
-        $('#listaDocumentos').html('<li>Selecciona una marca primero.</li>');
+          $('#tablaDocumentos tbody').html(`
+              <tr>
+                  <td colspan="8">Selecciona una marca para ver los documentos y datos de etiquetado.</td>
+              </tr>`);
       }
-    });
-
-
+  });
+  
+  
     $('#id_empresa').on('change', function () {
       obtenerGraneles();  // Cargar las marcas
       obtenerMarcas();  // Cargar las direcciones

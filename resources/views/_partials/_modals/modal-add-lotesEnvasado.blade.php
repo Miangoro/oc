@@ -101,41 +101,54 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-4">
-                        <label for="listaDocumentos">Documentos asociados:</label>
-                        <ul id="listaDocumentos">
-                            <li>Selecciona una marca para ver los documentos.</li>
-                        </ul>
-                    </div>
-                    <div >
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th><button type="button" class="btn btn-primary add-row"> <i
-                                                class="ri-add-line"></i> </button></th>
-                                    <th>Lote a granel</th>
-                                    <th>Volumen parcial</th>
-                                </tr>
-                            </thead>
-                            <tbody id="contenidoGraneles">
-                                <tr>
-                                    <th>
-                                        <button type="button" class="btn btn-danger remove-row" disabled> <i
-                                                class="ri-delete-bin-5-fill"></i> </button>
-                                    </th>
-                                    <td>
-                                        <select class="id_lote_granel form-control select2" name="id_lote_granel[]"
-                                            id="id_lote_granel">
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control form-control-sm"
-                                            name="volumen_parcial[]" id="volumen_parcial">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    
+                    <table class="table table-bordered" id="tablaDocumentos">
+                        <thead>
+                            <tr>
+                                <th>Etiquetas</th>
+                                <th>ID Dirección</th>
+                                <th>SKU</th>
+                                <th>ID Tipo</th>
+                                <th>Presentación</th>
+                                <th>ID Clase</th>
+                                <th>ID Categoría</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="8">Selecciona una marca para ver los documentos y datos de etiquetado.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th><button type="button" class="btn btn-primary add-row"> <i
+                                            class="ri-add-line"></i> </button></th>
+                                <th>Lote a granel</th>
+                                <th>Volumen parcial</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contenidoGraneles">
+                            <tr>
+                                <th>
+                                    <button type="button" class="btn btn-danger remove-row" disabled> <i
+                                            class="ri-delete-bin-5-fill"></i> </button>
+                                </th>
+                                <td>
+                                    <select class="id_lote_granel form-control select2" name="id_lote_granel[]"
+                                        id="id_lote_granel">
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="text" class="form-control form-control-sm"
+                                        name="volumen_parcial[]" id="volumen_parcial">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"

@@ -51,6 +51,7 @@
                                             </select>
                                         </td>
                                         <td>
+                                         
                                             <input type="text" class="form-control form-control-sm" name="sku[]"
                                                 id="sku">
                                         </td>

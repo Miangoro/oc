@@ -167,7 +167,9 @@ class DomiciliosController extends Controller
     
             if ($documentos->isNotEmpty()) {
                 $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $instalacion->id_empresa)->first();
-                $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+                $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                    return !empty($numero);
+                });
     
                 foreach ($documentos as $documento) {
                     $filePath = 'uploads/' . $numeroCliente . '/' . $documento->url;

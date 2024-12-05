@@ -341,17 +341,22 @@ class lotesEnvasadoController extends Controller
             $documentos = Documentacion_url::where('id_empresa', $marca->id_empresa)
                 ->where('id_relacion', $id_marca)
                 ->get();
-            // Devolver los documentos junto con el numero_cliente
+            // Decodificar el campo etiquetado
+            $etiquetado = $marca->etiquetado ? json_decode($marca->etiquetado, true) : null;
+    
+            // Devolver los documentos, el numero_cliente, y los datos de etiquetado
             return response()->json([
                 'success' => true,
                 'documentos' => $documentos,
-                'numero_cliente' => $numeroCliente // Añadir el numero_cliente a la respuesta
+                'numero_cliente' => $numeroCliente,
+                'etiquetado' => $etiquetado // Añadir los datos del campo etiquetado
             ]);
-        } catch (GlobalException $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener documentos: ' . $e->getMessage()
             ]);
         }
     }
+    
 }

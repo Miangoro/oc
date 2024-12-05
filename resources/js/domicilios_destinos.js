@@ -50,7 +50,7 @@ $(function () {
                 { data: 'id_empresa' },
                 { data: 'direccion' },
                 { data: 'destinatario' },
-                { data: 'aduana' },
+                //{ data: 'aduana' },
                 { data: 'pais_destino' },
                 { data: 'nombre_recibe' },
                 { data: 'correo_recibe' },
@@ -429,7 +429,7 @@ $(function () {
                         Swal.fire({
                             icon: 'success',
                             title: '¡Eliminado!',
-                            text: '¡la direccion ha sido eliminada correctamente!',
+                            text: '¡La direccion ha sido eliminada correctamente!',
                             customClass: {
                                 confirmButton: 'btn btn-success'
                             }
@@ -506,13 +506,13 @@ $(function () {
                         }
                     }
                 },
-                aduana: {
+                /*aduana: {
                     validators: {
                         notEmpty: {
                             message: 'Por favor ingresa la aduana'
                         }
                     }
-                },
+                },*/
                 pais_destino: {
                     validators: {
                         notEmpty: {
@@ -576,7 +576,7 @@ $(function () {
                 $('#exportacionFields').show();
                 // Habilitar validaciones para Exportación
                 fv.enableValidator('destinatario');
-                fv.enableValidator('aduana');
+                //fv.enableValidator('aduana');
                 fv.enableValidator('pais_destino');
                 // Deshabilitar validaciones de Envío de Hologramas
                 fv.disableValidator('correo_recibe');
@@ -590,12 +590,12 @@ $(function () {
                 fv.enableValidator('celular_recibe');
                 // Deshabilitar validaciones de Exportación
                 fv.disableValidator('destinatario');
-                fv.disableValidator('aduana');
+                //fv.disableValidator('aduana');
                 fv.disableValidator('pais_destino');
             } else {
                 // Deshabilitar todas las validaciones específicas
                 fv.disableValidator('destinatario');
-                fv.disableValidator('aduana');
+                //fv.disableValidator('aduana');
                 fv.disableValidator('pais_destino');
                 fv.disableValidator('correo_recibe');
                 fv.disableValidator('nombre_recibe');
@@ -690,7 +690,7 @@ $(function () {
                     $('#exportacionFieldsEdit').show();
                     $('#hologramasFieldsEdit').hide();
                     $('#edit_destinatario').val(data.destinatario);
-                    $('#edit_aduana').val(data.aduana);
+                    //$('#edit_aduana').val(data.aduana);
                     $('#edit_pais_destino').val(data.pais_destino);
                 } else if (data.tipo_direccion == '3') { // Envío de Hologramas
                     $('#hologramasFieldsEdit').show();
@@ -763,7 +763,7 @@ $(function () {
                             }
                         }
                     },
-                    'aduana': {
+                    /*'aduana': {
                         validators: {
                             notEmpty: {
                                 message: 'La aduana es obligatoria.',
@@ -772,7 +772,7 @@ $(function () {
                                 }
                             }
                         }
-                    },
+                    },*/
                     'pais_destino': {
                         validators: {
                             notEmpty: {
@@ -899,7 +899,7 @@ $(function () {
             $('#edit_tipo_direccion').change(function () {
                 var tipoDireccion = $(this).val();
                 formValidationInstance.disableValidator('destinatario');
-                formValidationInstance.disableValidator('aduana');
+                //formValidationInstance.disableValidator('aduana');
                 formValidationInstance.disableValidator('pais_destino');
                 formValidationInstance.disableValidator('correo_recibe');
                 formValidationInstance.disableValidator('nombre_recibe');
@@ -911,7 +911,7 @@ $(function () {
                 if (tipoDireccion == '1') { // Exportación
                     $('#exportacionFieldsEdit').show();
                     formValidationInstance.enableValidator('destinatario');
-                    formValidationInstance.enableValidator('aduana');
+                    //formValidationInstance.enableValidator('aduana');
                     formValidationInstance.enableValidator('pais_destino');
                 } else if (tipoDireccion == '3') { // Envío de Hologramas
                     $('#hologramasFieldsEdit').show();
