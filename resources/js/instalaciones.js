@@ -855,31 +855,8 @@ $('#edit_fecha_emision').on('change', function() {
   $('#edit_fecha_vigencia').val(year + '-' + month + '-' + day).trigger('change');
 });
 
-$(document).on('change', '#edit_tipo', function () {
-  var tipo = $(this).val(); 
-  
-  var hiddenIdDocumento = $('#edit_certificado_otros').find('input[name="edit_id_documento[]"]');
-  var hiddenNombreDocumento = $('#edit_certificado_otros').find('input[name="edit_nombre_documento[]"]');
-  var fileCertificado = $('#edit_certificado_otros').find('input[type="file"]');
-  
-  if (tipo.includes("Productora")) {
-      hiddenIdDocumento.val('127');
-      hiddenNombreDocumento.val('Certificado de instalaciones');
-      fileCertificado.attr('id', 'file-127');
-  } else if (tipo.includes("Envasadora")) {
-      hiddenIdDocumento.val('128');
-      hiddenNombreDocumento.val('Certificado de envasadora');
-      fileCertificado.attr('id', 'file-128');
-  } else if (tipo.includes("Comercializadora") || tipo.includes("Almacen y bodega") || tipo.includes("Area de maduracion")) {
-      hiddenIdDocumento.val('129');
-      hiddenNombreDocumento.val('Certificado de comercializadora');
-      fileCertificado.attr('id', 'file-129');
-  } else {
-      hiddenIdDocumento.val('');
-      hiddenNombreDocumento.val('');
-      fileCertificado.removeAttr('id');
-  }
-});
+
+
 
 $(document).ready(function () {
   let instalacionData = {};
@@ -992,6 +969,13 @@ $(document).ready(function () {
                 }
             }
         },
+        'edit_eslabon': {
+          validators: {
+              notEmpty: {
+                  message: 'La fecha de vigencia es obligatoria.'
+              }
+          }
+      },
         'edit_url[]': {
             validators: {
                 file: {
@@ -1060,6 +1044,87 @@ $(document).ready(function () {
     fvEdit.revalidateField('edit_tipo[]');
   });
 
+  var id_instalacion = null; // Variable global para almacenar el ID de instalación
+
+  // Evento `click` para inicializar el ID de instalación
+  $(document).on('click', '.edit-record', function () {
+      id_instalacion = $(this).data('id'); // Asignar el ID al hacer clic
+      console.log('ID de instalación inicializado:', id_instalacion);
+  });
+  
+  // Evento `change` para manejar el tipo seleccionado
+  $(document).on('change', '#edit_tipo', function () {
+      var tipo = $(this).val();
+  
+      // Referencias a los campos relacionados con documentos
+      var hiddenIdDocumento = $('#edit_certificado_otros').find('input[name="edit_id_documento[]"]');
+      var hiddenNombreDocumento = $('#edit_certificado_otros').find('input[name="edit_nombre_documento[]"]');
+      var fileCertificado = $('#edit_certificado_otros').find('input[type="file"]');
+  
+      // Manejo de documentos basado en el tipo seleccionado
+      if (tipo.includes("Productora")) {
+          hiddenIdDocumento.val('127');
+          hiddenNombreDocumento.val('Certificado de instalaciones');
+          fileCertificado.attr('id', 'file-127');
+      } else if (tipo.includes("Envasadora")) {
+          hiddenIdDocumento.val('128');
+          hiddenNombreDocumento.val('Certificado de envasadora');
+          fileCertificado.attr('id', 'file-128');
+      } else if (tipo.includes("Comercializadora") || tipo.includes("Almacen y bodega") || tipo.includes("Area de maduracion")) {
+          hiddenIdDocumento.val('129');
+          hiddenNombreDocumento.val('Certificado de comercializadora');
+          fileCertificado.attr('id', 'file-129');
+      } else {
+          hiddenIdDocumento.val('');
+          hiddenNombreDocumento.val('');
+          fileCertificado.removeAttr('id');
+      }
+  
+      // Mostrar u ocultar el campo `#edit_eslabon` dependiendo del tipo seleccionado
+      if (tipo.includes('Almacen y bodega') || tipo.includes('Area de maduracion')) {
+          $('#edit_eslabon-select').removeClass('d-none');
+          fvEdit.enableValidator('edit_eslabon');
+  
+          // Verifica si `id_instalacion` ya fue inicializado
+          if (id_instalacion) {
+              cargarDatos(id_instalacion); // Llama a cargarDatos con el ID almacenado
+          } else {
+              console.warn("No se encontró un ID de instalación válido.");
+          }
+      } else {
+          $('#edit_eslabon-select').addClass('d-none');
+          $('#edit_eslabon').val('');
+          fvEdit.disableValidator('edit_eslabon');
+          console.log('Validación desactivada para #edit_eslabon');
+      }
+  });
+  
+  function cargarDatos(id_instalacion) {
+      if (!id_instalacion) {
+          console.warn("No se proporcionó un ID de instalación válido.");
+          return;
+      }
+  
+      console.log('Se obtuvo: ' + id_instalacion);
+  
+      $.ajax({
+          url: '/domicilios/edit/' + id_instalacion,
+          type: 'GET',
+          success: function (response) {
+              console.log('Datos recibidos del servidor:', response);
+              $('#edit_eslabon').val(response.instalacion.eslabon).trigger('change');
+          },
+          error: function (error) {
+              console.log(error);
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Error',
+                  text: 'Hubo un problema al cargar los datos del domicilio.'
+              });
+          }
+      });
+  }
+  
   // Deshabilitar validación inicial
   fvEdit.disableValidator('edit_folio');
   fvEdit.disableValidator('edit_id_organismo');
@@ -1070,6 +1135,7 @@ $(document).ready(function () {
   $(document).on('click', '.edit-record', function () {
     var id_instalacion = $(this).data('id');
     var url = baseUrl + 'domicilios/edit/' + id_instalacion;
+    console.log('el ide es:' + id_instalacion);
 
     $.get(url, function (data) {
         if (data.success) {
@@ -1078,6 +1144,7 @@ $(document).ready(function () {
 
             instalacionData = {
                 folio: instalacion.folio || '',
+                eslabon: instalacion.eslabon || '',
                 id_organismo: instalacion.id_organismo || '',
                 fecha_emision: instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '',
                 fecha_vigencia: instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '',
@@ -1087,6 +1154,7 @@ $(document).ready(function () {
 
             $('#edit_id_empresa').val(instalacion.id_empresa).trigger('change');
             $('#edit_tipo').val(tipoParsed).trigger('change');
+            $('#edit_eslabon').val(instalacion.eslabon).trigger('change');
             $('#edit_estado').val(instalacion.estado).trigger('change');
             $('#edit_direccion').val(instalacion.direccion_completa);
             $('#edit_responsable').val(instalacion.responsable || '').trigger('change');
@@ -1094,16 +1162,6 @@ $(document).ready(function () {
             // Establecer el valor del select y mostrar los campos adicionales si corresponde
             $('#edit_certificacion').val(instalacion.certificacion).trigger('change');
             toggleCamposCertificacion(instalacion.certificacion);
-
-            // Mostrar el campo edit_eslabon si el tipo incluye "Área de maduración" o "Almacén y bodega"
-            if (tipoParsed.includes('Area de maduracion') || tipoParsed.includes('Almacen y bodega')) {
-                $('#edit_eslabon-select').removeClass('d-none');
-                $('#edit_eslabon').val(instalacion.eslabon || '').trigger('change');
-                console.log("entra")
-            } else {
-                $('#eslabon-select').addClass('d-none');
-                $('#edit_eslabon-select').val('');
-            }
 
             // Asignar el id_instalacion al atributo data-id del formulario
             $('#editInstalacionForm').data('id', id_instalacion);
@@ -1130,11 +1188,6 @@ $(document).ready(function () {
             }
         });
     });
-});
-$('#modalEditInstalacion').on('hidden.bs.modal', function () {
-  console.log('Se ocultó');
-  $('#edit_eslabon').val('');
-  $('#edit_eslabon-select').addClass('d-none');
 });
 });
 

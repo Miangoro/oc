@@ -35,7 +35,7 @@
                         <th>Cliente</th>
                         <th>Domicilio Completo</th>
                         <th>Nombre del Destinatario</th>
-                        <th>Aduana de Despacho</th>
+                        {{-- <th>Aduana de Despacho</th> --}}
                         <th>País de Destino</th>
                         <th>Nombre Persona (Hologramas)</th>
                         <th>Correo</th>

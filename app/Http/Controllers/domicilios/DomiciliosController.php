@@ -307,6 +307,7 @@ class DomiciliosController extends Controller
         try {
             $instalacion = Instalaciones::findOrFail($id);
     
+            // Actualizar instalación
             $instalacion->update([
                 'id_empresa' => $request->input('edit_id_empresa'),
                 'tipo' => $request->input('edit_tipo'),
@@ -321,31 +322,35 @@ class DomiciliosController extends Controller
                 'eslabon' => $request->input('edit_eslabon'), 
             ]);
     
+            // Obtener número de cliente de la empresa
             $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $request->input('edit_id_empresa'))->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
     
+            // Eliminar documentos antiguos antes de actualizar
             $documentacionUrls = Documentacion_url::where('id_relacion', $id)->get();
-            
+    
             if ($request->hasFile('edit_url')) {
                 foreach ($documentacionUrls as $documentacionUrl) {
                     $filePath = 'uploads/' . $numeroCliente . '/' . $documentacionUrl->url;
                     if (Storage::disk('public')->exists($filePath)) {
                         Storage::disk('public')->delete($filePath);
                     }
-                    $documentacionUrl->delete();
+                    $documentacionUrl->delete(); 
                 }
     
+                // Subir nuevos archivos
                 $files = $request->file('edit_url');
                 $documentoIds = $request->input('edit_id_documento');
                 $documentoNombres = $request->input('edit_nombre_documento');
     
                 foreach ($files as $index => $file) {
-                    $documentoId = $documentoIds[$index] ?? null;
                     $documentoNombre = $documentoNombres[$index] ?? 'Documento sin nombre';
-                    $filename = $documentoNombre . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $documentoId = $documentoIds[$index] ?? null;    
+                    $filename = $documentoNombre . '_' . $instalacion->id_instalacion . '_' . ($index + 1) . '.' . $file->getClientOriginalExtension();
                     $directoryPath = 'uploads/' . $numeroCliente;
                     $filePath = $file->storeAs($directoryPath, $filename, 'public');
     
+                    // Guardar la nueva entrada en la base de datos
                     Documentacion_url::create([
                         'id_relacion' => $id,
                         'id_documento' => $documentoId,
