@@ -66,6 +66,7 @@ public function index(Request $request)
             $users = Dictamen_instalaciones::join('inspecciones AS i', 'dictamenes_instalaciones.id_inspeccion', '=', 'i.id_inspeccion')
             ->leftjoin('solicitudes AS s', 's.id_solicitud', '=', 'i.id_solicitud')
             ->leftjoin('empresa AS e', 'e.id_empresa', '=', 's.id_empresa')
+            //->leftjoin('instalaciones AS ins', 'ins.id_instalacion', '=', 's.id_instalacion')
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
@@ -97,8 +98,8 @@ public function index(Request $request)
             //$users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
             $query = Dictamen_instalaciones::join('inspecciones AS i', 'dictamenes_instalaciones.id_inspeccion', '=', 'i.id_inspeccion')
                 ->leftjoin('solicitudes AS s', 's.id_solicitud', '=', 'i.id_solicitud')
-                ->leftjoin('empresa AS e', 'e.id_empresa', '=', 's.id_empresa')
-                ->leftjoin('instalaciones AS ins', 'ins.id_instalacion', '=', 's.id_instalacion');
+                ->leftjoin('empresa AS e', 'e.id_empresa', '=', 's.id_empresa');
+                //->leftjoin('instalaciones AS ins', 'ins.id_instalacion', '=', 's.id_instalacion');
 
         // Si se proporciona un tipo_dictamen válido, filtramos
             if ($searchType !== null) {
@@ -107,11 +108,11 @@ public function index(Request $request)
         // Si no se busca por tipo_dictamen, buscamos por otros campos
                 $query->where('id_dictamen', 'LIKE', "%{$search}%")
                     ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-                    ->orWhere('dictamenes_instalaciones.fecha_emision', 'LIKE', "%{$search}%")
+                    ->orWhereDate('dictamenes_instalaciones.fecha_emision', 'LIKE', "%{$search}%")
                     ->orWhere('dictamenes_instalaciones.fecha_vigencia', 'LIKE', "%{$search}%")
                     ->orWhere('num_servicio', 'LIKE', "%{$search}%")
-                    ->orWhere('razon_social', 'LIKE', "%{$search}%")
-                    ->orWhere('direccion_completa', 'LIKE', "%{$search}%");
+                    ->orWhere('razon_social', 'LIKE', "%{$search}%");
+                    //->orWhere('direccion_completa', 'LIKE', "%{$search}%");
             }
             $users = $query->offset($start)
                 ->limit($limit)
@@ -140,7 +141,8 @@ public function index(Request $request)
                 $nestedData['num_servicio'] = $user->inspeccione->num_servicio;
                 /*$nestedData['fecha_emision'] = $user->fecha_emision;
                 $nestedData['fecha_vigencia'] = $user->fecha_vigencia;*/
-                $fecha_emision= $user->fecha_emision;
+                //$fecha_emision= Helpers::formatearFecha($user->fecha_emision) ?? 'N/A';
+                $fecha_emision = $user->fecha_emision;
                 $fecha_vigencia = $user->fecha_vigencia;
                 $nestedData['fechas'] = '<b>Fecha Emisión: </b>' .$fecha_emision. '<br> <b>Fecha Vigencia: </b>' .$fecha_vigencia;
                 $nestedData['direccion_completa'] = $user->inspeccione->solicitud->instalacion->direccion_completa;
