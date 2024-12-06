@@ -618,7 +618,7 @@ $(function () {
         var id_tipo = marca.id_tipo[index];
         var presentacion = marca.presentacion[index];
         var id_unico = marca.id_unico[index]; 
-       
+        var alc_vol = marca.alc_vol[index];
         var id_clase = marca.id_clase[index];
         var id_categoria = marca.id_categoria[index];
         var id_direccion = marca.id_direccion[index];
@@ -648,7 +648,9 @@ $(function () {
                       </td>
                       <td>
                           <input type="number" class="form-control form-control-sm" name="presentacion[]" min="0" value="${presentacion}">
+                           <select class="form-control" name="unidad[]"><option value="mL">mL</option><option value="L">L</option><option value="cL">cL</option></select>
                       </td>
+                      <td><input type="text" class="form-control form-control-sm" name="alc_vol[]" value="${alc_vol}"></td>
                       <td>
                           <select class="form-control select2" name="id_clase[]" id="id_clase${index}">
                               ${clases}
@@ -661,7 +663,7 @@ $(function () {
                       </td>
                       <td>
                           <div style="display: flex; align-items: center;">
-                              <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
+                              <input class="form-control form-control-sm" type="file" name="url_etiqueta[]" style="flex: 1;">
                               ${documento_etiquetas ?
             `<a href="/files/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank" style="margin-left: 10px;">
                                       <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
@@ -673,7 +675,7 @@ $(function () {
                       </td>
                       <td>
                           <div style="display: flex; align-items: center;">
-                              <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
+                              <input class="form-control form-control-sm" type="file" name="url_corrugado[]" style="flex: 1;">
                               ${documento_corrugado ?
             `<a href="/files/${data.numeroCliente}/${documento_corrugado.url}" target="_blank" style="margin-left: 10px;">
                                       <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
@@ -728,6 +730,7 @@ $(function () {
       contentType: false,
       processData: false,
       success: function (response) {
+        console.log(response);
         Swal.fire({
           title: 'Éxito',
           text: response.success,

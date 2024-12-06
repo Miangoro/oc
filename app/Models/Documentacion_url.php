@@ -10,7 +10,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
 class Documentacion_url extends Model
 {
     protected $table = 'documentacion_url';
-        use LogsActivity, TranslatableActivityLog, HasFactory;
+       // use LogsActivity, TranslatableActivityLog, HasFactory;
+       use  HasFactory;
         protected $fillable = [
             'id_empresa',
             'url',
@@ -18,15 +19,16 @@ class Documentacion_url extends Model
             'id_usuario_registro',
             'nombre_documento',
             'fecha_vigencia',
-            'id_documento'
+            'id_documento',
+            'id_doc'
 
         ];
 
       // Método para obtener el nombre del registro que sirve para la trazabilidad
-        public function getLogName2(): string
+     /*   public function getLogName2(): string
         {
             return 'documentación'; // Devuelve el nombre que desees
-        }
+        }*/
 
 
       public function marca()

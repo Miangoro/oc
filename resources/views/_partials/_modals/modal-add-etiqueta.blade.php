@@ -15,7 +15,7 @@
                 </div>
                 <form id="etiquetasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
-                        <input type="hidden" id="etiqueta_marca" name="id_marca">
+                        <input type="text" id="etiqueta_marca" name="id_marca">
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
@@ -26,7 +26,8 @@
                                         <th>Destino de exportación</th>
                                         <th>SKU</th>
                                         <th>Tipo Maguey</th>
-                                        <th>Presentación</th>
+                                        <th>Cont. Neto</th>
+                                        <th>% Alc. Vol.</th>
                                         <th>Clase</th>
                                         <th>Categoria</th>
                                         <th>Etiqueta</th>
@@ -84,14 +85,14 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <input class="form-control form-control-sm" type="file" name="url[]">
+                                            <input class="form-control form-control-sm" type="file" name="url_etiqueta[]">
                                             <input value="60" class="form-control" type="hidden"
                                                 name="id_documento[]">
                                             <input value="Etiquetas" class="form-control" type="hidden"
                                                 name="nombre_documento[]">
                                         </td>
                                         <td>
-                                            <input class="form-control form-control-sm" type="file" name="url[]">
+                                            <input class="form-control form-control-sm" type="file" name="url_corrugado[]">
                                             <input value="75" class="form-control" type="hidden"
                                                 name="id_documento[]">
                                             <input value="Corrugado" class="form-control" type="hidden"
@@ -141,7 +142,7 @@
             let opciones4 = `
             @foreach ($direcciones as $direccion)
                 <option value="{{ $direccion->id_direccion }}">
-                    {{ $direccion->direccion }}
+                    {{ $direccion->destinatario }} | {{ $direccion->direccion }}
                 </option>
             @endforeach
         `;
@@ -154,11 +155,13 @@
                 opciones4 + `</select></td>
                 <td><input type="text" class="form-control form-control-sm" name="sku[]" id="sku"></td>
                 <td><select class="form-control select2" name="id_tipo[]">` + opciones + `</select></td>
-                <td><input type="number" class="form-control form-control-sm" name="presentacion[]" step="0.01" min="0"></td>
+                <td><input type="number" class="form-control form-control-sm" name="presentacion[]" step="0.01" min="0">
+                    <select class="form-control" name="unidad[]"><option value="mL">mL</option><option value="L">L</option><option value="cL">cL</option></select></td>
+                <td><input type="text" class="form-control form-control-sm" name="alc_vol[]"></td>
                 <td><select class="form-control select2" name="id_clase[]">` + opciones2 + `</select></td>
-                <td><select class="form-control select2" name="id_categoria[]">` + opciones3 + `</select></td>
-                <td><input class="form-control form-control-sm" type="file" name="url[]"><input value="60" class="form-control" type="hidden" name="id_documento[]"><input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]"></td>
-                <td><input class="form-control form-control-sm" type="file" name="url[]"><input value="75" class="form-control" type="hidden" name="id_documento[]"><input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]"></td>
+                <td><select class="form-control" name="id_categoria[]">` + opciones3 + `</select></td>
+                <td><input class="form-control form-control-sm" type="file" name="url_etiqueta[]"><input value="60" class="form-control" type="hidden" name="id_documento[]"><input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]"></td>
+                <td><input class="form-control form-control-sm" type="file" name="url_corrugado[]"><input value="75" class="form-control" type="hidden" name="id_documento[]"><input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]"></td>
             </tr>`;
 
             $('#contenidoRango').append(newRow);
