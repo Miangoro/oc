@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Destinos;
 use App\Models\empresa;
 use App\Models\LotesGranel;
 
@@ -12,21 +13,21 @@ use Illuminate\Support\Facades\DB;
 
 class getFuncionesController extends Controller
 {
-    private function datosComunes($id_empresa)
+    public function datosComunes($id_empresa)
     {   
-        $normas = DB::table('empresa_norma_certificar AS n')
+       /* $normas = DB::table('empresa_norma_certificar AS n')
         ->join('catalogo_norma_certificar AS c', 'n.id_norma', '=', 'c.id_norma')
         ->select('c.norma', 'c.id_norma') // Selecciona las columnas necesarias
         ->where('c.id_norma', '!=' ,2)
         ->where('n.id_empresa', $id_empresa)
-        ->get();
+        ->get();*/
 
 
         // Lógica común que se necesita en diferentes vistas
         return [
             'empresas' => empresa::all(),
-            'normas' => $normas,
-
+            //'normas' => $normas,
+            'direcciones_destino' => Destinos::where("id_empresa",$id_empresa),
            
         ];
     }
@@ -62,9 +63,7 @@ class getFuncionesController extends Controller
             'predio_plantacion' => $empresa->predio_plantacion(),
             'direcciones'=> $empresa->direcciones(),
             'lotes_envasado' => $empresa->lotes_envasado(),
-
-
-
+            'direcciones_destino' => Destinos::where("id_empresa",$empresa->id_empresa)->where('tipo_direccion',1)->get(),
         ]);
     }
 

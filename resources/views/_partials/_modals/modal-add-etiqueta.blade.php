@@ -11,94 +11,32 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2"> Subir/Ver etiquetas</h4>
-                    <p class="address-subtitle"></p>
+                    <p class="subtitulo badge bg-primary"></p>
                 </div>
                 <form id="etiquetasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="row">
-                        <input type="text" id="etiqueta_marca" name="id_marca">
+                        <input type="hidden" id="etiqueta_marca" name="id_marca">
+                        <input type="hidden" id="id_empresa">
                         <div class="table-responsive">
-                            <table class="table table-bordered">
+                            <table style="table-layout: fixed;" class="table table-bordered table-sm">
                                 <thead>
                                     <tr>
-                                        <th><button type="button" class="btn btn-primary add-row-add"> <i
+                                        <th style="width: 100px"><button type="button" class="btn btn-primary add-row-add"> <i
                                                     class="ri-add-line"></i>
                                             </button></th>
-                                        <th>Destino de exportación</th>
+                                        <th style="width: 20%">Destino de exportación</th>
                                         <th>SKU</th>
-                                        <th>Tipo Maguey</th>
+                                        <th>Categoría</th>
                                         <th>Cont. Neto</th>
                                         <th>% Alc. Vol.</th>
-                                        <th>Clase</th>
-                                        <th>Categoria</th>
+                                      
                                         <th>Etiqueta</th>
                                         <th>Corrugado</th>
 
                                     </tr>
                                 </thead>
                                 <tbody id="contenidoRango">
-                                    <tr>
-                                        <th>
-                                            <button type="button" class="btn btn-danger remove-row" disabled> <i
-                                                    class="ri-delete-bin-5-fill"></i> </button>
-                                        </th>
-                                        <td>
-                                            <select class=" form-control select2" name="id_direccion[]"
-                                                id="id_direccion">
-                                                @foreach ($direcciones as $direccion)
-                                                    <option value="{{ $direccion->id_direccion }}">
-                                                        {{ $direccion->direccion }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td>
-                                         
-                                            <input type="text" class="form-control form-control-sm" name="sku[]"
-                                                id="sku">
-                                        </td>
-                                        <td>
-                                            <select class=" form-control select2" name="id_tipo[]" id="id_tipo">
-                                                @foreach ($tipos as $nombre)
-                                                    <option value="{{ $nombre->id_tipo }}">{{ $nombre->nombre }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input type="number" class="form-control form-control-sm"
-                                                name="presentacion[]" id="presentacion" step="0.01" min="0">
-                                        </td>
-                                        <td>
-                                            <select class="form-control select2" name="id_clase[]" id="id_clase">
-                                                @foreach ($clases as $clase)
-                                                    <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select class="form-control select2" name="id_categoria[]"
-                                                id="id_categoria">
-                                                @foreach ($categorias as $categoria)
-                                                    <option value="{{ $categoria->id_categoria }}">
-                                                        {{ $categoria->categoria }}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <input class="form-control form-control-sm" type="file" name="url_etiqueta[]">
-                                            <input value="60" class="form-control" type="hidden"
-                                                name="id_documento[]">
-                                            <input value="Etiquetas" class="form-control" type="hidden"
-                                                name="nombre_documento[]">
-                                        </td>
-                                        <td>
-                                            <input class="form-control form-control-sm" type="file" name="url_corrugado[]">
-                                            <input value="75" class="form-control" type="hidden"
-                                                name="id_documento[]">
-                                            <input value="Corrugado" class="form-control" type="hidden"
-                                                name="nombre_documento[]">
-                                        </td>
-                                    </tr>
+                                    
                                 </tbody>
                             </table>
                         </div>
@@ -124,6 +62,7 @@
         //Agregar o eliminar filas en la tabla
         var i = 0;
         $('.add-row-add').click(function() {
+            obtenerDirecciones(i);
             let opciones = `
             @foreach ($tipos as $nombre)
                 <option value="{{ $nombre->id_tipo }}">{{ $nombre->nombre }}</option>
@@ -139,27 +78,21 @@
                 <option value="{{ $categoria->id_categoria }}">{{ $categoria->categoria }}</option>
             @endforeach
         `;
-            let opciones4 = `
-            @foreach ($direcciones as $direccion)
-                <option value="{{ $direccion->id_direccion }}">
-                    {{ $direccion->destinatario }} | {{ $direccion->direccion }}
-                </option>
-            @endforeach
-        `;
+        
             var newRow = `
             <tr>
                 <th>
                     <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
                 </th>
-                                                <td><select class="form-control select2" name="id_direccion[]">` +
-                opciones4 + `</select></td>
+                                                <td><select id="id_direccion_destino` + i + `" class="form-control select2 .id_direccion_destino" name="id_direccion[]"></select></td>
                 <td><input type="text" class="form-control form-control-sm" name="sku[]" id="sku"></td>
-                <td><select class="form-control select2" name="id_tipo[]">` + opciones + `</select></td>
+                <td><select class="form-control" name="id_categoria[]">` + opciones3 + `</select>
+                    <select class="form-control select2" name="id_tipo[]">` + opciones + `</select>
+                    <select class="form-control select2" name="id_clase[]">` + opciones2 + `</select></td>
                 <td><input type="number" class="form-control form-control-sm" name="presentacion[]" step="0.01" min="0">
                     <select class="form-control" name="unidad[]"><option value="mL">mL</option><option value="L">L</option><option value="cL">cL</option></select></td>
                 <td><input type="text" class="form-control form-control-sm" name="alc_vol[]"></td>
-                <td><select class="form-control select2" name="id_clase[]">` + opciones2 + `</select></td>
-                <td><select class="form-control" name="id_categoria[]">` + opciones3 + `</select></td>
+               
                 <td><input class="form-control form-control-sm" type="file" name="url_etiqueta[]"><input value="60" class="form-control" type="hidden" name="id_documento[]"><input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]"></td>
                 <td><input class="form-control form-control-sm" type="file" name="url_corrugado[]"><input value="75" class="form-control" type="hidden" name="id_documento[]"><input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]"></td>
             </tr>`;
@@ -176,4 +109,33 @@
             $(this).closest('tr').remove();
         });
     });
+
+    function obtenerDirecciones(aux) {
+        var empresa = $("#id_empresa").val();
+
+        // Hacer una petición AJAX para obtener los detalles de la empresa
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                console.log(response.direcciones_destino);
+                var contenido = "";
+            for (let index = 0; index < response.direcciones_destino.length; index++) {
+                // Limpia el campo tipo usando la función limpiarTipo
+               
+
+                contenido = '<option value="' + response.direcciones_destino[index].id_direccion + '">' +
+                    response.direcciones_destino[index].destinatario + ' | ' + response.direcciones_destino[index].direccion + '</option>' +
+                    contenido;
+            }
+            if (response.direcciones_destino.length == 0) {
+                contenido = '<option value="">Sin direcciones registradas</option>';
+            }
+            $('#id_direccion_destino'+aux).html(contenido);
+            },
+            error: function() {
+                //alert('Error al cargar los lotes a granel.');
+            }
+        });
+    }
 </script>

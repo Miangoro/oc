@@ -40,7 +40,7 @@ class marcasCatalogoController extends Controller
 
         // Otros datos que puedas querer pasar a la vista
         $marcas = marcas::all();
-        $direcciones = direcciones::all();
+        //$direcciones = direcciones::where('id_empresa',$marca->id_empresa)->get();
         $catalogo_norma_certificar = catalogo_norma_certificar::all();
         $tipos = tipos::all();
         $clases = clases::all();
@@ -61,7 +61,7 @@ class marcasCatalogoController extends Controller
             'tipos' => $tipos,
             'clases' => $clases,
             'categorias' => $categorias,
-            'direcciones' => $direcciones,
+          
 
 
 
@@ -449,7 +449,7 @@ protected function createNewDocuments($loteEnvasado, $idUnico, $request, $index,
         $marca = Marcas::findOrFail($id);
         $tipos = tipos::all();
         $clases = clases::all();
-        $direcciones = direcciones::all();
+        $direcciones = direcciones::where('id_empresa',$marca->id_empresa)->where('tipo_direccion',1)->get();
         $categorias = categorias::all();
         $documentacion_urls = Documentacion_url::where('id_relacion', $id)->get();
         $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $marca->id_empresa)->first();
@@ -466,6 +466,7 @@ protected function createNewDocuments($loteEnvasado, $idUnico, $request, $index,
         $marca->id_categoria = $etiquetado['id_categoria'] ?? null;
         $marca->id_unico = $etiquetado['id_unico'] ?? null;
         $marca->alc_vol = $etiquetado['alc_vol'] ?? null;
+        $marca->unidad = $etiquetado['unidad'] ?? null;
 
         return response()->json([
             'direcciones' => $direcciones,

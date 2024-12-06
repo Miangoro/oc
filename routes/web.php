@@ -492,6 +492,7 @@ Route::get('/solicitudInfoClienteNOM-199/{id}', [clientesProspectoController::cl
 Route::post('/aceptar-cliente', [clientesProspectoController::class, 'aceptarCliente']);
 Route::get('/lista_empresas/{id}', [getFuncionesController::class, 'find_clientes_prospecto']);
 Route::get('/lista_inspetores', [getFuncionesController::class, 'usuariosInspectores']);
+Route::get('/datosComunes/{id_empresa}', [getFuncionesController::class, 'datosComunes']);
 
 /*obtener el editar*/
 Route::get('/cliente_confirmado/{id}/edit', [clientesConfirmadosController::class, 'editarCliente'])->name('editarCliente');
