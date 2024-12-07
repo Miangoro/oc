@@ -443,7 +443,7 @@ protected function createNewDocuments($loteEnvasado, $idUnico, $request, $index,
     
 
     
-    //Editar etiquetas
+    //Editar etiquetas solo para quie se guarde
     public function editEtiquetas($id)
     {
         $marca = Marcas::findOrFail($id);
