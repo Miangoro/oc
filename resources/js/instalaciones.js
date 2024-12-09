@@ -1063,21 +1063,29 @@ $(document).ready(function () {
   
       // Manejo de documentos basado en el tipo seleccionado
       if (tipo.includes("Productora")) {
-          hiddenIdDocumento.val('127');
-          hiddenNombreDocumento.val('Certificado de instalaciones');
-          fileCertificado.attr('id', 'file-127');
+        hiddenIdDocumento.val('127');
+        hiddenNombreDocumento.val('Certificado de productora');
+        fileCertificado.attr('id', 'file-127');
       } else if (tipo.includes("Envasadora")) {
-          hiddenIdDocumento.val('128');
-          hiddenNombreDocumento.val('Certificado de envasadora');
-          fileCertificado.attr('id', 'file-128');
-      } else if (tipo.includes("Comercializadora") || tipo.includes("Almacen y bodega") || tipo.includes("Area de maduracion")) {
-          hiddenIdDocumento.val('129');
-          hiddenNombreDocumento.val('Certificado de comercializadora');
-          fileCertificado.attr('id', 'file-129');
+        hiddenIdDocumento.val('128');
+        hiddenNombreDocumento.val('Certificado de envasadora');
+        fileCertificado.attr('id', 'file-128');
+      } else if (tipo.includes("Comercializadora")) {
+        hiddenIdDocumento.val('129');
+        hiddenNombreDocumento.val('Certificado de comercializadora');
+        fileCertificado.attr('id', 'file-129');
+      } else if (tipo.includes("Almacen y bodega")) {
+        hiddenIdDocumento.val('130');
+        hiddenNombreDocumento.val('Certificado de almacén y bodega');
+        fileCertificado.attr('id', 'file-130');
+      } else if (tipo.includes("Area de maduracion")) {
+        hiddenIdDocumento.val('131');
+        hiddenNombreDocumento.val('Certificado de área de maduración');
+        fileCertificado.attr('id', 'file-131');
       } else {
-          hiddenIdDocumento.val('');
-          hiddenNombreDocumento.val('');
-          fileCertificado.removeAttr('id');
+        hiddenIdDocumento.val('');
+        hiddenNombreDocumento.val('');
+        fileCertificado.removeAttr('id');
       }
   
       // Mostrar u ocultar el campo `#edit_eslabon` dependiendo del tipo seleccionado
