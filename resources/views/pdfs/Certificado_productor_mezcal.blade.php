@@ -196,7 +196,6 @@
             height: auto;
             display: inline-block;
         }
-
     </style>
 </head>
 <body>
@@ -276,7 +275,13 @@ de Noviembre de L994, así como sus subsecuentes modificaciones.</p>
     <div class="signature-name">Gerente Técnico del Organismo Certificador ClDAM</div>
 </div>
 
-<div class="down">Este cert¡ficado sustituye al: No aplica<br>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35<br>Edición 5 Entrada en vigor 08/03/2023</div>
+<div class="down">Este cert¡ficado sustituye al: No aplica<br>Certificado como Productor de Mezcal NOM-070-SCFI-2016 F7.1-01-35<br>Edición 5 Entrada en vigor 08/03/2023 <br>
+
+ @if ($leyenda)
+    Cancela y sustituye al certificado con clave: CIDAM C-GRA-057/2023
+ @endif
+
+</div>
 
 <div class="foother">
     <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="300px">

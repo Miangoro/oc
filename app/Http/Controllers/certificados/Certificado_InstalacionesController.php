@@ -229,6 +229,7 @@ class Certificado_InstalacionesController extends Controller
         $empresa = $datos->dictamen->instalaciones->empresa;
         $numero_cliente = $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente;
         $watermarkText = $datos->estatus === 1;
+        $leyenda = $datos->estatus === 2;
 
         // Preparar los datos para el PDF
         $pdfData = [
@@ -249,6 +250,7 @@ class Certificado_InstalacionesController extends Controller
             'maestro_mezcalero' => $datos->maestro_mezcalero ?? '------------------------------',
             'numero_cliente' => $numero_cliente,
             'nombre_firmante' => $datos->firmante->name,
+            'leyenda' => $leyenda,
         ];
 
         // Generar y retornar el PDF
