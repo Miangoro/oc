@@ -217,6 +217,22 @@
             text-align: center;
             font-family: 'calibri-bold';
         }
+
+        .leyenda {
+            text-align: right;
+            font-size: 10px;
+            line-height: 1;
+            position: fixed;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            width: calc(100% - 40px);
+            height: 45px;
+            margin-right: 30px;
+            padding: 10px 0;
+            font-family: 'Lucida Sans Unicode';
+            z-index: 1;        
+         }
     </style>
 
 </head>
@@ -323,6 +339,12 @@
     <p class="pie">Certificado NOM de Mezcal a Granel NOM-070-SCFI-2016F7.1-01-07
     <br>
     Edición 7 Entrada en vigor: 07/11/2023
+
+    @if ($leyenda)
+    <p class="leyenda">
+    Cancela y sustituye al certificado con clave: CIDAM C-GRA-057/2023
+    </p>
+    @endif
     </p>
 
     <div class="foother">

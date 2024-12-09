@@ -364,6 +364,7 @@ class Certificado_GranelController extends Controller
         $num_dictamen = $certificado->dictamen->num_dictamen ?? 'N/A';
         $tipoNombre = $certificado->dictamen->lote_granel->tipo->nombre ?? 'N/A';
         $watermarkText = $certificado->estatus === 1;
+        $leyenda = $certificado->estatus === 2;
     
         // Datos para el PDF
         $pdfData = [
@@ -377,6 +378,7 @@ class Certificado_GranelController extends Controller
             'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
             'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
             'watermarkText' => $watermarkText,
+            'leyenda' => $leyenda,
     
             // Tabla #2
             'lote' => $clase,
