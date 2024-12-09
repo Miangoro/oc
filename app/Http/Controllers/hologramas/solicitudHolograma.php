@@ -142,6 +142,7 @@ class solicitudHolograma extends Controller
                     'restantes' => max(0, ($user->cantidad_hologramas - $user->cantidadActivados($user->id_solicitud) - $user->cantidadMermas($user->id_solicitud))),
                     'mermas' => $user->cantidadMermas($user->id_solicitud),
                     'razon_social' => $razonSocialFormatted, // Aquí asignamos la clave correctamente
+                    'razon_social_pdf' => $user->empresa ? $user->empresa->razon_social : '',
                 ];
                 $data[] = $nestedData;
             }
