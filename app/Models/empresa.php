@@ -58,10 +58,16 @@ class empresa extends Model
     return lotes_envasado::where('id_empresa', $this->id_empresa)->get();
     }
 
-
+/*
     public function marcas(){
         return marcas::where('id_empresa', $this->id_empresa)->get();
-    }
+    } */
+    public function marcas()
+{
+    return $this->hasMany(marcas::class, 'id_empresa', 'id_empresa');
+}
+
+
 
     public function guias(){
         return Guias::where('id_empresa', $this->id_empresa)->get();

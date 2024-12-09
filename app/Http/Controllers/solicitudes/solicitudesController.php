@@ -13,6 +13,7 @@ use App\Models\LotesGranel;
 use App\Models\solicitudesModel;
 use App\Models\clases;
 use App\Models\solicitudTipo;
+use App\Models\Documentacion_url;
 use App\Models\User;
 use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -34,10 +35,11 @@ class solicitudesController extends Controller
         $categorias = categorias::all();
         $clases = clases::all();
         $tipos = tipos::all();
+        $marcas = marcas::all();
 
 
         $inspectores = User::where('tipo', '=', '2')->get(); // Obtener todos los organismos
-        return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos'));
+        return view('solicitudes.find_solicitudes_view', compact('instalaciones', 'empresas', 'estados', 'inspectores', 'solicitudesTipos', 'organismos', 'LotesGranel', 'categorias', 'clases', 'tipos', 'marcas'));
     }
 
     public function index(Request $request)
@@ -616,6 +618,8 @@ class solicitudesController extends Controller
             'aduana_salida' => 'required|string|max:255',
             'no_pedido' => 'required|string|max:255',
             'info_adicional' => 'nullable|string|max:500',
+            'factura_proforma' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
+            'factura_proforma_cont' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
             /*  */
             'lote_envasado' => 'array',  // Asegurarse de que los lotes sean arrays
             'lote_granel' => 'array',    // Asegurarse de que los lotes sean arrays
@@ -629,7 +633,6 @@ class solicitudesController extends Controller
 
         // Incluir los demás campos dentro del JSON de 'caracteristicas'
         $data['tipo_solicitud'] = $validated['tipo_solicitud'] ?? $data['tipo_solicitud'];  // Solo si es enviado
-        $data['fecha_estimada_visita'] = $validated['fecha_estimada_visita'] ?? $data['fecha_estimada_visita'];  // Solo si es enviado
         $data['no_pedido'] = $validated['no_pedido'];  // Solo si es enviado
         $data['aduana_salida'] = $validated['aduana_salida'];  // Solo si es enviado
         $data['direccion_destinatario'] = $validated['direccion_destinatario'];  // Solo si es enviado
@@ -661,6 +664,57 @@ class solicitudesController extends Controller
         $pedido->info_adicional = $validated['info_adicional'];
         $pedido->caracteristicas = json_encode($data);  // Guardar el JSON completo con las características (incluyendo facturas)
         $pedido->save();
+
+        // Obtener el número del cliente desde la tabla empresa_num_cliente
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $validated['id_empresa'])->first();
+        $empresaNumCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
+
+        // Almacenar archivos si se enviaron
+        if ($request->hasFile('factura_proforma')) {
+            $file = $request->file('factura_proforma');
+            $uniqueId = uniqid();
+            $filename = 'FacturaProforma_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+            $directory = $empresaNumCliente;
+            $path = storage_path('app/public/uploads/' . $directory);
+
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+
+            $filePath = $file->storeAs($directory, $filename, 'public_uploads');
+            Documentacion_url::create([
+                'id_empresa' => $validated['id_empresa'],
+                'url' => basename($filePath),
+                'id_relacion' => $pedido->id_solicitud,
+                'id_documento' => 55, // ID de factura
+                'nombre_documento' => 'Factura Proforma',
+            ]);
+        }
+
+        if ($request->hasFile('factura_proforma_cont')) {
+            $file = $request->file('factura_proforma_cont');
+            $uniqueId = uniqid();
+            $filename = 'FacturaProformaCont_' . $uniqueId . '.' . $file->getClientOriginalExtension();
+            $directory = $empresaNumCliente;
+            $path = storage_path('app/public/uploads/' . $directory);
+
+            if (!file_exists($path)) {
+                mkdir($path, 0777, true);
+            }
+
+            $filePath = $file->storeAs($directory, $filename, 'public_uploads');
+            Documentacion_url::create([
+                'id_empresa' => $validated['id_empresa'],
+                'url' => basename($filePath),
+                'id_relacion' => $pedido->id_solicitud,
+                'id_documento' => 55, // ID de factura
+                'nombre_documento' => 'Factura Proforma (Continuación)',
+            ]);
+        }
+
+
                 // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
                 $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
 

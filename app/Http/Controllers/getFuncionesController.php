@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 class getFuncionesController extends Controller
 {
     public function datosComunes($id_empresa)
-    {   
+    {
        /* $normas = DB::table('empresa_norma_certificar AS n')
         ->join('catalogo_norma_certificar AS c', 'n.id_norma', '=', 'c.id_norma')
         ->select('c.norma', 'c.id_norma') // Selecciona las columnas necesarias
@@ -28,7 +28,7 @@ class getFuncionesController extends Controller
             'empresas' => empresa::all(),
             //'normas' => $normas,
             'direcciones_destino' => Destinos::where("id_empresa",$id_empresa),
-           
+
         ];
     }
 
@@ -40,38 +40,45 @@ class getFuncionesController extends Controller
     }
 
     public function find_clientes_prospecto($id)
-    {   
+    {
         $id_empresa = $id;
         return $this->renderVista('_partials._modals.modal-add-aceptar-cliente',$id_empresa);
     }
 
     public function usuariosInspectores()
-    {   
+    {
         $inspectores = User::all();
         return $this->renderVista('_partials._modals.modal-add-asignar-inspector',$inspectores);
     }
 
 
-    public function getDatos(empresa $empresa){
-        
+    public function getDatos(empresa $empresa)
+    {
+        // Obtener las marcas de la empresa
+        $marcas = $empresa->marcas()->get();  // Llamamos a `get()` para obtener los datos reales
+
+        // Depurar las marcas
+
+
         return response()->json([
             'instalaciones' => $empresa->obtenerInstalaciones(),
             'lotes_granel' => $empresa->lotes_granel(),
-            'marcas' => $empresa->marcas(),
+            'marcas' => $marcas,
             'guias' => $empresa->guias(),
             'predios' => $empresa->predios(),
             'predio_plantacion' => $empresa->predio_plantacion(),
-            'direcciones'=> $empresa->direcciones(),
+            'direcciones' => $empresa->direcciones(),
             'lotes_envasado' => $empresa->lotes_envasado(),
-            'direcciones_destino' => Destinos::where("id_empresa",$empresa->id_empresa)->where('tipo_direccion',1)->get(),
+            'direcciones_destino' => Destinos::where("id_empresa", $empresa->id_empresa)->where('tipo_direccion', 1)->get(),
         ]);
     }
+
 
     public function getDatos2(LotesGranel $lote_granel)
     {
         // Obtén las guías asociadas al lote a granel con la relación 'guia'
         $lotes_granel_guias = $lote_granel->lotesGuias()->with(['guia', 'guia.predios'])->get();
-        
+
         return response()->json([
             'instalaciones' => $lote_granel->empresa->obtenerInstalaciones(),
             'lotes_granel' => $lote_granel,
@@ -83,12 +90,12 @@ class getFuncionesController extends Controller
             'lotes_envasado' => $lote_granel->lotesEnvasado,
         ]);
     }
-    
-    
-    
-    
 
-    
 
-    
+
+
+
+
+
+
 }
