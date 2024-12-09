@@ -85,6 +85,15 @@ $(function () {
                     responsivePriority: 4,
                     render: function (data, type, full, meta) {
                         var $name = full['tipo_direccion'];
+                        if ($name == 'Exportación'){
+                            return '<span class="text-info">Exportación</span>';
+                         }
+                         else if($name == 'Nacional'){ 
+                                return '<span class="text-primary">Nacional</span>';
+                         }
+                         else if($name == 'Hologramas'){ 
+                            return '<span class="text-danger">Hologramas</span>';
+                        }
 
                         // For Avatar badge
                         var stateNum = Math.floor(Math.random() * 6);
