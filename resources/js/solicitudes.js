@@ -1909,7 +1909,8 @@ $(function () {
                         </div>
                     </div>
                 </div>
-            </div>`;
+            </div>
+            `;
 
       // Agregar la nueva sección al contenedor
       $('#sections-container').append(newSection);
@@ -1926,47 +1927,64 @@ $(function () {
       sectionCount++;
     });
 
-    // Función para cargar los lotes dinámicamente en la nueva sección
-    function cargarLotes(empresaSeleccionada, sectionCount) {
-      $.ajax({
-        url: '/getDatos/' + empresaSeleccionada, // Usa la empresa seleccionada para cargar los lotes
-        method: 'GET',
-        success: function (response) {
-          // Lote envasado
-          var contenidoLotesEnvasado = "";
-          for (let index = 0; index < response.lotes_envasado.length; index++) {
-            contenidoLotesEnvasado += `<option value="${response.lotes_envasado[index].id_lote_envasado}">
-                        ${response.lotes_envasado[index].nombre}</option>`;
-          }
-          if (response.lotes_envasado.length == 0) {
-            contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
-          }
-          $('#caracteristicas_Ex_' + sectionCount + ' .evasado_export').html(contenidoLotesEnvasado);
+// Función para cargar los lotes dinámicamente en la nueva sección
+function cargarLotes(empresaSeleccionada, sectionCount) {
+  $.ajax({
+    url: '/getDatos/' + empresaSeleccionada, // Usa la empresa seleccionada para cargar los lotes
+    method: 'GET',
+    success: function (response) {
+      // Lote envasado
+      var contenidoLotesEnvasado = "";
+      var marcas = response.marcas;
 
-          // Lote granel
-          var contenidoLotesGranel = "";
-          for (let index = 0; index < response.lotes_granel.length; index++) {
-            contenidoLotesGranel += `<option value="${response.lotes_granel[index].id_lote_granel}">
-                        ${response.lotes_granel[index].nombre_lote}</option>`;
-          }
-          if (response.lotes_granel.length == 0) {
-            contenidoLotesGranel = '<option value="" disabled selected>Sin lotes granel registrados</option>';
-          }
-          $('#caracteristicas_Ex_' + sectionCount + ' .lotes_granel_export').html(contenidoLotesGranel);
-        },
-        error: function () {
-          console.error('Error al cargar los lotes.');
-          Swal.fire({
-            icon: 'error',
-            title: 'Error al cargar los datos',
-            text: 'Hubo un problema al intentar cargar los lotes. Intenta nuevamente más tarde.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
+      for (let index = 0; index < response.lotes_envasado.length; index++) {
+        var skuLimpio = limpiarSku(response.lotes_envasado[index].sku);
+        var marcaEncontrada = marcas.find(function (marca) {
+          return marca.id_marca === response.lotes_envasado[index].id_marca;
+        });
+        var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
+
+        contenidoLotesEnvasado += `
+          <option value="${response.lotes_envasado[index].id_lote_envasado}">
+            ${skuLimpio} | ${response.lotes_envasado[index].nombre} | ${nombreMarca}
+          </option>`;
+      }
+
+      if (response.lotes_envasado.length == 0) {
+        contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
+      }
+
+      $('#caracteristicas_Ex_' + sectionCount + ' .evasado_export').html(contenidoLotesEnvasado);
+
+      // Lote granel
+      var contenidoLotesGranel = "";
+      for (let index = 0; index < response.lotes_granel.length; index++) {
+        contenidoLotesGranel += `
+          <option value="${response.lotes_granel[index].id_lote_granel}">
+            ${response.lotes_granel[index].nombre_lote}
+          </option>`;
+      }
+
+      if (response.lotes_granel.length == 0) {
+        contenidoLotesGranel = '<option value="" disabled selected>Sin lotes granel registrados</option>';
+      }
+
+      $('#caracteristicas_Ex_' + sectionCount + ' .lotes_granel_export').html(contenidoLotesGranel);
+    },
+    error: function () {
+      console.error('Error al cargar los lotes.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al cargar los datos',
+        text: 'Hubo un problema al intentar cargar los lotes. Intenta nuevamente más tarde.',
+        customClass: {
+          confirmButton: 'btn btn-danger'
         }
       });
     }
+  });
+}
+
 
     // Eliminar la última sección
     $('#delete-characteristics').click(function () {
@@ -2036,13 +2054,6 @@ $(function () {
           }
         },
         factura_proforma: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese la factura'
-            }
-          }
-        },
-        factura_proforma_cont: {
           validators: {
             notEmpty: {
               message: 'Por favor ingrese la factura'

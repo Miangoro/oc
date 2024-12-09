@@ -12,7 +12,6 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="tipo_solicitud" class="form-select" name="tipo_solicitud">
-                                    <option value="" disabled selected>Seleccione un tipo</option>
                                     <option value="1">Inspección y certificado de exportación</option>
                                     <option value="2">Inspección</option>
                                     <option value="3">Inspección y certificado de exportación (combinado)</option>
@@ -113,30 +112,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Sección: Elegir Etiquetas y Corrugados -->
-                    <div class="card mt-4" id="etiquetas_Ex">
-                        <div class="card-body table-responsive text-nowrap">
-                            <h5>Elegir Etiquetas y Corrugados</h5>
-                            <table class="table table-striped" id="tabla_marcas">
-                                <thead>
-                                    <tr>
-                                        <th>Seleccionar</th>
-                                        <th>dirección</th>
-                                        <th>SKU</th>
-                                        <th>Tipo</th>
-                                        <th>Presentación</th>
-                                        <th>Clase</th>
-                                        <th>Categoría</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table-border-bottom-0">
-                                    {{-- aqui seria el foreach --}}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                     <div id="sections-container">
                         <!-- Sección original: Características del Producto -->
                         <div class="card mt-4" id="caracteristicas_Ex">
@@ -190,7 +165,6 @@
                             </div>
                         </div>
                     </div>
-                    <hr>
                     <!-- Botones -->
                     <div id="botones_characteristics" class="d-none">
                         <button type="button" id="add-characteristics" class="btn btn-primary btn-sm mt-1">
@@ -202,7 +176,30 @@
                         </button>
                     </div>
 
-
+                    <!-- Sección: Elegir Etiquetas y Corrugados -->
+                    <div class="card mt-4" id="etiquetas_Ex">
+                      <div class="card-body table-responsive text-nowrap">
+                          <h5>Elegir Etiquetas y Corrugados</h5>
+                          <table class="table table-striped" id="tabla_marcas">
+                              <thead>
+                                  <tr>
+                                      <th>Seleccionar</th>
+                                      <th>dirección</th>
+                                      <th>SKU</th>
+                                      <th>Tipo</th>
+                                      <th>Presentación</th>
+                                      <th>Clase</th>
+                                      <th>Categoría</th>
+                                      <th>Etiqueta</th>
+                                      <th>Corrugado</th>
+                                  </tr>
+                              </thead>
+                              <tbody class="table-border-bottom-0">
+                                  {{-- aqui seria el foreach --}}
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
 
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5 mt-4">
@@ -247,49 +244,38 @@
                         '<option value="" disabled selected>Sin instalaciones registradas</option>';
                 }
                 $('#id_instalacion_exportacion').html(contenidoInstalaciones);
-
                 // Direcciones
                 var contenidoDirecciones = "";
                 for (let index = 0; index < response.direcciones.length; index++) {
-                    contenidoDirecciones += '<option value="' + response.direcciones[index].id_direccion +
-                        '">' +
-                        response.direcciones[index].direccion + '</option>';
+                    // Filtrar direcciones con tipo_direccion igual a 1
+                    if (response.direcciones[index].tipo_direccion === 1) {
+                        contenidoDirecciones += `
+                            <option value="${response.direcciones[index].id_direccion}">
+                                ${response.direcciones[index].direccion}
+                            </option>`;
+                    }
                 }
-                if (response.direcciones.length == 0) {
-                    contenidoDirecciones =
-                        '<option value="" disabled selected>Sin direcciones registradas</option>';
+                if (contenidoDirecciones === "") {
+                    contenidoDirecciones = '<option value="" disabled selected>Sin direcciones registradas</option>';
                 }
                 $('#direccion_destinatario_ex').html(contenidoDirecciones);
 
                 var contenidoLotes = "";
-var marcas = response.marcas;  // Array de marcas
+                var marcas = response.marcas;
+                for (let index = 0; index < response.lotes_envasado.length; index++) {
 
-for (let index = 0; index < response.lotes_envasado.length; index++) {
-    // Limpia el campo SKU usando la función limpiarSku
-    var skuLimpio = limpiarSku(response.lotes_envasado[index].sku);
-
-    // Busca la marca asociada al lote
-    var marcaEncontrada = marcas.find(function(marca) {
-        return marca.id_marca === response.lotes_envasado[index].id_marca;  // o usa otro campo de comparación si es necesario
-    });
-
-    // Si se encuentra la marca, usa su nombre, si no, "Sin marca"
-    var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
-
-    // Agrega la opción al contenido de lotes
-    contenidoLotes += '<option value="' + response.lotes_envasado[index].id_lote_envasado + '">' +
-        skuLimpio + ' | ' + response.lotes_envasado[index].nombre + ' | ' + nombreMarca + '</option>';
-}
-
-// Si no hay lotes, muestra una opción por defecto
-if (response.lotes_envasado.length == 0) {
-    contenidoLotes = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
-}
-
-// Inserta el contenido generado en el elemento correspondiente
-$('.evasado_export').html(contenidoLotes);
-
-
+                    var skuLimpio = limpiarSku(response.lotes_envasado[index].sku);
+                    var marcaEncontrada = marcas.find(function(marca) {
+                        return marca.id_marca === response.lotes_envasado[index].id_marca;
+                    });
+                    var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
+                    contenidoLotes += '<option value="' + response.lotes_envasado[index].id_lote_envasado + '">' +
+                        skuLimpio + ' | ' + response.lotes_envasado[index].nombre + ' | ' + nombreMarca + '</option>';
+                }
+                if (response.lotes_envasado.length == 0) {
+                    contenidoLotes = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
+                }
+                $('.evasado_export').html(contenidoLotes);
                 // Lotes graneles
                 var contenidoLotesGraneles = "";
                 for (let index = 0; index < response.lotes_granel.length; index++) {
