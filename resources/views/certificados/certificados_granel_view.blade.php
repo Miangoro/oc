@@ -51,6 +51,7 @@
                     <th>Cliente</th>
                     <th>No. Certificado</th>
                     <th>No. Dictamen</th>
+                    <th>Datos del Certificado</th> 
                     <th>Firmante</th>
                     <th>Fechas</th>
                     <th>Revisor Asignado</th>
