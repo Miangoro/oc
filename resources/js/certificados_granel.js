@@ -45,17 +45,18 @@ $('#editCertificadoForm .select2').each(function () {
          url: baseUrl + 'certificados/granel-list',
        },
        columns: [
-         { data: '#' },                //0
-         { data: 'fake_id' },          //1
-         { data: 'Cliente'},           //2
-         { data: 'certificado'},       //3  
-         { data: 'id_dictamen' },      //4       
-         { data: 'id_firmante' },      //5
-         { data: 'fechas' },           //6  
-         { data: 'Revisores'},         //7
-         { data: 'PDF' },              //8  
-         { data: 'Estatus' },          //9  
-         { data: 'actions'},           //10
+         { data: '#' },                 //0
+         { data: 'fake_id' },           //1
+         { data: 'Cliente'},            //2
+         { data: 'certificado'},        //3  
+         { data: 'id_dictamen' },       //4  
+         { dat:  'Datos Certificado' }, //5     
+         { data: 'id_firmante' },       //6
+         { data: 'fechas' },            //7  
+         { data: 'Revisores'},          //8
+         { data: 'PDF' },               //9  
+         { data: 'Estatus' },           //10  
+         { data: 'actions'},            //11
        ],
        columnDefs: [
          {
@@ -106,12 +107,42 @@ $('#editCertificadoForm .select2').each(function () {
           {
             targets: 5,
             render: function (data, type, full, meta) {
+              var $clase = full['clase'] ?? 'N/A';
+              var $ingredientes = full['ingredientes'] ?? 'N/A';
+              var $tipo = full['tipo'] ?? 'N/A';
+              var $lote = full['lote'] ?? 'N/A';
+              var $volumen = full['volumen'] ?? 'N/A';
+              var $edad = full['edad'] ?? 'N/A';
+              var $analisis = full['analisis'] ?? 'N/A';
+              var $cont_alc = full['cont_alc'] ?? 'N/A';
+            
+              return '<span class="fw-bold text-dark small">Categoría y clase: </span>' +
+                     '<span class="small">' + $clase + '</span>' +
+                     '<br><span class="fw-bold text-dark small">Ingredientes: </span>' +
+                     '<span class="small">' + $ingredientes + '</span>' +
+                     '<br><span class="fw-bold text-dark small">Tipo de maguey: </span>' +
+                     '<span class="small">' + $tipo + '</span>' +
+                     '<br><span class="fw-bold text-dark small">No. de lote: </span>' +
+                     '<span class="small">' + $lote + '</span>' +
+                     '<br><span class="fw-bold text-dark small">Volumen del lote: </span>' +
+                     '<span class="small">' + $volumen + '</span>' +
+                     '<br><span class="fw-bold text-dark small">Edad: </span>' +
+                     '<span class="small">' + $edad + '</span>' +
+                     '<br><span class="fw-bold text-dark small">No. de análisis: </span>' +
+                     '<span class="small">' + $analisis + '</span>' +
+                     '<br><span class="fw-bold text-dark small">Contenido alcohólico: </span>' +
+                     '<span class="small">' + $cont_alc + '</span>';
+            }
+          },                      
+          {
+            targets: 6,
+            render: function (data, type, full, meta) {
               var $id_firmante = full['id_firmante'];
               return '<span class="user-email">' + $id_firmante + '</span>';
             }
           }, 
           {
-            targets: 6, // Suponiendo que este es el índice de la columna que quieres actualizar
+            targets: 7, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
         
                 // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
@@ -132,7 +163,7 @@ $('#editCertificadoForm .select2').each(function () {
             }
           },        
           {
-            targets: 7,
+            targets: 8,
             render: function (data, type, full, meta) {
                 var id_revisor = full['id_revisor'];   // Obtener el id_revisor
                 var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
@@ -165,14 +196,14 @@ $('#editCertificadoForm .select2').each(function () {
           },
           {
             // Abre el pdf del certificado
-            targets: 8,
+            targets: 9,
             className: 'text-center',
             render: function (data, type, full, meta) {
               return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_certificado']}" data-dictamen="${full['id_dictamen']}"></i>`;
             }
           },
           {
-            target: 9, // Suponiendo que este es el índice de la columna que quieres actualizar
+            target: 10, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
                 var estatus = full['estatus']; // Obtener el estatus del certificado
                 
@@ -201,7 +232,7 @@ $('#editCertificadoForm .select2').each(function () {
           }, 
          {
            // Actions
-           targets: 10,
+           targets: 11,
            title: 'Acciones',
            searchable: false,
            orderable: false,

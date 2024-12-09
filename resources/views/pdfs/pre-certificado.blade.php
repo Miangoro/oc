@@ -290,9 +290,9 @@
 		</tr>
 		<tr>
 			<td class="columna" style="white-space: nowrap;">Categoría y clase</td>
-			<td class="columna-norm">{{ $nombre_lote }}</td>
+			<td class="columna-norm">{{ $lote }}</td>
 			<td class="columna">No. de lote</td>
-			<td class="columna-norm">----</td>
+			<td class="columna-norm">{{ $nombre_lote }}</td>
 			<td class="columna">No. de análisis</td>
             <td class="columna-norm" style="white-space: nowrap;">{{ $folio_fq }}</td>
 		</tr>
@@ -306,7 +306,7 @@
 		</tr>
 		<tr>
 			<td class="columna">Tipo de maguey</td>
-			<td class="columna-norm">Espadín (A. angustifolia)</td>
+			<td class="columna-norm">{{ $tipo }}</td>
 			<td class="columna">Edad</td>
 			<td class="columna-norm">{{ $edad }}</td>
 			<td class="columna">No. de dictamen</td>

@@ -84,7 +84,17 @@ class Certificado_GranelController extends Controller
                 'numero_cliente' => $numero_cliente,  
                 'id_revisor' => $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar',
                 'id_revisor2' => $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar',
-                'estatus' => $certificado->estatus
+                'estatus' => $certificado->estatus,
+
+                // Datos del Certificado
+                'clase' => $certificado->dictamen->lote_granel->clase->clase ?? 'N/A',
+                'ingredientes' => $certificado->dictamen->lote_granel->ingredientes ?? 'N/A',
+                'tipo' => $certificado->dictamen->lote_granel->tipo->nombre ?? 'N/A',
+                'lote' => $certificado->dictamen->lote_granel->nombre_lote ?? 'N/A',
+                'volumen' => $certificado->dictamen->lote_granel->volumen ?? 'N/A',
+                'edad' => $certificado->dictamen->lote_granel->edad ?? 'N/A',
+                'analisis' => $certificado->dictamen->lote_granel->folio_fq ?? 'N/A',
+                'cont_alc' => $certificado->dictamen->lote_granel->cont_alc ?? 'N/A',
             ];
         });
     
@@ -347,10 +357,12 @@ class Certificado_GranelController extends Controller
         $clase = $certificado->dictamen->lote_granel->clase->clase ?? 'N/A';
         $ingredientes = $certificado->dictamen->lote_granel->ingredientes ?? 'N/A';
         $volumen = $certificado->dictamen->lote_granel->volumen ?? 'N/A';
+        $nombre_lote = $certificado->dictamen->lote_granel->nombre_lote ?? 'N/A';
         $edad = $certificado->dictamen->lote_granel->edad ?? 'N/A';
         $cont_alc = $certificado->dictamen->lote_granel->cont_alc ?? 'N/A';
         $folio_fq = $certificado->dictamen->lote_granel->folio_fq ?? 'N/A';
         $num_dictamen = $certificado->dictamen->num_dictamen ?? 'N/A';
+        $tipoNombre = $certificado->dictamen->lote_granel->tipo->nombre ?? 'N/A';
         $watermarkText = $certificado->estatus === 1;
     
         // Datos para el PDF
@@ -367,17 +379,18 @@ class Certificado_GranelController extends Controller
             'watermarkText' => $watermarkText,
     
             // Tabla #2
-            'nombre_lote' => $clase,
+            'lote' => $clase,
             'ingredientes' => $ingredientes,
             'volumen' => $volumen,
+            'nombre_lote' => $nombre_lote,
             'edad' => $edad,
             'cont_alc' => $cont_alc,
             'folio_fq' => $folio_fq,
-            'num_dictamen' => $num_dictamen, // Incluir el número de dictamen
+            'num_dictamen' => $num_dictamen, 
+            'tipo' => $tipoNombre,
         ];
     
         // Generar y mostrar el PDF
         return Pdf::loadView('pdfs.pre-certificado', $pdfData)->stream("Pre-certificado.pdf");
     }
-    
 }
