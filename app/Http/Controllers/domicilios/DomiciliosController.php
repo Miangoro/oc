@@ -374,24 +374,38 @@ class DomiciliosController extends Controller
         ]);
     
         try {
+            // Carga la instalación y sus relaciones necesarias
             $instalacion = Instalaciones::with('empresa.empresaNumClientes', 'documentos')->findOrFail($request->id_instalacion);
-            $documentos = $instalacion->documentos;
+    
+            // Definir el filtro de tipos y los documentos válidos
+            $tiposPermitidos = [
+                'Productora' => 'Certificado de productora',
+                'Envasadora' => 'Certificado de envasadora',
+                'Comercializadora' => 'Certificado de comercializadora',
+                'Almacen y bodega' => 'Certificado de almacén y bodega',
+                'Area de maduracion' => 'Certificado de área de maduración'
+            ];
+    
+            // Filtrar los documentos solo si coinciden con los tipos permitidos
+            $documentosFiltrados = $instalacion->documentos->filter(function ($documento) use ($tiposPermitidos) {
+                return in_array($documento->nombre_documento, $tiposPermitidos);
+            })->values();
+    
+            // Obtener el número de cliente
             $numeroCliente = $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first();
     
             return response()->json([
                 'success' => true,
-                'documentos' => $documentos,
+                'documentos' => $documentosFiltrados,
                 'numero_cliente' => $numeroCliente,
             ]);
-
         } catch (\Exception $e) {
-            // Manejo de errores
             return response()->json([
                 'success' => false,
-                'message' => 'Error al obtener los documentos.',
+                'message' => 'Error al obtener los documentos: ' . $e->getMessage(),
             ], 500);
         }
     }
-
+    
 //end
 }
