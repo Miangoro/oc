@@ -11,6 +11,7 @@ use App\Models\CertificadosGranel;
 use App\Models\Dictamen_Granel;
 use App\Models\User;
 use App\Models\RevisorGranel; 
+use App\Models\tipos;
 //Notificacion
 use App\Notifications\GeneralNotification;
 //Enviar Correo
@@ -36,7 +37,7 @@ class Certificado_GranelController extends Controller
             3 => 'fecha_vigencia',
             4 => 'fecha_vencimiento',
         ];
-    
+
         $search = $request->input('search.value');
         $totalData = CertificadosGranel::count();
         $totalFiltered = $totalData;
@@ -44,60 +45,73 @@ class Certificado_GranelController extends Controller
         $start = $request->input('start');
         $orderIndex = $request->input('order.0.column');
         $orderDir = $request->input('order.0.dir');
-    
+
         $order = $columns[$orderIndex] ?? 'id_dictamen';
         $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
-    
+
         $query = CertificadosGranel::with([
             'dictamen.empresa' 
         ])
         ->when($search, function($q, $search) {
             $q->orWhere('id_firmante', 'LIKE', "%{$search}%")
-              ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%")
-              ->orWhere('fecha_vencimiento', 'LIKE', "%{$search}%");
+                ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%")
+                ->orWhere('fecha_vencimiento', 'LIKE', "%{$search}%");
         })
         ->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir);
-    
+
         $certificados = $query->get();
-    
+
         if ($search) {
             $totalFiltered = CertificadosGranel::where('id_firmante', 'LIKE', "%{$search}%")
                 ->orWhere('fecha_vigencia', 'LIKE', "%{$search}%")
                 ->orWhere('fecha_vencimiento', 'LIKE', "%{$search}%")
                 ->count();
         }
-    
-        $data = $certificados->map(function ($certificado) use (&$start) {
-            $empresa = $certificado->dictamen->empresa;
-            $numero_cliente = $empresa ? $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente : 'N/A';  
-            return [
-                'fake_id' => ++$start,
-                'id_certificado' => $certificado->id_certificado,
-                'id_dictamen' => $certificado->dictamen->num_dictamen ?? 'N/A',
-                'id_firmante' => $certificado->user->name ?? 'N/A',
-                'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
-                'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
-                'num_certificado' => $certificado->num_certificado,
-                'razon_social' => $empresa->razon_social ?? 'N/A',
-                'numero_cliente' => $numero_cliente,  
-                'id_revisor' => $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar',
-                'id_revisor2' => $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar',
-                'estatus' => $certificado->estatus,
 
-                // Datos del Certificado
-                'clase' => $certificado->dictamen->lote_granel->clase->clase ?? 'N/A',
-                'ingredientes' => $certificado->dictamen->lote_granel->ingredientes ?? 'N/A',
-                'tipo' => $certificado->dictamen->lote_granel->tipo->nombre ?? 'N/A',
-                'lote' => $certificado->dictamen->lote_granel->nombre_lote ?? 'N/A',
-                'volumen' => $certificado->dictamen->lote_granel->volumen ?? 'N/A',
-                'edad' => $certificado->dictamen->lote_granel->edad ?? 'N/A',
-                'analisis' => $certificado->dictamen->lote_granel->folio_fq ?? 'N/A',
-                'cont_alc' => $certificado->dictamen->lote_granel->cont_alc ?? 'N/A',
-            ];
+        $data = $certificados->map(function ($certificado) use (&$start) {
+        $empresa = $certificado->dictamen->empresa;
+        $numero_cliente = $empresa ? $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente : 'N/A';
+
+        $lote = $certificado->dictamen->lote_granel;
+        $tipoNombres = 'N/A';
+        if (!empty($lote->id_tipo)) {
+            $idTipos = json_decode($lote->id_tipo, true); // Decodificar JSON
+            if (json_last_error() === JSON_ERROR_NONE && is_array($idTipos)) {
+                $tiposNombres = \App\Models\tipos::whereIn('id_tipo', $idTipos)->pluck('nombre')->toArray();
+                $tipoNombres = !empty($tiposNombres) ? implode(', ', $tiposNombres) : 'Sin coincidencias';
+            } else {
+                $tipoNombres = 'Formato inválido';
+            }
+        }
+
+        return [
+            'fake_id' => ++$start,
+            'id_certificado' => $certificado->id_certificado,
+            'id_dictamen' => $certificado->dictamen->num_dictamen ?? 'N/A',
+            'id_firmante' => $certificado->user->name ?? 'N/A',
+            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+            'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
+            'num_certificado' => $certificado->num_certificado,
+            'razon_social' => $empresa->razon_social ?? 'N/A',
+            'numero_cliente' => $numero_cliente,
+            'id_revisor' => $certificado->revisor && $certificado->revisor->user ? $certificado->revisor->user->name : 'Sin asignar',
+            'id_revisor2' => $certificado->revisor && $certificado->revisor->user2 ? $certificado->revisor->user2->name : 'Sin asignar',
+            'estatus' => $certificado->estatus,
+
+            // Datos del Certificado
+            'clase' => $certificado->dictamen->lote_granel->clase->clase ?? 'N/A',
+            'ingredientes' => $certificado->dictamen->lote_granel->ingredientes ?? 'N/A',
+            'tipo' => $tipoNombres, // Incluye los nombres de los tipos
+            'lote' => $certificado->dictamen->lote_granel->nombre_lote ?? 'N/A',
+            'volumen' => $certificado->dictamen->lote_granel->volumen ?? 'N/A',
+            'edad' => $certificado->dictamen->lote_granel->edad ?? 'N/A',
+            'analisis' => $certificado->dictamen->lote_granel->folio_fq ?? 'N/A',
+            'cont_alc' => $certificado->dictamen->lote_granel->cont_alc ?? 'N/A',
+        ];
         });
-    
+
         return response()->json([
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
@@ -351,7 +365,7 @@ class Certificado_GranelController extends Controller
 
     public function PreCertificado($id_certificado)
     {
-        $certificado = CertificadosGranel::with('dictamen.empresa.instalaciones', 'dictamen.lote_granel.clase')->findOrFail($id_certificado);
+        $certificado = CertificadosGranel::with('dictamen.empresa.instalaciones', 'dictamen.lote_granel.clase', 'dictamen.lote_granel.tipo')->findOrFail($id_certificado);
     
         $direccionCompleta = $certificado->dictamen->empresa->instalaciones->first()->direccion_completa ?? 'N/A';
         $clase = $certificado->dictamen->lote_granel->clase->clase ?? 'N/A';
@@ -362,9 +376,18 @@ class Certificado_GranelController extends Controller
         $cont_alc = $certificado->dictamen->lote_granel->cont_alc ?? 'N/A';
         $folio_fq = $certificado->dictamen->lote_granel->folio_fq ?? 'N/A';
         $num_dictamen = $certificado->dictamen->num_dictamen ?? 'N/A';
-        $tipoNombre = $certificado->dictamen->lote_granel->tipo->nombre ?? 'N/A';
         $watermarkText = $certificado->estatus === 1;
         $leyenda = $certificado->estatus === 2;
+    
+        // Procesar los nombres de los tipos
+        $tipoNombres = 'N/A';
+        if ($certificado->dictamen->lote_granel->id_tipo) {
+            $idTipos = json_decode($certificado->dictamen->lote_granel->id_tipo, true);
+            if (is_array($idTipos)) {
+                $tipoNombresArray = tipos::whereIn('id_tipo', $idTipos)->pluck('nombre')->toArray();
+                $tipoNombres = implode(', ', $tipoNombresArray);
+            }
+        }
     
         // Datos para el PDF
         $pdfData = [
@@ -388,8 +411,8 @@ class Certificado_GranelController extends Controller
             'edad' => $edad,
             'cont_alc' => $cont_alc,
             'folio_fq' => $folio_fq,
-            'num_dictamen' => $num_dictamen, 
-            'tipo' => $tipoNombre,
+            'num_dictamen' => $num_dictamen,
+            'tipo' => $tipoNombres,
         ];
     
         // Generar y mostrar el PDF
