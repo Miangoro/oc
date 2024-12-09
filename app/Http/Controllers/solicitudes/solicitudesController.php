@@ -19,6 +19,7 @@ use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\tipos;
 use App\Models\marcas;
+use App\Models\Destinos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -587,21 +588,32 @@ class solicitudesController extends Controller
                 $marca->tipo_nombre = [];
                 $marca->clase_nombre = [];
                 $marca->categoria_nombre = [];
+                $marca->direccion_nombre = [];
                 $marca->etiquetado = [];
                 continue;
             }
 
             // Verificar la existencia de claves antes de procesar las relaciones
-            $tipos = isset($etiquetado['id_tipo']) ? tipos::whereIn('id_tipo', $etiquetado['id_tipo'])->pluck('nombre')->toArray() : [];
-            $clases = isset($etiquetado['id_clase']) ? clases::whereIn('id_clase', $etiquetado['id_clase'])->pluck('clase')->toArray() : [];
-            $categorias = isset($etiquetado['id_categoria']) ? categorias::whereIn('id_categoria', $etiquetado['id_categoria'])->pluck('categoria')->toArray() : [];
+        $tipos = isset($etiquetado['id_tipo']) ? tipos::whereIn('id_tipo', $etiquetado['id_tipo'])->pluck('nombre')->toArray() : [];
+        $clases = isset($etiquetado['id_clase']) ? clases::whereIn('id_clase', $etiquetado['id_clase'])->pluck('clase')->toArray() : [];
+        $categorias = isset($etiquetado['id_categoria']) ? categorias::whereIn('id_categoria', $etiquetado['id_categoria'])->pluck('categoria')->toArray() : [];
 
-            // Agregar los datos procesados al resultado
-            $marca->tipo_nombre = $tipos;
-            $marca->clase_nombre = $clases;
-            $marca->categoria_nombre = $categorias;
-            $marca->etiquetado = $etiquetado; // Incluye el JSON decodificado para referencia
+        // Procesar direcciones individualmente
+        $direcciones = [];
+        if (isset($etiquetado['id_direccion']) && is_array($etiquetado['id_direccion'])) {
+            foreach ($etiquetado['id_direccion'] as $id_direccion) {
+                $direccion = Destinos::where('id_direccion', $id_direccion)->value('direccion');
+                $direcciones[] = $direccion ?? 'N/A'; // Si no se encuentra, asignar 'N/A'
+            }
         }
+
+        // Agregar los datos procesados al resultado
+        $marca->tipo_nombre = $tipos;
+        $marca->clase_nombre = $clases;
+        $marca->categoria_nombre = $categorias;
+        $marca->direccion_nombre = $direcciones;
+        $marca->etiquetado = $etiquetado; // Incluye el JSON decodificado para referencia
+    }
 
         // Retornar las marcas como respuesta JSON
         return response()->json($marcas);
