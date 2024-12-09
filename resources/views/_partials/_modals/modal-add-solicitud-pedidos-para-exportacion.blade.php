@@ -352,8 +352,7 @@
                                     </div>
                                 </td>
                             `;
-                                tbody +=
-                                `<td>${marca.etiquetado.id_direccion[i] || 'N/A'}</td>`; // SKU
+                            tbody += `<td>${(marca.direccion_nombre && marca.direccion_nombre[i]) || 'N/A'}</td>`; // Dirección
                                 tbody += `<td>${marca.etiquetado.sku[i] || 'N/A'}</td>`; // SKU
                                 tbody +=
                                 `<td>${marca.tipo_nombre[i] || 'N/A'}</td>`; // Nombre del Tipo

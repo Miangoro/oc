@@ -55,6 +55,11 @@ class marcas extends Model
     {
         return $this->hasMany(categorias::class, 'id_categoria', 'id_categoria');
     }
+        public function direccion()
+    {
+        return $this->hasMany(Destinos::class, 'id_direccion', 'id_direccion');
+    }
+
 
 
     public function documentos()
