@@ -131,19 +131,19 @@ $('#edit_fecha_emision').on('change', function() {
            render: function (data, type, full, meta) {
              var $name = full['tipo_dictamen'];
              if ($name == 1){
-                return '<span class="text-primary">Productor</span>';
+                return '<span class="badge rounded-pill bg-primary">Productor</span>';
              }
              else if($name == 2){ 
-                    return '<span class="text-success">Envasador</span>';
+                    return '<span class="badge rounded-pill bg-success">Envasador</span>';
              }
              else if($name == 3){ 
-                return '<span class="text-info">Comercializador</span>';
+                return '<span class="badge rounded-pill bg-info">Comercializador</span>';
             }
             else if($name == 4){ 
-                return '<span class="text-danger">Almacén y bodega</span>';
+                return '<span class="badge rounded-pill bg-danger">Almacén y bodega</span>';
             }
             else if($name == 5){ 
-              return '<span class="text-warning">Área de maduración</span>';
+              return '<span class="badge rounded-pill bg-warning">Área de maduración</span>';
             }
 
              //return $name;
