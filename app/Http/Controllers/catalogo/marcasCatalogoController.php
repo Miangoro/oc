@@ -366,6 +366,7 @@ class marcasCatalogoController extends Controller
                     ->where('id_documento', $id_documento)
                     ->where('id_relacion', $loteEnvasado->id_marca)
                     ->first();
+               
     
                 // Subir archivos y actualizar/crear documentos
                 if ($documento) {

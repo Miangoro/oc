@@ -342,7 +342,15 @@ $(function () {
   });
 
 
-
+  //Date picker
+  $(document).ready(function () {
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      todayHighlight: true,
+      language: 'es' // Configura el idioma a español
+    });
+  });
 
   var dt_user_table = $('.datatables-solicitudes'),
     select2Elements = $('.select2')
@@ -359,16 +367,6 @@ $(function () {
   }
   initializeSelect2(select2Elements);
 
-
-  //Date picker
-  $(document).ready(function () {
-    $('.datepicker').datepicker({
-      format: 'yyyy-mm-dd',
-      autoclose: true,
-      todayHighlight: true,
-      language: 'es' // Configura el idioma a español
-    });
-  });
 
   // Configuración CSRF para Laravel
   $.ajaxSetup({
@@ -565,23 +563,23 @@ $(function () {
 
               // Aquí vamos a manejar las características (clases, categorías, renovacion)
               if (response.caracteristicas) {
-                  // Llenar las categorías si están presentes
-                  if (response.caracteristicas.categorias) {
-                      modal.find('#edit_categoria_in').val(response.caracteristicas.categorias).trigger('change');
-                  }
-                  // Llenar las clases si están presentes
-                  if (response.caracteristicas.clases) {
-                      modal.find('#edit_clases_in').val(response.caracteristicas.clases).trigger('change');
-                  }
-                  // Llenar la renovación si está presente
-                  if (response.caracteristicas.renovacion) {
-                      modal.find('#edit_renovacion_in').val(response.caracteristicas.renovacion).trigger('change');
-                  }
+                // Llenar las categorías si están presentes
+                if (response.caracteristicas.categorias) {
+                  modal.find('#edit_categoria_in').val(response.caracteristicas.categorias).trigger('change');
+                }
+                // Llenar las clases si están presentes
+                if (response.caracteristicas.clases) {
+                  modal.find('#edit_clases_in').val(response.caracteristicas.clases).trigger('change');
+                }
+                // Llenar la renovación si está presente
+                if (response.caracteristicas.renovacion) {
+                  modal.find('#edit_renovacion_in').val(response.caracteristicas.renovacion).trigger('change');
+                }
               } else {
-                  // Si no hay características, vaciar los campos correspondientes
-                  modal.find('#edit_categoria_in').val([]).trigger('change');
-                  modal.find('#edit_clases_in').val([]).trigger('change');
-                  modal.find('#edit_renovacion_in').val('').trigger('change');
+                // Si no hay características, vaciar los campos correspondientes
+                modal.find('#edit_categoria_in').val([]).trigger('change');
+                modal.find('#edit_clases_in').val([]).trigger('change');
+                modal.find('#edit_renovacion_in').val('').trigger('change');
               }
             }
             // Muestra el modal después de rellenar los datos
@@ -725,21 +723,21 @@ $(function () {
             }
           }
         },
-        'clases[]':{
+        'clases[]': {
           validators: {
             notEmpty: {
               message: 'Selecciona al menos una clase.'
             }
           }
         },
-        'categorias[]':{
+        'categorias[]': {
           validators: {
             notEmpty: {
               message: 'Selecciona al menos una categoria.'
             }
           }
         },
-        'renovacion':{
+        'renovacion': {
           validators: {
             notEmpty: {
               message: 'Selecciona si es renovación o no.'
@@ -1823,10 +1821,12 @@ $(function () {
     var $tipoSolicitud = $('#tipo_solicitud');
     var $pedidosEx = $('#pedidos_Ex');
     var $etiquetasEx = $('#etiquetas_Ex');
+    var $botonesCharacteristics = $('#botones_characteristics');
 
     // Manejar el evento de cambio
     $tipoSolicitud.on('change', function () {
       var valorSeleccionado = $tipoSolicitud.val();
+
       if (valorSeleccionado === '2') {
         // Ocultar secciones
         $pedidosEx.hide();
@@ -1835,6 +1835,11 @@ $(function () {
         // Mostrar secciones
         $pedidosEx.show();
         $etiquetasEx.show();
+      }
+      if (valorSeleccionado === '3' || valorSeleccionado === '5') {
+        $botonesCharacteristics.removeClass('d-none'); // Mostrar los botones
+      } else {
+        $botonesCharacteristics.addClass('d-none'); // Ocultar los botones
       }
     });
   });
@@ -1845,23 +1850,23 @@ $(function () {
 
     // Función para agregar una nueva sección dinámica
     $('#add-characteristics').click(function () {
-        // Validar que se haya seleccionado una empresa
-        let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val();
-        if (!empresaSeleccionada) {
-            // Mostrar alerta si no se seleccionó ninguna empresa
-            Swal.fire({
-                icon: 'warning',
-                title: 'Advertencia',
-                text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
-                customClass: {
-                    confirmButton: 'btn btn-warning'
-                }
-            });
-            return; // Salir del evento si no se seleccionó una empresa
-        }
+      // Validar que se haya seleccionado una empresa
+      let empresaSeleccionada = $('#id_empresa_solicitud_exportacion').val();
+      if (!empresaSeleccionada) {
+        // Mostrar alerta si no se seleccionó ninguna empresa
+        Swal.fire({
+          icon: 'warning',
+          title: 'Advertencia',
+          text: 'Debe seleccionar un cliente antes de agregar una nueva sección.',
+          customClass: {
+            confirmButton: 'btn btn-warning'
+          }
+        });
+        return; // Salir del evento si no se seleccionó una empresa
+      }
 
-        // Crear una nueva sección dinámica
-        var newSection = `
+      // Crear una nueva sección dinámica
+      var newSection = `
             <div class="card mt-4" id="caracteristicas_Ex_${sectionCount}">
                 <div class="card-body">
                     <h5>Características del Producto</h5>
@@ -1906,61 +1911,61 @@ $(function () {
                 </div>
             </div>`;
 
-        // Agregar la nueva sección al contenedor
-        $('#sections-container').append(newSection);
+      // Agregar la nueva sección al contenedor
+      $('#sections-container').append(newSection);
 
-        // Cargar opciones dinámicas para los selects de la nueva sección
-        cargarLotes(empresaSeleccionada, sectionCount);
+      // Cargar opciones dinámicas para los selects de la nueva sección
+      cargarLotes(empresaSeleccionada, sectionCount);
 
-        // Inicializar Select2 en los nuevos selects
-        // Inicializar los elementos select2
-        var select2Elements = $('.select2');
-        initializeSelect2(select2Elements);
+      // Inicializar Select2 en los nuevos selects
+      // Inicializar los elementos select2
+      var select2Elements = $('.select2');
+      initializeSelect2(select2Elements);
 
-        // Incrementar el contador para la siguiente sección
-        sectionCount++;
+      // Incrementar el contador para la siguiente sección
+      sectionCount++;
     });
 
     // Función para cargar los lotes dinámicamente en la nueva sección
     function cargarLotes(empresaSeleccionada, sectionCount) {
-        $.ajax({
-            url: '/getDatos/' + empresaSeleccionada, // Usa la empresa seleccionada para cargar los lotes
-            method: 'GET',
-            success: function(response) {
-                // Lote envasado
-                var contenidoLotesEnvasado = "";
-                for (let index = 0; index < response.lotes_envasado.length; index++) {
-                    contenidoLotesEnvasado += `<option value="${response.lotes_envasado[index].id_lote_envasado}">
+      $.ajax({
+        url: '/getDatos/' + empresaSeleccionada, // Usa la empresa seleccionada para cargar los lotes
+        method: 'GET',
+        success: function (response) {
+          // Lote envasado
+          var contenidoLotesEnvasado = "";
+          for (let index = 0; index < response.lotes_envasado.length; index++) {
+            contenidoLotesEnvasado += `<option value="${response.lotes_envasado[index].id_lote_envasado}">
                         ${response.lotes_envasado[index].nombre}</option>`;
-                }
-                if (response.lotes_envasado.length == 0) {
-                    contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
-                }
-                $('#caracteristicas_Ex_' + sectionCount + ' .evasado_export').html(contenidoLotesEnvasado);
-
-                // Lote granel
-                var contenidoLotesGranel = "";
-                for (let index = 0; index < response.lotes_granel.length; index++) {
-                    contenidoLotesGranel += `<option value="${response.lotes_granel[index].id_lote_granel}">
-                        ${response.lotes_granel[index].nombre_lote}</option>`;
-                }
-                if (response.lotes_granel.length == 0) {
-                    contenidoLotesGranel = '<option value="" disabled selected>Sin lotes granel registrados</option>';
-                }
-                $('#caracteristicas_Ex_' + sectionCount + ' .lotes_granel_export').html(contenidoLotesGranel);
-            },
-            error: function() {
-              console.error('Error al cargar los lotes.');
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Error al cargar los datos',
-                  text: 'Hubo un problema al intentar cargar los lotes. Intenta nuevamente más tarde.',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
           }
-        });
+          if (response.lotes_envasado.length == 0) {
+            contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
+          }
+          $('#caracteristicas_Ex_' + sectionCount + ' .evasado_export').html(contenidoLotesEnvasado);
+
+          // Lote granel
+          var contenidoLotesGranel = "";
+          for (let index = 0; index < response.lotes_granel.length; index++) {
+            contenidoLotesGranel += `<option value="${response.lotes_granel[index].id_lote_granel}">
+                        ${response.lotes_granel[index].nombre_lote}</option>`;
+          }
+          if (response.lotes_granel.length == 0) {
+            contenidoLotesGranel = '<option value="" disabled selected>Sin lotes granel registrados</option>';
+          }
+          $('#caracteristicas_Ex_' + sectionCount + ' .lotes_granel_export').html(contenidoLotesGranel);
+        },
+        error: function () {
+          console.error('Error al cargar los lotes.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al cargar los datos',
+            text: 'Hubo un problema al intentar cargar los lotes. Intenta nuevamente más tarde.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
     }
 
     // Eliminar la última sección
@@ -1970,22 +1975,22 @@ $(function () {
 
       // Solo eliminar si hay más de una sección (no borrar la sección original)
       if (totalSections > 1) {
-          lastSection.remove(); // Eliminar la última sección
-          sectionCount--; // Decrementar el contador
+        lastSection.remove(); // Eliminar la última sección
+        sectionCount--; // Decrementar el contador
       } else {
-          // Mensaje de advertencia con SweetAlert
-          Swal.fire({
-              icon: 'warning',
-              title: 'Advertencia',
-              text: 'No se puede eliminar la sección original.',
-              customClass: {
-                  confirmButton: 'btn btn-warning'
-              }
-          });
+        // Mensaje de advertencia con SweetAlert
+        Swal.fire({
+          icon: 'warning',
+          title: 'Advertencia',
+          text: 'No se puede eliminar la sección original.',
+          customClass: {
+            confirmButton: 'btn btn-warning'
+          }
+        });
       }
-  });
+    });
 
-});
+  });
 
 
 
@@ -2030,27 +2035,20 @@ $(function () {
             }
           }
         },
-        fecha_estimada_visita: {
+        factura_proforma: {
           validators: {
             notEmpty: {
-              message: 'Por favor ingrese la fecha estimada de la visita.'
+              message: 'Por favor ingrese la factura'
             }
           }
         },
-        /*       factura_proforma: {
-                validators: {
-                  notEmpty: {
-                    message: 'Por favor ingrese la factura'
-                  }
-                }
-              }, */
-        /*       factura_proforma_cont: {
-                validators: {
-                  notEmpty: {
-                    message: 'Por favor ingrese la factura'
-                  }
-                }
-              }, */
+        factura_proforma_cont: {
+          validators: {
+            notEmpty: {
+              message: 'Por favor ingrese la factura'
+            }
+          }
+        },
         direccion_destinatario: {
           validators: {
             notEmpty: {
@@ -2091,7 +2089,6 @@ $(function () {
       // Construir las características como un JSON completo
       const caracteristicas = {
         tipo_solicitud: $('#tipo_solicitud').val(),
-        fecha_estimada_visita: $('[name="fecha_estimada_visita"]').val(),
         direccion_destinatario: $('#direccion_destinatario_ex').val(),
         aduana_salida: $('[name="aduana_salida"]').val(),
         no_pedido: $('[name="no_pedido"]').val(),
