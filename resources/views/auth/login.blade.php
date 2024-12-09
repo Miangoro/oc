@@ -196,19 +196,25 @@
             transition: all 0.3s ease-in-out;
         }
 
+
+        .boton-effect:hover {
+            filter: drop-shadow(0 0 8px #16ba76);
+            transition: all 0.3s ease-in-out;
+        }
+
         .face-effect:hover {
             box-shadow: 0 0 15px dodgerblue,
-                0 0 45px dodgerblue,
-                0 0 75px dodgerblue,
-                0 0 90px dodgerblue;
+                0 0 20px dodgerblue,
+                0 0 25px dodgerblue,
+                0 0 30px dodgerblue;
             transition: all 0.3s ease-in-out;
         }
 
         .insta-effect:hover {
             box-shadow: 0 0 15px #a04293,
-                0 0 45px #a04293,
-                0 0 75px #a04293,
-                0 0 90px #a04293;
+                0 0 20px #a04293,
+                0 0 25px #a04293,
+                0 0 30px #a04293;
             transition: all 0.3s ease-in-out;
         }
 
@@ -351,15 +357,15 @@
                         <div class="flex-container">
                             <a href="https://cidam.org/sitio/empresas_certificadas.php" target="_blank">
                                 <img src="{{ asset('assets/img/branding/empresas_certificadas_cidam.png') }}"
-                                    alt="imagen de empresa certificado" class="imagenes">
+                                    alt="imagen de empresa certificado" class="imagenes boton-effect">
                             </a>
                             <a href="https://cidam.org/sitio/autenticidad_certificados.php" target="_blank">
                                 <img src="{{ asset('assets/img/branding/validacion_certificados_cidam.png') }}"
-                                    alt="imagen de calidacion certificado" class="imagenes">
+                                    alt="imagen de calidacion certificado" class="imagenes boton-effect">
                             </a>
                             <a href="https://cidam.org/sitio/autenticidad_hologramas.php" target="_blank">
                                 <img src="{{ asset('assets/img/branding/validacion_hologramas_cidam.png') }}"
-                                    alt=" imagen de" class="imagenes">
+                                    alt=" imagen de" class="imagenes boton-effect">
                             </a>
                         </div>
                         <div style="text-align: center">
