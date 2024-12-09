@@ -86,13 +86,13 @@ $(function () {
                     render: function (data, type, full, meta) {
                         var $name = full['tipo_direccion'];
                         if ($name == 'Exportación'){
-                            return '<span class="text-info">Exportación</span>';
+                            return '<span class="badge rounded-pill bg-info">Exportación</span>';
                          }
                          else if($name == 'Nacional'){ 
-                                return '<span class="text-primary">Nacional</span>';
+                                return '<span class="badge rounded-pill bg-primary">Nacional</span>';
                          }
                          else if($name == 'Hologramas'){ 
-                            return '<span class="text-danger">Hologramas</span>';
+                            return '<span class="badge rounded-pill bg-danger">Hologramas</span>';
                         }
 
                         // For Avatar badge
