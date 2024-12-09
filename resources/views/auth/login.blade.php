@@ -234,13 +234,11 @@
             position: absolute;
             top: 0;
             left: -100px;
-            /* Empieza fuera de la pantalla */
             width: 120px;
             height: 120px;
             background-image: url('{{ asset('assets/img/branding/santa.png') }}');
             background-size: cover;
             animation: volar 5.5s cubic-bezier(0.25, 0.8, 0.25, 1) infinite;
-
         }
 
         @keyframes volar {
@@ -250,17 +248,17 @@
             }
 
             25% {
-                transform: translateX(25vw) translateY(15vh) scale(1.1) rotate(-10deg);
+                transform: translateX(25vw) translateY(15vh) scale(1.2) rotate(-10deg);
                 filter: drop-shadow(0px 15px 15px #f5bf03);
             }
 
             50% {
-                transform: translateX(50vw) translateY(0) scale(1.2) rotate(5deg);
+                transform: translateX(50vw) translateY(0) scale(1.1) rotate(5deg);
                 filter: drop-shadow(0px 17px 17px #f5bf03);
             }
 
             75% {
-                transform: translateX(75vw) translateY(15vh) scale(1.1) rotate(-5deg);
+                transform: translateX(75vw) translateY(15vh) scale(1.2) rotate(-5deg);
                 filter: drop-shadow(0px 15px 15px #f5bf03);
             }
 
