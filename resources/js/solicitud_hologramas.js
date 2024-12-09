@@ -168,7 +168,7 @@ $(function () {
           className: 'text-center',
           render: function (data, type, full, meta) {
             var $id = full['id_solicitud'];
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_solicitud']}" data-registro="${full['razon_social']} "></i>`;
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_solicitud']}" data-registro="${full['razon_social_pdf']} "></i>`;
           }
         },
         {

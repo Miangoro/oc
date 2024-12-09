@@ -196,19 +196,25 @@
             transition: all 0.3s ease-in-out;
         }
 
+
+        .boton-effect:hover {
+            filter: drop-shadow(0 0 8px #16ba76);
+            transition: all 0.3s ease-in-out;
+        }
+
         .face-effect:hover {
             box-shadow: 0 0 15px dodgerblue,
-                0 0 45px dodgerblue,
-                0 0 75px dodgerblue,
-                0 0 90px dodgerblue;
+                0 0 20px dodgerblue,
+                0 0 25px dodgerblue,
+                0 0 30px dodgerblue;
             transition: all 0.3s ease-in-out;
         }
 
         .insta-effect:hover {
             box-shadow: 0 0 15px #a04293,
-                0 0 45px #a04293,
-                0 0 75px #a04293,
-                0 0 90px #a04293;
+                0 0 20px #a04293,
+                0 0 25px #a04293,
+                0 0 30px #a04293;
             transition: all 0.3s ease-in-out;
         }
 
@@ -223,40 +229,42 @@
             transition: transform 0.3s ease-in-out;
         }
 
-        /* Estilo de Santa Claus */
+        /* Estilo de Santa Claus y animacion*/
         .santa {
             position: absolute;
             top: 0;
             left: -100px;
-            /* Empieza fuera de la pantalla */
             width: 120px;
             height: 120px;
             background-image: url('{{ asset('assets/img/branding/santa.png') }}');
-            /* Reemplaza con la URL de la imagen de Santa Claus */
             background-size: cover;
-            animation: volar 12s linear infinite;
+            animation: volar 5.5s cubic-bezier(0.25, 0.8, 0.25, 1) infinite;
         }
 
-        /* Animación de Santa Claus volando */
         @keyframes volar {
             0% {
-                transform: translateX(-100px) translateY(0);
+                transform: translateX(-100px) translateY(0) scale(1) rotate(0deg);
+                filter: drop-shadow(0px 10px 10px #f5bf03);
             }
 
             25% {
-                transform: translateX(25vw) translateY(15vh);
+                transform: translateX(25vw) translateY(15vh) scale(1.2) rotate(-10deg);
+                filter: drop-shadow(0px 15px 15px #f5bf03);
             }
 
             50% {
-                transform: translateX(50vw) translateY(0);
+                transform: translateX(50vw) translateY(0) scale(1.1) rotate(5deg);
+                filter: drop-shadow(0px 17px 17px #f5bf03);
             }
 
             75% {
-                transform: translateX(75vw) translateY(15vh);
+                transform: translateX(75vw) translateY(15vh) scale(1.2) rotate(-5deg);
+                filter: drop-shadow(0px 15px 15px #f5bf03);
             }
 
             100% {
-                transform: translateX(80vw) translateY(0);
+                transform: translateX(80vw) translateY(0) scale(1) rotate(0deg);
+                filter: drop-shadow(0px 10px 10px #f5bf03);
             }
         }
     </style>
@@ -269,14 +277,12 @@
             </a>
             <div class="authentication-inner row m-0">
                 <div class="santa"></div>
-
                 <div class="d-none d-lg-flex col-lg-7 col-xl-8 align-items-center justify-content-center p-12 pb-2">
                     <video autoplay muted loop>
                         <source src="{{ asset('video/fondo.mp4') }}" type="video/mp4">
                         Tu navegador no soporta el formato de video
                     </video>
                 </div>
-                <!-- Login -->
                 <div
                     class="d-flex col-12 col-lg-5 col-xl-4 align-items-center authentication-bg position-relative py-sm-12 px-12 py-6">
                     <div class="w-px-400 mx-auto pt-5 pt-lg-0">
@@ -351,15 +357,15 @@
                         <div class="flex-container">
                             <a href="https://cidam.org/sitio/empresas_certificadas.php" target="_blank">
                                 <img src="{{ asset('assets/img/branding/empresas_certificadas_cidam.png') }}"
-                                    alt="imagen de empresa certificado" class="imagenes">
+                                    alt="imagen de empresa certificado" class="imagenes boton-effect">
                             </a>
                             <a href="https://cidam.org/sitio/autenticidad_certificados.php" target="_blank">
                                 <img src="{{ asset('assets/img/branding/validacion_certificados_cidam.png') }}"
-                                    alt="imagen de calidacion certificado" class="imagenes">
+                                    alt="imagen de calidacion certificado" class="imagenes boton-effect">
                             </a>
                             <a href="https://cidam.org/sitio/autenticidad_hologramas.php" target="_blank">
                                 <img src="{{ asset('assets/img/branding/validacion_hologramas_cidam.png') }}"
-                                    alt=" imagen de" class="imagenes">
+                                    alt=" imagen de" class="imagenes boton-effect">
                             </a>
                         </div>
                         <div style="text-align: center">

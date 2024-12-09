@@ -179,6 +179,7 @@ $('#edit_fecha_emision').on('change', function() {
           {
             // Tabla 5
             targets: 6,
+            searchable: true,
             render: function (data, type, full, meta) {
               var $fech = full['fechas'];
               return '<span class="small">' + $fech + '</span>';
@@ -187,6 +188,8 @@ $('#edit_fecha_emision').on('change', function() {
           {
             // Abre el pdf del dictamen
             targets: 7,
+            searchable: false,
+            orderable: false,
             className: 'text-center',
             //searchable: false, orderable: false, //Inhabilita "thead" busqueda/orden
             render: function (data, type, full, meta) {

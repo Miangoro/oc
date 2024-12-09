@@ -596,6 +596,8 @@ $(function () {
       var documentos = data.documentacion_urls; // Documentos asociados
       // Rellenar el campo con el ID de la marca obtenida
       $('#etiqueta_marca').val(marca.id_marca);
+      $('#id_empresa').val(marca.id_empresa);
+      $('.subtitulo').text(marca.marca);
       $('#contenidoRango').empty();
       var tipos = "";
       tipo.forEach(function (item) {
@@ -611,17 +613,30 @@ $(function () {
       });
       var direcciones = "";
       direccion.forEach(function (item) {
-        direcciones += "<option value='" + item.id_direccion + "'>" + item.direccion + "</option>";
+        direcciones += "<option value='" + item.id_direccion + "'>" + item.destinatario + " | " + item.direccion + "</option>";
       });
       // Crear nuevas filas en la tabla con los datos de las etiquetas y documentos
       marca.sku.forEach(function (sku, index) {
         var id_tipo = marca.id_tipo[index];
         var presentacion = marca.presentacion[index];
         var id_unico = marca.id_unico[index]; 
-       
+        var alc_vol = marca.alc_vol[index];
         var id_clase = marca.id_clase[index];
         var id_categoria = marca.id_categoria[index];
         var id_direccion = marca.id_direccion[index];
+        var unidad = marca.unidad[index]; 
+        let ml = '';
+        let cl = '';
+        let l = '';
+        if(unidad=='mL'){
+          ml = 'selected';
+        }
+        if(unidad=='cL'){
+          cl = 'selected';
+        }
+        if(unidad=='L'){
+          l = 'selected';
+        }
         // Obtenemos los documentos correspondientes por id_doc
         var documento_etiquetas = documentos.find(doc => doc.nombre_documento === 'Etiquetas' && (!doc.id_doc || doc.id_doc === id_unico));
         var documento_corrugado = documentos.find(doc => doc.nombre_documento === 'Corrugado' && (!doc.id_doc || doc.id_doc === id_unico));
@@ -632,36 +647,35 @@ $(function () {
                               <i class="ri-delete-bin-5-fill"></i>
                           </button>
                       </th>
-                                            <td>
-                          <select class="form-control select2" name="id_direccion[]" id="id_direccion${index}">
+                                            <td style="width: 150px;">
+                          <select style="width: 100%" class="form-control select2" name="id_direccion[]" id="id_direccion${index}">
                               ${direcciones}
                           </select>
                       </td>
-                      <td>   <input type="hidden" class="form-control form-control-sm"  value="${id_unico}" name="id_unico[]"
+                      <td style="width: 150px;">   <input type="hidden" class="form-control form-control-sm"  value="${id_unico}" name="id_unico[]"
                                             id="id_unico">
                           <input type="text" class="form-control form-control-sm" name="sku[]" min="0" value="${sku !== null ? sku : ''}">
                       </td>
-                      <td>
+                      <td style="width: 150px;">
+                        <select class="form-control select2" name="id_categoria[]" id="id_categoria${index}">
+                              ${categorias}
+                          </select>
                           <select class="form-control select2" name="id_tipo[]" id="id_tipo${index}">
                               ${tipos}
                           </select>
-                      </td>
-                      <td>
-                          <input type="number" class="form-control form-control-sm" name="presentacion[]" min="0" value="${presentacion}">
-                      </td>
-                      <td>
-                          <select class="form-control select2" name="id_clase[]" id="id_clase${index}">
+                           <select class="form-control select2" name="id_clase[]" id="id_clase${index}">
                               ${clases}
                           </select>
                       </td>
-                      <td>
-                          <select class="form-control select2" name="id_categoria[]" id="id_categoria${index}">
-                              ${categorias}
-                          </select>
+                      <td style="width: 150px;">
+                          <input type="number" class="form-control form-control-sm" name="presentacion[]" min="0" value="${presentacion}">
+                           <select ${ml} class="form-control" name="unidad[]"><option ${cl} value="mL">mL</option><option ${l} value="L">L</option><option value="cL">cL</option></select>
                       </td>
+                      <td style="width: 150px;"><input type="text" class="form-control form-control-sm" name="alc_vol[]" value="${alc_vol !== null ? alc_vol : ''}"></td>
+                      
                       <td>
                           <div style="display: flex; align-items: center;">
-                              <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
+                              <input class="form-control form-control-sm" type="file" name="url_etiqueta[]" style="flex: 1;">
                               ${documento_etiquetas ?
             `<a href="/files/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank" style="margin-left: 10px;">
                                       <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
@@ -673,7 +687,7 @@ $(function () {
                       </td>
                       <td>
                           <div style="display: flex; align-items: center;">
-                              <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
+                              <input class="form-control form-control-sm" type="file" name="url_corrugado[]" style="flex: 1;">
                               ${documento_corrugado ?
             `<a href="/files/${data.numeroCliente}/${documento_corrugado.url}" target="_blank" style="margin-left: 10px;">
                                       <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
@@ -728,6 +742,7 @@ $(function () {
       contentType: false,
       processData: false,
       success: function (response) {
+        console.log(response);
         Swal.fire({
           title: 'Éxito',
           text: response.success,
