@@ -5,7 +5,6 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Vigilancia en producción de lote</h4>
-                    <p class="address-subtitle"></p>
                 </div>
                 <form id="addVigilanciaProduccionForm">
                     <div class="row">
@@ -45,6 +44,8 @@
                             </div>
                         </div>
                     </div>
+                    <p class="address-subtitle" style="color: red">Seleccione un  cliente</p>
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
