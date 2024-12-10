@@ -104,7 +104,7 @@
                     
                     <!-- Sección: Elegir Etiquetas y Corrugados -->
                     <div class="card-body table-responsive text-nowrap">
-                        <h5>Datos</h5>
+                        <h5>Datos de Etiquetas</h5>
                         <table class="table table-striped" id="tabla_marcas">
                             <thead>
                                 <tr>
