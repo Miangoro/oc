@@ -108,13 +108,23 @@ $(function () {
           }
         },
         {
-          // Abre el pdf del certificado
           targets: 7,
           className: 'text-center',
+          searchable: false,
+          orderable: false,
           render: function (data, type, full, meta) {
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-num-certificado="${full['num_certificado']}" data-tipo="${full['tipo_dictamen']}"  data-id="${full['id_revision']}"></i>`;
+            if (full['decision']) {
+              // Si existe la decisión, el ícono es funcional (activo)
+              return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"
+                         data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" 
+                         data-bs-dismiss="modal" data-num-certificado="${full['num_certificado']}" 
+                         data-tipo="${full['tipo_dictamen']}" data-id="${full['id_revision']}"></i>`;
+            } else {
+              // Si la decisión no existe, el ícono se ve como deshabilitado con un color más claro
+              return `<i class="ri-file-pdf-2-fill ri-40px cursor-not-allowed" style="color: lightgray;"></i>`;
+            }
           }
-        },
+        },               
         {
           targets: 8,
           orderable: 0,
@@ -617,7 +627,7 @@ function cargarRespuestas(id_revision) {
 //Abrir PDF Bitacora
   $(document).on('click', '.pdf', function () {
     var id_revisor = $(this).data('id');
-    var url_pdf = '../bitacora_revicionPersonalOCCIDAM/' + id_revisor;
+    var url_pdf = '../bitacora_revisionPersonal_Instalaciones/' + id_revisor;
     console.log('URL del PDF:', url_pdf);
 
     var num_certificado = $(this).data('num-certificado');
