@@ -16,6 +16,7 @@ use App\Models\Documentacion_url;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class solicitudHolograma extends Controller
@@ -175,7 +176,6 @@ class solicitudHolograma extends Controller
 
         // Validar los datos recibidos del formulario
         $request->validate([
-            'folio' => 'required|string|max:255',
             'id_empresa' => 'required|integer',
             'id_marca' => 'required|integer',
             'cantidad_hologramas' => 'required|integer',
@@ -189,9 +189,24 @@ class solicitudHolograma extends Controller
             ->value('folio_final');
         // Si existe un registro previo, usar su folio_final + 1 como el nuevo folio_inicial, de lo contrario iniciar en 1
         $folioInicial = $ultimoFolio ? $ultimoFolio + 1 : 1;
+
+
+                // Obtener el último run_folio creado
+                $ultimoFolio = \App\Models\solicitudHolograma::latest('folio')->first();
+                // Extraer el número del último run_folio y calcular el siguiente número
+                if ($ultimoFolio) {
+                    $ultimoNumero = intval(substr($ultimoFolio->folio, 4, 6)); // Extrae 000001 de SOL-GUIA-000001/24
+                    $nuevoNumero = $ultimoNumero + 1;
+                } else {
+                    $nuevoNumero = 1;
+                }
+
+                $anoActual = Carbon::now()->now()->year;
+                // Formatear el nuevo run_folio
+                $nuevoFolio = sprintf('INV-%06d-%d', $nuevoNumero, $anoActual);
         // Crear una nueva instancia del modelo Hologramas
         $holograma = new ModelsSolicitudHolograma();
-        $holograma->folio = $request->folio;
+        $holograma->folio = $nuevoFolio;
         $holograma->id_empresa = $request->id_empresa;
         $holograma->id_marca = $request->id_marca;
         $holograma->id_solicitante = Auth::user()->id; // Obtiene el ID del usuario actual

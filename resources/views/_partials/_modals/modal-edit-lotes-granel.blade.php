@@ -16,24 +16,25 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
+                                    <select onchange="obtenerGuias1(); obtenerLotesEdit();" id="edit_id_empresa"
+                                        name="id_empresa" class="select2 form-select">
+                                        <option value="" disabled selected>Selecciona el cliente</option>
+                                        @foreach ($empresas as $empresa)
+                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                          
+                                        @endforeach
+                                    </select>
+                                    <label for="id_empresa">Cliente</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline mb-4">
                                     <input type="text" id="edit_nombre_lote" name="nombre_lote" class="form-control"
                                         placeholder="Nombre del lote" autocomplete="off" />
                                     <label for="edit_nombre_lote">Nombre del Lote</label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline mb-4">
-                                    <select onchange="obtenerGuias1(); obtenerLotesEdit();" id="edit_id_empresa"
-                                        name="id_empresa" class="select2 form-select">
-                                        <option value="" disabled selected>Selecciona la empresa</option>
-                                        @foreach ($empresas as $empresa)
-                                            <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <label for="id_empresa">Empresa</label>
-                                </div>
-                            </div>
+                            
                         </div>
                         <div class="row">
                             <div class="col-md-6">

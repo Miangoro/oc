@@ -295,11 +295,10 @@ class marcasCatalogoController extends Controller
         return response()->json(['success' => 'Clase eliminada correctamente']);
     }
 
-    //Actualizar etiquetas
     public function updateEtiquetas(Request $request)
     {
         try {
-            // Validar datos recibidos del formulario
+            // Validación de los campos requeridos
             $request->validate([
                 'id_direccion' => 'required|array',
                 'id_marca' => 'required|exists:marcas,id_marca',
@@ -315,20 +314,21 @@ class marcasCatalogoController extends Controller
                 'url_corrugado' => 'array',
             ]);
     
+            // Obtener datos del formulario
             $direcciones = $request->id_direccion;
             $totalElementos = count($direcciones);
-            $idUnico = $request->id_unico ?? []; // IDs únicos proporcionados
+            $idUnico = $request->id_unico ?? [];
     
-            // Generar IDs únicos si es necesario
+            // Completar IDs únicos si faltan
             for ($i = count($idUnico); $i < $totalElementos; $i++) {
                 $idUnico[] = Str::uuid()->toString();
             }
     
-            // Actualizar el etiquetado en la base de datos
+            // Actualizar el lote envasado con datos etiquetados
             $loteEnvasado = marcas::findOrFail($request->id_marca);
             $loteEnvasado->etiquetado = json_encode([
                 'id_unico' => $idUnico,
-                'id_direccion' => $request->id_direccion,
+                'id_direccion' => $direcciones,
                 'sku' => $request->sku,
                 'id_tipo' => $request->id_tipo,
                 'presentacion' => $request->presentacion,
@@ -339,106 +339,112 @@ class marcasCatalogoController extends Controller
             ]);
             $loteEnvasado->save();
     
-            // Obtener número del cliente
-            $empresa = empresa::with('empresaNumClientes')->where('id_empresa', $loteEnvasado->id_empresa)->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(fn($numero) => !empty($numero));
+            // Obtener el número de cliente
+            $empresa = empresa::with('empresaNumClientes')
+                ->where('id_empresa', $loteEnvasado->id_empresa)
+                ->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')
+                ->first(fn($numero) => !empty($numero));
     
-            // Eliminar documentos no presentes en el request
+            // Documentos actuales
             $documentosActuales = Documentacion_url::where('id_relacion', $loteEnvasado->id_marca)
                 ->whereIn('id_documento', [60, 75])
-                ->pluck('id_doc')
+                ->pluck('id_doc', 'id_documento')
                 ->toArray();
-            $documentosAEliminar = array_diff($documentosActuales, $idUnico);
-            if (!empty($documentosAEliminar)) {
-                Documentacion_url::whereIn('id_doc', $documentosAEliminar)->delete();
-            }
-    
-            // Procesar cada fila del formulario
-            foreach ($request->id_documento as $index => $id_documento) {
-                // Verificar índices
-                if (!isset($idUnico[$index]) || 
-                    (!isset($request->url_etiqueta[$index]) && !isset($request->url_corrugado[$index]))) {
-                    continue;
+                $imprimir = 'No entra a nada';
+
+                foreach ($idUnico as $item) {
+                    $idUnico1[] = $item;
+                    $idUnico1[] = $item; // Duplicamos el valor
                 }
+                
     
-                $currentIdUnico = $idUnico[$index];
+            // Procesar cada documento enviado
+            foreach ($request->id_documento as $index => $id_documento) {
+                $imprimir = 'entro aunque sea al for';
+               
+                $currentIdUnico = $idUnico1[$index];
                 $documento = Documentacion_url::where('id_doc', $currentIdUnico)
                     ->where('id_documento', $id_documento)
                     ->where('id_relacion', $loteEnvasado->id_marca)
                     ->first();
-               
-    
-                // Subir archivos y actualizar/crear documentos
+                
                 if ($documento) {
-                    $this->updateDocument($documento, $request, $index, $numeroCliente);
+                    // Actualizar documento existente
+                    $imprimir = 'entro al editar1';
+                    $this->updateDocument($documento, $request, $index, $numeroCliente,$imprimir);
                 } else {
-                    $this->createNewDocuments($loteEnvasado, $currentIdUnico, $request, $index, $numeroCliente);
+                    // Crear un nuevo documento
+                    $imprimir = 'entro al registrar1';
+                    $this->createNewDocuments($loteEnvasado, $currentIdUnico, $request, $index, $numeroCliente,$imprimir);
                 }
             }
-    
-            return response()->json(['success' => 'Etiquetas actualizadas correctamente']);
+          
+            return response()->json(['success' => 'Etiquetas actualizadas correctamente '.$imprimir]);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Error al actualizar las etiquetas',
                 'message' => $e->getMessage(),
                 'line' => $e->getLine(),
-                'file' => $e->getFile()
+                'file' => $e->getFile(),
             ], 500);
         }
+         
     }
 
-    protected function updateDocument($documento, $request, $index, $numeroCliente)
-{
-    if (isset($request->file('url_etiqueta')[$index]) && empty($documento->url)) {
-        $file = $request->file('url_etiqueta')[$index];
-        $filename = 'etiquetas_' . time() . $index . '.' . $file->getClientOriginalExtension();
-        $file->storeAs("uploads/$numeroCliente", $filename, 'public');
-        $documento->url = $filename;
-        $documento->save();
+    protected function updateDocument($documento, $request, $index, $numeroCliente,$imprimir)
+    {   $imprimir = 'a editar';
+        if (isset($request->file('url_etiqueta')[$index]) && $documento->id_documento==60) {
+            $file = $request->file('url_etiqueta')[$index];
+            $filename = 'etiquetas_editado' . time() . $index . '.' . $file->getClientOriginalExtension();
+            $file->storeAs("uploads/$numeroCliente", $filename, 'public');
+            $documento->url = $filename;
+            $documento->save();
+        }
+    
+        if (isset($request->file('url_corrugado')[$index]) && $documento->id_documento==75) {
+            $file = $request->file('url_corrugado')[$index];
+            $filename = 'corrugado_editado' . time() . $index . '.' . $file->getClientOriginalExtension();
+            $file->storeAs("uploads/$numeroCliente", $filename, 'public');
+            $documento->url = $filename;
+            $documento->save();
+        }
     }
     
-    if (isset($request->file('url_corrugado')[$index]) && empty($documento->url)) {
-        $file = $request->file('url_corrugado')[$index];
-        $filename = 'corrugado_' . time() . $index . '.' . $file->getClientOriginalExtension();
-        $file->storeAs("uploads/$numeroCliente", $filename, 'public');
-        $documento->url = $filename;
-        $documento->save();
+    protected function createNewDocuments($loteEnvasado, $idUnico, $request, $index, $numeroCliente)
+    {   
+        $imprimir = 'a registrar';
+        if (isset($request->file('url_etiqueta')[$index])) {
+            $file = $request->file('url_etiqueta')[$index];
+            $filename = 'etiquetas_' . time() . $index . '.' . $file->getClientOriginalExtension();
+            $file->storeAs("uploads/$numeroCliente", $filename, 'public');
+    
+            Documentacion_url::create([
+                'id_relacion' => $loteEnvasado->id_marca,
+                'id_doc' => $idUnico,
+                'id_documento' => 60,
+                'nombre_documento' => 'Etiquetas',
+                'url' => $filename,
+                'id_empresa' => $loteEnvasado->id_empresa,
+            ]);
+        }
+    
+        if (isset($request->file('url_corrugado')[$index])) {
+            $file = $request->file('url_corrugado')[$index];
+            $filename = 'corrugado_' . time() . $index . '.' . $file->getClientOriginalExtension();
+            $file->storeAs("uploads/$numeroCliente", $filename, 'public');
+    
+            Documentacion_url::create([
+                'id_relacion' => $loteEnvasado->id_marca,
+                'id_doc' => $idUnico,
+                'id_documento' => 75,
+                'nombre_documento' => 'Corrugado',
+                'url' => $filename,
+                'id_empresa' => $loteEnvasado->id_empresa,
+            ]);
+        }
     }
     
-}
-
-protected function createNewDocuments($loteEnvasado, $idUnico, $request, $index, $numeroCliente)
-{
-    if (isset($request->file('url_etiqueta')[$index])) {
-        $file = $request->file('url_etiqueta')[$index];
-        $filename = 'etiquetas_' . time() . $index . '.' . $file->getClientOriginalExtension();
-        $file->storeAs("uploads/$numeroCliente", $filename, 'public');
-
-        Documentacion_url::create([
-            'id_relacion' => $loteEnvasado->id_marca,
-            'id_doc' => $idUnico,
-            'id_documento' => 60,
-            'nombre_documento' => 'Etiquetas',
-            'url' => $filename,
-            'id_empresa' => $loteEnvasado->id_empresa,
-        ]);
-    }
-
-    if (isset($request->file('url_corrugado')[$index])) {
-        $file = $request->file('url_corrugado')[$index];
-        $filename = 'corrugado_' . time() . $index . '.' . $file->getClientOriginalExtension();
-        $file->storeAs("uploads/$numeroCliente", $filename, 'public');
-
-        Documentacion_url::create([
-            'id_relacion' => $loteEnvasado->id_marca,
-            'id_doc' => $idUnico,
-            'id_documento' => 75,
-            'nombre_documento' => 'Corrugado',
-            'url' => $filename,
-            'id_empresa' => $loteEnvasado->id_empresa,
-        ]);
-    }
-}
 
 
     
