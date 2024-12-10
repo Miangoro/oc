@@ -119,12 +119,12 @@ class lotesGranelController extends Controller
                     $lote->empresa->empresaNumClientes[2]->numero_cliente;
     
                     $nestedData['id_empresa'] = '<b>'.$numeroCliente . '</b><br>' . $razonSocial;
-                    $nestedData['nombre_lote'] = $lote->nombre_lote ?? 'N/A';
+                    $nestedData['nombre_lote'] = '<span class="fw-bold text-dark h5">'.$lote->nombre_lote.'</span>' ?? 'N/A';
                     $nestedData['tipo_lote'] = $lote->tipo_lote ?? 'N/A';
                     $nestedData['folio_fq'] = $lote->folio_fq ?? 'N/A';
                     $nestedData['volumen'] = $lote->volumen ?? 'N/A';
                     $nestedData['volumen_restante'] = $lote->volumen_restante ?? 'N/A';
-                    $nestedData['cont_alc'] = $lote->cont_alc ?? 'N/A';
+                    $nestedData['cont_alc'] = $lote->cont_alc.'% Alc. Vol.' ?? 'N/A';
                     $nestedData['id_categoria'] = $lote->categoria->categoria ?? 'N/A';
                     $nestedData['id_clase'] = $lote->clase->clase ?? 'N/A';
 
