@@ -10,17 +10,15 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);"
-                                    id="id_empresa" name="id_empresa" class="select2 form-select id_empresa" required>
-                                    <option value="" selected disabled>Selecciona cliente</option>
+                                <select id="id_empresa_solicitudes" onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);""
+                                    name="id_empresa" class="id_empresa_dic select2 form-select" required>
+                                    <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">
-                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
-                                            | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="id_empresa">Empresas</label>
+                                <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
                         <div class="col-md-6">
