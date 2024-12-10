@@ -790,7 +790,6 @@ $('#modalAprobacion').on('hidden.bs.modal', function () {
 $(document).on('click', '.abrir-historial', function() {
   const id_revision = $(this).data('id'); 
   console.log('ID de revisión clicado:', id_revision); 
-  cargarHistorial(id_revision); 
   $('#historialModal').modal('show'); 
 });
 
