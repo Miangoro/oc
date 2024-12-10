@@ -12,9 +12,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_solicitud" onchange="obtenerInstalacion();" 
-                                    name="id_empresa" class="id_empresa select2 form-select" required>
-                                    <option value="">Selecciona cliente</option>
+                                <select id="id_empresa_muestreo" onchange="obtenerInstalaciones();"
+                                    name="id_empresa" class="id_empresa_muestreo select2 form-select" required>
+                                    <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
@@ -36,7 +36,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select" id="id_instalacion" name="id_instalacion" aria-label="id_instalacion" required>
+                                <select class=" form-select" id="id_instalacion_muestreo" name="id_instalacion" aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
@@ -67,35 +67,33 @@
 
 
 <script>
-    function obtenerInstalacion() {
-        var empresa = $(".id_empresa").val();
+    function obtenerInstalaciones() {
+        var empresa = $(".id_empresa_muestreo").val();
+
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
             success: function(response) {
                 console.log(response);
-                // Cargar los detalles en el modal
                 var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' + response
-                        .instalaciones[index].tipo + ' | ' + response
-                        .instalaciones[index].direccion_completa + '</option>' + contenido;
-                    // console.log(response.normas[index].norma);
-                }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
-                    
-                }else{
-                   
-                }
-                $('#id_instalacion').html(contenido);
+            for (let index = 0; index < response.instalaciones.length; index++) {
+                // Limpia el campo tipo usando la función limpiarTipo
+                var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+
+                contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                    tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa + '</option>' +
+                    contenido;
+            }
+            if (response.instalaciones.length == 0) {
+                contenido = '<option value="">Sin instalaciones registradas</option>';
+            }
+            $('#id_instalacion_muestreo').html(contenido);
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');
             }
         });
     }
-
 
 </script>

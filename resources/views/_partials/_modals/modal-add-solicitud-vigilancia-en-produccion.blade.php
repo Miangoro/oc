@@ -10,8 +10,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_solicitudes" onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);""
-                                    name="id_empresa" class="id_empresa_dic select2 form-select" required>
+                                <select id="id_empresa_vigilancia" onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);"
+                                    name="id_empresa" class=" select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}

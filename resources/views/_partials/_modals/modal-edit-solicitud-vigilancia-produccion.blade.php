@@ -223,7 +223,6 @@
             },
             error: function(xhr, status, error) {
                 console.error("Error al obtener datos del lote a granel:", error);
-                alert("No se pudieron obtener los datos del lote a granel. Intenta nuevamente.");
             }
         });
     }
