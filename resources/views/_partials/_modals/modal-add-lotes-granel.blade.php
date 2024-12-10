@@ -17,26 +17,27 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline mb-4">
+                                    <select onchange="obtenerDatosEmpresa()" id="id_empresa" name="id_empresa"
+                                        class="select2 form-select"
+                                        data-error-message="por favor selecciona la empresa">
+                                        <option value="" disabled selected>Selecciona el cliente</option>
+                                        @foreach ($empresas as $empresa)
+                                            <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <label for="id_empresa" class="form-label">Cliente</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-outline mb-4">
                                     <input type="text" id="nombre_lote" name="nombre_lote" class="form-control"
                                         autocomplete="off" placeholder="Nombre del lote"
                                         data-error-message="por favor selecciona el lote" />
                                     <label for="nombre_lote">Nombre del Lote</label>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-floating form-floating-outline mb-4">
-                                    <select onchange="obtenerDatosEmpresa()" id="id_empresa" name="id_empresa"
-                                        class="select2 form-select"
-                                        data-error-message="por favor selecciona la empresa">
-                                        <option value="" disabled selected>Selecciona la empresa</option>
-                                        @foreach ($empresas as $empresa)
-                                            <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <label for="id_empresa" class="form-label">Selecciona la empresa</label>
-                                </div>
-                            </div>
+                            
                         </div>
                         <!-- Campo para seleccionar lote original -->
                         <div class="row">

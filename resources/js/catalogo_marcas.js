@@ -640,6 +640,8 @@ $(function () {
         // Obtenemos los documentos correspondientes por id_doc
         var documento_etiquetas = documentos.find(doc => doc.nombre_documento === 'Etiquetas' && (!doc.id_doc || doc.id_doc === id_unico));
         var documento_corrugado = documentos.find(doc => doc.nombre_documento === 'Corrugado' && (!doc.id_doc || doc.id_doc === id_unico));
+      
+    
         var newRow = `
                   <tr>
                       <th>
@@ -652,7 +654,7 @@ $(function () {
                               ${direcciones}
                           </select>
                       </td>
-                      <td style="width: 150px;">   <input type="hidden" class="form-control form-control-sm"  value="${id_unico}" name="id_unico[]"
+                      <td style="width: 150px;">   <input type="text" class="form-control form-control-sm"  value="${id_unico}" name="id_unico[]"
                                             id="id_unico">
                           <input type="text" class="form-control form-control-sm" name="sku[]" min="0" value="${sku !== null ? sku : ''}">
                       </td>
@@ -669,7 +671,7 @@ $(function () {
                       </td>
                       <td style="width: 150px;">
                           <input type="number" class="form-control form-control-sm" name="presentacion[]" min="0" value="${presentacion}">
-                           <select ${ml} class="form-control" name="unidad[]"><option ${cl} value="mL">mL</option><option ${l} value="L">L</option><option value="cL">cL</option></select>
+                           <select class="form-control" name="unidad[]"><option ${ml} value="mL">mL</option><option ${l} value="L">L</option><option ${cl} value="cL">cL</option></select>
                       </td>
                       <td style="width: 150px;"><input type="text" class="form-control form-control-sm" name="alc_vol[]" value="${alc_vol !== null ? alc_vol : ''}"></td>
                       
