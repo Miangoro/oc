@@ -24,11 +24,13 @@
                     </div>
  
                     <div class="form-floating form-floating-outline mb-5">
-                        <input class="form-control form-control-sm" type="file" name="url[]">
+                        <input class="form-control form-control-sm" type="file" name="url[]" id="fileInput">
                         <input value="51" class="form-control" type="hidden" name="id_documento[]">
-                        <input value="Comprobante de pago" class="form-control" type="hidden"
-                            name="nombre_documento[]">
+                        <input value="Comprobante de pago" class="form-control" type="hidden" name="nombre_documento[]">
                         <label for="Comprobante de pago">Adjuntar Comprobante de Pago</label>
+
+                        <!-- Contenedor para mostrar el nombre del archivo -->
+                        <div id="fileName" class="mt-2 text-muted"></div>
                     </div> 
 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
@@ -44,8 +46,25 @@
 </div>
 
 
-
-
 <script>
-    
+document.getElementById('fileInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const fileName = file ? "Comprobante de pago" : ''; // Mostrar "Comprobante de pago"
+    const fileNameContainer = document.getElementById('fileName');
+
+    if (fileName) {
+        // Crear un enlace que abre el archivo en una nueva pestaña
+        const fileLink = document.createElement('a');
+        fileLink.href = URL.createObjectURL(file); // URL temporal del archivo
+        fileLink.target = "_blank"; // Abrir en nueva pestaña
+        fileLink.textContent = `Archivo seleccionado: ${fileName}`;
+        
+        fileNameContainer.innerHTML = ''; // Limpiar cualquier contenido previo
+        fileNameContainer.appendChild(fileLink); // Añadir el enlace al contenedor
+    } else {
+        fileNameContainer.textContent = ''; // Limpiar si no hay archivo
+    }
+});
+
+
 </script>

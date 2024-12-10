@@ -283,38 +283,39 @@ class solicitudHolograma extends Controller
             $holograma = ModelsSolicitudHolograma::findOrFail($request->input('id_solicitud'));
             $holograma->tipo_pago = $request->input('tipo_pago'); // Nuevo campo tipo_pago
             $holograma->estatus = 'Pagado';
-
+    
             $holograma->save();
-            //metodo para guardar pdf
+    
+            // Metodo para guardar el archivo PDF
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->empresa)->first();
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
                 return !empty($numero);
             });
-
-
+    
             foreach ($request->id_documento as $index => $id_documento) {
-                // Agregar nuevo documento si no existe
                 if ($request->hasFile('url') && isset($request->file('url')[$index])) {
                     $file = $request->file('url')[$index];
-                    $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = "Comprobante_de_pago" . '.' . $extension; // Nombre del archivo con extensión
                     $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
-
+    
+                    // Guarda la información del archivo en la base de datos
                     $documentacion_url = new Documentacion_url();
                     $documentacion_url->id_relacion = $holograma->id_solicitud;
                     $documentacion_url->id_documento = $id_documento;
-                    $documentacion_url->nombre_documento = $request->nombre_documento[$index];
-                    $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
+                    $documentacion_url->nombre_documento = 'Comprobante de pago'; // Nombre del archivo
+                    $documentacion_url->url = $filename; // Solo el nombre del archivo
                     $documentacion_url->id_empresa = $request->empresa;
                     $documentacion_url->save();
                 }
             }
-            // Retorna una respuesta exitosa
+    
             return response()->json(['success' => 'Solicitud de pago actualizada correctamente']);
         } catch (\Exception $e) {
-            // Maneja cualquier error que ocurra durante el proceso
             return response()->json(['error' => 'Error al actualizar la solicitud de pago'], 500);
         }
     }
+    
 
     //Metodo apra Actualizar y Editar Guia
     public function update3(Request $request)

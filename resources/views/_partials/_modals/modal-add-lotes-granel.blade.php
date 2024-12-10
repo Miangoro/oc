@@ -168,7 +168,7 @@
                               <div class="form-floating form-floating-outline mb-4">
                                   <select id="tipo_agave" name="id_tipo[]" class="select2 form-select" multiple>
                                       @foreach ($tipos as $tipo)
-                                          <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
+                                          <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} ({{ $tipo->cientifico }})</option>
                                       @endforeach
                                   </select>
                                   <label for="tipo_agave">Tipo de Agave</label>
