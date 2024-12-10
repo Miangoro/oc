@@ -589,76 +589,74 @@ $(function () {
       });
     }
 
-    //llenar etiquetas
-    $('#id_marca').on('change', function () {
-      var idMarca = $(this).val();
-      
-      if (idMarca) {
+ 
+    function cargarMarcas() {
+      var id_empresa = $('#id_empresa').val();
+  
+      if (id_empresa) {
           $.ajax({
-              url: '/obtenerDocumentos/' + idMarca,
+              url: '/marcas/' + id_empresa,
               method: 'GET',
-              success: function (response) {
-                  var contenidoTabla = '';
+              success: function(marcas) {
+                  var tbody = '';
   
-                  // Verificar si la respuesta tiene éxito
-                  if (response.success) {
-                      // Agregar documentos y etiquetado a la tabla
-                      if (response.documentos.length > 0 || response.etiquetado) {
-                          response.documentos.forEach((documento) => {
-                              if (documento.nombre_documento === "Etiquetas") {
-                                  var rutaArchivo = '/files/' + response.numero_cliente + '/' + documento.url;
+                  marcas.forEach(function(marca) {
+                      // Verifica que 'etiquetado' sea un objeto válido
+                      if (marca.etiquetado && typeof marca.etiquetado === 'object') {
+                          for (var i = 0; i < marca.etiquetado.sku.length; i++) {
+                              tbody += '<tr>';
+                              tbody += `<td>${(marca.direccion_nombre && marca.direccion_nombre[i]) || 'N/A'}</td>`;
+                              tbody += `<td>${marca.etiquetado.sku[i] || 'N/A'}</td>`;
+                              tbody += `<td>${marca.tipo_nombre[i] || 'N/A'}</td>`;
+                              tbody += `<td>${marca.etiquetado.presentacion[i] || 'N/A'}</td>`;
+                              tbody += `<td>${marca.clase_nombre[i] || 'N/A'}</td>`;
+                              tbody += `<td>${marca.categoria_nombre[i] || 'N/A'}</td>`;
+/*                               tbody += '<td>' + (marca.etiquetado.etiqueta || 'N/A') + '</td>';
+                              tbody += '<td>' + (marca.etiquetado.corrugado || 'N/A') + '</td>'; */
   
-                                  contenidoTabla += `
-                                      <tr>
-                                          <td>
-                                              <a href="${rutaArchivo}" target="_blank" class="btn btn-sm btn-primary">
-                                                  <i class="ri-file-pdf-2-fill"></i> Visualizar
-                                              </a>
-                                          </td>
-                                          <td>${response.etiquetado?.id_direccion || 'N/A'}</td>
-                                          <td>${response.etiquetado?.sku || 'N/A'}</td>
-                                          <td>${response.etiquetado?.id_tipo || 'N/A'}</td>
-                                          <td>${response.etiquetado?.presentacion || 'N/A'}</td>
-                                          <td>${response.etiquetado?.id_clase || 'N/A'}</td>
-                                          <td>${response.etiquetado?.id_categoria || 'N/A'}</td>
-                                      </tr>`;
+                              // Agregar documento de etiquetas si existe
+                              var documentoEtiquetas = marca.documentos.find(function(doc) {
+                                  return doc.nombre_documento === "Etiquetas";
+                              });
+  
+                              if (documentoEtiquetas) {
+                                  var rutaArchivo = '/files/' + marca.numero_cliente + '/' + documentoEtiquetas.url;
+                                  tbody += `<td><a href="${rutaArchivo}" target="_blank" class="btn btn-sm btn-primary"><i class="ri-file-pdf-2-fill"></i> Visualizar</a></td>`;
+                              } else {
+                                  tbody += '<td>No disponible</td>';
                               }
-                          });
+  
+                              tbody += '</tr>';
+                          }
                       } else {
-                          contenidoTabla = `
-                              <tr>
-                                  <td colspan="8">No hay documentos ni datos de etiquetado disponibles.</td>
-                              </tr>`;
+                          tbody += '<tr><td colspan="9" class="text-center">Datos de etiquetado no disponibles.</td></tr>';
                       }
-                  } else {
-                      contenidoTabla = `
-                          <tr>
-                              <td colspan="8">${response.message || 'Ocurrió un error al obtener los datos.'}</td>
-                          </tr>`;
+                  });
+  
+                  // Si no hay filas, mostrar mensaje
+                  if (!tbody) {
+                      tbody = '<tr><td colspan="9" class="text-center">No hay datos disponibles.</td></tr>';
                   }
   
-                  $('#tablaDocumentos tbody').html(contenidoTabla);
+                  // Agregar las filas a la tabla
+                  $('#tabla_marcas tbody').html(tbody);
               },
-              error: function () {
-                  console.error('Error al obtener documentos.');
-                  $('#tablaDocumentos tbody').html(`
-                      <tr>
-                          <td colspan="8">Error al cargar los documentos.</td>
-                      </tr>`);
+              error: function(xhr) {
+                  console.error('Error al obtener marcas:', xhr);
+                  $('#tabla_marcas tbody').html('<tr><td colspan="9">Error al cargar los datos</td></tr>');
               }
           });
       } else {
-          $('#tablaDocumentos tbody').html(`
-              <tr>
-                  <td colspan="8">Selecciona una marca para ver los documentos y datos de etiquetado.</td>
-              </tr>`);
+          $('#tabla_marcas tbody').html('<tr><td colspan="9">Seleccione una empresa para ver los datos</td></tr>');
       }
-  });
+  }
   
   
     $('#id_empresa').on('change', function () {
       obtenerGraneles();  // Cargar las marcas
       obtenerMarcas();  // Cargar las direcciones
+      cargarMarcas();  // Cargar las direcciones
+
       obtenerDirecciones();  // Cargar las direcciones
       fv.revalidateField('id_empresa');  // Revalidar el campo de empresa
     });

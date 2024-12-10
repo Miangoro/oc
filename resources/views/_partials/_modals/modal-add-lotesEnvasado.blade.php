@@ -102,25 +102,29 @@
                         </div>
                     </div>
                     
-                    <table class="table table-bordered" id="tablaDocumentos">
-                        <thead>
-                            <tr>
-                                <th>Etiquetas</th>
-                                <th>ID Dirección</th>
-                                <th>SKU</th>
-                                <th>ID Tipo</th>
-                                <th>Presentación</th>
-                                <th>ID Clase</th>
-                                <th>ID Categoría</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="8">Selecciona una marca para ver los documentos y datos de etiquetado.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <!-- Sección: Elegir Etiquetas y Corrugados -->
+                    <div class="card-body table-responsive text-nowrap">
+                        <h5>Datos</h5>
+                        <table class="table table-striped" id="tabla_marcas">
+                            <thead>
+                                <tr>
+                                    <th>Dirección</th>
+                                    <th>SKU</th>
+                                    <th>Tipo</th>
+                                    <th>Presentación</th>
+                                    <th>Clase</th>
+                                    <th>Categoría</th>
+{{--                                     <th>Etiqueta</th>
+                                    <th>Corrugado</th> --}}
+                                    <th>Documento Etiquetas</th> <!-- Nueva columna -->
+                                </tr>
+                            </thead>
+                            <tbody class="table-border-bottom-0">
+                                {{-- Aquí se mostrará el contenido --}}
+                            </tbody>
+                        </table>
+                    </div>
+                    
 
                     <table class="table table-bordered">
                         <thead>
@@ -194,4 +198,7 @@
                 $('.select2').val(null).trigger('change'); // Reset select2 fields
             });
     });
+
+
+
 </script>
