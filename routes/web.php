@@ -821,16 +821,19 @@ Route::post('/editar_cliente_confirmado', [clientesConfirmadosController::class,
 Route::post('/registrar-clientes', [ClientesConfirmadosController::class, 'registrarClientes'])->name('clientes.registrar');
 
 //Revision Personal
+//-Instalaciones-
 Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManagement'])->name('revision-personal');
 Route::resource('/revision-personal-list', RevisionPersonalController::class);
 Route::post('/revisor/registrar-respuestas', [RevisionPersonalController::class, 'registrarRespuestas'])->name('registrar.respuestas');
 Route::get('/revisor/obtener-respuestas/{id_revision}', [RevisionPersonalController::class, 'obtenerRespuestas']);
 Route::get('/get-certificado-url/{id_revision}/{tipo}', [RevisionPersonalController::class, 'getCertificadoUrl']);
-Route::get('/bitacora_revicionPersonal_Instalaciones/{id}', [RevisionPersonalController::class, 'Bitacora_revicionPersonal_Instalaciones']);
+Route::get('/bitacora_revisionPersonal_Instalaciones/{id}', [RevisionPersonalController::class, 'Bitacora_revisionPersonal_Instalaciones']);
 Route::post('/registrar-aprobacion', [RevisionPersonalController::class, 'registrarAprobacion'])->name('registrar.aprobacion');
 Route::get('/aprobacion/{id}', [RevisionPersonalController::class, 'cargarAprobacion']);
 Route::get('/obtener/historial/{id_revision}', [RevisionPersonalController::class, 'cargarHistorial']);
 Route::post('/editar-respuestas', [RevisionPersonalController::class, 'editarRespuestas']);
+//-Granel-
+Route::get('/bitacora_revisionPersonal_Granel', [RevisionPersonalController::class, 'Bitacora_revisionPersonal_Granel']);
 
 //Certificado Granel
 Route::get('certificados/granel', [Certificado_GranelController::class, 'UserManagement'])->name('certificados-granel');

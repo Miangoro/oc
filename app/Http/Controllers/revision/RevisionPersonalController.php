@@ -246,7 +246,7 @@ class RevisionPersonalController extends Controller
         }
     }
 
-    public function bitacora_revicionPersonal_Instalaciones($id)
+    public function bitacora_revisionPersonal_Instalaciones($id)
     {
         $datos_revisor = Certificados::findOrFail($id);
         $id_dictamen = $datos_revisor->dictamen->id_dictamen; 
@@ -303,7 +303,7 @@ class RevisionPersonalController extends Controller
             'fecha_aprobacion' => Helpers::formatearFecha($fecha_aprobacion),
         ];
     
-        $pdf = Pdf::loadView('pdfs.Bitacora_revicionPersonal_Instalaciones', $pdfData);
+        $pdf = Pdf::loadView('pdfs.Bitacora_revisionPersonal_Instalaciones', $pdfData);
         return $pdf->stream('Bitácora de revisión documental.pdf');
     }    
 
@@ -464,10 +464,11 @@ class RevisionPersonalController extends Controller
         }
     }
 
-    public function Bitacora_revicionPersonal_Granel($id){
-        $pdf = Pdf::loadView('pdfs.Bitacora_revicionPersonal_Granel', $pdfData);
+    public function Bitacora_revisionPersonal_Granel() {
+        $pdf = Pdf::loadView('pdfs.Bitacora_revisionPersonal_Granel');
         return $pdf->stream('Bitácora de revisión documental.pdf');
     }
+    
     
 //end
 }
