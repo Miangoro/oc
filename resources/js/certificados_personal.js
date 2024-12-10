@@ -617,7 +617,7 @@ function cargarRespuestas(id_revision) {
 //Abrir PDF Bitacora
   $(document).on('click', '.pdf', function () {
     var id_revisor = $(this).data('id');
-    var url_pdf = '../bitacora_revicionPersonalOCCIDAM/' + id_revisor;
+    var url_pdf = '../bitacora_revicionPersonal_Instalaciones/' + id_revisor;
     console.log('URL del PDF:', url_pdf);
 
     var num_certificado = $(this).data('num-certificado');

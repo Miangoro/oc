@@ -826,7 +826,7 @@ Route::resource('/revision-personal-list', RevisionPersonalController::class);
 Route::post('/revisor/registrar-respuestas', [RevisionPersonalController::class, 'registrarRespuestas'])->name('registrar.respuestas');
 Route::get('/revisor/obtener-respuestas/{id_revision}', [RevisionPersonalController::class, 'obtenerRespuestas']);
 Route::get('/get-certificado-url/{id_revision}/{tipo}', [RevisionPersonalController::class, 'getCertificadoUrl']);
-Route::get('/bitacora_revicionPersonalOCCIDAM/{id}', [RevisionPersonalController::class, 'bitacora_revicionPersonalOCCIDAM']);
+Route::get('/bitacora_revicionPersonal_Instalaciones/{id}', [RevisionPersonalController::class, 'Bitacora_revicionPersonal_Instalaciones']);
 Route::post('/registrar-aprobacion', [RevisionPersonalController::class, 'registrarAprobacion'])->name('registrar.aprobacion');
 Route::get('/aprobacion/{id}', [RevisionPersonalController::class, 'cargarAprobacion']);
 Route::get('/obtener/historial/{id_revision}', [RevisionPersonalController::class, 'cargarHistorial']);
