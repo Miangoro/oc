@@ -99,7 +99,14 @@ class lotesGranelController extends Controller
                 foreach ($LotesGranel as $lote) {
                     $nestedData['id_lote_granel'] = $lote->id_lote_granel ?? 'N/A';
                     $nestedData['fake_id'] = ++$ids ?? 'N/A'; // Incremental ID
-                    $nestedData['id_empresa'] = $lote->empresa->razon_social ?? 'N/A';
+                   
+                    $razonSocial = $lote->empresa ? $lote->empresa->razon_social : '';
+                    $numeroCliente = 
+                    $lote->empresa->empresaNumClientes[0]->numero_cliente ?? 
+                    $lote->empresa->empresaNumClientes[1]->numero_cliente ?? 
+                    $lote->empresa->empresaNumClientes[2]->numero_cliente;
+    
+                    $nestedData['id_empresa'] = '<b>'.$numeroCliente . '</b><br>' . $razonSocial;
                     $nestedData['nombre_lote'] = $lote->nombre_lote ?? 'N/A';
                     $nestedData['tipo_lote'] = $lote->tipo_lote ?? 'N/A';
                     $nestedData['folio_fq'] = $lote->folio_fq ?? 'N/A';
