@@ -42,7 +42,10 @@
                         </div>
                     </div>
                     <hr class="my-6">
-                    <h5 class="mb-5">Documentación de la marca</h5>
+                    <div class="text-center mb-6">
+                        <h4 class="address-title mb-2">Documentación de la marca</h4>
+                        <p class="address-subtitle" style="color: red">Seleccione una fecha al subir un documento</p>
+                    </div>
 
                     @foreach ($documentos as $documento)
                         <div class="row mb-3">
