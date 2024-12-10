@@ -278,7 +278,13 @@ de Noviembre de l994. así como sus subsecuentes modificaciones.</p>
     <div class="signature-name">Gerente del Organismo Certificador CIDAM</div>
 </div>
 
-<div class="down">Este cértificado sustituye al: No aplica<br>Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36<br>Edición 4 Entrada en vigor 12/01/2024</div>
+<div class="down">Este cértificado sustituye al: No aplica<br>Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36<br>Edición 4 Entrada en vigor 12/01/2024 <br>
+
+@if ($leyenda)
+Cancela y sustituye al certificado con clave: CIDAM C-GRA-057/2023
+@endif
+
+</div>
 
 <div class="foother">
     <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="300px">

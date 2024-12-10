@@ -6,14 +6,15 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Registrar nueva Solicitud de Hologramas</h4>
-                    <p class="address-subtitle"></p>
+                    <p class="address-subtitle"> <b style="color: red"> (EL FOLIO SE GENERARÁ AUTOMÁTICAMENTE)</b></p>
+                    
                 </div>
                 <form id="addHologramasForm">
                     @csrf
-                    <div class="form-floating form-floating-outline mb-5">
+{{--                     <div class="form-floating form-floating-outline mb-5">
                         <input type="text" class="form-control" id="folio" name="folio" placeholder="Ingresa el folio de solicitud" aria-label="Ingrese el folio" required />
                         <label for="folio">Ingresa el folio de solicitud</label>
-                    </div>
+                    </div> --}}
 
                     <div class="row">
                         <div class="col-md-6">

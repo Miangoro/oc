@@ -273,7 +273,13 @@ instalaciones indicadas a continuación.</p>
     <div class="signature-name">Gerente del Organismo Certificador CIDAM</div>
 </div>
 
-<div class="down">Certificado como Comercializador de Mezcal NOM-070-2016 F7.1-01-37 <br>Edición 5 Entrada en vigor 12/01/2024</div>
+<div class="down">Certificado como Comercializador de Mezcal NOM-070-2016 F7.1-01-37 <br>Edición 5 Entrada en vigor 12/01/2024 <br>
+
+@if ($leyenda)
+Cancela y sustituye al certificado con clave: CIDAM C-GRA-057/2023
+@endif
+
+</div>
 
 <div class="foother">
     <img src="{{ public_path('img_pdf/pie_certificado.png') }}" alt="Logo CIDAM" width="300px">
