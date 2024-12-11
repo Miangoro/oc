@@ -5,14 +5,14 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Muestreo de lote a granel</h4>
+                    <h4 class="address-title mb-2">Muestreo de Lote a granel</h4>
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="addMuestreoLoteAgranelForm">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_muestreo" onchange="obtenerInstalaciones();" name="id_empresa"
+                                <select id="id_empresa_muestreo" onchange="obtenerInstalaciones(); obtenerGranelesMuestreo(this.value);" name="id_empresa"
                                     class="id_empresa_muestreo select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -31,26 +31,24 @@
                             </div>
                         </div>
                     </div>
-
-
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6 input-group ">
                                 <select class=" form-select" id="id_instalacion_muestreo" name="id_instalacion"
                                     aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
-                                    <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
                                 <button type="button" class="btn btn-primary" id="abrirModalInstalaciones"><i
                                         class="ri-add-line"></i> Agregar nueva instalación</button>
                             </div>
                         </div>
                     </div>
+                    <p class="address-subtitle" style="color: red">Seleccione un  cliente</p>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="obtenerDatosGraneles();" id="id_lote_granel_muestreo" name="id_lote_granel"
-                                    class="select2 form-select">
+                                <select onchange="obtenerDatosGranelesMuestreo();" id="id_lote_granel_muestreo"
+                                    name="id_lote_granel" class="select2 form-select">
                                     <option value="">Selecciona lote a granel</option>
                                     @foreach ($LotesGranel as $lotesgra)
                                         <option value="{{ $lotesgra->id_lote_granel }}">{{ $lotesgra->nombre_lote }}
@@ -70,58 +68,61 @@
                                 <label for="destino_lote">Tipo</label>
                             </div>
                         </div>
-
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted" id="analisis" name="analisis"
-                                    placeholder="Ingresa una Categoria" readonly style="pointer-events: none;"/>
-                                <label for="analisis">Ingresa Categoria</label>
+                                <input type="text" class="form-control bg-light text-muted" id="id_categoria_muestreo"
+                                    name="id_categoria" placeholder="Ingresa una Categoria" readonly
+                                    style="pointer-events: none;" />
+                                <label for="id_categoria">Ingresa Categoria</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted" id="analisis" name="analisis"
-                                    placeholder="Ingresa una Clase" readonly style="pointer-events: none;"/>
-                                <label for="analisis">Ingresa Clase</label>
+                                <input type="text" class="form-control bg-light text-muted" id="id_clase_muestreo"
+                                    name="id_clase" placeholder="Ingresa una Clase" readonly
+                                    style="pointer-events: none;" />
+                                <label for="id_clase">Ingresa Clase</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted" id="analisis" name="analisis"
-                                    placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;"/>
-                                <label for="analisis">Ingresa Tipo de Maguey</label>
+                                <input type="text" class="form-control bg-light text-muted" id="id_tipo_maguey_muestreo"
+                                    name="tipo_mageuy" placeholder="Ingresa un tipo de Maguey" readonly
+                                    style="pointer-events: none;" />
+                                <label for="tipo_mageuy">Ingresa Tipo de Maguey</label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="analisis" name="analisis"
+                                <input type="text" class="form-control" id="analisis_muestreo" name="analisis"
                                     placeholder="Ingresa Análisis fisicoquímico" />
                                 <label for="analisis">Ingresa Análisis fisicoquímico</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="number" class="form-control" id="analisis" name="analisis" step="0.01"
-                                    placeholder="Ingresa % Alc. Vol." />
-                                <label for="analisis">% Alc. Vol.</label>
+                                <input type="number" class="form-control" id="volumen_muestreo" name="volumen"
+                                    placeholder="Ingresa el volumen" />
+                                <label for="volumen">%Alc. Vol.</label>
                             </div>
                         </div>
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="analisis" name="analisis"
+                                <input type="text" class="form-control" id="id_certificado_muestreo" name="id_certificado"
                                     placeholder="Ingresa el Certificado de NOM a granel" />
-                                <label for="analisis">Ingresa Certificado de NOM a granel</label>
+                                <label for="id_certificado">Ingresa Certificado de NOM a granel</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."></textarea>
-                            <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y CONTENEDORES):</label>
+                            <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
+                                CONTENEDORES):</label>
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
@@ -140,8 +141,6 @@
 <script>
     function obtenerInstalaciones() {
         var empresa = $("#id_empresa_muestreo").val();
-
-        // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
@@ -163,8 +162,52 @@
                 $('#id_instalacion_muestreo').html(contenido);
             },
             error: function() {
-                //alert('Error al cargar los lotes a granel.');
             }
+        });
+    }
+
+
+    function obtenerGranelesMuestreo(empresa) {
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var contenido = "";
+                for (let index = 0; index < response.lotes_granel.length; index++) {
+                    contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
+                        response
+                        .lotes_granel[index].nombre_lote + '</option>' + contenido;
+                }
+                if (response.lotes_granel.length == 0) {
+                    contenido = '<option value="">Sin lotes registrados</option>';
+                } else {}
+                $('#id_lote_granel_muestreo').html(contenido);
+            },
+            error: function() {}
+        });
+    }
+    function limpiarTipo(tipo) {
+        try {
+            return JSON.parse(tipo).join(', ');
+        } catch (e) {
+            return tipo;
+        }
+    }
+
+    function obtenerDatosGranelesMuestreo() {
+        var lote_granel_id = $("#id_lote_granel_muestreo").val();
+        $.ajax({
+            url: '/getDatos2/' + lote_granel_id,
+            method: 'GET',
+            success: function(response) {
+                $('#id_categoria_muestreo').val(response.lotes_granel.id_categoria);
+                $('#id_clase_muestreo').val(response.lotes_granel.id_clase);
+                $('#id_tipo_maguey_muestreo').val(response.lotes_granel.id_tipo).trigger('change');
+                $('#analisis_muestreo').val(response.lotes_granel.folio_fq);
+                $('#volumen_muestreo').val(response.lotes_granel.cont_alc);
+                $('#id_certificado_muestreo').val(response.lotes_granel.folio_certificado);
+            },
+            error: function() {}
         });
     }
 </script>
