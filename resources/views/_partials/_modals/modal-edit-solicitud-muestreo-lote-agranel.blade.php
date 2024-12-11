@@ -10,7 +10,7 @@
                 </div>
                 <form id="editMuestreoLoteAgranelForm">
                     <input type="text" name="id_solicitud" id="edit_id_solicitud_muestreo">
-                    <input type="hidden" name="form_type" value="vigilanciaenproduccion">
+                    <input type="hidden" name="form_type" value="muestreoloteagranel">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
@@ -28,9 +28,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    name="edit_fecha_visita" />
-                                <label for="num_anterior">Fecha y hora sugerida para la inspección</label>
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text" id="edit_fecha_visita"
+                                    name="fecha_visita" />
+                                <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
                     </div>
@@ -143,7 +143,7 @@
 
 <script>
     function obtenerInstalacionesMuestreo() {
-        var empresa = $("#id_empresa_muestreo").val();
+        var empresa = $("#edit_id_empresa_muestreo").val();
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
@@ -162,7 +162,7 @@
                 if (response.instalaciones.length == 0) {
                     contenido = '<option value="">Sin instalaciones registradas</option>';
                 }
-                $('#id_instalacion_muestreo').html(contenido);
+                $('#edit_id_instalacion_muestreo').html(contenido);
             },
             error: function() {}
         });
@@ -182,7 +182,7 @@
                 if (response.lotes_granel.length == 0) {
                     contenido = '<option value="">Sin lotes registrados</option>';
                 } else {}
-                $('#id_lote_granel_muestreo').html(contenido);
+                $('#edit_id_lote_granel_muestreo').html(contenido);
             },
             error: function() {}
         });
@@ -197,22 +197,22 @@
     }
 
     function obtenerDatosGranelesMuestreo() {
-        var lote_granel_id = $("#id_lote_granel_muestreo").val();
+        var lote_granel_id = $("#edit_id_lote_granel_muestreo").val();
         $.ajax({
             url: '/getDatos2/' + lote_granel_id,
             method: 'GET',
             success: function(response) {
-                $('#id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :''); 
-                $('#id_clase_muestreo').val(response.clase ? response.clase.clase :''); 
+                $('#edit_id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :''); 
+                $('#edit_id_clase_muestreo').val(response.clase ? response.clase.clase :''); 
                 if (response.tipo) {
                     var tipoConcatenado = response.tipo.nombre + ' (' + response.tipo.cientifico + ')';
-                    $('#id_tipo_maguey_muestreo').val(tipoConcatenado);
+                    $('#edit_id_tipo_maguey_muestreo').val(tipoConcatenado);
                 } else {
-                    $('#id_tipo_maguey_muestreo').val('');
+                    $('#edit_id_tipo_maguey_muestreo').val('');
                 }
-                $('#analisis_muestreo').val(response.lotes_granel.folio_fq);
-                $('#volumen_muestreo').val(response.lotes_granel.cont_alc);
-                $('#id_certificado_muestreo').val(response.lotes_granel.folio_certificado);
+                $('#edit_analisis_muestreo').val(response.lotes_granel.folio_fq);
+                $('#edit_volumen_muestreo').val(response.lotes_granel.cont_alc);
+                $('#edit_id_certificado_muestreo').val(response.lotes_granel.folio_certificado);
             },
             error: function() {
                 console.error('Error al obtener los datos del lote granel.');

@@ -556,7 +556,7 @@ class solicitudesController extends Controller
                     $request->validate([
                         'id_empresa' => 'required|integer|exists:empresa,id_empresa',
                         'fecha_visita' => 'required|date',
-                        'id_instalacion_muestreo' => 'required|integer|exists:instalaciones,id_instalacion',
+                        'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                         'info_adicional' => 'nullable|string'
                     ]);
                     // Preparar el JSON para guardar en `caracteristicas`
@@ -578,7 +578,7 @@ class solicitudesController extends Controller
                     $solicitud->update([
                         'id_empresa' => $request->id_empresa,
                         'fecha_visita' => $request->fecha_visita,
-                        'id_instalacion_muestreo' => $request->id_instalacion,
+                        'id_instalacion' => $request->id_instalacion,
                         'info_adicional' => $request->info_adicional,
                         'caracteristicas' => $jsonContent,
                     ]);
