@@ -1,5 +1,5 @@
 <!-- Add New Lote Envasado Modal -->
-<div class="modal fade" id="addMuestreoLoteAgranel" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="editMuestreoLoteAgranel" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -8,7 +8,7 @@
                     <h4 class="address-title mb-2">Muestreo de Lote a granel</h4>
                     <p class="address-subtitle"></p>
                 </div>
-                <form id="addMuestreoLoteAgranelForm">
+                <form id="editMuestreoLoteAgranelForm">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
