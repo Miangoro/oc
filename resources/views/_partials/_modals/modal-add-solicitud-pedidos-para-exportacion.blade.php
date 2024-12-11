@@ -71,7 +71,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-floating form-floating-outline mb-4">
-                                        <select class="form-select" name="direccion_destinatario"
+                                        <select class="form-select select2" name="direccion_destinatario"
                                             id="direccion_destinatario_ex">
                                             <option value="" disabled selected>Seleccione una dirección</option>
                                         </select>
@@ -247,19 +247,16 @@
                 // Direcciones
                 var contenidoDirecciones = "";
                 for (let index = 0; index < response.direcciones.length; index++) {
-                    // Filtrar direcciones con tipo_direccion igual a 1
-                    if (response.direcciones[index].tipo_direccion === 1) {
-                        contenidoDirecciones += `
-                            <option value="${response.direcciones[index].id_direccion}">
-                                ${response.direcciones[index].direccion}
-                            </option>`;
-                    }
+                    let destinatario = response.direcciones[index].destinatario || "Sin destinatario";
+                    contenidoDirecciones += `
+                        <option value="${response.direcciones[index].id_direccion}">
+                            ${destinatario} | ${response.direcciones[index].direccion}
+                        </option>`;
                 }
-                if (contenidoDirecciones === "") {
+                if (response.direcciones.length === 0) {
                     contenidoDirecciones = '<option value="" disabled selected>Sin direcciones registradas</option>';
                 }
                 $('#direccion_destinatario_ex').html(contenidoDirecciones);
-
                 var contenidoLotes = "";
                 var marcas = response.marcas;
                 for (let index = 0; index < response.lotes_envasado.length; index++) {
