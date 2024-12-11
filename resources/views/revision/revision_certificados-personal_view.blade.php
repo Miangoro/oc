@@ -47,8 +47,8 @@
                     <div class="me-1">
                         <p class="text-heading mb-1">Instalaciones</p>
                         <div class="d-flex align-items-center">
-                            <h4 class="mb-1 me-2">{{ $certificadosData['totalCertificados'] }}</h4>
-                            <p class="text-success mb-1">({{ number_format($certificadosData['porcentaje'], 2) }}%)</p>
+                            <h4 class="mb-1 me-2">{{ $EstadisticasInstalaciones['totalCertificados'] }}</h4>
+                            <p class="text-success mb-1">({{ number_format($EstadisticasInstalaciones['porcentaje'], 2) }}%)</p>
                         </div>
                         <small class="mb-0">Certificados Asignados</small>
                     </div>
@@ -61,19 +61,20 @@
                 <div class="d-flex justify-content-between mt-auto"> 
                     <div class="me-1">
                         <div class="d-flex align-items-center">
-                            <h4 class="mb-1 me-2">{{ $certificadosData['certificadosPendientes'] }}</h4>
-                            <p class="text-danger mb-1">({{ number_format($certificadosData['porcentajePendientes'], 2) }}%)</p>
+                            <h4 class="mb-1 me-2">{{ $EstadisticasInstalaciones['certificadosPendientes'] }}</h4>
+                            <p class="text-danger mb-1">({{ number_format($EstadisticasInstalaciones['porcentajePendientes'], 2) }}%)</p>
                         </div>
                         <small class="mb-0">Certificados Pendientes</small>
                     </div>
                     <div class="me-1">
                         <div class="d-flex align-items-center">
-                            <h4 class="mb-1 me-2">{{ $certificadosData['certificadosRevisados'] }}</h4>
-                            <p class="text-info mb-1">({{ number_format($certificadosData['porcentajeRevisados'], 2) }}%)</p>
+                            <h4 class="mb-1 me-2">{{ $EstadisticasInstalaciones['certificadosRevisados'] }}</h4>
+                            <p class="text-info mb-1">({{ number_format($EstadisticasInstalaciones['porcentajeRevisados'], 2) }}%)</p>
                         </div>
                         <small class="mb-0">Certificados Revisados</small>
                     </div>
                 </div>
+
             </div>
         </div>        
     </div>
@@ -85,15 +86,31 @@
                     <div class="me-1">
                         <p class="text-heading mb-1">Granel</p>
                         <div class="d-flex align-items-center">
-                            <h4 class="mb-1 me-1"></h4>
-                            <p class="text-success mb-1">(+95%)</p>
+                            <h4 class="mb-1 me-2">{{ $EstadisticasGranel['totalCertificadosGranel'] }}</h4>
+                            <p class="text-success mb-1">({{ number_format($EstadisticasGranel['porcentajeGranel'], 2) }}%)</p>
                         </div>
-                        <small class="mb-0">Recent analytics</small>
+                         <small class="mb-0">Certificados Asignados</small>
                     </div>
                     <div class="avatar">
                         <div class="avatar-initial bg-label-success rounded-3">
                             <div class="ri-bar-chart-line ri-26px"></div>
                         </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mt-auto"> 
+                    <div class="me-1">
+                        <div class="d-flex align-items-center">
+                            <h4 class="mb-1 me-2">{{ $EstadisticasGranel['certificadosPendientesGranel'] }}</h4>
+                            <p class="text-danger mb-1">({{ number_format($EstadisticasGranel['porcentajePendientesGranel'], 2) }}%)</p>
+                        </div>
+                        <small class="mb-0">Certificados Pendientes</small>
+                    </div>
+                    <div class="me-1">
+                        <div class="d-flex align-items-center">
+                            <h4 class="mb-1 me-2">{{ $EstadisticasGranel['certificadosRevisadosGranel'] }}</h4>
+                            <p class="text-info mb-1">({{ number_format($EstadisticasGranel['porcentajeRevisadosGranel'], 2) }}%)</p>
+                        </div>
+                        <small class="mb-0">Certificados Revisados</small>
                     </div>
                 </div>
             </div>
