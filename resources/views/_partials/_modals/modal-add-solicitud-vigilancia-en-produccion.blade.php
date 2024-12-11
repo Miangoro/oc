@@ -43,7 +43,6 @@
                         </div>
                     </div>
                     <p class="address-subtitle" style="color: red">Seleccione un  cliente</p>
-
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
@@ -88,12 +87,13 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select2 form-select" id="id_tipo_maguey" name="id_tipo_maguey[]" aria-label="id_tipo" multiple>
-                            @foreach ($tipos as $tipo)
-                                <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} | {{ $tipo->cientifico }}</option>
+                        <select class="select form-select " id="id_tipo_maguey" name="id_tipo_maguey" aria-label="id_tipo">
+                            <option value="">Lista de tipos maguey</option>
+                            @foreach ($tipos as $tipos)
+                                <option value="{{ $tipos->id_tipo }}">{{ $tipos->nombre }} | {{ $tipos->cientifico }}
+                                </option>
                             @endforeach
                         </select>
-                        
                         <label for="id_tipo">Ingresa tipo de Maguey</label>
                     </div>
                 </div>

@@ -302,6 +302,48 @@ class solicitudesController extends Controller
         return response()->json(['message' => 'Vigilancia en producción de lote registrada exitosamente']);
     }
 
+    public function storeMuestreoLote(Request $request)
+    {
+        $MuestreoLote = new solicitudesModel();
+        $MuestreoLote->folio = Helpers::generarFolioSolicitud();
+        $MuestreoLote->id_empresa = $request->id_empresa;
+        $MuestreoLote->id_tipo = 3;
+        $MuestreoLote->id_predio = 0;
+        $MuestreoLote->fecha_visita = $request->fecha_visita;
+        $MuestreoLote->id_instalacion = $request->id_instalacion;
+        $MuestreoLote->info_adicional = $request->info_adicional;
+
+
+        $MuestreoLote->caracteristicas = json_encode([
+            'id_lote_granel_muestreo' => $request->id_lote_granel_muestreo,
+            'destino_lote' => $request->destino_lote,
+            'id_categoria_muestreo' => $request->id_categoria_muestreo,
+            'id_clase_muestreo' => $request->id_clase_muestreo,
+            'id_tipo_maguey_muestreo' => $request->id_tipo_maguey_muestreo,
+            'analisis_muestreo' => $request->analisis_muestreo,
+            'volumen_muestreo' => $request->volumen_muestreo,
+            'id_certificado_muestreo' => $request->id_certificado_muestreo,
+
+        ]);
+
+        $MuestreoLote->save();
+
+        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+        // Notificación 1
+        $data1 = [
+            'title' => 'Nuevo registro de solicitud',
+            'message' => $MuestreoLote->folio . " " . $MuestreoLote->tipo_solicitud->tipo,
+            'url' => 'solicitudes-historial',
+        ];
+
+        // Iterar sobre cada usuario y enviar la notificación
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
+        return response()->json(['message' => 'Vigilancia en producción de lote registrada exitosamente']);
+    }
+
     public function registrarSolicitudGeoreferenciacion(Request $request)
     {
 
@@ -473,7 +515,7 @@ class solicitudesController extends Controller
             case 'vigilanciaenproduccion':
                 // Validar datos para georreferenciación
                 $request->validate([
-                    'id_empresa_vigilancia' => 'required|integer|exists:empresa,id_empresa',
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -500,7 +542,7 @@ class solicitudesController extends Controller
 
                 // Actualizar datos específicos para georreferenciación
                 $solicitud->update([
-                    'id_empresa_vigilancia' => $request->id_empresa,
+                    'id_empresa' => $request->id_empresa,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
@@ -508,6 +550,40 @@ class solicitudesController extends Controller
                 ]);
 
                 break;
+
+                case 'muestreoloteagranel':
+                    // Validar datos para georreferenciación
+                    $request->validate([
+                        'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                        'fecha_visita' => 'required|date',
+                        'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                        'info_adicional' => 'nullable|string'
+                    ]);
+                    // Preparar el JSON para guardar en `caracteristicas`
+                    $caracteristicasJson = [
+                        'id_lote_granel_muestreo' => $request->id_lote_granel_muestreo,
+                        'destino_lote' => $request->destino_lote,
+                        'id_categoria_muestreo' => $request->id_categoria_muestreo,
+                        'id_clase_muestreo' => $request->id_clase_muestreo,
+                        'id_tipo_maguey_muestreo' => $request->id_tipo_maguey_muestreo,
+                        'analisis_muestreo' => $request->analisis_muestreo,
+                        'volumen_muestreo' => $request->volumen_muestreo,
+                        'id_certificado_muestreo' => $request->id_certificado_muestreo,
+                    ];
+    
+                    // Convertir el array a JSON
+                    $jsonContent = json_encode($caracteristicasJson);
+    
+                    // Actualizar datos específicos para georreferenciación
+                    $solicitud->update([
+                        'id_empresa' => $request->id_empresa,
+                        'fecha_visita' => $request->fecha_visita,
+                        'id_instalacion' => $request->id_instalacion,
+                        'info_adicional' => $request->info_adicional,
+                        'caracteristicas' => $jsonContent,
+                    ]);
+    
+                    break;
 
 
             case 'georreferenciacion':

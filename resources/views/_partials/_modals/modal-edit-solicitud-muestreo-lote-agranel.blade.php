@@ -1,19 +1,21 @@
 <!-- Add New Lote Envasado Modal -->
-<div class="modal fade" id="addMuestreoLoteAgranel" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="editMuestreoLoteAgranel" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Muestreo de Lote a granel</h4>
+                    <h4 class="address-title mb-2">Editar Muestreo de Lote a granel</h4>
                     <p class="address-subtitle"></p>
                 </div>
-                <form id="addMuestreoLoteAgranelForm">
+                <form id="editMuestreoLoteAgranelForm">
+                    <input type="hidden" name="id_solicitud" id="edit_id_solicitud_muestreo">
+                    <input type="hidden" name="form_type" value="muestreoloteagranel">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_muestreo"
-                                    onchange="obtenerInstalacionesMuestreo(); obtenerGranelesMuestreo(this.value);"
+                                <select id="edit_id_empresa_muestreo"
+                                    onchange="EditobtenerInstalacionesMuestreo(); editobtenerGranelesMuestreo(this.value);"
                                     name="id_empresa" class="id_empresa_muestreo select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -26,7 +28,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text" id="fecha_visita"
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text" id="edit_fecha_visita"
                                     name="fecha_visita" />
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
@@ -35,7 +37,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select" id="id_instalacion_muestreo" name="id_instalacion"
+                                <select class=" form-select" id="edit_id_instalacion_muestreo" name="id_instalacion"
                                     aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
                                 </select>
@@ -48,7 +50,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="obtenerDatosGranelesMuestreo();" id="id_lote_granel_muestreo"
+                                <select onchange="editobtenerDatosGranelesMuestreo();" id="edit_id_lote_granel_muestreo"
                                     name="id_lote_granel_muestreo" class="select2 form-select">
                                     <option value="" disabled selected>Selecciona lote a granel</option>
                                     @foreach ($LotesGranel as $lotesgra)
@@ -61,7 +63,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="destino_lote" name="destino_lote" class="form-select">
+                                <select id="edit_destino_lote" name="destino_lote" class="form-select">
                                     <option value="" disabled selected>Selecciona un tipo</option>
                                     <option value="Análisis completo">Análisis completo</option>
                                     <option value="Ajuste de grado alcohólico">Ajuste de grado alcohólico</option>
@@ -74,14 +76,14 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="id_categoria_muestreo" name="id_categoria_muestreo" placeholder="Ingresa una Categoria"
+                                    id="edit_id_categoria_muestreo" name="id_categoria_muestreo" placeholder="Ingresa una Categoria"
                                     readonly style="pointer-events: none;" />
                                 <label for="id_categoria_muestreo">Ingresa Categoria</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted" id="id_clase_muestreo"
+                                <input type="text" class="form-control bg-light text-muted" id="edit_id_clase_muestreo"
                                     name="id_clase_muestreo" placeholder="Ingresa una Clase" readonly
                                     style="pointer-events: none;" />
                                 <label for="id_clase_muestreo">Ingresa Clase</label>
@@ -90,7 +92,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="id_tipo_maguey_muestreo" name="id_tipo_maguey_muestreo"
+                                    id="edit_id_tipo_maguey_muestreo" name="id_tipo_maguey_muestreo"
                                     placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
                                 <label for="id_tipo_maguey_muestreo">Ingresa Tipo de Maguey</label>
                             </div>
@@ -99,21 +101,21 @@
                     <div class="row">
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="analisis_muestreo" name="analisis_muestreo"
+                                <input type="text" class="form-control" id="edit_analisis_muestreo" name="analisis_muestreo"
                                     placeholder="Ingresa Análisis fisicoquímico" />
                                 <label for="analisis_muestreo">Ingresa Análisis fisicoquímico</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="number" class="form-control" id="volumen_muestreo" name="volumen_muestreo"
+                                <input type="number" class="form-control" id="edit_volumen_muestreo" name="volumen_muestreo"
                                     placeholder="Ingresa el volumen" />
                                 <label for="volumen_muestreo">%Alc. Vol.</label>
                             </div>
                         </div>
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="id_certificado_muestreo"
+                                <input type="text" class="form-control" id="edit_id_certificado_muestreo"
                                     name="id_certificado_muestreo" placeholder="Ingresa el Certificado de NOM a granel" />
                                 <label for="id_certificado_muestreo">Ingresa Certificado de NOM a granel</label>
                             </div>
@@ -121,7 +123,7 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional" placeholder="Observaciones..."></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
                                 CONTENEDORES):</label>
                         </div>
@@ -140,8 +142,8 @@
 
 
 <script>
-    function obtenerInstalacionesMuestreo() {
-        var empresa = $("#id_empresa_muestreo").val();
+    function EditobtenerInstalacionesMuestreo() {
+        var empresa = $("#edit_id_empresa_muestreo").val();
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
@@ -160,13 +162,13 @@
                 if (response.instalaciones.length == 0) {
                     contenido = '<option value="">Sin instalaciones registradas</option>';
                 }
-                $('#id_instalacion_muestreo').html(contenido);
+                $('#edit_id_instalacion_muestreo').html(contenido);
             },
             error: function() {}
         });
     }
 
-    function obtenerGranelesMuestreo(empresa) {
+    function editobtenerGranelesMuestreo(empresa) {
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
@@ -180,7 +182,7 @@
                 if (response.lotes_granel.length == 0) {
                     contenido = '<option value="">Sin lotes registrados</option>';
                 } else {}
-                $('#id_lote_granel_muestreo').html(contenido);
+                $('#edit_id_lote_granel_muestreo').html(contenido);
             },
             error: function() {}
         });
@@ -194,23 +196,23 @@
         }
     }
 
-    function obtenerDatosGranelesMuestreo() {
-        var lote_granel_id = $("#id_lote_granel_muestreo").val();
+    function editobtenerDatosGranelesMuestreo() {
+        var lote_granel_id = $("#edit_id_lote_granel_muestreo").val();
         $.ajax({
             url: '/getDatos2/' + lote_granel_id,
             method: 'GET',
             success: function(response) {
-                $('#id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :''); 
-                $('#id_clase_muestreo').val(response.clase ? response.clase.clase :''); 
+                $('#edit_id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :''); 
+                $('#edit_id_clase_muestreo').val(response.clase ? response.clase.clase :''); 
                 if (response.tipo) {
                     var tipoConcatenado = response.tipo.nombre + ' (' + response.tipo.cientifico + ')';
-                    $('#id_tipo_maguey_muestreo').val(tipoConcatenado);
+                    $('#edit_id_tipo_maguey_muestreo').val(tipoConcatenado);
                 } else {
-                    $('#id_tipo_maguey_muestreo').val('');
+                    $('#edit_id_tipo_maguey_muestreo').val('');
                 }
-                $('#analisis_muestreo').val(response.lotes_granel.folio_fq);
-                $('#volumen_muestreo').val(response.lotes_granel.cont_alc);
-                $('#id_certificado_muestreo').val(response.lotes_granel.folio_certificado);
+                $('#edit_analisis_muestreo').val(response.lotes_granel.folio_fq);
+                $('#edit_volumen_muestreo').val(response.lotes_granel.cont_alc);
+                $('#edit_id_certificado_muestreo').val(response.lotes_granel.folio_certificado);
             },
             error: function() {
                 console.error('Error al obtener los datos del lote granel.');

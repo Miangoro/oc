@@ -448,6 +448,8 @@ $(function () {
       // Validamos el tipo y configuramos el modal correspondiente
       if (id_tipo === 2) {
         modal = $('#editVigilanciaProduccion');
+      } else if (id_tipo === 3) {
+        modal = $('#editMuestreoLoteAgranel');
       } else if (id_tipo === 10) {
         modal = $('#editClienteModalTipo10');
       } else if (id_tipo === 14) {
@@ -477,67 +479,115 @@ $(function () {
               if (response.caracteristicas && response.caracteristicas.id_lote_granel) {
                 modal.find('#edit_id_lote_granel_vig').val(response.caracteristicas.id_lote_granel);
               } else {
-                modal.find('#edit_id_lote_granel_vig').val(''); // Si no existe, deja vacío
-              }
-              if (response.caracteristicas && response.caracteristicas.id_categoria) {
+                modal.find('#edit_id_lote_granel_vig').val(''); 
+              } if (response.caracteristicas && response.caracteristicas.id_categoria) {
                 modal.find('#edit_id_categoria_vig').val(response.caracteristicas.id_categoria);
               } else {
-                modal.find('#edit_id_categoria_vig').val(''); // Si no existe, deja vacío
+                modal.find('#edit_id_categoria_vig').val(''); 
               } if (response.caracteristicas && response.caracteristicas.id_clase) {
                 modal.find('#edit_id_clase_vig').val(response.caracteristicas.id_clase);
               } else {
-                modal.find('#edit_id_clase_vig').val(''); // Si no existe, deja vacío
+                modal.find('#edit_id_clase_vig').val(''); 
               } if (response.caracteristicas && response.caracteristicas.id_tipo) {
                 modal.find('#edit_id_tipo_vig').val(response.caracteristicas.id_tipo);
               } else {
-                modal.find('#edit_id_tipo_vig').val(''); // Si no existe, deja vacío
+                modal.find('#edit_id_tipo_vig').val(''); 
               }
               if (response.caracteristicas && response.caracteristicas.analisis) {
                 modal.find('#edit_analisis_vig').val(response.caracteristicas.analisis);
               } else {
-                modal.find('#edit_analisis_vig').val(''); // Si no existe, deja vacío
+                modal.find('#edit_analisis_vig').val(''); 
               }
               if (response.caracteristicas && response.caracteristicas.volumen) {
                 modal.find('#edit_volumen_vig').val(response.caracteristicas.volumen);
               } else {
-                modal.find('#edit_volumen_vig').val(''); // Si no existe, deja vacío
+                modal.find('#edit_volumen_vig').val(''); 
               }
               if (response.caracteristicas && response.caracteristicas.fecha_corte) {
                 modal.find('#edit_fecha_corte_vig').val(response.caracteristicas.fecha_corte);
               } else {
-                modal.find('#edit_fecha_corte_vig').val(''); // Si no existe, deja vacío
+                modal.find('#edit_fecha_corte_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.kg_maguey) {
                 modal.find('#edit_kg_maguey_vig').val(response.caracteristicas.kg_maguey);
               } else {
-                modal.find('#edit_kg_maguey_vig').val(''); // Si no existe, deja vacío
+                modal.find('#edit_kg_maguey_vig').val(''); 
               }
               if (response.caracteristicas && response.caracteristicas.cant_pinas) {
                 modal.find('#edit_cant_pinas_vig').val(response.caracteristicas.cant_pinas);
               } else {
-                modal.find('#edit_cant_pinas_vig').val(''); // Si no existe, deja vacío
+                modal.find('#edit_cant_pinas_vig').val(''); 
               }
               if (response.caracteristicas && response.caracteristicas.art) {
                 modal.find('#edit_art_vig').val(response.caracteristicas.art);
               } else {
-                modal.find('#edit_art_vig').val(''); // Si no existe, deja vacío
+                modal.find('#edit_art_vig').val(''); 
               }
               if (response.caracteristicas && response.caracteristicas.etapa) {
                 modal.find('#edit_etapa_vig').val(response.caracteristicas.etapa);
               } else {
-                modal.find('#edit_etapa_vig').val(''); // Si no existe, deja vacío
+                modal.find('#edit_etapa_vig').val(''); 
               }
               if (response.caracteristicas && response.caracteristicas.folio) {
                 modal.find('#edit_folio_vig').val(response.caracteristicas.folio);
               } else {
-                modal.find('#edit_folio_vig').val(''); // Si no existe, deja vacío
+                modal.find('#edit_folio_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.nombre_predio) {
                 modal.find('#edit_nombre_predio_vig').val(response.caracteristicas.nombre_predio);
               } else {
-                modal.find('#edit_nombre_predio_vig').val(''); // Si no existe, deja vacío
+                modal.find('#edit_nombre_predio_vig').val('');
               }
               modal.find('#edit_info_adicional_vig').val(response.data.info_adicional);
+
+              //Muestreo lote a granel
+            } else if (id_tipo === 3) {
+              modal.find('#edit_id_solicitud_muestreo').val(id_solicitud);
+              modal.find('#edit_id_empresa_muestreo').val(response.data.id_empresa).trigger('change');
+              modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
+              modal.find('#edit_id_instalacion_muestreo').data('selected', response.data.id_instalacion);
+
+              // Acceder al campo `punto_reunion` desde `caracteristicas`
+              if (response.caracteristicas && response.caracteristicas.id_lote_granel_muestreo) {
+                modal.find('#edit_id_lote_granel_muestreo').val(response.caracteristicas.id_lote_granel_muestreo);
+              } else {
+                modal.find('#edit_id_lote_granel_muestreo').val(''); 
+              }
+              if (response.caracteristicas && response.caracteristicas.destino_lote) {
+                modal.find('#edit_destino_lote').val(response.caracteristicas.destino_lote);
+              } else {
+                modal.find('#edit_destino_lote').val(''); 
+              } if (response.caracteristicas && response.caracteristicas.id_categoria_muestreo) {
+                modal.find('#edit_id_categoria_muestreo').val(response.caracteristicas.id_categoria_muestreo);
+              } else {
+                modal.find('#edit_id_categoria_muestreo').val('');
+              } if (response.caracteristicas && response.caracteristicas.id_clase_muestreo) {
+                modal.find('#edit_id_clase_muestreo').val(response.caracteristicas.id_clase_muestreo);
+              } else {
+                modal.find('#edit_id_clase_muestreo').val(''); 
+              }
+              if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_muestreo) {
+                modal.find('#id_tipo_maguey_muestreo').val(response.caracteristicas.id_tipo_maguey_muestreo);
+              } else {
+                modal.find('#id_tipo_maguey_muestreo').val(''); 
+              }
+              if (response.caracteristicas && response.caracteristicas.analisis_muestreo) {
+                modal.find('#edit_analisis_muestreo').val(response.caracteristicas.analisis_muestreo);
+              } else {
+                modal.find('#edit_analisis_muestreo').val(''); 
+              }
+              if (response.caracteristicas && response.caracteristicas.volumen_muestreo) {
+                modal.find('#edit_volumen_muestreo').val(response.caracteristicas.volumen_muestreo);
+              } else {
+                modal.find('#edit_volumen_muestreo').val(''); 
+              }
+              if (response.caracteristicas && response.caracteristicas.id_certificado_muestreo) {
+                modal.find('#edit_id_certificado_muestreo').val(response.caracteristicas.id_certificado_muestreo);
+              } else {
+                modal.find('#edit_id_certificado_muestreo').val(''); 
+              }
+              modal.find('#edit_info_adicional').val(response.data.info_adicional);
+
               // Otros campos específicos para tipo 10
             } else if (id_tipo === 10) {
               modal.find('#id_solicitud_geo').val(id_solicitud);
@@ -891,7 +941,106 @@ $(function () {
       });
     });
   });
+//metodo update para muestrteo de lote agranel
+$(function () {
+  // Configuración CSRF para Laravel
+  $.ajaxSetup({
+      headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+  });
 
+  // Inicializar FormValidation para el formulario de edición
+  const formUpdate = document.getElementById('editMuestreoLoteAgranelForm');
+  const fvUpdate = FormValidation.formValidation(formUpdate, {
+      fields: {
+          'id_empresa': {
+              validators: {
+                  notEmpty: {
+                      message: 'Selecciona el cliente.'
+                  }
+              }
+          },
+          'fecha_visita': {
+              validators: {
+                  notEmpty: {
+                      message: 'Selecciona la fecha y hora para la inspección.'
+                  }
+              }
+          },
+          'id_instalacion': {
+              validators: {
+                  notEmpty: {
+                      message: 'Selecciona una instalación.'
+                  }
+              }
+          },
+          'id_lote_granel_muestreo': {
+              validators: {
+                  notEmpty: {
+                      message: 'Selecciona un lote a granel.'
+                  }
+              }
+          },
+          'destino_lote': {
+              validators: {
+                  notEmpty: {
+                      message: 'Selecciona un tipo.'
+                  }
+              }
+          }
+      },
+      plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+              eleValidClass: '',
+              eleInvalidClass: 'is-invalid',
+              rowSelector: '.form-floating'
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+  }).on('core.form.valid', function (e) {
+      // Obtener los datos del formulario
+      var formData = new FormData(formUpdate);
+
+      // Hacer la solicitud AJAX
+      $.ajax({
+          url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_muestreo').val(),
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+              $('#editMuestreoLoteAgranel').modal('hide'); // Oculta el modal
+              $('#editMuestreoLoteAgranelForm')[0].reset(); // Resetea el formulario
+              $('.select2').val(null).trigger('change'); // Resetea los select2
+              $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.message,
+                  customClass: {
+                      confirmButton: 'btn btn-success'
+                  }
+              });
+          },
+          error: function (xhr) {
+              console.log('Error:', xhr.responseText);
+
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Error al actualizar la solicitud de muestreo',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+      });
+  });
+});
 
 
   ///
@@ -1630,6 +1779,126 @@ $(function () {
     });
   });
 
+  // Validación del formulario Muestreo Lote Agranel
+  const addMuestreoLoteAgranelForm = document.getElementById('addMuestreoLoteAgranelForm');
+  const fvMuestreo = FormValidation.formValidation(addMuestreoLoteAgranelForm, {
+    fields: {
+      id_empresa: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una empresa.'
+          }
+        }
+      },
+      fecha_visita: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la fecha y hora de la visita.'
+          }
+        }
+      },
+      id_instalacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una instalación.'
+          }
+        }
+      },
+      id_lote_granel: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un lote a granel.'
+          }
+        }
+      },
+      destino_lote: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un tipo de destino.'
+          }
+        }
+      },
+      id_categoria: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese una categoría.'
+          }
+        }
+      },
+      id_clase: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese una clase.'
+          }
+        }
+      },
+      tipo_mageuy: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese un tipo de maguey.'
+          }
+        }
+      },
+      analisis: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el análisis fisicoquímico.'
+          }
+        }
+      }
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        rowSelector: function (field, ele) {
+          return '.mb-4, .mb-5, .mb-6';
+        }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+    const formData = new FormData(addMuestreoLoteAgranelForm);
+
+    $.ajax({
+      url: '/hologramas/storeMuestreoLote', // Actualiza con la URL correcta
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // Cerrar modal y reiniciar formulario
+        $('#addMuestreoLoteAgranel').modal('hide');
+        $('#addMuestreoLoteAgranelForm')[0].reset();
+        $('.select2').val(null).trigger('change');
+        $('.datatables-solicitudes').DataTable().ajax.reload();
+
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Muestreo registrado exitosamente.',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function () {
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al registrar el muestreo.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+  });
+
+
   // Manejar el cambio en el tipo de instalación
   $(document).on('change', '#edit_tipo', function () {
     var tipo = $(this).val();
@@ -1927,63 +2196,63 @@ $(function () {
       sectionCount++;
     });
 
-// Función para cargar los lotes dinámicamente en la nueva sección
-function cargarLotes(empresaSeleccionada, sectionCount) {
-  $.ajax({
-    url: '/getDatos/' + empresaSeleccionada, // Usa la empresa seleccionada para cargar los lotes
-    method: 'GET',
-    success: function (response) {
-      // Lote envasado
-      var contenidoLotesEnvasado = "";
-      var marcas = response.marcas;
+    // Función para cargar los lotes dinámicamente en la nueva sección
+    function cargarLotes(empresaSeleccionada, sectionCount) {
+      $.ajax({
+        url: '/getDatos/' + empresaSeleccionada, // Usa la empresa seleccionada para cargar los lotes
+        method: 'GET',
+        success: function (response) {
+          // Lote envasado
+          var contenidoLotesEnvasado = "";
+          var marcas = response.marcas;
 
-      for (let index = 0; index < response.lotes_envasado.length; index++) {
-        var skuLimpio = limpiarSku(response.lotes_envasado[index].sku);
-        var marcaEncontrada = marcas.find(function (marca) {
-          return marca.id_marca === response.lotes_envasado[index].id_marca;
-        });
-        var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
+          for (let index = 0; index < response.lotes_envasado.length; index++) {
+            var skuLimpio = limpiarSku(response.lotes_envasado[index].sku);
+            var marcaEncontrada = marcas.find(function (marca) {
+              return marca.id_marca === response.lotes_envasado[index].id_marca;
+            });
+            var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
 
-        contenidoLotesEnvasado += `
+            contenidoLotesEnvasado += `
           <option value="${response.lotes_envasado[index].id_lote_envasado}">
             ${skuLimpio} | ${response.lotes_envasado[index].nombre} | ${nombreMarca}
           </option>`;
-      }
+          }
 
-      if (response.lotes_envasado.length == 0) {
-        contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
-      }
+          if (response.lotes_envasado.length == 0) {
+            contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
+          }
 
-      $('#caracteristicas_Ex_' + sectionCount + ' .evasado_export').html(contenidoLotesEnvasado);
+          $('#caracteristicas_Ex_' + sectionCount + ' .evasado_export').html(contenidoLotesEnvasado);
 
-      // Lote granel
-      var contenidoLotesGranel = "";
-      for (let index = 0; index < response.lotes_granel.length; index++) {
-        contenidoLotesGranel += `
+          // Lote granel
+          var contenidoLotesGranel = "";
+          for (let index = 0; index < response.lotes_granel.length; index++) {
+            contenidoLotesGranel += `
           <option value="${response.lotes_granel[index].id_lote_granel}">
             ${response.lotes_granel[index].nombre_lote}
           </option>`;
-      }
+          }
 
-      if (response.lotes_granel.length == 0) {
-        contenidoLotesGranel = '<option value="" disabled selected>Sin lotes granel registrados</option>';
-      }
+          if (response.lotes_granel.length == 0) {
+            contenidoLotesGranel = '<option value="" disabled selected>Sin lotes granel registrados</option>';
+          }
 
-      $('#caracteristicas_Ex_' + sectionCount + ' .lotes_granel_export').html(contenidoLotesGranel);
-    },
-    error: function () {
-      console.error('Error al cargar los lotes.');
-      Swal.fire({
-        icon: 'error',
-        title: 'Error al cargar los datos',
-        text: 'Hubo un problema al intentar cargar los lotes. Intenta nuevamente más tarde.',
-        customClass: {
-          confirmButton: 'btn btn-danger'
+          $('#caracteristicas_Ex_' + sectionCount + ' .lotes_granel_export').html(contenidoLotesGranel);
+        },
+        error: function () {
+          console.error('Error al cargar los lotes.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al cargar los datos',
+            text: 'Hubo un problema al intentar cargar los lotes. Intenta nuevamente más tarde.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
         }
       });
     }
-  });
-}
 
 
     // Eliminar la última sección
