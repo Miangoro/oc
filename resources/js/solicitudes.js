@@ -450,6 +450,8 @@ $(function () {
         modal = $('#editVigilanciaProduccion');
       } else if (id_tipo === 3) {
         modal = $('#editMuestreoLoteAgranel');
+      } else if (id_tipo === 4) {
+        modal = $('#editVigilanciaTraslado');
       } else if (id_tipo === 10) {
         modal = $('#editClienteModalTipo10');
       } else if (id_tipo === 14) {
@@ -479,29 +481,29 @@ $(function () {
               if (response.caracteristicas && response.caracteristicas.id_lote_granel) {
                 modal.find('#edit_id_lote_granel_vig').val(response.caracteristicas.id_lote_granel);
               } else {
-                modal.find('#edit_id_lote_granel_vig').val(''); 
+                modal.find('#edit_id_lote_granel_vig').val('');
               } if (response.caracteristicas && response.caracteristicas.id_categoria) {
                 modal.find('#edit_id_categoria_vig').val(response.caracteristicas.id_categoria);
               } else {
-                modal.find('#edit_id_categoria_vig').val(''); 
+                modal.find('#edit_id_categoria_vig').val('');
               } if (response.caracteristicas && response.caracteristicas.id_clase) {
                 modal.find('#edit_id_clase_vig').val(response.caracteristicas.id_clase);
               } else {
-                modal.find('#edit_id_clase_vig').val(''); 
+                modal.find('#edit_id_clase_vig').val('');
               } if (response.caracteristicas && response.caracteristicas.id_tipo) {
                 modal.find('#edit_id_tipo_vig').val(response.caracteristicas.id_tipo);
               } else {
-                modal.find('#edit_id_tipo_vig').val(''); 
+                modal.find('#edit_id_tipo_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.analisis) {
                 modal.find('#edit_analisis_vig').val(response.caracteristicas.analisis);
               } else {
-                modal.find('#edit_analisis_vig').val(''); 
+                modal.find('#edit_analisis_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.volumen) {
                 modal.find('#edit_volumen_vig').val(response.caracteristicas.volumen);
               } else {
-                modal.find('#edit_volumen_vig').val(''); 
+                modal.find('#edit_volumen_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.fecha_corte) {
                 modal.find('#edit_fecha_corte_vig').val(response.caracteristicas.fecha_corte);
@@ -511,22 +513,22 @@ $(function () {
               if (response.caracteristicas && response.caracteristicas.kg_maguey) {
                 modal.find('#edit_kg_maguey_vig').val(response.caracteristicas.kg_maguey);
               } else {
-                modal.find('#edit_kg_maguey_vig').val(''); 
+                modal.find('#edit_kg_maguey_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.cant_pinas) {
                 modal.find('#edit_cant_pinas_vig').val(response.caracteristicas.cant_pinas);
               } else {
-                modal.find('#edit_cant_pinas_vig').val(''); 
+                modal.find('#edit_cant_pinas_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.art) {
                 modal.find('#edit_art_vig').val(response.caracteristicas.art);
               } else {
-                modal.find('#edit_art_vig').val(''); 
+                modal.find('#edit_art_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.etapa) {
                 modal.find('#edit_etapa_vig').val(response.caracteristicas.etapa);
               } else {
-                modal.find('#edit_etapa_vig').val(''); 
+                modal.find('#edit_etapa_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.folio) {
                 modal.find('#edit_folio_vig').val(response.caracteristicas.folio);
@@ -551,12 +553,12 @@ $(function () {
               if (response.caracteristicas && response.caracteristicas.id_lote_granel_muestreo) {
                 modal.find('#edit_id_lote_granel_muestreo').val(response.caracteristicas.id_lote_granel_muestreo);
               } else {
-                modal.find('#edit_id_lote_granel_muestreo').val(''); 
+                modal.find('#edit_id_lote_granel_muestreo').val('');
               }
               if (response.caracteristicas && response.caracteristicas.destino_lote) {
                 modal.find('#edit_destino_lote').val(response.caracteristicas.destino_lote);
               } else {
-                modal.find('#edit_destino_lote').val(''); 
+                modal.find('#edit_destino_lote').val('');
               } if (response.caracteristicas && response.caracteristicas.id_categoria_muestreo) {
                 modal.find('#edit_id_categoria_muestreo').val(response.caracteristicas.id_categoria_muestreo);
               } else {
@@ -564,27 +566,96 @@ $(function () {
               } if (response.caracteristicas && response.caracteristicas.id_clase_muestreo) {
                 modal.find('#edit_id_clase_muestreo').val(response.caracteristicas.id_clase_muestreo);
               } else {
-                modal.find('#edit_id_clase_muestreo').val(''); 
+                modal.find('#edit_id_clase_muestreo').val('');
               }
               if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_muestreo) {
                 modal.find('#id_tipo_maguey_muestreo').val(response.caracteristicas.id_tipo_maguey_muestreo);
               } else {
-                modal.find('#id_tipo_maguey_muestreo').val(''); 
+                modal.find('#id_tipo_maguey_muestreo').val('');
               }
               if (response.caracteristicas && response.caracteristicas.analisis_muestreo) {
                 modal.find('#edit_analisis_muestreo').val(response.caracteristicas.analisis_muestreo);
               } else {
-                modal.find('#edit_analisis_muestreo').val(''); 
+                modal.find('#edit_analisis_muestreo').val('');
               }
               if (response.caracteristicas && response.caracteristicas.volumen_muestreo) {
                 modal.find('#edit_volumen_muestreo').val(response.caracteristicas.volumen_muestreo);
               } else {
-                modal.find('#edit_volumen_muestreo').val(''); 
+                modal.find('#edit_volumen_muestreo').val('');
               }
               if (response.caracteristicas && response.caracteristicas.id_certificado_muestreo) {
                 modal.find('#edit_id_certificado_muestreo').val(response.caracteristicas.id_certificado_muestreo);
               } else {
-                modal.find('#edit_id_certificado_muestreo').val(''); 
+                modal.find('#edit_id_certificado_muestreo').val('');
+              }
+              modal.find('#edit_info_adicional').val(response.data.info_adicional);
+              //Vigilancia solicitud de vigilancia traslado lotes
+            } else if (id_tipo === 4) {
+              modal.find('#edit_id_solicitud_traslado').val(id_solicitud);
+              modal.find('#edit_id_empresa_traslado').val(response.data.id_empresa).trigger('change');
+              modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
+              modal.find('#edit_id_instalacion_traslado').data('selected', response.data.id_instalacion);
+
+              // Acceder al campo `punto_reunion` desde `caracteristicas`
+              if (response.caracteristicas && response.caracteristicas.id_lote_granel_muestreo) {
+                modal.find('#edit_id_lote_granel_traslado').val(response.caracteristicas.id_lote_granel_muestreo);
+              } else {
+                modal.find('#edit_id_lote_granel_traslado').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.id_categoria_traslado) {
+                modal.find('#edit_id_categoria_traslado').val(response.caracteristicas.id_categoria_traslado);
+              } else {
+                modal.find('#edit_id_categoria_traslado').val('');
+              } if (response.caracteristicas && response.caracteristicas.id_clase_traslado) {
+                modal.find('#edit_id_clase_traslado').val(response.caracteristicas.id_clase_traslado);
+              } else {
+                modal.find('#edit_id_clase_traslado').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_traslado) {
+                modal.find('#id_tipo_maguey_traslado').val(response.caracteristicas.id_tipo_maguey_traslado);
+              } else {
+                modal.find('#id_tipo_maguey_traslado').val('');
+              }
+              //
+              if (response.caracteristicas && response.caracteristicas.id_salida) {
+                modal.find('#edit_id_salida').val(response.caracteristicas.id_salida);
+              } else {
+                modal.find('#edit_id_salida').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.id_contenedor) {
+                modal.find('#edit_id_contenedor').val(response.caracteristicas.id_contenedor);
+              } else {
+                modal.find('#edit_id_contenedor').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.id_sobrante) {
+                modal.find('#edit_id_sobrante').val(response.caracteristicas.id_sobrante);
+              } else {
+                modal.find('#edit_id_sobrante').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.id_vol_actual) {
+                modal.find('#edit_id_vol_actual').val(response.caracteristicas.id_vol_actual);
+              } else {
+                modal.find('#edit_id_vol_actual').val('');
+              } if (response.caracteristicas && response.caracteristicas.id_vol_traslado) {
+                modal.find('#edit_id_vol_traslado').val(response.caracteristicas.id_vol_traslado);
+              } else {
+                modal.find('#edit_id_vol_traslado').val('');
+              } if (response.caracteristicas && response.caracteristicas.id_vol_res) {
+                modal.find('#edit_id_vol_res').val(response.caracteristicas.id_vol_res);
+              } else {
+                modal.find('#edit_id_vol_res').val('');
+              } if (response.caracteristicas && response.caracteristicas.analisis_traslado) {
+                modal.find('#edit_analisis_traslado').val(response.caracteristicas.analisis_traslado);
+              } else {
+                modal.find('#edit_analisis_traslado').val('');
+              } if (response.caracteristicas && response.caracteristicas.volumen_traslado) {
+                modal.find('#edit_volumen_traslado').val(response.caracteristicas.volumen_traslado);
+              } else {
+                modal.find('#edit_volumen_traslado').val('');
+              } if (response.caracteristicas && response.caracteristicas.id_certificado_traslado) {
+                modal.find('#edit_id_certificado_traslado').val(response.caracteristicas.id_certificado_traslado);
+              } else {
+                modal.find('#edit_id_certificado_traslado').val('');
               }
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
 
@@ -941,108 +1012,210 @@ $(function () {
       });
     });
   });
-//metodo update para muestrteo de lote agranel
-$(function () {
-  // Configuración CSRF para Laravel
-  $.ajaxSetup({
+  //metodo update para muestrteo de lote agranel
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
       headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
-  });
+    });
 
-  // Inicializar FormValidation para el formulario de edición
-  const formUpdate = document.getElementById('editMuestreoLoteAgranelForm');
-  const fvUpdate = FormValidation.formValidation(formUpdate, {
+    // Inicializar FormValidation para el formulario de edición
+    const formUpdate = document.getElementById('editMuestreoLoteAgranelForm');
+    const fvUpdate = FormValidation.formValidation(formUpdate, {
       fields: {
-          'id_empresa': {
-              validators: {
-                  notEmpty: {
-                      message: 'Selecciona el cliente.'
-                  }
-              }
-          },
-          'fecha_visita': {
-              validators: {
-                  notEmpty: {
-                      message: 'Selecciona la fecha y hora para la inspección.'
-                  }
-              }
-          },
-          'id_instalacion': {
-              validators: {
-                  notEmpty: {
-                      message: 'Selecciona una instalación.'
-                  }
-              }
-          },
-          'id_lote_granel_muestreo': {
-              validators: {
-                  notEmpty: {
-                      message: 'Selecciona un lote a granel.'
-                  }
-              }
-          },
-          'destino_lote': {
-              validators: {
-                  notEmpty: {
-                      message: 'Selecciona un tipo.'
-                  }
-              }
+        'id_empresa': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el cliente.'
+            }
           }
+        },
+        'fecha_visita': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la fecha y hora para la inspección.'
+            }
+          }
+        },
+        'id_instalacion': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona una instalación.'
+            }
+          }
+        },
+        'id_lote_granel_muestreo': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un lote a granel.'
+            }
+          }
+        },
+        'destino_lote': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un tipo.'
+            }
+          }
+        }
       },
       plugins: {
-          trigger: new FormValidation.plugins.Trigger(),
-          bootstrap5: new FormValidation.plugins.Bootstrap5({
-              eleValidClass: '',
-              eleInvalidClass: 'is-invalid',
-              rowSelector: '.form-floating'
-          }),
-          submitButton: new FormValidation.plugins.SubmitButton(),
-          autoFocus: new FormValidation.plugins.AutoFocus()
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
       }
-  }).on('core.form.valid', function (e) {
+    }).on('core.form.valid', function (e) {
       // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
 
       // Hacer la solicitud AJAX
       $.ajax({
-          url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_muestreo').val(),
-          type: 'POST',
-          data: formData,
-          processData: false,
-          contentType: false,
-          success: function (response) {
-              $('#editMuestreoLoteAgranel').modal('hide'); // Oculta el modal
-              $('#editMuestreoLoteAgranelForm')[0].reset(); // Resetea el formulario
-              $('.select2').val(null).trigger('change'); // Resetea los select2
-              $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_muestreo').val(),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#editMuestreoLoteAgranel').modal('hide'); // Oculta el modal
+          $('#editMuestreoLoteAgranelForm')[0].reset(); // Resetea el formulario
+          $('.select2').val(null).trigger('change'); // Resetea los select2
+          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
 
-              Swal.fire({
-                  icon: 'success',
-                  title: '¡Éxito!',
-                  text: response.message,
-                  customClass: {
-                      confirmButton: 'btn btn-success'
-                  }
-              });
-          },
-          error: function (xhr) {
-              console.log('Error:', xhr.responseText);
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
 
-              Swal.fire({
-                  icon: 'error',
-                  title: '¡Error!',
-                  text: 'Error al actualizar la solicitud de muestreo',
-                  customClass: {
-                      confirmButton: 'btn btn-danger'
-                  }
-              });
-          }
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la solicitud de muestreo',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
       });
+    });
   });
-});
-
-
+//medoto update para viligancia tarslado
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+  
+    // Inicializar FormValidation para el formulario de edición
+    const formUpdate = document.getElementById('editVigilanciaTrasladoForm');
+    const fvUpdate = FormValidation.formValidation(formUpdate, {
+      fields: {
+        'id_empresa': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el cliente.'
+            }
+          }
+        },
+        'fecha_visita': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la fecha y hora para la inspección.'
+            }
+          }
+        },
+        'id_instalacion': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona una instalación.'
+            }
+          }
+        },
+        'id_lote_granel_traslado': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un lote a granel.'
+            }
+          }
+        },
+        'id_vol_traslado': {
+          validators: {
+            notEmpty: {
+              message: 'Ingresa el volumen trasladado.'
+            },
+            numeric: {
+              message: 'El volumen debe ser un número válido.'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      // Obtener los datos del formulario
+      var formData = new FormData(formUpdate);
+  
+      // Hacer la solicitud AJAX
+      $.ajax({
+        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_traslado').val(),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#editVigilanciaTraslado').modal('hide'); // Oculta el modal
+          $('#editVigilanciaTrasladoForm')[0].reset(); // Resetea el formulario
+          $('.select2').val(null).trigger('change'); // Resetea los select2
+          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+  
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+  
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la vigilancia en el traslado del lote',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+  });
+  
   ///
   $(function () {
     // Configuración CSRF para Laravel
@@ -1897,101 +2070,101 @@ $(function () {
       }
     });
   });
-//Validar vigilancia en traslado
-const addVigilanciaTrasladoForm = document.getElementById('addVigilanciaTrasladoForm');
-const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
-  fields: {
-    id_empresa: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione una empresa.'
+  //Validar vigilancia en traslado
+  const addVigilanciaTrasladoForm = document.getElementById('addVigilanciaTrasladoForm');
+  const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
+    fields: {
+      id_empresa: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una empresa.'
+          }
+        }
+      },
+      fecha_visita: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la fecha y hora de la inspección.'
+          }
+        }
+      },
+      id_instalacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una instalación.'
+          }
+        }
+      },
+      id_lote_granel_traslado: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un lote a granel.'
+          }
+        }
+      },
+      id_vol_traslado: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el volumen trasladado.'
+          },
+          numeric: {
+            message: 'El volumen trasladado debe ser un número válido.',
+            thousandsSeparator: '',
+            decimalSeparator: '.'
+          }
         }
       }
     },
-    fecha_visita: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingrese la fecha y hora de la inspección.'
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        rowSelector: function (field, ele) {
+          return '.mb-4, .mb-5, .mb-6';
         }
-      }
-    },
-    id_instalacion: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione una instalación.'
-        }
-      }
-    },
-    id_lote_granel_traslado: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione un lote a granel.'
-        }
-      }
-    },
-    id_vol_traslado: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingrese el volumen trasladado.'
-        },
-        numeric: {
-          message: 'El volumen trasladado debe ser un número válido.',
-          thousandsSeparator: '',
-          decimalSeparator: '.'
-        }
-      }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
     }
-  },
-  plugins: {
-    trigger: new FormValidation.plugins.Trigger(),
-    bootstrap5: new FormValidation.plugins.Bootstrap5({
-      eleValidClass: '',
-      rowSelector: function (field, ele) {
-        return '.mb-4, .mb-5, .mb-6';
+  }).on('core.form.valid', function () {
+    const formData = new FormData(addVigilanciaTrasladoForm);
+
+    $.ajax({
+      url: '/hologramas/storeVigilanciaTraslado', // Cambia a la URL correcta
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // Cerrar modal y reiniciar formulario
+        $('#addVigilanciaTraslado').modal('hide');
+        $('#addVigilanciaTrasladoForm')[0].reset();
+        $('.select2').val(null).trigger('change');
+        $('.datatables-solicitudes').DataTable().ajax.reload();
+
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Vigilancia registrada exitosamente.',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function () {
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al registrar la vigilancia.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
       }
-    }),
-    submitButton: new FormValidation.plugins.SubmitButton(),
-    autoFocus: new FormValidation.plugins.AutoFocus()
-  }
-}).on('core.form.valid', function () {
-  const formData = new FormData(addVigilanciaTrasladoForm);
-
-  $.ajax({
-    url: '/hologramas/storeVigilanciaTraslado', // Cambia a la URL correcta
-    type: 'POST',
-    data: formData,
-    processData: false,
-    contentType: false,
-    success: function (response) {
-      // Cerrar modal y reiniciar formulario
-      $('#addVigilanciaTraslado').modal('hide');
-      $('#addVigilanciaTrasladoForm')[0].reset();
-      $('.select2').val(null).trigger('change');
-      $('.datatables-solicitudes').DataTable().ajax.reload();
-
-      // Mostrar alerta de éxito
-      Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: 'Vigilancia registrada exitosamente.',
-        customClass: {
-          confirmButton: 'btn btn-success'
-        }
-      });
-    },
-    error: function () {
-      // Mostrar alerta de error
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al registrar la vigilancia.',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    }
+    });
   });
-});
 
 
   // Manejar el cambio en el tipo de instalación
@@ -2179,8 +2352,8 @@ const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
     });
   });
 
-   //Muestreo de lote a granel
-   $(document).ready(function () {
+  //Muestreo de lote a granel
+  $(document).ready(function () {
     let openedFromFirstModal = false;
 
     $('#modalMuestreo').on('click', function () {
@@ -2213,6 +2386,42 @@ const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
     });
   });
 
+
+    //Muestreo de vigilancia traslado
+    $(document).ready(function () {
+      let openedFromFirstModal = false;
+  
+      $('#modalVigilanciaTraslado').on('click', function () {
+        var clienteSeleccionado = $('.id_empresa_traslado').val();
+        // Verificar si hay una empresa seleccionada
+        if (!clienteSeleccionado) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Espere!',
+            text: 'Por favor, selecciona un cliente primero.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+          });
+          return;
+        }
+        $('#addVigilanciaTraslado').modal('hide');
+        // Marcar que el nuevo modal fue abierto desde el anterior
+        openedFromFirstModal = true;
+        // Preseleccionar la empresa en el modal de nueva instalación
+        $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
+        $('#modalAddInstalacion').modal('show');
+      });
+      $('#modalAddInstalacion').on('hidden.bs.modal', function () {
+        if (openedFromFirstModal) {
+          $('#addVigilanciaTraslado').modal('show');
+          openedFromFirstModal = false;
+        }
+      });
+    });
+
+    
   /* seccion para exportacion */
   $(document).ready(function () {
     // Obtener el select y las secciones
