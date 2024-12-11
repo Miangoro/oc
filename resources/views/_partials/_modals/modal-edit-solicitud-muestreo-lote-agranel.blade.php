@@ -5,10 +5,12 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Muestreo de Lote a granel</h4>
+                    <h4 class="address-title mb-2">Editar Muestreo de Lote a granel</h4>
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="editMuestreoLoteAgranelForm">
+                    <input type="text" name="id_solicitud" id="edit_id_solicitud_muestreo">
+                    <input type="hidden" name="form_type" value="vigilanciaenproduccion">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
@@ -50,7 +52,7 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <select onchange="obtenerDatosGranelesMuestreo();" id="edit_id_lote_granel_muestreo"
                                     name="id_lote_granel_muestreo" class="select2 form-select">
-                                    <option value="">Selecciona lote a granel</option>
+                                    <option value="" disabled selected>Selecciona lote a granel</option>
                                     @foreach ($LotesGranel as $lotesgra)
                                         <option value="{{ $lotesgra->id_lote_granel }}">{{ $lotesgra->nombre_lote }}
                                         </option>

@@ -50,7 +50,7 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <select onchange="obtenerDatosGranelesMuestreo();" id="id_lote_granel_muestreo"
                                     name="id_lote_granel_muestreo" class="select2 form-select">
-                                    <option value="">Selecciona lote a granel</option>
+                                    <option value="" disabled selected>Selecciona lote a granel</option>
                                     @foreach ($LotesGranel as $lotesgra)
                                         <option value="{{ $lotesgra->id_lote_granel }}">{{ $lotesgra->nombre_lote }}
                                         </option>
