@@ -15,8 +15,8 @@ $(function () {
         { data: '#' },                //0
         { data: 'fake_id' },          //1
         { data: 'tipo_dictamen' },    //2
-        { data: 'id_revisor' },       //3
-        { data: 'num_certificado' },  //4
+        { data: 'num_certificado' },  //3
+        { data: 'id_revisor' },       //4
         { data: 'created_at' },       //5
         { data: 'updated_at' },       //6
         { data: 'PDF' },              //7
@@ -44,55 +44,66 @@ $(function () {
         },
         {
           targets: 2,
-          render: function (data, type, full, meta) {
-            var $tipoDictamen = parseInt(full['tipo_dictamen']);
-            var $colorDictamen;
-            var $nombreDictamen;
-
-            switch ($tipoDictamen) {
-              case 1:
-                $nombreDictamen = 'Productor';
-                $colorDictamen = 'primary'; // Azul
-                break;
-              case 2:
-                $nombreDictamen = 'Envasador';
-                $colorDictamen = 'success'; // Verde
-                break;
-              case 3:
-                $nombreDictamen = 'Comercializador';
-                $colorDictamen = 'info'; // Celeste
-                break;
-              case 4:
-                $nombreDictamen = 'Almacén y bodega';
-                $colorDictamen = 'danger'; // Rojo
-                break;
-              case 5:
-                $nombreDictamen = 'Área de maduración';
-                $colorDictamen = 'warning'; // Amarillo
-                break;
-              default:
-                $nombreDictamen = 'Desconocido';
-                $colorDictamen = 'secondary'; // Gris, color por defecto
-            }
-
-            // Retorna el badge con el texto y color apropiado
-            return `<span class="badge rounded-pill bg-label-${$colorDictamen}">${$nombreDictamen}</span>`;
+          render: function (data, type, row) {
+              var tipoRevision = row['tipo_revision'];
+              var icono = '';
+      
+              if (tipoRevision === 'Revisor') {
+                  icono = `
+                      <a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Instalaciones" class="d-flex flex-column align-items-center">
+                          <div class="avatar me-2">
+                              <div class="avatar-initial bg-label-primary rounded-3">
+                                  <i class="ri-building-2-line ri-26px"></i>
+                              </div>
+                          </div>
+                          <span class="fw-bold mt-1"></span>
+                      </a>
+                  `;
+              } else if (tipoRevision === 'RevisorGranel') {
+                  icono = `
+                      <a href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Granel" class="d-flex flex-column align-items-center">
+                          <div class="avatar me-2">
+                              <div class="avatar-initial bg-label-success rounded-3">
+                                  <i class="ri-bar-chart-line ri-26px"></i>
+                              </div>
+                          </div>
+                          <span class="fw-bold mt-1"></span>
+                      </a>
+                  `;
+              }
+              return icono;
           }
         },
         {
           targets: 3,
           render: function (data, type, full, meta) {
-            var $id_revisor = full['id_revisor'];
-            return '<span class="user-email">' + $id_revisor + '</span>';
+            var $num_certificado = full['num_certificado'];
+
+            if (full['tipo_revision'] === 'Revisor') {
+              return `
+              <div style="display: flex; flex-direction: column; align-items: start; gap: 4px;">
+                <span class="fw-bold">
+                  ${$num_certificado}
+                </span>
+              </div>
+              `;
+            } else if (full['tipo_revision'] === 'RevisorGranel') {
+              return `<span class="fw-bold">
+                        ${$num_certificado}
+                      </span>`;
+            } else {
+              return '<span class="text-muted">Tipo de revisión desconocido</span>';
+            }
           }
         },
         {
           targets: 4,
           render: function (data, type, full, meta) {
-            var $num_certificado = full['num_certificado'];
-            return '<span class="user-email"><strong>' + $num_certificado + '</strong></span>';
+            var $id_revisor = full['id_revisor'];
+            return '<span class="user-email">' + $id_revisor + '</span>';
           }
         },
+               
         {
           targets: 5,
           render: function (data, type, full, meta) {
@@ -406,6 +417,13 @@ $(function () {
 
   // FUNCIONES DEL FUNCIONAMIENTO DEL CRUD
 
+  dt_user.on('draw', function () {
+    // Inicializa todos los tooltips después de cada redibujado
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
   // Inicializacion Elementos
   function initializeSelect2($elements) {
       $elements.each(function () {
