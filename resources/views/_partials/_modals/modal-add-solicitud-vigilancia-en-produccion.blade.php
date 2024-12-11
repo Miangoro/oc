@@ -5,23 +5,20 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Vigilancia en producción de lote</h4>
-                    <p class="address-subtitle"></p>
                 </div>
                 <form id="addVigilanciaProduccionForm">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);"
-                                    id="id_empresa" name="id_empresa" class="select2 form-select id_empresa" required>
-                                    <option value="" selected disabled>Selecciona cliente</option>
+                                <select id="id_empresa_vigilancia" onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);"
+                                    name="id_empresa" class=" select2 form-select" required>
+                                    <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">
-                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
-                                            | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <label for="id_empresa">Empresas</label>
+                                <label for="id_empresa">Cliente</label>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -39,12 +36,14 @@
                                     name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                 </select>
-                                <label for="id_instalacion">instalaciones</label>
+                                <label for="id_instalacion">Instalaciones</label>
                                 <button type="button" class="btn btn-primary" id="modalVigilancia"><i
                                         class="ri-add-line"></i> Agregar nueva instalación</button>
                             </div>
                         </div>
                     </div>
+                    <p class="address-subtitle" style="color: red">Seleccione un  cliente</p>
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">

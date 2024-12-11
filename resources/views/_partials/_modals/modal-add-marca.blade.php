@@ -15,7 +15,9 @@
                             <select id="cliente" name="cliente" class="select2 form-select" required>
                                 <option value="" disabled selected>Selecciona cliente</option>
                                 @foreach ($clientes as $cliente)
-                                    <option value="{{ $cliente->id_empresa }}">{{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }} | {{ $cliente->razon_social }}</option>
+                                    <option value="{{ $cliente->id_empresa }}">
+                                        {{ $cliente->empresaNumClientes[0]->numero_cliente ?? $cliente->empresaNumClientes[1]->numero_cliente }}
+                                        | {{ $cliente->razon_social }}</option>
                                 @endforeach
                             </select>
                             <label for="cliente">Cliente</label>
@@ -40,7 +42,11 @@
                         </div>
                     </div>
                     <hr class="my-6">
-                    <h5 class="mb-5">Documentación de la marca</h5>
+                    <div class="text-center mb-6">
+                        <h4 class="address-title mb-2">Documentación de la marca</h4>
+                        <p class="address-subtitle" style="color: red">Seleccione una fecha al subir un documento</p>
+                    </div>
+
                     @foreach ($documentos as $documento)
                         <div class="row mb-3">
                             <div class="col-md-9 mb-5">

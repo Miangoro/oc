@@ -13,6 +13,11 @@ use Illuminate\Http\Request;
 use App\Models\Documentacion_url;
 use App\Models\empresaNumCliente;
 
+use App\Models\tipos;
+use App\Models\clases;
+use App\Models\categorias;
+use App\Models\Destinos;
+
 use App\Models\Exception;
 use Exception as GlobalException;
 
@@ -25,7 +30,11 @@ class lotesEnvasadoController extends Controller
         $lotes_granel = LotesGranel::all();
         $lotes_envasado = lotes_envasado::all();
         $Instalaciones = Instalaciones::all();
+        $clases = clases::all();
+        $categorias = categorias::all();
 
+        $tipos = tipos::all();
+        $marcas = marcas::all();
         $userCount = $lotes_envasado->count();
         $verified = 5;
         $notVerified = 10;
@@ -41,6 +50,10 @@ class lotesEnvasadoController extends Controller
             'lotes_granel' => $lotes_granel,
             'lotes_envasado' => $lotes_envasado,
             'Instalaciones' => $Instalaciones,
+            'clases' => $clases,
+            'categorias' => $categorias,
+            'tipos' => $tipos,
+
         ]);
     }
 
@@ -327,36 +340,50 @@ class lotesEnvasadoController extends Controller
     }
 
     //Metodo obtener etiquetas
-    public function obtenerDocumentosPorMarca(Request $request, $id_marca)
+    public function obtenerMarcasPorEmpresa($id_empresa)
     {
-        try {
-            // Obtener la marca
-            $marca = Marcas::findOrFail($id_marca);
-            // Obtener la empresa relacionada con la marca
-            $empresa = Empresa::findOrFail($marca->id_empresa);
-            // Obtener el numero_cliente desde la tabla empresa_num_cliente
-            $empresaNumCliente = empresaNumCliente::where('id_empresa', $marca->id_empresa)->first();
-            $numeroCliente = $empresaNumCliente ? $empresaNumCliente->numero_cliente : null;
-            // Obtener los documentos asociados al id_empresa de la marca
-            $documentos = Documentacion_url::where('id_empresa', $marca->id_empresa)
-                ->where('id_relacion', $id_marca)
-                ->get();
-            // Decodificar el campo etiquetado
-            $etiquetado = $marca->etiquetado ? json_decode($marca->etiquetado, true) : null;
+        $marcas = marcas::where('id_empresa', $id_empresa)->get();
     
-            // Devolver los documentos, el numero_cliente, y los datos de etiquetado
-            return response()->json([
-                'success' => true,
-                'documentos' => $documentos,
-                'numero_cliente' => $numeroCliente,
-                'etiquetado' => $etiquetado // Añadir los datos del campo etiquetado
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error al obtener documentos: ' . $e->getMessage()
-            ]);
+        foreach ($marcas as $marca) {
+            $etiquetado = is_string($marca->etiquetado) ? json_decode($marca->etiquetado, true) : $marca->etiquetado;
+    
+            if (is_null($etiquetado) || !is_array($etiquetado)) {
+                $marca->tipo_nombre = [];
+                $marca->clase_nombre = [];
+                $marca->categoria_nombre = [];
+                $marca->direccion_nombre = [];
+                $marca->etiquetado = [];
+                continue;
+            }
+    
+            $tipos = isset($etiquetado['id_tipo']) ? tipos::whereIn('id_tipo', $etiquetado['id_tipo'])->pluck('nombre')->toArray() : [];
+            $clases = isset($etiquetado['id_clase']) ? clases::whereIn('id_clase', $etiquetado['id_clase'])->pluck('clase')->toArray() : [];
+            $categorias = isset($etiquetado['id_categoria']) ? categorias::whereIn('id_categoria', $etiquetado['id_categoria'])->pluck('categoria')->toArray() : [];
+    
+            $direcciones = [];
+            if (isset($etiquetado['id_direccion']) && is_array($etiquetado['id_direccion'])) {
+                foreach ($etiquetado['id_direccion'] as $id_direccion) {
+                    $direccion = Destinos::where('id_direccion', $id_direccion)->value('direccion');
+                    $direcciones[] = $direccion ?? 'N/A';
+                }
+            }
+    
+            // Obtener los documentos asociados a la marca
+            $documentos = Documentacion_url::where('id_empresa', $marca->id_empresa)
+                                            ->where('id_relacion', $marca->id_marca)
+                                            ->get();
+    
+            // Agregar los datos procesados al resultado
+            $marca->tipo_nombre = $tipos;
+            $marca->clase_nombre = $clases;
+            $marca->categoria_nombre = $categorias;
+            $marca->direccion_nombre = $direcciones;
+            $marca->etiquetado = $etiquetado;
+            $marca->documentos = $documentos; // Agregar documentos a la marca
         }
+    
+        return response()->json($marcas);
     }
+    
     
 }

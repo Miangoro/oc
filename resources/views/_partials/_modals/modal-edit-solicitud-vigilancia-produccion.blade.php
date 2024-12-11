@@ -39,7 +39,7 @@
                                     name="id_instalacion" aria-label="id_instalacion">
                                     <option value="" disabled selected>Lista de instalaciones</option>
                                 </select>
-                                <label for="id_instalacion">instalaciones</label>
+                                <label for="id_instalacion">Instalaciones</label>
                                 <button type="button" class="btn btn-primary" id="vigi"><i
                                         class="ri-add-line"></i> Agregar nueva instalación</button>
                             </div>
@@ -223,7 +223,6 @@
             },
             error: function(xhr, status, error) {
                 console.error("Error al obtener datos del lote a granel:", error);
-                alert("No se pudieron obtener los datos del lote a granel. Intenta nuevamente.");
             }
         });
     }

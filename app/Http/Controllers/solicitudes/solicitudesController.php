@@ -473,7 +473,7 @@ class solicitudesController extends Controller
             case 'vigilanciaenproduccion':
                 // Validar datos para georreferenciación
                 $request->validate([
-                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'id_empresa_vigilancia' => 'required|integer|exists:empresa,id_empresa',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
@@ -500,7 +500,7 @@ class solicitudesController extends Controller
 
                 // Actualizar datos específicos para georreferenciación
                 $solicitud->update([
-                    'id_empresa' => $request->id_empresa,
+                    'id_empresa_vigilancia' => $request->id_empresa,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
