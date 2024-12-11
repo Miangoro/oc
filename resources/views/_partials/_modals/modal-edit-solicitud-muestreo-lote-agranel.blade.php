@@ -9,13 +9,13 @@
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="editMuestreoLoteAgranelForm">
-                    <input type="text" name="id_solicitud" id="edit_id_solicitud_muestreo">
+                    <input type="hidden" name="id_solicitud" id="edit_id_solicitud_muestreo">
                     <input type="hidden" name="form_type" value="muestreoloteagranel">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="edit_id_empresa_muestreo"
-                                    onchange="obtenerInstalacionesMuestreo(); obtenerGranelesMuestreo(this.value);"
+                                    onchange="EditobtenerInstalacionesMuestreo(); editobtenerGranelesMuestreo(this.value);"
                                     name="id_empresa" class="id_empresa_muestreo select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -50,7 +50,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="obtenerDatosGranelesMuestreo();" id="edit_id_lote_granel_muestreo"
+                                <select onchange="editobtenerDatosGranelesMuestreo();" id="edit_id_lote_granel_muestreo"
                                     name="id_lote_granel_muestreo" class="select2 form-select">
                                     <option value="" disabled selected>Selecciona lote a granel</option>
                                     @foreach ($LotesGranel as $lotesgra)
@@ -142,7 +142,7 @@
 
 
 <script>
-    function obtenerInstalacionesMuestreo() {
+    function EditobtenerInstalacionesMuestreo() {
         var empresa = $("#edit_id_empresa_muestreo").val();
         $.ajax({
             url: '/getDatos/' + empresa,
@@ -168,7 +168,7 @@
         });
     }
 
-    function obtenerGranelesMuestreo(empresa) {
+    function editobtenerGranelesMuestreo(empresa) {
         $.ajax({
             url: '/getDatos/' + empresa,
             method: 'GET',
@@ -196,7 +196,7 @@
         }
     }
 
-    function obtenerDatosGranelesMuestreo() {
+    function editobtenerDatosGranelesMuestreo() {
         var lote_granel_id = $("#edit_id_lote_granel_muestreo").val();
         $.ajax({
             url: '/getDatos2/' + lote_granel_id,
