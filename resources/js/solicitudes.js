@@ -1630,6 +1630,126 @@ $(function () {
     });
   });
 
+  // Validación del formulario Muestreo Lote Agranel
+const addMuestreoLoteAgranelForm = document.getElementById('addMuestreoLoteAgranelForm');
+const fvMuestreo = FormValidation.formValidation(addMuestreoLoteAgranelForm, {
+  fields: {
+    id_empresa: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione una empresa.'
+        }
+      }
+    },
+    fecha_visita: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese la fecha y hora de la visita.'
+        }
+      }
+    },
+    id_instalacion: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione una instalación.'
+        }
+      }
+    },
+    id_lote_granel: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione un lote a granel.'
+        }
+      }
+    },
+    destino_lote: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione un tipo de destino.'
+        }
+      }
+    },
+    id_categoria: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese una categoría.'
+        }
+      }
+    },
+    id_clase: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese una clase.'
+        }
+      }
+    },
+    tipo_mageuy: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese un tipo de maguey.'
+        }
+      }
+    },
+    analisis: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese el análisis fisicoquímico.'
+        }
+      }
+    }
+  },
+  plugins: {
+    trigger: new FormValidation.plugins.Trigger(),
+    bootstrap5: new FormValidation.plugins.Bootstrap5({
+      eleValidClass: '',
+      rowSelector: function (field, ele) {
+        return '.mb-4, .mb-5, .mb-6';
+      }
+    }),
+    submitButton: new FormValidation.plugins.SubmitButton(),
+    autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function () {
+  const formData = new FormData(addMuestreoLoteAgranelForm);
+
+  $.ajax({
+    url: '/hologramas/storeMuestreoLote', // Actualiza con la URL correcta
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      // Cerrar modal y reiniciar formulario
+      $('#addMuestreoLoteAgranel').modal('hide');
+      $('#addMuestreoLoteAgranelForm')[0].reset();
+      $('.select2').val(null).trigger('change');
+      $('.datatables-solicitudes').DataTable().ajax.reload();
+
+      // Mostrar alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Muestreo registrado exitosamente.',
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+    },
+    error: function () {
+      // Mostrar alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al registrar el muestreo.',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
+  });
+});
+
+
   // Manejar el cambio en el tipo de instalación
   $(document).on('change', '#edit_tipo', function () {
     var tipo = $(this).val();

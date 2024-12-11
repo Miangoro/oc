@@ -41,18 +41,19 @@ class LotesGranel extends Model
 
     public function categoria()
     {
-        return $this->belongsTo(categorias::class, 'id_categoria');
+        return $this->belongsTo(Categorias::class, 'id_categoria', 'id_categoria');
     }
 
     public function clase()
     {
-        return $this->belongsTo(clases::class, 'id_clase');
+        return $this->belongsTo(clases::class, 'id_clase', 'id_clase');
     }
 
     public function tipo()
     {
-        return $this->belongsTo(tipos::class, 'id_tipo');
+        return $this->belongsTo(tipos::class, 'id_tipo', 'id_tipo');
     }
+    
 
     public function organismo()
     {
@@ -84,9 +85,5 @@ class LotesGranel extends Model
         return $this->hasMany(LotesGranel::class, 'lote_original_id');
     }
 
-/*     public function lotesEnvasado()
-    {
-        return $this->belongsToMany(LotesEnvasado::class, 'lotes_envasado_granel', 'id_lote_granel', 'id_lote_envasado');
-    } */
 
 }
