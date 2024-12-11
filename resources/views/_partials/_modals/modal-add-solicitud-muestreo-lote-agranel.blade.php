@@ -49,7 +49,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="obtenerDatosGraneles();" id="id_lote_granel" name="id_lote_granel"
+                                <select onchange="obtenerDatosGraneles();" id="id_lote_granel_muestreo" name="id_lote_granel"
                                     class="select2 form-select">
                                     <option value="">Selecciona lote a granel</option>
                                     @foreach ($LotesGranel as $lotesgra)
