@@ -244,17 +244,19 @@
             url: '/getDatos2/' + lote_granel_id,
             method: 'GET',
             success: function(response) {
-                $('#id_categoria_muestreo').val(response.categoria ? response.categoria.categoria : '');
-                $('#id_clase_muestreo').val(response.clase ? response.clase.clase : '');
+                $('#id_categoria_traslado').val(response.categoria ? response.categoria.categoria : '');
+                $('#id_clase_traslado').val(response.clase ? response.clase.clase : '');
                 if (response.tipo) {
                     var tipoConcatenado = response.tipo.nombre + ' (' + response.tipo.cientifico + ')';
-                    $('#id_tipo_maguey_muestreo').val(tipoConcatenado);
+                    $('#id_tipo_maguey_traslado').val(tipoConcatenado);
                 } else {
-                    $('#id_tipo_maguey_muestreo').val('');
+                    $('#id_tipo_maguey_traslado').val('');
                 }
-                $('#analisis_muestreo').val(response.lotes_granel.folio_fq);
-                $('#volumen_muestreo').val(response.lotes_granel.cont_alc);
-                $('#id_certificado_muestreo').val(response.lotes_granel.folio_certificado);
+                $('#analisis_traslado').val(response.lotes_granel.folio_fq);
+                $('#volumen_traslado').val(response.lotes_granel.cont_alc);
+                $('#id_vol_actual').val(response.lotes_granel.volumen);
+                $('#id_vol_res').val(response.lotes_granel.volumen_restante);
+
             },
             error: function() {
                 console.error('Error al obtener los datos del lote granel.');
