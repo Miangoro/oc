@@ -431,7 +431,7 @@
                                     </span>
                                 @enderror
                             </div>
-                            <div class="mb-5">
+                            <div class="mb-4">
                                 <div class="form-password-toggle">
                                     <div class="input-group input-group-merge @error('password') is-invalid @enderror">
                                         <div class="form-floating form-floating-outline">
