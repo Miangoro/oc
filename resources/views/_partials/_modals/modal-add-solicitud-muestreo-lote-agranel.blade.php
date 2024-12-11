@@ -140,7 +140,7 @@
 
 <script>
     function obtenerInstalaciones() {
-        var empresa = $(".id_empresa_muestreo").val();
+        var empresa = $("#id_empresa_muestreo").val();
 
         // Hacer una petición AJAX para obtener los detalles de la empresa
         $.ajax({
