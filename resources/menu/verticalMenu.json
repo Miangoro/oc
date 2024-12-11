@@ -232,10 +232,38 @@
           "slug": "hologramas-"
         }
       ]
+    },
+    {
+      "name": "Bitácoras",
+      "icon": "menu-icon ri-article-fill",
+      "slug": "bitacora",
+      "submenu": [
+        {
+          "url": "#",
+          "name": "Mezcal a granel",
+          "slug": "#"
+        },
+        {
+          "url": "#",
+          "name": "Producto de maduración",
+          "slug": "#"
+        },
+        {
+          "url": "#",
+          "name": "Proceso de elaboración",
+          "slug": "#"
+        },
+        {
+          "url": "#",
+          "name": "Producto terminado",
+          "slug": "#"
+        },
+        {
+          "url": "#",
+          "name": "Hologramas",
+          "slug": "#"
+        }
+      ]
     }
-      
-    
-
-
-  ]
+ ]
 }
