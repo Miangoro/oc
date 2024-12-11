@@ -118,11 +118,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-150" id="comentarios"
-                                placeholder="Información adicional sobre la actividad..."></textarea>
-                            <label for="comentarios">Información adicional sobre la actividad</label>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."></textarea>
+                            <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y CONTENEDORES):</label>
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
