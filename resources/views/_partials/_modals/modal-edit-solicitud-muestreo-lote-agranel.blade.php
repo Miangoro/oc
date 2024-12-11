@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_muestreo"
+                                <select id="edit_id_empresa_muestreo"
                                     onchange="obtenerInstalacionesMuestreo(); obtenerGranelesMuestreo(this.value);"
                                     name="id_empresa" class="id_empresa_muestreo select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
@@ -27,7 +27,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
-                                    name="fecha_visita" />
+                                    name="edit_fecha_visita" />
                                 <label for="num_anterior">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -35,7 +35,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-6 input-group ">
-                                <select class=" form-select" id="id_instalacion_muestreo" name="id_instalacion"
+                                <select class=" form-select" id="edit_id_instalacion_muestreo" name="id_instalacion"
                                     aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
                                 </select>
@@ -48,7 +48,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
-                                <select onchange="obtenerDatosGranelesMuestreo();" id="id_lote_granel_muestreo"
+                                <select onchange="obtenerDatosGranelesMuestreo();" id="edit_id_lote_granel_muestreo"
                                     name="id_lote_granel_muestreo" class="select2 form-select">
                                     <option value="">Selecciona lote a granel</option>
                                     @foreach ($LotesGranel as $lotesgra)
@@ -61,7 +61,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="destino_lote" name="destino_lote" class="form-select">
+                                <select id="edit_destino_lote" name="destino_lote" class="form-select">
                                     <option value="" disabled selected>Selecciona un tipo</option>
                                     <option value="Análisis completo">Análisis completo</option>
                                     <option value="Ajuste de grado alcohólico">Ajuste de grado alcohólico</option>
@@ -74,14 +74,14 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="id_categoria_muestreo" name="id_categoria_muestreo" placeholder="Ingresa una Categoria"
+                                    id="edit_id_categoria_muestreo" name="id_categoria_muestreo" placeholder="Ingresa una Categoria"
                                     readonly style="pointer-events: none;" />
                                 <label for="id_categoria_muestreo">Ingresa Categoria</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted" id="id_clase_muestreo"
+                                <input type="text" class="form-control bg-light text-muted" id="edit_id_clase_muestreo"
                                     name="id_clase_muestreo" placeholder="Ingresa una Clase" readonly
                                     style="pointer-events: none;" />
                                 <label for="id_clase_muestreo">Ingresa Clase</label>
@@ -90,7 +90,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="id_tipo_maguey_muestreo" name="id_tipo_maguey_muestreo"
+                                    id="edit_id_tipo_maguey_muestreo" name="id_tipo_maguey_muestreo"
                                     placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
                                 <label for="id_tipo_maguey_muestreo">Ingresa Tipo de Maguey</label>
                             </div>
@@ -99,21 +99,21 @@
                     <div class="row">
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="analisis_muestreo" name="analisis_muestreo"
+                                <input type="text" class="form-control" id="edit_analisis_muestreo" name="analisis_muestreo"
                                     placeholder="Ingresa Análisis fisicoquímico" />
                                 <label for="analisis_muestreo">Ingresa Análisis fisicoquímico</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="number" class="form-control" id="volumen_muestreo" name="volumen_muestreo"
+                                <input type="number" class="form-control" id="edit_volumen_muestreo" name="volumen_muestreo"
                                     placeholder="Ingresa el volumen" />
                                 <label for="volumen_muestreo">%Alc. Vol.</label>
                             </div>
                         </div>
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="id_certificado_muestreo"
+                                <input type="text" class="form-control" id="edit_id_certificado_muestreo"
                                     name="id_certificado_muestreo" placeholder="Ingresa el Certificado de NOM a granel" />
                                 <label for="id_certificado_muestreo">Ingresa Certificado de NOM a granel</label>
                             </div>
@@ -121,7 +121,7 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional" placeholder="Observaciones..."></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
                                 CONTENEDORES):</label>
                         </div>
