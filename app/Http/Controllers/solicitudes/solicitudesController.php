@@ -344,6 +344,55 @@ class solicitudesController extends Controller
         return response()->json(['message' => 'Vigilancia en producción de lote registrada exitosamente']);
     }
 
+
+    public function storeVigilanciaTraslado(Request $request)
+    {
+        $MuestreoLote = new solicitudesModel();
+        $MuestreoLote->folio = Helpers::generarFolioSolicitud();
+        $MuestreoLote->id_empresa = $request->id_empresa;
+        $MuestreoLote->id_tipo = 4;
+        $MuestreoLote->id_predio = 0;
+        $MuestreoLote->fecha_visita = $request->fecha_visita;
+        $MuestreoLote->id_instalacion = $request->id_instalacion;
+        $MuestreoLote->info_adicional = $request->info_adicional;
+
+
+        $MuestreoLote->caracteristicas = json_encode([
+            'id_lote_granel_traslado' => $request->id_lote_granel_traslado,
+            'id_categoria_traslado' => $request->id_categoria_traslado,
+            'id_clase_traslado' => $request->id_clase_traslado,
+            'id_tipo_maguey_traslado' => $request->id_tipo_maguey_traslado,
+            'id_salida' => $request->id_salida,
+            'id_contenedor' => $request->id_contenedor,
+            'id_sobrante' => $request->id_sobrante,
+            'id_vol_actual' => $request->id_vol_actual,
+            'id_vol_traslado' => $request->id_vol_traslado,
+            'id_vol_res' => $request->id_vol_res,
+            'analisis_traslado' => $request->analisis_traslado,
+            'volumen_traslado' => $request->volumen_traslado,
+            'id_certificado_traslado' => $request->id_certificado_traslado,
+
+
+        ]);
+
+        $MuestreoLote->save();
+
+        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+        // Notificación 1
+        $data1 = [
+            'title' => 'Nuevo registro de solicitud',
+            'message' => $MuestreoLote->folio . " " . $MuestreoLote->tipo_solicitud->tipo,
+            'url' => 'solicitudes-historial',
+        ];
+
+        // Iterar sobre cada usuario y enviar la notificación
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
+        return response()->json(['message' => 'Vigilancia en producción de lote registrada exitosamente']);
+    }
+
     public function registrarSolicitudGeoreferenciacion(Request $request)
     {
 

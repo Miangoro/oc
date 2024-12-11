@@ -1897,6 +1897,101 @@ $(function () {
       }
     });
   });
+//Validar vigilancia en traslado
+const addVigilanciaTrasladoForm = document.getElementById('addVigilanciaTrasladoForm');
+const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
+  fields: {
+    id_empresa: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione una empresa.'
+        }
+      }
+    },
+    fecha_visita: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese la fecha y hora de la inspección.'
+        }
+      }
+    },
+    id_instalacion: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione una instalación.'
+        }
+      }
+    },
+    id_lote_granel_traslado: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione un lote a granel.'
+        }
+      }
+    },
+    id_vol_traslado: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese el volumen trasladado.'
+        },
+        numeric: {
+          message: 'El volumen trasladado debe ser un número válido.',
+          thousandsSeparator: '',
+          decimalSeparator: '.'
+        }
+      }
+    }
+  },
+  plugins: {
+    trigger: new FormValidation.plugins.Trigger(),
+    bootstrap5: new FormValidation.plugins.Bootstrap5({
+      eleValidClass: '',
+      rowSelector: function (field, ele) {
+        return '.mb-4, .mb-5, .mb-6';
+      }
+    }),
+    submitButton: new FormValidation.plugins.SubmitButton(),
+    autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function () {
+  const formData = new FormData(addVigilanciaTrasladoForm);
+
+  $.ajax({
+    url: '/hologramas/storeVigilanciaTraslado', // Cambia a la URL correcta
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      // Cerrar modal y reiniciar formulario
+      $('#addVigilanciaTraslado').modal('hide');
+      $('#addVigilanciaTrasladoForm')[0].reset();
+      $('.select2').val(null).trigger('change');
+      $('.datatables-solicitudes').DataTable().ajax.reload();
+
+      // Mostrar alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Vigilancia registrada exitosamente.',
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+    },
+    error: function () {
+      // Mostrar alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al registrar la vigilancia.',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
+  });
+});
 
 
   // Manejar el cambio en el tipo de instalación

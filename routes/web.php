@@ -772,6 +772,8 @@ Route::post('/registrar-solicitud-georeferenciacion', [solicitudesController::cl
 Route::post('/registrar-solicitud-muestreo-agave', [solicitudesController::class, 'registrarSolicitudMuestreoAgave'])->name('registrarSolicitudMuestreoAgave');
 Route::post('/hologramas/storeVigilanciaProduccion', [solicitudesController::class, 'storeVigilanciaProduccion']);
 Route::post('/hologramas/storeMuestreoLote', [solicitudesController::class, 'storeMuestreoLote']);
+Route::post('/hologramas/storeVigilanciaTraslado', [solicitudesController::class, 'storeVigilanciaTraslado']);
+
 
 Route::get('/verificar-solicitud', [solicitudesController::class, 'verificarSolicitud'])->name('verificarSolicitud');
 Route::get('/datos-solicitud/{id_solicitud}', [solicitudesController::class, 'obtenerDatosSolicitud'])->name('datos.solicitud');

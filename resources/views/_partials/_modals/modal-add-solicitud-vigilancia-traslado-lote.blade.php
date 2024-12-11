@@ -97,7 +97,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="number" class="form-control" id="id_contenedor"
+                                <input type="text" class="form-control" id="id_contenedor"
                                     name="id_contenedor" placeholder="Ingresa el volumen" />
                                 <label for="id_contenedor">Identificador de contenedor de recepción</label>
                             </div>
@@ -122,8 +122,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control " id="id_vol_traslado" name="id_vol_traslado"
-                                    placeholder="Ingresa una Categoria" />
+                                <input type="number" class="form-control " id="id_vol_traslado" name="id_vol_traslado"
+                                    placeholder="Ingresa una Categoria" step="0.01"/>
                                 <label for="id_vol_traslado">Volumen trasladado</label>
                             </div>
                         </div>
@@ -147,7 +147,7 @@
                         <div class="col-md-2">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="number" class="form-control" id="volumen_traslado"
-                                    name="volumen_traslado" placeholder="Ingresa el volumen" />
+                                    name="volumen_traslado" placeholder="Ingresa el volumen" step="0.01" />
                                 <label for="volumen_traslado">%Alc. Vol.</label>
                             </div>
                         </div>
