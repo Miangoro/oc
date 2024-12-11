@@ -1,5 +1,5 @@
 <!-- Modal Certificados Intslaciones -->
-<div class="modal fade" id="PdfDictamenIntalaciones" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="PdfDictamenIntalaciones" tabindex="-1">
   <div class="modal-dialog modal-xl modal-simple">
     <div class="modal-content">
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
