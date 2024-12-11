@@ -105,7 +105,7 @@
                     <!-- Sección: Elegir Etiquetas y Corrugados -->
                     <div class="card-body table-responsive text-nowrap">
                         <h5>Datos de Etiquetas</h5>
-                        <table class="table table-striped" id="tabla_marcas">
+                        <table class="table" id="tabla_marcas">
                             <thead>
                                 <tr>
                                     <th>Dirección</th>
@@ -114,13 +114,10 @@
                                     <th>Presentación</th>
                                     <th>Clase</th>
                                     <th>Categoría</th>
-{{--                                     <th>Etiqueta</th>
-                                    <th>Corrugado</th> --}}
-                                    <th>Documento Etiquetas</th> <!-- Nueva columna -->
+                                    <th>Documento Etiquetas</th> 
                                 </tr>
                             </thead>
                             <tbody class="table-border-bottom-0">
-                                {{-- Aquí se mostrará el contenido --}}
                             </tbody>
                         </table>
                     </div>
