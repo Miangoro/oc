@@ -133,9 +133,9 @@
                 <tr>
                     <th>#</th>
                     <th>ID</th>
-                    <th>Instalaciones de</th>
-                    <th>Revisor</th>
+                    <th>Tipo</th>
                     <th>Certificado</th>
+                    <th>Revisor</th>
                     <th>Fecha Emisión</th>
                     <th>Fecha Revisión</th>
                     <th>Bitacora</th>

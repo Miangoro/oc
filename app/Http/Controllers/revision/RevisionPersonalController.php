@@ -5,6 +5,7 @@ namespace App\Http\Controllers\revision;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Revisor;
+use App\Models\RevisorGranel;
 use App\Models\Certificados;
 use App\Models\empresa;
 use App\Models\User;
@@ -20,10 +21,12 @@ class RevisionPersonalController extends Controller
     {
         $userId = auth()->id();   
         $certificadosData = $this->calcularCertificados($userId); // Estadisticas
-        $revisor = Revisor::with('certificado')->where('id_revisor', $userId)->first(); // Autentificado
+        $revisor = Revisor::with('certificado')->where('id_revisor', $userId)->first(); // Autentificado Instalaciones
+        $revisoresGranel = RevisorGranel::with('certificado')->where('id_revisor', $userId)->get(); // Autentificado Granel
         $users = User::where('tipo', 1)->get(); // Select Aprobacion
         $preguntas = preguntas_revision::where('tipo_revisor', '1')->orWhere('tipo_certificado', '1')->get();
         $noCertificados = !$revisor || !$revisor->certificado; // Alerta 
+
         return view('revision.revision_certificados-personal_view', compact('revisor', 'preguntas', 'certificadosData', 'users', 'noCertificados'));
     }
     
@@ -43,16 +46,38 @@ class RevisionPersonalController extends Controller
         $search = $request->input('search.value');
         $userId = auth()->id();
     
-        $totalData = Revisor::with(['certificado.dictamen']);
+        // Inicializar la consulta para Revisor y RevisorGranel
+        $queryRevisor = Revisor::with(['certificado.dictamen']);
+        $queryRevisorGranel = RevisorGranel::with(['certificado.dictamen']);
     
-        // Si el usuario es el admin (ID 8), contar todos los registros
-        if ($userId == 8) {
-            $totalData = $totalData->count();
-        } else {
-            $totalData = $totalData->where('id_revisor', $userId)->count();
+        // Filtrar por usuario si no es admin (ID 8)
+        if ($userId != 8) {
+            $queryRevisor->where('id_revisor', $userId);
+            $queryRevisorGranel->where('id_revisor', $userId);
         }
     
-        $totalFiltered = $totalData;
+        // Filtros de búsqueda
+        if ($search) {
+            $queryRevisor->where(function ($q) use ($search) {
+                $q->where('id_revisor', 'LIKE', "%{$search}%")
+                    ->orWhereHas('certificado', function ($q) use ($search) {
+                        $q->where('num_certificado', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('observaciones', 'LIKE', "%{$search}%")
+                    ->orWhere('tipo_revision', 'LIKE', "%{$search}%");
+            });
+    
+            $queryRevisorGranel->where(function ($q) use ($search) {
+                $q->where('id_revisor', 'LIKE', "%{$search}%")
+                    ->orWhereHas('certificado', function ($q) use ($search) {
+                        $q->where('num_certificado', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('observaciones', 'LIKE', "%{$search}%")
+                    ->orWhere('tipo_revision', 'LIKE', "%{$search}%");
+            });
+        }
+    
+        // Paginación y ordenación
         $limit = $request->input('length');
         $start = $request->input('start');
         $orderIndex = $request->input('order.0.column');
@@ -61,93 +86,61 @@ class RevisionPersonalController extends Controller
         $order = $columns[$orderIndex] ?? 'id_revisor';
         $dir = in_array($orderDir, ['asc', 'desc']) ? $orderDir : 'asc';
     
-        $query = Revisor::with(['certificado.dictamen']);
+        // Obtener el total de registros (Revisor + RevisorGranel)
+        $totalDataRevisor = $queryRevisor->count();
+        $totalDataGranel = $queryRevisorGranel->count();
     
-        if ($userId != 8) {
-            $query->where('id_revisor', $userId);
-        }
+        // Total de resultados
+        $totalData = $totalDataRevisor + $totalDataGranel;
     
-        $query->when($search, function ($q) use ($search) {
-            $q->where('id_revisor', 'LIKE', "%{$search}%")
-                ->orWhereHas('certificado', function ($q) use ($search) {
-                    $q->where('num_certificado', 'LIKE', "%{$search}%");
-                })
-                ->orWhere('observaciones', 'LIKE', "%{$search}%")
-                ->orWhere('tipo_revision', 'LIKE', "%{$search}%");
-        })
-        ->offset($start)
-        ->limit($limit)
-        ->orderBy($order, $dir);
+        // Consultar los registros
+        $revisores = $queryRevisor->offset($start)->limit($limit)->orderBy($order, $dir)->get();
+        $revisoresGranel = $queryRevisorGranel->offset($start)->limit($limit)->orderBy($order, $dir)->get();
     
-        $revisores = $query->get();
+        // Combinar los dos conjuntos de resultados
+        $revisores = $revisores->merge($revisoresGranel);
     
-        if ($search) {
-            $filteredQuery = Revisor::with('certificado.dictamen');
-    
-            if ($userId == 8) {
-                $totalFiltered = $filteredQuery->where('id_revisor', 'LIKE', "%{$search}%")
-                    ->orWhereHas('certificado', function ($q) use ($search) {
-                        $q->where('num_certificado', 'LIKE', "%{$search}%");
-                    })
-                    ->orWhere('observaciones', 'LIKE', "%{$search}%")
-                    ->orWhere('tipo_revision', 'LIKE', "%{$search}%")
-                    ->count();
-            } else {
-                $totalFiltered = $filteredQuery->where('id_revisor', $userId)
-                    ->where(function ($query) use ($search) {
-                        $query->where('id_revisor', 'LIKE', "%{$search}%")
-                              ->orWhereHas('certificado', function ($q) use ($search) {
-                                  $q->where('num_certificado', 'LIKE', "%{$search}%");
-                              })
-                              ->orWhere('observaciones', 'LIKE', "%{$search}%")
-                              ->orWhere('tipo_revision', 'LIKE', "%{$search}%");
-                    })
-                    ->count();
-            }
-        }
-    
-        // Mapeando los resultados
+       // Mapeando los resultados
         $data = $revisores->map(function ($revisor) use (&$start) {
-            $nameRevisor = $revisor->user->name ?? null;
-            $tipoDictamen = $revisor->certificado && $revisor->certificado->dictamen ? $revisor->certificado->dictamen->tipo_dictamen : null;
+        $isGranel = get_class($revisor) === RevisorGranel::class; // Verifica si es un registro de RevisorGranel
+        $nameRevisor = $revisor->user->name ?? null;
+        $tipoDictamen = $revisor->certificado && $revisor->certificado->dictamen ? $revisor->certificado->dictamen->tipo_dictamen : null;
+        $numDictamen = $revisor->certificado && $revisor->certificado->dictamen ? $revisor->certificado->dictamen->num_dictamen : null;
+        $fechaVigencia = $revisor->certificado ? $revisor->certificado->fecha_vigencia : null;
+        $fechaVencimiento = $revisor->certificado ? $revisor->certificado->fecha_vencimiento : null;
+        $fechaCreacion = $revisor->created_at; 
+        $fechaActualizacion = $revisor->updated_at;
     
-            $numDictamen = $revisor->certificado && $revisor->certificado->dictamen ? $revisor->certificado->dictamen->num_dictamen : null;
-    
-            $fechaVigencia = $revisor->certificado ? $revisor->certificado->fecha_vigencia : null;
-            $fechaVencimiento = $revisor->certificado ? $revisor->certificado->fecha_vencimiento : null;
-            $fechaCreacion = $revisor->created_at; 
-            $fechaActualizacion = $revisor->updated_at;
-    
-            return [
-                'id_revision' => $revisor->id_revision,
-                'fake_id' => ++$start,
-                'id_revisor' => $nameRevisor,
-                'id_revisor2' => $revisor->id_revisor2,
-                'observaciones' => $revisor->observaciones,
-                'tipo_revision' => $revisor->tipo_revision,
-                'num_certificado' => $revisor->certificado ? $revisor->certificado->num_certificado : null,
-                'id_certificado' => $revisor->certificado ? $revisor->certificado->id_certificado : null,
-                'tipo_dictamen' => $tipoDictamen,
-                'num_dictamen' => $numDictamen,
-                'fecha_vigencia' => Helpers::formatearFecha($fechaVigencia),
-                'fecha_vencimiento' => Helpers::formatearFecha($fechaVencimiento),
-                'fecha_creacion' => Helpers::formatearFecha($fechaCreacion),
-                'created_at' => Helpers::formatearFecha($revisor->created_at), 
-                'updated_at' => Helpers::formatearFecha($revisor->updated_at),
-                'decision' => $revisor->decision,
-            ];
-        })->filter(function ($item) {
-            return $item['id_revisor'] !== null;
+        return [
+            'id_revision' => $revisor->id_revision,
+            'fake_id' => ++$start,
+            'id_revisor' => $nameRevisor,
+            'id_revisor2' => $revisor->id_revisor2,
+            'observaciones' => $revisor->observaciones,
+            'num_certificado' => $revisor->certificado ? $revisor->certificado->num_certificado : null,
+            'id_certificado' => $revisor->certificado ? $revisor->certificado->id_certificado : null,
+            'tipo_dictamen' => $tipoDictamen,
+            'num_dictamen' => $numDictamen,
+            'fecha_vigencia' => Helpers::formatearFecha($fechaVigencia),
+            'fecha_vencimiento' => Helpers::formatearFecha($fechaVencimiento),
+            'fecha_creacion' => Helpers::formatearFecha($fechaCreacion),
+            'created_at' => Helpers::formatearFecha($revisor->created_at), 
+            'updated_at' => Helpers::formatearFecha($revisor->updated_at),
+            'decision' => $revisor->decision,
+            // Diferenciador
+            'tipo_revision' => $isGranel ? 'RevisorGranel' : 'Revisor', 
+        ];
         });
-    
+
+        // Devolver los resultados como respuesta JSON
         return response()->json([
             'draw' => intval($request->input('draw')),
             'recordsTotal' => intval($totalData),
-            'recordsFiltered' => intval($totalFiltered),
+            'recordsFiltered' => intval($totalData),
             'data' => $data,
         ]);
     }
-
+    
     public function registrarRespuestas(Request $request)
     {
         try {
