@@ -186,6 +186,7 @@ $(function () {
               `data-fecha-vigencia="${full['fecha_vigencia']}" ` +
               `data-fecha-vencimiento="${full['fecha_vigencia']}" ` +
               `data-tipo="${full['tipo_dictamen']}" ` +
+              `data-tipo_revision="${full['tipo_revision']}" ` +
               `data-accion="revisar" ` +  // Identificador
               `data-bs-toggle="modal" ` +
               `data-bs-target="#fullscreenModal">` +
@@ -481,6 +482,12 @@ $(document).on('click', '.cuest', function () {
   });
 
   cargarRespuestas(id_revision); 
+
+    var tipoRevision = $(this).data('tipo_revision');
+    if (tipoRevision === 'RevisorGranel') {
+      console.log("Entro");
+    }
+    
 });
 
 $(document).on('click', '#registrarRevision', function () {
