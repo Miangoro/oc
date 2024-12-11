@@ -75,22 +75,22 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="analisis" name="analisis"
-                                    placeholder="Ingresa una Categoria" />
+                                <input type="text" class="form-control bg-light text-muted" id="analisis" name="analisis"
+                                    placeholder="Ingresa una Categoria" readonly style="pointer-events: none;"/>
                                 <label for="analisis">Ingresa Categoria</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="analisis" name="analisis"
-                                    placeholder="Ingresa una Clase" />
+                                <input type="text" class="form-control bg-light text-muted" id="analisis" name="analisis"
+                                    placeholder="Ingresa una Clase" readonly style="pointer-events: none;"/>
                                 <label for="analisis">Ingresa Clase</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="analisis" name="analisis"
-                                    placeholder="Ingresa un tipo de Maguey" />
+                                <input type="text" class="form-control bg-light text-muted" id="analisis" name="analisis"
+                                    placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;"/>
                                 <label for="analisis">Ingresa Tipo de Maguey</label>
                             </div>
                         </div>
@@ -105,7 +105,7 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="analisis" name="analisis"
+                                <input type="number" class="form-control" id="analisis" name="analisis" step="0.01"
                                     placeholder="Ingresa % Alc. Vol." />
                                 <label for="analisis">% Alc. Vol.</label>
                             </div>

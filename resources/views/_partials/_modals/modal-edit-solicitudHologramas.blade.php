@@ -14,7 +14,7 @@
                  <input type="hidden" id="editt_id_solicitud" name="id_solicitud">
 
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control bg-light text-muted" id="edit_folio" name="edit_folio" placeholder="Ingresa el folio de solicitud" aria-label="Ingrese el folio" required />
+                        <input type="text" class="form-control bg-light text-muted" id="edit_folio" name="edit_folio" placeholder="Ingresa el folio de solicitud" readonly style="pointer-events: none;" />
                         <label for="folio">Folio de solicitud</label>
                     </div>
 
