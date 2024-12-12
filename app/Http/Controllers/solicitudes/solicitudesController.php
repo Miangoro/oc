@@ -10,6 +10,7 @@ use App\Models\estados;
 use App\Models\Instalaciones;
 use App\Models\organismos;
 use App\Models\LotesGranel;
+use App\Models\lotes_envasado;
 use App\Models\solicitudesModel;
 use App\Models\clases;
 use App\Models\solicitudTipo;
@@ -742,39 +743,39 @@ class solicitudesController extends Controller
 
                 break;
 
-            case 'muestreoloteagranel':
-                // Validar datos para georreferenciación
-                $request->validate([
-                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
-                    'fecha_visita' => 'required|date',
-                    'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
-                    'info_adicional' => 'nullable|string'
-                ]);
-                // Preparar el JSON para guardar en `caracteristicas`
-                $caracteristicasJson = [
-                    'id_lote_granel_muestreo' => $request->id_lote_granel_muestreo,
-                    'destino_lote' => $request->destino_lote,
-                    'id_categoria_muestreo' => $request->id_categoria_muestreo,
-                    'id_clase_muestreo' => $request->id_clase_muestreo,
-                    'id_tipo_maguey_muestreo' => $request->id_tipo_maguey_muestreo,
-                    'analisis_muestreo' => $request->analisis_muestreo,
-                    'volumen_muestreo' => $request->volumen_muestreo,
-                    'id_certificado_muestreo' => $request->id_certificado_muestreo,
-                ];
+                case 'muestreoloteagranel':
+                    // Validar datos para georreferenciación
+                    $request->validate([
+                        'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                        'fecha_visita' => 'required|date',
+                        'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                        'info_adicional' => 'nullable|string'
+                    ]);
+                    // Preparar el JSON para guardar en `caracteristicas`
+                    $caracteristicasJson = [
+                        'id_lote_granel_muestreo' => $request->id_lote_granel_muestreo,
+                        'destino_lote' => $request->destino_lote,
+                        'id_categoria_muestreo' => $request->id_categoria_muestreo,
+                        'id_clase_muestreo' => $request->id_clase_muestreo,
+                        'id_tipo_maguey_muestreo' => $request->id_tipo_maguey_muestreo,
+                        'analisis_muestreo' => $request->analisis_muestreo,
+                        'volumen_muestreo' => $request->volumen_muestreo,
+                        'id_certificado_muestreo' => $request->id_certificado_muestreo,
+                    ];
 
-                // Convertir el array a JSON
-                $jsonContent = json_encode($caracteristicasJson);
+                    // Convertir el array a JSON
+                    $jsonContent = json_encode($caracteristicasJson);
 
-                // Actualizar datos específicos para georreferenciación
-                $solicitud->update([
-                    'id_empresa' => $request->id_empresa,
-                    'fecha_visita' => $request->fecha_visita,
-                    'id_instalacion' => $request->id_instalacion,
-                    'info_adicional' => $request->info_adicional,
-                    'caracteristicas' => $jsonContent,
-                ]);
+                    // Actualizar datos específicos para georreferenciación
+                    $solicitud->update([
+                        'id_empresa' => $request->id_empresa,
+                        'fecha_visita' => $request->fecha_visita,
+                        'id_instalacion' => $request->id_instalacion,
+                        'info_adicional' => $request->info_adicional,
+                        'caracteristicas' => $jsonContent,
+                    ]);
 
-                break;
+                    break;
 
             case 'vigilanciatraslado':
                 $request->validate([
@@ -1035,7 +1036,6 @@ class solicitudesController extends Controller
             'factura_proforma_cont' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
             /*  */
             'lote_envasado' => 'array',  // Asegurarse de que los lotes sean arrays
-            'lote_granel' => 'array',    // Asegurarse de que los lotes sean arrays
             'cantidad_botellas' => 'array',  // Asegurarse de que las cantidades sean arrays
             'cantidad_cajas' => 'array',  // Asegurarse de que las cantidades sean arrays
             'presentacion' => 'array',  // Asegurarse de que las presentaciones sean arrays
@@ -1057,7 +1057,6 @@ class solicitudesController extends Controller
             // Crear el detalle para cada conjunto de datos de lote
             $detalles[] = [
                 'lote_envasado' => (int)$validated['lote_envasado'][$i],
-                'lote_granel' => (int)$validated['lote_granel'][$i],
                 'cantidad_botellas' => (int)$validated['cantidad_botellas'][$i],
                 'cantidad_cajas' => (int)$validated['cantidad_cajas'][$i],
                 'presentacion' => (int)$validated['presentacion'][$i],
@@ -1145,4 +1144,24 @@ class solicitudesController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Pedido registrado.']);
     }
+
+    public function getDetalleLoteEnvasado($id_lote_envasado)
+    {
+        $lote = lotes_envasado::find($id_lote_envasado);
+        if (!$lote) {
+            return response()->json(['error' => 'Lote no encontrado'], 404);
+        }
+        // Usando la relación 'lotesGranel' para obtener los lotes a granel asociados
+        $lotesGranel = $lote->lotesGranel; // Esto devuelve los lotes a granel asociados
+        // Si no hay lotes a granel asociados, puedes devolver un mensaje o array vacío
+        if ($lotesGranel->isEmpty()) {
+            return response()->json(['detalle' => null], 200);
+        }
+        // Si hay lotes a granel, devolverlos en el formato adecuado
+        return response()->json([
+            'detalle' => $lotesGranel->pluck('nombre_lote') // Puedes cambiar 'nombre_lote' por cualquier campo relevante de LotesGranel
+        ]);
+    }
+
+
 }

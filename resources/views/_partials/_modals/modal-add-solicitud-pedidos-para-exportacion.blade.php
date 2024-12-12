@@ -131,13 +131,9 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating form-floating-outline mb-4">
-                                            <select name="lote_granel[0]"
-                                                class="select2 form-select lotes_granel_export">
-                                                <option value="" disabled selected>Selecciona un lote a granel
-                                                </option>
-                                                <!-- Opciones dinámicas -->
-                                            </select>
-                                            <label for="lote_granel">Selecciona el lote a granel</label>
+                                            <input type="text" disabled name="lote_granel[0]" class="form-control lotes_granel_export">
+                                            </input>
+                                            <label for="lote_granel">lote a granel</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -222,107 +218,135 @@
 
 
 <script>
-    function cargarDatosCliente() {
-        var empresa = $("#id_empresa_solicitud_exportacion").val();
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
-                // Instalaciones
-                var contenidoInstalaciones = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    // Limpia el campo tipo usando la función limpiarTipo
-                    var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-
-                    contenidoInstalaciones += '<option value="' + response.instalaciones[index]
-                        .id_instalacion + '">' +
-                        tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa + '</option>';
-                }
-                if (response.instalaciones.length == 0) {
-                    contenidoInstalaciones =
-                        '<option value="" disabled selected>Sin instalaciones registradas</option>';
-                }
-                $('#id_instalacion_exportacion').html(contenidoInstalaciones);
-                // Direcciones
-                var contenidoDirecciones = "";
-                for (let index = 0; index < response.direcciones.length; index++) {
-                    let destinatario = response.direcciones[index].destinatario || "Sin destinatario";
-                    contenidoDirecciones += `
-                        <option value="${response.direcciones[index].id_direccion}">
-                            ${destinatario} | ${response.direcciones[index].direccion}
-                        </option>`;
-                }
-                if (response.direcciones.length === 0) {
-                    contenidoDirecciones = '<option value="" disabled selected>Sin direcciones registradas</option>';
-                }
-                $('#direccion_destinatario_ex').html(contenidoDirecciones);
-                var contenidoLotes = "";
-                var marcas = response.marcas;
-                for (let index = 0; index < response.lotes_envasado.length; index++) {
-
-                    var skuLimpio = limpiarSku(response.lotes_envasado[index].sku);
-                    var marcaEncontrada = marcas.find(function(marca) {
-                        return marca.id_marca === response.lotes_envasado[index].id_marca;
-                    });
-                    var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
-                    contenidoLotes += '<option value="' + response.lotes_envasado[index].id_lote_envasado + '">' +
-                        skuLimpio + ' | ' + response.lotes_envasado[index].nombre + ' | ' + nombreMarca + '</option>';
-                }
-                if (response.lotes_envasado.length == 0) {
-                    contenidoLotes = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
-                }
-                $('.evasado_export').html(contenidoLotes);
-                // Lotes graneles
-                var contenidoLotesGraneles = "";
-                for (let index = 0; index < response.lotes_granel.length; index++) {
-                    contenidoLotesGraneles += '<option value="' + response.lotes_granel[index]
-                        .id_lote_granel + '">' +
-                        response.lotes_granel[index].nombre_lote + '</option>';
-                }
-                if (response.lotes_granel.length == 0) {
-                    contenidoLotesGraneles =
-                        '<option value="" disabled selected>Sin lotes granel registrados</option>';
-                }
-                $('.lotes_granel_export').html(contenidoLotesGraneles);
-
-            },
-            error: function() {
-                console.error('Error al cargar los datos.');
-            }
-        });
-    }
-    // Función para limpiar el campo tipo
-    function limpiarTipo(tipo) {
-        try {
-            // Convierte el JSON string a un array y únelos en una cadena limpia
-            return JSON.parse(tipo).join(', ');
-        } catch (e) {
-            // Si no es JSON válido, regresa el valor original
-            return tipo;
+function cargarDatosCliente() {
+    var empresa = $("#id_empresa_solicitud_exportacion").val();
+    $.ajax({
+        url: '/getDatos/' + empresa,
+        method: 'GET',
+        success: function(response) {
+            cargarInstalaciones(response.instalaciones);
+            cargarDirecciones(response.direcciones);
+            cargarLotesEnvasado(response.lotes_envasado, response.marcas);
+            cargarLotesGranel(response.lotes_granel);
+        },
+        error: function() {
+            console.error('Error al cargar los datos.');
         }
+    });
+}
+
+// Función para cargar instalaciones
+function cargarInstalaciones(instalaciones) {
+    var contenidoInstalaciones = "";
+    for (let index = 0; index < instalaciones.length; index++) {
+        var tipoLimpio = limpiarTipo(instalaciones[index].tipo);
+        contenidoInstalaciones += `
+            <option value="${instalaciones[index].id_instalacion}">
+                ${tipoLimpio} | ${instalaciones[index].direccion_completa}
+            </option>`;
     }
+    if (instalaciones.length === 0) {
+        contenidoInstalaciones = '<option value="" disabled selected>Sin instalaciones registradas</option>';
+    }
+    $('#id_instalacion_exportacion').html(contenidoInstalaciones);
+}
 
-    function limpiarSku(sku) {
-        console.log("Valor original de SKU:", sku); // Agrega un log para verificar el valor recibido
+// Función para cargar direcciones
+function cargarDirecciones(direcciones) {
+    var contenidoDirecciones = "";
+    for (let index = 0; index < direcciones.length; index++) {
+        let destinatario = direcciones[index].destinatario || "Sin destinatario";
+        contenidoDirecciones += `
+            <option value="${direcciones[index].id_direccion}">
+                ${destinatario} | ${direcciones[index].direccion}
+            </option>`;
+    }
+    if (direcciones.length === 0) {
+        contenidoDirecciones = '<option value="" disabled selected>Sin direcciones registradas</option>';
+    }
+    $('#direccion_destinatario_ex').html(contenidoDirecciones);
+}
 
-        try {
-            // Intenta parsear el SKU como JSON
-            let parsedSku = JSON.parse(sku);
-            console.log("SKU parseado:", parsedSku); // Verifica qué devuelve el parseo
+// Función para cargar lotes envasados
+// Función para cargar lotes envasados
+function cargarLotesEnvasado(lotesEnvasado, marcas) {
+    var contenidoLotes = "";
+    for (let index = 0; index < lotesEnvasado.length; index++) {
+        var skuLimpio = limpiarSku(lotesEnvasado[index].sku);
+        var marcaEncontrada = marcas.find(marca => marca.id_marca === lotesEnvasado[index].id_marca);
+        var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
 
-            // Verifica si parsedSku tiene la propiedad 'inicial'
-            if (parsedSku && parsedSku.inicial) {
-                return parsedSku.inicial; // Regresa el valor de 'inicial'
+        contenidoLotes += `
+            <option value="${lotesEnvasado[index].id_lote_envasado}">
+                ${skuLimpio} | ${lotesEnvasado[index].nombre} | ${nombreMarca}
+            </option>`;
+    }
+    if (lotesEnvasado.length === 0) {
+        contenidoLotes = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
+    }
+    $('.evasado_export').html(contenidoLotes);
+
+    // Añadir evento change a los select de lotes envasados
+    $('.evasado_export').on('change', function() {
+        var idLoteEnvasado = $(this).val(); // Obtén el id seleccionado
+        cargarDetallesLoteEnvasado(idLoteEnvasado); // Llamar a la función con el id seleccionado
+    });
+}
+
+// Función para cargar lotes a granel
+function cargarLotesGranel(lotesGranel) {
+    var contenidoLotesGraneles = "";
+    for (let index = 0; index < lotesGranel.length; index++) {
+        contenidoLotesGraneles += `
+            <option value="${lotesGranel[index].id_lote_granel}">
+                ${lotesGranel[index].nombre_lote}
+            </option>`;
+    }
+    if (lotesGranel.length === 0) {
+        contenidoLotesGraneles = '<option value="" disabled selected>Sin lotes granel registrados</option>';
+    }
+    $('.lotes_granel_export').html(contenidoLotesGraneles);
+}
+
+function cargarDetallesLoteEnvasado(idLoteEnvasado) {
+    $.ajax({
+        url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
+        method: 'GET',
+        success: function(response) {
+            console.log(response); // Verifica la respuesta que recibes
+            if (response.detalle) {
+                // Si hay detalles, convierte el array en una cadena separada por comas
+                $('.lotes_granel_export').val(response.detalle.join(', ')); // Une los nombres de los lotes con coma y espacio
             } else {
-                return sku; // Si no tiene la propiedad 'inicial', regresa el SKU tal como está
+                $('.lotes_granel_export').val(''); // Si no hay detalles, limpia el campo
             }
-        } catch (e) {
-            // Si no es un JSON válido, simplemente retorna el valor original
-            console.warn("Error al parsear SKU:", e); // Registra el error de parseo
-            return sku;
+        },
+        error: function() {
+            console.error('Error al cargar el detalle del lote envasado.');
         }
+    });
+}
+
+
+
+// Función para limpiar el campo tipo
+function limpiarTipo(tipo) {
+    try {
+        return JSON.parse(tipo).join(', ');
+    } catch (e) {
+        return tipo;
     }
+}
+
+// Función para limpiar SKU
+function limpiarSku(sku) {
+    try {
+        let parsedSku = JSON.parse(sku);
+        return parsedSku && parsedSku.inicial ? parsedSku.inicial : sku;
+    } catch (e) {
+        return sku;
+    }
+}
 
 
 

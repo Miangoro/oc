@@ -3,6 +3,33 @@
         max-width: 100%;
         width: auto%;
     }
+
+    .select2-container .select2-selection--single {
+    height: 31px; /* Ajusta la altura aquí */
+    font-size: 0.875rem; /* Tamaño del texto */
+    line-height: 31px; /* Alineación vertical */
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding-left: 8px; /* Espaciado interno */
+    padding-right: 8px;
+    font-size: 0.875rem; /* Tamaño del texto */
+    line-height: 31px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 31px; /* Ajusta el tamaño del ícono */
+}
+
+.select2-container .select2-selection--multiple {
+    min-height: 31px; /* Ajusta la altura */
+    font-size: 0.875rem;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    font-size: 0.875rem; /* Tamaño del texto */
+}
+
 </style>
 <div class="modal fade" id="etiquetas" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-custom-size modal-simple modal-add-new-address">
@@ -26,7 +53,7 @@
                                             </button></th>
                                         <th style="width: 20%">Destino de exportación</th>
                                         <th>SKU</th>
-                                        <th>Categoría</th>
+                                        <th>Información</th>
                                         <th>Cont. Neto</th>
                                         <th>% Alc. Vol.</th>
                                       
@@ -93,8 +120,8 @@
                     <select class="form-control" name="unidad[]"><option value="mL">mL</option><option value="L">L</option><option value="cL">cL</option></select></td>
                 <td><input type="text" class="form-control form-control-sm" name="alc_vol[]"></td>
                
-                <td><input class="form-control form-control-sm" type="file" name="url_etiqueta[]"><input value="60" class="form-control" type="hidden" name="id_documento[]"><input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]"></td>
-                <td><input class="form-control form-control-sm" type="file" name="url_corrugado[]"><input value="75" class="form-control" type="hidden" name="id_documento[]"><input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]"></td>
+                <td><input class="form-control form-control-sm" type="file" name="url[]"><input value="60" class="form-control" type="hidden" name="id_documento[]"><input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]"></td>
+                <td><input class="form-control form-control-sm" type="file" name="url[]"><input value="75" class="form-control" type="hidden" name="id_documento[]"><input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]"></td>
             </tr>`;
 
             $('#contenidoRango').append(newRow);

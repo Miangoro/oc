@@ -361,8 +361,19 @@ class marcasCatalogoController extends Controller
     
             // Procesar cada documento enviado
             foreach ($request->id_documento as $index => $id_documento) {
-                $imprimir = 'entro aunque sea al for';
                
+                
+
+                if ($id_documento ==60 AND !isset($idUnico1[$index]) AND !isset($request->url_etiqueta[$index])) {
+                    continue;
+                }
+
+                if ($id_documento == 75 AND !isset($idUnico1[$index]) AND !isset($request->url_corrugado[$index])) {
+                    continue;
+                }
+
+               // $imprimir = $imprimir.'-entro aunque sea al for'.$idUnico1[$index].' y '.$id_documento;
+    
                 $currentIdUnico = $idUnico1[$index];
                 $documento = Documentacion_url::where('id_doc', $currentIdUnico)
                     ->where('id_documento', $id_documento)
@@ -371,16 +382,16 @@ class marcasCatalogoController extends Controller
                 
                 if ($documento) {
                     // Actualizar documento existente
-                    $imprimir = 'entro al editar1';
+                    $imprimir = $imprimir.'---entro al editar'.$id_documento.' '.$currentIdUnico;
                     $this->updateDocument($documento, $request, $index, $numeroCliente,$imprimir);
                 } else {
                     // Crear un nuevo documento
-                    $imprimir = 'entro al registrar1';
-                    $this->createNewDocuments($loteEnvasado, $currentIdUnico, $request, $index, $numeroCliente,$imprimir);
+                    //$imprimir = $imprimir.'---entro al registrar'.$id_documento.' '.$currentIdUnico;
+                    $this->createNewDocuments($loteEnvasado, $currentIdUnico, $request, $index, $numeroCliente);
                 }
             }
           
-            return response()->json(['success' => 'Etiquetas actualizadas correctamente '.$imprimir]);
+            return response()->json(['success' => 'Etiquetas actualizadas correctamente']);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Error al actualizar las etiquetas',
@@ -394,16 +405,16 @@ class marcasCatalogoController extends Controller
 
     protected function updateDocument($documento, $request, $index, $numeroCliente,$imprimir)
     {   $imprimir = 'a editar';
-        if (isset($request->file('url_etiqueta')[$index]) && $documento->id_documento==60) {
-            $file = $request->file('url_etiqueta')[$index];
+        if (isset($request->file('url')[$index]) && $documento->id_documento==60) {
+            $file = $request->file('url')[$index];
             $filename = 'etiquetas_editado' . time() . $index . '.' . $file->getClientOriginalExtension();
             $file->storeAs("uploads/$numeroCliente", $filename, 'public');
             $documento->url = $filename;
             $documento->save();
         }
     
-        if (isset($request->file('url_corrugado')[$index]) && $documento->id_documento==75) {
-            $file = $request->file('url_corrugado')[$index];
+        if (isset($request->file('url')[$index]) && $documento->id_documento==75) {
+            $file = $request->file('url')[$index];
             $filename = 'corrugado_editado' . time() . $index . '.' . $file->getClientOriginalExtension();
             $file->storeAs("uploads/$numeroCliente", $filename, 'public');
             $documento->url = $filename;
@@ -411,38 +422,25 @@ class marcasCatalogoController extends Controller
         }
     }
     
-    protected function createNewDocuments($loteEnvasado, $idUnico, $request, $index, $numeroCliente)
+    protected function createNewDocuments($loteEnvasado, $currentIdUnico, $request, $index, $numeroCliente)
     {   
         $imprimir = 'a registrar';
-        if (isset($request->file('url_etiqueta')[$index])) {
-            $file = $request->file('url_etiqueta')[$index];
-            $filename = 'etiquetas_' . time() . $index . '.' . $file->getClientOriginalExtension();
+        if (isset($request->file('url')[$index])) {
+            $file = $request->file('url')[$index];
+            $filename = $request->nombre_documento[$index].'_' . time() . $index . '.' . $file->getClientOriginalExtension();
             $file->storeAs("uploads/$numeroCliente", $filename, 'public');
     
             Documentacion_url::create([
                 'id_relacion' => $loteEnvasado->id_marca,
-                'id_doc' => $idUnico,
-                'id_documento' => 60,
-                'nombre_documento' => 'Etiquetas',
+                'id_doc' => $currentIdUnico,
+                'id_documento' => $request->id_documento[$index],
+                'nombre_documento' => $request->nombre_documento[$index],
                 'url' => $filename,
                 'id_empresa' => $loteEnvasado->id_empresa,
             ]);
         }
     
-        if (isset($request->file('url_corrugado')[$index])) {
-            $file = $request->file('url_corrugado')[$index];
-            $filename = 'corrugado_' . time() . $index . '.' . $file->getClientOriginalExtension();
-            $file->storeAs("uploads/$numeroCliente", $filename, 'public');
-    
-            Documentacion_url::create([
-                'id_relacion' => $loteEnvasado->id_marca,
-                'id_doc' => $idUnico,
-                'id_documento' => 75,
-                'nombre_documento' => 'Corrugado',
-                'url' => $filename,
-                'id_empresa' => $loteEnvasado->id_empresa,
-            ]);
-        }
+     
     }
     
 

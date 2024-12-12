@@ -302,7 +302,7 @@
                                     <div class="form-floating form-floating-outline">
                                         <input type="text" id="fecha_emision" name="fecha_emision"
                                             autocomplete="off" class="form-control datepicker"
-                                            placeholder="Fecha de Emisión" readonly />
+                                            placeholder="Fecha de Emisión"  />
                                         <label for="fecha_emision">Fecha de Emisión</label>
                                     </div>
                                 </div>
@@ -310,7 +310,7 @@
                                     <div class="form-floating form-floating-outline">
                                         <input type="text" id="fecha_vigencia" name="fecha_vigencia"
                                             autocomplete="off" class="form-control datepicker"
-                                            placeholder="Fecha de Vigencia" readonly />
+                                            placeholder="Fecha de Vigencia"  />
                                         <label for="fecha_vigencia">Fecha de Vigencia</label>
                                     </div>
                                 </div>
