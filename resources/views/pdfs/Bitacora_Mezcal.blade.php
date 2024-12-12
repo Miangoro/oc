@@ -7,55 +7,64 @@
     <title>Bitácora Mezcal a Granel</title>
 </head>
 <style>
-    /* General styling for the table */
     table {
-        width: 100%; /* Make the table span across the entire page */
-        border-collapse: collapse; /* Remove spaces between borders */
+        width: 101%;
+        border-collapse: collapse;
         table-layout: fixed; 
     }
 
-    /* Style for table cells and headers */
     th, td {
         border: 1px solid #595959;
         padding: 8px;
         text-align: center;
         font-size: 10px;
         word-wrap: break-word;
-    }
-
-    /* Style for table headers */
-    th {
-        background-color: #f0e6cc;
-        font-weight: bold;
-    }
-
-    /* Alternating row colors */
-    tr:nth-child(even) {
-        background-color: #fbf8f0;
-    }
-
-    tr:nth-child(odd) {
-        background-color: #fefcf9;
-    }
-
-    /* Adjust the width of columns */
-    td, th {
-        width: auto; /* Allow content to decide width */
+        width: auto;
         height: 25px;
     }
 
-    /* Responsive behavior for smaller screens */
-    @media screen and (max-width: 768px) {
-        table, th, td {
-            font-size: 8px; /* Smaller text on mobile */
-        }
+    img {
+        display: flex;
+        margin-bottom: 10px; 
+    }
+
+    .img .logo-small {
+        height: 70px; 
+        width: auto;
+    }
+
+    .text {
+        text-align: center;
+        margin-top: -50px; 
+        font-family: 'calibri-bold';
+        font-size: 18px;
+    }
+
+    tr.text-title td, tr.text-title th {
+        border: 1px solid #595959;
+        padding: 2px; 
+        text-align: center; 
+        font-size: 5px; 
+        word-break: break-word;
+        height: auto;
+        width: auto;
+        vertical-align: middle;
+        background: #D0CECE;     
+        font-family: 'calibri-bold';
     }
 </style>
 <body>
-    
+    <div class="img"> 
+        <img src="{{ public_path('img_pdf/UVEM_logo.png') }}" alt="Unidad de Inspección" class="logo-small">
+    </div>
+
+    <div>
+        <p class="text">INVENTARIO DE MEZCAL A GRANEL</p>
+    </div>
+
     <table>
         <tbody>
-            <tr>
+            <tr class="text-title">
                 <td rowspan="2">FECHA</td>
                 <td rowspan="2">ID DE TANQUE</td>
                 <td rowspan="2">LOTE A GRANEL</td>
@@ -74,7 +83,7 @@
                 <td rowspan="2">OBSERVACIONES</td>
                 <td rowspan="2">FIRMA DE LA UI</td>
             </tr>
-            <tr>
+            <tr class="text-title">
                 <td>VOLUMEN</td>
                 <td>%ALC.VOL.</td>
                 <td>PROCEDENCIA</td>
