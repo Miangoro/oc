@@ -731,14 +731,12 @@ class solicitudesController extends Controller
                 break;
 
             case 'vigilanciatraslado':
-                // Validar datos para georreferenciación
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
                 ]);
-                // Preparar el JSON para guardar en `caracteristicas`
                 $caracteristicasJson = [
                     'id_lote_granel_traslado' => $request->id_lote_granel_traslado,
                     'id_categoria_traslado' => $request->id_categoria_traslado,
@@ -755,11 +753,7 @@ class solicitudesController extends Controller
                     'id_certificado_traslado' => $request->id_certificado_traslado,
 
                 ];
-
-                // Convertir el array a JSON
                 $jsonContent = json_encode($caracteristicasJson);
-
-                // Actualizar datos específicos para georreferenciación
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
                     'fecha_visita' => $request->fecha_visita,
@@ -767,18 +761,15 @@ class solicitudesController extends Controller
                     'info_adicional' => $request->info_adicional,
                     'caracteristicas' => $jsonContent,
                 ]);
-
                 break;
 
             case 'muestreobarricada':
-                // Validar datos para georreferenciación
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
                     'info_adicional' => 'nullable|string'
                 ]);
-                // Preparar el JSON para guardar en `caracteristicas`
                 $caracteristicasJson = [
                     'id_lote_granel_barricada' => $request->id_lote_granel_barricada,
                     'id_categoria_barricada' => $request->id_categoria_barricada,
@@ -795,14 +786,8 @@ class solicitudesController extends Controller
                     'num_recipientes' => $request->num_recipientes,
                     'tiempo_dura' => $request->tiempo_dura,
                     'id_certificado_barricada' => $request->id_certificado_barricada,
-
-
                 ];
-
-                // Convertir el array a JSON
                 $jsonContent = json_encode($caracteristicasJson);
-
-                // Actualizar datos específicos para georreferenciación
                 $solicitud->update([
                     'id_empresa' => $request->id_empresa,
                     'fecha_visita' => $request->fecha_visita,
@@ -810,7 +795,40 @@ class solicitudesController extends Controller
                     'info_adicional' => $request->info_adicional,
                     'caracteristicas' => $jsonContent,
                 ]);
+                break;
 
+            case 'muestreobarricadaliberacion':
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_visita' => 'required|date',
+                    'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                    'info_adicional' => 'nullable|string'
+                ]);
+                $caracteristicasJson = [
+                    'id_lote_granel_liberacion' => $request->id_lote_granel_liberacion,
+                    'id_categoria_liberacion' => $request->id_categoria_liberacion,
+                    'id_clase_liberacion' => $request->id_clase_liberacion,
+                    'id_tipo_maguey_liberacion' => $request->id_tipo_maguey_liberacion,
+                    'id_edad_liberacion' => $request->id_edad_liberacion,
+                    'analisis_liberacion' => $request->analisis_liberacion,
+                    'volumen_liberacion' => $request->volumen_liberacion,
+                    'tipo_lote_lib' => $request->tipo_lote_lib,
+                    'fecha_inicio_lib' => $request->fecha_inicio_lib,
+                    'fecha_termino_lib' => $request->fecha_termino_lib,
+                    'material_liberacion' => $request->material_liberacion,
+                    'capacidad_liberacion' => $request->capacidad_liberacion,
+                    'num_recipientes_lib' => $request->num_recipientes_lib,
+                    'tiempo_dura_lib' => $request->tiempo_dura_lib,
+                    'id_certificado_liberacion' => $request->id_certificado_liberacion,
+                ];
+                $jsonContent = json_encode($caracteristicasJson);
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_instalacion' => $request->id_instalacion,
+                    'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => $jsonContent,
+                ]);
                 break;
 
 
