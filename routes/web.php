@@ -856,8 +856,8 @@ Route::post('/certificados/reexpedir/granel', [Certificado_GranelController::cla
 
 //Bitacoras
 Route::get('/bitacora_mezcal', [CartaAsignacionController::class, 'BitacoraMezcal'])->name('bitacora_mezcal');
+Route::get('/bitacora_maduracion', [CartaAsignacionController::class, 'BitacoraMaduracion'])->name('bitacora_maduracion');
 /* Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
-Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion'); */
 
