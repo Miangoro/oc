@@ -957,7 +957,6 @@ class solicitudesController extends Controller
             'factura_proforma_cont' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
             /*  */
             'lote_envasado' => 'array',  // Asegurarse de que los lotes sean arrays
-            'lote_granel' => 'array',    // Asegurarse de que los lotes sean arrays
             'cantidad_botellas' => 'array',  // Asegurarse de que las cantidades sean arrays
             'cantidad_cajas' => 'array',  // Asegurarse de que las cantidades sean arrays
             'presentacion' => 'array',  // Asegurarse de que las presentaciones sean arrays
@@ -979,7 +978,6 @@ class solicitudesController extends Controller
             // Crear el detalle para cada conjunto de datos de lote
             $detalles[] = [
                 'lote_envasado' => (int)$validated['lote_envasado'][$i],
-                'lote_granel' => (int)$validated['lote_granel'][$i],
                 'cantidad_botellas' => (int)$validated['cantidad_botellas'][$i],
                 'cantidad_cajas' => (int)$validated['cantidad_cajas'][$i],
                 'presentacion' => (int)$validated['presentacion'][$i],

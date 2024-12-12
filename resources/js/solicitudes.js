@@ -3398,7 +3398,6 @@ function cargarLotes(empresaSeleccionada, sectionCount) {
         const row = $(this);
         caracteristicas.detalles.push({
           lote_envasado: row.find('.lote-envasado').val(),
-          lote_granel: row.find('.lote-granel').val(),
           cantidad_botellas: row.find('.cantidad-botellas').val(),
           cantidad_cajas: row.find('.cantidad-cajas').val(),
           presentacion: row.find('.presentacion').val()
