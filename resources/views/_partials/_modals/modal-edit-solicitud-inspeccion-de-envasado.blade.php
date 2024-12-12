@@ -178,8 +178,6 @@
     </div>
 </div>
 
-
-
 <script>
     function editobtenerInstalacionesInspecciones() {
         var empresa = $("#edit_id_empresa_inspeccion").val();

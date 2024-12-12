@@ -176,8 +176,6 @@
     </div>
 </div>
 
-
-
 <script>
     function obtenerInstalacionesInspecciones() {
         var empresa = $("#id_empresa_inspeccion").val();
