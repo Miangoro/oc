@@ -479,29 +479,29 @@ $(function () {
               if (response.caracteristicas && response.caracteristicas.id_lote_granel) {
                 modal.find('#edit_id_lote_granel_vig').val(response.caracteristicas.id_lote_granel);
               } else {
-                modal.find('#edit_id_lote_granel_vig').val(''); 
+                modal.find('#edit_id_lote_granel_vig').val('');
               } if (response.caracteristicas && response.caracteristicas.id_categoria) {
                 modal.find('#edit_id_categoria_vig').val(response.caracteristicas.id_categoria);
               } else {
-                modal.find('#edit_id_categoria_vig').val(''); 
+                modal.find('#edit_id_categoria_vig').val('');
               } if (response.caracteristicas && response.caracteristicas.id_clase) {
                 modal.find('#edit_id_clase_vig').val(response.caracteristicas.id_clase);
               } else {
-                modal.find('#edit_id_clase_vig').val(''); 
+                modal.find('#edit_id_clase_vig').val('');
               } if (response.caracteristicas && response.caracteristicas.id_tipo) {
                 modal.find('#edit_id_tipo_vig').val(response.caracteristicas.id_tipo);
               } else {
-                modal.find('#edit_id_tipo_vig').val(''); 
+                modal.find('#edit_id_tipo_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.analisis) {
                 modal.find('#edit_analisis_vig').val(response.caracteristicas.analisis);
               } else {
-                modal.find('#edit_analisis_vig').val(''); 
+                modal.find('#edit_analisis_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.volumen) {
                 modal.find('#edit_volumen_vig').val(response.caracteristicas.volumen);
               } else {
-                modal.find('#edit_volumen_vig').val(''); 
+                modal.find('#edit_volumen_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.fecha_corte) {
                 modal.find('#edit_fecha_corte_vig').val(response.caracteristicas.fecha_corte);
@@ -511,22 +511,22 @@ $(function () {
               if (response.caracteristicas && response.caracteristicas.kg_maguey) {
                 modal.find('#edit_kg_maguey_vig').val(response.caracteristicas.kg_maguey);
               } else {
-                modal.find('#edit_kg_maguey_vig').val(''); 
+                modal.find('#edit_kg_maguey_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.cant_pinas) {
                 modal.find('#edit_cant_pinas_vig').val(response.caracteristicas.cant_pinas);
               } else {
-                modal.find('#edit_cant_pinas_vig').val(''); 
+                modal.find('#edit_cant_pinas_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.art) {
                 modal.find('#edit_art_vig').val(response.caracteristicas.art);
               } else {
-                modal.find('#edit_art_vig').val(''); 
+                modal.find('#edit_art_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.etapa) {
                 modal.find('#edit_etapa_vig').val(response.caracteristicas.etapa);
               } else {
-                modal.find('#edit_etapa_vig').val(''); 
+                modal.find('#edit_etapa_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.folio) {
                 modal.find('#edit_folio_vig').val(response.caracteristicas.folio);
@@ -551,12 +551,12 @@ $(function () {
               if (response.caracteristicas && response.caracteristicas.id_lote_granel_muestreo) {
                 modal.find('#edit_id_lote_granel_muestreo').val(response.caracteristicas.id_lote_granel_muestreo);
               } else {
-                modal.find('#edit_id_lote_granel_muestreo').val(''); 
+                modal.find('#edit_id_lote_granel_muestreo').val('');
               }
               if (response.caracteristicas && response.caracteristicas.destino_lote) {
                 modal.find('#edit_destino_lote').val(response.caracteristicas.destino_lote);
               } else {
-                modal.find('#edit_destino_lote').val(''); 
+                modal.find('#edit_destino_lote').val('');
               } if (response.caracteristicas && response.caracteristicas.id_categoria_muestreo) {
                 modal.find('#edit_id_categoria_muestreo').val(response.caracteristicas.id_categoria_muestreo);
               } else {
@@ -564,27 +564,27 @@ $(function () {
               } if (response.caracteristicas && response.caracteristicas.id_clase_muestreo) {
                 modal.find('#edit_id_clase_muestreo').val(response.caracteristicas.id_clase_muestreo);
               } else {
-                modal.find('#edit_id_clase_muestreo').val(''); 
+                modal.find('#edit_id_clase_muestreo').val('');
               }
               if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_muestreo) {
                 modal.find('#id_tipo_maguey_muestreo').val(response.caracteristicas.id_tipo_maguey_muestreo);
               } else {
-                modal.find('#id_tipo_maguey_muestreo').val(''); 
+                modal.find('#id_tipo_maguey_muestreo').val('');
               }
               if (response.caracteristicas && response.caracteristicas.analisis_muestreo) {
                 modal.find('#edit_analisis_muestreo').val(response.caracteristicas.analisis_muestreo);
               } else {
-                modal.find('#edit_analisis_muestreo').val(''); 
+                modal.find('#edit_analisis_muestreo').val('');
               }
               if (response.caracteristicas && response.caracteristicas.volumen_muestreo) {
                 modal.find('#edit_volumen_muestreo').val(response.caracteristicas.volumen_muestreo);
               } else {
-                modal.find('#edit_volumen_muestreo').val(''); 
+                modal.find('#edit_volumen_muestreo').val('');
               }
               if (response.caracteristicas && response.caracteristicas.id_certificado_muestreo) {
                 modal.find('#edit_id_certificado_muestreo').val(response.caracteristicas.id_certificado_muestreo);
               } else {
-                modal.find('#edit_id_certificado_muestreo').val(''); 
+                modal.find('#edit_id_certificado_muestreo').val('');
               }
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
 
@@ -2265,50 +2265,47 @@ const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
 
       // Crear una nueva sección dinámica
       var newSection = `
-            <div class="card mt-4" id="caracteristicas_Ex_${sectionCount}">
-                <div class="card-body">
-                    <h5>Características del Producto</h5>
-                    <div class="row caracteristicas-row">
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <select name="lote_envasado[${sectionCount}]" class="select2 form-select evasado_export">
-                                    <option value="" disabled selected>Selecciona un lote envasado</option>
-                                    <!-- Opciones dinámicas -->
-                                </select>
-                                <label for="lote_envasado">Selecciona el lote envasado</label>
-                            </div>
+        <div class="card mt-4" id="caracteristicas_Ex_${sectionCount}">
+            <div class="card-body">
+                <h5>Características del Producto</h5>
+                <div class="row caracteristicas-row">
+                    <div class="col-md-6">
+                        <div class="form-floating form-floating-outline mb-4">
+                            <select name="lote_envasado[${sectionCount}]" class="select2 form-select evasado_export">
+                                <option value="" disabled selected>Selecciona un lote envasado</option>
+                                <!-- Opciones dinámicas -->
+                            </select>
+                            <label for="lote_envasado">Selecciona el lote envasado</label>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <select name="lote_granel[${sectionCount}]" class="select2 form-select lotes_granel_export">
-                                    <option value="" disabled selected>Selecciona un lote a granel</option>
-                                    <!-- Opciones dinámicas -->
-                                </select>
-                                <label for="lote_granel">Selecciona el lote a granel</label>
-                            </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="text" disabled class="form-control" name="lote_granel[${sectionCount}]" id="lote_granel_${sectionCount}" placeholder="Lote a granel">
+                            <label for="lote_granel">Lote a granel</label>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <input type="number" class="form-control" name="cantidad_botellas[${sectionCount}]" placeholder="Cantidad de botellas">
-                                <label for="cantidad_botellas">Cantidad de botellas</label>
-                            </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="number" class="form-control" name="cantidad_botellas[${sectionCount}]" placeholder="Cantidad de botellas">
+                            <label for="cantidad_botellas">Cantidad de botellas</label>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <input type="number" class="form-control" name="cantidad_cajas[${sectionCount}]" placeholder="Cantidad de cajas">
-                                <label for="cantidad_cajas">Cantidad de cajas</label>
-                            </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="number" class="form-control" name="cantidad_cajas[${sectionCount}]" placeholder="Cantidad de cajas">
+                            <label for="cantidad_cajas">Cantidad de cajas</label>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <input type="text" class="form-control" name="presentacion[${sectionCount}]" placeholder="Ej. 750ml">
-                                <label for="presentacion">Presentación</label>
-                            </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-floating form-floating-outline mb-4">
+                            <input type="text" class="form-control" name="presentacion[${sectionCount}]" placeholder="Ej. 750ml">
+                            <label for="presentacion">Presentación</label>
                         </div>
                     </div>
                 </div>
             </div>
-            `;
+        </div>
+      `;
 
       // Agregar la nueva sección al contenedor
       $('#sections-container').append(newSection);
@@ -2317,7 +2314,6 @@ const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
       cargarLotes(empresaSeleccionada, sectionCount);
 
       // Inicializar Select2 en los nuevos selects
-      // Inicializar los elementos select2
       var select2Elements = $('.select2');
       initializeSelect2(select2Elements);
 
@@ -2326,62 +2322,76 @@ const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
     });
 
     // Función para cargar los lotes dinámicamente en la nueva sección
-    function cargarLotes(empresaSeleccionada, sectionCount) {
-      $.ajax({
-        url: '/getDatos/' + empresaSeleccionada, // Usa la empresa seleccionada para cargar los lotes
-        method: 'GET',
-        success: function (response) {
-          // Lote envasado
-          var contenidoLotesEnvasado = "";
-          var marcas = response.marcas;
+// Función para cargar los lotes dinámicamente en la nueva sección
+function cargarLotes(empresaSeleccionada, sectionCount) {
+  $.ajax({
+    url: '/getDatos/' + empresaSeleccionada, // Usa la empresa seleccionada para cargar los lotes
+    method: 'GET',
+    success: function (response) {
+      // Lote envasado
+      var contenidoLotesEnvasado = "";
+      var marcas = response.marcas;
 
-          for (let index = 0; index < response.lotes_envasado.length; index++) {
-            var skuLimpio = limpiarSku(response.lotes_envasado[index].sku);
-            var marcaEncontrada = marcas.find(function (marca) {
-              return marca.id_marca === response.lotes_envasado[index].id_marca;
-            });
-            var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
+      for (let index = 0; index < response.lotes_envasado.length; index++) {
+        var skuLimpio = limpiarSku(response.lotes_envasado[index].sku);
+        var marcaEncontrada = marcas.find(function (marca) {
+          return marca.id_marca === response.lotes_envasado[index].id_marca;
+        });
+        var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
 
-            contenidoLotesEnvasado += `
+        contenidoLotesEnvasado += `
           <option value="${response.lotes_envasado[index].id_lote_envasado}">
             ${skuLimpio} | ${response.lotes_envasado[index].nombre} | ${nombreMarca}
           </option>`;
-          }
+      }
 
-          if (response.lotes_envasado.length == 0) {
-            contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
-          }
+      if (response.lotes_envasado.length == 0) {
+        contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
+      }
 
-          $('#caracteristicas_Ex_' + sectionCount + ' .evasado_export').html(contenidoLotesEnvasado);
-
-          // Lote granel
-          var contenidoLotesGranel = "";
-          for (let index = 0; index < response.lotes_granel.length; index++) {
-            contenidoLotesGranel += `
-          <option value="${response.lotes_granel[index].id_lote_granel}">
-            ${response.lotes_granel[index].nombre_lote}
-          </option>`;
-          }
-
-          if (response.lotes_granel.length == 0) {
-            contenidoLotesGranel = '<option value="" disabled selected>Sin lotes granel registrados</option>';
-          }
-
-          $('#caracteristicas_Ex_' + sectionCount + ' .lotes_granel_export').html(contenidoLotesGranel);
-        },
-        error: function () {
-          console.error('Error al cargar los lotes.');
-          Swal.fire({
-            icon: 'error',
-            title: 'Error al cargar los datos',
-            text: 'Hubo un problema al intentar cargar los lotes. Intenta nuevamente más tarde.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            }
-          });
+      // Actualizar las opciones del select para la nueva sección
+      $('#caracteristicas_Ex_' + sectionCount + ' .evasado_export').html(contenidoLotesEnvasado);
+    },
+    error: function () {
+      console.error('Error al cargar los lotes.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error al cargar los datos',
+        text: 'Hubo un problema al intentar cargar los lotes. Intenta nuevamente más tarde.',
+        customClass: {
+          confirmButton: 'btn btn-danger'
         }
       });
     }
+  });
+}
+
+    $(document).on('change', '.evasado_export', function () {
+      var sectionId = $(this).closest('.card').attr('id').split('_')[2]; // Cambiado a split('_')[2]
+      var loteEnvasadoSeleccionado = $(this).val(); // Obtener el valor del lote envasado seleccionado
+
+      // Obtener los lotes a granel correspondientes a este lote envasado desde el servidor
+      $.ajax({
+        url: '/getDetalleLoteEnvasado/' + loteEnvasadoSeleccionado, // Asegúrate de que esta URL sea la correcta
+        method: 'GET',
+        success: function (response) {
+          console.log(response); // Para depuración, asegúrate de que la respuesta esté correcta
+
+          // Comprobar si 'detalle' tiene datos
+          if (response.detalle && response.detalle.length > 0) {
+            // Convertir el array de lotes a granel en una cadena separada por comas
+            var lotesGranelNombres = response.detalle.join(', '); // Convierte el array en una cadena separada por comas
+            $('#caracteristicas_Ex_' + sectionId + ' #lote_granel_' + sectionId).val(lotesGranelNombres); // Actualiza el campo de lote a granel
+          } else {
+            $('#caracteristicas_Ex_' + sectionId + ' #lote_granel_' + sectionId).val(''); // Si no hay lotes, limpia el campo
+          }
+        },
+        error: function () {
+          console.error('Error al cargar los lotes a granel.');
+        }
+      });
+    });
+
 
 
     // Eliminar la última sección
@@ -2406,7 +2416,7 @@ const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
       }
     });
 
-  });
+});
 
 
 

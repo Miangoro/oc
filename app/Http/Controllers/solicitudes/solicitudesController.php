@@ -10,6 +10,7 @@ use App\Models\estados;
 use App\Models\Instalaciones;
 use App\Models\organismos;
 use App\Models\LotesGranel;
+use App\Models\lotes_envasado;
 use App\Models\solicitudesModel;
 use App\Models\clases;
 use App\Models\solicitudTipo;
@@ -619,10 +620,10 @@ class solicitudesController extends Controller
                         'volumen_muestreo' => $request->volumen_muestreo,
                         'id_certificado_muestreo' => $request->id_certificado_muestreo,
                     ];
-    
+
                     // Convertir el array a JSON
                     $jsonContent = json_encode($caracteristicasJson);
-    
+
                     // Actualizar datos específicos para georreferenciación
                     $solicitud->update([
                         'id_empresa' => $request->id_empresa,
@@ -631,7 +632,7 @@ class solicitudesController extends Controller
                         'info_adicional' => $request->info_adicional,
                         'caracteristicas' => $jsonContent,
                     ]);
-    
+
                     break;
 
 
@@ -869,7 +870,23 @@ class solicitudesController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Pedido registrado.']);
     }
-
-
+    //lotes granel segun lote envasado
+    public function getDetalleLoteEnvasado($id_lote_envasado)
+    {
+        $lote = lotes_envasado::find($id_lote_envasado);
+        if (!$lote) {
+            return response()->json(['error' => 'Lote no encontrado'], 404);
+        }
+        // Usando la relación 'lotesGranel' para obtener los lotes a granel asociados
+        $lotesGranel = $lote->lotesGranel; // Esto devuelve los lotes a granel asociados
+        // Si no hay lotes a granel asociados, puedes devolver un mensaje o array vacío
+        if ($lotesGranel->isEmpty()) {
+            return response()->json(['detalle' => null], 200);
+        }
+        // Si hay lotes a granel, devolverlos en el formato adecuado
+        return response()->json([
+            'detalle' => $lotesGranel->pluck('nombre_lote') // Puedes cambiar 'nombre_lote' por cualquier campo relevante de LotesGranel
+        ]);
+    }
 
 }
