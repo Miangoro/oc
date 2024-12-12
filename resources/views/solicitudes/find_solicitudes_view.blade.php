@@ -226,6 +226,7 @@
     @include('_partials._modals.modal-edit-solicitud-vigilancia-produccion')
     @include('_partials._modals.modal-edit-solicitud-muestreo-lote-agranel')
     @include('_partials._modals.modal-edit-solicitud-vigilancia-traslado-lote')
+    @include('_partials._modals.modal-edit-solicitud-inspeccion-ingreso-barricada')
 
     <!-- /Modal -->
 

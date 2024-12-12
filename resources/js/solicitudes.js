@@ -452,6 +452,8 @@ $(function () {
         modal = $('#editMuestreoLoteAgranel');
       } else if (id_tipo === 4) {
         modal = $('#editVigilanciaTraslado');
+      } else if (id_tipo === 7) {
+        modal = $('#editInspeccionIngresoBarricada');
       } else if (id_tipo === 10) {
         modal = $('#editClienteModalTipo10');
       } else if (id_tipo === 14) {
@@ -616,7 +618,6 @@ $(function () {
               } else {
                 modal.find('#id_tipo_maguey_traslado').val('');
               }
-              //
               if (response.caracteristicas && response.caracteristicas.id_salida) {
                 modal.find('#edit_id_salida').val(response.caracteristicas.id_salida);
               } else {
@@ -658,7 +659,82 @@ $(function () {
                 modal.find('#edit_id_certificado_traslado').val('');
               }
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
+              //Inspeccion ingreso barricada
+            } else if (id_tipo === 7) {
+              modal.find('#edit_id_solicitud_barricada').val(id_solicitud);
+              modal.find('#edit_id_empresa_barricada').val(response.data.id_empresa).trigger('change');
+              modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
+              modal.find('#edit_id_instalacion_barricada').data('selected', response.data.id_instalacion);
 
+              // Acceder al campo `punto_reunion` desde `caracteristicas`
+              if (response.caracteristicas && response.caracteristicas.id_lote_granel_barricada) {
+                modal.find('#edit_id_lote_granel_barricada').val(response.caracteristicas.id_lote_granel_barricada);
+              } else {
+                modal.find('#edit_id_lote_granel_barricada').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.id_categoria_barricada) {
+                modal.find('#edit_id_categoria_barricada').val(response.caracteristicas.id_categoria_barricada);
+              } else {
+                modal.find('#edit_id_categoria_barricada').val('');
+              } if (response.caracteristicas && response.caracteristicas.id_clase_barricada) {
+                modal.find('#edit_id_clase_barricada').val(response.caracteristicas.id_clase_barricada);
+              } else {
+                modal.find('#edit_id_clase_barricada').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_barricada) {
+                modal.find('#edit_id_tipo_maguey_barricada').val(response.caracteristicas.id_tipo_maguey_barricada);
+              } else {
+                modal.find('#edit_id_tipo_maguey_barricada').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.id_edad) {
+                modal.find('#edit_id_edad').val(response.caracteristicas.id_edad);
+              } else {
+                modal.find('#edit_id_edad').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.analisis_barricada) {
+                modal.find('#edit_analisis_barricada').val(response.caracteristicas.analisis_barricada);
+              } else {
+                modal.find('#edit_analisis_barricada').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.volumen_barricada) {
+                modal.find('#edit_volumen_barricada').val(response.caracteristicas.volumen_barricada);
+              } else {
+                modal.find('#edit_volumen_barricada').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.tipo_lote) {
+                modal.find('#edit_tipo_lote').val(response.caracteristicas.tipo_lote);
+              } else {
+                modal.find('#edit_tipo_lote').val('');
+              } if (response.caracteristicas && response.caracteristicas.fecha_inicio) {
+                modal.find('#edit_fecha_inicio').val(response.caracteristicas.fecha_inicio);
+              } else {
+                modal.find('#edit_fecha_inicio').val('');
+              } if (response.caracteristicas && response.caracteristicas.fecha_termino) {
+                modal.find('#edit_fecha_termino').val(response.caracteristicas.fecha_termino);
+              } else {
+                modal.find('#edit_fecha_termino').val('');
+              } if (response.caracteristicas && response.caracteristicas.material) {
+                modal.find('#edit_material').val(response.caracteristicas.material);
+              } else {
+                modal.find('#edit_material').val('');
+              } if (response.caracteristicas && response.caracteristicas.capacidad) {
+                modal.find('#edit_capacidad').val(response.caracteristicas.capacidad);
+              } else {
+                modal.find('#edit_capacidad').val('');
+              } if (response.caracteristicas && response.caracteristicas.num_recipientes) {
+                modal.find('#edit_num_recipientes').val(response.caracteristicas.num_recipientes);
+              } else {
+                modal.find('#edit_num_recipientes').val('');
+              }if (response.caracteristicas && response.caracteristicas.tiempo_dura) {
+                modal.find('#edit_tiempo_dura').val(response.caracteristicas.tiempo_dura);
+              } else {
+                modal.find('#edit_tiempo_dura').val('');
+              }if (response.caracteristicas && response.caracteristicas.id_certificado_barricada) {
+                modal.find('#edit_id_certificado_barricada').val(response.caracteristicas.id_certificado_barricada);
+              } else {
+                modal.find('#edit_id_certificado_barricada').val('');
+              }
+              modal.find('#edit_info_adicional').val(response.data.info_adicional);
               // Otros campos específicos para tipo 10
             } else if (id_tipo === 10) {
               modal.find('#id_solicitud_geo').val(id_solicitud);
@@ -1207,6 +1283,109 @@ $(function () {
             icon: 'error',
             title: '¡Error!',
             text: 'Error al actualizar la vigilancia en el traslado del lote',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+  });
+  //metodo para actualizar inspeccion barricada
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+  
+    // Inicializar FormValidation para el formulario de edición
+    const formUpdate = document.getElementById('editInspeccionIngresoBarricadaForm');
+    const fvUpdate = FormValidation.formValidation(formUpdate, {
+      fields: {
+        'id_empresa': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el cliente.'
+            }
+          }
+        },
+        'fecha_visita': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la fecha y hora para la inspección.'
+            }
+          }
+        },
+        'id_instalacion': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona una instalación.'
+            }
+          }
+        },
+        'id_lote_granel_barricada': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un lote a granel.'
+            }
+          }
+        },
+        'volumen_barricada': {
+          validators: {
+            notEmpty: {
+              message: 'Ingresa el volumen trasladado.'
+            },
+            numeric: {
+              message: 'El volumen debe ser un número válido.'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      // Obtener los datos del formulario
+      var formData = new FormData(formUpdate);
+  
+      // Hacer la solicitud AJAX
+      $.ajax({
+        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_barricada').val(),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#editInspeccionIngresoBarricada').modal('hide'); // Oculta el modal
+          $('#editInspeccionIngresoBarricadaForm')[0].reset(); // Resetea el formulario
+          $('.select2').val(null).trigger('change'); // Resetea los select2
+          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+  
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+  
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la inspección ingreso a la barrica/contenedor de vidrio',
             customClass: {
               confirmButton: 'btn btn-danger'
             }

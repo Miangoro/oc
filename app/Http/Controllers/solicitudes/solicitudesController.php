@@ -397,16 +397,16 @@ class solicitudesController extends Controller
 
     public function storeInspeccionBarricada(Request $request)
     {
-        $VigilanciaTras = new solicitudesModel();
-        $VigilanciaTras->folio = Helpers::generarFolioSolicitud();
-        $VigilanciaTras->id_empresa = $request->id_empresa;
-        $VigilanciaTras->id_tipo = 4;
-        $VigilanciaTras->id_predio = 0;
-        $VigilanciaTras->fecha_visita = $request->fecha_visita;
-        $VigilanciaTras->id_instalacion = $request->id_instalacion;
-        $VigilanciaTras->info_adicional = $request->info_adicional;
+        $InspeccionBarri = new solicitudesModel();
+        $InspeccionBarri->folio = Helpers::generarFolioSolicitud();
+        $InspeccionBarri->id_empresa = $request->id_empresa;
+        $InspeccionBarri->id_tipo = 7;
+        $InspeccionBarri->id_predio = 0;
+        $InspeccionBarri->fecha_visita = $request->fecha_visita;
+        $InspeccionBarri->id_instalacion = $request->id_instalacion;
+        $InspeccionBarri->info_adicional = $request->info_adicional;
 
-        $VigilanciaTras->caracteristicas = json_encode([
+        $InspeccionBarri->caracteristicas = json_encode([
             'id_lote_granel_barricada' => $request->id_lote_granel_barricada,
             'id_categoria_barricada' => $request->id_categoria_barricada,
             'id_clase_barricada' => $request->id_clase_barricada,
@@ -424,14 +424,14 @@ class solicitudesController extends Controller
             'id_certificado_barricada' => $request->id_certificado_barricada,
         ]);
 
-        $VigilanciaTras->save();
+        $InspeccionBarri->save();
 
         $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
 
         // Notificación 1
         $data1 = [
             'title' => 'Nuevo registro de solicitud',
-            'message' => $VigilanciaTras->folio . " " . $VigilanciaTras->tipo_solicitud->tipo,
+            'message' => $InspeccionBarri->folio . " " . $InspeccionBarri->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
 
@@ -706,6 +706,49 @@ class solicitudesController extends Controller
                     'analisis_traslado' => $request->analisis_traslado,
                     'volumen_traslado' => $request->volumen_traslado,
                     'id_certificado_traslado' => $request->id_certificado_traslado,
+
+                ];
+
+                // Convertir el array a JSON
+                $jsonContent = json_encode($caracteristicasJson);
+
+                // Actualizar datos específicos para georreferenciación
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_instalacion' => $request->id_instalacion,
+                    'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => $jsonContent,
+                ]);
+
+                break;
+
+            case 'muestreobarricada':
+                // Validar datos para georreferenciación
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_visita' => 'required|date',
+                    'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                    'info_adicional' => 'nullable|string'
+                ]);
+                // Preparar el JSON para guardar en `caracteristicas`
+                $caracteristicasJson = [
+                    'id_lote_granel_barricada' => $request->id_lote_granel_barricada,
+                    'id_categoria_barricada' => $request->id_categoria_barricada,
+                    'id_clase_barricada' => $request->id_clase_barricada,
+                    'id_tipo_maguey_barricada' => $request->id_tipo_maguey_barricada,
+                    'id_edad' => $request->id_edad,
+                    'analisis_barricada' => $request->analisis_barricada,
+                    'volumen_barricada' => $request->volumen_barricada,
+                    'tipo_lote' => $request->tipo_lote,
+                    'fecha_inicio' => $request->fecha_inicio,
+                    'fecha_termino' => $request->fecha_termino,
+                    'material' => $request->material,
+                    'capacidad' => $request->capacidad,
+                    'num_recipientes' => $request->num_recipientes,
+                    'tiempo_dura' => $request->tiempo_dura,
+                    'id_certificado_barricada' => $request->id_certificado_barricada,
+
 
                 ];
 
