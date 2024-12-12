@@ -853,6 +853,13 @@ Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelControlle
 Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor');
 Route::post('/certificados/reexpedir/granel', [Certificado_GranelController::class, 'reexpedir'])->name('certificados.reexpedir.granel');
 
+//Bitacoras
+Route::get('/bitacora_mezcal', [CartaAsignacionController::class, 'BitacoraMezcal'])->name('bitacora_mezcal');
+/* Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
+Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
+Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
+Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion'); */
+
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
 
 //Eliminar Cliente Confirmado
