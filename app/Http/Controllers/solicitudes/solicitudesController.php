@@ -292,7 +292,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud',
+            'title' => 'Nuevo registro de solicitud Vigilancia en producción',
             'message' => $VigilanciaProdu->folio . " " . $VigilanciaProdu->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -334,7 +334,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud',
+            'title' => 'Nuevo registro de solicitud Muestreo de lote',
             'message' => $MuestreoLote->folio . " " . $MuestreoLote->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -383,7 +383,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud',
+            'title' => 'Nuevo registro de solicitud Vigilancia en traslado',
             'message' => $VigilanciaTras->folio . " " . $VigilanciaTras->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -428,7 +428,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud',
+            'title' => 'Nuevo registro de solicitud Inpeccion de envasado',
             'message' => $InspeccionEnva->folio . " " . $InspeccionEnva->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -437,7 +437,7 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Vigilancia en traslado de lote registrada exitosamente']);
+        return response()->json(['message' => 'Inpeccion de envasado de lote registrada exitosamente']);
     }
 
     public function storeInspeccionBarricada(Request $request)
@@ -475,7 +475,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud',
+            'title' => 'Nuevo registro de solicitud Inspeccion ingreso a barricada',
             'message' => $InspeccionBarri->folio . " " . $InspeccionBarri->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -484,7 +484,7 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Vigilancia en traslado de lote registrada exitosamente']);
+        return response()->json(['message' => 'Inspeccion ingreso a barricada de lote registrada exitosamente']);
     }
 
     public function storeInspeccionBarricadaLiberacion(Request $request)
@@ -522,7 +522,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud',
+            'title' => 'Nuevo registro de solicitud Inspeccion liberacion a barricada',
             'message' => $BarricadaLib->folio . " " . $BarricadaLib->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -531,7 +531,7 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Vigilancia en traslado de lote registrada exitosamente']);
+        return response()->json(['message' => 'Inspeccion liberacion a barricada de lote registrada exitosamente']);
     }
 
     
