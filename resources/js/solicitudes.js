@@ -727,11 +727,11 @@ $(function () {
                 modal.find('#edit_num_recipientes').val(response.caracteristicas.num_recipientes);
               } else {
                 modal.find('#edit_num_recipientes').val('');
-              }if (response.caracteristicas && response.caracteristicas.tiempo_dura) {
+              } if (response.caracteristicas && response.caracteristicas.tiempo_dura) {
                 modal.find('#edit_tiempo_dura').val(response.caracteristicas.tiempo_dura);
               } else {
                 modal.find('#edit_tiempo_dura').val('');
-              }if (response.caracteristicas && response.caracteristicas.id_certificado_barricada) {
+              } if (response.caracteristicas && response.caracteristicas.id_certificado_barricada) {
                 modal.find('#edit_id_certificado_barricada').val(response.caracteristicas.id_certificado_barricada);
               } else {
                 modal.find('#edit_id_certificado_barricada').val('');
@@ -803,11 +803,11 @@ $(function () {
                 modal.find('#edit_num_recipientes_lib').val(response.caracteristicas.num_recipientes_lib);
               } else {
                 modal.find('#edit_num_recipientes_lib').val('');
-              }if (response.caracteristicas && response.caracteristicas.tiempo_dura_lib) {
+              } if (response.caracteristicas && response.caracteristicas.tiempo_dura_lib) {
                 modal.find('#edit_tiempo_dura_lib').val(response.caracteristicas.tiempo_dura_lib);
               } else {
                 modal.find('#edit_tiempo_dura_lib').val('');
-              }if (response.caracteristicas && response.caracteristicas.id_certificado_liberacion) {
+              } if (response.caracteristicas && response.caracteristicas.id_certificado_liberacion) {
                 modal.find('#edit_id_certificado_liberacion').val(response.caracteristicas.id_certificado_liberacion);
               } else {
                 modal.find('#edit_id_certificado_liberacion').val('');
@@ -1266,7 +1266,7 @@ $(function () {
       });
     });
   });
-//medoto update para viligancia tarslado
+  //medoto update para viligancia tarslado
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -1274,7 +1274,7 @@ $(function () {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-  
+
     // Inicializar FormValidation para el formulario de edición
     const formUpdate = document.getElementById('editVigilanciaTrasladoForm');
     const fvUpdate = FormValidation.formValidation(formUpdate, {
@@ -1331,7 +1331,7 @@ $(function () {
     }).on('core.form.valid', function (e) {
       // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
-  
+
       // Hacer la solicitud AJAX
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_traslado').val(),
@@ -1344,7 +1344,7 @@ $(function () {
           $('#editVigilanciaTrasladoForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
           $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
-  
+
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
@@ -1356,7 +1356,7 @@ $(function () {
         },
         error: function (xhr) {
           console.log('Error:', xhr.responseText);
-  
+
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
@@ -1377,7 +1377,7 @@ $(function () {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-  
+
     // Inicializar FormValidation para el formulario de edición
     const formUpdate = document.getElementById('editInspeccionIngresoBarricadaForm');
     const fvUpdate = FormValidation.formValidation(formUpdate, {
@@ -1434,7 +1434,7 @@ $(function () {
     }).on('core.form.valid', function (e) {
       // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
-  
+
       // Hacer la solicitud AJAX
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_barricada').val(),
@@ -1447,7 +1447,7 @@ $(function () {
           $('#editInspeccionIngresoBarricadaForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
           $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
-  
+
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
@@ -1459,7 +1459,7 @@ $(function () {
         },
         error: function (xhr) {
           console.log('Error:', xhr.responseText);
-  
+
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
@@ -1472,8 +1472,8 @@ $(function () {
       });
     });
   });
-  
-//metodo para liberacion
+
+  //metodo para liberacion
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -1481,7 +1481,7 @@ $(function () {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
     });
-  
+
     // Inicializar FormValidation para el formulario de edición
     const formUpdate = document.getElementById('editInspeccionLiberacionForm');
     const fvUpdate = FormValidation.formValidation(formUpdate, {
@@ -1538,7 +1538,7 @@ $(function () {
     }).on('core.form.valid', function (e) {
       // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
-  
+
       // Hacer la solicitud AJAX
       $.ajax({
         url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_liberacion').val(),
@@ -1551,7 +1551,7 @@ $(function () {
           $('#editInspeccionLiberacionForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
           $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
-  
+
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
@@ -1563,7 +1563,7 @@ $(function () {
         },
         error: function (xhr) {
           console.log('Error:', xhr.responseText);
-  
+
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
@@ -1576,7 +1576,7 @@ $(function () {
       });
     });
   });
-  
+
   ///
   $(function () {
     // Configuración CSRF para Laravel
@@ -2433,241 +2433,241 @@ $(function () {
   });
 
   // Validación del formulario Inspección Ingreso Barricada
-const addInspeccionIngresoBarricadaForm = document.getElementById('addInspeccionIngresoBarricadaForm');
-const fvBarricada = FormValidation.formValidation(addInspeccionIngresoBarricadaForm, {
-  fields: {
-    id_empresa: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione un cliente.'
+  const addInspeccionIngresoBarricadaForm = document.getElementById('addInspeccionIngresoBarricadaForm');
+  const fvBarricada = FormValidation.formValidation(addInspeccionIngresoBarricadaForm, {
+    fields: {
+      id_empresa: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un cliente.'
+          }
+        }
+      },
+      fecha_visita: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
+          }
+        }
+      },
+      id_instalacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una instalación.'
+          }
+        }
+      },
+      id_lote_granel_barricada: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un lote a granel.'
+          }
+        }
+      },
+      tipo_lote: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un tipo.'
+          }
+        }
+      },
+      analisis_barricada: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el análisis fisicoquímico.'
+          }
+        }
+      },
+      volumen_barricada: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el porcentaje de alcohol.'
+          },
+          numeric: {
+            message: 'Por favor ingrese un valor numérico válido.'
+          }
+        }
+      },
+      fecha_inicio: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la fecha de inicio.'
+          }
         }
       }
     },
-    fecha_visita: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        rowSelector: function (field, ele) {
+          return '.mb-4, .mb-5, .mb-6';
         }
-      }
-    },
-    id_instalacion: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione una instalación.'
-        }
-      }
-    },
-    id_lote_granel_barricada: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione un lote a granel.'
-        }
-      }
-    },
-    tipo_lote: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione un tipo.'
-        }
-      }
-    },
-    analisis_barricada: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingrese el análisis fisicoquímico.'
-        }
-      }
-    },
-    volumen_barricada: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingrese el porcentaje de alcohol.'
-        },
-        numeric: {
-          message: 'Por favor ingrese un valor numérico válido.'
-        }
-      }
-    },
-    fecha_inicio: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingrese la fecha de inicio.'
-        }
-      }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
     }
-  },
-  plugins: {
-    trigger: new FormValidation.plugins.Trigger(),
-    bootstrap5: new FormValidation.plugins.Bootstrap5({
-      eleValidClass: '',
-      rowSelector: function (field, ele) {
-        return '.mb-4, .mb-5, .mb-6';
+  }).on('core.form.valid', function () {
+    const formData = new FormData(addInspeccionIngresoBarricadaForm);
+
+    $.ajax({
+      url: '/hologramas/storeInspeccionBarricada', // Actualiza con la URL correcta
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // Cerrar modal y reiniciar formulario
+        $('#addInspeccionIngresoBarricada').modal('hide');
+        $('#addInspeccionIngresoBarricadaForm')[0].reset();
+        $('.select2').val(null).trigger('change');
+        $('.datatables-solicitudes').DataTable().ajax.reload();
+
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Inspección barricada registrada exitosamente.',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function () {
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al registrar la inspección.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
       }
-    }),
-    submitButton: new FormValidation.plugins.SubmitButton(),
-    autoFocus: new FormValidation.plugins.AutoFocus()
-  }
-}).on('core.form.valid', function () {
-  const formData = new FormData(addInspeccionIngresoBarricadaForm);
-
-  $.ajax({
-    url: '/hologramas/storeInspeccionBarricada', // Actualiza con la URL correcta
-    type: 'POST',
-    data: formData,
-    processData: false,
-    contentType: false,
-    success: function (response) {
-      // Cerrar modal y reiniciar formulario
-      $('#addInspeccionIngresoBarricada').modal('hide');
-      $('#addInspeccionIngresoBarricadaForm')[0].reset();
-      $('.select2').val(null).trigger('change');
-      $('.datatables-solicitudes').DataTable().ajax.reload();
-
-      // Mostrar alerta de éxito
-      Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: 'Inspección registrada exitosamente.',
-        customClass: {
-          confirmButton: 'btn btn-success'
-        }
-      });
-    },
-    error: function () {
-      // Mostrar alerta de error
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al registrar la inspección.',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    }
+    });
   });
-});
 
-// Validación del formulario Inspección Liberación Barrica/Contenedor de Vidrio
-const addInspeccionLiberacionForm = document.getElementById('addInspeccionLiberacionForm');
-const fvLiberacion = FormValidation.formValidation(addInspeccionLiberacionForm, {
-  fields: {
-    id_empresa: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione un cliente.'
+  // Validación del formulario Inspección Liberación Barrica/Contenedor de Vidrio
+  const addInspeccionLiberacionForm = document.getElementById('addInspeccionLiberacionForm');
+  const fvLiberacion = FormValidation.formValidation(addInspeccionLiberacionForm, {
+    fields: {
+      id_empresa: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un cliente.'
+          }
+        }
+      },
+      fecha_visita: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
+          }
+        }
+      },
+      id_instalacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una instalación.'
+          }
+        }
+      },
+      id_lote_granel_liberacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un lote a granel.'
+          }
+        }
+      },
+      tipo_lote_lib: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un tipo.'
+          }
+        }
+      },
+      analisis_liberacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el análisis fisicoquímico.'
+          }
+        }
+      },
+      volumen_liberacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el volumen.'
+          },
+          numeric: {
+            message: 'Por favor ingrese un valor numérico válido.'
+          }
+        }
+      },
+      fecha_inicio_lib: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la fecha de inicio.'
+          }
+        }
+      },
+      fecha_termino_lib: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la fecha de término.'
+          }
         }
       }
     },
-    fecha_visita: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        rowSelector: function (field, ele) {
+          return '.mb-4, .mb-5, .mb-6';
         }
-      }
-    },
-    id_instalacion: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione una instalación.'
-        }
-      }
-    },
-    id_lote_granel_liberacion: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione un lote a granel.'
-        }
-      }
-    },
-    tipo_lote_lib: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor seleccione un tipo.'
-        }
-      }
-    },
-    analisis_liberacion: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingrese el análisis fisicoquímico.'
-        }
-      }
-    },
-    volumen_liberacion: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingrese el volumen.'
-        },
-        numeric: {
-          message: 'Por favor ingrese un valor numérico válido.'
-        }
-      }
-    },
-    fecha_inicio_lib: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingrese la fecha de inicio.'
-        }
-      }
-    },
-    fecha_termino_lib: {
-      validators: {
-        notEmpty: {
-          message: 'Por favor ingrese la fecha de término.'
-        }
-      }
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
     }
-  },
-  plugins: {
-    trigger: new FormValidation.plugins.Trigger(),
-    bootstrap5: new FormValidation.plugins.Bootstrap5({
-      eleValidClass: '',
-      rowSelector: function (field, ele) {
-        return '.mb-4, .mb-5, .mb-6';
+  }).on('core.form.valid', function () {
+    const formData = new FormData(addInspeccionLiberacionForm);
+
+    $.ajax({
+      url: '/hologramas/storeInspeccionBarricadaLiberacion', // Actualiza con la URL correcta
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // Cerrar modal y reiniciar formulario
+        $('#addInspeccionLiberacion').modal('hide');
+        $('#addInspeccionLiberacionForm')[0].reset();
+        $('.select2').val(null).trigger('change');
+        $('.datatables-solicitudes').DataTable().ajax.reload();
+
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Inspección de liberacion barricada registrada exitosamente.',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function () {
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al registrar la inspección.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
       }
-    }),
-    submitButton: new FormValidation.plugins.SubmitButton(),
-    autoFocus: new FormValidation.plugins.AutoFocus()
-  }
-}).on('core.form.valid', function () {
-  const formData = new FormData(addInspeccionLiberacionForm);
-
-  $.ajax({
-    url: '/hologramas/storeInspeccionBarricadaLiberacion', // Actualiza con la URL correcta
-    type: 'POST',
-    data: formData,
-    processData: false,
-    contentType: false,
-    success: function (response) {
-      // Cerrar modal y reiniciar formulario
-      $('#addInspeccionLiberacion').modal('hide');
-      $('#addInspeccionLiberacionForm')[0].reset();
-      $('.select2').val(null).trigger('change');
-      $('.datatables-solicitudes').DataTable().ajax.reload();
-
-      // Mostrar alerta de éxito
-      Swal.fire({
-        icon: 'success',
-        title: '¡Éxito!',
-        text: 'Inspección de liberacion registrada exitosamente.',
-        customClass: {
-          confirmButton: 'btn btn-success'
-        }
-      });
-    },
-    error: function () {
-      // Mostrar alerta de error
-      Swal.fire({
-        icon: 'error',
-        title: '¡Error!',
-        text: 'Error al registrar la inspección.',
-        customClass: {
-          confirmButton: 'btn btn-danger'
-        }
-      });
-    }
+    });
   });
-});
 
 
   //Validar vigilancia en traslado
@@ -2746,7 +2746,7 @@ const fvLiberacion = FormValidation.formValidation(addInspeccionLiberacionForm, 
         Swal.fire({
           icon: 'success',
           title: '¡Éxito!',
-          text: 'Vigilancia registrada exitosamente.',
+          text: 'Vigilancia traslado registrada exitosamente.',
           customClass: {
             confirmButton: 'btn btn-success'
           }
@@ -2987,110 +2987,109 @@ const fvLiberacion = FormValidation.formValidation(addInspeccionLiberacionForm, 
   });
 
 
-    //Muestreo de vigilancia traslado
-    $(document).ready(function () {
-      let openedFromFirstModal = false;
-  
-      $('#modalVigilanciaTraslado').on('click', function () {
-        var clienteSeleccionado = $('.id_empresa_traslado').val();
-        // Verificar si hay una empresa seleccionada
-        if (!clienteSeleccionado) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Espere!',
-            text: 'Por favor, selecciona un cliente primero.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            },
-            buttonsStyling: false
-          });
-          return;
-        }
-        $('#addVigilanciaTraslado').modal('hide');
-        // Marcar que el nuevo modal fue abierto desde el anterior
-        openedFromFirstModal = true;
-        // Preseleccionar la empresa en el modal de nueva instalación
-        $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-        $('#modalAddInstalacion').modal('show');
-      });
-      $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-        if (openedFromFirstModal) {
-          $('#addVigilanciaTraslado').modal('show');
-          openedFromFirstModal = false;
-        }
-      });
-    });
+  //Muestreo de vigilancia traslado
+  $(document).ready(function () {
+    let openedFromFirstModal = false;
 
-
-    //Muestreo de inpeccion ingreso barricada
-    $(document).ready(function () {
-      let openedFromFirstModal = false;
-  
-      $('#modalVigilanciaBarricada').on('click', function () {
-        var clienteSeleccionado = $('.id_empresa_barricada').val();
-        // Verificar si hay una empresa seleccionada
-        if (!clienteSeleccionado) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Espere!',
-            text: 'Por favor, selecciona un cliente primero.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            },
-            buttonsStyling: false
-          });
-          return;
-        }
-        $('#addInspeccionIngresoBarricada').modal('hide');
-        // Marcar que el nuevo modal fue abierto desde el anterior
-        openedFromFirstModal = true;
-        // Preseleccionar la empresa en el modal de nueva instalación
-        $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-        $('#modalAddInstalacion').modal('show');
-      });
-      $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-        if (openedFromFirstModal) {
-          $('#addInspeccionIngresoBarricada').modal('show');
-          openedFromFirstModal = false;
-        }
-      });
-    });
-
-
-        //Muestreo de inpeccion liberacion barricada
-        $(document).ready(function () {
-          let openedFromFirstModal = false;
-      
-          $('#modalVigilanciaBarricadaLiberacion').on('click', function () {
-            var clienteSeleccionado = $('.id_empresa_liberacion').val();
-            // Verificar si hay una empresa seleccionada
-            if (!clienteSeleccionado) {
-              Swal.fire({
-                icon: 'warning',
-                title: 'Espere!',
-                text: 'Por favor, selecciona un cliente primero.',
-                customClass: {
-                  confirmButton: 'btn btn-danger'
-                },
-                buttonsStyling: false
-              });
-              return;
-            }
-            $('#addInspeccionLiberacion').modal('hide');
-            // Marcar que el nuevo modal fue abierto desde el anterior
-            openedFromFirstModal = true;
-            // Preseleccionar la empresa en el modal de nueva instalación
-            $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-            $('#modalAddInstalacion').modal('show');
-          });
-          $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-            if (openedFromFirstModal) {
-              $('#addInspeccionLiberacion').modal('show');
-              openedFromFirstModal = false;
-            }
-          });
+    $('#modalVigilanciaTraslado').on('click', function () {
+      var clienteSeleccionado = $('.id_empresa_traslado').val();
+      // Verificar si hay una empresa seleccionada
+      if (!clienteSeleccionado) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Espere!',
+          text: 'Por favor, selecciona un cliente primero.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          },
+          buttonsStyling: false
         });
-    
+        return;
+      }
+      $('#addVigilanciaTraslado').modal('hide');
+      // Marcar que el nuevo modal fue abierto desde el anterior
+      openedFromFirstModal = true;
+      // Preseleccionar la empresa en el modal de nueva instalación
+      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
+      $('#modalAddInstalacion').modal('show');
+    });
+    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
+      if (openedFromFirstModal) {
+        $('#addVigilanciaTraslado').modal('show');
+        openedFromFirstModal = false;
+      }
+    });
+  });
+
+
+  //Muestreo de inpeccion ingreso barricada
+  $(document).ready(function () {
+    let openedFromFirstModal = false;
+
+    $('#modalVigilanciaBarricada').on('click', function () {
+      var clienteSeleccionado = $('.id_empresa_barricada').val();
+      // Verificar si hay una empresa seleccionada
+      if (!clienteSeleccionado) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Espere!',
+          text: 'Por favor, selecciona un cliente primero.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          },
+          buttonsStyling: false
+        });
+        return;
+      }
+      $('#addInspeccionIngresoBarricada').modal('hide');
+      // Marcar que el nuevo modal fue abierto desde el anterior
+      openedFromFirstModal = true;
+      // Preseleccionar la empresa en el modal de nueva instalación
+      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
+      $('#modalAddInstalacion').modal('show');
+    });
+    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
+      if (openedFromFirstModal) {
+        $('#addInspeccionIngresoBarricada').modal('show');
+        openedFromFirstModal = false;
+      }
+    });
+  });
+
+  //Muestreo de inpeccion liberacion barricada
+  $(document).ready(function () {
+    let openedFromFirstModal = false;
+
+    $('#modalVigilanciaBarricadaLiberacion').on('click', function () {
+      var clienteSeleccionado = $('.id_empresa_liberacion').val();
+      // Verificar si hay una empresa seleccionada
+      if (!clienteSeleccionado) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Espere!',
+          text: 'Por favor, selecciona un cliente primero.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          },
+          buttonsStyling: false
+        });
+        return;
+      }
+      $('#addInspeccionLiberacion').modal('hide');
+      // Marcar que el nuevo modal fue abierto desde el anterior
+      openedFromFirstModal = true;
+      // Preseleccionar la empresa en el modal de nueva instalación
+      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
+      $('#modalAddInstalacion').modal('show');
+    });
+    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
+      if (openedFromFirstModal) {
+        $('#addInspeccionLiberacion').modal('show');
+        openedFromFirstModal = false;
+      }
+    });
+  });
+
   /* seccion para exportacion */
   $(document).ready(function () {
     // Obtener el select y las secciones
