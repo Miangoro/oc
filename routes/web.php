@@ -774,6 +774,7 @@ Route::post('/hologramas/storeVigilanciaProduccion', [solicitudesController::cla
 Route::post('/hologramas/storeMuestreoLote', [solicitudesController::class, 'storeMuestreoLote']);
 Route::post('/hologramas/storeVigilanciaTraslado', [solicitudesController::class, 'storeVigilanciaTraslado']);
 Route::post('/hologramas/storeInspeccionBarricada', [solicitudesController::class, 'storeInspeccionBarricada']);
+Route::post('/hologramas/storeInspeccionBarricadaLiberacion', [solicitudesController::class, 'storeInspeccionBarricadaLiberacion']);
 
 
 

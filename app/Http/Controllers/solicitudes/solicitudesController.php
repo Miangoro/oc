@@ -442,6 +442,53 @@ class solicitudesController extends Controller
         return response()->json(['message' => 'Vigilancia en traslado de lote registrada exitosamente']);
     }
 
+    public function storeInspeccionBarricadaLiberacion(Request $request)
+    {
+        $BarricadaLib = new solicitudesModel();
+        $BarricadaLib->folio = Helpers::generarFolioSolicitud();
+        $BarricadaLib->id_empresa = $request->id_empresa;
+        $BarricadaLib->id_tipo = 9;
+        $BarricadaLib->id_predio = 0;
+        $BarricadaLib->fecha_visita = $request->fecha_visita;
+        $BarricadaLib->id_instalacion = $request->id_instalacion;
+        $BarricadaLib->info_adicional = $request->info_adicional;
+
+        $BarricadaLib->caracteristicas = json_encode([
+            'id_lote_granel_liberacion' => $request->id_lote_granel_liberacion,
+            'id_categoria_liberacion' => $request->id_categoria_liberacion,
+            'id_clase_liberacion' => $request->id_clase_liberacion,
+            'id_tipo_maguey_liberacion' => $request->id_tipo_maguey_liberacion,
+            'id_edad_liberacion' => $request->id_edad_liberacion,
+            'analisis_liberacion' => $request->analisis_liberacion,
+            'volumen_liberacion' => $request->volumen_liberacion,
+            'tipo_lote_lib' => $request->tipo_lote_lib,
+            'fecha_inicio_lib' => $request->fecha_inicio_lib,
+            'fecha_termino_lib' => $request->fecha_termino_lib,
+            'material_liberacion' => $request->material_liberacion,
+            'capacidad_liberacion' => $request->capacidad_liberacion,
+            'num_recipientes_lib' => $request->num_recipientes_lib,
+            'tiempo_dura_lib' => $request->tiempo_dura_lib,
+            'id_certificado_liberacion' => $request->id_certificado_liberacion,
+        ]);
+
+        $BarricadaLib->save();
+
+        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+        // Notificación 1
+        $data1 = [
+            'title' => 'Nuevo registro de solicitud',
+            'message' => $BarricadaLib->folio . " " . $BarricadaLib->tipo_solicitud->tipo,
+            'url' => 'solicitudes-historial',
+        ];
+
+        // Iterar sobre cada usuario y enviar la notificación
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
+        return response()->json(['message' => 'Vigilancia en traslado de lote registrada exitosamente']);
+    }
+
     public function registrarSolicitudGeoreferenciacion(Request $request)
     {
 
