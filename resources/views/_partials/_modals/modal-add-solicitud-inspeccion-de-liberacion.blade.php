@@ -14,7 +14,7 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="id_empresa_liberacion"
                                     onchange="obtenerInstalacionesLiberacion(); obtenerGranelesLiberacion(this.value);"
-                                    name="id_empresa" class="id_empresa_barricada select2 form-select" required>
+                                    name="id_empresa" class="id_empresa_liberacion select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}

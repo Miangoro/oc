@@ -3056,6 +3056,40 @@ const fvLiberacion = FormValidation.formValidation(addInspeccionLiberacionForm, 
       });
     });
 
+
+        //Muestreo de inpeccion liberacion barricada
+        $(document).ready(function () {
+          let openedFromFirstModal = false;
+      
+          $('#modalVigilanciaBarricadaLiberacion').on('click', function () {
+            var clienteSeleccionado = $('.id_empresa_liberacion').val();
+            // Verificar si hay una empresa seleccionada
+            if (!clienteSeleccionado) {
+              Swal.fire({
+                icon: 'warning',
+                title: 'Espere!',
+                text: 'Por favor, selecciona un cliente primero.',
+                customClass: {
+                  confirmButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+              });
+              return;
+            }
+            $('#addInspeccionLiberacion').modal('hide');
+            // Marcar que el nuevo modal fue abierto desde el anterior
+            openedFromFirstModal = true;
+            // Preseleccionar la empresa en el modal de nueva instalación
+            $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
+            $('#modalAddInstalacion').modal('show');
+          });
+          $('#modalAddInstalacion').on('hidden.bs.modal', function () {
+            if (openedFromFirstModal) {
+              $('#addInspeccionLiberacion').modal('show');
+              openedFromFirstModal = false;
+            }
+          });
+        });
     
   /* seccion para exportacion */
   $(document).ready(function () {
