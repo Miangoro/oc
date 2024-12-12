@@ -391,7 +391,7 @@ class marcasCatalogoController extends Controller
                 }
             }
           
-            return response()->json(['success' => 'Etiquetas actualizadas correctamente '.$imprimir]);
+            return response()->json(['success' => 'Etiquetas actualizadas correctamente']);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Error al actualizar las etiquetas',
