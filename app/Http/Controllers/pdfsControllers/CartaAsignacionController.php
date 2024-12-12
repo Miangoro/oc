@@ -324,4 +324,9 @@ class CartaAsignacionController extends Controller
         $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal')->setPaper('letter', 'landscape');
         return $pdf->stream('Bitácora Mezcal a Granel.pdf');
     }   
+
+    public function BitacoraMaduracion() {
+        $pdf = Pdf::loadView('pdfs.Bitacora_Maduracion')->setPaper('letter', 'landscape');
+        return $pdf->stream('Bitácora Producto en Maduración.pdf');
+    } 
 }
