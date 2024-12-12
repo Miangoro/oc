@@ -2070,6 +2070,122 @@ $(function () {
       }
     });
   });
+
+  // Validación del formulario Inspección Ingreso Barricada
+const addInspeccionIngresoBarricadaForm = document.getElementById('addInspeccionIngresoBarricadaForm');
+const fvBarricada = FormValidation.formValidation(addInspeccionIngresoBarricadaForm, {
+  fields: {
+    id_empresa: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione un cliente.'
+        }
+      }
+    },
+    fecha_visita: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
+        }
+      }
+    },
+    id_instalacion: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione una instalación.'
+        }
+      }
+    },
+    id_lote_granel_barricada: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione un lote a granel.'
+        }
+      }
+    },
+    tipo_lote: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor seleccione un tipo.'
+        }
+      }
+    },
+    analisis_barricada: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese el análisis fisicoquímico.'
+        }
+      }
+    },
+    volumen_barricada: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese el porcentaje de alcohol.'
+        },
+        numeric: {
+          message: 'Por favor ingrese un valor numérico válido.'
+        }
+      }
+    },
+    fecha_inicio: {
+      validators: {
+        notEmpty: {
+          message: 'Por favor ingrese la fecha de inicio.'
+        }
+      }
+    }
+  },
+  plugins: {
+    trigger: new FormValidation.plugins.Trigger(),
+    bootstrap5: new FormValidation.plugins.Bootstrap5({
+      eleValidClass: '',
+      rowSelector: function (field, ele) {
+        return '.mb-4, .mb-5, .mb-6';
+      }
+    }),
+    submitButton: new FormValidation.plugins.SubmitButton(),
+    autoFocus: new FormValidation.plugins.AutoFocus()
+  }
+}).on('core.form.valid', function () {
+  const formData = new FormData(addInspeccionIngresoBarricadaForm);
+
+  $.ajax({
+    url: '/hologramas/storeInspeccionBarricada', // Actualiza con la URL correcta
+    type: 'POST',
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      // Cerrar modal y reiniciar formulario
+      $('#addInspeccionIngresoBarricada').modal('hide');
+      $('#addInspeccionIngresoBarricadaForm')[0].reset();
+      $('.select2').val(null).trigger('change');
+      $('.datatables-solicitudes').DataTable().ajax.reload();
+
+      // Mostrar alerta de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Inspección registrada exitosamente.',
+        customClass: {
+          confirmButton: 'btn btn-success'
+        }
+      });
+    },
+    error: function () {
+      // Mostrar alerta de error
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: 'Error al registrar la inspección.',
+        customClass: {
+          confirmButton: 'btn btn-danger'
+        }
+      });
+    }
+  });
+});
+
   //Validar vigilancia en traslado
   const addVigilanciaTrasladoForm = document.getElementById('addVigilanciaTrasladoForm');
   const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {

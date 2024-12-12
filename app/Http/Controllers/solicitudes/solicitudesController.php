@@ -343,7 +343,7 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Vigilancia en producción de lote registrada exitosamente']);
+        return response()->json(['message' => 'Muestreo de lote registrada exitosamente']);
     }
 
 
@@ -392,7 +392,54 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Vigilancia en producción de lote registrada exitosamente']);
+        return response()->json(['message' => 'Vigilancia en traslado de lote registrada exitosamente']);
+    }
+
+    public function storeInspeccionBarricada(Request $request)
+    {
+        $VigilanciaTras = new solicitudesModel();
+        $VigilanciaTras->folio = Helpers::generarFolioSolicitud();
+        $VigilanciaTras->id_empresa = $request->id_empresa;
+        $VigilanciaTras->id_tipo = 4;
+        $VigilanciaTras->id_predio = 0;
+        $VigilanciaTras->fecha_visita = $request->fecha_visita;
+        $VigilanciaTras->id_instalacion = $request->id_instalacion;
+        $VigilanciaTras->info_adicional = $request->info_adicional;
+
+        $VigilanciaTras->caracteristicas = json_encode([
+            'id_lote_granel_barricada' => $request->id_lote_granel_barricada,
+            'id_categoria_barricada' => $request->id_categoria_barricada,
+            'id_clase_barricada' => $request->id_clase_barricada,
+            'id_tipo_maguey_barricada' => $request->id_tipo_maguey_barricada,
+            'id_edad' => $request->id_edad,
+            'analisis_barricada' => $request->analisis_barricada,
+            'volumen_barricada' => $request->volumen_barricada,
+            'tipo_lote' => $request->tipo_lote,
+            'fecha_inicio' => $request->fecha_inicio,
+            'fecha_termino' => $request->fecha_termino,
+            'material' => $request->material,
+            'capacidad' => $request->capacidad,
+            'num_recipientes' => $request->num_recipientes,
+            'tiempo_dura' => $request->tiempo_dura,
+            'id_certificado_barricada' => $request->id_certificado_barricada,
+        ]);
+
+        $VigilanciaTras->save();
+
+        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+        // Notificación 1
+        $data1 = [
+            'title' => 'Nuevo registro de solicitud',
+            'message' => $VigilanciaTras->folio . " " . $VigilanciaTras->tipo_solicitud->tipo,
+            'url' => 'solicitudes-historial',
+        ];
+
+        // Iterar sobre cada usuario y enviar la notificación
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
+        return response()->json(['message' => 'Vigilancia en traslado de lote registrada exitosamente']);
     }
 
     public function registrarSolicitudGeoreferenciacion(Request $request)

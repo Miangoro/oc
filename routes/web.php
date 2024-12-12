@@ -773,6 +773,8 @@ Route::post('/registrar-solicitud-muestreo-agave', [solicitudesController::class
 Route::post('/hologramas/storeVigilanciaProduccion', [solicitudesController::class, 'storeVigilanciaProduccion']);
 Route::post('/hologramas/storeMuestreoLote', [solicitudesController::class, 'storeMuestreoLote']);
 Route::post('/hologramas/storeVigilanciaTraslado', [solicitudesController::class, 'storeVigilanciaTraslado']);
+Route::post('/hologramas/storeInspeccionBarricada', [solicitudesController::class, 'storeInspeccionBarricada']);
+
 
 
 Route::get('/verificar-solicitud', [solicitudesController::class, 'verificarSolicitud'])->name('verificarSolicitud');
