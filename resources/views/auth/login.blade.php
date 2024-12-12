@@ -108,6 +108,10 @@
             .img-logo {
                 visibility: hidden;
             }
+
+            .facebook {
+                visibility: hidden;
+            }
         }
 
         @media (max-width: 768px) {
@@ -303,7 +307,7 @@
                                 </div>
                             </div>
                         @endif
-                        <div class="facebook-iframe">
+                        <div class="facebook-iframe facebook">
                             <iframe
                                 src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Forganismo.certificador.CIDAM&amp;tabs=timeline&amp;width=340&amp;height=500&amp;small_header=false&amp;adapt_container_width=true&amp;hide_cover=false&amp;show_facepile=true&amp;appId=1310192986090547"
                                 width="340" height="500" style="border:none;overflow:hidden; border-radius: 20px;" allowfullscreen=""
