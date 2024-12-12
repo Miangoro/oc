@@ -643,63 +643,69 @@ $(function () {
       
     
         var newRow = `
-                  <tr>
-                      <th>
-                          <button type="button" class="btn btn-danger remove-row">
-                              <i class="ri-delete-bin-5-fill"></i>
-                          </button>
-                      </th>
-                                            <td style="width: 150px;">
-                          <select style="width: 100%" class="form-control select2" name="id_direccion[]" id="id_direccion${index}">
-                              ${direcciones}
-                          </select>
-                      </td>
-                      <td style="width: 150px;">   <input type="text" class="form-control form-control-sm"  value="${id_unico}" name="id_unico[]"
-                                            id="id_unico">
-                          <input type="text" class="form-control form-control-sm" name="sku[]" min="0" value="${sku !== null ? sku : ''}">
-                      </td>
-                      <td style="width: 150px;">
-                        <select class="form-control select2" name="id_categoria[]" id="id_categoria${index}">
-                              ${categorias}
-                          </select>
-                          <select class="form-control select2" name="id_tipo[]" id="id_tipo${index}">
-                              ${tipos}
-                          </select>
-                           <select class="form-control select2" name="id_clase[]" id="id_clase${index}">
-                              ${clases}
-                          </select>
-                      </td>
-                      <td style="width: 150px;">
-                          <input type="number" class="form-control form-control-sm" name="presentacion[]" min="0" value="${presentacion}">
-                           <select class="form-control" name="unidad[]"><option ${ml} value="mL">mL</option><option ${l} value="L">L</option><option ${cl} value="cL">cL</option></select>
-                      </td>
-                      <td style="width: 150px;"><input type="text" class="form-control form-control-sm" name="alc_vol[]" value="${alc_vol !== null ? alc_vol : ''}"></td>
-                      
-                      <td>
-                          <div style="display: flex; align-items: center;">
-                              <input class="form-control form-control-sm" type="file" name="url_etiqueta[]" style="flex: 1;">
-                              ${documento_etiquetas ?
-            `<a href="/files/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank" style="margin-left: 10px;">
-                                      <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
-                                  </a>`
+                 <tr>
+    <th>
+        <button type="button" class="btn btn-danger btn-sm remove-row">
+            <i class="ri-delete-bin-5-fill"></i>
+        </button>
+    </th>
+    <td style="width: 150px;">
+        <select style="width: 100%" class="form-control form-control-sm select2" name="id_direccion[]" id="id_direccion${index}">
+            ${direcciones}
+        </select>
+    </td>
+    <td style="width: 150px;">
+        <input type="hidden" class="form-control form-control-sm" value="${id_unico}" name="id_unico[]" id="id_unico">
+        <input type="text" class="form-control form-control-sm" name="sku[]" min="0" value="${sku !== null ? sku : ''}">
+    </td>
+    <td style="width: 150px;">
+        <select class="form-control form-control-sm select2" name="id_categoria[]" id="id_categoria${index}">
+            ${categorias}
+        </select>
+        <select class="form-control form-control-sm select2" name="id_tipo[]" id="id_tipo${index}">
+            ${tipos}
+        </select>
+        <select class="form-control form-control-sm select2" name="id_clase[]" id="id_clase${index}">
+            ${clases}
+        </select>
+    </td>
+    <td style="width: 150px;">
+        <input type="number" class="form-control form-control-sm" name="presentacion[]" min="0" value="${presentacion}">
+        <select class="form-control form-control-sm" name="unidad[]">
+            <option ${ml} value="mL">mL</option>
+            <option ${l} value="L">L</option>
+            <option ${cl} value="cL">cL</option>
+        </select>
+    </td>
+    <td style="width: 150px;">
+        <input type="text" class="form-control form-control-sm" name="alc_vol[]" value="${alc_vol !== null ? alc_vol : ''}">
+    </td>
+    <td>
+        <div style="display: flex; align-items: center;">
+            <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
+            ${documento_etiquetas ? 
+                `<a href="/files/${data.numeroCliente}/${documento_etiquetas.url}" target="_blank" style="margin-left: 5px;">
+                    <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i>
+                </a>` 
             : ''}
-                          </div>
-                          <input value="60" class="form-control" type="hidden" name="id_documento[]">
-                          <input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]">
-                      </td>
-                      <td>
-                          <div style="display: flex; align-items: center;">
-                              <input class="form-control form-control-sm" type="file" name="url_corrugado[]" style="flex: 1;">
-                              ${documento_corrugado ?
-            `<a href="/files/${data.numeroCliente}/${documento_corrugado.url}" target="_blank" style="margin-left: 10px;">
-                                      <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i> 
-                                  </a>`
+        </div>
+        <input value="60" class="form-control" type="hidden" name="id_documento[]">
+        <input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]">
+    </td>
+    <td>
+        <div style="display: flex; align-items: center;">
+            <input class="form-control form-control-sm" type="file" name="url[]" style="flex: 1;">
+            ${documento_corrugado ? 
+                `<a href="/files/${data.numeroCliente}/${documento_corrugado.url}" target="_blank" style="margin-left: 5px;">
+                    <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i>
+                </a>` 
             : ''}
-                          </div>
-                          <input value="75" class="form-control" type="hidden" name="id_documento[]">
-                          <input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]">
-                      </td>
-                  </tr>`;
+        </div>
+        <input value="75" class="form-control" type="hidden" name="id_documento[]">
+        <input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]">
+    </td>
+</tr>
+`;
                   
         $('#contenidoRango').append(newRow);
         // Inicializar select2 y establecer el valor seleccionado

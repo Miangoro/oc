@@ -73,13 +73,12 @@ class getFuncionesController extends Controller
         ]);
     }
 
-
     public function getDatos2(LotesGranel $lote_granel)
     {    
         return response()->json([
             'instalaciones' => $lote_granel->empresa->obtenerInstalaciones(),
             'lotes_granel' => $lote_granel,
-            'marcas' => $lote_granel->empresa->marcas(),
+            'marca' => $lote_granel->empresa->marcas()->pluck('marca')->first(),
             'lotes_granel_guias' => $lote_granel->lotesGuias()->with(['guia', 'guia.predios'])->get(),
             'predios' => $lote_granel->empresa->predios(),
             'predio_plantacion' => $lote_granel->empresa->predio_plantacion(),
@@ -88,9 +87,10 @@ class getFuncionesController extends Controller
             'categoria' => $lote_granel->categoria,
             'tipo' => $lote_granel->tipo, 
             'clase' => $lote_granel->clase,
-
         ]);
     }
+    
+    
     
 
 
