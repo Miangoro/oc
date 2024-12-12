@@ -39,7 +39,7 @@
                                     aria-label="id_instalacion" required>
                                     <option value="" selected>Lista de instalaciones</option>
                                 </select>
-                                <button type="button" class="btn btn-primary" id="modalMuestreo"><i
+                                <button type="button" class="btn btn-primary" id="modalVigilanciaBarricada"><i
                                         class="ri-add-line"></i> Agregar nueva instalación</button>
                             </div>
                         </div>
