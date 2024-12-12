@@ -773,9 +773,9 @@ Route::post('/registrar-solicitud-muestreo-agave', [solicitudesController::class
 Route::post('/hologramas/storeVigilanciaProduccion', [solicitudesController::class, 'storeVigilanciaProduccion']);
 Route::post('/hologramas/storeMuestreoLote', [solicitudesController::class, 'storeMuestreoLote']);
 Route::post('/hologramas/storeVigilanciaTraslado', [solicitudesController::class, 'storeVigilanciaTraslado']);
+Route::post('/hologramas/storeInspeccionBarricada', [solicitudesController::class, 'storeInspeccionBarricada']);
+Route::post('/hologramas/storeInspeccionBarricadaLiberacion', [solicitudesController::class, 'storeInspeccionBarricadaLiberacion']);
 Route::get('/getDetalleLoteEnvasado/{id_lote_envasado}', [solicitudesController::class, 'getDetalleLoteEnvasado']);
-
-
 Route::get('/verificar-solicitud', [solicitudesController::class, 'verificarSolicitud'])->name('verificarSolicitud');
 Route::get('/datos-solicitud/{id_solicitud}', [solicitudesController::class, 'obtenerDatosSolicitud'])->name('datos.solicitud');
 Route::post('/actualizar-solicitudes/{id_solicitud}', [SolicitudesController::class, 'actualizarSolicitudes']);
@@ -851,6 +851,13 @@ Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCe
 Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'update']);
 Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor');
 Route::post('/certificados/reexpedir/granel', [Certificado_GranelController::class, 'reexpedir'])->name('certificados.reexpedir.granel');
+
+//Bitacoras
+Route::get('/bitacora_mezcal', [CartaAsignacionController::class, 'BitacoraMezcal'])->name('bitacora_mezcal');
+Route::get('/bitacora_maduracion', [CartaAsignacionController::class, 'BitacoraMaduracion'])->name('bitacora_maduracion');
+/* Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
+Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
+Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion'); */
 
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
 

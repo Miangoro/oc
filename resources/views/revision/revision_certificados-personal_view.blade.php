@@ -155,7 +155,7 @@
                     <th>Revisor</th>
                     <th>Fecha Emisión</th>
                     <th>Fecha Revisión</th>
-                    <th>Bitacora</th>
+                    <th>Bitácora</th>
                     <th>Estatus</th>
                     <th>Acciones</th>
                 </tr>

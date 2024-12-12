@@ -27,6 +27,13 @@
             z-index: -2;
         }
 
+        .facebook-iframe {
+            position: fixed;
+            left: 10px;
+            bottom: 10px;
+            z-index: 9999;
+        }
+
         /* Halloween */
         .bat {
             position: absolute;
@@ -100,6 +107,10 @@
 
         @media (max-width: 990px) {
             .img-logo {
+                visibility: hidden;
+            }
+
+            .facebook {
                 visibility: hidden;
             }
         }
@@ -297,6 +308,13 @@
                                 </div>
                             </div>
                         @endif
+                        <div class="facebook-iframe facebook">
+                            <iframe
+                                src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Forganismo.certificador.CIDAM&amp;tabs=timeline&amp;width=340&amp;height=500&amp;small_header=false&amp;adapt_container_width=true&amp;hide_cover=false&amp;show_facepile=true&amp;appId=1310192986090547"
+                                width="340" height="500" style="border:none;overflow:hidden; border-radius: 20px;"
+                                allowfullscreen=""
+                                allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+                        </div>
                         <form id="formAuthentication" class="mb-5" action="{{ route('login') }}" method="POST">
                             @csrf
                             <div class="form-floating form-floating-outline mb-5">
