@@ -228,6 +228,7 @@
     @include('_partials._modals.modal-edit-solicitud-vigilancia-traslado-lote')
     @include('_partials._modals.modal-edit-solicitud-inspeccion-ingreso-barricada')
     @include('_partials._modals.modal-edit-solicitud-inspeccion-de-liberacion')
+    @include('_partials._modals.modal-edit-solicitud-inspeccion-de-envasado')
 
 
     <!-- /Modal -->
@@ -338,6 +339,25 @@
     $("#id_solicitud").val(id_solicitud);
     $('#subirResultados').modal('show');
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+  // Función para obtener parámetros de la URL
+  function getParameterByName(name) {
+    const url = window.location.href;
+    const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
+    const results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
+
+  // Verificar si el modal debe abrirse
+  const modalToOpen = getParameterByName('abrirModal');
+  if (modalToOpen === 'nuevaSolicitud') {
+    $('#verSolicitudes').modal('show'); // Abrir modal
+  }
+});
+
 
 
 </script>

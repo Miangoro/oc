@@ -452,6 +452,8 @@ $(function () {
         modal = $('#editMuestreoLoteAgranel');
       } else if (id_tipo === 4) {
         modal = $('#editVigilanciaTraslado');
+      } else if (id_tipo === 5) {
+        modal = $('#editInspeccionEnvasado');
       } else if (id_tipo === 7) {
         modal = $('#editInspeccionIngresoBarricada');
       } else if (id_tipo === 9) {
@@ -553,7 +555,6 @@ $(function () {
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_muestreo').data('selected', response.data.id_instalacion);
 
-              // Acceder al campo `punto_reunion` desde `caracteristicas`
               if (response.caracteristicas && response.caracteristicas.id_lote_granel_muestreo) {
                 modal.find('#edit_id_lote_granel_muestreo').val(response.caracteristicas.id_lote_granel_muestreo);
               } else {
@@ -600,7 +601,6 @@ $(function () {
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_traslado').data('selected', response.data.id_instalacion);
 
-              // Acceder al campo `punto_reunion` desde `caracteristicas`
               if (response.caracteristicas && response.caracteristicas.id_lote_granel_muestreo) {
                 modal.find('#edit_id_lote_granel_traslado').val(response.caracteristicas.id_lote_granel_muestreo);
               } else {
@@ -659,6 +659,72 @@ $(function () {
                 modal.find('#edit_id_certificado_traslado').val(response.caracteristicas.id_certificado_traslado);
               } else {
                 modal.find('#edit_id_certificado_traslado').val('');
+              }
+              modal.find('#edit_info_adicional').val(response.data.info_adicional);
+            } else if (id_tipo === 5) {
+              modal.find('#edit_id_solicitud_inspeccion').val(id_solicitud);
+              modal.find('#edit_id_empresa_inspeccion').val(response.data.id_empresa).trigger('change');
+              modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
+              modal.find('#edit_id_instalacion_inspeccion').data('selected', response.data.id_instalacion);
+
+              if (response.caracteristicas && response.caracteristicas.id_lote_granel_inspeccion) {
+                modal.find('#edit_id_lote_granel_inspeccion').val(response.caracteristicas.id_lote_granel_inspeccion);
+              } else {
+                modal.find('#edit_id_lote_granel_inspeccion').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.id_categoria_inspeccion) {
+                modal.find('#edit_id_categoria_inspeccion').val(response.caracteristicas.id_categoria_inspeccion);
+              } else {
+                modal.find('#edit_id_categoria_inspeccion').val('');
+              } if (response.caracteristicas && response.caracteristicas.id_clase_inspeccion) {
+                modal.find('#edit_id_clase_inspeccion').val(response.caracteristicas.id_clase_inspeccion);
+              } else {
+                modal.find('#edit_id_clase_inspeccion').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_inspeccion) {
+                modal.find('#edit_id_tipo_maguey_inspeccion').val(response.caracteristicas.id_tipo_maguey_inspeccion);
+              } else {
+                modal.find('#edit_id_tipo_maguey_inspeccion').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.id_marca) {
+                modal.find('#edit_id_marca').val(response.caracteristicas.id_marca);
+              } else {
+                modal.find('#edit_id_marca').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.volumen_inspeccion) {
+                modal.find('#edit_volumen_inspeccion').val(response.caracteristicas.volumen_inspeccion);
+              } else {
+                modal.find('#edit_volumen_inspeccion').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.analisis_inspeccion) {
+                modal.find('#edit_analisis_inspeccion').val(response.caracteristicas.analisis_inspeccion);
+              } else {
+                modal.find('#edit_analisis_inspeccion').val('');
+              }
+              if (response.caracteristicas && response.caracteristicas.id_tipo_inspeccion) {
+                modal.find('#edit_id_tipo_inspeccion').val(response.caracteristicas.id_tipo_inspeccion);
+              } else {
+                modal.find('#edit_id_tipo_inspeccion').val('');
+              } if (response.caracteristicas && response.caracteristicas.id_cantidad_bote) {
+                modal.find('#edit_id_cantidad_bote').val(response.caracteristicas.id_cantidad_bote);
+              } else {
+                modal.find('#edit_id_cantidad_bote').val('');
+              } if (response.caracteristicas && response.caracteristicas.id_cantidad_caja) {
+                modal.find('#edit_id_cantidad_caja').val(response.caracteristicas.id_cantidad_caja);
+              } else {
+                modal.find('#edit_id_cantidad_caja').val('');
+              } if (response.caracteristicas && response.caracteristicas.id_inicio_envasado) {
+                modal.find('#edit_id_inicio_envasado').val(response.caracteristicas.id_inicio_envasado);
+              } else {
+                modal.find('#edit_id_inicio_envasado').val('');
+              } if (response.caracteristicas && response.caracteristicas.id_previsto) {
+                modal.find('#edit_id_previsto').val(response.caracteristicas.id_previsto);
+              } else {
+                modal.find('#edit_id_previsto').val('');
+              } if (response.caracteristicas && response.caracteristicas.id_certificado_inspeccion) {
+                modal.find('#edit_id_certificado_inspeccion').val(response.caracteristicas.id_certificado_inspeccion);
+              } else {
+                modal.find('#edit_id_certificado_inspeccion').val('');
               }
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
               //Inspeccion ingreso barricada
@@ -1472,6 +1538,111 @@ $(function () {
       });
     });
   });
+
+
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // Inicializar FormValidation para el formulario de edición
+    const formUpdate = document.getElementById('editInspeccionEnvasadoForm');
+    const fvUpdate = FormValidation.formValidation(formUpdate, {
+        fields: {
+            'id_empresa': {
+                validators: {
+                    notEmpty: {
+                        message: 'Selecciona el cliente.'
+                    }
+                }
+            },
+            'fecha_visita': {
+                validators: {
+                    notEmpty: {
+                        message: 'Selecciona la fecha y hora para la inspección.'
+                    }
+                }
+            },
+            'id_instalacion': {
+                validators: {
+                    notEmpty: {
+                        message: 'Selecciona una instalación.'
+                    }
+                }
+            },
+            'id_lote_granel_inspeccion': {
+                validators: {
+                    notEmpty: {
+                        message: 'Selecciona un lote a granel.'
+                    }
+                }
+            },
+            'volumen_inspeccion': {
+                validators: {
+                    notEmpty: {
+                        message: 'Ingresa el volumen trasladado.'
+                    },
+                    numeric: {
+                        message: 'El volumen debe ser un número válido.'
+                    }
+                }
+            }
+        },
+        plugins: {
+            trigger: new FormValidation.plugins.Trigger(),
+            bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: '.form-floating'
+            }),
+            submitButton: new FormValidation.plugins.SubmitButton(),
+            autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+    }).on('core.form.valid', function () {
+        // Obtener los datos del formulario
+        var formData = new FormData(formUpdate);
+
+        // Hacer la solicitud AJAX
+        $.ajax({
+            url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_inspeccion').val(),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                $('#editInspeccionEnvasado').modal('hide'); // Oculta el modal
+                $('#editInspeccionEnvasadoForm')[0].reset(); // Resetea el formulario
+                $('.select2').val(null).trigger('change'); // Resetea los select2
+                $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.message,
+                    customClass: {
+                        confirmButton: 'btn btn-success'
+                    }
+                });
+            },
+            error: function (xhr) {
+                console.log('Error:', xhr.responseText);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Error al actualizar la inspección de envasado',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            }
+        });
+    });
+});
+
 
   //metodo para liberacion
   $(function () {
@@ -2669,6 +2840,122 @@ $(function () {
     });
   });
 
+  // Validación del formulario inpeccion de envasado
+  const addInspeccionEnvasadoForm = document.getElementById('addInspeccionEnvasadoForm');
+  const fvEnvasado = FormValidation.formValidation(addInspeccionEnvasadoForm, {
+    fields: {
+      id_empresa: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un cliente.'
+          }
+        }
+      },
+      fecha_visita: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la fecha y hora sugerida para la inspección.'
+          }
+        }
+      },
+      id_instalacion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione una instalación.'
+          }
+        }
+      },
+      id_lote_granel_inspeccion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un lote a granel.'
+          }
+        }
+      },
+      id_tipo_inspeccion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor seleccione un tipo.'
+          }
+        }
+      },
+      analisis_inspeccion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el análisis fisicoquímico.'
+          }
+        }
+      },
+      volumen_inspeccion: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese el volumen.'
+          },
+          numeric: {
+            message: 'Por favor ingrese un valor numérico válido.'
+          }
+        }
+      },
+      id_cantidad_bote: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor ingrese la cantidad de botellas.'
+          },
+          numeric: {
+            message: 'Por favor ingrese un valor numérico válido.'
+          }
+        }
+      }
+    },
+    plugins: {
+      trigger: new FormValidation.plugins.Trigger(),
+      bootstrap5: new FormValidation.plugins.Bootstrap5({
+        eleValidClass: '',
+        rowSelector: '.mb-4, .mb-5, .mb-6'
+      }),
+      submitButton: new FormValidation.plugins.SubmitButton(),
+      autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+  }).on('core.form.valid', function () {
+    const formData = new FormData(addInspeccionEnvasadoForm);
+
+    $.ajax({
+      url: '/hologramas/storeInspeccionEnvasado', // Cambiar a la ruta correspondiente
+      type: 'POST',
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        // Cerrar modal y reiniciar formulario
+        $('#addInspeccionEnvasado').modal('hide');
+        $('#addInspeccionEnvasadoForm')[0].reset();
+        $('.select2').val(null).trigger('change');
+        $('.datatables-inspecciones').DataTable().ajax.reload();
+
+        // Mostrar alerta de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Inspección de envasado registrada exitosamente.',
+          customClass: {
+            confirmButton: 'btn btn-success'
+          }
+        });
+      },
+      error: function () {
+        // Mostrar alerta de error
+        Swal.fire({
+          icon: 'error',
+          title: '¡Error!',
+          text: 'Error al registrar la inspección.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          }
+        });
+      }
+    });
+  });
+
 
   //Validar vigilancia en traslado
   const addVigilanciaTrasladoForm = document.getElementById('addVigilanciaTrasladoForm');
@@ -3089,6 +3376,40 @@ $(function () {
       }
     });
   });
+
+    //Muestreo de inspeccion de envasado
+    $(document).ready(function () {
+      let openedFromFirstModal = false;
+  
+      $('#modalMuestreoInspeccion').on('click', function () {
+        var clienteSeleccionado = $('.id_empresa_inspeccion').val();
+        // Verificar si hay una empresa seleccionada
+        if (!clienteSeleccionado) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Espere!',
+            text: 'Por favor, selecciona un cliente primero.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+          });
+          return;
+        }
+        $('#addInspeccionEnvasado').modal('hide');
+        // Marcar que el nuevo modal fue abierto desde el anterior
+        openedFromFirstModal = true;
+        // Preseleccionar la empresa en el modal de nueva instalación
+        $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
+        $('#modalAddInstalacion').modal('show');
+      });
+      $('#modalAddInstalacion').on('hidden.bs.modal', function () {
+        if (openedFromFirstModal) {
+          $('#addInspeccionEnvasado').modal('show');
+          openedFromFirstModal = false;
+        }
+      });
+    });
 
   /* seccion para exportacion */
   $(document).ready(function () {

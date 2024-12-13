@@ -160,7 +160,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."></textarea>
@@ -178,8 +177,6 @@
         </div>
     </div>
 </div>
-
-
 
 <script>
     function obtenerInstalacionesTraslado() {
@@ -236,8 +233,6 @@
         });
     }
 
-
-
     function obtenerDatosGranelesTarslado() {
         var lote_granel_id = $("#id_lote_granel_traslado").val();
         $.ajax({
@@ -256,7 +251,6 @@
                 $('#volumen_traslado').val(response.lotes_granel.cont_alc);
                 $('#id_vol_actual').val(response.lotes_granel.volumen);
                 $('#id_vol_res').val(response.lotes_granel.volumen_restante);
-
             },
             error: function() {
                 console.error('Error al obtener los datos del lote granel.');
