@@ -38,6 +38,109 @@ $(function () {
       { data: 'direccion_completa' },
       { data: 'fecha_visita' },
       { data: 'inspector' },
+      {
+        data: null,
+        render: function (data) {
+          switch (data.id_tipo) {
+            case 2:
+              return `<br><span class="fw-bold text-dark small">Nombre del predio:</span><span class="small"> ${data.nombre_predio || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Folio:</span><span class="small"> ${data.folio_caracteristicas || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Art:</span><span class="small"> ${data.art || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Etapa:</span><span class="small"> ${data.etapa || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Fecha de Corte:</span>
+                      <span class="small">${data.fecha_corte || 'N/A'}</span>
+                      `;
+            case 3:
+              return `<br><span class="fw-bold text-dark small">Destino lote:</span><span class="small"> ${data.destino_lote || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_muestreo || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_muestreo || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_muestreo || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Certificado muestreo:</span><span class="small"> ${data.id_certificado_muestreo || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Volumen muestreo:</span><span class="small"> ${data.volumen_muestreo || 'N/A'}</span>
+                      `;
+            case 4:
+              return `<br><span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_traslado || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_traslado || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_traslado || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Volumen actual:</span><span class="small"> ${data.id_vol_actual || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Volumen restante:</span><span class="small"> ${data.id_vol_res || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_traslado || 'N/A'}</span>
+                      `;
+            case 5:
+              return `<br><span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_inspeccion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_inspeccion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_inspeccion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Marca:</span><span class="small"> ${data.id_marca || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Volumen:</span><span class="small"> ${data.volumen_inspeccion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_inspeccion || 'N/A'}</span>
+                      `;
+            case 7:
+              return `<br><span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_barricada || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_barricada || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_barricada || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_barricada || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.tipo_lote || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
+                      `;
+            case 9:
+              return `<br><span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_liberacion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_liberacion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_liberacion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_liberacion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.tipo_lote_lib || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio_lib || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Fecha término:</span><span class="small"> ${data.fecha_termino_lib || 'N/A'}</span>
+                      `;
+            case 10:
+              return `<br><span class="fw-bold text-dark small">Punto de reunión:</span><span class="small"> ${data.punto_reunion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
+            case 14:
+              return `<br><span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.clase || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.categorias || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Renovación:</span><span class="small"> ${data.renovacion || 'N/A'}</span>
+                      `;
+            default:
+              return `<br><span class="fw-bold text-dark small">Información no disponible</span>`;
+          }
+        }
+      },      
       { data: 'fecha_servicio' },
       { data: '' },
       { data: 'estatus' },
@@ -96,7 +199,7 @@ $(function () {
       },
       {
 
-        targets: 11,
+        targets: 12,
         className: 'text-center',
         searchable: false,
         orderable: false,
@@ -1543,105 +1646,105 @@ $(function () {
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
     });
 
     // Inicializar FormValidation para el formulario de edición
     const formUpdate = document.getElementById('editInspeccionEnvasadoForm');
     const fvUpdate = FormValidation.formValidation(formUpdate, {
-        fields: {
-            'id_empresa': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona el cliente.'
-                    }
-                }
-            },
-            'fecha_visita': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona la fecha y hora para la inspección.'
-                    }
-                }
-            },
-            'id_instalacion': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona una instalación.'
-                    }
-                }
-            },
-            'id_lote_granel_inspeccion': {
-                validators: {
-                    notEmpty: {
-                        message: 'Selecciona un lote a granel.'
-                    }
-                }
-            },
-            'volumen_inspeccion': {
-                validators: {
-                    notEmpty: {
-                        message: 'Ingresa el volumen trasladado.'
-                    },
-                    numeric: {
-                        message: 'El volumen debe ser un número válido.'
-                    }
-                }
+      fields: {
+        'id_empresa': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el cliente.'
             }
+          }
         },
-        plugins: {
-            trigger: new FormValidation.plugins.Trigger(),
-            bootstrap5: new FormValidation.plugins.Bootstrap5({
-                eleValidClass: '',
-                eleInvalidClass: 'is-invalid',
-                rowSelector: '.form-floating'
-            }),
-            submitButton: new FormValidation.plugins.SubmitButton(),
-            autoFocus: new FormValidation.plugins.AutoFocus()
-        }
-    }).on('core.form.valid', function () {
-        // Obtener los datos del formulario
-        var formData = new FormData(formUpdate);
-
-        // Hacer la solicitud AJAX
-        $.ajax({
-            url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_inspeccion').val(),
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                $('#editInspeccionEnvasado').modal('hide'); // Oculta el modal
-                $('#editInspeccionEnvasadoForm')[0].reset(); // Resetea el formulario
-                $('.select2').val(null).trigger('change'); // Resetea los select2
-                $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
-
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.message,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
-            },
-            error: function (xhr) {
-                console.log('Error:', xhr.responseText);
-
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: 'Error al actualizar la inspección de envasado',
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
+        'fecha_visita': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la fecha y hora para la inspección.'
             }
-        });
+          }
+        },
+        'id_instalacion': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona una instalación.'
+            }
+          }
+        },
+        'id_lote_granel_inspeccion': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un lote a granel.'
+            }
+          }
+        },
+        'volumen_inspeccion': {
+          validators: {
+            notEmpty: {
+              message: 'Ingresa el volumen trasladado.'
+            },
+            numeric: {
+              message: 'El volumen debe ser un número válido.'
+            }
+          }
+        }
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      // Obtener los datos del formulario
+      var formData = new FormData(formUpdate);
+
+      // Hacer la solicitud AJAX
+      $.ajax({
+        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_inspeccion').val(),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#editInspeccionEnvasado').modal('hide'); // Oculta el modal
+          $('#editInspeccionEnvasadoForm')[0].reset(); // Resetea el formulario
+          $('.select2').val(null).trigger('change'); // Resetea los select2
+          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la inspección de envasado',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
     });
-});
+  });
 
 
   //metodo para liberacion
@@ -3377,39 +3480,39 @@ $(function () {
     });
   });
 
-    //Muestreo de inspeccion de envasado
-    $(document).ready(function () {
-      let openedFromFirstModal = false;
-  
-      $('#modalMuestreoInspeccion').on('click', function () {
-        var clienteSeleccionado = $('.id_empresa_inspeccion').val();
-        // Verificar si hay una empresa seleccionada
-        if (!clienteSeleccionado) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Espere!',
-            text: 'Por favor, selecciona un cliente primero.',
-            customClass: {
-              confirmButton: 'btn btn-danger'
-            },
-            buttonsStyling: false
-          });
-          return;
-        }
-        $('#addInspeccionEnvasado').modal('hide');
-        // Marcar que el nuevo modal fue abierto desde el anterior
-        openedFromFirstModal = true;
-        // Preseleccionar la empresa en el modal de nueva instalación
-        $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
-        $('#modalAddInstalacion').modal('show');
-      });
-      $('#modalAddInstalacion').on('hidden.bs.modal', function () {
-        if (openedFromFirstModal) {
-          $('#addInspeccionEnvasado').modal('show');
-          openedFromFirstModal = false;
-        }
-      });
+  //Muestreo de inspeccion de envasado
+  $(document).ready(function () {
+    let openedFromFirstModal = false;
+
+    $('#modalMuestreoInspeccion').on('click', function () {
+      var clienteSeleccionado = $('.id_empresa_inspeccion').val();
+      // Verificar si hay una empresa seleccionada
+      if (!clienteSeleccionado) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Espere!',
+          text: 'Por favor, selecciona un cliente primero.',
+          customClass: {
+            confirmButton: 'btn btn-danger'
+          },
+          buttonsStyling: false
+        });
+        return;
+      }
+      $('#addInspeccionEnvasado').modal('hide');
+      // Marcar que el nuevo modal fue abierto desde el anterior
+      openedFromFirstModal = true;
+      // Preseleccionar la empresa en el modal de nueva instalación
+      $('#modalAddInstalacion #id_empresa').val(clienteSeleccionado).trigger('change');
+      $('#modalAddInstalacion').modal('show');
     });
+    $('#modalAddInstalacion').on('hidden.bs.modal', function () {
+      if (openedFromFirstModal) {
+        $('#addInspeccionEnvasado').modal('show');
+        openedFromFirstModal = false;
+      }
+    });
+  });
 
   /* seccion para exportacion */
   $(document).ready(function () {
@@ -3520,49 +3623,49 @@ $(function () {
     });
 
     // Función para cargar los lotes dinámicamente en la nueva sección
-// Función para cargar los lotes dinámicamente en la nueva sección
-function cargarLotes(empresaSeleccionada, sectionCount) {
-  $.ajax({
-    url: '/getDatos/' + empresaSeleccionada, // Usa la empresa seleccionada para cargar los lotes
-    method: 'GET',
-    success: function (response) {
-      // Lote envasado
-      var contenidoLotesEnvasado = "";
-      var marcas = response.marcas;
+    // Función para cargar los lotes dinámicamente en la nueva sección
+    function cargarLotes(empresaSeleccionada, sectionCount) {
+      $.ajax({
+        url: '/getDatos/' + empresaSeleccionada, // Usa la empresa seleccionada para cargar los lotes
+        method: 'GET',
+        success: function (response) {
+          // Lote envasado
+          var contenidoLotesEnvasado = "";
+          var marcas = response.marcas;
 
-      for (let index = 0; index < response.lotes_envasado.length; index++) {
-        var skuLimpio = limpiarSku(response.lotes_envasado[index].sku);
-        var marcaEncontrada = marcas.find(function (marca) {
-          return marca.id_marca === response.lotes_envasado[index].id_marca;
-        });
-        var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
+          for (let index = 0; index < response.lotes_envasado.length; index++) {
+            var skuLimpio = limpiarSku(response.lotes_envasado[index].sku);
+            var marcaEncontrada = marcas.find(function (marca) {
+              return marca.id_marca === response.lotes_envasado[index].id_marca;
+            });
+            var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
 
-        contenidoLotesEnvasado += `
+            contenidoLotesEnvasado += `
           <option value="${response.lotes_envasado[index].id_lote_envasado}">
             ${skuLimpio} | ${response.lotes_envasado[index].nombre} | ${nombreMarca}
           </option>`;
-      }
+          }
 
-      if (response.lotes_envasado.length == 0) {
-        contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
-      }
+          if (response.lotes_envasado.length == 0) {
+            contenidoLotesEnvasado = '<option value="" disabled selected>Sin lotes envasados registrados</option>';
+          }
 
-      // Actualizar las opciones del select para la nueva sección
-      $('#caracteristicas_Ex_' + sectionCount + ' .evasado_export').html(contenidoLotesEnvasado);
-    },
-    error: function () {
-      console.error('Error al cargar los lotes.');
-      Swal.fire({
-        icon: 'error',
-        title: 'Error al cargar los datos',
-        text: 'Hubo un problema al intentar cargar los lotes. Intenta nuevamente más tarde.',
-        customClass: {
-          confirmButton: 'btn btn-danger'
+          // Actualizar las opciones del select para la nueva sección
+          $('#caracteristicas_Ex_' + sectionCount + ' .evasado_export').html(contenidoLotesEnvasado);
+        },
+        error: function () {
+          console.error('Error al cargar los lotes.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al cargar los datos',
+            text: 'Hubo un problema al intentar cargar los lotes. Intenta nuevamente más tarde.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
         }
       });
     }
-  });
-}
 
     $(document).on('change', '.evasado_export', function () {
       var sectionId = $(this).closest('.card').attr('id').split('_')[2]; // Cambiado a split('_')[2]
@@ -3614,7 +3717,7 @@ function cargarLotes(empresaSeleccionada, sectionCount) {
       }
     });
 
-});
+  });
 
 
 
