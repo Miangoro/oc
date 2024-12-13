@@ -32,9 +32,19 @@ $(function () {
       { data: '' },
       { data: 'folio' },
       { data: 'num_servicio' },
-      { data: 'razon_social' },
+      { 
+        data: 'razon_social',
+        render: function(data) {
+          return `<span class="fw-bold">${data}</span>`;
+        }
+      },
       { data: 'fecha_solicitud' },
-      { data: 'tipo' },
+      { 
+        data: 'tipo',
+        render: function(data) {
+          return `<span class="fw-bold">${data}</span>`;
+        }
+      },
       { data: 'direccion_completa' },
       { data: 'fecha_visita' },
       { data: 'inspector' },
