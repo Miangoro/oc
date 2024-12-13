@@ -75,9 +75,9 @@ $(function () {
                       <br>
                       <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_muestreo || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Certificado muestreo:</span><span class="small"> ${data.id_certificado_muestreo || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Certificado de lote:</span><span class="small"> ${data.id_certificado_muestreo || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Volumen muestreo:</span><span class="small"> ${data.volumen_muestreo || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.volumen_muestreo || 'N/A'}</span>
                       `;
             case 4:
               return `<br><span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_traslado || 'N/A'}</span>
@@ -101,7 +101,7 @@ $(function () {
                       <br>
                       <span class="fw-bold text-dark small">Marca:</span><span class="small"> ${data.id_marca || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Volumen:</span><span class="small"> ${data.volumen_inspeccion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">%Alc. Vol::</span><span class="small"> ${data.volumen_inspeccion || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_inspeccion || 'N/A'}</span>
                       `;
