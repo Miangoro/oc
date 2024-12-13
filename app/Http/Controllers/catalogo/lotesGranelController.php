@@ -67,28 +67,42 @@ class lotesGranelController extends Controller
             $order = $columns[$request->input('order.0.column')];
             $dir = $request->input('order.0.dir');
 
-            $LotesGranel = LotesGranel::with(['empresa', 'categoria', 'clase', 'Tipo', 'Organismo'])
-                ->when($search, function ($query, $search) {
-                    return $query->where('id_lote_granel', 'LIKE', "%{$search}%")
-                        ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
-                        ->orWhere('folio_fq', 'LIKE', "%{$search}%")
-                        ->orWhere('volumen', 'LIKE', "%{$search}%")
-                        ->orWhere('cont_alc', 'LIKE', "%{$search}%")
-                        ->orWhereHas('empresa', function ($subQuery) use ($search) {
-                            $subQuery->where('razon_social', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
-                            $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhereHas('Organismo', function ($subQuery) use ($search) {
-                            $subQuery->where('organismo', 'LIKE', "%{$search}%");
-                        })
-                        ->orWhere('ingredientes', 'LIKE', "%{$search}%");
-                })
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
+            $LotesGranel = LotesGranel::with(['empresa', 'categoria', 'clase', 'tipo', 'Organismo'])
+    ->when($search, function ($query, $search) {
+        return $query->where('id_lote_granel', 'LIKE', "%{$search}%")
+            ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
+            ->orWhere('folio_fq', 'LIKE', "%{$search}%")
+            ->orWhere('volumen', 'LIKE', "%{$search}%")
+            ->orWhere('cont_alc', 'LIKE', "%{$search}%")
+            ->orWhereHas('empresa', function ($subQuery) use ($search) {
+                $subQuery->where('razon_social', 'LIKE', "%{$search}%");
+            })
+            ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
+                $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
+            })
+            ->orWhereHas('Organismo', function ($subQuery) use ($search) {
+                $subQuery->where('organismo', 'LIKE', "%{$search}%");
+            })
+            ->orWhereHas('categoria', function ($subQuery) use ($search) {
+                $subQuery->where('categoria', 'LIKE', "%{$search}%");
+            })
+            ->orWhereHas('clase', function ($subQuery) use ($search) {
+                $subQuery->where('clase', 'LIKE', "%{$search}%");
+            })
+            ->orWhereHas('tipo', function ($subQuery) use ($search) {
+                $subQuery->where('nombre', 'LIKE', "%{$search}%");
+            })
+            ->orWhere('ingredientes', 'LIKE', "%{$search}%")
+            ->orWhereRaw("CASE 
+                WHEN tipo_lote = 1 THEN 'Certificado por OC CIDAM' 
+                WHEN tipo_lote = 2 THEN 'Certificado por otro organismo' 
+            END LIKE ?", ["%{$search}%"]);
+    })
+    ->offset($start)
+    ->limit($limit)
+    ->orderBy($order, $dir)
+    ->get();
+
 
             $totalFiltered = LotesGranel::when($search, function ($query, $search) {
                 return $query->where('id_lote_granel', 'LIKE', "%{$search}%")
@@ -99,7 +113,24 @@ class lotesGranelController extends Controller
                     ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
                         $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
                     })
-                    ->orWhere('ingredientes', 'LIKE', "%{$search}%");
+                    ->orWhereHas('Organismo', function ($subQuery) use ($search) {
+                        $subQuery->where('organismo', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('categoria', function ($subQuery) use ($search) {
+                        $subQuery->where('categoria', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('clase', function ($subQuery) use ($search) {
+                        $subQuery->where('clase', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('tipo', function ($subQuery) use ($search) {
+                        $subQuery->where('nombre', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhere('ingredientes', 'LIKE', "%{$search}%")
+                    ->orWhereRaw("CASE 
+                    WHEN tipo_lote = 1 THEN 'Certificado por OC CIDAM' 
+                    WHEN tipo_lote = 2 THEN 'Certificado por otro organismo' 
+                END LIKE ?", ["%{$search}%"]);
+        
             })->count();
 
             $data = [];
@@ -467,7 +498,7 @@ class lotesGranelController extends Controller
             }
 
             // Obtener los documentos asociados
-            $documentos = Documentacion_url::where('id_relacion', $id_lote_granel)->get();
+            $documentos = Documentacion_url::where('id_relacion', $id_lote_granel)->where('id_documento',59)->get();
 
             // Extraer la URL de los documentos
             $documentosConUrl = $documentos->map(function ($documento) {
@@ -483,12 +514,16 @@ class lotesGranelController extends Controller
             $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
 
              // Obtener las guías asociadas con su ID y folio
-            $guias = $lote->lotesGuias->map(function ($loteGuia) {
-                return [
-                    'id' => $loteGuia->guia->id_guia,
-                    'folio' => $loteGuia->guia->folio,
-                ];
-            });
+             $guias = $lote->lotesGuias->map(function ($loteGuia) {
+                if ($loteGuia->guia) {
+                    return [
+                        'id' => $loteGuia->guia->id_guia,
+                        'folio' => $loteGuia->guia->folio,
+                    ];
+                }
+                return null; // Si no hay una guía, devuelves null.
+            })->filter(); // Filtras los valores null para que no aparezcan en la colección final.
+            
 
             // Obtener la URL del archivo para "otro organismo"
             $archivoUrlOtroOrganismo = $lote->tipo_lote == '2' ? $lote->url_certificado : '';
