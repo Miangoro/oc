@@ -62,10 +62,5 @@ class marcas extends Model
 
 
 
-    public function documentos()
-{
-    return $this->hasMany(Documentacion_url::class, 'id_empresa', 'id_marca');
-}
-
 
 }

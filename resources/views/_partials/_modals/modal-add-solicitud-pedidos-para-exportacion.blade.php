@@ -24,7 +24,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="id_empresa_solicitud_exportacion"
-                                    onchange="cargarDatosCliente(); cargarMarcas();" name="id_empresa"
+                                    onchange="cargarDatosCliente();" name="id_empresa"
                                     class="select2 form-select">
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -133,7 +133,7 @@
                                         <div class="form-floating form-floating-outline mb-4">
                                             <input type="text" disabled name="lote_granel[0]" class="form-control lotes_granel_export">
                                             </input>
-                                            <label for="lote_granel">lote a granel</label>
+                                            <label for="lote_granel">Lote a granel</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -171,16 +171,16 @@
                             <i class="ri-delete-bin-6-fill"></i> Eliminar tabla
                         </button>
                     </div>
-
+                   
                     <!-- Sección: Elegir Etiquetas y Corrugados -->
                     <div class="card mt-4" id="etiquetas_Ex">
                       <div class="card-body table-responsive text-nowrap">
-                          <h5>Elegir Etiquetas y Corrugados</h5>
-                          <table class="table table-striped" id="tabla_marcas">
+                          <h6 id="encabezado_etiquetas">Elegir Etiquetas y Corrugados</h6>
+                          <table class="table table-striped small table-sm" id="tabla_marcas">
                               <thead>
                                   <tr>
                                       <th>Seleccionar</th>
-                                      <th>dirección</th>
+                                    
                                       <th>SKU</th>
                                       <th>Tipo</th>
                                       <th>Presentación</th>
@@ -265,6 +265,7 @@ function cargarDirecciones(direcciones) {
         contenidoDirecciones = '<option value="" disabled selected>Sin direcciones registradas</option>';
     }
     $('#direccion_destinatario_ex').html(contenidoDirecciones);
+    //cargarMarcas();
 }
 
 // Función para cargar lotes envasados
@@ -277,7 +278,7 @@ function cargarLotesEnvasado(lotesEnvasado, marcas) {
         var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
 
         contenidoLotes += `
-            <option value="${lotesEnvasado[index].id_lote_envasado}">
+            <option data-id-marca="${marcaEncontrada ? marcaEncontrada.id_marca : ''}" value="${lotesEnvasado[index].id_lote_envasado}">
                 ${skuLimpio} | ${lotesEnvasado[index].nombre} | ${nombreMarca}
             </option>`;
     }
@@ -286,10 +287,14 @@ function cargarLotesEnvasado(lotesEnvasado, marcas) {
     }
     $('.evasado_export').html(contenidoLotes);
 
+    cargarMarcas();
+
     // Añadir evento change a los select de lotes envasados
     $('.evasado_export').on('change', function() {
         var idLoteEnvasado = $(this).val(); // Obtén el id seleccionado
         cargarDetallesLoteEnvasado(idLoteEnvasado); // Llamar a la función con el id seleccionado
+     
+        cargarMarcas();
     });
 }
 
@@ -352,49 +357,84 @@ function limpiarSku(sku) {
 
     function cargarMarcas() {
         var id_empresa = $('#id_empresa_solicitud_exportacion').val();
+        var id_marca = $('.evasado_export').find(':selected').data('id-marca'); 
+
+        var id_direccion = $('#direccion_destinatario_ex').val();
+
+        
 
         if (id_empresa) {
             $.ajax({
-                url: '/marcas/' + id_empresa,
+                url: '/marcas/' + id_marca+'/'+id_direccion,
                 method: 'GET',
                 success: function(marcas) {
                     var tbody = '';
+                    if (marcas.length > 0 && 
+    marcas[0].direccion_nombre && 
+    marcas[0].direccion_nombre[0] !== undefined && 
+    marcas[0].direccion_nombre[0] !== ""){
+                        $("#encabezado_etiquetas").text(marcas[0].direccion_nombre[0]); 
+                    }
+                   
 
                     marcas.forEach(function(marca) {
-                        // Verifica que 'etiquetado' sea un objeto válido
-                        if (marca.etiquetado && typeof marca.etiquetado === 'object') {
-                            // Iterar sobre los SKU en 'etiquetado'
-                            for (var i = 0; i < marca.etiquetado.sku.length; i++) {
-                                tbody += '<tr>';
-                                tbody += `
-                                <td>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="marcaSeleccionada" id="radio_${marca.etiquetado.sku[i]}" value="${marca.etiquetado.sku[i]}" />
-                                    </div>
-                                </td>
-                            `;
-                            tbody += `<td>${(marca.direccion_nombre && marca.direccion_nombre[i]) || 'N/A'}</td>`; // Dirección
-                                tbody += `<td>${marca.etiquetado.sku[i] || 'N/A'}</td>`; // SKU
-                                tbody +=
-                                `<td>${marca.tipo_nombre[i] || 'N/A'}</td>`; // Nombre del Tipo
-                                tbody +=
-                                `<td>${marca.etiquetado.presentacion[i] || 'N/A'}</td>`; // Presentación
-                                tbody +=
-                                `<td>${marca.clase_nombre[i] || 'N/A'}</td>`; // Nombre de la Clase
-                                tbody +=
-                                `<td>${marca.categoria_nombre[i] || 'N/A'}</td>`; // Nombre de la Categoría
-                                tbody += '</tr>';
-                            }
-                        } else {
-                            tbody +=
-                                '<tr><td colspan="6" class="text-center">Datos de etiquetado no disponibles.</td></tr>';
-                        }
-                    });
+    // Verifica que 'etiquetado' sea un objeto válido
+    if (marca.etiquetado && typeof marca.etiquetado === 'object') {
+        // Iterar sobre los SKU en 'etiquetado'
+        for (var i = 0; i < marca.etiquetado.sku.length; i++) {
+            tbody += '<tr>';
+            
+            // Radio button
+            tbody += `
+                <td>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="marcaSeleccionada" id="radio_${marca.etiquetado.sku[i]}" value="${marca.etiquetado.sku[i]}" />
+                    </div>
+                </td>
+            `;
+
+            // SKU
+            tbody += `<td>${marca.etiquetado.sku[i] || 'N/A'}</td>`;
+
+            // Nombre del Tipo (considerando que `tipo_nombre` es un array de un solo elemento)
+            tbody += `<td>${marca.tipo_nombre[0] || 'N/A'}</td>`;
+
+            // Presentación
+            tbody += `<td>${marca.etiquetado.presentacion[i] || 'N/A'}</td>`;
+
+            // Nombre de la Clase (también un array de un solo elemento)
+            tbody += `<td>${marca.clase_nombre[0] || 'N/A'}</td>`;
+
+            // Nombre de la Categoría (también un array de un solo elemento)
+            tbody += `<td>${marca.categoria_nombre[0] || 'N/A'}</td>`;
+
+// Función para generar enlace a archivos
+function generarEnlaceArchivo(marca, idUnico, tipoDocumento) {
+    if (marca.documentacion_url && Array.isArray(marca.documentacion_url)) {
+        let documento = marca.documentacion_url.find(doc => doc.id_doc === idUnico && doc.nombre_documento === tipoDocumento);
+        if (documento) {
+            let url = `/files/${marca.empresa.empresa_num_clientes[0].numero_cliente}/${documento.url}`;
+            return `<td><a href="${url}" target="_blank"> <i class="ri-file-pdf-2-line ri-20px" aria-hidden="true"></i></a></td>`;
+        }
+    }
+    // Retorna una celda vacía si no hay archivo
+    return `<td>--</td>`;
+}
+
+// Generar enlaces
+tbody += generarEnlaceArchivo(marca, marca.etiquetado.id_unico[i], 'Etiquetas');
+tbody += generarEnlaceArchivo(marca, marca.etiquetado.id_unico[i], 'Corrugado');
+
+            tbody += '</tr>';
+        }
+    }
+});
+
 
                     // Si no hay filas, mostrar mensaje
                     if (!tbody) {
                         tbody =
-                            '<tr><td colspan="6" class="text-center">No hay datos disponibles.</td></tr>';
+                            '<tr><td colspan="8" class="text-center">No hay datos disponibles.</td></tr>';
                     }
 
                     // Agregar las filas a la tabla

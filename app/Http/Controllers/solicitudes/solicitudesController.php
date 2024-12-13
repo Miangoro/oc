@@ -1043,10 +1043,12 @@ class solicitudesController extends Controller
         return response()->json(['success' => true, 'message' => 'Solicitud actualizada correctamente']);
     }
 
-    public function obtenerMarcasPorEmpresa($id_empresa)
+    public function obtenerMarcasPorEmpresa($id_marca,$id_direccion)
     {
-        // Obtén las marcas relacionadas con la empresa
-        $marcas = marcas::where('id_empresa', $id_empresa)->get();
+        
+        $marcas = marcas::with('empresa.empresaNumClientes','documentacion_url')->whereJsonContains('etiquetado->id_direccion', $id_direccion)
+        ->where('id_marca', $id_marca)
+        ->get();
 
         foreach ($marcas as $marca) {
             // Decodificar el campo 'etiquetado'
@@ -1124,6 +1126,7 @@ class solicitudesController extends Controller
             // Crear el detalle para cada conjunto de datos de lote
             $detalles[] = [
                 'lote_envasado' => (int)$validated['lote_envasado'][$i],
+                //'lote_granel' => (int)$validated['lote_granel'][$i],
                 'cantidad_botellas' => (int)$validated['cantidad_botellas'][$i],
                 'cantidad_cajas' => (int)$validated['cantidad_cajas'][$i],
                 'presentacion' => (int)$validated['presentacion'][$i],
