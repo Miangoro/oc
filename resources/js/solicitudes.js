@@ -67,7 +67,7 @@ $(function () {
                       <span class="small">${data.fecha_corte || 'N/A'}</span>
                       `;
             case 3:
-              return `<br><span class="fw-bold text-dark small">Destino lote:</span><span class="small"> ${data.destino_lote || 'N/A'}</span>
+              return `<br><span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.destino_lote || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_muestreo || 'N/A'}</span>
                       <br>
