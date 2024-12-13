@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\solicitudes;
 
 use App\Helpers\Helpers;
+use Carbon\Carbon;
+
 use App\Http\Controllers\Controller;
 use App\Models\categorias;
 use App\Models\empresa;
@@ -151,25 +153,90 @@ class solicitudesController extends Controller
 
             foreach ($solicitudes as $solicitud) {
                 $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
-                $nestedData['fake_id'] = ++$ids  ?? 'N/A';
+                $nestedData['fake_id'] = ++$ids ?? 'N/A';
                 $nestedData['folio'] = '<b class="text-primary">' . $solicitud->folio . '</b>';
-                $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? '<span class="badge bg-danger">Sin asignar</apan>';
-                $nestedData['razon_social'] = $solicitud->empresa->razon_social  ?? 'N/A';
-                $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
-                $nestedData['tipo'] = $solicitud->tipo_solicitud->tipo  ?? 'N/A';
+                $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? '<span class="badge bg-danger">Sin asignar</span>';
+                $nestedData['razon_social'] = $solicitud->empresa->razon_social ?? 'N/A';
+                $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud) ?? 'N/A';
+                $nestedData['tipo'] = $solicitud->tipo_solicitud->tipo ?? 'N/A';
                 $nestedData['direccion_completa'] = $solicitud->instalacion->direccion_completa ?? $solicitud->predios->ubicacion_predio ?? 'N/A';
-                $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</apan>';
-                $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</apan>'; // Maneja el caso donde el organismo sea nulo
-                $nestedData['foto_inspector'] = $solicitud->inspector->profile_photo_path ?? ''; // Maneja el caso donde el organismo sea nulo
-                $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</apan>';
-                $nestedData['id_tipo'] = $solicitud->tipo_solicitud->id_tipo  ?? 'N/A';
+                $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita) ?? '<span class="badge bg-danger">Sin asignar</span>';
+                $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</span>';
+                $nestedData['foto_inspector'] = $solicitud->inspector->profile_photo_path ?? '';
+                $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</span>';
+                $nestedData['id_tipo'] = $solicitud->tipo_solicitud->id_tipo ?? 'N/A';
                 $nestedData['estatus'] = $solicitud->estatus ?? 'Vacío';
+                $nestedData['info_adicional'] = $solicitud->info_adicional ?? 'Vacío';
 
+                // Decodificar JSON y extraer datos específicos
+                $caracteristicas = json_decode($solicitud->caracteristicas, true);
+                //case 2
+                $nestedData['nombre_predio'] = $caracteristicas['nombre_predio'] ?? 'N/A';
+                $nestedData['art'] = $caracteristicas['art'] ?? 'N/A';
+                $nestedData['analisis'] = $caracteristicas['analisis'] ?? 'N/A';
+                $nestedData['folio_caracteristicas'] = $caracteristicas['folio'] ?? 'N/A';
+                $nestedData['etapa'] = $caracteristicas['etapa'] ?? 'N/A';
+                $nestedData['fecha_corte'] = isset($caracteristicas['fecha_corte'])
+                    ? Carbon::parse($caracteristicas['fecha_corte'])->format('d/m/Y H:i')
+                    : 'N/A';
+                //case 3
+                $nestedData['destino_lote'] = $caracteristicas['destino_lote'] ?? 'N/A';
+                $nestedData['id_categoria_muestreo'] = $caracteristicas['id_categoria_muestreo'] ?? 'N/A';
+                $nestedData['id_clase_muestreo'] = $caracteristicas['id_clase_muestreo'] ?? 'N/A';
+                $nestedData['analisis_muestreo'] = $caracteristicas['analisis_muestreo'] ?? 'N/A';
+                $nestedData['volumen_muestreo'] = $caracteristicas['volumen_muestreo'] ?? 'N/A';
+                $nestedData['id_certificado_muestreo'] = $caracteristicas['id_certificado_muestreo'] ?? 'N/A';
+                //case 4
+                $nestedData['id_categoria_traslado'] = $caracteristicas['id_categoria_traslado'] ?? 'N/A';
+                $nestedData['id_clase_traslado'] = $caracteristicas['id_clase_traslado'] ?? 'N/A';
+                $nestedData['id_tipo_maguey_traslado'] = $caracteristicas['id_tipo_maguey_traslado'] ?? 'N/A';
+                $nestedData['id_vol_actual'] = $caracteristicas['id_vol_actual'] ?? 'N/A';
+                $nestedData['id_vol_res'] = $caracteristicas['id_vol_res'] ?? 'N/A';
+                $nestedData['analisis_traslado'] = $caracteristicas['analisis_traslado'] ?? 'N/A';
+                //case 5
+                $nestedData['id_categoria_inspeccion'] = $caracteristicas['id_categoria_inspeccion'] ?? 'N/A';
+                $nestedData['id_clase_inspeccion'] = $caracteristicas['id_clase_inspeccion'] ?? 'N/A';
+                $nestedData['id_tipo_maguey_inspeccion'] = $caracteristicas['id_tipo_maguey_inspeccion'] ?? 'N/A';
+                $nestedData['id_marca'] = $caracteristicas['id_marca'] ?? 'N/A';
+                $nestedData['volumen_inspeccion'] = $caracteristicas['volumen_inspeccion'] ?? 'N/A';
+                $nestedData['analisis_inspeccion'] = $caracteristicas['analisis_inspeccion'] ?? 'N/A';
+                //case 7
+                $nestedData['id_categoria_barricada'] = $caracteristicas['id_categoria_barricada'] ?? 'N/A';
+                $nestedData['id_clase_barricada'] = $caracteristicas['id_clase_barricada'] ?? 'N/A';
+                $nestedData['id_tipo_maguey_barricada'] = $caracteristicas['id_tipo_maguey_barricada'] ?? 'N/A';
+                $nestedData['analisis_barricada'] = $caracteristicas['analisis_barricada'] ?? 'N/A';
+                $nestedData['tipo_lote'] = $caracteristicas['tipo_lote'] ?? 'N/A';
+                $nestedData['fecha_inicio'] = isset($caracteristicas['fecha_inicio'])
+                ? Carbon::parse($caracteristicas['fecha_inicio'])->format('d/m/Y')
+                : 'N/A';
+                $nestedData['fecha_termino'] = isset($caracteristicas['fecha_termino'])
+                ? Carbon::parse($caracteristicas['fecha_termino'])->format('d/m/Y')
+                : 'N/A';
+
+                //case 9
+                $nestedData['id_categoria_liberacion'] = $caracteristicas['id_categoria_liberacion'] ?? 'N/A';
+                $nestedData['id_clase_liberacion'] = $caracteristicas['id_clase_liberacion'] ?? 'N/A';
+                $nestedData['id_tipo_maguey_liberacion'] = $caracteristicas['id_tipo_maguey_liberacion'] ?? 'N/A';
+                $nestedData['analisis_liberacion'] = $caracteristicas['analisis_liberacion'] ?? 'N/A';
+                $nestedData['tipo_lote_lib'] = $caracteristicas['tipo_lote_lib'] ?? 'N/A';
+                $nestedData['fecha_inicio_lib'] = isset($caracteristicas['fecha_inicio_lib'])
+                ? Carbon::parse($caracteristicas['fecha_inicio_lib'])->format('d/m/Y')
+                : 'N/A';
+                $nestedData['fecha_termino_lib'] = isset($caracteristicas['fecha_termino_lib'])
+                ? Carbon::parse($caracteristicas['fecha_inicio_lib'])->format('d/m/Y')
+                : 'N/A';
+                //case 10
+                $nestedData['punto_reunion'] = $caracteristicas['punto_reunion'] ?? 'N/A';
+                //case 14
+                $nestedData['clase'] = $caracteristicas['clase'] ?? 'N/A';
+                $nestedData['categorias'] = $caracteristicas['categorias'] ?? 'N/A';
+                $nestedData['renovacion'] = $caracteristicas['renovacion'] ?? 'N/A';
 
 
                 $data[] = $nestedData;
             }
         }
+
 
         return response()->json([
             'draw' => intval($request->input('draw')),
@@ -206,56 +273,6 @@ class solicitudesController extends Controller
             'caracteristicas' => $caracteristicas,
             'instalaciones' => $instalaciones,
         ]);
-    }
-
-
-    public function store(Request $request)
-    {
-        $solicitud = new solicitudesModel();
-        $solicitud->folio = Helpers::generarFolioSolicitud();
-        $solicitud->id_empresa = $request->id_empresa;
-        $solicitud->id_tipo = 14;
-        $solicitud->fecha_visita = $request->fecha_visita;
-        //Auth::user()->id;
-        $solicitud->id_instalacion = $request->id_instalacion;
-        $solicitud->info_adicional = $request->info_adicional;
-        // Guardar el nuevo registro en la base de datos
-
-        // Verificar si los campos tienen valores
-        $clases = $request->input('clases', []);
-        $categorias = $request->input('categorias', []);
-        $renovacion = $request->input('renovacion', null);
-
-        if (!empty($clases) || !empty($categorias) || $renovacion !== null) {
-            $caracteristicas = [
-                'clases' => $clases,
-                'categorias' => $categorias,
-                'renovacion' => $renovacion,
-            ];
-            // Convertir el array a JSON y guardarlo en la columna 'caracteristicas'
-            $solicitud->caracteristicas = json_encode($caracteristicas);
-        }
-
-        $solicitud->save();
-
-        // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
-        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
-
-        // Notificación 1
-        $data1 = [
-            'title' => 'Nuevo registro de solicitud',
-            'message' => $solicitud->folio . " " . $solicitud->tipo_solicitud->tipo,
-            'url' => 'solicitudes-historial',
-        ];
-
-        // Iterar sobre cada usuario y enviar la notificación
-        foreach ($users as $user) {
-            $user->notify(new GeneralNotification($data1));
-        }
-
-
-        // Retornar una respuesta JSON indicando éxito
-        return response()->json(['success' => 'Solicitud registrada correctamente']);
     }
 
 
@@ -535,7 +552,7 @@ class solicitudesController extends Controller
         return response()->json(['message' => 'Inspeccion liberacion a barricada de lote registrada exitosamente']);
     }
 
-    
+
     public function registrarSolicitudGeoreferenciacion(Request $request)
     {
 
@@ -568,6 +585,56 @@ class solicitudesController extends Controller
         }
         return response()->json(['success' => 'Solicitud registrada correctamente']);
     }
+
+    public function store(Request $request)
+    {
+        $solicitud = new solicitudesModel();
+        $solicitud->folio = Helpers::generarFolioSolicitud();
+        $solicitud->id_empresa = $request->id_empresa;
+        $solicitud->id_tipo = 14;
+        $solicitud->fecha_visita = $request->fecha_visita;
+        //Auth::user()->id;
+        $solicitud->id_instalacion = $request->id_instalacion;
+        $solicitud->info_adicional = $request->info_adicional;
+        // Guardar el nuevo registro en la base de datos
+
+        // Verificar si los campos tienen valores
+        $clases = $request->input('clases', []);
+        $categorias = $request->input('categorias', []);
+        $renovacion = $request->input('renovacion', null);
+
+        if (!empty($clases) || !empty($categorias) || $renovacion !== null) {
+            $caracteristicas = [
+                'clases' => $clases,
+                'categorias' => $categorias,
+                'renovacion' => $renovacion,
+            ];
+            // Convertir el array a JSON y guardarlo en la columna 'caracteristicas'
+            $solicitud->caracteristicas = json_encode($caracteristicas);
+        }
+
+        $solicitud->save();
+
+        // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
+        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+        // Notificación 1
+        $data1 = [
+            'title' => 'Nuevo registro de solicitud',
+            'message' => $solicitud->folio . " " . $solicitud->tipo_solicitud->tipo,
+            'url' => 'solicitudes-historial',
+        ];
+
+        // Iterar sobre cada usuario y enviar la notificación
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
+
+
+        // Retornar una respuesta JSON indicando éxito
+        return response()->json(['success' => 'Solicitud registrada correctamente']);
+    }
+
 
     public function pdf_solicitud_servicios_070($id_solicitud)
     {
@@ -743,39 +810,39 @@ class solicitudesController extends Controller
 
                 break;
 
-                case 'muestreoloteagranel':
-                    // Validar datos para georreferenciación
-                    $request->validate([
-                        'id_empresa' => 'required|integer|exists:empresa,id_empresa',
-                        'fecha_visita' => 'required|date',
-                        'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
-                        'info_adicional' => 'nullable|string'
-                    ]);
-                    // Preparar el JSON para guardar en `caracteristicas`
-                    $caracteristicasJson = [
-                        'id_lote_granel_muestreo' => $request->id_lote_granel_muestreo,
-                        'destino_lote' => $request->destino_lote,
-                        'id_categoria_muestreo' => $request->id_categoria_muestreo,
-                        'id_clase_muestreo' => $request->id_clase_muestreo,
-                        'id_tipo_maguey_muestreo' => $request->id_tipo_maguey_muestreo,
-                        'analisis_muestreo' => $request->analisis_muestreo,
-                        'volumen_muestreo' => $request->volumen_muestreo,
-                        'id_certificado_muestreo' => $request->id_certificado_muestreo,
-                    ];
+            case 'muestreoloteagranel':
+                // Validar datos para georreferenciación
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_visita' => 'required|date',
+                    'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                    'info_adicional' => 'nullable|string'
+                ]);
+                // Preparar el JSON para guardar en `caracteristicas`
+                $caracteristicasJson = [
+                    'id_lote_granel_muestreo' => $request->id_lote_granel_muestreo,
+                    'destino_lote' => $request->destino_lote,
+                    'id_categoria_muestreo' => $request->id_categoria_muestreo,
+                    'id_clase_muestreo' => $request->id_clase_muestreo,
+                    'id_tipo_maguey_muestreo' => $request->id_tipo_maguey_muestreo,
+                    'analisis_muestreo' => $request->analisis_muestreo,
+                    'volumen_muestreo' => $request->volumen_muestreo,
+                    'id_certificado_muestreo' => $request->id_certificado_muestreo,
+                ];
 
-                    // Convertir el array a JSON
-                    $jsonContent = json_encode($caracteristicasJson);
+                // Convertir el array a JSON
+                $jsonContent = json_encode($caracteristicasJson);
 
-                    // Actualizar datos específicos para georreferenciación
-                    $solicitud->update([
-                        'id_empresa' => $request->id_empresa,
-                        'fecha_visita' => $request->fecha_visita,
-                        'id_instalacion' => $request->id_instalacion,
-                        'info_adicional' => $request->info_adicional,
-                        'caracteristicas' => $jsonContent,
-                    ]);
+                // Actualizar datos específicos para georreferenciación
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_instalacion' => $request->id_instalacion,
+                    'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => $jsonContent,
+                ]);
 
-                    break;
+                break;
 
             case 'vigilanciatraslado':
                 $request->validate([
@@ -810,38 +877,38 @@ class solicitudesController extends Controller
                 ]);
                 break;
 
-                case 'inspeccionenvasado':
-                    $request->validate([
-                        'id_empresa' => 'required|integer|exists:empresa,id_empresa',
-                        'fecha_visita' => 'required|date',
-                        'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
-                        'info_adicional' => 'nullable|string'
-                    ]);
-                    $caracteristicasJson = [
-                        'id_lote_granel_inspeccion' => $request->id_lote_granel_inspeccion,
-                        'id_categoria_inspeccion' => $request->id_categoria_inspeccion,
-                        'id_clase_inspeccion' => $request->id_clase_inspeccion,
-                        'id_tipo_maguey_inspeccion' => $request->id_tipo_maguey_inspeccion,
-                        'id_marca' => $request->id_marca,
-                        'volumen_inspeccion' => $request->volumen_inspeccion,
-                        'analisis_inspeccion' => $request->analisis_inspeccion,
-                        'id_tipo_inspeccion' => $request->id_tipo_inspeccion,
-                        'id_cantidad_bote' => $request->id_cantidad_bote,
-                        'id_cantidad_caja' => $request->id_cantidad_caja,
-                        'id_inicio_envasado' => $request->id_inicio_envasado,
-                        'id_previsto' => $request->id_previsto,
-                        'id_certificado_inspeccion' => $request->id_certificado_inspeccion,
-    
-                    ];
-                    $jsonContent = json_encode($caracteristicasJson);
-                    $solicitud->update([
-                        'id_empresa' => $request->id_empresa,
-                        'fecha_visita' => $request->fecha_visita,
-                        'id_instalacion' => $request->id_instalacion,
-                        'info_adicional' => $request->info_adicional,
-                        'caracteristicas' => $jsonContent,
-                    ]);
-                    break;
+            case 'inspeccionenvasado':
+                $request->validate([
+                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                    'fecha_visita' => 'required|date',
+                    'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                    'info_adicional' => 'nullable|string'
+                ]);
+                $caracteristicasJson = [
+                    'id_lote_granel_inspeccion' => $request->id_lote_granel_inspeccion,
+                    'id_categoria_inspeccion' => $request->id_categoria_inspeccion,
+                    'id_clase_inspeccion' => $request->id_clase_inspeccion,
+                    'id_tipo_maguey_inspeccion' => $request->id_tipo_maguey_inspeccion,
+                    'id_marca' => $request->id_marca,
+                    'volumen_inspeccion' => $request->volumen_inspeccion,
+                    'analisis_inspeccion' => $request->analisis_inspeccion,
+                    'id_tipo_inspeccion' => $request->id_tipo_inspeccion,
+                    'id_cantidad_bote' => $request->id_cantidad_bote,
+                    'id_cantidad_caja' => $request->id_cantidad_caja,
+                    'id_inicio_envasado' => $request->id_inicio_envasado,
+                    'id_previsto' => $request->id_previsto,
+                    'id_certificado_inspeccion' => $request->id_certificado_inspeccion,
+
+                ];
+                $jsonContent = json_encode($caracteristicasJson);
+                $solicitud->update([
+                    'id_empresa' => $request->id_empresa,
+                    'fecha_visita' => $request->fecha_visita,
+                    'id_instalacion' => $request->id_instalacion,
+                    'info_adicional' => $request->info_adicional,
+                    'caracteristicas' => $jsonContent,
+                ]);
+                break;
 
             case 'muestreobarricada':
                 $request->validate([
@@ -1165,6 +1232,4 @@ class solicitudesController extends Controller
             'detalle' => $lotesGranel->pluck('nombre_lote') // Puedes cambiar 'nombre_lote' por cualquier campo relevante de LotesGranel
         ]);
     }
-
-
 }
