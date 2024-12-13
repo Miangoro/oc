@@ -168,7 +168,7 @@
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary btnCancelar" data-bs-dismiss="modal"
+                        <button type="reset" class="btn btn-outline-secondary " data-bs-dismiss="modal"
                             aria-label="Close">Cancelar</button>
                     </div>
                 </form>
