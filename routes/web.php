@@ -782,7 +782,7 @@ Route::post('/actualizar-solicitudes/{id_solicitud}', [SolicitudesController::cl
 Route::post('/exportaciones/storePedidoExportacion', [SolicitudesController::class, 'storePedidoExportacion'])->name('exportaciones.storePedidoExportacion');
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
  */
-Route::get('/marcas/{id_empresa}', [SolicitudesController::class, 'obtenerMarcasPorEmpresa']);
+Route::get('/marcas/{id_marca}/{id_direccion}', [SolicitudesController::class, 'obtenerMarcasPorEmpresa']);
 Route::get('/marcas/{id_empresa}', [lotesEnvasadoController::class, 'obtenerMarcasPorEmpresa']);
 
 //catalago equipos
