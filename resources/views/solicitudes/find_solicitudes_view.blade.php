@@ -228,6 +228,7 @@
     @include('_partials._modals.modal-edit-solicitud-vigilancia-traslado-lote')
     @include('_partials._modals.modal-edit-solicitud-inspeccion-ingreso-barricada')
     @include('_partials._modals.modal-edit-solicitud-inspeccion-de-liberacion')
+    @include('_partials._modals.modal-edit-solicitud-inspeccion-de-envasado')
 
 
     <!-- /Modal -->

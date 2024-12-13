@@ -293,7 +293,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud',
+            'title' => 'Nuevo registro de solicitud Vigilancia en producción',
             'message' => $VigilanciaProdu->folio . " " . $VigilanciaProdu->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -335,7 +335,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud',
+            'title' => 'Nuevo registro de solicitud Muestreo de lote',
             'message' => $MuestreoLote->folio . " " . $MuestreoLote->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -384,7 +384,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud',
+            'title' => 'Nuevo registro de solicitud Vigilancia en traslado',
             'message' => $VigilanciaTras->folio . " " . $VigilanciaTras->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -394,6 +394,51 @@ class solicitudesController extends Controller
             $user->notify(new GeneralNotification($data1));
         }
         return response()->json(['message' => 'Vigilancia en traslado de lote registrada exitosamente']);
+    }
+
+    public function storeInspeccionEnvasado(Request $request)
+    {
+        $InspeccionEnva = new solicitudesModel();
+        $InspeccionEnva->folio = Helpers::generarFolioSolicitud();
+        $InspeccionEnva->id_empresa = $request->id_empresa;
+        $InspeccionEnva->id_tipo = 5;
+        $InspeccionEnva->id_predio = 0;
+        $InspeccionEnva->fecha_visita = $request->fecha_visita;
+        $InspeccionEnva->id_instalacion = $request->id_instalacion;
+        $InspeccionEnva->info_adicional = $request->info_adicional;
+
+        $InspeccionEnva->caracteristicas = json_encode([
+            'id_lote_granel_inspeccion' => $request->id_lote_granel_inspeccion,
+            'id_categoria_inspeccion' => $request->id_categoria_inspeccion,
+            'id_clase_inspeccion' => $request->id_clase_inspeccion,
+            'id_tipo_maguey_inspeccion' => $request->id_tipo_maguey_inspeccion,
+            'id_marca' => $request->id_marca,
+            'volumen_inspeccion' => $request->volumen_inspeccion,
+            'analisis_inspeccion' => $request->analisis_inspeccion,
+            'id_tipo_inspeccion' => $request->id_tipo_inspeccion,
+            'id_cantidad_bote' => $request->id_cantidad_bote,
+            'id_cantidad_caja' => $request->id_cantidad_caja,
+            'id_inicio_envasado' => $request->id_inicio_envasado,
+            'id_previsto' => $request->id_previsto,
+            'id_certificado_inspeccion' => $request->id_certificado_inspeccion,
+        ]);
+
+        $InspeccionEnva->save();
+
+        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+        // Notificación 1
+        $data1 = [
+            'title' => 'Nuevo registro de solicitud Inpeccion de envasado',
+            'message' => $InspeccionEnva->folio . " " . $InspeccionEnva->tipo_solicitud->tipo,
+            'url' => 'solicitudes-historial',
+        ];
+
+        // Iterar sobre cada usuario y enviar la notificación
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
+        return response()->json(['message' => 'Inpeccion de envasado de lote registrada exitosamente']);
     }
 
     public function storeInspeccionBarricada(Request $request)
@@ -431,7 +476,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud',
+            'title' => 'Nuevo registro de solicitud Inspeccion ingreso a barricada',
             'message' => $InspeccionBarri->folio . " " . $InspeccionBarri->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -440,7 +485,7 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Vigilancia en traslado de lote registrada exitosamente']);
+        return response()->json(['message' => 'Inspeccion ingreso a barricada de lote registrada exitosamente']);
     }
 
     public function storeInspeccionBarricadaLiberacion(Request $request)
@@ -478,7 +523,7 @@ class solicitudesController extends Controller
 
         // Notificación 1
         $data1 = [
-            'title' => 'Nuevo registro de solicitud',
+            'title' => 'Nuevo registro de solicitud Inspeccion liberacion a barricada',
             'message' => $BarricadaLib->folio . " " . $BarricadaLib->tipo_solicitud->tipo,
             'url' => 'solicitudes-historial',
         ];
@@ -487,9 +532,10 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Vigilancia en traslado de lote registrada exitosamente']);
+        return response()->json(['message' => 'Inspeccion liberacion a barricada de lote registrada exitosamente']);
     }
 
+    
     public function registrarSolicitudGeoreferenciacion(Request $request)
     {
 
@@ -764,6 +810,39 @@ class solicitudesController extends Controller
                 ]);
                 break;
 
+                case 'inspeccionenvasado':
+                    $request->validate([
+                        'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                        'fecha_visita' => 'required|date',
+                        'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                        'info_adicional' => 'nullable|string'
+                    ]);
+                    $caracteristicasJson = [
+                        'id_lote_granel_inspeccion' => $request->id_lote_granel_inspeccion,
+                        'id_categoria_inspeccion' => $request->id_categoria_inspeccion,
+                        'id_clase_inspeccion' => $request->id_clase_inspeccion,
+                        'id_tipo_maguey_inspeccion' => $request->id_tipo_maguey_inspeccion,
+                        'id_marca' => $request->id_marca,
+                        'volumen_inspeccion' => $request->volumen_inspeccion,
+                        'analisis_inspeccion' => $request->analisis_inspeccion,
+                        'id_tipo_inspeccion' => $request->id_tipo_inspeccion,
+                        'id_cantidad_bote' => $request->id_cantidad_bote,
+                        'id_cantidad_caja' => $request->id_cantidad_caja,
+                        'id_inicio_envasado' => $request->id_inicio_envasado,
+                        'id_previsto' => $request->id_previsto,
+                        'id_certificado_inspeccion' => $request->id_certificado_inspeccion,
+    
+                    ];
+                    $jsonContent = json_encode($caracteristicasJson);
+                    $solicitud->update([
+                        'id_empresa' => $request->id_empresa,
+                        'fecha_visita' => $request->fecha_visita,
+                        'id_instalacion' => $request->id_instalacion,
+                        'info_adicional' => $request->info_adicional,
+                        'caracteristicas' => $jsonContent,
+                    ]);
+                    break;
+
             case 'muestreobarricada':
                 $request->validate([
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
@@ -959,7 +1038,6 @@ class solicitudesController extends Controller
             'factura_proforma_cont' => 'nullable|file|mimes:pdf,jpg,jpeg,png',
             /*  */
             'lote_envasado' => 'array',  // Asegurarse de que los lotes sean arrays
-            'lote_granel' => 'array',    // Asegurarse de que los lotes sean arrays
             'cantidad_botellas' => 'array',  // Asegurarse de que las cantidades sean arrays
             'cantidad_cajas' => 'array',  // Asegurarse de que las cantidades sean arrays
             'presentacion' => 'array',  // Asegurarse de que las presentaciones sean arrays

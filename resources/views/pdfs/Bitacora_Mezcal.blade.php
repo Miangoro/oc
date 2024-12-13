@@ -14,13 +14,14 @@
     }
 
     th, td {
-        border: 1px solid #595959;
+        border: 1px solid;
         padding: 8px;
         text-align: center;
         font-size: 10px;
         word-wrap: break-word;
         width: auto;
         height: 25px;
+        font-family: 'calibri';
     }
 
     img {
@@ -41,7 +42,6 @@
     }
 
     tr.text-title td, tr.text-title th {
-        border: 1px solid #595959;
         padding: 2px; 
         text-align: center; 
         font-size: 5px; 

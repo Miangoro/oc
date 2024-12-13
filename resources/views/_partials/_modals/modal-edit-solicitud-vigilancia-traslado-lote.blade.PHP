@@ -162,7 +162,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional" placeholder="Observaciones..."></textarea>
@@ -180,8 +179,6 @@
         </div>
     </div>
 </div>
-
-
 
 <script>
     function editobtenerInstalacionesTraslado() {
@@ -237,8 +234,6 @@
             error: function() {}
         });
     }
-
-
 
     function editobtenerDatosGranelesTarslado() {
         var lote_granel_id = $("#edit_id_lote_granel_traslado").val();

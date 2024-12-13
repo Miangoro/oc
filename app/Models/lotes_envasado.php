@@ -13,8 +13,7 @@ class lotes_envasado extends Model
     protected $fillable = [
         'id_lote_envasado',
         'id_empresa',
-        'nombre_lote',
-        'tipo_lote',
+        'nombre',
         'sku',
         'id_marca',
         'destino_lote',
