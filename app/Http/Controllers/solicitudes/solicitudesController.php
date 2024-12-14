@@ -378,6 +378,7 @@ class solicitudesController extends Controller
 
 
         $VigilanciaTras->caracteristicas = json_encode([
+            'id_instalacion' => $request->id_instalacion,
             'id_lote_granel_traslado' => $request->id_lote_granel_traslado,
             'id_categoria_traslado' => $request->id_categoria_traslado,
             'id_clase_traslado' => $request->id_clase_traslado,
