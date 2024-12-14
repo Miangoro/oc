@@ -772,7 +772,14 @@ $(function () {
                 modal.find('#edit_id_certificado_traslado').val(response.caracteristicas.id_certificado_traslado);
               } else {
                 modal.find('#edit_id_certificado_traslado').val('');
-              }
+              } if (response.caracteristicas && response.caracteristicas.instalacion_vigilancia) {
+                modal.find('#edit_instalacion_vigilancia')
+                     .val(response.caracteristicas.instalacion_vigilancia) // Establece el valor
+                     .trigger('change'); // Asegúrate de que select2 lo actualice visualmente
+            } else {
+                modal.find('#edit_instalacion_vigilancia').val('').trigger('change');
+            }
+            
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
             } else if (id_tipo === 5) {
               modal.find('#edit_id_solicitud_inspeccion').val(id_solicitud);

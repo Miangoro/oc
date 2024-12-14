@@ -45,15 +45,15 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-4">
-                            <select id="id_instalacion"
-                                name="id_instalacion" class="select2 form-select">
+                            <select id="instalacion_vigilancia"
+                                name="instalacion_vigilancia" class="select2 form-select">
                                 <option value="" disabled selected>Selecciona lote a granel</option>
                                 @foreach ($instalaciones as $instalaciones)
                                     <option value="{{ $instalaciones->id_instalacion }}">{{ $instalaciones->direccion_completa }}
                                     </option>
                                 @endforeach
                             </select>
-                            <label for="id_instalacion">Direccion de destino</label>
+                            <label for="instalacion_vigilancia">Direccion de destino</label>
                         </div>
                     </div>
                     <p class="address-subtitle" style="color: red">Seleccione un cliente</p>
