@@ -53,7 +53,9 @@ $(function () {
         render: function (data) {
           switch (data.id_tipo) {
             case 2:
-              return `<br><span class="fw-bold text-dark small">Nombre del predio:</span><span class="small"> ${data.nombre_predio || 'N/A'}</span>
+              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Nombre del predio:</span><span class="small"> ${data.nombre_predio || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Folio:</span><span class="small"> ${data.folio_caracteristicas || 'N/A'}</span>
                       <br>
@@ -67,7 +69,9 @@ $(function () {
                       <span class="small">${data.fecha_corte || 'N/A'}</span>
                       `;
             case 3:
-              return `<br><span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.destino_lote || 'N/A'}</span>
+              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote_muestreo || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.destino_lote || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_muestreo || 'N/A'}</span>
                       <br>
@@ -80,7 +84,9 @@ $(function () {
                       <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.volumen_muestreo || 'N/A'}</span>
                       `;
             case 4:
-              return `<br><span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_traslado || 'N/A'}</span>
+              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote_traslado || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_traslado || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_traslado || 'N/A'}</span>
                       <br>
@@ -93,7 +99,9 @@ $(function () {
                       <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_traslado || 'N/A'}</span>
                       `;
             case 5:
-              return `<br><span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_inspeccion || 'N/A'}</span>
+              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote_inspeccion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_inspeccion || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_inspeccion || 'N/A'}</span>
                       <br>
@@ -106,7 +114,9 @@ $(function () {
                       <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_inspeccion || 'N/A'}</span>
                       `;
             case 7:
-              return `<br><span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_barricada || 'N/A'}</span>
+              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote_barricada || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_barricada || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_barricada || 'N/A'}</span>
                       <br>
@@ -121,7 +131,9 @@ $(function () {
                       <span class="fw-bold text-dark small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
                       `;
             case 9:
-              return `<br><span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_liberacion || 'N/A'}</span>
+              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote_liberacion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_liberacion || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_liberacion || 'N/A'}</span>
                       <br>

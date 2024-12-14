@@ -171,6 +171,15 @@ class solicitudesController extends Controller
                 // Decodificar JSON y extraer datos específicos
                 $caracteristicas = json_decode($solicitud->caracteristicas, true);
                 //case 2
+                $idLoteGranel = $caracteristicas['id_lote_granel'] ?? null;
+                if ($idLoteGranel) {
+                    $loteGranel = LotesGranel::find($idLoteGranel); // Busca el lote a granel
+                    $nestedData['id_lote_granel'] = $idLoteGranel;
+                    $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
+                } else {
+                    $nestedData['id_lote_granel'] = 'N/A';
+                    $nestedData['nombre_lote'] = 'N/A';
+                }
                 $nestedData['nombre_predio'] = $caracteristicas['nombre_predio'] ?? 'N/A';
                 $nestedData['art'] = $caracteristicas['art'] ?? 'N/A';
                 $nestedData['analisis'] = $caracteristicas['analisis'] ?? 'N/A';
@@ -180,6 +189,15 @@ class solicitudesController extends Controller
                     ? Carbon::parse($caracteristicas['fecha_corte'])->format('d/m/Y H:i')
                     : 'N/A';
                 //case 3
+                $idLoteGranelDestino = $caracteristicas['id_lote_granel_muestreo'] ?? null;
+                if ($idLoteGranelDestino) {
+                    $loteGranel = LotesGranel::find($idLoteGranelDestino); // Busca el lote a granel
+                    $nestedData['id_lote_granel_muestreo'] = $idLoteGranelDestino;
+                    $nestedData['nombre_lote_muestreo'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
+                } else {
+                    $nestedData['id_lote_granel_muestreo'] = 'N/A';
+                    $nestedData['nombre_lote_muestreo'] = 'N/A';
+                }
                 $nestedData['destino_lote'] = $caracteristicas['destino_lote'] ?? 'N/A';
                 $nestedData['id_categoria_muestreo'] = $caracteristicas['id_categoria_muestreo'] ?? 'N/A';
                 $nestedData['id_clase_muestreo'] = $caracteristicas['id_clase_muestreo'] ?? 'N/A';
@@ -187,6 +205,15 @@ class solicitudesController extends Controller
                 $nestedData['volumen_muestreo'] = $caracteristicas['volumen_muestreo'] ?? 'N/A';
                 $nestedData['id_certificado_muestreo'] = $caracteristicas['id_certificado_muestreo'] ?? 'N/A';
                 //case 4
+                $idLoteGranelTraslado = $caracteristicas['id_lote_granel_traslado'] ?? null;
+                if ($idLoteGranelTraslado) {
+                    $loteGranel = LotesGranel::find($idLoteGranelTraslado); // Busca el lote a granel
+                    $nestedData['id_lote_granel_traslado'] = $idLoteGranelTraslado;
+                    $nestedData['nombre_lote_traslado'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
+                } else {
+                    $nestedData['id_lote_granel_traslado'] = 'N/A';
+                    $nestedData['nombre_lote_traslado'] = 'N/A';
+                }
                 $nestedData['id_categoria_traslado'] = $caracteristicas['id_categoria_traslado'] ?? 'N/A';
                 $nestedData['id_clase_traslado'] = $caracteristicas['id_clase_traslado'] ?? 'N/A';
                 $nestedData['id_tipo_maguey_traslado'] = $caracteristicas['id_tipo_maguey_traslado'] ?? 'N/A';
@@ -194,6 +221,15 @@ class solicitudesController extends Controller
                 $nestedData['id_vol_res'] = $caracteristicas['id_vol_res'] ?? 'N/A';
                 $nestedData['analisis_traslado'] = $caracteristicas['analisis_traslado'] ?? 'N/A';
                 //case 5
+                $idLoteGranelInpeccion = $caracteristicas['id_lote_granel_inspeccion'] ?? null;
+                if ($idLoteGranelInpeccion) {
+                    $loteGranel = LotesGranel::find($idLoteGranelInpeccion); // Busca el lote a granel
+                    $nestedData['id_lote_granel_inspeccion'] = $idLoteGranelInpeccion;
+                    $nestedData['nombre_lote_inspeccion'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
+                } else {
+                    $nestedData['id_lote_granel_inspeccion'] = 'N/A';
+                    $nestedData['nombre_lote_inspeccion'] = 'N/A';
+                }
                 $nestedData['id_categoria_inspeccion'] = $caracteristicas['id_categoria_inspeccion'] ?? 'N/A';
                 $nestedData['id_clase_inspeccion'] = $caracteristicas['id_clase_inspeccion'] ?? 'N/A';
                 $nestedData['id_tipo_maguey_inspeccion'] = $caracteristicas['id_tipo_maguey_inspeccion'] ?? 'N/A';
@@ -201,30 +237,48 @@ class solicitudesController extends Controller
                 $nestedData['volumen_inspeccion'] = $caracteristicas['volumen_inspeccion'] ?? 'N/A';
                 $nestedData['analisis_inspeccion'] = $caracteristicas['analisis_inspeccion'] ?? 'N/A';
                 //case 7
+                $idLoteGranelBarricada = $caracteristicas['id_lote_granel_barricada'] ?? null;
+                if ($idLoteGranelInpeccion) {
+                    $loteGranel = LotesGranel::find($idLoteGranelBarricada); // Busca el lote a granel
+                    $nestedData['id_lote_granel_barricada'] = $idLoteGranelBarricada;
+                    $nestedData['nombre_lote_barricada'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
+                } else {
+                    $nestedData['id_lote_granel_barricada'] = 'N/A';
+                    $nestedData['nombre_lote_barricada'] = 'N/A';
+                }
                 $nestedData['id_categoria_barricada'] = $caracteristicas['id_categoria_barricada'] ?? 'N/A';
                 $nestedData['id_clase_barricada'] = $caracteristicas['id_clase_barricada'] ?? 'N/A';
                 $nestedData['id_tipo_maguey_barricada'] = $caracteristicas['id_tipo_maguey_barricada'] ?? 'N/A';
                 $nestedData['analisis_barricada'] = $caracteristicas['analisis_barricada'] ?? 'N/A';
                 $nestedData['tipo_lote'] = $caracteristicas['tipo_lote'] ?? 'N/A';
                 $nestedData['fecha_inicio'] = isset($caracteristicas['fecha_inicio'])
-                ? Carbon::parse($caracteristicas['fecha_inicio'])->format('d/m/Y')
-                : 'N/A';
+                    ? Carbon::parse($caracteristicas['fecha_inicio'])->format('d/m/Y')
+                    : 'N/A';
                 $nestedData['fecha_termino'] = isset($caracteristicas['fecha_termino'])
-                ? Carbon::parse($caracteristicas['fecha_termino'])->format('d/m/Y')
-                : 'N/A';
+                    ? Carbon::parse($caracteristicas['fecha_termino'])->format('d/m/Y')
+                    : 'N/A';
 
                 //case 9
+                $idLoteGranelLiberacion = $caracteristicas['id_lote_granel_liberacion'] ?? null;
+                if ($idLoteGranelInpeccion) {
+                    $loteGranel = LotesGranel::find($idLoteGranelLiberacion); // Busca el lote a granel
+                    $nestedData['id_lote_granel_liberacion'] = $idLoteGranelLiberacion;
+                    $nestedData['nombre_lote_liberacion'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
+                } else {
+                    $nestedData['id_lote_granel_liberacion'] = 'N/A';
+                    $nestedData['nombre_lote_liberacion'] = 'N/A';
+                }
                 $nestedData['id_categoria_liberacion'] = $caracteristicas['id_categoria_liberacion'] ?? 'N/A';
                 $nestedData['id_clase_liberacion'] = $caracteristicas['id_clase_liberacion'] ?? 'N/A';
                 $nestedData['id_tipo_maguey_liberacion'] = $caracteristicas['id_tipo_maguey_liberacion'] ?? 'N/A';
                 $nestedData['analisis_liberacion'] = $caracteristicas['analisis_liberacion'] ?? 'N/A';
                 $nestedData['tipo_lote_lib'] = $caracteristicas['tipo_lote_lib'] ?? 'N/A';
                 $nestedData['fecha_inicio_lib'] = isset($caracteristicas['fecha_inicio_lib'])
-                ? Carbon::parse($caracteristicas['fecha_inicio_lib'])->format('d/m/Y')
-                : 'N/A';
+                    ? Carbon::parse($caracteristicas['fecha_inicio_lib'])->format('d/m/Y')
+                    : 'N/A';
                 $nestedData['fecha_termino_lib'] = isset($caracteristicas['fecha_termino_lib'])
-                ? Carbon::parse($caracteristicas['fecha_inicio_lib'])->format('d/m/Y')
-                : 'N/A';
+                    ? Carbon::parse($caracteristicas['fecha_inicio_lib'])->format('d/m/Y')
+                    : 'N/A';
                 //case 10
                 $nestedData['punto_reunion'] = $caracteristicas['punto_reunion'] ?? 'N/A';
                 //case 14
@@ -1045,12 +1099,12 @@ class solicitudesController extends Controller
         return response()->json(['success' => true, 'message' => 'Solicitud actualizada correctamente']);
     }
 
-    public function obtenerMarcasPorEmpresa($id_marca,$id_direccion)
+    public function obtenerMarcasPorEmpresa($id_marca, $id_direccion)
     {
-        
-        $marcas = marcas::with('empresa.empresaNumClientes','documentacion_url')->whereJsonContains('etiquetado->id_direccion', $id_direccion)
-        ->where('id_marca', $id_marca)
-        ->get();
+
+        $marcas = marcas::with('empresa.empresaNumClientes', 'documentacion_url')->whereJsonContains('etiquetado->id_direccion', $id_direccion)
+            ->where('id_marca', $id_marca)
+            ->get();
 
         foreach ($marcas as $marca) {
             // Decodificar el campo 'etiquetado'
