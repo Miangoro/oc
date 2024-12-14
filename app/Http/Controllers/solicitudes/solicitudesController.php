@@ -238,7 +238,7 @@ class solicitudesController extends Controller
                 $nestedData['analisis_inspeccion'] = $caracteristicas['analisis_inspeccion'] ?? 'N/A';
                 //case 7
                 $idLoteGranelBarricada = $caracteristicas['id_lote_granel_barricada'] ?? null;
-                if ($idLoteGranelInpeccion) {
+                if ($idLoteGranelBarricada) {
                     $loteGranel = LotesGranel::find($idLoteGranelBarricada); // Busca el lote a granel
                     $nestedData['id_lote_granel_barricada'] = $idLoteGranelBarricada;
                     $nestedData['nombre_lote_barricada'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
