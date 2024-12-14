@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
                                     id="id_categoria_muestreo" name="id_categoria_muestreo" placeholder="Ingresa una Categoria"
@@ -78,7 +78,7 @@
                                 <label for="id_categoria_muestreo">Ingresa Categoria</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="id_clase_muestreo"
                                     name="id_clase_muestreo" placeholder="Ingresa una Clase" readonly
@@ -86,13 +86,13 @@
                                 <label for="id_clase_muestreo">Ingresa Clase</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted marca"
-                                    id="id_tipo_maguey_muestreo" name="id_tipo_maguey_muestreo[0]"
-                                    placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
-                                <label for="id_tipo_maguey_muestreo">Ingresa Tipo de Maguey</label>
-                            </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-floating form-floating-outline mb-5">
+                            <input type="text" class="form-control bg-light text-muted marca"
+                                id="id_tipo_maguey_muestreo" name="id_tipo_maguey_muestreo[0]"
+                                placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
+                            <label for="id_tipo_maguey_muestreo">Ingresa Tipo de Maguey</label>
                         </div>
                     </div>
                     <div class="row">
@@ -194,61 +194,37 @@
     }
 
     function obtenerDatosGranelesMuestreo() {
-        var lote_granel_id = $("#id_lote_granel_muestreo").val();
-        $.ajax({
-            url: '/getDatos2/' + lote_granel_id,
-            method: 'GET',
-            success: function(response) {
-                $('#id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :''); 
-                $('#id_clase_muestreo').val(response.clase ? response.clase.clase :''); 
-/*                 if (response.tipo) {
-                    var tipoConcatenado = response.tipo.nombre + ' (' + response.tipo.cientifico + ')';
-                    $('#id_tipo_maguey_muestreo').val(tipoConcatenado);
-                } else {
-                    $('#id_tipo_maguey_muestreo').val('');
-                } */
-                $('#analisis_muestreo').val(response.lotes_granel.folio_fq);
-                $('#volumen_muestreo').val(response.lotes_granel.cont_alc);
-                $('#id_certificado_muestreo').val(response.lotes_granel.folio_certificado);
-            },
-            error: function() {
-                console.error('Error al obtener los datos del lote granel.');
-            }
-        });
-    }
+    var lote_granel_id = $("#id_lote_granel_muestreo").val();
 
-/*     // Función para cargar lotes a granel
-function cargarLotesGranel(tipos) {
-    var contenidoLotesGraneles = "";
-    for (let index = 0; index < tipos.length; index++) {
-        contenidoLotesGraneles += `
-            <option value="${tipos[index].nombre}">
-                ${tipos[index].cientifico}
-            </option>`;
-    }
-    if (tipos.length === 0) {
-        contenidoLotesGraneles = '<option value="" disabled selected>Sin lotes granel registrados</option>';
-    }
-    $('.marca').html(contenidoLotesGraneles);
-}
-
-function cargarDetallesLoteEnvasado(id_lote_granel_muestreo) {
     $.ajax({
-        url: '/getDetalleLoteTipo/' + id_lote_granel_muestreo,
+        url: '/getDatos2/' + lote_granel_id,
         method: 'GET',
         success: function(response) {
-            console.log(response); // Verifica la respuesta que recibes
-            if (response.detalle) {
-                // Si hay detalles, convierte el array en una cadena separada por comas
-                $('.marca').val(response.detalle.join(', ')); // Une los nombres de los lotes con coma y espacio
+            // Rellenar categoría y clase
+            $('#id_categoria_muestreo').val(response.categoria ? response.categoria.categoria : '');
+            $('#id_clase_muestreo').val(response.clase ? response.clase.clase : '');
+
+            // Procesar los tipos (varios)
+            if (response.tipo && response.tipo.length > 0) {
+                // Concatenar todos los tipos
+                var tiposConcatenados = response.tipo.map(function(tipo) {
+                    return tipo.nombre + ' (' + tipo.cientifico + ')';
+                }).join(', '); // Unir con coma
+                $('#id_tipo_maguey_muestreo').val(tiposConcatenados);
             } else {
-                $('.marca').val(''); // Si no hay detalles, limpia el campo
+                $('#id_tipo_maguey_muestreo').val('');
             }
+
+            // Rellenar otros campos
+            $('#analisis_muestreo').val(response.lotes_granel.folio_fq || '');
+            $('#volumen_muestreo').val(response.lotes_granel.cont_alc || '');
+            $('#id_certificado_muestreo').val(response.lotes_granel.folio_certificado || '');
         },
         error: function() {
-            console.error('Error al cargar el detalle del lote envasado.');
+            console.error('Error al obtener los datos del lote granel.');
         }
     });
 }
- */
+
+
 </script>

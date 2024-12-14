@@ -1232,4 +1232,23 @@ class solicitudesController extends Controller
             'detalle' => $lotesGranel->pluck('nombre_lote') // Puedes cambiar 'nombre_lote' por cualquier campo relevante de LotesGranel
         ]);
     }
+
+
+    public function getDetalleLoteTipo($id_lote_granel)
+    {
+        $lote = LotesGranel::find($id_lote_granel);
+        if (!$lote) {
+            return response()->json(['error' => 'Lote no encontrado'], 404);
+        }
+        // Usando la relación 'lotesGranel' para obtener los lotes a granel asociados
+        $lotesGranel = $lote->lotesGranel; // Esto devuelve los lotes a granel asociados
+        // Si no hay lotes a granel asociados, puedes devolver un mensaje o array vacío
+        if ($lotesGranel->isEmpty()) {
+            return response()->json(['detalle' => null], 200);
+        }
+        // Si hay lotes a granel, devolverlos en el formato adecuado
+        return response()->json([
+            'detalle' => $lotesGranel->pluck('nombre_lote') // Puedes cambiar 'nombre_lote' por cualquier campo relevante de LotesGranel
+        ]);
+    }
 }
