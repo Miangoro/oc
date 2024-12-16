@@ -859,8 +859,7 @@ Route::post('/certificados/reexpedir/granel', [Certificado_GranelController::cla
 Route::get('/bitacora_mezcal', [CartaAsignacionController::class, 'BitacoraMezcal'])->name('bitacora_mezcal');
 Route::get('/bitacora_maduracion', [CartaAsignacionController::class, 'BitacoraMaduracion'])->name('bitacora_maduracion');
 Route::get('/bitacora_productor', [CartaAsignacionController::class, 'BitacoraProductor'])->name('bitacora_productor');
-/* Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
-Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion'); */
+Route::get('/bitacora_terminado', [CartaAsignacionController::class, 'BitacoraTerminado'])->name('bitacora_terminado');
 
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
 
