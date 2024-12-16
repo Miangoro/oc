@@ -52,6 +52,24 @@
         background: #D0CECE;     
         font-family: 'calibri-bold';
     }
+    
+    .pie {
+            text-align: right;
+            font-size: 12px;
+            line-height: 1;
+            position: fixed;
+            bottom: -40px;
+            left: 0;
+            right: 0;
+            width: calc(100% - 40px);
+            height: 45px;
+            margin-right: 30px;
+            padding: 10px 0;
+            font-family: 'Lucida Sans Unicode';
+            z-index: 1; 
+            color: #A6A6A6;
+     }
+
 </style>
 <body>
     <div class="img"> 
@@ -463,5 +481,8 @@
         </tbody>
     </table>
 
+    <div class="pie">
+        <p>Página 1 de 1</p>
+    </div>
 </body>
 </html>

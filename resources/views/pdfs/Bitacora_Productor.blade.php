@@ -165,6 +165,40 @@
         height: 20px; 
     }
 
+    .pie1 {
+            text-align: right;
+            font-size: 12px;
+            line-height: 1;
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            right: 0;
+            width: calc(100% - 40px);
+            height: 45px;
+            margin-right: 30px;
+            padding: 10px 0;
+            font-family: 'Lucida Sans Unicode';
+            z-index: 1; 
+            color: #A6A6A6;
+     }
+
+    .pie {
+            text-align: right;
+            font-size: 12px;
+            line-height: 1;
+            position: fixed;
+            bottom: -40px;
+            left: 0;
+            right: 0;
+            width: calc(100% - 40px);
+            height: 45px;
+            margin-right: 30px;
+            padding: 10px 0;
+            font-family: 'Lucida Sans Unicode';
+            z-index: 1; 
+            color: #A6A6A6;
+     }
+
 </style>
 <body>
     <div class="img"> 
@@ -273,6 +307,10 @@
     <div>
         <p class="datos"></p>
         <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR ____________________________________________________________________</p>
+    </div>
+
+    <div class="pie1">
+        <p>Página 1 de 2</p>
     </div>
 
     <table>
@@ -593,6 +631,10 @@
             </tr>
         </tbody>
     </table>
+    
+    <div class="pie">
+        <p>Página 2 de 2</p>
+    </div>
     
     <div>
         <p class="datos"></p>
