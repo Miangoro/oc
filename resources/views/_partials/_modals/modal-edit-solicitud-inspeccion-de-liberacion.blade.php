@@ -19,8 +19,7 @@
                                     name="id_empresa" class="id_empresa_barricada select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
-                                        </option>
+                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -71,7 +70,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="edit_id_clase_liberacion"
                                     name="id_clase_liberacion" placeholder="Ingresa una Clase" readonly
@@ -79,21 +78,21 @@
                                 <label for="id_clase_liberacion">Ingresa Clase</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_tipo_maguey_liberacion" name="id_tipo_maguey_liberacion"
-                                    placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
-                                <label for="id_tipo_maguey_liberacion">Ingresa Tipo de Maguey</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="edit_id_edad_liberacion"
                                     name="id_edad_liberacion" placeholder="Ingresa una Edad" readonly
                                     style="pointer-events: none;" />
                                 <label for="id_edad_liberacion">Ingresa Edad</label>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-floating form-floating-outline mb-5">
+                            <input type="text" class="form-control bg-light text-muted"
+                                id="edit_id_tipo_maguey_liberacion" name="id_tipo_maguey_liberacion"
+                                placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
+                            <label for="id_tipo_maguey_liberacion">Ingresa Tipo de Maguey</label>
                         </div>
                     </div>
                     <div class="row">
@@ -189,7 +188,7 @@
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary btnCancelar" data-bs-dismiss="modal"
+                        <button type="reset" class="btn btn-outline-secondary " data-bs-dismiss="modal"
                             aria-label="Close">Cancelar</button>
                     </div>
                 </form>
@@ -263,9 +262,11 @@
             success: function(response) {
                 $('#edit_id_categoria_liberacion').val(response.categoria ? response.categoria.categoria : '');
                 $('#edit_id_clase_liberacion').val(response.clase ? response.clase.clase : '');
-                if (response.tipo) {
-                    var tipoConcatenado = response.tipo.nombre + ' (' + response.tipo.cientifico + ')';
-                    $('#edit_id_tipo_maguey_liberacion').val(tipoConcatenado);
+                if (response.tipo && response.tipo.length > 0) {
+                    var tiposConcatenados = response.tipo.map(function(tipo) {
+                        return tipo.nombre + ' (' + tipo.cientifico + ')';
+                    }).join(', '); // Unir con coma
+                    $('#edit_id_tipo_maguey_liberacion').val(tiposConcatenados);
                 } else {
                     $('#edit_id_tipo_maguey_liberacion').val('');
                 }

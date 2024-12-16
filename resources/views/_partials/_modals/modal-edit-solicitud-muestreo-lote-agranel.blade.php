@@ -19,8 +19,9 @@
                                     name="id_empresa" class="id_empresa_muestreo select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
-                                        </option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -28,8 +29,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text" id="edit_fecha_visita"
-                                    name="fecha_visita" />
+                                <input placeholder="YYYY-MM-DD" class="form-control flatpickr-datetime" type="text"
+                                    id="edit_fecha_visita" name="fecha_visita" />
                                 <label for="fecha_visita">Fecha y hora sugerida para la inspección</label>
                             </div>
                         </div>
@@ -73,65 +74,67 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_categoria_muestreo" name="id_categoria_muestreo" placeholder="Ingresa una Categoria"
-                                    readonly style="pointer-events: none;" />
+                                    id="edit_id_categoria_muestreo" name="id_categoria_muestreo"
+                                    placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
                                 <label for="id_categoria_muestreo">Ingresa Categoria</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted" id="edit_id_clase_muestreo"
-                                    name="id_clase_muestreo" placeholder="Ingresa una Clase" readonly
-                                    style="pointer-events: none;" />
+                                <input type="text" class="form-control bg-light text-muted"
+                                    id="edit_id_clase_muestreo" name="id_clase_muestreo" placeholder="Ingresa una Clase"
+                                    readonly style="pointer-events: none;" />
                                 <label for="id_clase_muestreo">Ingresa Clase</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_tipo_maguey_muestreo" name="id_tipo_maguey_muestreo"
-                                    placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
-                                <label for="id_tipo_maguey_muestreo">Ingresa Tipo de Maguey</label>
-                            </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-floating form-floating-outline mb-5">
+                            <input type="text" class="form-control bg-light text-muted"
+                                id="edit_id_tipo_maguey_muestreo" name="id_tipo_maguey_muestreo[0]"
+                                placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
+                            <label for="id_tipo_maguey_muestreo">Ingresa Tipo de Maguey</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="edit_analisis_muestreo" name="analisis_muestreo"
-                                    placeholder="Ingresa Análisis fisicoquímico" />
+                                <input type="text" class="form-control" id="edit_analisis_muestreo"
+                                    name="analisis_muestreo" placeholder="Ingresa Análisis fisicoquímico" />
                                 <label for="analisis_muestreo">Ingresa Análisis fisicoquímico</label>
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="number" class="form-control" id="edit_volumen_muestreo" name="volumen_muestreo"
-                                    placeholder="Ingresa el volumen" />
+                                <input type="number" class="form-control" id="edit_volumen_muestreo"
+                                    name="volumen_muestreo" placeholder="Ingresa el volumen" />
                                 <label for="volumen_muestreo">%Alc. Vol.</label>
                             </div>
                         </div>
                         <div class="col-md-5">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="edit_id_certificado_muestreo"
-                                    name="id_certificado_muestreo" placeholder="Ingresa el Certificado de NOM a granel" />
+                                    name="id_certificado_muestreo"
+                                    placeholder="Ingresa el Certificado de NOM a granel" />
                                 <label for="id_certificado_muestreo">Ingresa Certificado de NOM a granel</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional" placeholder="Observaciones..."></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional"
+                                placeholder="Observaciones..."></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
                                 CONTENEDORES):</label>
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary btnCancelar" data-bs-dismiss="modal"
-                            aria-label="Close">Cancelar</button>
+                        <button type="reset" class="btn btn-outline-secondary " id="ejemploo"
+                            data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -202,11 +205,14 @@
             url: '/getDatos2/' + lote_granel_id,
             method: 'GET',
             success: function(response) {
-                $('#edit_id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :''); 
-                $('#edit_id_clase_muestreo').val(response.clase ? response.clase.clase :''); 
-                if (response.tipo) {
-                    var tipoConcatenado = response.tipo.nombre + ' (' + response.tipo.cientifico + ')';
-                    $('#edit_id_tipo_maguey_muestreo').val(tipoConcatenado);
+                $('#edit_id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :
+                '');
+                $('#edit_id_clase_muestreo').val(response.clase ? response.clase.clase : '');
+                if (response.tipo && response.tipo.length > 0) {
+                    var tiposConcatenados = response.tipo.map(function(tipo) {
+                        return tipo.nombre + ' (' + tipo.cientifico + ')';
+                    }).join(', '); // Unir con coma
+                    $('#edit_id_tipo_maguey_muestreo').val(tiposConcatenados);
                 } else {
                     $('#edit_id_tipo_maguey_muestreo').val('');
                 }

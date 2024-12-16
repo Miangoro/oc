@@ -58,13 +58,7 @@ function obtenerIcono(id_tipo) {
                 const contentContainer = document.getElementById(contentContainerId);
                 contentContainer.innerHTML = ''; 
 
-                var solicitudesMap = {
-
-/*                     1: "#addSolicitudMuestreoAgave",
-                    10: "#addSolicitudGeoreferenciacion",
-                    14: "#addSolicitudDictamen",    
-                    3: "#addSolicitudOtroTipo",    */     
-                    
+                var solicitudesMap = {                    
                     1: "#addSolicitudMuestreoAgave",
                     2: "#addVigilanciaProduccion",         
                     3: "#addMuestreoLoteAgranel",         

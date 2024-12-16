@@ -17,8 +17,9 @@
                                     name="id_empresa" class="id_empresa_traslado select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
-                                        </option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -42,6 +43,20 @@
                                 <button type="button" class="btn btn-primary" id="modalVigilanciaTraslado"><i
                                         class="ri-add-line"></i> Agregar nueva instalación</button>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-floating form-floating-outline mb-4">
+                            <select id="instalacion_vigilancia" name="instalacion_vigilancia"
+                                class="select2 form-select">
+                                <option value="" disabled selected>Selecciona lote a granel</option>
+                                @foreach ($instalaciones as $instalaciones)
+                                    <option value="{{ $instalaciones->id_instalacion }}">
+                                        {{ $instalaciones->direccion_completa }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <label for="instalacion_vigilancia">Direccion de destino</label>
                         </div>
                     </div>
                     <p class="address-subtitle" style="color: red">Seleccione un cliente</p>
@@ -69,7 +84,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="id_clase_traslado"
                                     name="id_clase_traslado" placeholder="Ingresa una Clase" readonly
@@ -77,10 +92,10 @@
                                 <label for="id_clase_traslado">Ingresa Clase</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-9">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="id_tipo_maguey_traslado" name="id_tipo_maguey_traslado"
+                                    id="id_tipo_maguey_traslado" name="id_tipo_maguey_traslado[0]"
                                     placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
                                 <label for="id_tipo_maguey_traslado">Ingresa Tipo de Maguey</label>
                             </div>
@@ -89,23 +104,22 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="id_salida"
-                                    name="id_salida" placeholder="Ingresa Análisis fisicoquímico" />
+                                <input type="text" class="form-control" id="id_salida" name="id_salida"
+                                    placeholder="Ingresa Análisis fisicoquímico" />
                                 <label for="id_salida">Identificador de contenedor de salida
                                 </label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="id_contenedor"
-                                    name="id_contenedor" placeholder="Ingresa el volumen" />
+                                <input type="text" class="form-control" id="id_contenedor" name="id_contenedor"
+                                    placeholder="Ingresa el volumen" />
                                 <label for="id_contenedor">Identificador de contenedor de recepción</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="id_sobrante"
-                                    name="id_sobrante"
+                                <input type="text" class="form-control" id="id_sobrante" name="id_sobrante"
                                     placeholder="Ingresa el Certificado de NOM a granel" />
                                 <label for="id_sobrante">Sobrante en contenedor de salida </label>
                             </div>
@@ -122,8 +136,8 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="number" class="form-control " id="id_vol_traslado" name="id_vol_traslado"
-                                    placeholder="Ingresa una Categoria" step="0.01"/>
+                                <input type="number" class="form-control " id="id_vol_traslado"
+                                    name="id_vol_traslado" placeholder="Ingresa una Categoria" step="0.01" />
                                 <label for="id_vol_traslado">Volumen trasladado</label>
                             </div>
                         </div>
@@ -241,9 +255,11 @@
             success: function(response) {
                 $('#id_categoria_traslado').val(response.categoria ? response.categoria.categoria : '');
                 $('#id_clase_traslado').val(response.clase ? response.clase.clase : '');
-                if (response.tipo) {
-                    var tipoConcatenado = response.tipo.nombre + ' (' + response.tipo.cientifico + ')';
-                    $('#id_tipo_maguey_traslado').val(tipoConcatenado);
+                if (response.tipo && response.tipo.length > 0) {
+                    var tiposConcatenados = response.tipo.map(function(tipo) {
+                        return tipo.nombre + ' (' + tipo.cientifico + ')';
+                    }).join(', '); // Unir con coma
+                    $('#id_tipo_maguey_traslado').val(tiposConcatenados);
                 } else {
                     $('#id_tipo_maguey_traslado').val('');
                 }

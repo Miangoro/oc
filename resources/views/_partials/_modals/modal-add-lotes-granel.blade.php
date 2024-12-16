@@ -71,9 +71,10 @@
                       <table class="table table-bordered shadow-lg">
                           <thead>
                               <tr>
-                                  <th><button type="button" class="btn btn-primary add-row-lotes"> <i class="ri-add-line"></i> </button></th>
-                                  <th>Lote a granel</th>
-                                  <th>Volumen parcial</th>
+                                  <th style="width: 30px"><button type="button" class="btn btn-primary add-row-lotes"> <i
+                                    class="ri-add-line"></i> </button></th>
+                                <th style="width: 70%">Lote a granel</th>
+                                <th>Volumen parcial</th>
                               </tr>
                           </thead>
                           <tbody id="contenidoGraneles">
@@ -335,6 +336,7 @@
 <script>
     function obtenerDatosEmpresa() {
         var empresa = $("#id_empresa").val();
+    
 
         // Verifica si el valor de empresa es válido
         if (!empresa) {

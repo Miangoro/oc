@@ -481,6 +481,7 @@ $(function () {
         $('#addLotes').removeClass('d-none');
         if ($('#contenidoGraneles').children('tr').length === 0) {
           agregarFilaLotes(); // Llamar a la función para agregar la fila
+        
         }
       } else {
         $('#addLotes').addClass('d-none');
@@ -500,6 +501,7 @@ $(function () {
     });
 
     function agregarFilaLotes() {
+      obtenerDatosEmpresa();
       rowIndex++; // Incrementar el índice global
 
       var newRow = `
@@ -879,6 +881,12 @@ $(function () {
             var nombreLotes = data.nombreLotes; // Este array contiene los nombres de los lote
             var organismoId = data.organismo;
             var tipos = data.tipos;
+            var lote_original_id = data.lote.lote_original_id;
+            if(lote_original_id){
+              $('#edit_es_creado_a_partir').val('si').trigger('change');
+            }else{
+              $('#edit_es_creado_a_partir').val('no').trigger('change');
+            }
 
             $('#contenidoGranelesEdit').html('');
             $('#edit_tipo_agave').empty();
@@ -1078,6 +1086,7 @@ $(function () {
         $('#editLotesGranel').removeClass('d-none');
         if ($('#contenidoGranelesEdit').children('tr').length === 0) {
           agregarFilaLotesEdit();
+          obtenerLotesEdit();
         }
       } else {
         $('#editLotesGranel').addClass('d-none');
@@ -1088,6 +1097,7 @@ $(function () {
 
     $('.add-row-lotes-edit').click(function () {
       agregarFilaLotesEdit();
+      obtenerLotesEdit();
     });
 
 

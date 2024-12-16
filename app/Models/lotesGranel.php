@@ -41,7 +41,7 @@ class LotesGranel extends Model
 
     public function categoria()
     {
-        return $this->belongsTo(Categorias::class, 'id_categoria', 'id_categoria');
+        return $this->belongsTo(categorias::class, 'id_categoria', 'id_categoria');
     }
 
     public function clase()

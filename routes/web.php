@@ -776,6 +776,7 @@ Route::post('/hologramas/storeVigilanciaTraslado', [solicitudesController::class
 Route::post('/hologramas/storeInspeccionBarricada', [solicitudesController::class, 'storeInspeccionBarricada']);
 Route::post('/hologramas/storeInspeccionBarricadaLiberacion', [solicitudesController::class, 'storeInspeccionBarricadaLiberacion']);
 Route::post('/hologramas/storeInspeccionEnvasado', [solicitudesController::class, 'storeInspeccionEnvasado']);
+Route::get('/getDetalleLoteTipo/{id_tipo}', [solicitudesController::class, 'getDetalleLoteTipo']);
 
 Route::get('/getDetalleLoteEnvasado/{id_lote_envasado}', [solicitudesController::class, 'getDetalleLoteEnvasado']);
 Route::get('/verificar-solicitud', [solicitudesController::class, 'verificarSolicitud'])->name('verificarSolicitud');
@@ -858,8 +859,8 @@ Route::post('/certificados/reexpedir/granel', [Certificado_GranelController::cla
 Route::get('/bitacora_mezcal', [CartaAsignacionController::class, 'BitacoraMezcal'])->name('bitacora_mezcal');
 Route::get('/bitacora_maduracion', [CartaAsignacionController::class, 'BitacoraMaduracion'])->name('bitacora_maduracion');
 Route::get('/bitacora_productor', [CartaAsignacionController::class, 'BitacoraProductor'])->name('bitacora_productor');
-/* Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
-Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion'); */
+Route::get('/bitacora_terminado', [CartaAsignacionController::class, 'BitacoraTerminado'])->name('bitacora_terminado');
+Route::get('/bitacora_hologramas', [CartaAsignacionController::class, 'BitacoraHologramas'])->name('bitacora_hologramas');
 
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
 

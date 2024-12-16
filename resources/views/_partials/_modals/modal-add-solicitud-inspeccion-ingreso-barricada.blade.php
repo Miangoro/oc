@@ -5,7 +5,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Inspeccion ingreso a barrica/ contenedor de vidrio</h4>
+                    <h4 class="address-title mb-2">Inspección ingreso a barrica/ contenedor de vidrio</h4>
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="addInspeccionIngresoBarricadaForm">
@@ -17,8 +17,7 @@
                                     name="id_empresa" class="id_empresa_barricada select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
-                                        </option>
+                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -69,7 +68,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="id_clase_barricada"
                                     name="id_clase_barricada" placeholder="Ingresa una Clase" readonly
@@ -77,21 +76,22 @@
                                 <label for="id_clase_barricada">Ingresa Clase</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted"
-                                    id="id_tipo_maguey_barricada" name="id_tipo_maguey_barricada"
-                                    placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
-                                <label for="id_tipo_maguey_barricada">Ingresa Tipo de Maguey</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
+
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="id_edad"
                                     name="id_edad" placeholder="Ingresa una Edad" readonly
                                     style="pointer-events: none;" />
                                 <label for="id_edad">Ingresa Edad</label>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-floating form-floating-outline mb-5">
+                            <input type="text" class="form-control bg-light text-muted"
+                                id="id_tipo_maguey_barricada" name="id_tipo_maguey_barricada"
+                                placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
+                            <label for="id_tipo_maguey_barricada">Ingresa Tipo de Maguey</label>
                         </div>
                     </div>
                     <div class="row">
@@ -262,9 +262,11 @@
             success: function(response) {
                 $('#id_categoria_barricada').val(response.categoria ? response.categoria.categoria : '');
                 $('#id_clase_barricada').val(response.clase ? response.clase.clase : '');
-                if (response.tipo) {
-                    var tipoConcatenado = response.tipo.nombre + ' (' + response.tipo.cientifico + ')';
-                    $('#id_tipo_maguey_barricada').val(tipoConcatenado);
+                if (response.tipo && response.tipo.length > 0) {
+                    var tiposConcatenados = response.tipo.map(function(tipo) {
+                        return tipo.nombre + ' (' + tipo.cientifico + ')';
+                    }).join(', '); // Unir con coma
+                    $('#id_tipo_maguey_barricada').val(tiposConcatenados);
                 } else {
                     $('#id_tipo_maguey_barricada').val('');
                 }
