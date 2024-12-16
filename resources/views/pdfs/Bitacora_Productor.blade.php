@@ -40,7 +40,7 @@
     }
 
     tr.text-title td, tr.text-title th {
-        padding: 2px; 
+        padding: 0px; 
         text-align: center; 
         font-size: 12px; 
         word-break: break-word;
@@ -106,7 +106,15 @@
     .segunda {
         width: 50%; 
         border-collapse: collapse;
-        margin-left: 0;
+        margin-left: -5;
+    }
+
+    .tercera {
+    width: 50%; 
+    border-collapse: collapse;
+    margin-left: auto; 
+    margin-right: -5; 
+    margin-top: -220px;
     }
 
     .observaciones-table2 {
@@ -289,7 +297,6 @@
                 <td>Volumen</td>
                 <td>%Alc.Vol.</td>
             </tr>
-            <!-- Filas numeradas del 1 al 20 -->
             <tr>
                 <td class="no-border">1</td>
                 <td></td>
@@ -596,13 +603,15 @@
     
     <table class="segunda">
             <tbody>
-                <tr>
-                    <td rowspan="2">FECHA DE DESTILACIÓN	FLOR</td>
+                <tr class="text-title">
+                    <td class="no-border"></td>
+                    <td rowspan="2">FECHA DE DESTILACIÓN</td>
                     <td colspan="2">FLOR</td>
                     <td colspan="2">MEZCAL</td>
                     <td colspan="2">COLAS</td>
                 </tr>
                 <tr>
+                    <td class="no-border"></td>
                     <td>Volumen</td>
                     <td>%Alc.Vol.</td>
                     <td>Volumen</td>
@@ -611,6 +620,7 @@
                     <td>%Alc.Vol.</td>
                 </tr>
                 <tr>
+                    <td class="no-border">1</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -620,6 +630,7 @@
                     <td></td>
                 </tr>
                 <tr>
+                    <td class="no-border">2</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -629,6 +640,7 @@
                     <td></td>
                 </tr>
                 <tr>
+                    <td class="no-border">3</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -638,6 +650,7 @@
                     <td></td>
                 </tr>
                 <tr>
+                    <td class="no-border">4</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -647,6 +660,7 @@
                     <td></td>
                 </tr>
                 <tr>
+                    <td class="no-border">5</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -656,6 +670,7 @@
                     <td></td>
                 </tr>
                 <tr>
+                    <td class="no-border"></td>
                     <td>VOLUMEN TOTAL</td>
                     <td></td>
                     <td></td>
@@ -666,6 +681,92 @@
                 </tr>
             </tbody>
         </table>
+
+        <table class="tercera">
+            <tbody>
+                <tr class="text-title">
+                    <td class="no-border"></td>
+                    <td rowspan="2">FECHA DE DESTILACIÓN</td>
+                    <td colspan="2">FLOR</td>
+                    <td colspan="2">MEZCAL</td>
+                    <td colspan="2">COLAS</td>
+                </tr>
+                <tr>
+                    <td class="no-border"></td>
+                    <td>Volumen</td>
+                    <td>%Alc.Vol.</td>
+                    <td>Volumen</td>
+                    <td>%Alc.Vol.</td>
+                    <td>Volumen</td>
+                    <td>%Alc.Vol.</td>
+                </tr>
+                <tr>
+                    <td class="no-border">1</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="no-border">2</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="no-border">3</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="no-border">4</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="no-border">5</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="no-border"></td>
+                    <td>VOLUMEN TOTAL</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div>
+            <p class="datos"></p>
+            <p class="inspector">NOMBRE Y FIRMA DEL INSPECTOR ____________________________________________________________________</p>
+        </div>
 
         <br>
 
