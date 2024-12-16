@@ -185,13 +185,17 @@
         });
     }
 
-    function limpiarTipo(tipo) {
+function limpiarTipo(tipo) {
+    if (tipo.startsWith('[') && tipo.endsWith(']')) {
         try {
             return JSON.parse(tipo).join(', ');
         } catch (e) {
             return tipo;
         }
     }
+    return tipo;
+}
+
 
     function obtenerDatosGranelesMuestreo() {
     var lote_granel_id = $("#id_lote_granel_muestreo").val();

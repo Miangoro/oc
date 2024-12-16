@@ -72,7 +72,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
                                     id="edit_id_categoria_muestreo" name="id_categoria_muestreo" placeholder="Ingresa una Categoria"
@@ -80,7 +80,7 @@
                                 <label for="id_categoria_muestreo">Ingresa Categoria</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="edit_id_clase_muestreo"
                                     name="id_clase_muestreo" placeholder="Ingresa una Clase" readonly
@@ -88,13 +88,13 @@
                                 <label for="id_clase_muestreo">Ingresa Clase</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_tipo_maguey_muestreo" name="id_tipo_maguey_muestreo"
-                                    placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
-                                <label for="id_tipo_maguey_muestreo">Ingresa Tipo de Maguey</label>
-                            </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-floating form-floating-outline mb-5">
+                            <input type="text" class="form-control bg-light text-muted"
+                                id="edit_id_tipo_maguey_muestreo" name="id_tipo_maguey_muestreo[0]"
+                                placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
+                            <label for="id_tipo_maguey_muestreo">Ingresa Tipo de Maguey</label>
                         </div>
                     </div>
                     <div class="row">
@@ -203,12 +203,16 @@
             success: function(response) {
                 $('#edit_id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :''); 
                 $('#edit_id_clase_muestreo').val(response.clase ? response.clase.clase :''); 
-                if (response.tipo) {
-                    var tipoConcatenado = response.tipo.nombre + ' (' + response.tipo.cientifico + ')';
-                    $('#edit_id_tipo_maguey_muestreo').val(tipoConcatenado);
-                } else {
-                    $('#edit_id_tipo_maguey_muestreo').val('');
-                }
+            // Procesar los tipos (varios)
+            if (response.tipo && response.tipo.length > 0) {
+                // Concatenar todos los tipos
+                var tiposConcatenados = response.tipo.map(function(tipo) {
+                    return tipo.nombre + ' (' + tipo.cientifico + ')';
+                }).join(', '); // Unir con coma
+                $('#edit_id_tipo_maguey_muestreo').val(tiposConcatenados);
+            } else {
+                $('#edit_id_tipo_maguey_muestreo').val('');
+            }
                 $('#edit_analisis_muestreo').val(response.lotes_granel.folio_fq);
                 $('#edit_volumen_muestreo').val(response.lotes_granel.cont_alc);
                 $('#edit_id_certificado_muestreo').val(response.lotes_granel.folio_certificado);
