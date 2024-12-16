@@ -535,7 +535,7 @@ class solicitudesController extends Controller
         return response()->json(['message' => 'Inspeccion liberacion a barricada de lote registrada exitosamente']);
     }
 
-    
+
     public function registrarSolicitudGeoreferenciacion(Request $request)
     {
 
@@ -831,7 +831,7 @@ class solicitudesController extends Controller
                         'id_inicio_envasado' => $request->id_inicio_envasado,
                         'id_previsto' => $request->id_previsto,
                         'id_certificado_inspeccion' => $request->id_certificado_inspeccion,
-    
+
                     ];
                     $jsonContent = json_encode($caracteristicasJson);
                     $solicitud->update([
@@ -978,7 +978,7 @@ class solicitudesController extends Controller
 
     public function obtenerMarcasPorEmpresa($id_marca,$id_direccion)
     {
-        
+
         $marcas = marcas::with('empresa.empresaNumClientes','documentacion_url')->whereJsonContains('etiquetado->id_direccion', $id_direccion)
         ->where('id_marca', $id_marca)
         ->get();

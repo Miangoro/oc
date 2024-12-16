@@ -87,7 +87,7 @@
       @method('PUT')
       <input type="hidden" name="id_clase" id="edit_clase_id" value="">
       <div class="form-floating form-floating-outline mb-5">
-        <input type="text" class="form-control" id="edit_clase_nombre" placeholder="Nombre de la clase" name="clase" aria-label="clase" required>
+        <input type="text" class="form-control" id="edit_clase_nombre" placeholder="Nombre de la clase" name="edit_clase" aria-label="clase" required>
         <label for="edit_clase_nombre">Nombre de la clase</label>
       </div>
       <button type="submit" class="btn btn-primary me-sm-3 me-1">Confirmar</button>

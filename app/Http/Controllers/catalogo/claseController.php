@@ -9,7 +9,7 @@ use App\Models\clases;
 
 class ClaseController extends Controller
 {
-    
+
     public function UserManagement()
     {
         $empresas = clases::all();
@@ -138,12 +138,12 @@ class ClaseController extends Controller
             return response()->json(['error' => 'Error al obtener la clase'], 500);
         }
     }
-    
+
     // Función para actualizar una clase existente
     public function update(Request $request, $id_clase)
 {
     $request->validate([
-        'clase' => 'required|string|max:255',
+        'edit_clase' => 'required|string|max:255',
     ]);
 
     try {
@@ -156,6 +156,6 @@ class ClaseController extends Controller
         return response()->json(['error' => 'Error al actualizar la clase'], 500);
     }
 }
-    
+
 
 }
