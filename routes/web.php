@@ -860,6 +860,7 @@ Route::get('/bitacora_mezcal', [CartaAsignacionController::class, 'BitacoraMezca
 Route::get('/bitacora_maduracion', [CartaAsignacionController::class, 'BitacoraMaduracion'])->name('bitacora_maduracion');
 Route::get('/bitacora_productor', [CartaAsignacionController::class, 'BitacoraProductor'])->name('bitacora_productor');
 Route::get('/bitacora_terminado', [CartaAsignacionController::class, 'BitacoraTerminado'])->name('bitacora_terminado');
+Route::get('/bitacora_hologramas', [CartaAsignacionController::class, 'BitacoraHologramas'])->name('bitacora_hologramas');
 
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
 

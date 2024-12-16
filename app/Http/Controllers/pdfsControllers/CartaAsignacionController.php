@@ -340,4 +340,9 @@ class CartaAsignacionController extends Controller
         return $pdf->stream('Bitácora Producto Terminado.pdf');
     } 
 
+    public function BitacoraHologramas() {
+        $pdf = Pdf::loadView('pdfs.Bitacora_Hologramas')->setPaper('letter', 'landscape');
+        return $pdf->stream('Bitácora De Hologramas.pdf');
+    } 
+
 }
