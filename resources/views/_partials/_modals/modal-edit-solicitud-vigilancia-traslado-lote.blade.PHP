@@ -19,8 +19,7 @@
                                     name="id_empresa" class="id_empresa_traslado select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
-                                        </option>
+                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -44,6 +43,18 @@
                                 <button type="button" class="btn btn-primary" id="modalMuestreo"><i
                                         class="ri-add-line"></i> Agregar nueva instalación</button>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-floating form-floating-outline mb-4">
+                            <select id="edit_instalacion_vigilancia"
+                                name="instalacion_vigilancia" class="select2 form-select">
+                                @foreach ($instalaciones as $instalaciones)
+                                    <option value="{{ $instalaciones->id_instalacion }}">{{ $instalaciones->direccion_completa }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <label for="instalacion_vigilancia">Direccion de destino</label>
                         </div>
                     </div>
                     <p class="address-subtitle" style="color: red">Seleccione un cliente</p>
@@ -171,7 +182,7 @@
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary btnCancelar" data-bs-dismiss="modal"
+                        <button type="reset" class="btn btn-outline-secondary " data-bs-dismiss="modal"
                             aria-label="Close">Cancelar</button>
                     </div>
                 </form>

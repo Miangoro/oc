@@ -19,8 +19,7 @@
                                     name="id_empresa" class="id_empresa_barricada select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}
-                                        </option>
+                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -189,7 +188,7 @@
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
-                        <button type="reset" class="btn btn-outline-secondary btnCancelar" data-bs-dismiss="modal"
+                        <button type="reset" class="btn btn-outline-secondary " data-bs-dismiss="modal"
                             aria-label="Close">Cancelar</button>
                     </div>
                 </form>

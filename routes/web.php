@@ -776,6 +776,7 @@ Route::post('/hologramas/storeVigilanciaTraslado', [solicitudesController::class
 Route::post('/hologramas/storeInspeccionBarricada', [solicitudesController::class, 'storeInspeccionBarricada']);
 Route::post('/hologramas/storeInspeccionBarricadaLiberacion', [solicitudesController::class, 'storeInspeccionBarricadaLiberacion']);
 Route::post('/hologramas/storeInspeccionEnvasado', [solicitudesController::class, 'storeInspeccionEnvasado']);
+Route::get('/getDetalleLoteTipo/{id_tipo}', [solicitudesController::class, 'getDetalleLoteTipo']);
 
 Route::get('/getDetalleLoteEnvasado/{id_lote_envasado}', [solicitudesController::class, 'getDetalleLoteEnvasado']);
 Route::get('/verificar-solicitud', [solicitudesController::class, 'verificarSolicitud'])->name('verificarSolicitud');
@@ -784,7 +785,7 @@ Route::post('/actualizar-solicitudes/{id_solicitud}', [SolicitudesController::cl
 Route::post('/exportaciones/storePedidoExportacion', [SolicitudesController::class, 'storePedidoExportacion'])->name('exportaciones.storePedidoExportacion');
 /* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
  */
-Route::get('/marcas/{id_empresa}', [SolicitudesController::class, 'obtenerMarcasPorEmpresa']);
+Route::get('/marcas/{id_marca}/{id_direccion}', [SolicitudesController::class, 'obtenerMarcasPorEmpresa']);
 Route::get('/marcas/{id_empresa}', [lotesEnvasadoController::class, 'obtenerMarcasPorEmpresa']);
 
 //catalago equipos

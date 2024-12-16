@@ -182,6 +182,7 @@
                     <th>Domicilio de inspección</th>
                     <th>Fecha y hora de visita estimada</th>
                     <th>Inspector asignado</th>
+                    <th>Características</th>
                     <th>Fecha y hora de inspección</th>
                     <th>Formato de solicitud</th>
                     <th>Estatus</th>
@@ -339,6 +340,25 @@
     $("#id_solicitud").val(id_solicitud);
     $('#subirResultados').modal('show');
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+  // Función para obtener parámetros de la URL
+  function getParameterByName(name) {
+    const url = window.location.href;
+    const regex = new RegExp(`[?&]${name}(=([^&#]*)|&|#|$)`);
+    const results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
+
+  // Verificar si el modal debe abrirse
+  const modalToOpen = getParameterByName('abrirModal');
+  if (modalToOpen === 'nuevaSolicitud') {
+    $('#verSolicitudes').modal('show'); // Abrir modal
+  }
+});
+
 
 
 </script>

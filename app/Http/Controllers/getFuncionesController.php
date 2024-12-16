@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Destinos;
 use App\Models\empresa;
 use App\Models\LotesGranel;
+use App\Models\tipos;
 
 use App\Models\normas;
 use App\Models\User;
@@ -73,22 +74,39 @@ class getFuncionesController extends Controller
         ]);
     }
 
-    public function getDatos2(LotesGranel $lote_granel)
-    {    
+    public function getDatos2($id_lote_granel)
+    {
+        $loteGranel = LotesGranel::find($id_lote_granel);
+    
+        if (!$loteGranel) {
+            return response()->json(['error' => 'Lote Granel no encontrado'], 404);
+        }
+    
+        // Obtener ids de tipos desde el JSON (id_tipo)
+        $idTipos = json_decode($loteGranel->id_tipo, true);
+    
+        // Si no hay tipos, devolvemos un valor vacío
+        if (!$idTipos || !is_array($idTipos)) {
+            return response()->json([
+                'categoria' => $loteGranel->categoria,
+                'clase' => $loteGranel->clase,
+                'tipo' => [],
+                'lotes_granel' => $loteGranel
+            ]);
+        }
+    
+        // Buscar los datos de cada tipo relacionado
+        $tipos = tipos::whereIn('id_tipo', $idTipos)
+            ->get(['nombre', 'cientifico']);
+    
         return response()->json([
-            'instalaciones' => $lote_granel->empresa->obtenerInstalaciones(),
-            'lotes_granel' => $lote_granel,
-            'marca' => $lote_granel->empresa->marcas()->pluck('marca')->first(),
-            'lotes_granel_guias' => $lote_granel->lotesGuias()->with(['guia', 'guia.predios'])->get(),
-            'predios' => $lote_granel->empresa->predios(),
-            'predio_plantacion' => $lote_granel->empresa->predio_plantacion(),
-            'direcciones' => $lote_granel->empresa->direcciones(),
-            'lotes_envasado' => $lote_granel->lotesEnvasadoGranel,
-            'categoria' => $lote_granel->categoria,
-            'tipo' => $lote_granel->tipo, 
-            'clase' => $lote_granel->clase,
+            'categoria' => $loteGranel->categoria,
+            'clase' => $loteGranel->clase,
+            'tipo' => $tipos, // Devolver la lista de tipos encontrados
+            'lotes_granel' => $loteGranel
         ]);
     }
+    
     
     
     
