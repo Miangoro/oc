@@ -21,7 +21,7 @@ class RevisionPersonalController extends Controller
     {
         $userId = auth()->id();   
         $EstadisticasInstalaciones = $this->calcularCertificadosInstalaciones($userId); // Estadisticas Instalaciones
-        $EstadisticasGranel = $this->calcularCertificadosGranel($userId); // Estadisticas Instalaciones
+        $EstadisticasGranel = $this->calcularCertificadosGranel($userId); // Estadisticas Granel
         $revisor = Revisor::with('certificado')->where('id_revisor', $userId)->first(); // Autentificado Instalaciones
         $revisoresGranel = RevisorGranel::with('certificado')->where('id_revisor', $userId)->first(); // Autentificado Granel
         $users = User::where('tipo', 1)->get(); // Select Aprobacion
