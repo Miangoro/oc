@@ -565,7 +565,7 @@ $(document).ready(function() {
           var id_clase = $('#edit_clase_id').val();
           $.ajax({
               url: '/clases-list/' + id_clase,
-              type: 'PUT',
+              type: 'POST',
               data: formData,
               success: function (response) {
                   $('#editClase').offcanvas('hide');

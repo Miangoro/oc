@@ -524,7 +524,7 @@ Route::get('/clases-list', [claseController::class, 'index']);
 Route::delete('/clases-list/{id_clase}', [claseController::class, 'destroy'])->name('clases.destroy');
 Route::post('/catalogo', [claseController::class, 'store'])->name('catalogo.store');
 Route::get('/clases-list/{id_clase}/edit', [claseController::class, 'edit'])->name('clases.edit');
-Route::put('/clases-list/{id_clase}', [claseController::class, 'update'])->name('clases.update');
+Route::post('/clases-list/{id_clase}', [claseController::class, 'update'])->name('clases.update');
 
 //Categorias Agave
 Route::get('/catalogo/categorias', [categoriasController::class, 'UserManagement'])->name('catalogo-categorias');

@@ -121,7 +121,6 @@ class ClaseController extends Controller
             $clase = new clases();
             $clase->clase = $request->clase;
             $clase->save();
-
             return response()->json(['success' => 'Clase agregada correctamente']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al agregar la clase'], 500);
@@ -148,7 +147,7 @@ class ClaseController extends Controller
 
     try {
         $clase = clases::findOrFail($id_clase);
-        $clase->clase = $request->clase;
+        $clase->clase = $request->edit_clase;
         $clase->save();
 
         return response()->json(['success' => 'Clase actualizada correctamente']);

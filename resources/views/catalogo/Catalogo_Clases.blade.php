@@ -82,9 +82,8 @@
     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body mx-0 flex-grow-0 h-100">
-    <form class="edit-class-form pt-0" id="editClassForm">
-      @csrf
-      @method('PUT')
+    @csrf
+    <form class="edit-class-form pt-0" id="editClassForm" method="POST">
       <input type="hidden" name="id_clase" id="edit_clase_id" value="">
       <div class="form-floating form-floating-outline mb-5">
         <input type="text" class="form-control" id="edit_clase_nombre" placeholder="Nombre de la clase" name="edit_clase" aria-label="clase" required>
