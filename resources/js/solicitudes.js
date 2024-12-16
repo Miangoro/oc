@@ -741,9 +741,9 @@ $(function () {
                 modal.find('#edit_id_clase_traslado').val('');
               }
               if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_traslado) {
-                modal.find('#id_tipo_maguey_traslado').val(response.caracteristicas.id_tipo_maguey_traslado);
+                modal.find('#edit_id_tipo_maguey_traslado').val(response.caracteristicas.id_tipo_maguey_traslado);
               } else {
-                modal.find('#id_tipo_maguey_traslado').val('');
+                modal.find('#edit_id_tipo_maguey_traslado').val('');
               }
               if (response.caracteristicas && response.caracteristicas.id_salida) {
                 modal.find('#edit_id_salida').val(response.caracteristicas.id_salida);
