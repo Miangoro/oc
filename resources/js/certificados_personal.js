@@ -124,18 +124,25 @@ $(function () {
           searchable: false,
           orderable: false,
           render: function (data, type, full, meta) {
-            if (full['decision']) {
-              // Si existe la decisión, el ícono es funcional (activo)
-              return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"
-                         data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" 
-                         data-bs-dismiss="modal" data-num-certificado="${full['num_certificado']}" 
-                         data-tipo="${full['tipo_dictamen']}" data-id="${full['id_revision']}"></i>`;
-            } else {
-              // Si la decisión no existe, el ícono se ve como deshabilitado con un color más claro
-              return `<i class="ri-file-pdf-2-fill ri-40px cursor-not-allowed" style="color: lightgray;"></i>`;
-            }
+              if (full['decision']) {
+                  // Si existe la decisión, el ícono es funcional (activo)
+                  return `
+                      <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"
+                         data-bs-target="#PdfDictamenIntalaciones"
+                         data-bs-toggle="modal"
+                         data-bs-dismiss="modal"
+                         data-num-certificado="${full['num_certificado']}"
+                         data-tipo="${full['tipo_dictamen']}"
+                         data-id="${full['id_revision']}"
+                         data-tipo_revision="${full['tipo_revision']}">
+                      </i>`;
+              } else {
+                  // Si la decisión no existe, el ícono se ve como deshabilitado con un color más claro
+                  return `
+                      <i class="ri-file-pdf-2-fill ri-40px cursor-not-allowed" style="color: lightgray;"></i>`;
+              }
           }
-        },               
+        },                    
         {
           targets: 8,
           orderable: 0,
@@ -196,6 +203,7 @@ $(function () {
               `<a class="dropdown-item waves-effect text-primary editar-revision" ` + 
               `data-id="${full['id_revision']}" ` +
               `data-tipo="${full['tipo_dictamen']}" ` +
+              `data-tipo_revision="${full['tipo_revision']}" ` +
               `data-accion="editar" ` +  // Identificador
               `data-bs-toggle="modal" ` +
               `data-bs-target="#fullscreenModal">` +
@@ -456,13 +464,24 @@ $(document).on('click', '.cuest', function () {
 
   // Genera un parámetro único para evitar el caché
   let timestamp = new Date().getTime();
-  let url = '/get-certificado-url/' + id_revision + '/' + tipo + '?t=' + timestamp;
+  let tipoRevision = $(this).data('tipo_revision');
+  let url;
+
+  // Decide la URL del PDF según el tipo de revisión
+  if (tipoRevision === 'RevisorGranel') {
+    url = `/Pre-certificado/${id_revision}?t=${timestamp}`;
+  } else {
+    url = `/get-certificado-url/${id_revision}/${tipo}?t=${timestamp}`;
+  }
 
   $.ajax({
       url: url,
       type: 'GET',
       success: function (response) {
-          if (response.certificado_url) {
+          if (tipoRevision === 'RevisorGranel') {
+              $('#pdfViewerDictamenFrame').attr('src', url + '#zoom=80');
+              console.log('PDF cargado (Granel): ' + url);
+          } else if (response.certificado_url) {
               let uniqueUrl = response.certificado_url + '?t=' + timestamp;
               $('#pdfViewerDictamenFrame').attr('src', uniqueUrl + '#zoom=80');
               console.log('PDF cargado: ' + uniqueUrl);
@@ -481,13 +500,17 @@ $(document).on('click', '.cuest', function () {
       }
   });
 
-  cargarRespuestas(id_revision); 
-
-    var tipoRevision = $(this).data('tipo_revision');
-    if (tipoRevision === 'RevisorGranel') {
-      console.log("Entro");
-    }
-    
+  // Ajuste de títulos y visibilidad según el tipo de revisión
+  if (tipoRevision === 'Revisor') {
+    $('#modalFullTitle').text('REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (INSTALACIONES)');
+    $('tbody#revisor').show();
+    $('tbody#revisorGranel').hide();
+    cargarRespuestas(id_revision); 
+  } else if (tipoRevision === 'RevisorGranel') {
+    $('#modalFullTitle').text('REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (GRANEL)');
+    $('tbody#revisorGranel').show();
+    $('tbody#revisor').hide();
+  }
 });
 
 $(document).on('click', '#registrarRevision', function () {
@@ -510,31 +533,34 @@ $(document).on('click', '#registrarRevision', function () {
   let valid = true;
 
   rows.each(function (index) {
-    let respuesta = $(this).find('select').val();
-    const observacion = $(this).find('textarea').val();
+    // Verificar si la fila está visible antes de realizar la validación
+    if ($(this).is(':visible')) {
+      let respuesta = $(this).find('select').val();
+      const observacion = $(this).find('textarea').val();
 
-    if (!respuesta) {
-      $(this).find('select').addClass('is-invalid');
-      valid = false;
-    } else {
-      $(this).find('select').removeClass('is-invalid');
+      if (!respuesta) {
+        $(this).find('select').addClass('is-invalid');
+        valid = false;
+      } else {
+        $(this).find('select').removeClass('is-invalid');
+      }
+
+      if (respuesta === '1') {
+        respuesta = 'C';
+      } else if (respuesta === '2') {
+        respuesta = 'NC';
+        todasLasRespuestasSonC = false;
+      } else if (respuesta === '3') {
+        respuesta = 'NA';
+        todasLasRespuestasSonC = false;
+      } else {
+        respuesta = null;
+        todasLasRespuestasSonC = false;
+      }
+
+      respuestas[`pregunta${index + 1}`] = respuesta;
+      observaciones[`pregunta${index + 1}`] = observacion || null;
     }
-
-    if (respuesta === '1') {
-      respuesta = 'C';
-    } else if (respuesta === '2') {
-      respuesta = 'NC';
-      todasLasRespuestasSonC = false;
-    } else if (respuesta === '3') {
-      respuesta = 'NA';
-      todasLasRespuestasSonC = false;
-    } else {
-      respuesta = null;
-      todasLasRespuestasSonC = false;
-    }
-
-    respuestas[`pregunta${index + 1}`] = respuesta;
-    observaciones[`pregunta${index + 1}`] = observacion || null;
   });
 
   if (!valid) {
@@ -644,38 +670,54 @@ function cargarRespuestas(id_revision) {
           $('#floatingSelect').val(decision);
       },
       error: function (xhr) {
-          console.error('Error al cargar las respuestas:', xhr);
+          console.error('Sin Respuestas');
       }
   });
 }
 
 //Abrir PDF Bitacora
-  $(document).on('click', '.pdf', function () {
-    var id_revisor = $(this).data('id');
-    var url_pdf = '../bitacora_revisionPersonal_Instalaciones/' + id_revisor;
-    console.log('URL del PDF:', url_pdf);
+$(document).on('click', '.pdf', function () {
+  var id_revisor = $(this).data('id');
+  var tipoRevision = $(this).data('tipo_revision'); // Nuevo: tipo de revisión
+  var num_certificado = $(this).data('num-certificado');
 
-    var num_certificado = $(this).data('num-certificado');
-    console.log('Número de Certificado:', num_certificado);
+  console.log('ID del Revisor:', id_revisor);
+  console.log('Tipo de Revisión:', tipoRevision);
+  console.log('Número de Certificado:', num_certificado);
 
-    $('#titulo_modal_Dictamen').text("Bitácora de revisión documental");
-    $('#subtitulo_modal_Dictamen').text(num_certificado);
+  // Definir URL según el tipo de revisión
+  var url_pdf;
+  if (tipoRevision === 'Revisor') {
+      url_pdf = '../bitacora_revisionPersonal_Instalaciones/' + id_revisor;
+  } else if (tipoRevision === 'RevisorGranel') {
+      url_pdf = '../bitacora_revisionPersonal_Granel/' + id_revisor;
+  }
 
-    var openPdfBtn = $('#openPdfBtnDictamen');
-    openPdfBtn.attr('href', url_pdf);
-    openPdfBtn.show();
+  console.log('URL del PDF:', url_pdf);
 
-    $('#PdfDictamenIntalaciones').modal('show');
-    $('#loading-spinner').show();
-    $('#pdfViewerDictamen').hide();
+  // Configurar encabezados del modal
+  $('#titulo_modal_Dictamen').text("Bitácora de revisión documental");
+  $('#subtitulo_modal_Dictamen').text(num_certificado);
 
-    $('#pdfViewerDictamen').attr('src', url_pdf);
-  });
+  // Configurar botón para abrir PDF
+  var openPdfBtn = $('#openPdfBtnDictamen');
+  openPdfBtn.attr('href', url_pdf);
+  openPdfBtn.show();
 
-  $('#pdfViewerDictamen').on('load', function () {
-    $('#loading-spinner').hide();
-    $('#pdfViewerDictamen').show();
-  });
+  // Mostrar modal de PDF
+  $('#PdfDictamenIntalaciones').modal('show');
+  $('#loading-spinner').show();
+  $('#pdfViewerDictamen').hide();
+
+  // Cargar PDF en iframe
+  $('#pdfViewerDictamen').attr('src', url_pdf);
+});
+
+// Ocultar spinner y mostrar PDF cuando el iframe se haya cargado
+$('#pdfViewerDictamen').on('load', function () {
+  $('#loading-spinner').hide();
+  $('#pdfViewerDictamen').show();
+});
 
 // Abrir modal Aprobacion
 $(document).on('click', '.Aprobacion-record', function() {
@@ -951,10 +993,24 @@ $(document).on('click', '.editar-revision', function () {
   id_revision_edit = $(this).data('id'); 
   let tipox = $(this).data('tipo');
   console.log('ID de revisión clicado:', id_revision_edit);
-  console.log('ID de revisión clicado:', tipox);
-
+  console.log('Tipo:', tipox);
   cargarRespuestas(id_revision_edit);
-  
+
+  let tipoRevision = $(this).data('tipo_revision');
+  console.log("Tipo de revisión: " + tipoRevision);
+
+  // Ajuste de títulos y visibilidad según el tipo de revisión
+  if (tipoRevision === 'Revisor') {
+    $('#modalFullTitle').text('REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (INSTALACIONES)');
+    $('tbody#revisor').show();
+    $('tbody#revisorGranel').hide();
+    cargarRespuestas(id_revision_edit);
+  } else if (tipoRevision === 'RevisorGranel') {
+    $('#modalFullTitle').text('REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (GRANEL)');
+    $('tbody#revisorGranel').show();
+    $('tbody#revisor').hide();
+  }
+
   $('#fullscreenModal').modal('show');
   $('#Editar').show(); 
   $('#Registrar').hide();
@@ -963,14 +1019,23 @@ $(document).on('click', '.editar-revision', function () {
 
   // Genera un parámetro único para evitar el caché
   let timestamp = new Date().getTime();
-  let url = '/get-certificado-url/' + id_revision_edit + '/' + tipox + '?t=' + timestamp;
+  let url;
+
+  // Ruta del PDF según el tipo de revisión
+  if (tipoRevision === 'Revisor') {
+    url = '/get-certificado-url/' + id_revision_edit + '/' + tipox + '?t=' + timestamp;
+  } else if (tipoRevision === 'RevisorGranel') {
+    url = '/Pre-certificado/' + id_revision_edit + '?t=' + timestamp;
+  }
 
   $.ajax({
       url: url,
       type: 'GET',
       success: function (response) {
-          if (response.certificado_url) {
-              let uniqueUrl = response.certificado_url + '?t=' + timestamp;
+          if (response.certificado_url || tipoRevision === 'RevisorGranel') {
+              let uniqueUrl = response.certificado_url 
+                ? response.certificado_url + '?t=' + timestamp 
+                : url;
               $('#pdfViewerDictamenFrame').attr('src', uniqueUrl + '#zoom=80');
               console.log('PDF cargado: ' + uniqueUrl);
           } else {
@@ -987,7 +1052,6 @@ $(document).on('click', '.editar-revision', function () {
           });
       }
   });
- 
 });
 
 $(document).on('click', '#editarRevision', function () {
@@ -1014,6 +1078,7 @@ $(document).on('click', '#editarRevision', function () {
   let valid = true;
 
   rows.each(function (index) {
+    if ($(this).is(':visible')) {
     let respuesta = $(this).find('select').val();
     const observacion = $(this).find('textarea').val();
 
@@ -1039,6 +1104,7 @@ $(document).on('click', '#editarRevision', function () {
 
     respuestas[`pregunta${index + 1}`] = respuesta;
     observaciones[`pregunta${index + 1}`] = observacion || null;
+  }
   });
 
   if (!valid) {

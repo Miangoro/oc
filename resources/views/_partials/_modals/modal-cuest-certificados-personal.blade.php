@@ -8,9 +8,7 @@
         <div class="modal-content">
             <div style="border-bottom: 2px solid #E0E1E3; background-color: #F2F3F4;">
                 <div class="modal-header" style="margin-bottom: 20px;">
-                    <h5 class="modal-title custom-title" id="modalFullTitle" style="font-weight: bold;">
-                        REVISIÓN POR PARTE DEL PERSONAL DEL OC PARA LA DECISIÓN DE LA CERTIFICACIÓN (INSTALACIONES)
-                    </h5>
+                    <h5 class="modal-title custom-title" id="modalFullTitle" style="font-weight: bold;"></h5>
                     <span style="font-weight: normal; margin-left: 10px; color: #3498db; text-transform: uppercase; font-weight: bold;">
                         {{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A'}}
                     </span>
@@ -46,57 +44,102 @@
                                             </thead>
                                             <tbody>
                                                 @php $contador = 1; @endphp
-                                                @foreach($preguntas as $index => $pregunta)
-                                                <tr>
-                                                    <td>{{ $contador++ }}</td>
-                                                    <td>{{ $pregunta->pregunta }}</td>
-                                                    @if($pregunta->documentacion?->documentacionUrls)
-                                                        <td>
-                                                        <a target="_blank" 
-                                                            href="{{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->isNotEmpty() ? 
-                                                                   '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente . '/' . 
-                                                                   $revisor->obtenerDocumentosClientes($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa) 
-                                                                   : 'NA' }}">
-                                                         </a>                                                         
-                                                        </td>
-                                                    @elseif($pregunta->filtro == 'cliente')
-                                                        <td><b>{{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->first()?->numero_cliente ?? 'Sin asignar' }}</b></td>
-                                                    @elseif($pregunta->filtro == 'direccion_fiscal')
-                                                        <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }}</b></td>
-                                                    @elseif($pregunta->filtro == 'num_certificado')
-                                                        <td><b>{{ $revisor->certificado->num_certificado ?? 'N/A' }}</b></td>
-                                                    @elseif($pregunta->filtro == 'nombre_empresa')
-                                                        <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</b></td>
-                                                    @elseif($pregunta->filtro == 'domicilio_insta')
-                                                        <td><b>{{ $revisor->certificado->dictamen->instalaciones->direccion_completa ?? 'N/A' }}</b></td>
-                                                    @elseif($pregunta->filtro == 'correo')
-                                                        <td>
-                                                            <b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->correo ?? 'N/A' }}</b><br>
-                                                            <b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->telefono ?? 'N/A' }}</b>
-                                                        </td>
-                                                    @elseif($pregunta->filtro == 'fechas')
-                                                        <td>
-                                                            <b>{{ $revisor?->certificado?->fecha_vigencia ? Helpers::formatearFecha($revisor->certificado->fecha_vigencia) : 'NA' }}</b><br>
-                                                            <b>{{ $revisor?->certificado?->fecha_vencimiento ? Helpers::formatearFecha($revisor->certificado->fecha_vencimiento) : 'NA' }}</b>
-                                                            
-                                                        </td>
-                                                    @else
-                                                        <td>Sin datos</td>
-                                                    @endif
-                                                    <td>
-                                                        <select class="form-select form-select-sm" aria-label="Elige la respuesta" name="respuesta[{{ $index }}]">
-                                                            <option value="" selected>Selecciona</option>
-                                                            <option value="1">C</option>
-                                                            <option value="2">NC</option>
-                                                            <option value="3">NA</option>
-                                                        </select>                                                          
-                                                    </td>
-                                                    <td>
-                                                        <textarea rows="1" name="" id="" class="form-control" placeholder="Observaciones"></textarea>                               
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>                                            
+                                            
+                                                <!-- Preguntas de tipo Revisor (Instalaciones) -->
+                                                @if($preguntasRevisor->isNotEmpty())
+                                                    <tbody id="revisor">  
+                                                        @foreach($preguntasRevisor as $index => $pregunta)
+                                                            <tr>
+                                                                <td>{{ $contador++ }}</td>
+                                                                <td>{{ $pregunta->pregunta }}</td>
+                                            
+                                                                @if($pregunta->documentacion?->documentacionUrls)
+                                                                    <td>
+                                                                        <a target="_blank" href="{{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->isNotEmpty() ? 
+                                                                            '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente . '/' . 
+                                                                            $revisor->obtenerDocumentosClientes($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa) 
+                                                                            : 'NA' }}">
+                                                                            Ver Documento
+                                                                        </a>
+                                                                    </td>
+                                                                @elseif($pregunta->filtro == 'cliente')
+                                                                    <td><b>{{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->first()?->numero_cliente ?? 'Sin asignar' }}</b></td>
+                                                                @elseif($pregunta->filtro == 'direccion_fiscal')
+                                                                    <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }}</b></td>
+                                                                @elseif($pregunta->filtro == 'num_certificado')
+                                                                    <td><b>{{ $revisor->certificado->num_certificado ?? 'N/A' }}</b></td>
+                                                                @elseif($pregunta->filtro == 'nombre_empresa')
+                                                                    <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</b></td>
+                                                                @elseif($pregunta->filtro == 'domicilio_insta')
+                                                                    <td><b>{{ $revisor->certificado->dictamen->instalaciones->direccion_completa ?? 'N/A' }}</b></td>
+                                                                @elseif($pregunta->filtro == 'correo')
+                                                                    <td>
+                                                                        <b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->correo ?? 'N/A' }}</b><br>
+                                                                        <b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->telefono ?? 'N/A' }}</b>
+                                                                    </td>
+                                                                @elseif($pregunta->filtro == 'fechas')
+                                                                    <td>
+                                                                        <b>{{ $revisor?->certificado?->fecha_vigencia ? Helpers::formatearFecha($revisor->certificado->fecha_vigencia) : 'NA' }}</b><br>
+                                                                        <b>{{ $revisor?->certificado?->fecha_vencimiento ? Helpers::formatearFecha($revisor->certificado->fecha_vencimiento) : 'NA' }}</b>
+                                                                    </td>
+                                                                @else
+                                                                    <td>Sin datos</td>
+                                                                @endif
+                                            
+                                                                <td>
+                                                                    <select class="form-select form-select-sm" aria-label="Elige la respuesta" name="respuesta[{{ $index }}]">
+                                                                        <option value="" selected>Selecciona</option>
+                                                                        <option value="1">C</option>
+                                                                        <option value="2">NC</option>
+                                                                        <option value="3">NA</option>
+                                                                    </select>                                                          
+                                                                </td>
+                                                                <td>
+                                                                    <textarea rows="1" name="" id="" class="form-control" placeholder="Observaciones"></textarea>                               
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                @endif
+                                            
+                                                <!-- Preguntas de tipo RevisorGranel -->
+                                                @if($preguntasRevisorGranel->isNotEmpty())
+                                                    <tbody id="revisorGranel">
+                                                        @foreach($preguntasRevisorGranel as $index => $pregunta)
+                                                            <tr>
+                                                                <td>{{ $contador++ }}</td>
+                                                                <td>{{ $pregunta->pregunta }}</td>
+                                            
+                                                                @if($pregunta->documentacion?->documentacionUrls)
+                                                                    <td>
+                                                                        <a target="_blank" href="{{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->isNotEmpty() ? 
+                                                                            '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente . '/' . 
+                                                                            $revisor->obtenerDocumentosClientes($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa) 
+                                                                            : 'NA' }}">
+                                                                            Ver Documento
+                                                                        </a>
+                                                                    </td>
+                                                                @else
+                                                                    <td>Sin datos</td>
+                                                                @endif
+                                            
+                                                                <td>
+                                                                    <select class="form-select form-select-sm" aria-label="Elige la respuesta" name="respuesta[{{ $index }}]">
+                                                                        <option value="" selected>Selecciona</option>
+                                                                        <option value="1">C</option>
+                                                                        <option value="2">NC</option>
+                                                                        <option value="3">NA</option>
+                                                                    </select>                                                          
+                                                                </td>
+                                                                <td>
+                                                                    <textarea rows="1" name="" id="" class="form-control" placeholder="Observaciones"></textarea>                               
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                @endif
+                                            </tbody>
+                                                                                                                                 
                                         </table>
                                     </div>        
                                 </div>
