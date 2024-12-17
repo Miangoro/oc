@@ -17,13 +17,13 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Guias de traslado</h4>
+                    <h4 class="address-title mb-2">Guías de traslado</h4>
                     <p class="address-subtitle"></p>
                 </div>
 
                 <form id="verGuiasRegistardasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
                     <div class="d-flex justify-content-center mb-3">
-                        <a href="#" id="descargarPdfBtn" class="btn btn-primary waves-effect">Descargar PDF</a>
+                        <a href="#" id="descargarPdfBtn" class="btn btn-primary waves-effect">Descargar PDFs</a>
                     </div>
                     <div class="row">
                         <div class="table-responsive">
@@ -31,7 +31,7 @@
                                 <thead>
                                     <tr>
                                         <th>folio</th>
-                                        <th>Guia</th>
+                                        <th>Guía</th>
                                         <th>Abrir Guia</th>
                                         <th>Acciones</th>
                                     </tr>
