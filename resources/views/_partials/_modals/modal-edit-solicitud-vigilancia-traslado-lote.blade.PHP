@@ -82,7 +82,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="edit_id_clase_traslado"
                                     name="id_clase_traslado" placeholder="Ingresa una Clase" readonly
@@ -90,10 +90,10 @@
                                 <label for="id_clase_traslado">Ingresa Clase</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-9">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_tipo_maguey_traslado" name="id_tipo_maguey_traslado"
+                                    id="edit_id_tipo_maguey_traslado" name="id_tipo_maguey_traslado[0]"
                                     placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
                                 <label for="id_tipo_maguey_traslado">Ingresa Tipo de Maguey</label>
                             </div>
@@ -254,9 +254,11 @@
             success: function(response) {
                 $('#edit_id_categoria_traslado').val(response.categoria ? response.categoria.categoria : '');
                 $('#edit_id_clase_traslado').val(response.clase ? response.clase.clase : '');
-                if (response.tipo) {
-                    var tipoConcatenado = response.tipo.nombre + ' (' + response.tipo.cientifico + ')';
-                    $('#edit_id_tipo_maguey_traslado').val(tipoConcatenado);
+                if (response.tipo && response.tipo.length > 0) {
+                    var tiposConcatenados = response.tipo.map(function(tipo) {
+                        return tipo.nombre + ' (' + tipo.cientifico + ')';
+                    }).join(', '); // Unir con coma
+                    $('#edit_id_tipo_maguey_traslado').val(tiposConcatenados);
                 } else {
                     $('#edit_id_tipo_maguey_traslado').val('');
                 }

@@ -933,38 +933,38 @@ class solicitudesController extends Controller
                 ]);
                 break;
 
-            case 'inspeccionenvasado':
-                $request->validate([
-                    'id_empresa' => 'required|integer|exists:empresa,id_empresa',
-                    'fecha_visita' => 'required|date',
-                    'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
-                    'info_adicional' => 'nullable|string'
-                ]);
-                $caracteristicasJson = [
-                    'id_lote_granel_inspeccion' => $request->id_lote_granel_inspeccion,
-                    'id_categoria_inspeccion' => $request->id_categoria_inspeccion,
-                    'id_clase_inspeccion' => $request->id_clase_inspeccion,
-                    'id_tipo_maguey_inspeccion' => $request->id_tipo_maguey_inspeccion,
-                    'id_marca' => $request->id_marca,
-                    'volumen_inspeccion' => $request->volumen_inspeccion,
-                    'analisis_inspeccion' => $request->analisis_inspeccion,
-                    'id_tipo_inspeccion' => $request->id_tipo_inspeccion,
-                    'id_cantidad_bote' => $request->id_cantidad_bote,
-                    'id_cantidad_caja' => $request->id_cantidad_caja,
-                    'id_inicio_envasado' => $request->id_inicio_envasado,
-                    'id_previsto' => $request->id_previsto,
-                    'id_certificado_inspeccion' => $request->id_certificado_inspeccion,
-
-                ];
-                $jsonContent = json_encode($caracteristicasJson);
-                $solicitud->update([
-                    'id_empresa' => $request->id_empresa,
-                    'fecha_visita' => $request->fecha_visita,
-                    'id_instalacion' => $request->id_instalacion,
-                    'info_adicional' => $request->info_adicional,
-                    'caracteristicas' => $jsonContent,
-                ]);
-                break;
+                case 'inspeccionenvasado':
+                    $request->validate([
+                        'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                        'fecha_visita' => 'required|date',
+                        'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                        'info_adicional' => 'nullable|string'
+                    ]);
+                    $caracteristicasJson = [
+                        'id_lote_granel_inspeccion' => $request->id_lote_granel_inspeccion,
+                        'id_categoria_inspeccion' => $request->id_categoria_inspeccion,
+                        'id_clase_inspeccion' => $request->id_clase_inspeccion,
+                        'id_tipo_maguey_inspeccion' => $request->id_tipo_maguey_inspeccion,
+                        'id_marca' => $request->id_marca,
+                        'volumen_inspeccion' => $request->volumen_inspeccion,
+                        'analisis_inspeccion' => $request->analisis_inspeccion,
+                        'id_tipo_inspeccion' => $request->id_tipo_inspeccion,
+                        'id_cantidad_bote' => $request->id_cantidad_bote,
+                        'id_cantidad_caja' => $request->id_cantidad_caja,
+                        'id_inicio_envasado' => $request->id_inicio_envasado,
+                        'id_previsto' => $request->id_previsto,
+                        'id_certificado_inspeccion' => $request->id_certificado_inspeccion,
+    
+                    ];
+                    $jsonContent = json_encode($caracteristicasJson);
+                    $solicitud->update([
+                        'id_empresa' => $request->id_empresa,
+                        'fecha_visita' => $request->fecha_visita,
+                        'id_instalacion' => $request->id_instalacion,
+                        'info_adicional' => $request->info_adicional,
+                        'caracteristicas' => $jsonContent,
+                    ]);
+                    break;
 
             case 'muestreobarricada':
                 $request->validate([
@@ -1101,10 +1101,10 @@ class solicitudesController extends Controller
 
     public function obtenerMarcasPorEmpresa($id_marca, $id_direccion)
     {
-
-        $marcas = marcas::with('empresa.empresaNumClientes', 'documentacion_url')->whereJsonContains('etiquetado->id_direccion', $id_direccion)
-            ->where('id_marca', $id_marca)
-            ->get();
+        
+        $marcas = marcas::with('empresa.empresaNumClientes','documentacion_url')->whereJsonContains('etiquetado->id_direccion', $id_direccion)
+        ->where('id_marca', $id_marca)
+        ->get();
 
         foreach ($marcas as $marca) {
             // Decodificar el campo 'etiquetado'

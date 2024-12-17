@@ -318,7 +318,7 @@
                 </tr>
                 <tr>
                     <td class="column">No. servicio</td>
-                    <td>{{ $data->inspeccion->num_servicio }}</td>
+                    <td>{{ $data->inspeccion->num_servicio ?? 'N/A' }}</td>
                     <td class="column">Fecha del servicio</td>
                     <td>{{ $fecha_servicio }}</td>
                 </tr>
@@ -343,7 +343,7 @@
                             N/A
                         @endif
                         <br> ORIGEN
-                        {{ $data->inspeccion->solicitud->instalacion->estados->nombre }}
+                        {{ $data->inspeccion->solicitud->instalacion->estados->nombre ?? 'N/A' }}
                     </td>
                 </tr>
                 <tr>

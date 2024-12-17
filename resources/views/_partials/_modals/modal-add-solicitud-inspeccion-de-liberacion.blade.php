@@ -69,7 +69,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="id_clase_liberacion"
                                     name="id_clase_liberacion" placeholder="Ingresa una Clase" readonly
@@ -77,21 +77,21 @@
                                 <label for="id_clase_liberacion">Ingresa Clase</label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted"
-                                    id="id_tipo_maguey_liberacion" name="id_tipo_maguey_liberacion"
-                                    placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
-                                <label for="id_tipo_maguey_liberacion">Ingresa Tipo de Maguey</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="id_edad_liberacion"
                                     name="id_edad_liberacion" placeholder="Ingresa una Edad" readonly
                                     style="pointer-events: none;" />
                                 <label for="id_edad_liberacion">Ingresa Edad</label>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-floating form-floating-outline mb-5">
+                            <input type="text" class="form-control bg-light text-muted"
+                                id="id_tipo_maguey_liberacion" name="id_tipo_maguey_liberacion"
+                                placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
+                            <label for="id_tipo_maguey_liberacion">Ingresa Tipo de Maguey</label>
                         </div>
                     </div>
                     <div class="row">
@@ -262,9 +262,11 @@
             success: function(response) {
                 $('#id_categoria_liberacion').val(response.categoria ? response.categoria.categoria : '');
                 $('#id_clase_liberacion').val(response.clase ? response.clase.clase : '');
-                if (response.tipo) {
-                    var tipoConcatenado = response.tipo.nombre + ' (' + response.tipo.cientifico + ')';
-                    $('#id_tipo_maguey_liberacion').val(tipoConcatenado);
+                if (response.tipo && response.tipo.length > 0) {
+                    var tiposConcatenados = response.tipo.map(function(tipo) {
+                        return tipo.nombre + ' (' + tipo.cientifico + ')';
+                    }).join(', '); // Unir con coma
+                    $('#id_tipo_maguey_liberacion').val(tiposConcatenados);
                 } else {
                     $('#id_tipo_maguey_liberacion').val('');
                 }

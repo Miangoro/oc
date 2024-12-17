@@ -82,6 +82,9 @@ class getFuncionesController extends Controller
             return response()->json(['error' => 'Lote Granel no encontrado'], 404);
         }
     
+        // Obtener la marca asociada a la empresa relacionada con el lote_granel
+        $marca = $loteGranel->empresa ? $loteGranel->empresa->marcas()->pluck('marca')->first() : null;
+        
         // Obtener ids de tipos desde el JSON (id_tipo)
         $idTipos = json_decode($loteGranel->id_tipo, true);
     
@@ -91,6 +94,7 @@ class getFuncionesController extends Controller
                 'categoria' => $loteGranel->categoria,
                 'clase' => $loteGranel->clase,
                 'tipo' => [],
+                'marca' => $marca, // Incluir la marca aquí
                 'lotes_granel' => $loteGranel
             ]);
         }
@@ -103,9 +107,11 @@ class getFuncionesController extends Controller
             'categoria' => $loteGranel->categoria,
             'clase' => $loteGranel->clase,
             'tipo' => $tipos, // Devolver la lista de tipos encontrados
+            'marca' => $marca, // Incluir la marca aquí
             'lotes_granel' => $loteGranel
         ]);
     }
+    
     
     
     

@@ -109,7 +109,7 @@ $(function () {
                       <br>
                       <span class="fw-bold text-dark small">Marca:</span><span class="small"> ${data.id_marca || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">%Alc. Vol::</span><span class="small"> ${data.volumen_inspeccion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.volumen_inspeccion || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_inspeccion || 'N/A'}</span>
                       `;
@@ -699,9 +699,9 @@ $(function () {
                 modal.find('#edit_id_clase_muestreo').val('');
               }
               if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_muestreo) {
-                modal.find('#id_tipo_maguey_muestreo').val(response.caracteristicas.id_tipo_maguey_muestreo);
+                modal.find('#edit_id_tipo_maguey_muestreo').val(response.caracteristicas.id_tipo_maguey_muestreo);
               } else {
-                modal.find('#id_tipo_maguey_muestreo').val('');
+                modal.find('#edit_id_tipo_maguey_muestreo').val('');
               }
               if (response.caracteristicas && response.caracteristicas.analisis_muestreo) {
                 modal.find('#edit_analisis_muestreo').val(response.caracteristicas.analisis_muestreo);
@@ -741,9 +741,9 @@ $(function () {
                 modal.find('#edit_id_clase_traslado').val('');
               }
               if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_traslado) {
-                modal.find('#id_tipo_maguey_traslado').val(response.caracteristicas.id_tipo_maguey_traslado);
+                modal.find('#edit_id_tipo_maguey_traslado').val(response.caracteristicas.id_tipo_maguey_traslado);
               } else {
-                modal.find('#id_tipo_maguey_traslado').val('');
+                modal.find('#edit_id_tipo_maguey_traslado').val('');
               }
               if (response.caracteristicas && response.caracteristicas.id_salida) {
                 modal.find('#edit_id_salida').val(response.caracteristicas.id_salida);
