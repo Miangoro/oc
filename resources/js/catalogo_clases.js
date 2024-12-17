@@ -27,13 +27,13 @@ $(function () {
         }
     });
 
-    
-    
+
+
     // Users datatable
     if (dt_user_table.length) {
         var dt_user = dt_user_table.DataTable({
 
-            
+
             processing: true,
             serverSide: true,
             ajax: {
@@ -114,7 +114,7 @@ $(function () {
                   '</div>' +
                   '</div>'
                 );
-              }           
+              }
                 }
             ],
             order: [[2, 'desc']],
@@ -171,7 +171,7 @@ $(function () {
                                                 result = result + item.textContent;
                                             } else {
                                                 result = result + item.innerText;
-                                            }                                      
+                                            }
                                         });
                                         return result;
                                     }
@@ -213,7 +213,7 @@ $(function () {
                                                 result = result + item.textContent;
                                             } else {
                                                 result = result + item.innerText;
-                                            }                                         
+                                            }
                                         });
                                         return result;
                                     }
@@ -242,7 +242,7 @@ $(function () {
                                                 result = result + item.textContent;
                                             } else {
                                                 result = result + item.innerText;
-                                            }                                     
+                                            }
                                         });
                                         return result;
                                     }
@@ -271,7 +271,7 @@ $(function () {
                                                 result = result + item.textContent;
                                             } else {
                                                 result = result + item.innerText;
-                                            }                                    
+                                            }
                                         });
                                         return result;
                                     }
@@ -300,7 +300,7 @@ $(function () {
                                                 result = result + item.textContent;
                                             } else {
                                                 result = result + item.innerText;
-                                            }                                        
+                                            }
                                         });
                                         return result;
                                     }
@@ -319,7 +319,7 @@ $(function () {
                 }
             ],
 
-            
+
             // For responsive popup
       responsive: {
         details: {
@@ -357,46 +357,76 @@ $(function () {
     }
 
 
-// Función para agregar registro de clase
-$('#addNewClassForm').on('submit', function (e) {
-    e.preventDefault();
+    $(function () {
+      // Configuración de CSRF para Laravel
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
 
-    var formData = $(this).serialize();
+      // Inicializar FormValidation
+      const form = document.getElementById('addNewClassForm');
+      const fv = FormValidation.formValidation(form, {
+          fields: {
+              'clase': { // Ajusta el nombre del campo según el formulario
+                  validators: {
+                      notEmpty: {
+                          message: 'Por favor ingrese el nombre de la clase.'
+                      }
+                  }
+              }
+          },
+          plugins: {
+              trigger: new FormValidation.plugins.Trigger(),
+              bootstrap5: new FormValidation.plugins.Bootstrap5({
+                eleValidClass: '',
+                eleInvalidClass: 'is-invalid',
+                rowSelector: '.form-floating',
+              }),
+              submitButton: new FormValidation.plugins.SubmitButton(),
+              autoFocus: new FormValidation.plugins.AutoFocus()
+          }
+      }).on('core.form.valid', function () {
+          // Enviar datos por Ajax si el formulario es válido
+          var formData = $(form).serialize();
 
-    $.ajax({
-        url: '/catalogo',
-        type: 'POST',
-        data: formData,
-        success: function (response) {
-            $('#offcanvasAddUser').offcanvas('hide');
-            $('#addNewClassForm')[0].reset();
+          $.ajax({
+              url: '/catalogo',
+              type: 'POST',
+              data: formData,
+              success: function (response) {
+                  // Ocultar el offcanvas
+                  $('#offcanvasAddUser').offcanvas('hide');
+                  // Resetear el formulario
+                  $('#addNewClassForm')[0].reset();
+                  // Recargar la tabla DataTables
+                  $('.datatables-users').DataTable().ajax.reload();
 
-            // Actualizar la tabla sin reinicializar DataTables
-            $('.datatables-users').DataTable().ajax.reload();
-
-            // Mostrar alerta de éxito
-            Swal.fire({
-                icon: 'success',
-                title: '¡Éxito!',
-                text: response.success,
-                customClass: {
-                    confirmButton: 'btn btn-success'
-                }
-            });
-        },
-        error: function (xhr) {
-            // Mostrar alerta de error
-            Swal.fire({
-                icon: 'error',
-                title: '¡Error!',
-                text: 'Error al agregar la clase',
-                customClass: {
-                    confirmButton: 'btn btn-danger'
-                }
-            });
-        }
-    });
-});
+                  // Mostrar alerta de éxito
+                  Swal.fire({
+                      icon: 'success',
+                      title: '¡Éxito!',
+                      text: response.success,
+                      customClass: {
+                          confirmButton: 'btn btn-success'
+                      }
+                  });
+              },
+              error: function (xhr) {
+                  // Mostrar alerta de error
+                  Swal.fire({
+                      icon: 'error',
+                      title: '¡Error!',
+                      text: 'Error al agregar la clase',
+                      customClass: {
+                          confirmButton: 'btn btn-danger'
+                      }
+                  });
+              }
+          });
+      });
+  });
 
 
 
@@ -477,18 +507,15 @@ $(document).on('click', '.delete-record', function () {
 });
 
 //editar un campo de la tabla
-// mostrar el registro en el campo
 $(document).ready(function() {
     // Abrir el modal y cargar datos para editar
     $('.datatables-users').on('click', '.edit-record', function() {
         var id_clase = $(this).data('id');
-        
         // Realizar la solicitud AJAX para obtener los datos de la clase
         $.get('/clases-list/' + id_clase + '/edit', function(data) {
             // Rellenar el formulario con los datos obtenidos
             $('#edit_clase_id').val(data.id_clase);
             $('#edit_clase_nombre').val(data.clase);
-            
             // Mostrar el modal de edición
             $('#editClase').offcanvas('show');
         }).fail(function() {
@@ -503,47 +530,70 @@ $(document).ready(function() {
         });
     });
 
-    // Manejar el envío del formulario de edición
-    $('#editClassForm').on('submit', function(e) {
-        e.preventDefault();
+    $(function () {
+      // Configuración de CSRF para Laravel
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
 
-        var formData = $(this).serialize();
-        var id_clase = $('#edit_clase_id').val(); // Obtener el ID de la clase desde el campo oculto
+      // Inicializar FormValidation para el formulario de edición
+      const form = document.getElementById('editClassForm');
+      const fv = FormValidation.formValidation(form, {
+          fields: {
+              'edit_clase': { // Ajusta los nombres según tu formulario
+                  validators: {
+                      notEmpty: {
+                          message: 'Por favor ingrese el nombre de la clase.'
+                      },
+                  }
+              }
+          },
+          plugins: {
+              trigger: new FormValidation.plugins.Trigger(),
+              bootstrap5: new FormValidation.plugins.Bootstrap5({
+                  eleValidClass: '',
+                  eleInvalidClass: 'is-invalid',
+                  rowSelector: '.form-floating'
+              }),
+              submitButton: new FormValidation.plugins.SubmitButton(),
+              autoFocus: new FormValidation.plugins.AutoFocus()
+          }
+      }).on('core.form.valid', function () {
+          var formData = $(form).serialize();
+          var id_clase = $('#edit_clase_id').val();
+          $.ajax({
+              url: '/clases-list/' + id_clase,
+              type: 'POST',
+              data: formData,
+              success: function (response) {
+                  $('#editClase').offcanvas('hide');
+                  $('#editClassForm')[0].reset();
+                  $('.datatables-users').DataTable().ajax.reload();
+                  Swal.fire({
+                      icon: 'success',
+                      title: '¡Éxito!',
+                      text: response.success,
+                      customClass: {
+                          confirmButton: 'btn btn-success'
+                      }
+                  });
+              },
+              error: function (xhr) {
+                  Swal.fire({
+                      icon: 'error',
+                      title: '¡Error!',
+                      text: 'Error al actualizar la clase',
+                      customClass: {
+                          confirmButton: 'btn btn-danger'
+                      }
+                  });
+              }
+          });
+      });
+  });
 
-        $.ajax({
-            url: '/clases-list/' + id_clase,
-            type: 'PUT',
-            data: formData,
-            success: function(response) {
-                $('#editClase').offcanvas('hide'); // Ocultar el modal de edición
-                $('#editClassForm')[0].reset(); // Limpiar el formulario
-
-                // Mostrar alerta de éxito
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.success,
-                    customClass: {
-                        confirmButton: 'btn btn-success'
-                    }
-                });
-
-                // Recargar los datos en la tabla sin reinicializar DataTables
-                $('.datatables-users').DataTable().ajax.reload();
-            },
-            error: function(xhr) {
-                // Mostrar alerta de error
-                Swal.fire({
-                    icon: 'error',
-                    title: '¡Error!',
-                    text: 'Error al actualizar la clase',
-                    customClass: {
-                        confirmButton: 'btn btn-danger'
-                    }
-                });
-            }
-        });
-    });
 });
 
 

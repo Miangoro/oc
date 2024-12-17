@@ -229,6 +229,55 @@
                     </div>
                 </div>
 
+                <div id="vigilanciaTraslado">
+                  <h4 class="address-title mb-2">Vigilancia en el Traslado de Lote</h4>
+                  <div class="datos-importantes">
+                      <table style="font-size: 11px;" class="table table-bordered table-sm">
+                          <tbody>
+                              <tr>
+                                  <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Nombre del Lote:</th>
+                                  <td id="nombreLoteTraslado"></td>
+                              </tr>
+                              <tr>
+                                  <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Categoría:</th>
+                                  <td id="categoriaTraslado"></td>
+                              </tr>
+                              <tr>
+                                  <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Clase:</th>
+                                  <td id="claseTraslado"></td>
+                              </tr>
+                              <tr>
+                                  <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Especie de Agave:</th>
+                                  <td id="especieAgaveTraslado"></td>
+                              </tr>
+                              <tr>
+                                  <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Contenido Alcohólico:</th>
+                                  <td id="contenidoAlcoholTraslado"></td>
+                              </tr>
+                              <tr>
+                                  <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">FQ:</th>
+                                  <td id="fqTraslado"></td>
+                              </tr>
+                              <tr>
+                                  <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Certificado a Granel:</th>
+                                  <td id="certificadoGranelTraslado"></td>
+                              </tr>
+                              <tr>
+                                  <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Volumen del Lote Actual:</th>
+                                  <td id="volumenLoteActualTraslado"></td>
+                              </tr>
+                              <tr>
+                                  <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Volumen Trasladado:</th>
+                                  <td id="volumenTrasladado"></td>
+                              </tr>
+                              <tr>
+                                  <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Volumen Sobrante:</th>
+                                  <td id="volumenSobrante"></td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
 
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5 mt-4">
