@@ -38,7 +38,7 @@
                                     <option value="{{ $cate->categoria }}">{{ $cate->categoria }}</option>
                                     @endforeach
                                 </select>
-                                <label for="categoria">Categoría</label>
+                                <label for="categoria">Categoría Mezcal</label>
                             </div>
                         </div>
 
@@ -113,7 +113,7 @@
                                     <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
                                     @endforeach
                                 </select>
-                                <label for="id_tipo">Categoría</label>
+                                <label for="id_tipo">Categoría Agave</label>
                             </div>
                         </div>
                         <div class="col-md-4">
