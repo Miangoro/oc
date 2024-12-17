@@ -141,7 +141,7 @@ function obtenerLote() {
             var contenido = "";
             for (let index = 0; index < response.lotes_envasado.length; index++) {
                 contenido += '<option value="' + response.lotes_envasado[index].id_lote_envasado + '">' +
-                    response.lotes_envasado[index].nombre_lote + '</option>';
+                    response.lotes_envasado[index].nombre + '</option>';
             }
             if (response.lotes_envasado.length === 0) {
                 contenido = '<option value="" disabled selected>Sin lotes envasado registrados</option>';
