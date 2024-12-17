@@ -8,21 +8,20 @@
                     <h4 class="address-title mb-2">Modificar Hologramas Activos</h4>
                     <p class="address-subtitle"></p>
                 </div>
-                <form id="edit_activarHologramasForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
+                <form id="edit_activarHologramasForm" method="POST" enctype="multipart/form-data"
+                    onsubmit="return false">
                     <div class="row">
-
-                        <input type="hidden"  id="edit_id" name="id">
+                        <input type="hidden" id="edit_id" name="id">
                         <input type="hidden" id="edit_id_solicitud" name="edit_id_solicitud">
-
-
                         <div class="form-floating form-floating-outline mb-6">
-                            <select id="edit_id_inspeccion" name="edit_id_inspeccion" class="form-select select2" aria-label="Default select example">
+                            <select id="edit_id_inspeccion" name="edit_id_inspeccion" class="form-select select2"
+                                aria-label="Default select example">
                                 <option value="" disabled selected>Elige un numero de inspección</option>
-                                    @foreach ($inspeccion as $insp)
+                                @foreach ($inspeccion as $insp)
                                     <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option>
-                                    @endforeach
+                                @endforeach
                             </select>
-                                <label for="edit_id_inspeccion">No. de servicio</label>
+                            <label for="edit_id_inspeccion">No. de servicio</label>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
@@ -34,31 +33,30 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select class=" form-select select2" id="edit_categoria" name="edit_categoria" aria-label="categoría">
+                                <select class=" form-select select2" id="edit_categoria" name="edit_categoria"
+                                    aria-label="categoría">
                                     <option value="" disabled selected>Elige una categoría</option>
                                     @foreach ($categorias as $cate)
-                                    <option value="{{ $cate->categoria }}">{{ $cate->categoria }}</option>
+                                        <option value="{{ $cate->categoria }}">{{ $cate->categoria }}</option>
                                     @endforeach
                                 </select>
                                 <label for="edit_categoria">Categoría Mezcal</label>
                             </div>
                         </div>
-
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="No de análisis de laboratorio:" id="edit_no_analisis"
-                                    name="edit_no_analisis" />
+                                <input class="form-control" type="text" placeholder="No de análisis de laboratorio:"
+                                    id="edit_no_analisis" name="edit_no_analisis" />
                                 <label for="edit_no_analisis">No de análisis de laboratorio:</label>
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-4">
-
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="number" step="0.01" placeholder="Contenido neto por botellas (ml/L):"
-                                    id="edit_cont_neto" name="edit_cont_neto" />
+                                <input class="form-control" type="number" step="0.01"
+                                    placeholder="Contenido neto por botellas (ml/L):" id="edit_cont_neto"
+                                    name="edit_cont_neto" />
                                 <label for="edit_cont_neto">Contenido neto por botellas (ml/L):</label>
                             </div>
                         </div>
@@ -87,31 +85,30 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="Contenido Alcohólico:" id="edit_contenido"
-                                    name="edit_contenido" />
+                                <input class="form-control" type="text" placeholder="Contenido Alcohólico:"
+                                    id="edit_contenido" name="edit_contenido" />
                                 <label for="edit_contenido">Contenido Alcohólico:</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="No. de lote de envasado:" id="edit_no_lote_envasado"
-                                    name="edit_no_lote_envasado" />
+                                <input class="form-control" type="text" placeholder="No. de lote de envasado:"
+                                    id="edit_no_lote_envasado" name="edit_no_lote_envasado" />
                                 <label for="edit_no_lote_envasado">No. de lote de envasado:</label>
                             </div>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <select class=" form-select select2" id="edit_id_tipo" name="edit_id_tipo" aria-label="categoría">
+                                <select class=" form-select select2" id="edit_id_tipo" name="edit_id_tipo"
+                                    aria-label="categoría">
                                     <option value="" disabled selected>Elige una categoría</option>
                                     @foreach ($tipos as $tipo)
-                                    <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
+                                        <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }}</option>
                                     @endforeach
                                 </select>
                                 <label for="edit_id_tipo">Categoría Agave</label>
@@ -119,38 +116,35 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" placeholder="Lugar de producción:" id="edit_lugar_produccion"
-                                    name="edit_lugar_produccion" />
+                                <input class="form-control" type="text" placeholder="Lugar de producción:"
+                                    id="edit_lugar_produccion" name="edit_lugar_produccion" />
                                 <label for="edit_lugar_produccion">Lugar de producción: </label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input class="form-control" type="text" step="0.01" placeholder="Lugar de envasado:"
-                                    id="edit_lugar_envasado" name="edit_lugar_envasado"  />
+                                <input class="form-control" type="text" step="0.01"
+                                    placeholder="Lugar de envasado:" id="edit_lugar_envasado"
+                                    name="edit_lugar_envasado" />
                                 <label for="edit_lugar_envasado">Lugar de envasado:</label>
                             </div>
                         </div>
-
                     </div>
 
                     <div class="text-center mb-6">
                         <h4 class="address-title mb-2">Activar</h4>
                         <p class="address-subtitle"></p>
                     </div>
-
-                    <div style="display: none;" id="mensaje" role="alert"></div>
-
-
+                    {{--                     <div style="display: none;" id="mensaje" role="alert"></div>
+ --}}
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th><button type="button" class="btn btn-primary add-row-edit"> <i class="ri-add-line"></i>
+                                <th><button type="button" class="btn btn-primary add-row-edit"> <i
+                                            class="ri-add-line"></i>
                                     </button></th>
                                 <th>Rango inicial</th>
                                 <th>Rango final</th>
-
-
                             </tr>
                         </thead>
                         <tbody id="edit_contenidoRango">
@@ -160,34 +154,32 @@
                                             class="ri-delete-bin-5-fill"></i> </button>
                                 </th>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="edit_rango_inicial[]"
-                                        id="folio_inicial"  placeholder="Rango inicial"  min="0">
+                                    <input type="number" class="form-control form-control-sm"
+                                        name="edit_rango_inicial[]" id="folio_inicial" placeholder="Rango inicial"
+                                        min="0">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm" name="edit_rango_final[]"
-                                        id="folio_final"  placeholder="Rango final"  min="0">
+                                    <input type="number" class="form-control form-control-sm"
+                                        name="edit_rango_final[]" id="folio_final" placeholder="Rango final"
+                                        min="0">
                                 </td>
-
                             </tr>
                         </tbody>
                     </table>
-
 
                     <div class="text-center mb-6">
                         <h4 class="address-title mb-2">Mermas (Opcional)</h4>
                         <p class="address-subtitle"></p>
                     </div>
-                    <div style="display: none;" id="mensaje" role="alert"></div>
-
-                    
+                    {{--                     <div style="display: none;" id="mensaje" role="alert"></div>
+ --}}
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th><button type="button" class="btn btn-primary add-row-editMermas"> <i class="ri-add-line"></i>
+                                <th><button type="button" class="btn btn-primary add-row-editMermas"> <i
+                                            class="ri-add-line"></i>
                                     </button></th>
                                 <th>Mermas</th>
-
-
                             </tr>
                         </thead>
                         <tbody id="edit_contenidoMermas">
@@ -196,19 +188,13 @@
                                     <button type="button" class="btn btn-danger remove-row" disabled> <i
                                             class="ri-delete-bin-5-fill"></i> </button>
                                 </th>
-
                                 <td>
                                     <input type="number" class="form-control form-control-sm" name="edit_mermas[]"
-                                        id="mermas" min="0" placeholder="Mermas" >
+                                        id="mermas" min="0" placeholder="Mermas">
                                 </td>
-
                             </tr>
                         </tbody>
                     </table>
-
-
-
-
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Actualizar</button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
@@ -222,25 +208,28 @@
 
 <script>
     //funcion para reditrigir a otra vista
-document.addEventListener("DOMContentLoaded", function() {
-  // Selecciona los botones por su id
-  const closeModalButtons = [document.getElementById("btnCloseModal"), document.getElementById("btnCancelModal")];
+    document.addEventListener("DOMContentLoaded", function() {
+        // Selecciona los botones por su id
+        const closeModalButtons = [document.getElementById("btnCloseModal"), document.getElementById(
+            "btnCancelModal")];
 
-  closeModalButtons.forEach(button => {
-    button.addEventListener("click", function(event) {
-      // Encuentra el modal padre del botón de cierre
-      const modalElement = button.closest('.modal');
-      
-      // Asegúrate de que no sea el modal #verGuiasRegistardas
-      if (modalElement && modalElement.id !== "activosHologramas") {
-        // Espera a que el modal actual se cierre antes de abrir el nuevo modal
-        setTimeout(() => {
-          // Abre el modal de guías registradas
-          const activosHologramasModal = new bootstrap.Modal(document.getElementById("activosHologramas"));
-          activosHologramasModal.show();
-        }, 300); // Ajusta el tiempo para asegurar que el modal anterior se cierre completamente
-      }
+        closeModalButtons.forEach(button => {
+            button.addEventListener("click", function(event) {
+                // Encuentra el modal padre del botón de cierre
+                const modalElement = button.closest('.modal');
+
+                // Asegúrate de que no sea el modal #verGuiasRegistardas
+                if (modalElement && modalElement.id !== "activosHologramas") {
+                    // Espera a que el modal actual se cierre antes de abrir el nuevo modal
+                    setTimeout(() => {
+                        // Abre el modal de guías registradas
+                        const activosHologramasModal = new bootstrap.Modal(document
+                            .getElementById("activosHologramas"));
+                        activosHologramasModal.show();
+                    },
+                    300); // Ajusta el tiempo para asegurar que el modal anterior se cierre completamente
+                }
+            });
+        });
     });
-  });
-});
 </script>
