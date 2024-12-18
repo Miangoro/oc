@@ -210,14 +210,14 @@
           "slug": "hologramas-solicitud"
         },
         {
-          "url": "/hologramas/",
+          "url": "#",
           "name": "Inventario CIDAM",
-          "slug": "hologramas-solicitud"
+          "slug": "#"
         },
         {
-          "url": "/hologramas/",
+          "url": "#",
           "name": "Inventario clientes",
-          "slug": "hologramas-solicitud"
+          "slug": "#"
         }
       ]
     },
