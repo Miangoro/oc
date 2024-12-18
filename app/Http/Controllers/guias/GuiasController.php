@@ -147,10 +147,15 @@ class GuiasController  extends Controller
     //Metodo para eliminar
     public function destroy($id_guia)
     {
-        $clase = guias::findOrFail($id_guia)->groupBy('run_folio');
-        $clase->delete();
-        return response()->json(['success' => 'Clase eliminada correctamente']);
+        $guia = Guias::findOrFail($id_guia);
+    
+        $run_folio = $guia->run_folio;
+    
+        Guias::where('run_folio', $run_folio)->delete();
+    
+        return response()->json(['success' => 'Todas las guías con el mismo run_folio se eliminaron correctamente']);
     }
+    
 
     public function store(Request $request)
     {
