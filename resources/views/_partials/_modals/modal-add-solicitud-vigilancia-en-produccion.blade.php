@@ -187,48 +187,46 @@
 </div>
 
 <script>
-    function obtenerDatosGraneles() {
-        var lote_granel_id = $("#id_lote_granel").val();
-        $.ajax({
-            url: '/getDatos2/' + lote_granel_id,
-            method: 'GET',
-            success: function(response) {
-                $('#id_categoria').val(response.lotes_granel.id_categoria);
-                $('#id_clase').val(response.lotes_granel.id_clase);
-                $('#id_tipo_maguey').val(response.lotes_granel.id_tipo).trigger('change');
-                $('#analisis').val(response.lotes_granel.folio_fq);
-                $('#volumen').val(response.lotes_granel.cont_alc);
-                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                    $('#kg_maguey').val(response.lotes_granel_guias[0].guia
-                        .kg_maguey);
-                } else {
-                    $('#kg_maguey').val('');
-                }
-                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                    $('#cant_pinas').val(response.lotes_granel_guias[0].guia
-                        .num_comercializadas);
-                } else {
-                    $('#cant_pinas').val('');
-                }
-                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                    $('#art').val(response.lotes_granel_guias[0].guia.art);
-                } else {
-                    $('#art').val('');
-                }
-                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                    $('#folio').val(response.lotes_granel_guias[0].guia.folio);
-                } else {
-                    $('#folio').val('');
-                }
-                // Acceder a id_predio y nombre_predio de la relación predios
+function obtenerDatosGraneles() {
+    var lote_granel_id = $("#id_lote_granel").val();
+    $.ajax({
+        url: '/getDatos2/' + lote_granel_id,
+        method: 'GET',
+        success: function(response) {
+            // Setear valores para los campos individuales
+            $('#id_categoria').val(response.lotes_granel.id_categoria);
+            $('#id_clase').val(response.lotes_granel.id_clase);
+            $('#analisis').val(response.lotes_granel.folio_fq);
+            $('#volumen').val(response.lotes_granel.cont_alc);
+
+            // Manejar múltiples valores para id_tipo_maguey
+            var idTipos = response.tipo.map(function(tipo) {
+                return tipo.id_tipo; // Asegúrate de devolver id_tipo desde el backend
+            });
+            $('#id_tipo_maguey').val(idTipos).trigger('change'); // Asignar y refrescar select2
+
+            if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
+                $('#kg_maguey').val(response.lotes_granel_guias[0].guia.kg_maguey);
+                $('#cant_pinas').val(response.lotes_granel_guias[0].guia.num_comercializadas);
+                $('#art').val(response.lotes_granel_guias[0].guia.art);
+                $('#folio').val(response.lotes_granel_guias[0].guia.folio);
+
                 if (response.lotes_granel_guias[0].guia.predios) {
-                    $('#nombre_predio').val(response.lotes_granel_guias[0].guia.predios
-                        .nombre_predio); // Nombre del predio
+                    $('#nombre_predio').val(response.lotes_granel_guias[0].guia.predios.nombre_predio);
                 }
-            },
-            error: function() {}
-        });
-    }
+            } else {
+                $('#kg_maguey').val('');
+                $('#cant_pinas').val('');
+                $('#art').val('');
+                $('#folio').val('');
+            }
+        },
+        error: function() {
+            console.error('Error al obtener datos de graneles');
+        }
+    });
+}
+
 
     function obtenerGraneles(empresa) {
         $.ajax({
