@@ -1,4 +1,3 @@
-<!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="addVigilanciaTraslado" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -273,4 +272,25 @@
             }
         });
     }
+
+    // Limpiar campos al cerrar el modal
+    $('#addVigilanciaTraslado').on('hidden.bs.modal', function() {
+        $('#id_empresa_traslado').val('');
+        $('#id_instalacion_traslado').html('<option value="" selected>Lista de instalaciones</option>');
+        $('#id_lote_granel_traslado').val('').trigger('change');
+        $('#id_categoria_traslado').val('');
+        $('#id_clase_traslado').val('');
+        $('#id_tipo_maguey_traslado').val('');
+        $('#id_salida').val('');
+        $('#id_contenedor').val('');
+        $('#id_sobrante').val('');
+        $('#id_vol_actual').val('');
+        $('#id_vol_traslado').val('');
+        $('#id_vol_res').val('');
+        $('#analisis_traslado').val('');
+        $('#volumen_traslado').val('');
+        $('#id_certificado_traslado').val('');
+        $('#info_adicional').val('');
+        formValidator.resetForm(true);
+    });
 </script>

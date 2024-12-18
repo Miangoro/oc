@@ -1,4 +1,3 @@
-<!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="addInspeccionLiberacion" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -17,7 +16,9 @@
                                     name="id_empresa" class="id_empresa_liberacion select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -197,8 +198,6 @@
     </div>
 </div>
 
-
-
 <script>
     function obtenerInstalacionesLiberacion() {
         var empresa = $("#id_empresa_liberacion").val();
@@ -279,4 +278,28 @@
             }
         });
     }
+
+    // Limpiar campos al cerrar el modal
+    $('#addInspeccionLiberacion').on('hidden.bs.modal', function() {
+        $('#id_empresa_liberacion').val('').trigger('change');
+        $('#id_instalacion_liberacion').html(
+        '<option value="" selected>Lista de instalaciones</option>');
+        $('#id_lote_granel_liberacion').val('').trigger('change');
+        $('#id_categoria_liberacion').val('').prop('readonly', true);
+        $('#id_clase_liberacion').val('').prop('readonly', true);
+        $('#id_edad_liberacion').val('').prop('readonly', true);
+        $('#id_tipo_maguey_liberacion').val('').prop('readonly', true);
+        $('#analisis_liberacion').val('');
+        $('#volumen_liberacion').val('');
+        $('#tipo_lote_lib').val('').trigger('change');
+        $('#fecha_inicio_lib').val('');
+        $('#fecha_termino_lib').val('');
+        $('#material_liberacion').val('');
+        $('#capacidad_liberacion').val('');
+        $('#num_recipientes_lib').val('');
+        $('#tiempo_dura_lib').val('');
+        $('#id_certificado_liberacion').val('');
+        $('#info_adicional').val('');
+        formValidator.resetForm(true); 
+    });
 </script>

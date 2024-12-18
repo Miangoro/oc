@@ -1,4 +1,3 @@
-<!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="addInspeccionIngresoBarricada" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -17,7 +16,9 @@
                                     name="id_empresa" class="id_empresa_barricada select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -88,9 +89,9 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <input type="text" class="form-control bg-light text-muted"
-                                id="id_tipo_maguey_barricada" name="id_tipo_maguey_barricada"
-                                placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
+                            <input type="text" class="form-control bg-light text-muted" id="id_tipo_maguey_barricada"
+                                name="id_tipo_maguey_barricada" placeholder="Ingresa un tipo de Maguey" readonly
+                                style="pointer-events: none;" />
                             <label for="id_tipo_maguey_barricada">Ingresa Tipo de Maguey</label>
                         </div>
                     </div>
@@ -125,15 +126,15 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control datepicker"
-                                    type="date" id="fecha_inicio" name="fecha_inicio" readonly/>
+                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="date"
+                                    id="fecha_inicio" name="fecha_inicio" readonly />
                                 <label for="fecha_inicio">Fecha de inicio ingreso/liberación </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control datepicker"
-                                    type="date" id="fecha_termino" name="fecha_termino" readonly/>
+                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="date"
+                                    id="fecha_termino" name="fecha_termino" readonly />
                                 <label for="fecha_termino">Fecha de término ingreso/liberación
                                 </label>
                             </div>
@@ -196,8 +197,6 @@
         </div>
     </div>
 </div>
-
-
 
 <script>
     function obtenerInstalacionesBarricada() {
@@ -279,4 +278,28 @@
             }
         });
     }
+
+    // Limpiar campos al cerrar el modal de Inspección Ingreso Barricada
+    $('#addInspeccionIngresoBarricada').on('hidden.bs.modal', function() {
+        $('#id_empresa_barricada').val('');
+        $('#id_instalacion_barricada').html(
+        '<option value="" selected>Lista de instalaciones</option>'); // Limpiar instalaciones
+        $('#id_lote_granel_barricada').val('');
+        $('#id_categoria_barricada').val('');
+        $('#id_clase_barricada').val('');
+        $('#id_edad').val('');
+        $('#id_tipo_maguey_barricada').val('');
+        $('#analisis_barricada').val('');
+        $('#volumen_barricada').val('');
+        $('#tipo_lote').val('');
+        $('#fecha_inicio').val('');
+        $('#fecha_termino').val('');
+        $('#material').val('');
+        $('#capacidad').val('');
+        $('#num_recipientes').val('');
+        $('#tiempo_dura').val('');
+        $('#id_certificado_barricada').val('');
+        $('#info_adicional').val('');
+        formValidator.resetForm(true); 
+    });
 </script>

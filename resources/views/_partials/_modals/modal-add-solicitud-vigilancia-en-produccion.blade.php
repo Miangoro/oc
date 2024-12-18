@@ -10,11 +10,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_vigilancia" onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);"
+                                <select id="id_empresa_vigilancia"
+                                    onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);"
                                     name="id_empresa" class="id_empresa select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -41,7 +44,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="address-subtitle" style="color: red">Seleccione un  cliente</p>
+                    <p class="address-subtitle" style="color: red">Seleccione un cliente</p>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
@@ -86,12 +89,14 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select2 form-select" id="id_tipo_maguey" name="id_tipo_maguey[]" aria-label="id_tipo" multiple>
+                        <select class="select2 form-select" id="id_tipo_maguey" name="id_tipo_maguey[]"
+                            aria-label="id_tipo" multiple>
                             @foreach ($tipos as $tipo)
-                                <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} | {{ $tipo->cientifico }}</option>
+                                <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} | {{ $tipo->cientifico }}
+                                </option>
                             @endforeach
                         </select>
-                        
+
                         <label for="id_tipo">Ingresa tipo de Maguey</label>
                     </div>
                 </div>
@@ -276,4 +281,26 @@
             return tipo;
         }
     }
+
+    // Limpiar campos al cerrar el modal
+    $('#addVigilanciaProduccion').on('hidden.bs.modal', function() {
+        $('#id_empresa_vigilancia').val('').trigger('change');
+        $('#id_instalacion').html('<option value="" disabled selected>Lista de instalaciones</option>');
+        $('#id_lote_granel').val('').trigger('change');
+        $('#id_categoria').val('').trigger('change');
+        $('#id_clase').val('').trigger('change');
+        $('#id_tipo_maguey').val('').trigger('change');
+        $('#fecha_visita').val('');
+        $('#analisis').val('');
+        $('#volumen').val('');
+        $('#fecha_corte').val('');
+        $('#kg_maguey').val('');
+        $('#cant_pinas').val('');
+        $('#art').val('');
+        $('#etapa').val('');
+        $('#folio').val('');
+        $('#nombre_predio').val('');
+        $('#info_adicional').val('');
+        $('#addVigilanciaProduccionForm').trigger('reset');
+    });
 </script>
