@@ -25,10 +25,11 @@ class RevisionPersonalController extends Controller
         $revisor = Revisor::with('certificado')->where('id_revisor', $userId)->first(); // Autentificado Instalaciones
         $revisoresGranel = RevisorGranel::with('certificado')->where('id_revisor', $userId)->first(); // Autentificado Granel
         $users = User::where('tipo', 1)->get(); // Select Aprobacion
-        $preguntas = preguntas_revision::where('tipo_revisor', '1')->orWhere('tipo_certificado', '1')->get();
-        $noCertificados = (!$revisor || !$revisor->certificado) && (!$revisoresGranel || !$revisoresGranel->certificado); // Alerta 
-
-        return view('revision.revision_certificados-personal_view', compact('revisor', 'revisoresGranel', 'preguntas', 'EstadisticasInstalaciones', 'EstadisticasGranel', 'users', 'noCertificados'));
+        $preguntasRevisor = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 1)->get(); // Preguntas Instalaciones
+        $preguntasRevisorGranel = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 2)->get(); // Preguntas Granel
+        $noCertificados = (!$revisor || !$revisor->certificado) && (!$revisoresGranel || !$revisoresGranel->certificado); // Alerta si no hay Certificados Asignados al Revisor
+ 
+        return view('revision.revision_certificados-personal_view', compact('revisor', 'revisoresGranel', 'preguntasRevisor', 'preguntasRevisorGranel', 'EstadisticasInstalaciones', 'EstadisticasGranel', 'users', 'noCertificados'));
     }
 
     public function index(Request $request)
@@ -224,22 +225,27 @@ class RevisionPersonalController extends Controller
                 return response()->json(['message' => 'El registro no fue encontrado.'], 404);
             }
     
+            // Decodificar respuestas
             $historialRespuestas = json_decode($revisor->respuestas, true);
-            $ultimaRevision = end($historialRespuestas); 
+    
+            // Verificar si es un array válido
+            $ultimaRevision = is_array($historialRespuestas) ? end($historialRespuestas) : null;
             $decision = $revisor->decision;
     
+            // Respuesta con datos o vacío si no hay historial
             return response()->json([
                 'message' => 'Datos de la revisión más actual recuperados exitosamente.',
                 'respuestas' => $ultimaRevision,
                 'decision' => $decision,
             ], 200);
-            
+    
         } catch (\Exception $e) {
+            // Manejo de errores
             return response()->json([
                 'message' => 'Ocurrió un error al cargar las respuestas: ' . $e->getMessage(),
             ], 500);
         }
-    }
+    }    
     
     public function getCertificadoUrl($id_revision, $tipo)
     {
@@ -517,6 +523,62 @@ class RevisionPersonalController extends Controller
     public function Bitacora_revisionPersonal_Granel() {
         $pdf = Pdf::loadView('pdfs.Bitacora_revisionPersonal_Granel');
         return $pdf->stream('Bitácora de revisión documental.pdf');
+    }
+    
+    public function PreCertificado($id_certificado)
+    {
+        $certificado = CertificadosGranel::with('dictamen.empresa.instalaciones', 'dictamen.lote_granel.clase', 'dictamen.lote_granel.tipo')->findOrFail($id_certificado);
+    
+        $direccionCompleta = $certificado->dictamen->empresa->instalaciones->first()->direccion_completa ?? 'N/A';
+        $clase = $certificado->dictamen->lote_granel->clase->clase ?? 'N/A';
+        $ingredientes = $certificado->dictamen->lote_granel->ingredientes ?? 'N/A';
+        $volumen = $certificado->dictamen->lote_granel->volumen ?? 'N/A';
+        $nombre_lote = $certificado->dictamen->lote_granel->nombre_lote ?? 'N/A';
+        $edad = $certificado->dictamen->lote_granel->edad ?? 'N/A';
+        $cont_alc = $certificado->dictamen->lote_granel->cont_alc ?? 'N/A';
+        $folio_fq = $certificado->dictamen->lote_granel->folio_fq ?? 'N/A';
+        $num_dictamen = $certificado->dictamen->num_dictamen ?? 'N/A';
+        $watermarkText = $certificado->estatus === 1;
+        $leyenda = $certificado->estatus === 2;
+    
+        // Procesar los nombres de los tipos
+        $tipoNombres = 'N/A';
+        if ($certificado->dictamen->lote_granel->id_tipo) {
+            $idTipos = json_decode($certificado->dictamen->lote_granel->id_tipo, true);
+            if (is_array($idTipos)) {
+                $tipoNombresArray = tipos::whereIn('id_tipo', $idTipos)->pluck('nombre')->toArray();
+                $tipoNombres = implode(', ', $tipoNombresArray);
+            }
+        }
+    
+        // Datos para el PDF
+        $pdfData = [
+            // Tabla #1
+            'num_certificado' => $certificado->num_certificado,
+            'razon_social' => $certificado->dictamen->empresa->razon_social,
+            'representante' => $certificado->dictamen->empresa->representante,
+            'domicilio_fiscal' => $certificado->dictamen->empresa->domicilio_fiscal,
+            'rfc' => $certificado->dictamen->empresa->rfc,
+            'direccion_completa' => $direccionCompleta,
+            'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
+            'fecha_vencimiento' => Helpers::formatearFecha($certificado->fecha_vencimiento),
+            'watermarkText' => $watermarkText,
+            'leyenda' => $leyenda,
+    
+            // Tabla #2
+            'lote' => $clase,
+            'ingredientes' => $ingredientes,
+            'volumen' => $volumen,
+            'nombre_lote' => $nombre_lote,
+            'edad' => $edad,
+            'cont_alc' => $cont_alc,
+            'folio_fq' => $folio_fq,
+            'num_dictamen' => $num_dictamen,
+            'tipo' => $tipoNombres,
+        ];
+    
+        // Generar y mostrar el PDF
+        return Pdf::loadView('pdfs.pre-certificado', $pdfData)->stream("Pre-certificado.pdf");
     }
     
 //end

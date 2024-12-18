@@ -423,11 +423,9 @@ Route::middleware([
     })->name('dashboard');
 });
 
-
 //Solicitud de Cliente
 Route::get('/solicitud-cliente', [solicitudClienteController::class, 'index'])->name('solicitud-cliente');
 Route::post('/solicitud-cliente-registrar', [solicitudClienteController::class, 'registrar'])->name('solicitud-cliente-registrar');
-
 
 //Vista formulario registro exitoso
 Route::get('/Registro_exitoso', [solicitudClienteController::class, 'RegistroExitoso'])->name('Registro_exitoso');
@@ -439,7 +437,6 @@ Route::get('/enviar-correo', [EnviarCorreoController::class, 'enviarCorreo']);
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'index'])->name('carta_asignacion');
 Route::get('/solicitudinfo_cliente/{id}', [clientesProspectoController::class, 'info'])->name('solicitud_cliente');
 Route::get('/asignacion_usuario', [CartaAsignacionController::class, 'access_user'])->name('asignacion_usuario');
-
 Route::get('/prestacion_servicio_fisica/{id}', [clientesConfirmadosController::class, 'pdfServicioPersonaFisica070'])->name('prestacion_servicio_fisica');
 Route::get('/prestacion_servicio_moral/{id}', [clientesConfirmadosController::class, 'pdfServicioPersonaMoral070'])->name('prestacion_servicio_moral');
 Route::get('/Contrato_NMX-052', [CartaAsignacionController::class, 'CONTRATO_NMX_052'])->name('Contrato_NMX-052');
@@ -459,16 +456,10 @@ Route::get('/dictamen_cumplimiento_instalaciones', [CartaAsignacionController::c
 Route::get('/carta_asignacion', [CartaAsignacionController::class, 'Contancia_trabajo'])->name('Contancia_trabajo');
 Route::get('/informe_inspeccion_etiqueta', [CartaAsignacionController::class, 'InformeInspeccionEtiqueta'])->name('InformeInspeccionEtiqueta');
 
-
-
 /* orden-trabajo-inspeccion-etiquetas */
 Route::get('/orden_trabajo_inspeccion_etiquetas', [CartaAsignacionController::class, 'OrdenTrabajoInspeccionEtiquetas'])->name('OrdenTrabajoInspeccionEtiquetas');
 /* lista_verificacion_nom051-mod20200327_solrev005 */
 Route::get('/lista_verificacion_nom051-mod20200327_solrev005', [CartaAsignacionController::class, 'ListaVerificacionNom051Mod20200327Solrev005'])->name('ListaVerificacionNom051Mod20200327Solrev005');
-
-
-
-
 
 //Etiquetas Etiqueta_Barrica
 Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'])->name('Etiqueta-2401ESPTOB');
@@ -516,8 +507,6 @@ Route::post('/marcas-list/update', [marcasCatalogoController::class, 'update'])-
 Route::post('/etiquetado/updateEtiquetas', [marcasCatalogoController::class, 'updateEtiquetas']);
 Route::get('/marcas-list/{id}/editEtiquetas', [marcasCatalogoController::class, 'editEtiquetas'])->name('marcas.edit');
 
-
-
 /* ruta de clases catalogo */
 Route::get('/catalogo/clases', [claseController::class, 'UserManagement'])->name('catalogo-clases');
 Route::get('/clases-list', [claseController::class, 'index']);
@@ -542,7 +531,6 @@ Route::get('/lotes-a-granel/{id_lote_granel}/edit', [lotesGranelController::clas
 Route::post('/lotes-a-granel/{id_lote_granel}', [lotesGranelController::class, 'update']);
 Route::get('/lotes-a-granel/{id_lote_granel}/volumen', [lotesGranelController::class, 'getVolumen'])->name('lotes-a-granel.volumen');
 
-
 //Lotes de envasado
 Route::get('/catalogo/lotes', [LotesEnvasadoController::class, 'UserManagement'])->name('catalogo-lotes');
 Route::resource('/lotes-list', LotesEnvasadoController::class);
@@ -552,8 +540,6 @@ Route::post('/lotes-envasado/update/', [lotesEnvasadoController::class, 'update'
 Route::get('/lotes-envasado/editSKU/{id}', [lotesEnvasadoController::class, 'editSKU']);
 Route::post('/lotes-envasado/updateSKU/', [lotesEnvasadoController::class, 'updateSKU']);
 Route::get('/obtenerDocumentos/{id_marca}', [LotesEnvasadoController::class, 'obtenerDocumentosPorMarca']);
-
-
 
 //Domicilios fiscal
 Route::get('/domicilios/fiscal', [ClaseController::class, 'UserManagement'])->name('domicilio_fiscal');
@@ -626,7 +612,6 @@ Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('ti
 Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');
 Route::get('/getDatos2/{lote_granel}', [getFuncionesController::class, 'getDatos2'])->name('getDatos2');
 
-
 //Guias de agave o maguey
 Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('traslado-guias');
 Route::resource('/guias-list', GuiasController::class);
@@ -672,7 +657,6 @@ Route::post('/dictamenes/productos/{id_dictamen}/reexpedir', [DictamenGranelCont
 // Ruta para el PDF con ID
 route::get('/dictamen_cumplimiento_mezcal_granel/{id_dictamen}', [DictamenGranelController::class, 'dictamenDeCumplimientoGranel'])->name('dictamen-cumplimiento-granel');
 
-
 /*------------------- Dictamenes envadaso -------------------*/
 Route::get('/dictamenes/envasado', [DictamenEnvasadoController::class, 'UserManagement'])->name('dictamenes-envasado');
 Route::resource('/dictamen-envasado-list', DictamenEnvasadoController::class);
@@ -686,7 +670,6 @@ Route::post('/dictamenes/envasado/{id_dictamen}/reexpedir', [DictamenEnvasadoCon
 // Ruta para el PDF con ID
 route::get('/Dictamen-MezcalEnvasado/{id_dictamen}', [DictamenEnvasadoController::class, 'dictamenDeCumplimientoEnvasado'])->name('dictamen-cumplimiento-envasado');
 
-
 //Documentacion
 Route::get('/documentos', [DocumentosController::class, 'UserManagement'])->name('catalogo-documentos');
 Route::resource('/documentos-list', DocumentosController::class);
@@ -698,8 +681,6 @@ Route::get('/documentos/{id}/edit', [DocumentosController::class, 'edit']);
 
 // Ruta para actualizar el documento
 Route::put('/documentos/{id}', [DocumentosController::class, 'update']);
-
-
 
 //Inspecciones
 Route::get('/inspecciones', [inspeccionesController::class, 'UserManagement'])->name('inspecciones');
@@ -714,7 +695,6 @@ Route::get('/acta-solicitud/edit/{id_acta}', [inspeccionesController::class, 'ed
 //pdf rutas
 Route::post('/acta-unidades', [inspeccionesController::class, 'store'])->name('acta.unidades.store');
 Route::get('/acta_circunstanciada_unidades_produccion/{id_inspeccion}', [inspeccionesController::class, 'acta_circunstanciada_produccion'])->name('acta_circunstanciada_unidades_produccion');
-
 
 //Hologramas - solicitud hologramas
 Route::get('/hologramas/solicitud', [solicitudHolograma::class, 'UserManagement'])->name('hologramas-solicitud');
@@ -731,26 +711,6 @@ Route::post('/solicitud_holograma/storeActivar', [solicitudHolograma::class, 'st
 Route::get('/solicitud_holograma/editActivos/{id}', [solicitudHolograma::class, 'editActivos']);
 Route::get('/solicitud_holograma/editActivados/{id}', [solicitudHolograma::class, 'editActivados']);
 
-
-
-
-//Certificados Instalaciones
-Route::get('certificados/instalaciones', [Certificado_InstalacionesController::class, 'UserManagement'])->name('certificados-instalaciones');
-Route::resource('certificados-list',Certificado_InstalacionesController::class);
-Route::post('certificados-list', [Certificado_InstalacionesController::class, 'store'])->name('certificados.store');
-Route::get('certificados-list/{id}/edit', [Certificado_InstalacionesController::class, 'edit']);
-Route::put('certificados-list/{id}', [Certificado_InstalacionesController::class, 'update']);
-Route::get('/ruta-para-obtener-revisores', [Certificado_InstalacionesController::class, 'obtenerRevisores']);
-Route::post('/asignar-revisor', [Certificado_InstalacionesController::class, 'storeRevisor'])->name('asignarRevisor'); //Agregar
-Route::post('/certificados/reexpedir', [Certificado_InstalacionesController::class, 'reexpedir'])->name('certificados.reexpedir');
-
-//Pdfs de certificados de instalaciones
-Route::get('/certificado_comercializador/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_comercializador'])->name('certificado_comercializador');
-Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
-Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
-
-
-
 //solicitud hologrammas
 Route::post('/hologramas/store', [solicitudHolograma::class, 'store']);
 Route::get('/solicitud_holograma/edit/{id_solicitud}', [solicitudHolograma::class, 'edit']);
@@ -762,7 +722,6 @@ Route::post('/solicitud_holograma/updateAsignar', [solicitudHolograma::class, 'u
 Route::post('/solicitud_holograma/updateRecepcion', [solicitudHolograma::class, 'updateRecepcion']);
 Route::post('/verificar-folios', [solicitudHolograma::class, 'verificarFolios']);
 Route::post('/solicitud_holograma/update/updateActivar', [solicitudHolograma::class, 'updateActivar']);
-
 
 //Módulo de solicitudes
 Route::get('/solicitudes-historial', [solicitudesController::class, 'UserManagement'])->name('solicitudes-historial');
@@ -783,8 +742,6 @@ Route::get('/verificar-solicitud', [solicitudesController::class, 'verificarSoli
 Route::get('/datos-solicitud/{id_solicitud}', [solicitudesController::class, 'obtenerDatosSolicitud'])->name('datos.solicitud');
 Route::post('/actualizar-solicitudes/{id_solicitud}', [SolicitudesController::class, 'actualizarSolicitudes']);
 Route::post('/exportaciones/storePedidoExportacion', [SolicitudesController::class, 'storePedidoExportacion'])->name('exportaciones.storePedidoExportacion');
-/* Route::get('/dictamenes', [DictamenesController::class, 'getDictamenes'])->name('dictamenes.list');
- */
 Route::get('/marcas/{id_marca}/{id_direccion}', [SolicitudesController::class, 'obtenerMarcasPorEmpresa']);
 Route::get('/marcas/{id_empresa}', [lotesEnvasadoController::class, 'obtenerMarcasPorEmpresa']);
 
@@ -807,27 +764,46 @@ Route::get('/trazabilidad/{id}', [TrazabilidadController::class, 'mostrarLogs'])
 
 Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema');
 Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico');
-
-//
-
 Route::get('/Dictamen-MezcalEnvasado', [CartaAsignacionController::class, 'DictamenMezcalEnvasado'])->name('Dictamen-MezcalEnvasado');
 Route::get('/Plan-auditoria-esquema', [CartaAsignacionController::class, 'PlanAuditoria'])->name('Plan-auditoria-esquema');
 Route::get('/Reporte-Tecnico', [CartaAsignacionController::class, 'ReporteTecnico'])->name('Reporte-Tecnico');
-
-
-//PDFS NEW
 Route::get('/Solicitud-Especificaciones', [CartaAsignacionController::class, 'SolicitudEspecificaciones'])->name('Solicitud-Especificaciones');
 Route::get('/Oreden-Trabajo', [CartaAsignacionController::class, 'OrdenTrabajo'])->name('Oreden-Trabajo');
 Route::get('/Solicitud-Servicio-UNIIC', [CartaAsignacionController::class, 'SolicitudUNIIC'])->name('Solicitud-Servicio-UNIIC');
 
-/* Route::get('/lista_empresas/{id_empresa}', [clientesConfirmadosController::class, 'obtenerContratos']);
- */
 Route::get('/empresa_contrato/{id_empresa}', [clientesConfirmadosController::class, 'obtenerContratosPorEmpresa']);
 Route::get('/edit_cliente_confirmado/{id_empresa}', [clientesConfirmadosController::class, 'edit_cliente_confirmado']);
 Route::get('/empresa_num_cliente/{id_empresa}', [clientesConfirmadosController::class, 'obtenerNumeroCliente']);
 Route::post('/actualizar-registros', [clientesConfirmadosController::class, 'actualizarRegistros']);
 Route::post('/editar_cliente_confirmado', [clientesConfirmadosController::class, 'editar_cliente_confirmado']);
+Route::delete('clientes-list/{id_empresa}', [clientesConfirmadosController::class, 'destroy'])->name('');
 Route::post('/registrar-clientes', [ClientesConfirmadosController::class, 'registrarClientes'])->name('clientes.registrar');
+
+//Certificados Instalaciones
+Route::get('certificados/instalaciones', [Certificado_InstalacionesController::class, 'UserManagement'])->name('certificados-instalaciones');
+Route::resource('certificados-list',Certificado_InstalacionesController::class);
+Route::post('certificados-list', [Certificado_InstalacionesController::class, 'store'])->name('certificados.store');
+Route::get('certificados-list/{id}/edit', [Certificado_InstalacionesController::class, 'edit']);
+Route::put('certificados-list/{id}', [Certificado_InstalacionesController::class, 'update']);
+Route::get('/ruta-para-obtener-revisores', [Certificado_InstalacionesController::class, 'obtenerRevisores']);
+Route::post('/asignar-revisor', [Certificado_InstalacionesController::class, 'storeRevisor'])->name('asignarRevisor'); //Agregar
+Route::post('/certificados/reexpedir', [Certificado_InstalacionesController::class, 'reexpedir'])->name('certificados.reexpedir');
+
+//Pdfs de certificados de instalaciones
+Route::get('/certificado_comercializador/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_comercializador'])->name('certificado_comercializador');
+Route::get('/certificado_envasador_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_envasador'])->name('certificado_envasador_mezcal');
+Route::get('/certificado_productor_mezcal/{id_certificado}', [Certificado_InstalacionesController::class, 'pdf_certificado_productor'])->name('certificado_productor_mezcal');
+
+//Certificado Granel
+Route::get('certificados/granel', [Certificado_GranelController::class, 'UserManagement'])->name('certificados-granel');
+Route::resource('certificados/granel-list',Certificado_GranelController::class);
+Route::post('/certificados/granel', [Certificado_GranelController::class, 'store']);
+Route::get('/edit-certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'edit']);
+Route::delete('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'destroy'])->name('certificados.destroy');
+Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCertificado'])->name('Pre-certificado');
+Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'update']);
+Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor');
+Route::post('/certificados/reexpedir/granel', [Certificado_GranelController::class, 'reexpedir'])->name('certificados.reexpedir.granel');
 
 //Revision Personal
 //-Instalaciones-
@@ -842,18 +818,8 @@ Route::get('/aprobacion/{id}', [RevisionPersonalController::class, 'cargarAproba
 Route::get('/obtener/historial/{id_revision}', [RevisionPersonalController::class, 'cargarHistorial']);
 Route::post('/editar-respuestas', [RevisionPersonalController::class, 'editarRespuestas']);
 //-Granel-
-Route::get('/bitacora_revisionPersonal_Granel', [RevisionPersonalController::class, 'Bitacora_revisionPersonal_Granel']);
-
-//Certificado Granel
-Route::get('certificados/granel', [Certificado_GranelController::class, 'UserManagement'])->name('certificados-granel');
-Route::resource('certificados/granel-list',Certificado_GranelController::class);
-Route::post('/certificados/granel', [Certificado_GranelController::class, 'store']);
-Route::get('/edit-certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'edit']);
-Route::delete('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'destroy'])->name('certificados.destroy');
+Route::get('/bitacora_revisionPersonal_Granel/{id}', [RevisionPersonalController::class, 'Bitacora_revisionPersonal_Granel']);
 Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCertificado'])->name('Pre-certificado');
-Route::put('/certificados/granel/{id_certificado}', [Certificado_GranelController::class, 'update']);
-Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'storeRevisor'])->name('asignarRevisor');
-Route::post('/certificados/reexpedir/granel', [Certificado_GranelController::class, 'reexpedir'])->name('certificados.reexpedir.granel');
 
 //Bitacoras
 Route::get('/bitacora_mezcal', [CartaAsignacionController::class, 'BitacoraMezcal'])->name('bitacora_mezcal');
@@ -863,6 +829,3 @@ Route::get('/bitacora_terminado', [CartaAsignacionController::class, 'BitacoraTe
 Route::get('/bitacora_hologramas', [CartaAsignacionController::class, 'BitacoraHologramas'])->name('bitacora_hologramas');
 
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
-
-//Eliminar Cliente Confirmado
-Route::delete('clientes-list/{id_empresa}', [clientesConfirmadosController::class, 'destroy'])->name('');
