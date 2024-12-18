@@ -621,8 +621,8 @@ $(function () {
                 modal.find('#edit_id_clase_vig').val(response.caracteristicas.id_clase);
               } else {
                 modal.find('#edit_id_clase_vig').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_tipo) {
-                modal.find('#edit_id_tipo_vig').val(response.caracteristicas.id_tipo);
+              } if (response.caracteristicas && response.caracteristicas.id_tipo_maguey) {
+                modal.find('#edit_id_tipo_vig').val(response.caracteristicas.id_tipo_maguey);
               } else {
                 modal.find('#edit_id_tipo_vig').val('');
               }

@@ -89,7 +89,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select2 form-select" id="id_tipo_maguey" name="id_tipo_maguey[]"
+                        <select class="select2 form-select" id="id_tipo_maguey" name="id_tipo_maguey[0]"
                             aria-label="id_tipo" multiple>
                             @foreach ($tipos as $tipo)
                                 <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} | {{ $tipo->cientifico }}
@@ -97,7 +97,7 @@
                             @endforeach
                         </select>
 
-                        <label for="id_tipo">Ingresa tipo de Maguey</label>
+                        <label for="id_tipo_maguey">Ingresa tipo de Maguey</label>
                     </div>
                 </div>
                 <div class="col-md-4">
