@@ -593,7 +593,7 @@
         const snowflake = document.createElement("span");
         snowflake.classList.add("snowflake");
         snowflake.textContent = "❄";
-        snowflake.style.left = Math.random() * 70 + "vw";
+        snowflake.style.left = Math.random() * 50 + "vw";
         snowflake.style.animationDuration = Math.random() * 3 + 2 + "s"; // Duración de caída de 2 a 5 segundos
         snowflake.style.fontSize = Math.random() * 10 + 10 + "px"; // Tamaño entre 10px y 20px
 

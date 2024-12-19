@@ -643,25 +643,7 @@ $(function () {
     $('#loading-spinner-chelo').hide(); // Ocultar el spinner
     $(this).show(); // Mostrar el iframe con el PDF
   });
-  // Función para descargar el PDF dentro de un ZIP
-  function downloadPdfAsZip(pdfUrl, fileName) {
-    // Crear una nueva instancia de JSZip
-    var zip = new JSZip();
-    // Descargar el archivo PDF
-    fetch(pdfUrl)
-      .then(response => response.blob())
-      .then(blob => {
-        // Añadir el archivo al ZIP
-        zip.file(fileName, blob);
 
-        // Generar el archivo ZIP
-        zip.generateAsync({ type: 'blob' }).then(function (zipBlob) {
-          // Guardar el archivo ZIP usando FileSaver.js
-          saveAs(zipBlob, fileName.replace('.pdf', '.zip'));
-        });
-      })
-      .catch(error => console.error('Error al descargar el PDF:', error));
-  }
 
   //Editar guias
   $(document).on('click', '.edit-record', function () {
