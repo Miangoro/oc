@@ -1,4 +1,3 @@
-<!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="editMuestreoLoteAgranel" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -142,8 +141,6 @@
     </div>
 </div>
 
-
-
 <script>
     function EditobtenerInstalacionesMuestreo() {
         var empresa = $("#edit_id_empresa_muestreo").val();
@@ -154,9 +151,7 @@
                 console.log(response);
                 var contenido = "";
                 for (let index = 0; index < response.instalaciones.length; index++) {
-                    // Limpia el campo tipo usando la función limpiarTipo
                     var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-
                     contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
                         tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
                         '</option>' +
@@ -206,7 +201,7 @@
             method: 'GET',
             success: function(response) {
                 $('#edit_id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :
-                '');
+                    '');
                 $('#edit_id_clase_muestreo').val(response.clase ? response.clase.clase : '');
                 if (response.tipo && response.tipo.length > 0) {
                     var tiposConcatenados = response.tipo.map(function(tipo) {

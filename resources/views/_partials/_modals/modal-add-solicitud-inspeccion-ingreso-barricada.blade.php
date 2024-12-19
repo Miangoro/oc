@@ -77,7 +77,6 @@
                                 <label for="id_clase_barricada">Ingresa Clase</label>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="id_edad"
@@ -179,7 +178,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-100" id="info_adicional" placeholder="Observaciones..."></textarea>
@@ -208,9 +206,7 @@
                 console.log(response);
                 var contenido = "";
                 for (let index = 0; index < response.instalaciones.length; index++) {
-                    // Limpia el campo tipo usando la función limpiarTipo
                     var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-
                     contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
                         tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
                         '</option>' +
@@ -283,7 +279,7 @@
     $('#addInspeccionIngresoBarricada').on('hidden.bs.modal', function() {
         $('#id_empresa_barricada').val('');
         $('#id_instalacion_barricada').html(
-        '<option value="" selected>Lista de instalaciones</option>'); // Limpiar instalaciones
+            '<option value="" selected>Lista de instalaciones</option>');
         $('#id_lote_granel_barricada').val('');
         $('#id_categoria_barricada').val('');
         $('#id_clase_barricada').val('');
@@ -300,6 +296,6 @@
         $('#tiempo_dura').val('');
         $('#id_certificado_barricada').val('');
         $('#info_adicional').val('');
-        formValidator.resetForm(true); 
+        formValidator.resetForm(true);
     });
 </script>

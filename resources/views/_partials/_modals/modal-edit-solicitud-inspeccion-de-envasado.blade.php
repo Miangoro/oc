@@ -1,4 +1,3 @@
-<!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="editInspeccionEnvasado" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -19,7 +18,9 @@
                                     name="id_empresa" class="id_empresa_inspeccion select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -48,8 +49,9 @@
                     <p class="address-subtitle" style="color: red">Seleccione un cliente</p>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-4">
-                            <select onchange="editobtenerDatosGranelesInspecciones();" id="edit_id_lote_granel_inspeccion"
-                                name="id_lote_granel_inspeccion" class="select2 form-select">
+                            <select onchange="editobtenerDatosGranelesInspecciones();"
+                                id="edit_id_lote_granel_inspeccion" name="id_lote_granel_inspeccion"
+                                class="select2 form-select">
                                 <option value="" disabled selected>Selecciona lote a granel</option>
                                 @foreach ($LotesGranel as $lotesgra)
                                     <option value="{{ $lotesgra->id_lote_granel }}">{{ $lotesgra->nombre_lote }}
@@ -70,9 +72,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted" id="edit_id_clase_inspeccion"
-                                    name="id_clase_inspeccion" placeholder="Ingresa una Clase" readonly
-                                    style="pointer-events: none;" />
+                                <input type="text" class="form-control bg-light text-muted"
+                                    id="edit_id_clase_inspeccion" name="id_clase_inspeccion"
+                                    placeholder="Ingresa una Clase" readonly style="pointer-events: none;" />
                                 <label for="id_clase_inspeccion">Ingresa Clase</label>
                             </div>
                         </div>
@@ -146,7 +148,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control " id="edit_id_previsto" name="id_previsto"
-                                    placeholder="Termino previsto del envasado"  />
+                                    placeholder="Termino previsto del envasado" />
                                 <label for="id_previsto">Termino previsto del envasado</label>
                             </div>
                         </div>
@@ -161,7 +163,8 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional" placeholder="Observaciones..."></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional"
+                                placeholder="Observaciones..."></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
                                 CONTENEDORES):</label>
                         </div>
@@ -187,9 +190,7 @@
                 console.log(response);
                 var contenido = "";
                 for (let index = 0; index < response.instalaciones.length; index++) {
-                    // Limpia el campo tipo usando la función limpiarTipo
                     var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-
                     contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
                         tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
                         '</option>' +
@@ -238,7 +239,8 @@
             url: '/getDatos2/' + lote_granel_id,
             method: 'GET',
             success: function(response) {
-                $('#edit_id_categoria_inspeccion').val(response.categoria ? response.categoria.categoria : '');
+                $('#edit_id_categoria_inspeccion').val(response.categoria ? response.categoria.categoria :
+                    '');
                 $('#edit_id_clase_inspeccion').val(response.clase ? response.clase.clase : '');
                 if (response.tipo && response.tipo.length > 0) {
                     var tiposConcatenados = response.tipo.map(function(tipo) {
@@ -252,7 +254,6 @@
                 $('#edit_analisis_inspeccion').val(response.lotes_granel.folio_fq);
                 $('#edit_volumen_inspeccion').val(response.lotes_granel.cont_alc);
                 $('#edit_id_certificado_inspeccion').val(response.lotes_granel.folio_certificado);
-
             },
             error: function() {
                 console.error('Error al obtener los datos del lote granel.');
