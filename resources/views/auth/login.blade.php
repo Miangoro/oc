@@ -206,7 +206,22 @@
             border-radius: 50%;
             transition: all 0.3s ease-in-out;
         }
+        
+        .border-effect:hover {
+            transform: scale(1.15);
+            transition: transform 0.3s ease-in-out;
+        }
 
+        
+        .border-effect-boton {
+            border-radius: 50%;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .border-effect-boton:hover {
+            transform: scale(1.07);
+            transition: transform 0.3s ease-in-out;
+        }
 
         .boton-effect:hover {
             filter: drop-shadow(0 0 8px #16ba76);
@@ -228,15 +243,9 @@
                 0 0 30px #a04293;
             transition: all 0.3s ease-in-out;
         }
-
         .btn {
             position: relative;
             border-radius: 10px;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .border-effect:hover {
-            transform: scale(1.07);
             transition: transform 0.3s ease-in-out;
         }
 
@@ -360,7 +369,7 @@
                                     </a>
                                 @endif
                             </div>
-                            <button class="btn btn-primary d-grid w-100 border-effect">
+                            <button class="btn btn-primary d-grid w-100 border-effect-boton">
                                 Iniciar sesión
                             </button>
                         </form>
@@ -392,7 +401,7 @@
                         <div class="flex-container">
                             <a href="https://www.facebook.com/organismo.certificador.CIDAM" target="_blank">
                                 <img src="{{ asset('assets/img/branding/facebook_logo.png') }}" alt=""
-                                    class="redes border-effect face-effect">
+                                    class="redes border-effect  face-effect">
                             </a>
                             <div style="gap: 10px"></div>
                             <a href="https://www.instagram.com/oc_cidam/" target="_blank">
@@ -480,7 +489,7 @@
                                     <a href="{{ route('password.request') }}" class="text-end">¿Olvidó su contraseña?</a>
                                 @endif
                             </div>
-                            <button class="btn btn-primary d-grid w-100 border-effect">
+                            <button class="btn btn-primary d-grid w-100 border-effect-boton">
                                 Iniciar sesión
                             </button>
                         </form>
