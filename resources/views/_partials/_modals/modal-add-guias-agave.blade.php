@@ -1,4 +1,3 @@
-<!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="addGuias" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -15,8 +14,10 @@
                                 <select id="id_empresa" name="empresa" class="select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresa as $id_cliente)
-                                    <option value="{{ $id_cliente->id_empresa }}">{{ $id_cliente->empresaNumClientes[0]->numero_cliente ?? $id_cliente->empresaNumClientes[1]->numero_cliente }} | {{ $id_cliente->razon_social }}</option>
-                                </option>
+                                        <option value="{{ $id_cliente->id_empresa }}">
+                                            {{ $id_cliente->empresaNumClientes[0]->numero_cliente ?? $id_cliente->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $id_cliente->razon_social }}</option>
+                                        </option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -44,7 +45,6 @@
                         </select>
                         <label for="id_plantacion">Características del predio</label>
                     </div>
-
                     <div class="text-center mb-6">
                         <h4 class="address-title mb-2">Datos para Guía de traslado</h4>
                         <p class="address-subtitle"> <b style="color: red"> (DATOS NO OBLIGATORIOS SI NO CUENTA CON
@@ -58,7 +58,6 @@
                                 <label for="num_anterior">Número de plantas anterior</label>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number"
@@ -76,7 +75,6 @@
                                 <label for="mermas_plantas">Mermas plantas</label>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input class="form-control" type="number" placeholder="Número de plantas actualmente"
@@ -96,8 +94,6 @@
     </div>
 </div>
 
-
-
 <script>
     // Función para restar los campos
     function calcularPlantasActualmente() {
@@ -107,11 +103,9 @@
         const mermasPlantas = parseFloat(document.getElementById('mermas_plantas').value) || 0;
         // Calcular el número de plantas actualmente
         let plantasActualmente = numAnterior - numComercializadas - mermasPlantas;
-        // Evitar números negativos
         if (plantasActualmente < 0) {
             plantasActualmente = 0;
         }
-        // Asignar el valor calculado al input
         document.getElementById('numero_plantas').value = plantasActualmente;
     }
 
@@ -120,7 +114,7 @@
         document.querySelector('#addGuias .btn-outline-secondary').addEventListener('click',
             function() {
                 document.getElementById('addGuiaForm').reset();
-                $('.select2').val(null).trigger('change'); // Reset select2 fields
+                $('.select2').val(null).trigger('change');
             });
     });
 </script>

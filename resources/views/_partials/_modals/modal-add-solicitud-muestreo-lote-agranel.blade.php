@@ -148,9 +148,7 @@
                 console.log(response);
                 var contenido = "";
                 for (let index = 0; index < response.instalaciones.length; index++) {
-                    // Limpia el campo tipo usando la función limpiarTipo
                     var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-
                     contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
                         tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
                         '</option>' +
@@ -196,10 +194,8 @@
         return tipo;
     }
 
-
     function obtenerDatosGranelesMuestreo() {
         var lote_granel_id = $("#id_lote_granel_muestreo").val();
-
         $.ajax({
             url: '/getDatos2/' + lote_granel_id,
             method: 'GET',
@@ -207,9 +203,10 @@
                 $('#id_categoria_muestreo').val(response.categoria ? response.categoria.categoria : '');
                 $('#id_clase_muestreo').val(response.clase ? response.clase.clase : '');
                 if (response.tipo && response.tipo.length > 0) {
+                    //Obtener varios tipos
                     var tiposConcatenados = response.tipo.map(function(tipo) {
                         return tipo.nombre + ' (' + tipo.cientifico + ')';
-                    }).join(', '); // Unir con coma
+                    }).join(', ');
                     $('#id_tipo_maguey_muestreo').val(tiposConcatenados);
                 } else {
                     $('#id_tipo_maguey_muestreo').val('');

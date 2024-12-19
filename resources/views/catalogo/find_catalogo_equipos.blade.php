@@ -18,10 +18,6 @@
 @endsection
 
 @section('content')
-
-    {{-- <meta name="csrf-token" content="{{ csrf_token() }}">
- --}}
-    <!-- Users List Table -->
     <div class="card">
         <div class="card-header pb-0">
             <h3 class="card-title mb-0">Equipos</h3>
@@ -39,7 +35,7 @@
             </table>
         </div>
 
-        <!-- Offcanvas to add new category -->
+        <!-- Añadir equipo -->
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
             <div class="offcanvas-header border-bottom">
                 <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Nuevo Equipo</h5>
@@ -49,8 +45,8 @@
                 <form class="add-new-user pt-0" id="addNewCategoryForm">
                     @csrf
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="equipo" placeholder="Nombre del Equipo" name="equipo"
-                            aria-label="Categoría" required>
+                        <input type="text" class="form-control" id="equipo" placeholder="Nombre del Equipo"
+                            name="equipo" aria-label="Categoría" required>
                         <label for="equipo">Nombre del equipo</label>
                     </div>
                     <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
@@ -59,15 +55,15 @@
             </div>
         </div>
 
-        <!-- Offcanvas to edit category -->
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="editEquipo"
-            aria-labelledby="offcanvaseditEquipoLabel">
+        <!-- Editar equipo -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="editEquipo" aria-labelledby="offcanvaseditEquipoLabel">
             <div class="offcanvas-header border-bottom">
                 <h5 id="offcanvaseditEquipoLabel" class="offcanvas-title">Editar Equipo</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body mx-0 flex-grow-0 h-100">
-                <form class="edit-class-form pt-0" id="editEquipoForm" method="POST" enctype="multipart/form-data" onsubmit="return false">
+                <form class="edit-class-form pt-0" id="editEquipoForm" method="POST" enctype="multipart/form-data"
+                    onsubmit="return false">
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="id_equipo" id="edit_id_equipo" value="">
@@ -81,10 +77,7 @@
                 </form>
             </div>
         </div>
-
     </div>
 
-    <!-- Modal -->
     @include('_partials/_modals/modal-pdfs-frames')
-    <!-- /Modal -->
 @endsection

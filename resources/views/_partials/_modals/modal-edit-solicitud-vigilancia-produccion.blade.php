@@ -17,7 +17,9 @@
                                     id="edit_id_empresa_vig" name="id_empresa" class="select2 form-select id_empresa">
                                     <option value="" selected disabled>Selecciona Empresa</option>
                                     @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Empresa</label>
@@ -44,7 +46,6 @@
                             </div>
                         </div>
                     </div>
-                    {{-- mio --}}
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
@@ -90,12 +91,13 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select2 form-select" id="edit_id_tipo_vig" name="edit_id_tipo_vig[]" aria-label="id_tipo" multiple>
+                        <select class="select2 form-select" id="edit_id_tipo_vig" name="edit_id_tipo_vig[]"
+                            aria-label="id_tipo" multiple>
                             @foreach ($tipos as $tipo)
-                                <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} | {{ $tipo->cientifico }}</option>
+                                <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} | {{ $tipo->cientifico }}
+                                </option>
                             @endforeach
                         </select>
-                        
                         <label for="id_tipo">Ingresa tipo de Maguey</label>
                     </div>
                 </div>
@@ -188,9 +190,9 @@
 
 <script>
     function obtenerDatosGranelesedit() {
-        var lote_granel_id = $("#edit_id_lote_granel_vig").val(); 
+        var lote_granel_id = $("#edit_id_lote_granel_vig").val();
         $.ajax({
-            url: `/getDatos2/${lote_granel_id}`, 
+            url: `/getDatos2/${lote_granel_id}`,
             method: 'GET',
             success: function(response) {
                 if (response && response.lotes_granel) {
@@ -238,8 +240,7 @@
                 }
                 if (response.lotes_granel.length == 0) {
                     contenido = '<option value="">Sin lotes registrados</option>';
-                } else {
-                }
+                } else {}
                 $('#edit_id_lote_granel_vig').html(contenido);
             },
             error: function() {}
@@ -247,43 +248,41 @@
     }
 
     function obtenerGraneles2(empresa) {
-    $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function(response) {
-            var contenido = "";
-            for (let index = 0; index < response.instalaciones.length; index++) {
-                var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+        $.ajax({
+            url: '/getDatos/' + empresa,
+            method: 'GET',
+            success: function(response) {
+                var contenido = "";
+                for (let index = 0; index < response.instalaciones.length; index++) {
+                    var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
 
-                contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                    tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                    '</option>' + contenido;
+                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                        tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                        '</option>' + contenido;
+                }
+                if (response.instalaciones.length == 0) {
+                    contenido = '<option value="">Sin instalaciones registradas</option>';
+                }
+                $('#edit_id_instalacion_vig').html(contenido);
+                // Mantener el dato del select
+                const idInstalacionSeleccionada = $('#edit_id_instalacion_vig').data('selected');
+                if (idInstalacionSeleccionada) {
+                    $('#edit_id_instalacion_vig')
+                        .val(idInstalacionSeleccionada)
+                        .trigger('change');
+                }
+            },
+            error: function() {
+                console.error("Error al cargar las instalaciones.");
             }
-            if (response.instalaciones.length == 0) {
-                contenido = '<option value="">Sin instalaciones registradas</option>';
-            }
-            // Actualizar las opciones del select
-            $('#edit_id_instalacion_vig').html(contenido);
-            // Restaurar el valor previamente seleccionado
-            const idInstalacionSeleccionada = $('#edit_id_instalacion_vig').data('selected');
-            if (idInstalacionSeleccionada) {
-                $('#edit_id_instalacion_vig')
-                    .val(idInstalacionSeleccionada) // Selecciona el valor previo
-                    .trigger('change'); // Propaga el cambio al select
-            }
-        },
-        error: function() {
-            console.error("Error al cargar las instalaciones.");
-        }
-    });
-}
-
-function limpiarTipo(tipo) {
-    try {
-        return JSON.parse(tipo).join(', ');
-    } catch (e) {
-        return tipo;
+        });
     }
-}
 
+    function limpiarTipo(tipo) {
+        try {
+            return JSON.parse(tipo).join(', ');
+        } catch (e) {
+            return tipo;
+        }
+    }
 </script>
