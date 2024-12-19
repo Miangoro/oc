@@ -5,7 +5,7 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Validación de la solicitud de servicio</h4>
-                    <p class="solicitud badge bg-primary"></p>
+                    <p id="tipoSolicitud" class="solicitud badge bg-primary"></p>
                     <div class="datos-importantes">
                       <table style="font-size: 11px;" class="table table-bordered table-sm">
                         <tbody>
@@ -170,7 +170,7 @@
                     </div>
 
                     <div id="dictamenInstalaciones" class="d-none terminado">
-                        <h4 class="address-title mb-2">Dictamen de Instalaciones</h4>
+                        <h4 class="address-title mb-2" >Dictamen de Instalaciones</h4>
                         <div class="datos-importantes">
                             <table style="font-size: 11px;" class="table table-bordered table-sm">
                                 <thead>
@@ -1616,7 +1616,7 @@
                     </div>
 
                     <div id="georreferencia" class="d-none terminado">
-                        <h4 class="address-title mb-2">Georreferencia</h4>
+                        <h4 class="address-title mb-2">Georreferenciación</h4>
                         <div class="datos-importantes">
                             <table style="font-size: 11px;" class="table table-bordered table-sm">
                                 <thead>
@@ -1703,7 +1703,7 @@
                         </div>
                     </div>
 
-                    <div id="dictamenInstalaciones" class="d-none terminado">
+                    <div id="dictamenInstalaciones" class="d-none">
                         <h4 class="address-title mb-2">Dictamen de Instalaciones</h4>
                         <div class="datos-importantes">
                             <table style="font-size: 11px;" class="table table-bordered table-sm">
