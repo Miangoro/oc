@@ -3909,22 +3909,28 @@ $(function () {
 
 // Mapeo entre IDs de tipo de solicitud y IDs de divs
 const divsPorSolicitud = {
-  14: 'dictamenInstalaciones',
-  10: 'georreferencia',
-  11: 'liberacionPTExportacion',
-  3: 'muestreoLoteAjustes',
-  5: 'inspeccionEnvasado',
-  7: 'inspeccionIngresoBarrica',
-  9: 'liberacionBarricaVidrio'
+  1: ['guiastraslado'],
+  2: ['guiastraslado'],
+  14: ['dictamenInstalaciones'],
+  10: ['georreferencia'],
+  11: ['liberacionPTExportacion'],
+  3: ['muestreoLoteAjustes', 'guiastraslado'],
+  5: ['inspeccionEnvasado'],
+  7: ['inspeccionIngresoBarrica'],
+  9: ['liberacionBarricaVidrio']
 };
+
 // Función para manejar la visibilidad de divs según el tipo de solicitud
-function manejarVisibilidadDivs(idSolicitud) {
-  Object.values(divsPorSolicitud).forEach(divId => {
+function manejarVisibilidadDivs(idTipo) {
+  // Ocultamos todos los divs
+  Object.values(divsPorSolicitud).flat().forEach(divId => {
       $(`#${divId}`).addClass('d-none');
   });
-  const divMostrar = divsPorSolicitud[idSolicitud];
-  if (divMostrar) {
-      $(`#${divMostrar}`).removeClass('d-none');
+  const divsMostrar = divsPorSolicitud[idTipo];
+  if (divsMostrar) {
+      divsMostrar.forEach(divId => {
+          $(`#${divId}`).removeClass('d-none');
+      });
   }
 }
 

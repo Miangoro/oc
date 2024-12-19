@@ -47,8 +47,7 @@
                                   </select>
                               </td>
                             </tr>
-                            <!-- Guías de traslado de agave -->
-{{--                             <tr>
+                           <tr id="guiastraslado" class="d-none">
                                 <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Guías de Traslado de Agave:</th>
                                 <td id="guiasTrasladoAgave">Guía #12345</td>
                                 <td class="text-dark fw-bold" style="font-size: 11px;">Cumple:</td>
@@ -59,7 +58,6 @@
                                         <option value="no">No</option>
                                     </select>
                                 </td>
-                            </tr> --}}
 
                             <!-- Domicilio de instalaciones (unidad de producción autorizada vigente) -->
                             <tr>
