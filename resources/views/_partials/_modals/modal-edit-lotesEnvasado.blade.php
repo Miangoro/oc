@@ -235,11 +235,10 @@
             } else if (edit_unidad === "Centrilitros") {
                 volumenTotal = (cantidadBotellas * edit_presentacion) / 100;
             } else {
-                volumenTotal = ''; // Limpiar el campo si la unidad no es Litros ni Mililitros
+                volumenTotal = ''; 
             }
             document.getElementById('edit_volumen_total').value = volumenTotal ? volumenTotal.toFixed(2) : '';
         }
-        // Añadir eventos de cambio a los campos relevantes
         document.getElementById('edit_cant_botellas').addEventListener('input', calcularVolumenTotal);
         document.getElementById('edit_presentacion').addEventListener('input', calcularVolumenTotal);
         document.getElementById('edit_unidad').addEventListener('change', calcularVolumenTotal);

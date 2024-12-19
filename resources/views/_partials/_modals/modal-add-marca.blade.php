@@ -1,4 +1,3 @@
-<!-- Add New Address Modal -->
 <div class="modal fade" id="addMarca" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -46,7 +45,6 @@
                         <h4 class="address-title mb-2">Documentación de la marca</h4>
                         <p class="address-subtitle" style="color: red">Seleccione una fecha al subir un documento</p>
                     </div>
-
                     @foreach ($documentos as $documento)
                         <div class="row mb-3">
                             <div class="col-md-9 mb-5">
