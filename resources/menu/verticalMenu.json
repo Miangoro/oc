@@ -244,9 +244,9 @@
       "slug": "bitacora",
       "submenu": [
         {
-          "url": "#",
+          "url": "/bitacoraMezcal",
           "name": "Mezcal a granel",
-          "slug": "#"
+          "slug": "bitacora-mezcal"
         },
         {
           "url": "#",

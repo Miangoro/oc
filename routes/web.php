@@ -200,6 +200,7 @@ use App\Http\Controllers\TrazabilidadController;
 use App\Http\Controllers\pdf_llenado\PdfController;
 use App\Http\Controllers\revision\RevisionPersonalController;
 use App\Http\Controllers\revision\catalogo_personal_seleccion_preguntas_controller;
+use App\Http\Controllers\Bitacoras\BitacoraMezcalController;
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -821,11 +822,15 @@ Route::post('/editar-respuestas', [RevisionPersonalController::class, 'editarRes
 Route::get('/bitacora_revisionPersonal_Granel/{id}', [RevisionPersonalController::class, 'Bitacora_revisionPersonal_Granel']);
 Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCertificado'])->name('Pre-certificado');
 
-//Bitacoras
+// Pdfs Bitacoras
 Route::get('/bitacora_mezcal', [CartaAsignacionController::class, 'BitacoraMezcal'])->name('bitacora_mezcal');
 Route::get('/bitacora_maduracion', [CartaAsignacionController::class, 'BitacoraMaduracion'])->name('bitacora_maduracion');
 Route::get('/bitacora_productor', [CartaAsignacionController::class, 'BitacoraProductor'])->name('bitacora_productor');
 Route::get('/bitacora_terminado', [CartaAsignacionController::class, 'BitacoraTerminado'])->name('bitacora_terminado');
 Route::get('/bitacora_hologramas', [CartaAsignacionController::class, 'BitacoraHologramas'])->name('bitacora_hologramas');
+
+// BitacoraMezcal
+Route::get('/bitacoraMezcal', [BitacoraMezcalController::class, 'UserManagement'])->name('bitacora-mezcal');
+Route::resource('/bitacoraMezcal-list', BitacoraMezcalController::class);
 
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
