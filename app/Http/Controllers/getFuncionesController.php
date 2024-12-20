@@ -101,15 +101,16 @@ class getFuncionesController extends Controller
     
         // Buscar los datos de cada tipo relacionado
         $tipos = tipos::whereIn('id_tipo', $idTipos)
-            ->get(['nombre', 'cientifico']);
+        ->get(['id_tipo', 'nombre', 'cientifico']); // Incluye 'id_tipo' en la consulta
     
-        return response()->json([
-            'categoria' => $loteGranel->categoria,
-            'clase' => $loteGranel->clase,
-            'tipo' => $tipos, // Devolver la lista de tipos encontrados
-            'marca' => $marca, // Incluir la marca aquí
-            'lotes_granel' => $loteGranel
-        ]);
+    return response()->json([
+        'categoria' => $loteGranel->categoria,
+        'clase' => $loteGranel->clase,
+        'tipo' => $tipos, // Enviar la lista de tipos encontrados
+        'marca' => $marca, // Incluir la marca aquí
+        'lotes_granel' => $loteGranel
+    ]);
+    
     }
     
     

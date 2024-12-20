@@ -32,14 +32,14 @@ $(function () {
       { data: '' },
       { data: 'folio' },
       { data: 'num_servicio' },
-      { 
+      {
         data: 'razon_social',
         render: function(data) {
           return `<span class="fw-bold">${data}</span>`;
         }
       },
       { data: 'fecha_solicitud' },
-      { 
+      {
         data: 'tipo',
         render: function(data) {
           return `<span class="fw-bold">${data}</span>`;
@@ -162,7 +162,7 @@ $(function () {
               return `<br><span class="fw-bold text-dark small">Información no disponible</span>`;
           }
         }
-      },      
+      },
       { data: 'fecha_servicio' },
       { data: '' },
       { data: 'estatus' },
@@ -250,9 +250,16 @@ $(function () {
 
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2">` +
             '<i class="text-warning ri-user-search-fill"></i>Trazabilidad</a>' +
-
-            `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalValidarSolicitud(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud">` +
-            '<i class="text-success ri-search-eye-line"></i>Validar solicitud</a>' +
+`<a
+   data-id="${full['id_tipo']}"
+   data-id-solicitud="${full['id_solicitud']}"
+   data-tipo="${full['tipo']}"
+   data-razon-social="${full['razon_social']}"
+   data-bs-toggle="modal"
+   data-bs-target="#addSolicitudValidar"
+   class="dropdown-item text-dark waves-effect validar-solicitudes">
+   <i class="text-success ri-search-eye-line"></i>Validar solicitud
+</a>` +
 
             `<a
               data-id="${full['id']}"
@@ -260,7 +267,7 @@ $(function () {
               data-tipo="${full['tipo']}"
               data-id-tipo="${full['id_tipo']}"
               data-razon-social="${full['razon_social']}"
-              class="cursor-pointer dropdown-item edit-record-tipo">` +
+              class="cursor-pointer dropdown-item text-dark edit-record-tipo">` +
             '<i class="text-warning ri-edit-fill"></i>Editar</a>' +
 
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud">` +
@@ -621,8 +628,8 @@ $(function () {
                 modal.find('#edit_id_clase_vig').val(response.caracteristicas.id_clase);
               } else {
                 modal.find('#edit_id_clase_vig').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_tipo) {
-                modal.find('#edit_id_tipo_vig').val(response.caracteristicas.id_tipo);
+              } if (response.caracteristicas && response.caracteristicas.id_tipo_maguey) {
+                modal.find('#edit_id_tipo_vig').val(response.caracteristicas.id_tipo_maguey);
               } else {
                 modal.find('#edit_id_tipo_vig').val('');
               }
@@ -791,7 +798,7 @@ $(function () {
             } else {
                 modal.find('#edit_instalacion_vigilancia').val('').trigger('change');
             }
-            
+
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
             } else if (id_tipo === 5) {
               modal.find('#edit_id_solicitud_inspeccion').val(id_solicitud);
@@ -3896,6 +3903,54 @@ $(function () {
       });
     });
   });
+
+
+
+
+// Mapeo entre IDs de tipo de solicitud y IDs de divs
+const divsPorSolicitud = {
+  1: ['guiastraslado'],
+  2: ['guiastraslado'],
+  14: ['dictamenInstalaciones'],
+  10: ['georreferencia'],
+  11: ['liberacionPTExportacion'],
+  3: ['muestreoLoteAjustes', 'guiastraslado'],
+  5: ['inspeccionEnvasado'],
+  7: ['inspeccionIngresoBarrica'],
+  9: ['liberacionBarricaVidrio']
+};
+
+// Función para manejar la visibilidad de divs según el tipo de solicitud
+function manejarVisibilidadDivs(idTipo) {
+  // Ocultamos todos los divs
+  Object.values(divsPorSolicitud).flat().forEach(divId => {
+      $(`#${divId}`).addClass('d-none');
+  });
+  const divsMostrar = divsPorSolicitud[idTipo];
+  if (divsMostrar) {
+      divsMostrar.forEach(divId => {
+          $(`#${divId}`).removeClass('d-none');
+      });
+  }
+}
+
+  // Manejar el clic en los enlaces con clase "validar-solicitud"
+$(document).on('click', '.validar-solicitudes', function () {
+  // Leer los datos desde los atributos data-*
+  var idTipo = $(this).data('id');
+  manejarVisibilidadDivs(idTipo);
+
+  var id_solicitud = $(this).data('id-solicitud');
+  var tipoName = $(this).data('tipo');
+  var razon_social = $(this).data('razon-social');
+  // Actualizar los campos dentro del modal
+  $('#clienteNombre').text(razon_social);
+  $('#tipoSolicitud').text(tipoName);
+
+  console.log('Datos del registro:', { idTipo, id_solicitud, tipoName, razon_social });
+
+});
+
 
 
 

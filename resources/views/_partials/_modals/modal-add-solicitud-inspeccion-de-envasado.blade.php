@@ -1,4 +1,3 @@
-<!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="addInspeccionEnvasado" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -17,7 +16,9 @@
                                     name="id_empresa" class="id_empresa_inspeccion select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -144,7 +145,7 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control " id="id_previsto" name="id_previsto"
-                                    placeholder="Termino previsto del envasado"  />
+                                    placeholder="Termino previsto del envasado" />
                                 <label for="id_previsto">Termino previsto del envasado</label>
                             </div>
                         </div>
@@ -257,4 +258,27 @@
             }
         });
     }
+
+    // Limpiar campos al cerrar el modal
+    $('#addInspeccionEnvasado').on('hidden.bs.modal', function() {
+        $('#id_empresa_inspeccion').val('');
+        $('#id_instalacion_inspeccion').html('<option value="" selected>Lista de instalaciones</option>');
+        $('#fecha_visita').val('');
+        $('#id_lote_granel_inspeccion').val('');
+        $('#id_categoria_inspeccion').val('').prop('readonly', true);
+        $('#id_clase_inspeccion').val('').prop('readonly', true);
+        $('#id_tipo_maguey_inspeccion').val('').prop('readonly', true);
+        $('#id_marca').val('').prop('readonly', true);
+        $('#volumen_inspeccion').val('');
+        $('#analisis_inspeccion').val('');
+        $('#id_tipo_inspeccion').val('');
+        $('#id_cantidad_bote').val('');
+        $('#id_cantidad_caja').val('');
+        $('#id_inicio_envasado').val('');
+        $('#id_previsto').val('');
+        $('#id_certificado_inspeccion').val('');
+        $('#info_adicional').val('');
+        var formValidator = $('#addInspeccionEnvasadoForm').validate();
+        formValidator.resetForm(true);
+    });
 </script>

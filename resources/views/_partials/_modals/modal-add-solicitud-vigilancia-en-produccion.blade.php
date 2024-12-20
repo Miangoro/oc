@@ -10,11 +10,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_empresa_vigilancia" onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);"
+                                <select id="id_empresa_vigilancia"
+                                    onchange=" obtenerGraneles(this.value);obtenerGranelesInsta(this.value);"
                                     name="id_empresa" class="id_empresa select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -41,7 +44,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="address-subtitle" style="color: red">Seleccione un  cliente</p>
+                    <p class="address-subtitle" style="color: red">Seleccione un cliente</p>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
@@ -86,13 +89,14 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select2 form-select" id="id_tipo_maguey" name="id_tipo_maguey[]" aria-label="id_tipo" multiple>
+                        <select class="select2 form-select" id="id_tipo_maguey" name="id_tipo_maguey[0]"
+                            aria-label="id_tipo" multiple>
                             @foreach ($tipos as $tipo)
-                                <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} | {{ $tipo->cientifico }}</option>
+                                <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} | {{ $tipo->cientifico }}
+                                </option>
                             @endforeach
                         </select>
-                        
-                        <label for="id_tipo">Ingresa tipo de Maguey</label>
+                        <label for="id_tipo_maguey">Ingresa tipo de Maguey</label>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -188,40 +192,36 @@
             url: '/getDatos2/' + lote_granel_id,
             method: 'GET',
             success: function(response) {
+                // Setear valores para los campos individuales
                 $('#id_categoria').val(response.lotes_granel.id_categoria);
                 $('#id_clase').val(response.lotes_granel.id_clase);
-                $('#id_tipo_maguey').val(response.lotes_granel.id_tipo).trigger('change');
                 $('#analisis').val(response.lotes_granel.folio_fq);
                 $('#volumen').val(response.lotes_granel.cont_alc);
+                // Manejar múltiples valores para id_tipo_maguey
+                var idTipos = response.tipo.map(function(tipo) {
+                    return tipo.id_tipo; // Asegúrate de devolver id_tipo desde el backend
+                });
+                $('#id_tipo_maguey').val(idTipos).trigger('change'); // Asignar y refrescar select2
+
                 if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                    $('#kg_maguey').val(response.lotes_granel_guias[0].guia
-                        .kg_maguey);
+                    $('#kg_maguey').val(response.lotes_granel_guias[0].guia.kg_maguey);
+                    $('#cant_pinas').val(response.lotes_granel_guias[0].guia.num_comercializadas);
+                    $('#art').val(response.lotes_granel_guias[0].guia.art);
+                    $('#folio').val(response.lotes_granel_guias[0].guia.folio);
+
+                    if (response.lotes_granel_guias[0].guia.predios) {
+                        $('#nombre_predio').val(response.lotes_granel_guias[0].guia.predios.nombre_predio);
+                    }
                 } else {
                     $('#kg_maguey').val('');
-                }
-                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                    $('#cant_pinas').val(response.lotes_granel_guias[0].guia
-                        .num_comercializadas);
-                } else {
                     $('#cant_pinas').val('');
-                }
-                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                    $('#art').val(response.lotes_granel_guias[0].guia.art);
-                } else {
                     $('#art').val('');
-                }
-                if (response.lotes_granel_guias.length > 0 && response.lotes_granel_guias[0].guia) {
-                    $('#folio').val(response.lotes_granel_guias[0].guia.folio);
-                } else {
                     $('#folio').val('');
                 }
-                // Acceder a id_predio y nombre_predio de la relación predios
-                if (response.lotes_granel_guias[0].guia.predios) {
-                    $('#nombre_predio').val(response.lotes_granel_guias[0].guia.predios
-                        .nombre_predio); // Nombre del predio
-                }
             },
-            error: function() {}
+            error: function() {
+                console.error('Error al obtener datos de graneles');
+            }
         });
     }
 
@@ -276,4 +276,26 @@
             return tipo;
         }
     }
+
+    // Limpiar campos al cerrar el modal
+    $('#addVigilanciaProduccion').on('hidden.bs.modal', function() {
+        $('#id_empresa_vigilancia').val('').trigger('change');
+        $('#id_instalacion').html('<option value="" disabled selected>Lista de instalaciones</option>');
+        $('#id_lote_granel').val('').trigger('change');
+        $('#id_categoria').val('').trigger('change');
+        $('#id_clase').val('').trigger('change');
+        $('#id_tipo_maguey').val('').trigger('change');
+        $('#fecha_visita').val('');
+        $('#analisis').val('');
+        $('#volumen').val('');
+        $('#fecha_corte').val('');
+        $('#kg_maguey').val('');
+        $('#cant_pinas').val('');
+        $('#art').val('');
+        $('#etapa').val('');
+        $('#folio').val('');
+        $('#nombre_predio').val('');
+        $('#info_adicional').val('');
+        $('#addVigilanciaProduccionForm').trigger('reset');
+    });
 </script>

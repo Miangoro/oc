@@ -1,4 +1,3 @@
-<!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="addMuestreoLoteAgranel" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -139,8 +138,6 @@
     </div>
 </div>
 
-
-
 <script>
     function obtenerInstalacionesMuestreo() {
         var empresa = $("#id_empresa_muestreo").val();
@@ -151,9 +148,7 @@
                 console.log(response);
                 var contenido = "";
                 for (let index = 0; index < response.instalaciones.length; index++) {
-                    // Limpia el campo tipo usando la función limpiarTipo
                     var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-
                     contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
                         tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
                         '</option>' +
@@ -199,10 +194,8 @@
         return tipo;
     }
 
-
     function obtenerDatosGranelesMuestreo() {
         var lote_granel_id = $("#id_lote_granel_muestreo").val();
-
         $.ajax({
             url: '/getDatos2/' + lote_granel_id,
             method: 'GET',
@@ -210,9 +203,10 @@
                 $('#id_categoria_muestreo').val(response.categoria ? response.categoria.categoria : '');
                 $('#id_clase_muestreo').val(response.clase ? response.clase.clase : '');
                 if (response.tipo && response.tipo.length > 0) {
+                    //Obtener varios tipos
                     var tiposConcatenados = response.tipo.map(function(tipo) {
                         return tipo.nombre + ' (' + tipo.cientifico + ')';
-                    }).join(', '); // Unir con coma
+                    }).join(', ');
                     $('#id_tipo_maguey_muestreo').val(tiposConcatenados);
                 } else {
                     $('#id_tipo_maguey_muestreo').val('');
@@ -226,4 +220,22 @@
             }
         });
     }
+
+    // Limpiar campos al cerrar el modal
+    $('#addMuestreoLoteAgranel').on('hidden.bs.modal', function() {
+        $('#id_empresa_muestreo').val('');
+        $('#id_instalacion_muestreo').html('<option value="" selected>Lista de instalaciones</option>');
+        $('#id_lote_granel_muestreo').val('');
+        $('#destino_lote').val('');
+        $('#id_categoria_muestreo').val('');
+        $('#id_clase_muestreo').val('');
+        $('#id_tipo_maguey_muestreo').val('');
+        $('#analisis_muestreo').val('');
+        $('#volumen_muestreo').val('');
+        $('#id_certificado_muestreo').val('');
+        $('#info_adicional').val('');
+        if (typeof formValidator !== 'undefined') {
+            formValidator.resetForm(true);
+        }
+    });
 </script>

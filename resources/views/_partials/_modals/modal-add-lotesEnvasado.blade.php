@@ -101,8 +101,6 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Sección: Elegir Etiquetas y Corrugados -->
                     <div class="card-body table-responsive text-nowrap">
                         <h5>Datos de Etiquetas</h5>
                         <table class="table" id="tabla_marcas">
@@ -114,15 +112,13 @@
                                     <th>Presentación</th>
                                     <th>Clase</th>
                                     <th>Categoría</th>
-                                    <th>Documento Etiquetas</th> 
+                                    <th>Documento Etiquetas</th>
                                 </tr>
                             </thead>
                             <tbody class="table-border-bottom-0">
                             </tbody>
                         </table>
                     </div>
-                    
-
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -167,9 +163,7 @@
             var cantidadBotellas = parseFloat(document.getElementById('cantidad_botellas').value) || 0;
             var presentacion = parseFloat(document.getElementById('presentacion').value) || 0;
             var unidad = document.getElementById('unidad').value;
-
             var volumenTotal;
-
             if (unidad === "Litros") {
                 volumenTotal = cantidadBotellas * presentacion;
             } else if (unidad === "Mililitros") {
@@ -195,7 +189,4 @@
                 $('.select2').val(null).trigger('change'); // Reset select2 fields
             });
     });
-
-
-
 </script>

@@ -1,4 +1,3 @@
-<!-- Add New Lote Envasado Modal -->
 <div class="modal fade" id="editVigilanciaTraslado" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -19,7 +18,9 @@
                                     name="id_empresa" class="id_empresa_traslado select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -47,10 +48,11 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-4">
-                            <select id="edit_instalacion_vigilancia"
-                                name="instalacion_vigilancia" class="select2 form-select">
+                            <select id="edit_instalacion_vigilancia" name="instalacion_vigilancia"
+                                class="select2 form-select">
                                 @foreach ($instalaciones as $instalaciones)
-                                    <option value="{{ $instalaciones->id_instalacion }}">{{ $instalaciones->direccion_completa }}
+                                    <option value="{{ $instalaciones->id_instalacion }}">
+                                        {{ $instalaciones->direccion_completa }}
                                     </option>
                                 @endforeach
                             </select>
@@ -84,9 +86,9 @@
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted" id="edit_id_clase_traslado"
-                                    name="id_clase_traslado" placeholder="Ingresa una Clase" readonly
-                                    style="pointer-events: none;" />
+                                <input type="text" class="form-control bg-light text-muted"
+                                    id="edit_id_clase_traslado" name="id_clase_traslado" placeholder="Ingresa una Clase"
+                                    readonly style="pointer-events: none;" />
                                 <label for="id_clase_traslado">Ingresa Clase</label>
                             </div>
                         </div>
@@ -102,8 +104,8 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="edit_id_salida"
-                                    name="id_salida" placeholder="Ingresa Análisis fisicoquímico" />
+                                <input type="text" class="form-control" id="edit_id_salida" name="id_salida"
+                                    placeholder="Ingresa Análisis fisicoquímico" />
                                 <label for="id_salida">Identificador de contenedor de salida
                                 </label>
                             </div>
@@ -117,8 +119,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="edit_id_sobrante"
-                                    name="id_sobrante"
+                                <input type="text" class="form-control" id="edit_id_sobrante" name="id_sobrante"
                                     placeholder="Ingresa el Certificado de NOM a granel" />
                                 <label for="id_sobrante">Sobrante en contenedor de salida </label>
                             </div>
@@ -127,16 +128,16 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted" id="edit_id_vol_actual"
-                                    name="id_vol_actual" placeholder="Ingresa una Categoria" readonly
-                                    style="pointer-events: none;" />
+                                <input type="text" class="form-control bg-light text-muted"
+                                    id="edit_id_vol_actual" name="id_vol_actual" placeholder="Ingresa una Categoria"
+                                    readonly style="pointer-events: none;" />
                                 <label for="id_vol_actual">Volumen actual del lote</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="number" class="form-control " id="edit_id_vol_traslado" name="id_vol_traslado"
-                                    placeholder="Ingresa una Categoria" step="0.01"/>
+                                <input type="number" class="form-control " id="edit_id_vol_traslado"
+                                    name="id_vol_traslado" placeholder="Ingresa una Categoria" step="0.01" />
                                 <label for="id_vol_traslado">Volumen trasladado</label>
                             </div>
                         </div>
@@ -175,7 +176,8 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional" placeholder="Observaciones..."></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional"
+                                placeholder="Observaciones..."></textarea>
                             <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
                                 CONTENEDORES):</label>
                         </div>
@@ -201,9 +203,7 @@
                 console.log(response);
                 var contenido = "";
                 for (let index = 0; index < response.instalaciones.length; index++) {
-                    // Limpia el campo tipo usando la función limpiarTipo
                     var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-
                     contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
                         tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
                         '</option>' +
@@ -252,7 +252,8 @@
             url: '/getDatos2/' + lote_granel_id,
             method: 'GET',
             success: function(response) {
-                $('#edit_id_categoria_traslado').val(response.categoria ? response.categoria.categoria : '');
+                $('#edit_id_categoria_traslado').val(response.categoria ? response.categoria.categoria :
+                '');
                 $('#edit_id_clase_traslado').val(response.clase ? response.clase.clase : '');
                 if (response.tipo && response.tipo.length > 0) {
                     var tiposConcatenados = response.tipo.map(function(tipo) {

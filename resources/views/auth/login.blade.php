@@ -207,6 +207,21 @@
             transition: all 0.3s ease-in-out;
         }
 
+        .border-effect:hover {
+            transform: scale(1.15);
+            transition: transform 0.3s ease-in-out;
+        }
+
+
+        .border-effect-boton {
+            border-radius: 50%;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .border-effect-boton:hover {
+            transform: scale(1.07);
+            transition: transform 0.3s ease-in-out;
+        }
 
         .boton-effect:hover {
             filter: drop-shadow(0 0 8px #16ba76);
@@ -232,11 +247,6 @@
         .btn {
             position: relative;
             border-radius: 10px;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .border-effect:hover {
-            transform: scale(1.07);
             transition: transform 0.3s ease-in-out;
         }
 
@@ -278,6 +288,38 @@
                 filter: drop-shadow(0px 10px 10px #f5bf03);
             }
         }
+
+        .hover-linea {
+            display: inline-block;
+            position: relative;
+            color: #50d7fc;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .hover-linea::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background-color: #50d7fc;
+            transition: width 0.3s ease;/
+        }
+
+        .hover-linea:hover::after {
+            width: 100%;
+        }
+
+        .hover-zoom {
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .hover-zoom:hover {
+            transform: scale(1.1);
+        }
     </style>
 
     <div id="desktop-view" class="d-none">
@@ -299,7 +341,8 @@
                     <div class="w-px-400 mx-auto pt-5 pt-lg-0">
                         <h4 class="text-center">¡Bienvenido!</h4>
 
-                        <img height="150px" src="{{ asset('assets/img/branding/logo.png') }}" alt="">
+                        <img class="hover-zoom" height="150px" src="{{ asset('assets/img/branding/logo.png') }}"
+                            alt="Logo">
                         <p class="mb-5">Por favor, inicie sesión</p>
                         @if (session('status'))
                             <div class="alert alert-success mb-3" role="alert">
@@ -360,7 +403,7 @@
                                     </a>
                                 @endif
                             </div>
-                            <button class="btn btn-primary d-grid w-100 border-effect">
+                            <button class="btn btn-primary d-grid w-100 border-effect-boton">
                                 Iniciar sesión
                             </button>
                         </form>
@@ -368,7 +411,7 @@
                             <span>¿No estás certificado?</span>
                             @if (Route::has('register'))
                                 <a href="{{ route('solicitud-cliente') }}">
-                                    <span class="text-info">¡Quiero certificarme!</span>
+                                    <span class="text-info hover-linea">¡Quiero certificarme!</span>
                                 </a>
                             @endif
                         </p>
@@ -392,7 +435,7 @@
                         <div class="flex-container">
                             <a href="https://www.facebook.com/organismo.certificador.CIDAM" target="_blank">
                                 <img src="{{ asset('assets/img/branding/facebook_logo.png') }}" alt=""
-                                    class="redes border-effect face-effect">
+                                    class="redes border-effect  face-effect">
                             </a>
                             <div style="gap: 10px"></div>
                             <a href="https://www.instagram.com/oc_cidam/" target="_blank">
@@ -480,14 +523,15 @@
                                     <a href="{{ route('password.request') }}" class="text-end">¿Olvidó su contraseña?</a>
                                 @endif
                             </div>
-                            <button class="btn btn-primary d-grid w-100 border-effect">
+                            <button class="btn btn-primary d-grid w-100 border-effect-boton">
                                 Iniciar sesión
                             </button>
                         </form>
                         <p class="text-center">
                             <span>¿No estás certificado?</span>
                             @if (Route::has('register'))
-                                <a href="{{ route('solicitud-cliente') }}" class="text-info">¡Quiero certificarme!</a>
+                                <a href="{{ route('solicitud-cliente') }}" class="text-info hover-linea">¡Quiero
+                                    certificarme!</a>
                             @endif
                         </p>
                         <div class="flex-container-cel">
@@ -593,9 +637,9 @@
         const snowflake = document.createElement("span");
         snowflake.classList.add("snowflake");
         snowflake.textContent = "❄";
-        snowflake.style.left = Math.random() * 100 + "vw";
+        snowflake.style.left = Math.random() * 70 + "vw";
         snowflake.style.animationDuration = Math.random() * 3 + 2 + "s"; // Duración de caída de 2 a 5 segundos
-        snowflake.style.fontSize = Math.random() * 10 + 10 + "px"; // Tamaño entre 10px y 20px
+        snowflake.style.fontSize = Math.random() * 10 + 5 + "px"; // Tamaño entre 10px y 20px
 
         document.body.appendChild(snowflake);
 

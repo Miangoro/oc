@@ -5,31 +5,38 @@
     }
 
     .select2-container .select2-selection--single {
-    height: 31px; /* Ajusta la altura aquí */
-    font-size: 0.875rem; /* Tamaño del texto */
-    line-height: 31px; /* Alineación vertical */
-}
+        height: 31px;
+        /* Ajusta la altura aquí */
+        font-size: 0.875rem;
+        /* Tamaño del texto */
+        line-height: 31px;
+        /* Alineación vertical */
+    }
 
-.select2-container--default .select2-selection--single .select2-selection__rendered {
-    padding-left: 8px; /* Espaciado interno */
-    padding-right: 8px;
-    font-size: 0.875rem; /* Tamaño del texto */
-    line-height: 31px;
-}
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        padding-left: 8px;
+        /* Espaciado interno */
+        padding-right: 8px;
+        font-size: 0.875rem;
+        /* Tamaño del texto */
+        line-height: 31px;
+    }
 
-.select2-container--default .select2-selection--single .select2-selection__arrow {
-    height: 31px; /* Ajusta el tamaño del ícono */
-}
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 31px;
+        /* Ajusta el tamaño del ícono */
+    }
 
-.select2-container .select2-selection--multiple {
-    min-height: 31px; /* Ajusta la altura */
-    font-size: 0.875rem;
-}
+    .select2-container .select2-selection--multiple {
+        min-height: 31px;
+        /* Ajusta la altura */
+        font-size: 0.875rem;
+    }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
-    font-size: 0.875rem; /* Tamaño del texto */
-}
-
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        font-size: 0.875rem;
+        /* Tamaño del texto */
+    }
 </style>
 <div class="modal fade" id="etiquetas" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-custom-size modal-simple modal-add-new-address">
@@ -48,22 +55,20 @@
                             <table style="table-layout: fixed;" class="table table-bordered table-sm">
                                 <thead>
                                     <tr>
-                                        <th style="width: 100px"><button type="button" class="btn btn-primary add-row-add"> <i
-                                                    class="ri-add-line"></i>
+                                        <th style="width: 100px"><button type="button"
+                                                class="btn btn-primary add-row-add"> <i class="ri-add-line"></i>
                                             </button></th>
                                         <th style="width: 20%">Destino de exportación</th>
                                         <th>SKU</th>
                                         <th>Información</th>
                                         <th>Cont. Neto</th>
                                         <th>% Alc. Vol.</th>
-                                      
                                         <th>Etiqueta</th>
                                         <th>Corrugado</th>
-
                                     </tr>
                                 </thead>
                                 <tbody id="contenidoRango">
-                                    
+
                                 </tbody>
                             </table>
                         </div>
@@ -77,7 +82,6 @@
         </div>
     </div>
 </div>
-
 
 <script>
     $(document).ready(function() {
@@ -105,13 +109,13 @@
                 <option value="{{ $categoria->id_categoria }}">{{ $categoria->categoria }}</option>
             @endforeach
         `;
-        
+
             var newRow = `
             <tr>
                 <th>
                     <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
                 </th>
-                                                <td><select id="id_direccion_destino` + i + `" class="form-control select2 .id_direccion_destino" name="id_direccion[]"></select></td>
+                <td><select id="id_direccion_destino` + i + `" class="form-control select2 .id_direccion_destino" name="id_direccion[]"></select></td>
                 <td><input type="text" class="form-control form-control-sm" name="sku[]" id="sku"></td>
                 <td><select class="form-control" name="id_categoria[]">` + opciones3 + `</select>
                     <select class="form-control select2" name="id_tipo[]">` + opciones + `</select>
@@ -119,7 +123,6 @@
                 <td><input type="number" class="form-control form-control-sm" name="presentacion[]" step="0.01" min="0">
                     <select class="form-control" name="unidad[]"><option value="mL">mL</option><option value="L">L</option><option value="cL">cL</option></select></td>
                 <td><input type="text" class="form-control form-control-sm" name="alc_vol[]"></td>
-               
                 <td><input class="form-control form-control-sm" type="file" name="url[]"><input value="60" class="form-control" type="hidden" name="id_documento[]"><input value="Etiquetas" class="form-control" type="hidden" name="nombre_documento[]"></td>
                 <td><input class="form-control form-control-sm" type="file" name="url[]"><input value="75" class="form-control" type="hidden" name="id_documento[]"><input value="Corrugado" class="form-control" type="hidden" name="nombre_documento[]"></td>
             </tr>`;
@@ -147,18 +150,20 @@
             success: function(response) {
                 console.log(response.direcciones_destino);
                 var contenido = "";
-            for (let index = 0; index < response.direcciones_destino.length; index++) {
-                // Limpia el campo tipo usando la función limpiarTipo
-               
+                for (let index = 0; index < response.direcciones_destino.length; index++) {
+                    // Limpia el campo tipo usando la función limpiarTipo
 
-                contenido = '<option value="' + response.direcciones_destino[index].id_direccion + '">' +
-                    response.direcciones_destino[index].destinatario + ' | ' + response.direcciones_destino[index].direccion + '</option>' +
-                    contenido;
-            }
-            if (response.direcciones_destino.length == 0) {
-                contenido = '<option value="">Sin direcciones registradas</option>';
-            }
-            $('#id_direccion_destino'+aux).html(contenido);
+
+                    contenido = '<option value="' + response.direcciones_destino[index].id_direccion +
+                        '">' +
+                        response.direcciones_destino[index].destinatario + ' | ' + response
+                        .direcciones_destino[index].direccion + '</option>' +
+                        contenido;
+                }
+                if (response.direcciones_destino.length == 0) {
+                    contenido = '<option value="">Sin direcciones registradas</option>';
+                }
+                $('#id_direccion_destino' + aux).html(contenido);
             },
             error: function() {
                 //alert('Error al cargar los lotes a granel.');
