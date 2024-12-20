@@ -206,18 +206,18 @@
             border-radius: 50%;
             transition: all 0.3s ease-in-out;
         }
-        
+
         .border-effect:hover {
             transform: scale(1.15);
             transition: transform 0.3s ease-in-out;
         }
 
-        
+
         .border-effect-boton {
             border-radius: 50%;
             transition: all 0.3s ease-in-out;
         }
-        
+
         .border-effect-boton:hover {
             transform: scale(1.07);
             transition: transform 0.3s ease-in-out;
@@ -243,6 +243,7 @@
                 0 0 30px #a04293;
             transition: all 0.3s ease-in-out;
         }
+
         .btn {
             position: relative;
             border-radius: 10px;
@@ -287,6 +288,38 @@
                 filter: drop-shadow(0px 10px 10px #f5bf03);
             }
         }
+
+        .hover-linea {
+            display: inline-block;
+            position: relative;
+            color: #50d7fc;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .hover-linea::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background-color: #50d7fc;
+            transition: width 0.3s ease;/
+        }
+
+        .hover-linea:hover::after {
+            width: 100%;
+        }
+
+        .hover-zoom {
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .hover-zoom:hover {
+            transform: scale(1.1);
+        }
     </style>
 
     <div id="desktop-view" class="d-none">
@@ -308,7 +341,8 @@
                     <div class="w-px-400 mx-auto pt-5 pt-lg-0">
                         <h4 class="text-center">¡Bienvenido!</h4>
 
-                        <img height="150px" src="{{ asset('assets/img/branding/logo.png') }}" alt="">
+                        <img class="hover-zoom" height="150px" src="{{ asset('assets/img/branding/logo.png') }}"
+                            alt="Logo">
                         <p class="mb-5">Por favor, inicie sesión</p>
                         @if (session('status'))
                             <div class="alert alert-success mb-3" role="alert">
@@ -377,7 +411,7 @@
                             <span>¿No estás certificado?</span>
                             @if (Route::has('register'))
                                 <a href="{{ route('solicitud-cliente') }}">
-                                    <span class="text-info">¡Quiero certificarme!</span>
+                                    <span class="text-info hover-linea">¡Quiero certificarme!</span>
                                 </a>
                             @endif
                         </p>
@@ -496,7 +530,8 @@
                         <p class="text-center">
                             <span>¿No estás certificado?</span>
                             @if (Route::has('register'))
-                                <a href="{{ route('solicitud-cliente') }}" class="text-info">¡Quiero certificarme!</a>
+                                <a href="{{ route('solicitud-cliente') }}" class="text-info hover-linea">¡Quiero
+                                    certificarme!</a>
                             @endif
                         </p>
                         <div class="flex-container-cel">
