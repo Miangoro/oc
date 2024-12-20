@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 id="modalReexpedirDictamenEnvasadoLabel" class="modal-title">Cancelar/Reexpedir Dictamen a Granel</h5>
+                <h5 id="modalReexpedirDictamenEnvasadoLabel" class="modal-title">Cancelar/Reexpedir Dictamen Envasado</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -84,7 +84,7 @@
                                     <label for="fecha_emision">Fecha de Emisión</label>
                                 </div>
                             </div>
-    
+
                             <!-- Fecha de Vigencia -->
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline">
