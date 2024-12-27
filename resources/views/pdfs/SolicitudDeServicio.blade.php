@@ -416,9 +416,7 @@
             <td class="con-negra" colspan="2" style="text-align: left">5) Especie de Agave:</td>
             <td colspan="3">
                 @if($datos->lote_granel && $datos->lote_granel->tiposRelacionados && $datos->lote_granel->tiposRelacionados->isNotEmpty())
-                    @foreach ($datos->lote_granel->tiposRelacionados as $tipo)
-                        {{ $tipo->nombre }} (<i style="font-size: 7px">{{ $tipo->cientifico }}</i>)<br>
-                    @endforeach
+                   
                 @else
                     ---------------
                 @endif
