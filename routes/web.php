@@ -612,6 +612,9 @@ Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('ti
 
 Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');
 Route::get('/getDatos2/{lote_granel}', [getFuncionesController::class, 'getDatos2'])->name('getDatos2');
+Route::get('/getDatosSolicitud/{id_solicitud}', [getFuncionesController::class, 'getDatosSolicitud'])->name('getDatosSolicitud');
+Route::get('/obtenerDocumentosClientes/{id_documento}/{id_cliente}', [getFuncionesController::class, 'obtenerDocumentosClientes'])->name('obtenerDocumentosClientes');
+
 
 //Guias de agave o maguey
 Route::get('/guias/guias_de_agave', [GuiasController::class, 'UserManagement'])->name('traslado-guias');

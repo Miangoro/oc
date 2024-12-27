@@ -3909,8 +3909,9 @@ $(function () {
 
 // Mapeo entre IDs de tipo de solicitud y IDs de divs
 const divsPorSolicitud = {
-  1: ['guiastraslado'],
-  2: ['guiastraslado'],
+  1: ['muestreoAgave'],
+  2: ['vigilanciaProduccion'],
+  4: ['vigilanciaTraslado'],
   14: ['dictamenInstalaciones'],
   10: ['georreferencia'],
   11: ['liberacionPTExportacion'],
@@ -3933,23 +3934,140 @@ function manejarVisibilidadDivs(idTipo) {
       });
   }
 }
-
-  // Manejar el clic en los enlaces con clase "validar-solicitud"
+// Manejar el clic en los enlaces con clase "validar-solicitudes"
 $(document).on('click', '.validar-solicitudes', function () {
   // Leer los datos desde los atributos data-*
   var idTipo = $(this).data('id');
-  manejarVisibilidadDivs(idTipo);
-
   var id_solicitud = $(this).data('id-solicitud');
   var tipoName = $(this).data('tipo');
   var razon_social = $(this).data('razon-social');
-  // Actualizar los campos dentro del modal
-  $('#clienteNombre').text(razon_social);
   $('#tipoSolicitud').text(tipoName);
 
-  console.log('Datos del registro:', { idTipo, id_solicitud, tipoName, razon_social });
 
+  $.ajax({
+      url: `/getDatosSolicitud/${id_solicitud}`, 
+      type: 'GET',
+      dataType: 'json', 
+      success: function (response) {
+
+          if (response.success) {
+            
+              $('.domicilioFiscal').text(response.data.empresa.domicilio_fiscal);
+            // Validar si `direccion_completa` no está vacío
+        if (response.data.instalacion) {
+          $('.domicilioInstalacion').text(response.data.instalacion.direccion_completa);
+        } else {
+          // Si está vacío, usar `ubicacion_predio`
+          $('.domicilioInstalacion').text(response.data.predios.ubicacion_predio);
+          $(".preregistro").html("<a target='_Blank' href='/pre-registro_predios/"+response.data.predios.id_predio+"'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>");
+        }
+
+        var caracteristicas = JSON.parse(response.data.caracteristicas);
+
+
+
+              $('.razonSocial').text(response.data.empresa.razon_social);
+              //console.log(response.data.empresa.razon_social);
+              $('.fechaHora').text(response.fecha_visita_formateada);
+              $('.guiasTraslado').text(response.data.caracteristicas.guias);
+              $('.nombreLote').text(response.data.lote_granel.nombre_lote);
+              $('.categoria').text(response.data.lote_granel.categoria.categoria);
+              $('.clase').text(response.data.lote_granel.clase.clase);
+              $('.tipos').text(response.tipos_agave);
+              $('.tipoAnalisis').text(caracteristicas.tipo_analisis);
+            
+// Estructura de configuración para los documentos
+const documentConfig = [
+  {
+      ids: [45, 66, 113],
+      targetClass: '.comprobantePosesion',
+      noDocMessage: 'No hay comprobante de posesión',
+      condition: (documento, response) => 
+          documento.id_relacion == response.data.id_instalacion 
+  },
+  {
+    ids: [34],
+    targetClass: '.comprobantePosesion',
+    noDocMessage: 'No hay contrato de arrendamiento',
+    condition: (documento, response) => 
+        documento.id_relacion == response.data.id_predio
+  },
+  {
+      ids: [43, 106, 112],
+      targetClass: '.planoDistribucion',
+      noDocMessage: 'No hay plan de distribución',
+      condition: (documento, response) => 
+          documento.id_relacion == response.data.id_instalacion
+  },
+  {
+      ids: [76],
+      targetClass: '.csf',
+      noDocMessage: 'No hay CSF',
+      condition: (documento, response) => 
+          documento.id_empresa == response.data.id_empresa
+  },
+  {
+      ids: [1],
+      targetClass: '.actaConstitutiva',
+      noDocMessage: 'No hay acta constitutiva',
+      condition: (documento, response) => 
+          documento.id_empresa == response.data.id_empresa
+  }
+];
+
+// Variable para seguimiento de documentos encontrados
+const documentsFound = {};
+
+// Inicializamos cada grupo como no encontrado
+documentConfig.forEach(config => {
+  documentsFound[config.targetClass] = false;
 });
+
+// Iterar sobre los documentos
+$.each(response.documentos, function(index, documento) {
+  documentConfig.forEach(config => {
+      if (
+          config.ids.includes(documento.id_documento) && 
+          config.condition(documento, response) // Usar la condición dinámica
+      ) {
+          const link = $('<a>', {
+              href: 'files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + documento.url,
+              target: '_blank'
+          });
+
+          link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
+          $(config.targetClass).empty().append(link);
+          documentsFound[config.targetClass] = true;
+      }
+  });
+});
+
+// Mostrar mensajes para documentos no encontrados
+documentConfig.forEach(config => {
+  if (!documentsFound[config.targetClass]) {
+      $(config.targetClass).text(config.noDocMessage);
+  }
+});
+
+
+
+
+
+        
+              
+          } else {
+              console.warn('No se encontró información para la solicitud.');
+          }
+      },
+      error: function (xhr, status, error) {
+          console.error('Error al obtener los datos:', error);
+      }
+  });
+
+  // Manejar la visibilidad de divs si aplica
+  manejarVisibilidadDivs(idTipo);
+});
+
 
 
 

@@ -5,85 +5,18 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Validación de la solicitud de servicio</h4>
-                    <p id="tipoSolicitud" class="solicitud badge bg-primary"></p>
+                    <p id="tipoSolicitud" class="solicitud badge bg-primary fs-4"></p>
                     <div class="datos-importantes">
-                      <table style="font-size: 11px;" class="table table-bordered table-sm">
-                        <tbody>
-                            <tr>
-                                <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Número de
-                                    Solicitud:</th>
-                                <td id="numeroSolicitud">12345</td>
-                                <td class="text-dark fw-bold" style="font-size: 11px;">Cumple:</td>
-                                <td>
-                                  <select class="form-control form-control-sm" id="cumpleGuiasTrasladoAgave">
-                                      <option value="" disabled selected>Seleccionar</option>
-                                      <option value="si">Sí</option>
-                                      <option value="no">No</option>
-                                  </select>
-                              </td>
-                            </tr>
-                            <tr>
-                                <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Cliente:</th>
-                                <td id="clienteNombre">Nombre del Cliente</td>
-                                <td class="text-dark fw-bold" style="font-size: 11px;">Cumple:</td>
-                                <td>
-                                  <select class="form-control form-control-sm">
-                                      <option value="" disabled selected>Seleccionar</option>
-                                      <option value="si">Sí</option>
-                                      <option value="no">No</option>
-                                  </select>
-                              </td>
-                            </tr>
-                            <tr>
-                                <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Fecha de
-                                    Solicitud:</th>
-                                <td id="fechaSolicitud">21/10/2024</td>
-                                <td class="text-dark fw-bold" style="font-size: 11px;">Cumple:</td>
-                                <td>
-                                  <select class="form-control form-control-sm" >
-                                      <option value="" disabled selected>Seleccionar</option>
-                                      <option value="si">Sí</option>
-                                      <option value="no">No</option>
-                                  </select>
-                              </td>
-                            </tr>
-                           <tr id="guiastraslado" class="d-none">
-                                <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Guías de Traslado de Agave:</th>
-                                <td id="guiasTrasladoAgave">Guía #12345</td>
-                                <td class="text-dark fw-bold" style="font-size: 11px;">Cumple:</td>
-                                <td>
-                                    <select class="form-control form-control-sm">
-                                        <option value="" disabled selected>Seleccionar</option>
-                                        <option value="si">Sí</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </td>
+                       
 
-                            <!-- Domicilio de instalaciones (unidad de producción autorizada vigente) -->
-                            <tr>
-                                <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Domicilio de Instalaciones (Unidad de Producción Autorizada Vigente):</th>
-                                <td id="domicilioInstalaciones">Calle Ejemplo #456, Zona Industrial</td>
-                                <td class="text-dark fw-bold" style="font-size: 11px;">Cumple:</td>
-                                <td>
-                                    <select class="form-control form-control-sm">
-                                        <option value="" disabled selected>Seleccionar</option>
-                                        <option value="si">Sí</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                            </tbody>
-                        </table>
+                       
 
 
                     </div>
                 </div>
 
                 <div id="addRegistrarSolicitudValidar">
-                    <div class="row">
+                  <!--  <div class="row">
                         <div class="col-md-6">
                             <div class="card mb-5">
                                 <div class="card-body">
@@ -165,12 +98,11 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
 
-                    <div id="dictamenInstalaciones" class="d-none terminado">
-                        <h4 class="address-title mb-2" >Dictamen de Instalaciones</h4>
+                    <div id="muestreoAgave" class="d-none terminado">
                         <div class="datos-importantes">
-                            <table style="font-size: 11px;" class="table table-bordered table-sm">
+                            <table style="font-size: 12px;" class="table table-bordered table-sm">
                                 <thead>
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;">Descripción</th>
@@ -181,8 +113,8 @@
                                 <tbody>
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Razón
-                                            Social (Emisor):</th>
-                                        <td id="razonSocialEmisorDictamen"></td>
+                                            Social:</th>
+                                        <td class="razonSocial"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
                                                 id="cumpleRazonSocialEmisorDictamen">
@@ -193,12 +125,12 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Razón
-                                            Social (Receptor):</th>
-                                        <td id="razonSocialReceptorDictamen"></td>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                            Domicilio Fiscal:</th>
+                                        <td class="domicilioFiscal"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
-                                                id="cumpleRazonSocialReceptorDictamen">
+                                                id="cumpleDomicilioFiscalEmisorDictamen">
                                                 <option disabled selected>Seleccionar</option>
                                                 <option value="si">Sí</option>
                                                 <option value="no">No</option>
@@ -207,8 +139,157 @@
                                     </tr>
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Domicilio Fiscal (Emisor):</th>
-                                        <td id="domicilioFiscalEmisorDictamen"></td>
+                                            Domicilio de Instalaciones (Unidad de Producción Autorizada):
+                                        </th>
+                                        <td class="domicilioInstalacion"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleDomicilioInstalacionesEmisorDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Fecha y
+                                            Hora de Visita:</th>
+                                        <td class="fechaHora"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleFechaHoraVisitaDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Guías de traslado de agave:</th>
+                                        <td class="guiasTraslado"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumple">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="vigilanciaProduccion" class="d-none terminado">
+                        <div class="datos-importantes">
+                            <table style="font-size: 12px;" class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;">Descripción</th>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;">Dato</th>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;">Cumple</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Razón
+                                            Social:</th>
+                                        <td class="razonSocial"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleRazonSocialEmisorDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                            Domicilio Fiscal:</th>
+                                        <td class="domicilioFiscal"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleDomicilioFiscalEmisorDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                            Domicilio de Instalaciones (Unidad de Producción Autorizada):
+                                        </th>
+                                        <td class="domicilioInstalacion"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleDomicilioInstalacionesEmisorDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Fecha y
+                                            Hora de Visita:</th>
+                                        <td class="fechaHora"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleFechaHoraVisitaDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Guías de traslado de agave:</th>
+                                        <td class="guiasTraslado"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumple">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="dictamenInstalaciones" class="d-none terminado">
+                        <div class="datos-importantes">
+                            <table style="font-size: 12px;" class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;">Descripción</th>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;">Dato</th>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;">Cumple</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Razón
+                                            Social:</th>
+                                        <td class="razonSocial"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleRazonSocialEmisorDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                            Domicilio Fiscal:</th>
+                                        <td class="domicilioFiscal"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
                                                 id="cumpleDomicilioFiscalEmisorDictamen">
@@ -222,7 +303,7 @@
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                             Domicilio de Instalaciones (Unidad de Producción o Envasadora Autorizada):
                                         </th>
-                                        <td id="domicilioInstalacionesEmisorDictamen"></td>
+                                        <td class="domicilioInstalacion"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
                                                 id="cumpleDomicilioInstalacionesEmisorDictamen">
@@ -235,7 +316,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Fecha y
                                             Hora de Visita:</th>
-                                        <td id="fechaHoraVisitaDictamen"></td>
+                                        <td class="fechaHora"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
                                                 id="cumpleFechaHoraVisitaDictamen">
@@ -248,7 +329,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                             Comprobante de Posesión:</th>
-                                        <td id="comprobantePosesionDictamen"></td>
+                                        <td class="comprobantePosesion"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
                                                 id="cumpleComprobantePosesionDictamen">
@@ -261,7 +342,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Plano
                                             de Distribución:</th>
-                                        <td id="planoDistribucionDictamen"></td>
+                                        <td class="planoDistribucion"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
                                                 id="cumplePlanoDistribucionDictamen">
@@ -274,7 +355,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">CSF:
                                         </th>
-                                        <td id="csfDictamen"></td>
+                                        <td class="csf"></td>
                                         <td>
                                             <select class="form-control form-control-sm" id="cumpleCsfDictamen">
                                                 <option disabled selected>Seleccionar</option>
@@ -286,7 +367,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Acta
                                             Constitutiva:</th>
-                                        <td id="actaConstitutivaDictamen"></td>
+                                        <td class="actaConstitutiva"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
                                                 id="cumpleActaConstitutivaDictamen">
@@ -301,10 +382,9 @@
                         </div>
                     </div>
 
-                    <div id="muestreoLoteRemuestreo" class="d-none terminado">
-                        <h4 class="address-title mb-2">Muestreo de Lote a Granel </h4>
+                    <div id="muestreoLoteAjustes" class="d-none terminado">
                         <div class="datos-importantes">
-                            <table style="font-size: 11px;" class="table table-bordered table-sm">
+                            <table style="font-size: 12px;" class="table table-bordered table-sm">
                                 <thead>
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;">Descripción</th>
@@ -314,9 +394,62 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Razón
+                                            Social:</th>
+                                        <td class="razonSocial"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleRazonSocialEmisorDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                            Domicilio Fiscal:</th>
+                                        <td class="domicilioFiscal"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleDomicilioFiscalEmisorDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                            Domicilio de Instalaciones (Unidad de Producción o Envasadora Autorizada):
+                                        </th>
+                                        <td class="domicilioInstalacion"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleDomicilioInstalacionesEmisorDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Fecha y
+                                            Hora de Visita:</th>
+                                        <td class="fechaHora"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleFechaHoraVisitaDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Nombre
                                             del Lote:</th>
-                                        <td id="nombreLoteRemuestreo"></td>
+                                        <td class="nombreLote"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
                                                 id="cumpleNombreLoteRemuestreo">
@@ -329,7 +462,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                             Categoría:</th>
-                                        <td id="categoriaRemuestreo"></td>
+                                        <td class="categoria"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
                                                 id="cumpleCategoriaRemuestreo">
@@ -342,7 +475,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Clase:
                                         </th>
-                                        <td id="claseRemuestreo"></td>
+                                        <td class="clase"></td>
                                         <td>
                                             <select class="form-control form-control-sm" id="cumpleClaseRemuestreo">
                                                 <option disabled selected>Seleccionar</option>
@@ -354,7 +487,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Especie
                                             de Agave:</th>
-                                        <td id="especieAgaveRemuestreo"></td>
+                                        <td class="tipos"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
                                                 id="cumpleEspecieAgaveRemuestreo">
@@ -367,7 +500,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Tipo de
                                             Análisis:</th>
-                                        <td id="tipoAnalisisRemuestreo"></td>
+                                        <td class="tipoAnalisis"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
                                                 id="cumpleTipoAnalisisRemuestreo">
@@ -378,20 +511,8 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">FQ (del
-                                            lote que no pasa):</th>
-                                        <td id="fqRemuestreo"></td>
-                                        <td>
-                                            <select class="form-control form-control-sm" id="cumpleFqRemuestreo">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option value="si">Sí</option>
-                                                <option value="no">No</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Acta de
-                                            Vigilancia:</th>
+                                            Vigilancia de producción:</th>
                                         <td id="actaVigilanciaRemuestreo"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
@@ -407,141 +528,11 @@
                         </div>
                     </div>
 
-                    <div id="muestreoLoteAjustes" class="d-none termiando">
-                        <h4 class="address-title mb-2">Muestreo de Lote a Granel {{-- (Otras clases o ajustes) --}}</h4>
-
-                        <div class="datos-importantes">
-                            <table style="font-size: 11px;" class="table table-bordered table-sm">
-                                <thead>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;">Descripción</th>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;">Dato</th>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;">Cumple</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Nombre
-                                            del Lote:</th>
-                                        <td id="nombreLoteAjustes"></td>
-                                        <td>
-                                            <select class="form-control form-control-sm" id="cumpleNombreLoteAjustes">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option value="si">Sí</option>
-                                                <option value="no">No</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Categoría:</th>
-                                        <td id="categoriaAjustes"></td>
-                                        <td>
-                                            <select class="form-control form-control-sm" id="cumpleCategoriaAjustes">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option value="si">Sí</option>
-                                                <option value="no">No</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Clase:
-                                        </th>
-                                        <td id="claseAjustes"></td>
-                                        <td>
-                                            <select class="form-control form-control-sm" id="cumpleClaseAjustes">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option value="si">Sí</option>
-                                                <option value="no">No</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Especie
-                                            de Agave:</th>
-                                        <td id="especieAgaveAjustes"></td>
-                                        <td>
-                                            <select class="form-control form-control-sm"
-                                                id="cumpleEspecieAgaveAjustes">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option value="si">Sí</option>
-                                                <option value="no">No</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Tipo de
-                                            Análisis:</th>
-                                        <td id="tipoAnalisisAjustes"></td>
-                                        <td>
-                                            <select class="form-control form-control-sm"
-                                                id="cumpleTipoAnalisisAjustes">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option value="si">Sí</option>
-                                                <option value="no">No</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">FQ:
-                                        </th>
-                                        <td id="fqAjustes"></td>
-                                        <td>
-                                            <select class="form-control form-control-sm" id="cumpleFqAjustes">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option value="si">Sí</option>
-                                                <option value="no">No</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Certificado:</th>
-                                        <td id="certificadoAjustes"></td>
-                                        <td>
-                                            <select class="form-control form-control-sm"
-                                                id="cumpleCertificadoAjustes">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option value="si">Sí</option>
-                                                <option value="no">No</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Volumen
-                                            del Lote:</th>
-                                        <td id="volumenLoteAjustes"></td>
-                                        <td>
-                                            <select class="form-control form-control-sm"
-                                                id="cumpleVolumenLoteAjustes">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option value="si">Sí</option>
-                                                <option value="no">No</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Acta de
-                                            Vigilancia:</th>
-                                        <td id="actaVigilanciaAjustes"></td>
-                                        <td>
-                                            <select class="form-control form-control-sm"
-                                                id="cumpleActaVigilanciaAjustes">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option value="si">Sí</option>
-                                                <option value="no">No</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+              
 
                     <div id="vigilanciaTraslado" class="d-none terminado">
-                        <h4 class="address-title mb-2">Vigilancia en el Traslado de Lote</h4>
                         <div class="datos-importantes">
-                            <table style="font-size: 11px;" class="table table-bordered table-sm">
+                            <table style="font-size: 12px;" class="table table-bordered table-sm">
                                 <thead>
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;">Descripción</th>
@@ -551,9 +542,62 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Razón
+                                            Social:</th>
+                                        <td class="razonSocial"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleRazonSocialEmisorDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                            Domicilio Fiscal:</th>
+                                        <td class="domicilioFiscal"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleDomicilioFiscalEmisorDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
+                                            Domicilio de Instalaciones (Unidad de Producción o Envasadora Autorizada):
+                                        </th>
+                                        <td class="domicilioInstalacion"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleDomicilioInstalacionesEmisorDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Fecha y
+                                            Hora de Visita:</th>
+                                        <td class="fechaHora"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleFechaHoraVisitaDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Nombre
                                             del Lote:</th>
-                                        <td id="nombreLoteTraslado"></td>
+                                        <td class="nombreLote"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
                                                 id="cumpleNombreLoteTraslado">
@@ -566,7 +610,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                             Categoría:</th>
-                                        <td id="categoriaTraslado"></td>
+                                        <td class="categoria"></td>
                                         <td>
                                             <select class="form-control form-control-sm" id="cumpleCategoriaTraslado">
                                                 <option disabled selected>Seleccionar</option>
@@ -578,7 +622,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Clase:
                                         </th>
-                                        <td id="claseTraslado"></td>
+                                        <td class="clase"></td>
                                         <td>
                                             <select class="form-control form-control-sm" id="cumpleClaseTraslado">
                                                 <option disabled selected>Seleccionar</option>
@@ -590,7 +634,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Especie
                                             de Agave:</th>
-                                        <td id="especieAgaveTraslado"></td>
+                                        <td class="tipos"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
                                                 id="cumpleEspecieAgaveTraslado">
@@ -1614,9 +1658,9 @@
                     </div>
 
                     <div id="georreferencia" class="d-none terminado">
-                        <h4 class="address-title mb-2">Georreferenciación</h4>
+                       
                         <div class="datos-importantes">
-                            <table style="font-size: 11px;" class="table table-bordered table-sm">
+                            <table style="font-size: 12px;" class="table table-bordered table-sm">
                                 <thead>
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;">Descripción</th>
@@ -1626,60 +1670,62 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Razón Social (Emisor):</th>
-                                        <td id="razonSocialEmisorGeorreferencia"></td>
-                                        <td><select class="form-control form-control-sm">
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Razón
+                                            Social:</th>
+                                        <td class="razonSocial"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleRazonSocialEmisorDictamen">
                                                 <option disabled selected>Seleccionar</option>
-                                                <option>Sí</option>
-                                                <option>No</option>
-                                            </select></td>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Razón Social (Receptor):</th>
-                                        <td id="razonSocialReceptorGeorreferencia"></td>
-                                        <td><select class="form-control form-control-sm">
+                                            Domicilio Fiscal:</th>
+                                        <td class="domicilioFiscal"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleDomicilioFiscalEmisorDictamen">
                                                 <option disabled selected>Seleccionar</option>
-                                                <option>Sí</option>
-                                                <option>No</option>
-                                            </select></td>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Domicilio Fiscal (Emisor):</th>
-                                        <td id="domicilioFiscalEmisorGeorreferencia"></td>
-                                        <td><select class="form-control form-control-sm">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option>Sí</option>
-                                                <option>No</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Domicilio de Instalaciones (Unidad de Producción o Envasadora Autorizada):
+                                            Domicilio del predio:
                                         </th>
-                                        <td id="domicilioInstalacionesEmisorGeorreferencia"></td>
-                                        <td><select class="form-control form-control-sm">
+                                        <td class="domicilioInstalacion"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleDomicilioInstalacionesEmisorDictamen">
                                                 <option disabled selected>Seleccionar</option>
-                                                <option>Sí</option>
-                                                <option>No</option>
-                                            </select></td>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Fecha y
+                                            Hora de Visita:</th>
+                                        <td class="fechaHora"></td>
+                                        <td>
+                                            <select class="form-control form-control-sm"
+                                                id="cumpleFechaHoraVisitaDictamen">
+                                                <option disabled selected>Seleccionar</option>
+                                                <option value="si">Sí</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Fecha y Hora de Visita:</th>
-                                        <td id="fechaHoraVisitaGeorreferencia"></td>
-                                        <td><select class="form-control form-control-sm">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option>Sí</option>
-                                                <option>No</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Comprobante de Predio:</th>
-                                        <td id="comprobantePredioGeorreferencia"></td>
+                                            Comprobante de posesión del Predio:</th>
+                                        <td class="comprobantePosesion"></td>
                                         <td><select class="form-control form-control-sm">
                                                 <option disabled selected>Seleccionar</option>
                                                 <option>Sí</option>
@@ -1689,7 +1735,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
                                             Preregistro:</th>
-                                        <td id="preregistroGeorreferencia"></td>
+                                        <td class="preregistro"></td>
                                         <td><select class="form-control form-control-sm">
                                                 <option disabled selected>Seleccionar</option>
                                                 <option>Sí</option>
@@ -1701,124 +1747,18 @@
                         </div>
                     </div>
 
-                    <div id="dictamenInstalaciones" class="d-none">
-                        <h4 class="address-title mb-2">Dictamen de Instalaciones</h4>
-                        <div class="datos-importantes">
-                            <table style="font-size: 11px;" class="table table-bordered table-sm">
-                                <thead>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;">Descripción</th>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;">Dato</th>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;">Cumple</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Razón Social (Emisor):</th>
-                                        <td id="razonSocialEmisorDictamen"></td>
-                                        <td><select class="form-control form-control-sm">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option>Sí</option>
-                                                <option>No</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Razón Social (Receptor):</th>
-                                        <td id="razonSocialReceptorDictamen"></td>
-                                        <td><select class="form-control form-control-sm">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option>Sí</option>
-                                                <option>No</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Domicilio Fiscal (Emisor):</th>
-                                        <td id="domicilioFiscalEmisorDictamen"></td>
-                                        <td><select class="form-control form-control-sm">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option>Sí</option>
-                                                <option>No</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Domicilio de Instalaciones (Unidad de Producción o Envasadora Autorizada):
-                                        </th>
-                                        <td id="domicilioInstalacionesEmisorDictamen"></td>
-                                        <td><select class="form-control form-control-sm">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option>Sí</option>
-                                                <option>No</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Fecha y Hora de Visita:</th>
-                                        <td id="fechaHoraVisitaDictamen"></td>
-                                        <td><select class="form-control form-control-sm">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option>Sí</option>
-                                                <option>No</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Comprobante de Posesión:</th>
-                                        <td id="comprobantePosesionDictamen"></td>
-                                        <td><select class="form-control form-control-sm">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option>Sí</option>
-                                                <option>No</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">
-                                            Plano de Distribución:</th>
-                                        <td id="planoDistribucionDictamen"></td>
-                                        <td><select class="form-control form-control-sm">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option>Sí</option>
-                                                <option>No</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">CSF:
-                                        </th>
-                                        <td id="csfDictamen"></td>
-                                        <td><select class="form-control form-control-sm">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option>Sí</option>
-                                                <option>No</option>
-                                            </select></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Acta
-                                            Constitutiva:</th>
-                                        <td id="actaConstitutivaDictamen"></td>
-                                        <td><select class="form-control form-control-sm">
-                                                <option disabled selected>Seleccionar</option>
-                                                <option>Sí</option>
-                                                <option>No</option>
-                                            </select></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+               
 
 
-                    <div class="row">
+                   <!-- <div class="row">
                         <div class="form-floating form-floating-outline mb-5 mt-4">
                             <textarea name="info_adicional" class="form-control h-px-150 info_adicional" id="info"
                                 placeholder="Información comentarios u observaciones sobre esta solicitud..."></textarea>
                             <label for="comentarios">Comentarios u observaciones sobre esta solicitud</label>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
-                        <button type="submit" class="btn btn-primary">Registrar</button>
+                        <button type="submit" class="btn btn-primary">Validar</button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
                             aria-label="Close">Cancelar</button>
                     </div>

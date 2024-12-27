@@ -347,7 +347,7 @@ class lotesGranelController extends Controller
 
         $lote->ingredientes = $validatedData['ingredientes'] ?? null;
         $lote->edad = $validatedData['edad'] ?? null;
-        $lote->folio_certificado = $validatedData['folio_certificado'] ?? null;
+        $lote->folio_certificado = $validatedData['folio_certificado'] ?? 'Sin certificado';
         $lote->id_organismo = $validatedData['id_organismo'] ?? null;
         $lote->fecha_emision = $validatedData['fecha_emision'] ?? null;
         $lote->fecha_vigencia = $validatedData['fecha_vigencia'] ?? null;

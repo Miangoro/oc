@@ -189,7 +189,7 @@ class solicitudesController extends Controller
                     ? Carbon::parse($caracteristicas['fecha_corte'])->format('d/m/Y H:i')
                     : 'N/A';
                 //case 3
-                $idLoteGranelDestino = $caracteristicas['id_lote_granel_muestreo'] ?? null;
+                $idLoteGranelDestino = $caracteristicas['id_lote_granel'] ?? null;
                 if ($idLoteGranelDestino) {
                     $loteGranel = LotesGranel::find($idLoteGranelDestino); // Busca el lote a granel
                     $nestedData['id_lote_granel_muestreo'] = $idLoteGranelDestino;
@@ -205,7 +205,7 @@ class solicitudesController extends Controller
                 $nestedData['volumen_muestreo'] = $caracteristicas['volumen_muestreo'] ?? 'N/A';
                 $nestedData['id_certificado_muestreo'] = $caracteristicas['id_certificado_muestreo'] ?? 'N/A';
                 //case 4
-                $idLoteGranelTraslado = $caracteristicas['id_lote_granel_traslado'] ?? null;
+                $idLoteGranelTraslado = $caracteristicas['id_lote_granel'] ?? null;
                 if ($idLoteGranelTraslado) {
                     $loteGranel = LotesGranel::find($idLoteGranelTraslado); // Busca el lote a granel
                     $nestedData['id_lote_granel_traslado'] = $idLoteGranelTraslado;
@@ -221,7 +221,7 @@ class solicitudesController extends Controller
                 $nestedData['id_vol_res'] = $caracteristicas['id_vol_res'] ?? 'N/A';
                 $nestedData['analisis_traslado'] = $caracteristicas['analisis_traslado'] ?? 'N/A';
                 //case 5
-                $idLoteGranelInpeccion = $caracteristicas['id_lote_granel_inspeccion'] ?? null;
+                $idLoteGranelInpeccion = $caracteristicas['id_lote_granel'] ?? null;
                 if ($idLoteGranelInpeccion) {
                     $loteGranel = LotesGranel::find($idLoteGranelInpeccion); // Busca el lote a granel
                     $nestedData['id_lote_granel_inspeccion'] = $idLoteGranelInpeccion;
@@ -237,7 +237,7 @@ class solicitudesController extends Controller
                 $nestedData['volumen_inspeccion'] = $caracteristicas['volumen_inspeccion'] ?? 'N/A';
                 $nestedData['analisis_inspeccion'] = $caracteristicas['analisis_inspeccion'] ?? 'N/A';
                 //case 7
-                $idLoteGranelBarricada = $caracteristicas['id_lote_granel_barricada'] ?? null;
+                $idLoteGranelBarricada = $caracteristicas['id_lote_granel'] ?? null;
                 if ($idLoteGranelBarricada) {
                     $loteGranel = LotesGranel::find($idLoteGranelBarricada); // Busca el lote a granel
                     $nestedData['id_lote_granel_barricada'] = $idLoteGranelBarricada;
@@ -259,7 +259,7 @@ class solicitudesController extends Controller
                     : 'N/A';
 
                 //case 9
-                $idLoteGranelLiberacion = $caracteristicas['id_lote_granel_liberacion'] ?? null;
+                $idLoteGranelLiberacion = $caracteristicas['id_lote_granel'] ?? null;
                 if ($idLoteGranelInpeccion) {
                     $loteGranel = LotesGranel::find($idLoteGranelLiberacion); // Busca el lote a granel
                     $nestedData['id_lote_granel_liberacion'] = $idLoteGranelLiberacion;
@@ -389,8 +389,8 @@ class solicitudesController extends Controller
 
 
         $MuestreoLote->caracteristicas = json_encode([
-            'id_lote_granel_muestreo' => $request->id_lote_granel_muestreo,
-            'destino_lote' => $request->destino_lote,
+            'id_lote_granel' => $request->id_lote_granel_muestreo,
+            'tipo_analisis' => $request->tipo_analisis,
             'id_categoria_muestreo' => $request->id_categoria_muestreo,
             'id_clase_muestreo' => $request->id_clase_muestreo,
             'id_tipo_maguey_muestreo' => $request->id_tipo_maguey_muestreo,
@@ -433,7 +433,7 @@ class solicitudesController extends Controller
 
         $VigilanciaTras->caracteristicas = json_encode([
             'instalacion_vigilancia' => $request->instalacion_vigilancia,
-            'id_lote_granel_traslado' => $request->id_lote_granel_traslado,
+            'id_lote_granel' => $request->id_lote_granel_traslado,
             'id_categoria_traslado' => $request->id_categoria_traslado,
             'id_clase_traslado' => $request->id_clase_traslado,
             'id_tipo_maguey_traslado' => $request->id_tipo_maguey_traslado,
@@ -480,7 +480,7 @@ class solicitudesController extends Controller
         $InspeccionEnva->info_adicional = $request->info_adicional;
 
         $InspeccionEnva->caracteristicas = json_encode([
-            'id_lote_granel_inspeccion' => $request->id_lote_granel_inspeccion,
+            'id_lote_granel' => $request->id_lote_granel_inspeccion,
             'id_categoria_inspeccion' => $request->id_categoria_inspeccion,
             'id_clase_inspeccion' => $request->id_clase_inspeccion,
             'id_tipo_maguey_inspeccion' => $request->id_tipo_maguey_inspeccion,
@@ -525,7 +525,7 @@ class solicitudesController extends Controller
         $InspeccionBarri->info_adicional = $request->info_adicional;
 
         $InspeccionBarri->caracteristicas = json_encode([
-            'id_lote_granel_barricada' => $request->id_lote_granel_barricada,
+            'id_lote_granel' => $request->id_lote_granel_barricada,
             'id_categoria_barricada' => $request->id_categoria_barricada,
             'id_clase_barricada' => $request->id_clase_barricada,
             'id_tipo_maguey_barricada' => $request->id_tipo_maguey_barricada,
@@ -572,7 +572,7 @@ class solicitudesController extends Controller
         $BarricadaLib->info_adicional = $request->info_adicional;
 
         $BarricadaLib->caracteristicas = json_encode([
-            'id_lote_granel_liberacion' => $request->id_lote_granel_liberacion,
+            'id_lote_granel' => $request->id_lote_granel_liberacion,
             'id_categoria_liberacion' => $request->id_categoria_liberacion,
             'id_clase_liberacion' => $request->id_clase_liberacion,
             'id_tipo_maguey_liberacion' => $request->id_tipo_maguey_liberacion,
@@ -626,6 +626,44 @@ class solicitudesController extends Controller
 
         // Convertir a JSON y asignarlo
         $solicitud->caracteristicas = json_encode($caracteristicas);
+
+        $solicitud->save();
+
+        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+        $data1 = [
+            'title' => 'Nuevo registro de solicitud',
+            'message' => $solicitud->folio . " " . $solicitud->tipo_solicitud->tipo,
+            'url' => 'solicitudes-historial',
+        ];
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
+        return response()->json(['success' => 'Solicitud registrada correctamente']);
+    }
+
+    public function registrarSolicitudMuestreoAgave(Request $request)
+    {
+
+        $solicitud = new solicitudesModel();
+        $solicitud->folio = Helpers::generarFolioSolicitud();
+        $solicitud->id_empresa = $request->id_empresa;
+        $solicitud->id_tipo = 1;
+        $solicitud->fecha_visita = $request->fecha_visita;
+        $solicitud->id_instalacion = $request->id_instalacion ? $request->id_instalacion : 0;
+        $solicitud->info_adicional = $request->info_adicional;
+        // Preparar el JSON para la columna `caracteristicas`
+
+        if(!empty($request->id_guia)){
+            $caracteristicas = [
+                'id_guia' => $request->id_guia,
+            ];
+
+                    // Convertir a JSON y asignarlo
+            $solicitud->caracteristicas = json_encode($caracteristicas);
+        }
+        
+
+
 
         $solicitud->save();
 
@@ -797,7 +835,7 @@ class solicitudesController extends Controller
             'renovacion_dictaminacion',
             'fecha_visita'
         ))
-            ->setPaper([0, 0, 640, 880]);;
+            ->setPaper([0, 0, 640, 910]);;
         return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
     }
 
@@ -908,7 +946,7 @@ class solicitudesController extends Controller
                 ]);
                 $caracteristicasJson = [
                     'instalacion_vigilancia' => $request->instalacion_vigilancia,
-                    'id_lote_granel_traslado' => $request->id_lote_granel_traslado,
+                    'id_lote_granel' => $request->id_lote_granel_traslado,
                     'id_categoria_traslado' => $request->id_categoria_traslado,
                     'id_clase_traslado' => $request->id_clase_traslado,
                     'id_tipo_maguey_traslado' => $request->id_tipo_maguey_traslado,
@@ -1181,7 +1219,7 @@ class solicitudesController extends Controller
         for ($i = 0; $i < $totalLotes; $i++) {
             // Crear el detalle para cada conjunto de datos de lote
             $detalles[] = [
-                'lote_envasado' => (int)$validated['lote_envasado'][$i],
+                'id_lote_envasado' => (int)$validated['lote_envasado'][$i],
                 //'lote_granel' => (int)$validated['lote_granel'][$i],
                 'cantidad_botellas' => (int)$validated['cantidad_botellas'][$i],
                 'cantidad_cajas' => (int)$validated['cantidad_cajas'][$i],

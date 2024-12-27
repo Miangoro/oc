@@ -128,15 +128,18 @@
             <td colspan="4">{{ $datos->instalacion ? ($datos->instalacion->responsable ? '-----------------' : '-----------------') : '-----------------' }}</td>
                 
             <td class="con-negra" colspan="3">SKU:</td>
-            <td colspan="4">&nbsp;</td>
+            <td colspan="4">{{ $datos->lote_envasado->sku ?? "---------------" }}</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="padding-top: 1px; padding-bottom: 1px;">Domicilio Fiscal:</td>
             <td colspan="4">{{ $datos->empresa->domicilio_fiscal}}</td>
             <td class="con-negra" rowspan="2" style="width: 90px; padding: 4px" colspan="3">
-                Dirección de destino: <br><br> Empresa de destino:
+                Dirección de destino:<br><br> Empresa de destino:
             </td>
-            <td colspan="4" rowspan="2">&nbsp;</td>
+            <td colspan="4" rowspan="2"> 
+                @if($vigilancia_traslado === 'X')  {{ $datos->instalacion_destino->direccion_completa }} @else ------------------------ @endif <br><br>
+                @if($vigilancia_traslado === 'X')  {{ $datos->instalacion_destino->empresa->razon_social }} @else ------------------------ @endif
+            </td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2">Domicilio de inspección:</td>
@@ -177,7 +180,7 @@
             <td colspan="7"><span style="font-size: 14px" class="con-negra">@if($vigilancia_produccion === 'X')  {{ $fecha_visita }} @else ------------------------ @endif</span></td>
 
         </tr>
-        <tr>
+        <tr>di
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
         </tr>
         <tr>
@@ -385,35 +388,56 @@
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">1) No. de lote granel:</td>
-            <td colspan="3">&nbsp;</td>
+            <td colspan="3">{{ $datos->lote_granel->nombre_lote ?? "---------------" }}</td>
             <td class="con-negra" colspan="4" style="text-align: left">6) No. de certificado NOM de Mezcal <br> a
                 granel vigente:</td>
-            <td colspan="4">&nbsp;</td>
+            <td colspan="4">{{ $datos->lote_granel->folio_certificado ?? "---------------" }}</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">2) Categoria:</td>
-            <td colspan="3">&nbsp;</td>
+            <td colspan="3">{{ $datos->lote_granel->categoria->categoria ?? "---------------" }}</td>
             <td class="con-negra" colspan="4" style="text-align: left">7) Clase:</td>
-            <td colspan="4">&nbsp;</td>
+            <td colspan="4">{{ $datos->lote_granel->clase->clase ?? "---------------" }}</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">3) No. de análisis de
                 laboratorio:</td>
-            <td colspan="3">&nbsp;</td>
+            <td colspan="3">{{ $datos->lote_granel->folio_fq ?? "---------------" }}</td>
             <td class="con-negra" colspan="4" style="text-align: left">8) Contenido Alcohólico:</td>
-            <td colspan="4">&nbsp;</td>
+            <td colspan="4">{{ $datos->lote_granel->cont_alc ?? "---------------" }}</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">4) Marca:</td>
-            <td colspan="3">&nbsp;</td>
+            <td colspan="3">{{ $datos->lote_envasado->marca->marca ?? "---------------" }}</td>
             <td class="con-negra" colspan="4" style="text-align: left">9) No. de lote de envasado:</td>
-            <td colspan="4">&nbsp;</td>
+            <td colspan="4">{{ $datos->lote_envasado->nombre ?? "---------------" }}</td>
         </tr>
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">5) Especie de Agave:</td>
-            <td colspan="3">&nbsp;</td>
+            <td colspan="3">
+                @if($datos->lote_granel && $datos->lote_granel->tiposRelacionados->isNotEmpty())
+                    @foreach ($datos->lote_granel->tiposRelacionados as $tipo)
+                        {{ $tipo->nombre }} (<i style="font-size: 7px">{{ $tipo->cientifico }}</i>)<br>
+                    @endforeach
+                @else
+                    ---------------
+                @endif
+            </td>
             <td class="con-negra" colspan="4" style="text-align: left">10) Cajas y botellas:</td>
-            <td colspan="4">&nbsp;</td>
+            <td colspan="4">@php
+                $caracteristicas = json_decode($datos->caracteristicas, true);
+            @endphp
+            
+            @if(isset($caracteristicas['detalles']))
+                @foreach($caracteristicas['detalles'] as $detalle)
+                    <span>Cantidad de Botellas: {{ $detalle['cantidad_botellas'] ?? 'No definido' }}</span><br>
+                    <span>Cantidad de Cajas: {{ $detalle['cantidad_cajas'] ?? 'No definido' }}</span><br>
+                    <span>Presentación: {{ $detalle['presentacion'] ?? 'No definido' }}</span>
+                @endforeach
+            @else
+                <p>---------------</</p>
+            @endif
+            </td>
         </tr>
     </table>
 
@@ -447,7 +471,7 @@
         <tr>
             <td class="con-negra" colspan="3" rowspan="3">INFORMACIÓN ADICIONAL SOBRE LA <br> ACTIVIDAD:</td>
             <td class="td-margins" colspan="6">
-                {{ $datos->info_adicional }}
+                {{ $datos->info_adicional ?? "------------------------" }}
 
                 {!! $datos->punto_reunion ? "<br><span class='con-negra'>Punto de reunión: </span> {$datos->punto_reunion}" : "" !!}
                 

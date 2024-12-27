@@ -215,7 +215,7 @@
     @include('_partials._modals.modal-add-solicitud-emision-certificado-venta-nacional')
     @include('_partials._modals.modal-add-solicitud-inspeccion-emision-certificado-NOM')
     @include('_partials._modals.modal-add-solicitud-georeferenciacion')
-    @include('_partials._modals.modal-add-solicitud-renovacion-dictamen-instalaciones')
+   
     @include('_partials._modals.modal-add-solicitud-muestreo-agave')
 
 

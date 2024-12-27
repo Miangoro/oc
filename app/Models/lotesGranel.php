@@ -49,10 +49,23 @@ class LotesGranel extends Model
         return $this->belongsTo(clases::class, 'id_clase', 'id_clase');
     }
 
-    public function tipo()
+    
+    public function getTiposRelacionadosAttribute()
     {
-        return $this->belongsTo(tipos::class, 'id_tipo', 'id_tipo');
+       
+        $idTipos = json_decode($this->id_tipo, true);
+        if (is_array($idTipos)) {
+            return Tipos::whereIn('id_tipo', $idTipos)->get();
+        }
+        return collect();
     }
+
+        public function tipos()
+    {   
+        return $this->hasMany(Tipos::class, 'id_tipo', 'id_tipo');
+    }
+
+
     
 
     public function organismo()

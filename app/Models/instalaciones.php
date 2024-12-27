@@ -69,4 +69,11 @@ class Instalaciones extends Model
     {
         return $this->belongsTo(Dictamen_instalaciones::class, 'id_instalacion', 'id_instalacion');
     }
+
+    public function certificado_instalacion()
+{
+    return $this->hasOne(Dictamen_instalaciones::class, 'id_instalacion', 'id_instalacion')
+        ->with('certificado');
+}
+
 }

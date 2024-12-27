@@ -274,6 +274,8 @@
     }
 
     // Limpiar campos al cerrar el modal
+
+    /*
     $('#addVigilanciaTraslado').on('hidden.bs.modal', function() {
         $('#id_empresa_traslado').val('');
         $('#id_instalacion_traslado').html('<option value="" selected>Lista de instalaciones</option>');
@@ -292,5 +294,5 @@
         $('#id_certificado_traslado').val('');
         $('#info_adicional').val('');
         formValidator.resetForm(true);
-    });
+    });*/
 </script>

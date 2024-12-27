@@ -532,7 +532,7 @@ $(function () {
             contenido = '<option value="">Sin lotes a granel registrados</option>';
           }
           $('.id_lote_granel').html(contenido);
-          fv.revalidateField('id_lote_granel');
+          //fv.revalidateField('id_lote_granel');
 
         },
         error: function () { }
@@ -555,7 +555,7 @@ $(function () {
             contenido = '<option value="">Sin marcas registradas</option>';
           }
           $('#id_marca').html(contenido);
-          fv.revalidateField('id_marca');
+          //fv.revalidateField('id_marca');
 
         },
         error: function () { }
@@ -582,7 +582,7 @@ $(function () {
             contenido = '<option value="">Sin instalaciones de envasado registrados</option>';
           }
           $('.id_instalacion').html(contenido);
-          fv.revalidateField('lugar_envasado');
+          //fv.revalidateField('lugar_envasado');
 
         },
         error: function () { }
@@ -658,7 +658,7 @@ $(function () {
       cargarMarcas();  // Cargar las direcciones
 
       obtenerDirecciones();  // Cargar las direcciones
-      fv.revalidateField('id_empresa');  // Revalidar el campo de empresa
+      //fv.revalidateField('id_empresa');  // Revalidar el campo de empresa
     });
 
     const addNewLoteForm = document.getElementById('addNewLoteForm');
@@ -685,6 +685,13 @@ $(function () {
             }
           }
         },
+     /*   'volumen_parcial[]': {
+          validators: {
+            notEmpty: {
+              message: 'Por favor introduzca el volumen del lote'
+            }
+          }
+        },*/
         /*         presentacion: {
                   validators: {
                     notEmpty: {
@@ -927,7 +934,7 @@ $(function () {
     var newRow = `
     <tr>
       <th>
-        <button type="button" class="btn btn-danger remove-row">
+        <button type="button" class="btn btn-danger btn-sm remove-row">
           <i class="ri-delete-bin-5-fill"></i>
         </button>
       </th>
@@ -986,7 +993,7 @@ $(function () {
       var newRow = `
         <tr>
             <th>
-                <button type="button" class="btn btn-danger remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
+                <button type="button" class="btn btn-danger btn-sm remove-row"> <i class="ri-delete-bin-5-fill"></i> </button>
             </th>
             <td>
                 <select class="id_lote_granel form-control select2-nuevo id_lote_granel" name="id_lote_granel[]">

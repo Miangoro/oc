@@ -81,7 +81,7 @@ class lotesEnvasadoController extends Controller
 
         $searchValue = $request->input('search.value');
 
-        $query = lotes_envasado::with(['empresa.empresaNumClientes', 'marca', 'Instalaciones']); // Cargar relaciones necesarias
+        $query = lotes_envasado::with(['empresa.empresaNumClientes', 'marca', 'Instalaciones', 'lotes_envasado_granel']); // Cargar relaciones necesarias
 
         if (!empty($searchValue)) {
             $query->where(function ($q) use ($searchValue) {
@@ -99,6 +99,10 @@ class lotesEnvasadoController extends Controller
 
                 $q->orWhereHas('empresa', function ($qEmpresa) use ($searchValue) {
                     $qEmpresa->where('razon_social', 'LIKE', "%{$searchValue}%");
+                });
+
+                $q->orWhereHas('lotes_envasado_granel.lotes_granel', function ($qEmpresa) use ($searchValue) {
+                    $qEmpresa->where('nombre_lote', 'LIKE', "%{$searchValue}%");
                 });
 
 
@@ -121,21 +125,12 @@ class lotesEnvasadoController extends Controller
             $ids = $start;
 
             foreach ($users as $user) {
-                // Obtener la dirección completa de la instalación mediante el id_empresa
-                $instalacion = Instalaciones::where('id_instalacion', $user->lugar_envasado)->first();
-                $direccion_completa = $instalacion ? $instalacion->direccion_completa : '';
-                // Obtener el numero_cliente de la tabla empresa_num_cliente
+  
                 $numero_cliente = \App\Models\empresaNumCliente::where('id_empresa', $user->id_empresa)->value('numero_cliente');
-                // Obtener la marca de la tabla marcas mediante el id_marca
-                $marca = \App\Models\marcas::where('id_marca', $user->id_marca)->value('marca');
                 $sku = json_decode($user->sku, true); // Decodifica el JSON en un array
                 $inicial = isset($sku['inicial']) ? $sku['inicial'] : 0; // Obtén el valor de 'inicial' del JSON
                 $nuevo = isset($sku['nuevo']) ? $sku['nuevo'] : 0; // Obtén el valor de 'inicial' del JSON
                 $cantt_botellas = isset($sku['cantt_botellas']) ? $sku['cantt_botellas'] : $user->cant_botellas;
-                // Obtener los IDs de lotes a granel asociados al envasado
-                $id_lote_granel = lotes_envasado_granel::where('id_lote_envasado', $user->id_lote_envasado)->pluck('id_lote_granel');
-                // Obtener los nombres de los lotes a granel
-                $nombres_lote = LotesGranel::whereIn('id_lote_granel', $id_lote_granel)->pluck('nombre_lote');
                 $nombres_lote = lotes_envasado_granel::where('id_lote_envasado', $user->id_lote_envasado)
                     ->with('loteGranel') // Carga la relación
                     ->get()
@@ -147,7 +142,7 @@ class lotesEnvasadoController extends Controller
                     'id_lote_envasado' => $user->id_lote_envasado,
                     'fake_id' => ++$ids,
                     'id_empresa' => $numero_cliente,
-                    'id_marca' => $marca,
+                    'id_marca' => $user->marca->marca,
                     'razon_social' => $user->empresa ? $user->empresa->razon_social : '',
                     'nombre' => $user->nombre,
                     'cant_botellas' => $user->cant_botellas,
@@ -155,7 +150,7 @@ class lotesEnvasadoController extends Controller
                     'unidad' => $user->unidad,
                     'destino_lote' => $user->destino_lote,
                     'volumen_total' => $user->volumen_total,
-                    'lugar_envasado' => $direccion_completa,
+                    'lugar_envasado' => $user->Instalaciones->direccion_completa ?? '',
                     'sku' => $user->sku,
                     'inicial' => $inicial,
                     'nuevo' => $nuevo,
@@ -201,21 +196,23 @@ class lotesEnvasadoController extends Controller
             $lotes->id_marca = $request->id_marca;
             $lotes->destino_lote = $request->destino_lote;
             $lotes->cant_botellas = $request->cant_botellas;
+            $lotes->cant_bot_restantes = $request->cant_botellas;
             $lotes->presentacion = $request->presentacion;
             $lotes->unidad = $request->unidad;
             $lotes->volumen_total = $request->volumen_total;
+            $lotes->vol_restante = $request->volumen_total;
             $lotes->lugar_envasado = $request->lugar_envasado;
             $lotes->save();
 
             // Verificar si existen los arrays antes de procesarlos
-            if ($request->has('id_lote_granel') && is_array($request->id_lote_granel) && $request->has('volumen_parcial') && is_array($request->volumen_parcial)) {
+            if ($request->has('id_lote_granel') && is_array($request->id_lote_granel) ) {
                 for ($i = 0; $i < count($request->id_lote_granel); $i++) {
                     // Verificar que ambos arrays tengan el mismo tamaño
                     if (isset($request->id_lote_granel[$i]) && isset($request->volumen_parcial[$i])) {
                         $envasado = new lotes_envasado_granel();
                         $envasado->id_lote_envasado = $lotes->id_lote_envasado;  // Relacionar con el lote envasado creado
                         $envasado->id_lote_granel = $request->id_lote_granel[$i];
-                        $envasado->volumen_parcial = $request->volumen_parcial[$i];
+                        $envasado->volumen_parcial = $request->volumen_parcial[$i] ?? $request->volumen_total;
                         $envasado->save();
                     }
                 }

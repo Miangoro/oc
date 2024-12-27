@@ -61,7 +61,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select id="destino_lote" name="destino_lote" class="form-select">
+                                <select id="tipo_analisis" name="destino_lote" class="form-select">
                                     <option value="" disabled selected>Selecciona un tipo</option>
                                     <option value="Análisis completo">Análisis completo</option>
                                     <option value="Ajuste de grado alcohólico">Ajuste de grado alcohólico</option>

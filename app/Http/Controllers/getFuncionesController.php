@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Helpers;
 use App\Models\Destinos;
+use App\Models\Documentacion_url;
 use App\Models\empresa;
+use App\Models\Instalaciones;
 use App\Models\LotesGranel;
 use App\Models\tipos;
 
 use App\Models\normas;
+use App\Models\solicitudesModel;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -71,6 +75,7 @@ class getFuncionesController extends Controller
             'direcciones' => $empresa->direcciones(),
             'lotes_envasado' => $empresa->lotes_envasado(),
             'direcciones_destino' => Destinos::where("id_empresa", $empresa->id_empresa)->where('tipo_direccion', 1)->get(),
+            'instalaciones_produccion' => Instalaciones::where('tipo', 'like', '%Productora%')->where("id_empresa", $empresa->id_empresa)->get(),
         ]);
     }
 
@@ -114,6 +119,63 @@ class getFuncionesController extends Controller
     }
     
     
+    public function getDatosSolicitud($id_solicitud)
+    {
+        $solicitud = solicitudesModel::with('empresa.empresaNumClientes', 'instalacion.certificado_instalacion', 'predios', 'marcas','lote_granel.categoria','lote_granel.clase')
+            ->where("id_solicitud", $id_solicitud)
+            ->first();
+       
+        if ($solicitud) {
+            $tipos = ''; // Inicializamos la variable para concatenar los tipos
+
+            if ($solicitud->lote_granel && $solicitud->lote_granel->tiposRelacionados) {
+                foreach ($solicitud->lote_granel->tiposRelacionados as $tipo) {
+                    $tipos .= $tipo->nombre . " (" . $tipo->cientifico . "), "; // Concatenamos con coma
+                }
+                // Eliminar la última coma y espacio
+                $tipos = rtrim($tipos, ', ');
+            } else {
+                $tipos = "No hay tipos relacionados disponibles."; // Mensaje si no hay tipos
+            }
+            
+
+
+            return response()->json([
+                'success' => true,
+                'data' => $solicitud,
+                'documentos' => Documentacion_url::where("id_empresa", "=", $solicitud->empresa->id_empresa)->get(),
+                'fecha_visita_formateada' => Helpers::formatearFechaHora($solicitud->fecha_visita), // Enviar la hora formateada
+                'tipos_agave' => $tipos
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró la solicitud.',
+            ]);
+        }
+    }
+
+
+    //Este por ahora no se usa para nada, pero lo dejo para un futuro
+    public function obtenerDocumentosClientes($id_cliente)
+    {
+    $documento = Documentacion_url::where("id_empresa", "=", $id_cliente)
+                                  ->first(); // Devuelve el primer registro que coincida
+
+  
+
+        if ($documento) {
+            return response()->json([
+                'success' => true,
+                'data' => $documento,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontró documento.',
+            ]);
+        }
+    }
     
     
     

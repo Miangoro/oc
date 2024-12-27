@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // Función Icono por ID
 function obtenerIcono(id_tipo) {
     const id_tipoStr = id_tipo.toString();
-    console.log('ID recibido:', id_tipoStr); 
+   // console.log('ID recibido:', id_tipoStr); 
     switch (id_tipoStr) {
         case '1': 
             return 'assets/img/solicitudes/muestreo_agave.png'; 
@@ -83,7 +83,7 @@ function obtenerIcono(id_tipo) {
                     data.forEach((item, index) => {
                         const solicitud = solicitudesMap[item.id_tipo] || "#defaultSolicitud";
                         const icono = obtenerIcono(item.id_tipo); 
-                        console.log('Ícono asignado:', icono);
+                        //console.log('Ícono asignado:', icono);
                     
                         // Crear la tarjeta
                         const card = document.createElement('div');

@@ -105,42 +105,39 @@
 <script>
     function obtenerInstalaciones() {
         var empresa = $(".id_empresa_dic").val();
+        if (empresa !== "" && empresa !== null && empresa !== undefined) { 
+            $.ajax({
+                url: '/getDatos/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    var contenido = "";
+                for (let index = 0; index < response.instalaciones.length; index++) {
+                    var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
 
-        // Hacer una petición AJAX para obtener los detalles de la empresa
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
-                var contenido = "";
-            for (let index = 0; index < response.instalaciones.length; index++) {
-                // Limpia el campo tipo usando la función limpiarTipo
-                var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                        tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa + '</option>' +
+                        contenido;
+                }
+                if (response.instalaciones.length == 0) {
+                    contenido = '<option value="">Sin instalaciones registradas</option>';
+                }
+                $('#id_instalacion_dic').html(contenido);
+                },
+                error: function() {
+                }
+            });
+        }
 
-                contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                    tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa + '</option>' +
-                    contenido;
-            }
-            if (response.instalaciones.length == 0) {
-                contenido = '<option value="">Sin instalaciones registradas</option>';
-            }
-            $('#id_instalacion_dic').html(contenido);
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
-            }
-        });
     }
-    // Función para limpiar el campo tipo
-function limpiarTipo(tipo) {
-    try {
-        // Convierte el JSON string a un array y únelos en una cadena limpia
-        return JSON.parse(tipo).join(', ');
-    } catch (e) {
-        // Si no es JSON válido, regresa el valor original
-        return tipo;
+    
+    function limpiarTipo(tipo) {
+        try {
+            return JSON.parse(tipo).join(', ');
+        } catch (e) {
+            return tipo;
+        }
     }
-}
 
 
 </script>

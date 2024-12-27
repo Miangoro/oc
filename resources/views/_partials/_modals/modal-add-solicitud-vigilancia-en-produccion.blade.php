@@ -226,47 +226,51 @@
     }
 
     function obtenerGraneles(empresa) {
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                var contenido = "";
-                for (let index = 0; index < response.lotes_granel.length; index++) {
-                    contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                        response
-                        .lotes_granel[index].nombre_lote + '</option>' + contenido;
-                }
-                if (response.lotes_granel.length == 0) {
-                    contenido = '<option value="">Sin lotes registrados</option>';
-                } else {}
-                $('#id_lote_granel').html(contenido);
-            },
-            error: function() {}
-        });
+        if (empresa !== "" && empresa !== null && empresa !== undefined) { 
+            $.ajax({
+                url: '/getDatos/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    var contenido = "";
+                    for (let index = 0; index < response.lotes_granel.length; index++) {
+                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
+                            response
+                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
+                    }
+                    if (response.lotes_granel.length == 0) {
+                        contenido = '<option value="">Sin lotes registrados</option>';
+                    } else {}
+                    $('#id_lote_granel').html(contenido);
+                },
+                error: function() {}
+            });
+        }
     }
 
     function obtenerGranelesInsta(empresa) {
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                        tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                        '</option>' +
-                        contenido;
+        if (empresa !== "" && empresa !== null && empresa !== undefined) { 
+            $.ajax({
+                url: '/getDatos/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    var contenido = "";
+                    for (let index = 0; index < response.instalaciones.length; index++) {
+                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+                        contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                            tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                            '</option>' +
+                            contenido;
+                    }
+                    if (response.instalaciones.length == 0) {
+                        contenido = '<option value="">Sin instalaciones registradas</option>';
+                    }
+                    $('.id_instalacion').html(contenido);
+                },
+                error: function() {
+                    console.error('Error al obtener las instalaciones.');
                 }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
-                }
-                $('.id_instalacion').html(contenido);
-            },
-            error: function() {
-                console.error('Error al obtener las instalaciones.');
-            }
-        });
+            });
+        }
     }
 
     function limpiarTipo(tipo) {
