@@ -415,13 +415,13 @@
         <tr>
             <td class="con-negra" colspan="2" style="text-align: left">5) Especie de Agave:</td>
             <td colspan="3">
-             {{-- @if($datos->lote_granel && $datos->lote_granel->tiposRelacionados->isNotEmpty())
+              @if($datos->lote_granel && $datos->lote_granel->tiposRelacionados->isNotEmpty())
                     @foreach ($datos->lote_granel->tiposRelacionados as $tipo)
                         {{ $tipo->nombre }} (<i style="font-size: 7px">{{ $tipo->cientifico }}</i>)<br>
                     @endforeach
                 @else
                     ---------------
-                @endif --}}
+                @endif 
             </td>
             <td class="con-negra" colspan="4" style="text-align: left">10) Cajas y botellas:</td>
             <td colspan="4">@php

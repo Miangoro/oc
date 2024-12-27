@@ -55,14 +55,14 @@ class LotesGranel extends Model
        
         $idTipos = json_decode($this->id_tipo, true);
         if (is_array($idTipos)) {
-            return Tipos::whereIn('id_tipo', $idTipos)->get();
+            return tipos::whereIn('id_tipo', $idTipos)->get();
         }
         return collect();
     }
 
         public function tipos()
     {   
-        return $this->hasMany(Tipos::class, 'id_tipo', 'id_tipo');
+        return $this->hasMany(tipos::class, 'id_tipo', 'id_tipo');
     }
 
 
