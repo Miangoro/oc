@@ -152,7 +152,7 @@ class documentacionController extends Controller
 
         foreach ($documentos2 as $indexD => $documento) {
 
-          $urlPrimera = $documento->documentacionUrls->first();
+          $urlPrimera = $documento->documentacionUrls->where('id_empresa', $id_empresa)->first();
 
           $url = '';
 
