@@ -50,7 +50,7 @@ class LotesGranel extends Model
     }
 
     
-    public function getTiposRelacionadosAttribute()
+    public function gettiposRelacionadosAttribute()
     {
        
         $idTipos = json_decode($this->id_tipo, true);
