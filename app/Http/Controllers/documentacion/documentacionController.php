@@ -8,6 +8,7 @@ use App\Models\Documentacion_url;
 use App\Models\empresa;
 use App\Models\Instalaciones;
 use App\Models\marcas;
+use App\Models\Predios;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -80,9 +81,11 @@ class documentacionController extends Controller
         $activeClassA = $indexA == 0 ? 'active' : '';
         $showClassA = $indexA == 0 ? 'show' : '';
         $contenidoDocumentos = "";
+        $contenidoDocumentosPredios = "";
         $contenidoDocumentosGenerales = "";
         $contenidoDocumentosMarcas = "";
         $contenidoInstalaciones = '';
+        $contenidoPredios = '';
         $contenidoInstalacionesGenerales = '';
         $act_instalacion = '';
 
@@ -110,7 +113,7 @@ class documentacionController extends Controller
 
         if ($actividad->id_actividad == 1) {
           $documentosActividad = "Generales Productor";
-          $act_instalacion = "";
+          $act_instalacion = "Producción de agave"; 
         }
 
         if ($actividad->id_actividad == 2) {
@@ -197,6 +200,8 @@ class documentacionController extends Controller
 
         $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)->where('tipo', 'like', '%'.$act_instalacion.'%')->get(); //Se va a ocultar los tipo 1 que son para predios
 
+        $predios = Predios::where('id_empresa', '=', $id_empresa)->get(); //Se va a ocultar los tipo 1 que son para predios
+
 
 
 
@@ -231,6 +236,83 @@ $instalaciones->toSql();
 
 print_r($instalaciones->getBindings());*/
 
+if ($act_instalacion == 'Producción de agave') {
+//Esto es para los prediods
+foreach ($predios as $indexI => $predio) {
+
+  $documentos = Documentacion::where('subtipo', $documentosActividad)
+  ->with('documentacionUrls')
+  ->get();
+  $contenidoDocumentosPredios = '';
+
+
+
+foreach ($documentos as $indexD => $documento) {
+  
+
+  $urlPrimera = $documento->documentacionUrls
+  ->where('id_relacion', $predio->id_predio)
+  ->first();
+
+  $url = '';
+
+  if (!empty($urlPrimera)) {
+    $url = $urlPrimera->url;
+  }
+
+  if (!empty($url)) {
+    $mostrarDocumento = '<i onclick="abrirModal(\'files/' . $numeroCliente . '/' . $url . '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>';
+  } else {
+    $mostrarDocumento = '---';
+  }
+
+  $contenidoDocumentosPredios = $contenidoDocumentosPredios . '
+      <tr>
+        <td>' . ($indexD + 1) . '</td>
+        <td class="text-wrap text-break"><b>' . $documento->nombre . '</b></td>
+        <td class="text-end">
+            <input class="form-control form-control-sm" type="file" id="file' . $documento->id_documento . '" data-id="' . $documento->id_documento . '" name="url[]">
+                  <input value="' . $documento->id_documento . '" class="form-control" type="hidden" name="id_documento[]">
+                  <input value="' . $documento->nombre . '" class="form-control" type="hidden" name="nombre_documento[]">'.'<input type="hidden" name="id_relacion[]" value="' . $predio->id_predio . '">'.'
+        </td>
+        <td class="text-end fw-medium">   
+        
+          ' . $mostrarDocumento . '
+        
+        </td>
+        <td class="text-success fw-medium text-end">----</td>
+      </tr>
+      ';
+}
+  $contenidoPredios = $contenidoPredios . '
+
+<div class="table-responsive text-nowrap col-md-6 mb-5 ">
+    <table class="table table-sm table-bordered">
+      <thead class="bg-secondary text-white">
+        <tr>
+          <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-4"><span class="fs-6">Predio:</span><br> <b style="font-size:12px" class="badge bg-primary">' . $predio->nombre_predio . '</b></th>
+        </tr>
+        <tr>
+          <th class="bg-transparent border-bottom">#</th>
+          <th class="bg-transparent border-bottom">Descripción del documento</th>
+          <th class="text-end bg-transparent border-bottom">Subir archivo</th>
+          <th class="text-end bg-transparent border-bottom">Documento</th>
+          <th class="text-end bg-transparent border-bottom">Validar</th>
+        </tr>
+      </thead>
+      <tbody class="table-border-bottom-0" style="font-size:12px">
+          ' . $contenidoDocumentosPredios . '
+      </tbody>
+    </table>
+  </div>';
+}
+
+}
+
+
+if ($act_instalacion != 'Produccion de agave') {
+
+        //Estp es para las instalaciones
         foreach ($instalaciones as $indexI => $instalacion) {
 
           $documentos = Documentacion::where('subtipo', $documentosActividad)
@@ -238,11 +320,10 @@ print_r($instalaciones->getBindings());*/
           ->get();
           $contenidoDocumentos = '';
 
-          $id_relacion_array_instalacion = ''; 
-
         
        
         foreach ($documentos as $indexD => $documento) {
+          
 
           $urlPrimera = $documento->documentacionUrls
           ->where('id_relacion', $instalacion->id_instalacion)
@@ -278,13 +359,6 @@ print_r($instalaciones->getBindings());*/
               </tr>
               ';
         }
-
-
-
-
-
-
-
           $contenidoInstalaciones = $contenidoInstalaciones . '
      
       <div class="table-responsive text-nowrap col-md-6 mb-5 ">
@@ -307,6 +381,8 @@ print_r($instalaciones->getBindings());*/
             </table>
           </div>';
         }
+
+      }
 
         
       $marcas = marcas::where('id_empresa', '=', $id_empresa)->get();
@@ -398,6 +474,7 @@ print_r($instalaciones->getBindings());*/
       $contenidoActividades = $contenidoActividades . '
       <div class="tab-pane fade" id="navs-orders-id-' . $actividad->id_actividad . '" role="tabpanel">
        <div class="row p-5">
+       ' . $contenidoPredios . '
         ' . $contenidoInstalaciones . '
         ' . $contenidoMarcas . '
       </div> 
