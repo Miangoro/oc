@@ -43,8 +43,8 @@
                         <th>Nombre Predio</th>
                         <th>Ubicación Predio</th>
                         <th>Tipo Predio</th>
-                        <th>Puntos Referencia</th>
-                        <th>Cuenta con Coordenadas</th>
+                        <!--<th>Puntos Referencia</th>-->
+                        <!--<th>Cuenta con Coordenadas</th>-->
                         <th>Superficie</th>
                         <th>estatus</th>
                         <th>Solicitud</th>

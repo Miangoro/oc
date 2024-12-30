@@ -93,6 +93,9 @@ class PrediosController extends Controller
                     $query->whereHas('empresa', function ($q) use ($search) {
                         $q->where('razon_social', 'LIKE', "%{$search}%");
                     })
+                    ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
+                        $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
+                    })
                     ->orWhere('nombre_productor', 'LIKE', "%{$search}%")
                     ->orWhere('nombre_predio', 'LIKE', "%{$search}%")
                     ->orWhere('ubicacion_predio', 'LIKE', "%{$search}%")
@@ -112,6 +115,9 @@ class PrediosController extends Controller
                 ->where(function ($query) use ($search) {
                     $query->whereHas('empresa', function ($q) use ($search) {
                         $q->where('razon_social', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
+                        $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
                     })
                     ->orWhere('nombre_productor', 'LIKE', "%{$search}%")
                     ->orWhere('nombre_predio', 'LIKE', "%{$search}%")
@@ -134,7 +140,13 @@ class PrediosController extends Controller
 
                 $nestedData['id_predio'] = $predio->id_predio;
                 $nestedData['fake_id'] = ++$ids;
-                $nestedData['id_empresa'] = $predio->empresa->razon_social ?? 'N/A'; // Muestra la razón social de la empresa
+                $razonSocial = $predio->empresa ? $predio->empresa->razon_social : '';
+                $numeroCliente = 
+                $predio->empresa->empresaNumClientes[0]->numero_cliente ?? 
+                $predio->empresa->empresaNumClientes[1]->numero_cliente ?? 
+                $predio->empresa->empresaNumClientes[2]->numero_cliente;
+
+                $nestedData['id_empresa'] = '<b>'.$numeroCliente . '</b><br>' . $razonSocial;
                 $nestedData['nombre_productor'] = $predio->nombre_productor;
                 $nestedData['nombre_predio'] = $predio->nombre_predio;
                 $nestedData['ubicacion_predio'] = $predio->ubicacion_predio ?? 'N/A';

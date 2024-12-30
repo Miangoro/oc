@@ -4,7 +4,7 @@
    <div class="modal-dialog modal-xl">
        <div class="modal-content">
            <div class="modal-header">
-               <h5 id="modalAddPredioLabel" class="modal-title">Editar Predio</h5>
+               <h5 id="modalAddPredioLabel" class="modal-title">Editar pre-registro de predio</h5>
                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
            </div>
            <div class="modal-body">
@@ -114,7 +114,7 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th><button type="button" class="btn btn-primary add-row-cordenadas-edit"><i class="ri-add-line"></i></button></th>
+                                    <th><button type="button" class="btn btn-primary add-row-cordenadas-edit btn-sm"><i class="ri-add-line"></i></button></th>
                                     <th colspan="2" style="width: 95%"><h5 class="card-title mb-0 text-center">Coordenadas</h5></th>
                                 </tr>
                             </thead>
@@ -132,7 +132,7 @@
                            <div class="table-responsive text-nowrap">
                                <table class="table table-bordered table-striped mb-3">
                                    <tr>
-                                       <th><button type="button" class="btn btn-primary add-row-plantacion"><i
+                                       <th><button type="button" class="btn btn-primary add-row-plantacion btn-sm"><i
                                                    class="ri-add-line"></i></button></th>
                                        <th colspan="2" style="width: 95%">
                                            <h5 class="card-title mb-0 text-center">Información del Agave/Maguey y
@@ -144,7 +144,7 @@
                                            <td rowspan="4">
                                                <!-- El botón de eliminar estará en cada fila que se agregue -->
                                                <button type="button"
-                                                   class="btn btn-danger remove-row-plantacion" disabled><i
+                                                   class="btn btn-danger remove-row-plantacion btn-sm" disabled><i
                                                        class="ri-delete-bin-5-fill"></i></button>
                                            </td>
                                            <td>
@@ -158,7 +158,7 @@
                                                        </option>
                                                        @foreach ($tipos as $tipo)
                                                            <option value="{{ $tipo->id_tipo }}">
-                                                               {{ $tipo->nombre }}</option>
+                                                               {{ $tipo->nombre }} ({{ $tipo->cientifico }})</option>
                                                        @endforeach
                                                    </select>
                                                    <label for="especie_agave"></label>
@@ -180,14 +180,14 @@
                                        </tr>
                                        <tr>
                                            <td>
-                                               <b>Edad de la Plantación (años)</b>
+                                               <b>Año de plantación</b>
                                            </td>
                                            <td>
                                                <div class="form-floating form-floating-outline">
                                                    <input type="number" class="form-control" autocomplete="off"
                                                        id="edit_edad_plantacion" name="edad_plantacion[]"
-                                                       placeholder="Edad de la plantación (años)" step="1">
-                                                   <label for="edad_plantacion">Edad de la Plantación (años)</label>
+                                                       placeholder="Año de plantación" step="1">
+                                                   <label for="edad_plantacion">Año de plantación</label>
                                                </div>
                                            </td>
                                        </tr>
@@ -197,9 +197,10 @@
                                            </td>
                                            <td>
                                                <div class="form-floating form-floating-outline">
-                                                   <input type="text" class="form-control" autocomplete="off"
-                                                       id="edit_tipo_plantacion" name="tipo_plantacion[]"
-                                                       placeholder="Tipo de plantación">
+                                                <select  id="edit_tipo_plantacion" class="form-control" name="tipo_plantacion[]" >
+                                                    <option value="Cultivado">Cultivado</option>
+                                                    <option value="Silvestre">Silvestre</option>
+                                                </select>
                                                    <label for="tipo_plantacion">Tipo de Plantación</label>
                                                </div>
                                            </td>

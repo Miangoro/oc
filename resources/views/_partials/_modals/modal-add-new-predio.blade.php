@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 id="modalAddPredioLabel" class="modal-title">Nuevo Predio</h5>
+                <h5 id="modalAddPredioLabel" class="modal-title">Nuevo pre-registro de predio</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -12,12 +12,12 @@
                     <!-- Select de Empresa Cliente -->
                     <div class="form-floating form-floating-outline mb-4">
                         <select id="id_empresa" name="id_empresa" class="select2 form-select">
-                            <option value="" disabled selected>Selecciona la empresa cliente</option>
+                            <option value="" disabled selected>Selecciona el cliente</option>
                             @foreach ($empresas as $empresa)
-                                <option value="{{ $empresa->id_empresa }}">{{ $empresa->razon_social }}</option>
+                                <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
                             @endforeach
                         </select>
-                        <label for="id_empresa">Empresa Cliente</label>
+                        <label for="id_empresa">Cliente</label>
                     </div>
                     <!-- Nombre del Productor -->
                     <div class="row mb-4">
@@ -113,7 +113,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th><button type="button" class="btn btn-primary add-row-cordenadas"><i
+                                        <th><button type="button" class="btn btn-primary add-row-cordenadas btn-sm"><i
                                                     class="ri-add-line"></i></button></th>
                                         <th colspan="2" style="width: 95%"><h5 class="card-title mb-0 text-center">Coordenadas</h5></th>
                                     </tr>
@@ -131,7 +131,7 @@
                                     <table class="table  table-bordered table-striped mb-3">
                                         <tr>
                                             <th>
-                                                <button type="button" class="btn btn-primary add-row-plantacion"><i
+                                                <button type="button" class="btn btn-primary add-row-plantacion btn-sm"><i
                                                         class="ri-add-line"></i></button>
                                             </th>
                                             <th colspan="2" style="width: 95%">
@@ -143,7 +143,7 @@
                                             <tr>
                                                 <td rowspan="4">
                                                     <button type="button"
-                                                        class="btn btn-danger remove-row-plantacion" disabled><i
+                                                        class="btn btn-danger remove-row-plantacion btn-sm" disabled><i
                                                             class="ri-delete-bin-5-fill"></i></button>
                                                 </td>
                                                 <td><b>Nombre/Especie de Agave/Maguey</b></td>
@@ -155,7 +155,7 @@
                                                             </option>
                                                             @foreach ($tipos as $tipo)
                                                                 <option value="{{ $tipo->id_tipo }}">
-                                                                    {{ $tipo->nombre }}</option>
+                                                                    {{ $tipo->nombre }} ({{ $tipo->cientifico }})</option>
                                                             @endforeach
                                                         </select>
                                                         <label for="especie_agave"></label>
@@ -174,24 +174,26 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><b>Edad de la Plantación (años)</b></td>
+                                                <td><b>Año de la plantación</b></td>
                                                 <td>
                                                     <div class="form-floating form-floating-outline">
                                                         <input type="number" class="form-control"
                                                             name="edad_plantacion[]" autocomplete="off"
-                                                            placeholder="Edad de la plantación (años)" step="1">
-                                                        <label for="edad_plantacion">Edad de la Plantación (años)</label>
+                                                            placeholder="Año de la plantación" step="1">
+                                                        <label for="edad_plantacion">Año de la plantación</label>
                                                     </div>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <p>Tipo de Plantación</p>
+                                                    <b>Tipo de Plantación</b>
                                                 </td>
                                                 <td>
                                                     <div class="form-floating form-floating-outline">
-                                                        <input type="text" class="form-control" autocomplete="off"
-                                                            name="tipo_plantacion[]" placeholder="Tipo de plantación">
+                                                        <select class="form-control" name="tipo_plantacion[]" >
+                                                            <option value="Cultivado">Cultivado</option>
+                                                            <option value="Silvestre">Silvestre</option>
+                                                        </select>
                                                         <label for="tipo_plantacion">Tipo de Plantación</label>
                                                     </div>
                                                 </td>

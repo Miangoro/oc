@@ -61,8 +61,8 @@ $(function () {
         { data: 'nombre_predio' },
         { data: 'ubicacion_predio' },
         { data: 'tipo_predio' },
-        { data: 'puntos_referencia' },
-        { data: 'cuenta_con_coordenadas' },
+        //{ data: 'puntos_referencia' },
+       // { data: 'cuenta_con_coordenadas' },
         { data: 'superficie' },
         {
           data: 'estatus',
@@ -110,7 +110,7 @@ $(function () {
         // Pdf de solicitud
         // Pdf de solicitud
         {
-          targets: 11,
+          targets: 9,
           className: 'text-center',
           searchable: false,
           orderable: false,
@@ -129,7 +129,7 @@ $(function () {
 
         // Pdf de pre-registro
         {
-          targets: 12,
+          targets: 10,
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
@@ -146,7 +146,7 @@ $(function () {
         },
         // Pdf de pre-registro (Dictamen)
         {
-          targets: 13,
+          targets: 11,
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
@@ -162,7 +162,7 @@ $(function () {
         },
         // Pdf de pre-registro (Dictamen final)
         {
-          targets: 14,
+          targets: 12,
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
@@ -423,7 +423,7 @@ $(function () {
           ]
         },
         {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar predios</span>',
+          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline shadow"></i><span class="d-none d-sm-inline-block">Agregar pre-registro de predios</span>',
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'modal',
@@ -568,7 +568,7 @@ $(function () {
 
     // Función para generar las opciones de tipos de agave
     function generateOptions(tipos) {
-      return tipos.map(tipo => `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`).join('');
+      return tipos.map(tipo => `<option value="${tipo.id_tipo}">${tipo.nombre} (${tipo.cientifico})</option>`).join('');
     }
 
     // Función para agregar una nueva sección de plantación
@@ -577,7 +577,7 @@ $(function () {
       var newSection = `
           <tr class="plantacion-row">
               <td rowspan="4">
-                  <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
+                  <button type="button" class="btn btn-danger remove-row-plantacion btn-sm"><i class="ri-delete-bin-5-fill"></i></button>
               </td>
               <td><b>Nombre y Especie de Agave/Maguey</b></td>
               <td>
@@ -600,11 +600,11 @@ $(function () {
               </td>
           </tr>
           <tr class="plantacion-row">
-              <td><b>Edad de la Plantación (años)</b></td>
+              <td><b>Año de plantación</b></td>
               <td>
                   <div class="form-floating form-floating-outline">
-                      <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Edad de la plantación (años)" step="1" autocomplete="off" required>
-                      <label for="edad_plantacion">Edad de la Plantación (años)</label>
+                      <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Año de plantación" step="1" autocomplete="off" required>
+                      <label for="edad_plantacion">Año de plantación</label>
                   </div>
               </td>
           </tr>
@@ -612,7 +612,10 @@ $(function () {
               <td><b>Tipo de Plantación</b></td>
               <td>
                   <div class="form-floating form-floating-outline">
-                      <input type="text" class="form-control" name="tipo_plantacion[]" placeholder="Tipo de plantación" autocomplete="off" required>
+                      <select class="form-control" name="tipo_plantacion[]" >
+                                                            <option value="Cultivado">Cultivado</option>
+                                                            <option value="Silvestre">Silvestre</option>
+                                                        </select>
                       <label for="tipo_plantacion">Tipo de Plantación</label>
                   </div>
               </td>
@@ -683,7 +686,7 @@ $(function () {
       const newRow = `
             <tr>
                 <td>
-                    <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
+                    <button type="button" class="btn btn-danger remove-row-cordenadas btn-sm"><i class="ri-delete-bin-5-fill"></i></button>
                 </td>
                 <td>
                     <div class="form-floating form-floating-outline">
@@ -1283,7 +1286,7 @@ $(function () {
                 var newRow = `
                         <tr>
                             <td>
-                                <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
+                                <button type="button" class="btn btn-danger remove-row-cordenadas btn-sm"><i class="ri-delete-bin-5-fill"></i></button>
                             </td>
                             <td>
                                 <div class="form-floating form-floating-outline">
@@ -1304,7 +1307,7 @@ $(function () {
               var emptyRow = `
                     <tr>
                         <td>
-                            <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
+                            <button type="button" class="btn btn-danger remove-row-cordenadas btn-sm"><i class="ri-delete-bin-5-fill"></i></button>
                         </td>
                         <td>
                             <div class="form-floating form-floating-outline">
@@ -1334,16 +1337,18 @@ $(function () {
 
             // Cargar tipos de agave en el select
             var tipoOptions = data.tipos.map(function (tipo) {
-              return `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`;
+              return `<option value="${tipo.id_tipo}">${tipo.nombre}  (${tipo.cientifico})</option>`;
             }).join('');
 
             // Rellenar plantaciones o añadir una fila vacía si no hay plantaciones
             if (data.plantaciones.length > 0) {
               data.plantaciones.forEach(function (plantacion) {
+
+                $('#edit_superficie').val(predio.superficie);
                 var newRow = `
                                 <tr class="plantacion-row">
                                     <td rowspan="4">
-                                        <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
+                                        <button type="button" class="btn btn-danger remove-row-plantacion btn-sm"><i class="ri-delete-bin-5-fill"></i></button>
                                     </td>
                                     <td><b>Nombre y Especie de Agave/Maguey</b></td>
                                     <td>
@@ -1366,11 +1371,11 @@ $(function () {
                                     </td>
                                 </tr>
                                 <tr class="plantacion-row">
-                                    <td><b>Edad de la Plantación (años)</b></td>
+                                    <td><b>Año de la plantación</b></td>
                                     <td>
                                         <div class="form-floating form-floating-outline">
-                                            <input type="number" class="form-control" name="edad_plantacion[]" value="${plantacion.anio_plantacion}" placeholder="Edad de la plantación (años)" step="1" autocomplete="off">
-                                            <label for="edad_plantacion">Edad de la Plantación (años)</label>
+                                            <input type="number" class="form-control" name="edad_plantacion[]" value="${plantacion.anio_plantacion}" placeholder="Año de la plantación" step="1" autocomplete="off">
+                                            <label for="edad_plantacion">Año de la plantación</label>
                                         </div>
                                     </td>
                                 </tr>
@@ -1378,7 +1383,10 @@ $(function () {
                                     <td><b>Tipo de Plantación</b></td>
                                     <td>
                                         <div class="form-floating form-floating-outline">
-                                            <input type="text" class="form-control" name="tipo_plantacion[]" value="${plantacion.tipo_plantacion}" placeholder="Tipo de plantación" autocomplete="off">
+                                             <select class="form-control" name="tipo_plantacion[]" >
+                                                  <option value="Cultivado" ${plantacion.tipo_plantacion === 'Cultivado' ? 'selected' : ''}>Cultivado</option>
+                                                  <option value="Silvestre" ${plantacion.tipo_plantacion === 'Silvestre' ? 'selected' : ''}>Silvestre</option>
+                                              </select>
                                             <label for="tipo_plantacion">Tipo de Plantación</label>
                                         </div>
                                     </td>
@@ -1394,7 +1402,7 @@ $(function () {
               var emptyRow = `
                             <tr>
                                 <td rowspan="4">
-                                    <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
+                                    <button type="button" class="btn btn-danger remove-row-plantacion btn-sm"><i class="ri-delete-bin-5-fill"></i></button>
                                 </td>
                                 <td><b>Nombre y Especie de Agave/Maguey</b></td>
                                 <td>
@@ -1417,11 +1425,11 @@ $(function () {
                                 </td>
                             </tr>
                             <tr>
-                                <td><b>Edad de la Plantación (años)</b></td>
+                                <td><b>Año de plantación</b></td>
                                 <td>
                                     <div class="form-floating form-floating-outline">
-                                        <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Edad de la plantación (años)" step="1">
-                                        <label for="edad_plantacion">Edad de la Plantación (años)</label>
+                                        <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Año de plantación" step="1">
+                                        <label for="edad_plantacion">Año de plantación</label>
                                     </div>
                                 </td>
                             </tr>
@@ -1429,7 +1437,10 @@ $(function () {
                                 <td><b>Tipo de Plantación</b></td>
                                 <td>
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" name="tipo_plantacion[]" placeholder="Tipo de plantación">
+                                       <select class="form-control" name="tipo_plantacion[]" >
+                                                  <option value="Cultivado">Cultivado</option>
+                                                  <option value="Silvestre">Silvestre</option>
+                                              </select>
                                         <label for="tipo_plantacion">Tipo de Plantación</label>
                                     </div>
                                 </td>
@@ -1877,7 +1888,7 @@ $(function () {
                 var newRow = `
                       <tr>
                           <td>
-                              <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
+                              <button type="button" class="btn btn-danger remove-row-cordenadas btn-sm"><i class="ri-delete-bin-5-fill"></i></button>
                           </td>
                           <td>
                               <div class="form-floating form-floating-outline">
@@ -1898,7 +1909,7 @@ $(function () {
               var emptyRow = `
                   <tr>
                       <td>
-                          <button type="button" class="btn btn-danger remove-row-cordenadas"><i class="ri-delete-bin-5-fill"></i></button>
+                          <button type="button" class="btn btn-danger remove-row-cordenadas btn-sm"><i class="ri-delete-bin-5-fill"></i></button>
                       </td>
                       <td>
                           <div class="form-floating form-floating-outline">
@@ -1928,7 +1939,7 @@ $(function () {
 
             // Cargar tipos de agave en el select
             var tipoOptions = data.tipos.map(function (tipo) {
-              return `<option value="${tipo.id_tipo}">${tipo.nombre}</option>`;
+              return `<option value="${tipo.id_tipo}">${tipo.nombre} (${tipo.cientifico})</option>`;
             }).join('');
 
             // Rellenar plantaciones o añadir una fila vacía si no hay plantaciones
@@ -1937,7 +1948,7 @@ $(function () {
                 var newRow = `
                               <tr class="plantacion-row">
                                   <td rowspan="4">
-                                      <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
+                                      <button type="button" class="btn btn-danger remove-row-plantacion btn-sm"><i class="ri-delete-bin-5-fill"></i></button>
                                   </td>
                                   <td><b>Nombre y Especie de Agave/Maguey</b></td>
                                   <td>
@@ -1960,11 +1971,11 @@ $(function () {
                                   </td>
                               </tr>
                               <tr class="plantacion-row">
-                                  <td><b>Edad de la Plantación (años)</b></td>
+                                  <td><b>Año de plantación</b></td>
                                   <td>
                                       <div class="form-floating form-floating-outline">
-                                          <input type="number" class="form-control" name="edad_plantacion[]" value="${plantacion.anio_plantacion}" placeholder="Edad de la plantación (años)" step="1" autocomplete="off">
-                                          <label for="edad_plantacion">Edad de la Plantación (años)</label>
+                                          <input type="number" class="form-control" name="edad_plantacion[]" value="${plantacion.anio_plantacion}" placeholder="Año de plantación" step="1" autocomplete="off">
+                                          <label for="edad_plantacion">Año de plantación</label>
                                       </div>
                                   </td>
                               </tr>
@@ -1988,7 +1999,7 @@ $(function () {
               var emptyRow = `
                           <tr>
                               <td rowspan="4">
-                                  <button type="button" class="btn btn-danger remove-row-plantacion"><i class="ri-delete-bin-5-fill"></i></button>
+                                  <button type="button" class="btn btn-danger remove-row-plantacion btn-sm"><i class="ri-delete-bin-5-fill"></i></button>
                               </td>
                               <td><b>Nombre y Especie de Agave/Maguey</b></td>
                               <td>
@@ -2011,11 +2022,11 @@ $(function () {
                               </td>
                           </tr>
                           <tr>
-                              <td><b>Edad de la Plantación (años)</b></td>
+                              <td><b>Año de plantación</b></td>
                               <td>
                                   <div class="form-floating form-floating-outline">
-                                      <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Edad de la plantación (años)" step="1">
-                                      <label for="edad_plantacion">Edad de la Plantación (años)</label>
+                                      <input type="number" class="form-control" name="edad_plantacion[]" placeholder="Año de plantación" step="1">
+                                      <label for="edad_plantacion">Año de plantación</label>
                                   </div>
                               </td>
                           </tr>
