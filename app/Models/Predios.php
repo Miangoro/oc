@@ -9,7 +9,8 @@ use Spatie\Activitylog\Traits\LogsActivity;
 
 class Predios extends Model
 {
-    use LogsActivity, TranslatableActivityLog, HasFactory;
+    //use LogsActivity, TranslatableActivityLog, HasFactory;
+    use HasFactory;
 
     // Puedes especificar la tabla si no sigue la convención
     protected $table = 'predios';
