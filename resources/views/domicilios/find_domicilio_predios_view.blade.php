@@ -39,7 +39,7 @@
                         <th></th>
                         <th>ID</th>
                         <th>Cliente</th>
-                        <th>Nombre Productor</th>
+                        <th>Número de predio</th>
                         <th>Nombre Predio</th>
                         <th>Ubicación Predio</th>
                         <th>Tipo Predio</th>

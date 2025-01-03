@@ -49,7 +49,7 @@ class PrediosController extends Controller
         $columns = [
             1 => 'id_predio',
             2 => 'id_empresa',
-            3 => 'nombre_productor',
+            3 => 'num_predio',
             4 => 'nombre_predio',
             5 => 'ubicacion_predio',
             6 => 'tipo_predio',
@@ -96,7 +96,7 @@ class PrediosController extends Controller
                     ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
                         $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
                     })
-                    ->orWhere('nombre_productor', 'LIKE', "%{$search}%")
+                    ->orWhere('num_predio', 'LIKE', "%{$search}%")
                     ->orWhere('nombre_predio', 'LIKE', "%{$search}%")
                     ->orWhere('ubicacion_predio', 'LIKE', "%{$search}%")
                     ->orWhere('tipo_predio', 'LIKE', "%{$search}%")
@@ -119,7 +119,7 @@ class PrediosController extends Controller
                     ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
                         $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
                     })
-                    ->orWhere('nombre_productor', 'LIKE', "%{$search}%")
+                    ->orWhere('num_predio', 'LIKE', "%{$search}%")
                     ->orWhere('nombre_predio', 'LIKE', "%{$search}%")
                     ->orWhere('ubicacion_predio', 'LIKE', "%{$search}%")
                     ->orWhere('tipo_predio', 'LIKE', "%{$search}%")
@@ -147,7 +147,7 @@ class PrediosController extends Controller
                 $predio->empresa->empresaNumClientes[2]->numero_cliente;
 
                 $nestedData['id_empresa'] = '<b>'.$numeroCliente . '</b><br>' . $razonSocial;
-                $nestedData['nombre_productor'] = $predio->nombre_productor;
+                $nestedData['num_predio'] = $predio->num_predio ?? '';
                 $nestedData['nombre_predio'] = $predio->nombre_predio;
                 $nestedData['ubicacion_predio'] = $predio->ubicacion_predio ?? 'N/A';
                 $nestedData['tipo_predio'] = $predio->tipo_predio;
@@ -197,7 +197,7 @@ class PrediosController extends Controller
                 'puntos_referencia' => 'required|string',
                 'tiene_coordenadas' => 'nullable|string|max:2',
                 'superficie' => 'required|string',
-                'url' => 'required|file|mimes:jpg,jpeg,png,pdf',
+                'url' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
                 'id_documento' => 'required|integer',
                 'nombre_documento' => 'required|string|max:255'
             ]);
@@ -502,7 +502,13 @@ class PrediosController extends Controller
         public function PdfPreRegistroPredios($id_predio)
         {
 
-            $datos = Predios::with(['predio_plantaciones.tipo','empresa.empresaNumClientes'])->find($id_predio);
+            $datos = Predios::with([
+                'predio_plantaciones.tipo',
+                'empresa.empresaNumClientes' => function ($query) {
+                    $query->whereNotNull('numero_cliente')->where('numero_cliente', '!=', '');
+                }
+            ])->find($id_predio);
+            
             $comunal = '___';
             $ejidal = '___';
             $propiedad = '___';
@@ -515,7 +521,7 @@ class PrediosController extends Controller
                 case 'Ejidal':
                     $ejidal = 'X';
                     break;
-                case 'Propiedad Privada':
+                case 'Propiedad privada':
                     $propiedad = 'X';
                     break;
                 case 'Otro':
@@ -731,20 +737,20 @@ class PrediosController extends Controller
       $predio = Predios::with(['empresa', 'empresa.empresaNumClientes'])->find($id_predio);
 
       // Obtener la solicitud relacionada a partir del id_predio
-      $solicitud = solicitudesModel::where('id_predio', $id_predio)->first();
+     // $solicitud = solicitudesModel::where('id_predio', $id_predio)->first();
       // Obtener la inspección relacionada a partir del id_solicitud de la solicitud
-      $inspeccionData = inspecciones::where('id_solicitud', $solicitud->id_solicitud)->first();
+    //  $inspeccionData = inspecciones::where('id_solicitud', $solicitud->id_solicitud)->first();
 
       // Obtener todas las coordenadas relacionadas con la inspección
-      $coordenadas = PredioCoordenadas::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
+      $coordenadas = PredioCoordenadas::where('id_predio', $id_predio)->get();
       $caracteristicas = PrediosCaracteristicasMaguey::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
-      $plantacion = predio_plantacion::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
+      $plantacion = predio_plantacion::where('id_predio', $id_predio)->get();
 
       // Cargar la vista PDF con la inspección y las coordenadas
       $pdf = Pdf::loadView('pdfs.inspeccion_geo_referenciacion', [
           'inspeccion' => $inspeccion,
-          'solicitud' => $solicitud, // Pasar la solicitud
-          'inspeccionData' => $inspeccionData, // Pasar la inspección relacionada
+          'solicitud' => 'pendiente', // Pasar la solicitud
+          'inspeccionData' => 'pendiente', // Pasar la inspección relacionada
           'coordenadas' => $coordenadas,
           'caracteristicas' => $caracteristicas,
           'plantacion' => $plantacion,
@@ -764,10 +770,10 @@ class PrediosController extends Controller
     // Obtener la solicitud relacionada a partir del id_predio
     $solicitud = solicitudesModel::where('id_predio', $id_predio)->first();
     // Obtener la inspección relacionada a partir del id_solicitud de la solicitud
-    $inspeccionData = inspecciones::where('id_solicitud', $solicitud->id_solicitud)->first();
+    //$inspeccionData = inspecciones::where('id_solicitud', $solicitud->id_solicitud)->first();
 
     // Obtener todas las coordenadas relacionadas con la inspección
-    $coordenadas = PredioCoordenadas::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
+    $coordenadas = PredioCoordenadas::where('id_predio', $id_predio)->get();
     $caracteristicas = PrediosCaracteristicasMaguey::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
     $plantacion = predio_plantacion::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
 
@@ -775,7 +781,7 @@ class PrediosController extends Controller
           'inspeccion' => $inspeccion,
           'vigencia' => $vigencia,
           'emision' => $emision,
-          'inspeccionData' => $inspeccionData, // Pasar la inspección relacionada
+          'inspeccionData' => '', // Pasar la inspección relacionada
           'predio' => $predio,
           'solicitud' => $solicitud, // Pasar la solicitud
           'coordenadas' => $coordenadas,
@@ -802,7 +808,7 @@ class PrediosController extends Controller
               'num_predio' => $validated['num_predio'],
               'fecha_emision' => $validated['fecha_emision'],
               'fecha_vigencia' => $validated['fecha_vigencia'],
-              'estatus' => 'Completado'
+              'estatus' => 'Vigente'
           ]);
 
           return response()->json([

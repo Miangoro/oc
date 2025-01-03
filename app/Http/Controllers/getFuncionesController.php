@@ -120,40 +120,56 @@ class getFuncionesController extends Controller
     
     
     public function getDatosSolicitud($id_solicitud)
-    {
-        $solicitud = solicitudesModel::with('empresa.empresaNumClientes', 'instalacion.certificado_instalacion', 'predios', 'marcas','lote_granel.categoria','lote_granel.clase')
-            ->where("id_solicitud", $id_solicitud)
-            ->first();
+{
+   // Realizamos la consulta base sin las relaciones condicionales
+$solicitudQuery = solicitudesModel::with([
+    'empresa.empresaNumClientes', 
+    'instalacion.certificado_instalacion', 
+    'predios', 
+    'marcas',
+     'lote_envasado.lotes_envasado_granel.lotes_granel.clase',
+        'lote_envasado.lotes_envasado_granel.lotes_granel.categoria'
+    
+]);
+
+// Cargamos la solicitud
+$solicitud = $solicitudQuery->where("id_solicitud", $id_solicitud)->first();
+
+if ($solicitud && $solicitud->id_tipo != 11) {
+    // Si el id_tipo no es 11, agregamos las relaciones adicionales
+    $solicitud->load([
+        'lote_granel.categoria', 
+        'lote_granel.clase',
        
-        if ($solicitud) {
-            $tipos = ''; // Inicializamos la variable para concatenar los tipos
-
-            if ($solicitud->lote_granel && $solicitud->lote_granel->tiposRelacionados) {
-                foreach ($solicitud->lote_granel->tiposRelacionados as $tipo) {
-                    $tipos .= $tipo->nombre . " (" . $tipo->cientifico . "), "; // Concatenamos con coma
-                }
-                // Eliminar la última coma y espacio
-                $tipos = rtrim($tipos, ', ');
-            } else {
-                $tipos = "No hay tipos relacionados disponibles."; // Mensaje si no hay tipos
-            }
-            
-
-
-            return response()->json([
-                'success' => true,
-                'data' => $solicitud,
-                'documentos' => Documentacion_url::where("id_empresa", "=", $solicitud->empresa->id_empresa)->get(),
-                'fecha_visita_formateada' => Helpers::formatearFechaHora($solicitud->fecha_visita), // Enviar la hora formateada
-                'tipos_agave' => $tipos
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'No se encontró la solicitud.',
-            ]);
-        }
+    ]);
+}
+    if (!$solicitud) {
+        return response()->json([
+            'success' => false,
+            'message' => 'No se encontró la solicitud.',
+        ]);
     }
+
+    // Manejar tipos relacionados
+    $tipos = "No hay tipos relacionados disponibles.";
+    if (!empty($solicitud->lote_granel) && !empty($solicitud->lote_granel->tiposRelacionados)) {
+        $tipos = collect($solicitud->lote_granel->tiposRelacionados)
+            ->map(fn($tipo) => $tipo->nombre . " (" . $tipo->cientifico . ")")
+            ->join(', ');
+    }
+
+    // Obtener documentos relacionados
+    $documentos = Documentacion_url::where("id_empresa", $solicitud->empresa->id_empresa)->get();
+
+    return response()->json([
+        'success' => true,
+        'data' => $solicitud,
+        'documentos' => $documentos,
+        'fecha_visita_formateada' => Helpers::formatearFechaHora($solicitud->fecha_visita),
+        'tipos_agave' => $tipos
+    ]);
+}
+
 
 
     //Este por ahora no se usa para nada, pero lo dejo para un futuro

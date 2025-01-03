@@ -30,7 +30,7 @@ class lotesGranelController extends Controller
         $tipos = tipos::all(); // Obtén todos los tipos de agave
         $organismos = organismos::all(); // Obtén todos los organismos, aquí usa 'organismos' en minúscula
         $guias = Guias::all(); // Obtén todas las guías
-        $lotes = LotesGranel::with('empresa', 'categoria', 'clase', 'tipo', 'organismo', 'guias')->get();
+        $lotes = LotesGranel::with('empresa', 'categoria', 'clase', 'tipos', 'organismo', 'guias')->get();
         $documentos = Documentacion::where('id_documento', '=', '58')->get();
         return view('catalogo.lotes_granel', compact('lotes', 'empresas', 'categorias', 'clases', 'tipos', 'organismos', 'guias', 'documentos'));
     }
@@ -67,7 +67,7 @@ class lotesGranelController extends Controller
             $order = $columns[$request->input('order.0.column')];
             $dir = $request->input('order.0.dir');
 
-            $LotesGranel = LotesGranel::with(['empresa', 'categoria', 'clase', 'tipo', 'Organismo'])
+            $LotesGranel = LotesGranel::with(['empresa', 'categoria', 'clase', 'tipos', 'Organismo'])
     ->when($search, function ($query, $search) {
         return $query->where('id_lote_granel', 'LIKE', "%{$search}%")
             ->orWhere('nombre_lote', 'LIKE', "%{$search}%")
@@ -122,7 +122,7 @@ class lotesGranelController extends Controller
                     ->orWhereHas('clase', function ($subQuery) use ($search) {
                         $subQuery->where('clase', 'LIKE', "%{$search}%");
                     })
-                    ->orWhereHas('tipo', function ($subQuery) use ($search) {
+                    ->orWhereHas('tipos', function ($subQuery) use ($search) {
                         $subQuery->where('nombre', 'LIKE', "%{$search}%");
                     })
                     ->orWhere('ingredientes', 'LIKE', "%{$search}%")

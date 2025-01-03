@@ -80,7 +80,7 @@ class solicitudesModel extends Model
     }
 
     // Busca en los lotes relacionados a través de la tabla intermedia
-    if ($this->lotes_envasado_granel->isNotEmpty()) {
+    if ($this->lotes_envasado_granel && $this->lotes_envasado_granel->isNotEmpty()) {
         return $this->lotes_envasado_granel->pluck('id_lote_granel')->toArray();
     }
 

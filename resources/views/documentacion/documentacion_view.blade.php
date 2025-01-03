@@ -38,15 +38,19 @@
 
     <div class="col-md-12 col-xxl-12">
         <div class="card h-100">
-          <div class="card-header d-flex align-items-center justify-content-between">
-            <div class="card-title mb-0">
+          <img src="{{ asset('assets/img/branding/banner_documentos.png') }}" alt="timeline-image" class="card-img-top img-fluid" style="object-fit: cover;">
+          <!-- <div class="card-header d-flex align-items-center justify-content-between">
+           <div class="card-title mb-0">
               <h2 class="m-0 me-2">Requisitos documentales</h2>
               
             </div>
             
             
-          </div>
+          </div>-->
           <div class="card-body p-0">
+
+         
+
            
             <form id="uploadForm" enctype="multipart/form-data">
               <div class="form-floating form-floating-outline m-5 col-md-6">

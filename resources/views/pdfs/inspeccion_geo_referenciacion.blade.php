@@ -337,7 +337,7 @@
             </tr>
             <tr>
                 <td>Estado</td>
-                <td style="font-weight: normal;">{{ $inspeccion->estados->nombre }}</td> {{-- cambiarlo por el estado --}}
+                <td style="font-weight: normal;">{{ $inspeccion->estados->nombre ?? '' }}</td> {{-- cambiarlo por el estado --}}
 
             </tr>
             <tr>

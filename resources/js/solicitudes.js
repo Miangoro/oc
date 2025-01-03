@@ -3971,10 +3971,40 @@ $(document).on('click', '.validar-solicitudes', function () {
               $('.fechaHora').text(response.fecha_visita_formateada);
               $('.guiasTraslado').text(response.data.caracteristicas.guias);
               $('.nombreLote').text(response.data.lote_granel.nombre_lote);
-              $('.categoria').text(response.data.lote_granel.categoria.categoria);
-              $('.clase').text(response.data.lote_granel.clase.clase);
+              if (response.data.lote_granel && response.data.lote_granel.categoria) {
+                $('.categoria').text(response.data.lote_granel.categoria.categoria);
+            } else {
+                $('.categoria').text(response.data.lote_envasado.lotes_envasado_granel[0].lotes_granel[0].categoria.categoria); // O cualquier otro valor por defecto
+            }
+            
+            if (response.data.lote_granel && response.data.lote_granel.clase) {
+                $('.clase').text(response.data.lote_granel.clase.clase);
+            } else {
+                $('.clase').text(response.data.lote_envasado.lotes_envasado_granel[0].lotes_granel[0].clase.clase); // O cualquier otro valor por defecto
+            }
+
+            $('.cont_alc').text(response.data.lote_granel.cont_alc);
+            $('.fq').text(response.data.lote_granel.folio_fq);
+            $('.certificadoGranel').text(response.data.lote_granel.folio_certificado);
+
+            
+            
               $('.tipos').text(response.tipos_agave);
               $('.tipoAnalisis').text(caracteristicas.tipo_analisis);
+
+              $('.nombreLoteEnvasado').text(response.data.lote_envasado.nombre);
+              // Verificar si 'detalles' existe y es un arreglo
+            if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
+              // Recorrer cada elemento de 'detalles'
+              caracteristicas.detalles.forEach(function(detalle) {
+                  // Asumiendo que '.cajasBotellas' es un contenedor de varias cajas, agregamos el texto en cada una
+                  $('.cajasBotellas').append(detalle.cantidad_cajas + " Cajas y " + detalle.cantidad_botellas + " Botellas<br>");
+              });
+            } else {
+              // Si 'detalles' no existe o no es un arreglo
+              $('.cajasBotellas').text('No hay detalles disponibles.');
+            }
+
             
 // Estructura de configuración para los documentos
 const documentConfig = [

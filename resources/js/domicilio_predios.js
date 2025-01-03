@@ -57,7 +57,7 @@ $(function () {
         { data: '' },
         { data: 'id_predio' },
         { data: 'id_empresa' },
-        { data: 'nombre_productor' },
+        { data: 'num_predio' },
         { data: 'nombre_predio' },
         { data: 'ubicacion_predio' },
         { data: 'tipo_predio' },
@@ -66,11 +66,11 @@ $(function () {
         { data: 'superficie' },
         {
           data: 'estatus',
-          searchable: false, orderable: false,
+          searchable: true, orderable: true,
           render: function (data, type, row) {
             var estatusClass = '';
             // Asignar clases según el estatus
-            if (data === 'Completado') {
+            if (data === 'Vigente') {
               estatusClass = 'badge rounded-pill bg-success'; // Verde para 'Vigente'
             } else if (data === 'Pendiente') {
               estatusClass = 'badge rounded-pill bg-danger'; // Rojo para 'Pendiente'
@@ -134,7 +134,7 @@ $(function () {
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
             var $id = full['id_guia'];
-            if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Completado') {
+            if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"
                       data-bs-target="#mostrarPdfDcitamen" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
@@ -150,7 +150,7 @@ $(function () {
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
-            if (full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Completado') {
+            if (full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"
                       data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
@@ -166,7 +166,7 @@ $(function () {
           className: 'text-center',
           searchable: false, orderable: false,
           render: function (data, type, full, meta) {
-            if (full['estatus'] === 'Completado') {
+            if (full['estatus'] === 'Vigente') {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf3 cursor-pointer"
                       data-bs-target="#mostrarPdfDictamenFinal" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
@@ -853,13 +853,13 @@ $(function () {
             }
           }
         },
-        url: {
+       /* url: {
           validators: {
             notEmpty: {
               message: 'Por favor adjunta el documento requerido'
             }
           }
-        },
+        },*/
         'id_tipo[]': {
           validators: {
             notEmpty: {
@@ -1502,7 +1502,7 @@ $(function () {
     iframe.attr('src', '../pre-registro_predios/' + id);
 
     $("#titulo_modal_Dictamen").text("Pre-registro de predios de maguey o agave");
-    $("#subtitulo_modal_Dictamen").text(registro);
+    $("#subtitulo_modal_Dictamen").html(registro);
     // Abrir el modal
     $('#mostrarPdfDictamen').modal('show');
   });
@@ -1525,7 +1525,7 @@ $(function () {
     // Cargar el PDF
     iframe.attr('src', '../inspeccion_geo_referenciacion/' + id);
     $("#titulo_modal_Dictamen").text("Inspección para la geo-referenciación de los predios de maguey o agave");
-    $("#subtitulo_modal_Dictamen").text(registro);
+    $("#subtitulo_modal_Dictamen").html(registro);
 
     // Abrir el modal
     $('#mostrarPdfDictamen').modal('show');
@@ -1551,7 +1551,7 @@ $(function () {
     // Cargar el PDF
     iframe.attr('src', '../Registro_de_Predios_Maguey_Agave/' + id);
     $("#titulo_modal_Dictamen").text("F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.");
-    $("#subtitulo_modal_Dictamen").text(registro);
+    $("#subtitulo_modal_Dictamen").html(registro);
 
     // Abrir el modal
     $('#mostrarPdfDictamen').modal('show');
@@ -1577,7 +1577,7 @@ $(function () {
     // Cargar el PDF
     iframe.attr('src', '../solicitudServicio/' + id);
     $("#titulo_modal_Dictamen").text("Inspección para la geo-referenciación de los predios de maguey o agave");
-    $("#subtitulo_modal_Dictamen").text(registro);
+    $("#subtitulo_modal_Dictamen").html(registro);
     // Abrir el modal
     $('#mostrarPdfDictamen').modal('show');
   });

@@ -515,7 +515,7 @@ if ($act_instalacion != 'Produccion de agave') {
   <!-- Top Referral Source Mobile  -->
   <div class="col-xxl-12">
     <div class="card"> 
-      <img src="' . asset('assets/img/branding/banner_documentos.png') . '" alt="timeline-image" class="card-img-top img-fluid" style="object-fit: cover;">
+     
       <div class="card-header d-flex justify-content-between">
         <div>
           <h5 class="card-title mb-1">' . $numeroCliente . ' ' . $razonSocial . ' (' . $norma . ')</h5>

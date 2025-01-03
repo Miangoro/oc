@@ -145,6 +145,8 @@
 <div class="description1-container">
     <div class="description1">
         Pre-registro de predios de maguey o agave F-UV-21-01<br>Edición 1, 15/07/2024
+
+     
     </div>
 </div>
 
@@ -155,7 +157,7 @@
 	<tbody>
 		<tr>
 			<td><strong>Nombre del productor</strong><br>(Name of producer)</td>
-			<td colspan="3">{{ $datos->nombre_productor }}</td>
+			<td colspan="3">{{ $datos->empresa->razon_social }}</td>
 		</tr>
 		<tr>
 			<td style="width: 87px"><strong>Número de cliente</strong><br>(client number)</td>
@@ -171,9 +173,9 @@
 		</tr>
 		<tr>
 			<td><strong>Fecha de servicio</strong></td>
-			<td>Lorem ipsum dolor sit amet consectetur adipisicing #5</td>
+			<td>-------</td>
 			<td><strong>Dirección del punto de reunión</strong></td>
-			<td>Lorem ipsum dolor sit amet consectetur adipisicing #6</td>
+			<td>-------</td>
 		</tr>
 	</tbody>
 </table><br>
@@ -207,7 +209,7 @@
 	<tbody>
 		<tr>
 			<td style="width: 20px; max-width: 20px; overflow: hidden; white-space: nowrap; text-align: center; vertical-align: middle; padding: 0; border: 1px solid #000;"><strong>Superficie</strong> (area)</td>
-			<td>{{ $datos->superficie }}</td>
+			<td>{{ $datos->superficie }} Ha</td>
 		</tr>
 	</tbody>
 </table><br>
