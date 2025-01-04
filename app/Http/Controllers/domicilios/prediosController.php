@@ -775,7 +775,7 @@ class PrediosController extends Controller
     // Obtener todas las coordenadas relacionadas con la inspección
     $coordenadas = PredioCoordenadas::where('id_predio', $id_predio)->get();
     $caracteristicas = PrediosCaracteristicasMaguey::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
-    $plantacion = predio_plantacion::where('id_inspeccion', $inspeccion->id_inspeccion)->get();
+    $plantacion = predio_plantacion::where('id_predio', $id_predio)->get();
 
       $pdf = Pdf::loadView('pdfs.Registro_de_Predios_Maguey_Agave' , [
           'inspeccion' => $inspeccion,

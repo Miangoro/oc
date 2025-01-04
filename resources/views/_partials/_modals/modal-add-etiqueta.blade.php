@@ -1,42 +1,11 @@
 <style>
     .modal-custom-size {
         max-width: 100%;
-        width: auto%;
+    width: auto;
+    max-height: 90vh; /* Limita la altura máxima al 90% de la altura de la ventana */
+    overflow-y: auto; /* Permite el scroll vertical si el contenido excede la altura */
     }
 
-    .select2-container .select2-selection--single {
-        height: 31px;
-        /* Ajusta la altura aquí */
-        font-size: 0.875rem;
-        /* Tamaño del texto */
-        line-height: 31px;
-        /* Alineación vertical */
-    }
-
-    .select2-container--default .select2-selection--single .select2-selection__rendered {
-        padding-left: 8px;
-        /* Espaciado interno */
-        padding-right: 8px;
-        font-size: 0.875rem;
-        /* Tamaño del texto */
-        line-height: 31px;
-    }
-
-    .select2-container--default .select2-selection--single .select2-selection__arrow {
-        height: 31px;
-        /* Ajusta el tamaño del ícono */
-    }
-
-    .select2-container .select2-selection--multiple {
-        min-height: 31px;
-        /* Ajusta la altura */
-        font-size: 0.875rem;
-    }
-
-    .select2-container--default .select2-selection--multiple .select2-selection__choice {
-        font-size: 0.875rem;
-        /* Tamaño del texto */
-    }
 </style>
 <div class="modal fade" id="etiquetas" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-custom-size modal-simple modal-add-new-address">
