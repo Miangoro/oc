@@ -166,7 +166,7 @@
         }
 
         .caracteristicas {
-            width: 80%;
+            width: 100%;
             text-align: center;
             border-collapse: collapse;
         }

@@ -169,15 +169,15 @@
                 </td>
             </tr>
             <tr>
-                <td style="height: 20px;"><b>Número de cliente</b> <br> (<i>client number)</i></td>
+                <td style="height: 18px;"><b>Número de cliente</b> <br> (<i>client number)</i></td>
                 <td>{{ $predio->empresa->empresaNumClientes->first()->numero_cliente ?? 'N/A' }}</td>
-                <td style=" width: 20%;"><b>Número de teléfono</b> <br>(<i>phone number)</i></td>
+                <td ><b>Número de teléfono</b> <br>(<i>phone number)</i></td>
                 <td>{{$predio->empresa->telefono ?? 'N/A'}}</td>
             </tr>
             <tr>
                 <td><b>Dirección fiscal</b> <br>
                     <i>(Fiscal address)</i></td>
-                <td>{{ $predio->empresa->domicilio_fiscal ?? 'N/A' }}</td>
+                <td style=" width: 27%;">{{ $predio->empresa->domicilio_fiscal ?? 'N/A' }}</td>
                 <td><b>Correo electrónico </b><br>
                     (<i>email)</i></td>
                 <td>{{ $predio->empresa->correo ?? 'N/A' }}</td>
