@@ -233,44 +233,31 @@
         <p  style="margin: 0;"class="indice">III. &nbsp;&nbsp;&nbsp;&nbsp; Datos de geo-referenciación del predio</p>
         <br>
         <table class="coordenadas">
+          <tbody>
             <tr>
-              <td rowspan="{{ max(count($coordenadas) * 2, 2) }}" style="width: 25%; text-align: center;"><b>Coordenadas Geográficas</b> <i>(Geographic coordinates)</i></td>
-              <td><b>Latitud</b> <i>(latitude)</i></td>
-              <td style="font-weight: normal;">
-                  @if ($coordenadas->isNotEmpty())
-                      {{ $coordenadas[0]->latitud }}
-                  @else
-                      N/A
-                  @endif
+              <td colspan="4" style="text-align: center; height: 40px;">
+                <b>Coordenadas Geográficas</b> <i>(Geographic coordinates)</i>
               </td>
-          </tr>
-          <tr>
-              <td><b>Longitud</b> <i>(Length) o (measuring
-                length)</i></td>
-              <td style="font-weight: normal;">
-                  @if ($coordenadas->isNotEmpty())
-                      {{ $coordenadas[0]->longitud }}
-                  @else
-                      N/A
-                  @endif
-              </td>
-          </tr>
-          @foreach ($coordenadas->slice(1) as $coordenada)
-              <tr>
-                  <td><b>Latitud</b> <i>(latitude)</i></td>
-                  <td style="font-weight: normal;">{{ $coordenada->latitud }}</td>
-              </tr>
-              <tr>
-                  <td><b>Longitud</b> <i>(Length) o (measuring
-                    length)</i></td>
-                  <td style="font-weight: normal;">{{ $coordenada->longitud }}</td>
-              </tr>
-          @endforeach
-            <tr>
-                <td><b>Superficie</b> <i>(area)</i></td>
-                <td colspan="2">{{ $inspeccion->superficie ?? 'N/A' }}</td>
             </tr>
+
+            @foreach ($coordenadas as $coordenada)
+              <tr>
+                <td><b>Latitud</b> <i>(latitude)</i></td>
+                <td style="font-weight: normal;">{{ $coordenada->latitud }}</td>
+                <td><b>Longitud</b> <i>(Length) o (measuring length)</i></td>
+                <td style="font-weight: normal;">{{ $coordenada->longitud }}</td>
+              </tr>
+            @endforeach
+
+            <tr>
+              <td colspan="2"><b>Superficie</b> <i>(area)</i></td>
+              <td colspan="2" style="text-align: center; font-weight: normal;">
+                {{ $inspeccion->superficie ?? 'N/A' }}
+              </td>
+            </tr>
+          </tbody>
         </table>
+
     </div>
 <br>
     <div class="container">
