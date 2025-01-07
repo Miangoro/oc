@@ -51,14 +51,12 @@ $(function () {
         data: null,
         render: function (data) {
           switch (data.id_tipo) {
-            case 1:
+            case 1: //Muestreo de agave
               return `<br><span class="fw-bold text-dark small">Guías de agave:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>`;
-            case 2:
+            case 2: //Vigilancia en producción de lote
               return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Nombre del predio:</span><span class="small"> ${data.nombre_predio || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold text-dark small">Folio:</span><span class="small"> ${data.folio_caracteristicas || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Art:</span><span class="small"> ${data.art || 'N/A'}</span>
                       <br>
@@ -155,24 +153,18 @@ $(function () {
             case 11:
               return `<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ${data.nombre_lote_inspeccion || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_inspeccion || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_inspeccion || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_inspeccion || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold text-dark small">Marca:</span><span class="small"> ${data.id_marca || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Marca:</span><span class="small"> ${data.marca || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.volumen_inspeccion || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_inspeccion || 'N/A'}</span>`;
+                      <span class="fw-bold text-dark small">Cajas:</span><span class="small"> ${data.analisis_inspeccion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Botellas:</span><span class="small"> ${data.analisis_inspeccion || 'N/A'}</span>`;
             case 14:
-              return `<br><span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.clase || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.categorias || 'N/A'}</span>
-                      <br>
-                      <span class="fw-bold text-dark small">Renovación:</span><span class="small"> ${data.renovacion || 'N/A'}</span>
-                      `;
+              return `<span class="fw-bold text-dark small">
+                  ${data.renovacion === 'si' ? 'Es renovación' : 'No es renovación'}
+              </span>`;
+          
             default:
               return `<br><span class="fw-bold text-dark small">Información no disponible</span>`;
           }

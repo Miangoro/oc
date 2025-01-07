@@ -139,6 +139,12 @@ public function lote_envasado()
         return $this->hasMany(lotes_envasado_granel::class,'id_lote_envasado', 'id_lote_envasado');
     }
 
+    public function categorias_mezcal()
+    {
+        $ids = $this->getAttribute('caracteristicas')['categorias'] ?? [];
+        return Categorias::whereIn('id_categoria', $ids)->get();
+    }
+
     
 
 
