@@ -209,7 +209,7 @@
     }
 
     function editobtenerGranelesInspecciones(empresa) {
-        if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
+        if (empresa !== "" && empresa !== null && empresa !== undefined) {
             $.ajax({
                 url: '/getDatos/' + empresa,
                 method: 'GET',
