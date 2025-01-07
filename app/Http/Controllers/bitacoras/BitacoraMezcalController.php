@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BitacoraMezcal;
 use App\Helpers\Helpers;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BitacoraMezcalController extends Controller
 {
@@ -18,8 +19,9 @@ class BitacoraMezcalController extends Controller
     public function index(Request $request)
     {
         $columns = [
-            1 => 'fecha',
-            2 => 'lote_a_granel',
+            1 => 'id',
+            2 => 'fecha',
+            3 => 'lote_a_granel',
         ];
 
         $search = $request->input('search.value');
@@ -52,7 +54,7 @@ class BitacoraMezcalController extends Controller
             $nestedData = [
                 'fake_id' => $counter++,
                 'fecha' => Helpers::formatearFecha($bitacora->fecha),
-
+                'id' => $bitacora->id,
                 'lote_a_granel' => $bitacora->lote_a_granel ?? 'N/A',
 
                 // Salidas
@@ -77,5 +79,10 @@ class BitacoraMezcalController extends Controller
             'code' => 200,
             'data' => $data,
         ]);
+    }
+
+    public function PDFBitacoraMezcal($id) {
+      $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal');
+      return $pdf->stream('Bitácora Mezcal a Granel.pdf');
     }
 }
