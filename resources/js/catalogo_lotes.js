@@ -481,7 +481,7 @@ $(function () {
         $('#addLotes').removeClass('d-none');
         if ($('#contenidoGraneles').children('tr').length === 0) {
           agregarFilaLotes(); // Llamar a la función para agregar la fila
-        
+
         }
       } else {
         $('#addLotes').addClass('d-none');
@@ -930,6 +930,7 @@ $(function () {
             $('#edit_nombre_lote').val(lote.nombre_lote);
             $('#edit_id_empresa').val(lote.id_empresa).trigger('change');
             $('#edit_tipo_lote').val(lote.tipo_lote);
+            $('#edit_id_tanque').val(lote.id_tanque);
             // Asigna los valores seleccionados (solo IDs)
             var guiasIds = guias.map(function (guia) { return guia.id; });
             $('#edit_id_guia').val(guiasIds).trigger('change');

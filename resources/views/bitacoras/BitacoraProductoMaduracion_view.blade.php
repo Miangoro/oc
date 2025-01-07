@@ -1,6 +1,6 @@
 @extends('layouts.layoutMaster')
 
-@section('title', 'Bitácora Mezcal a Granel')
+@section('title', 'Bitácora Producto de Maduración')
 
 @section('vendor-style')
 @vite([
@@ -33,14 +33,14 @@
 @endsection
 
 @section('page-script')
-@vite(['resources/js/bitacora_mezcal.js'])
+@vite(['resources/js/bitacora_maduracion.js'])
 @endsection
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- Users List Table -->
 <div class="card">
     <div class="card-header pb-0">
-        <h3 class="card-title mb-0">Mezcal a Granel</h3>
+        <h3 class="card-title mb-0">Producto de maduracion</h3>
     </div>
     <div class="card-datatable table-responsive">
         <table class="datatables-users table">
@@ -48,10 +48,8 @@
                 <tr>
                     <th>#</th>
                     <th>ID</th>
-                    <th>Datos Iniciales</th>
-                    <th>Salidas</th>
-                    <th>Inventario Final</th>
-                    <th>Bitácora</th>
+                    <th>fecha</th>
+                    <th>lote granel</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -61,8 +59,6 @@
 </div>
 
 <!-- Modal -->
-@include('_partials/_modals/modal-pdfs-certificados')
-@include('_partials/_modals/modal-add-bitacoraMezcal')
 <!-- /Modal -->
 
 @endsection

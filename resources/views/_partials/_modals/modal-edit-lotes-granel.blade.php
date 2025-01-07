@@ -21,7 +21,7 @@
                                         <option value="" disabled selected>Selecciona el cliente</option>
                                         @foreach ($empresas as $empresa)
                                         <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
-                                          
+
                                         @endforeach
                                     </select>
                                     <label for="id_empresa">Cliente</label>
@@ -34,10 +34,10 @@
                                     <label for="edit_nombre_lote">Nombre del Lote</label>
                                 </div>
                             </div>
-                            
+
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="edit_tipo_lote" name="tipo_lote" class="form-select">
                                         <option value="" disabled selected>Selecciona el tipo de lote</option>
@@ -49,7 +49,7 @@
                             </div>
 
                             <!-- Campo para seleccionar lote original -->
-                            <div class="col-md-6" id="editarLotes">
+                            <div class="col-md-4" id="editarLotes">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="edit_es_creado_a_partir" name="edit_es_creado_a_partir"
                                         class="form-select">
@@ -62,6 +62,12 @@
                                         lote?</label>
                                 </div>
                             </div>
+                            <div class="col-md-4 mb-4">
+                              <div class="form-floating form-floating-outline">
+                                  <input type="text" class="form-control" id="edit_id_tanque" name="id_tanque" placeholder="ID del Tanque(s)" aria-label="ID del Tanque">
+                                  <label for="id_tanque">ID del Tanque(s)</label>
+                              </div>
+                          </div>
                         </div>
 
                         <div id="editLotesGranel" class="d-none">

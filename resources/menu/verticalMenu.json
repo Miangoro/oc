@@ -55,7 +55,7 @@
       "icon": "menu-icon ri-map-pin-user-fill",
       "slug": "domicilio",
       "submenu": [
-       
+
         {
           "url": "domicilios/predios",
           "name": "Predios",
@@ -249,24 +249,24 @@
           "slug": "bitacora-mezcal"
         },
         {
-          "url": "#",
+          "url": "/bitacoraProductoMaduracion",
           "name": "Producto de maduración",
-          "slug": "#"
+          "slug": "/bitacoraProductoMaduracion"
         },
         {
-          "url": "#",
+          "url": "/bitacoraProcesoElaboracion",
           "name": "Proceso de elaboración",
-          "slug": "#"
+          "slug": "/bitacoraProcesoElaboracion"
         },
         {
-          "url": "#",
+          "url": "/bitacoraProductoTerminado",
           "name": "Producto terminado",
-          "slug": "#"
+          "slug": "/bitacoraProductoTerminado"
         },
         {
-          "url": "#",
+          "url": "/bitacoraHologramas",
           "name": "Hologramas",
-          "slug": "#"
+          "slug": "/bitacoraHologramas"
         }
       ]
     }

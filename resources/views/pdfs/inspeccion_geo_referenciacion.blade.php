@@ -166,7 +166,7 @@
         }
 
         .caracteristicas {
-            width: 80%;
+            width: 100%;
             text-align: center;
             border-collapse: collapse;
         }
@@ -353,45 +353,26 @@
         <p class="indice">III. &nbsp;&nbsp;&nbsp;&nbsp; Datos de geo-referenciación del predio</p>
         <br>
         <table class="tabla-coordenadas">
-            <tr>
-                <td rowspan="{{ max(count($coordenadas) * 2, 2) }}" style="width: 25%;">Grados decimales</td>
-                <td>Latitud</td>
-                <td style="font-weight: normal;">
-                    @if ($coordenadas->isNotEmpty())
-                        {{ $coordenadas[0]->latitud }}
-                    @else
-                        N/A
-                    @endif
-                </td>
-            </tr>
-            <tr>
-                <td>Longitud</td>
-                <td style="font-weight: normal;">
-                    @if ($coordenadas->isNotEmpty())
-                        {{ $coordenadas[0]->longitud }}
-                    @else
-                        N/A
-                    @endif
-                </td>
-            </tr>
+          <tbody>
+              <tr>
+                  <td colspan="4" style="text-align: center; height:40px;">Grados decimales</td>
+              </tr>
 
-            @foreach ($coordenadas->slice(1) as $coordenada)
-                <tr>
-                    <td>Latitud</td>
-                    <td style="font-weight: normal;">{{ $coordenada->latitud }}</td>
-                </tr>
-                <tr>
-                    <td>Longitud</td>
-                    <td style="font-weight: normal;">{{ $coordenada->longitud }}</td>
-                </tr>
-            @endforeach
+              @foreach ($coordenadas as $coordenada)
+                  <tr>
+                      <td>Latitud</td>
+                      <td style="font-weight: normal;">{{ $coordenada->latitud }}</td>
+                      <td>Longitud</td>
+                      <td style="font-weight: normal;">{{ $coordenada->longitud }}</td>
+                  </tr>
+              @endforeach
 
-            <tr>
-                <td>Superficie</td>
-                <td colspan="2" style="font-weight: normal;">{{ $inspeccion->superficie ?? 'N/A' }}</td>
-            </tr>
-        </table>
-
+              <tr>
+                  <td colspan="2">Superficie</td>
+                  <td colspan="2" style="text-align: center; font-weight: normal;">{{ $inspeccion->superficie ?? 'N/A' }}</td>
+              </tr>
+          </tbody>
+      </table>
 
     </div>
 

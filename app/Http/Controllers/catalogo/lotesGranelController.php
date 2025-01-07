@@ -93,9 +93,9 @@ class lotesGranelController extends Controller
                 $subQuery->where('nombre', 'LIKE', "%{$search}%");
             })
             ->orWhere('ingredientes', 'LIKE', "%{$search}%")
-            ->orWhereRaw("CASE 
-                WHEN tipo_lote = 1 THEN 'Certificado por OC CIDAM' 
-                WHEN tipo_lote = 2 THEN 'Certificado por otro organismo' 
+            ->orWhereRaw("CASE
+                WHEN tipo_lote = 1 THEN 'Certificado por OC CIDAM'
+                WHEN tipo_lote = 2 THEN 'Certificado por otro organismo'
             END LIKE ?", ["%{$search}%"]);
     })
     ->offset($start)
@@ -126,11 +126,11 @@ class lotesGranelController extends Controller
                         $subQuery->where('nombre', 'LIKE', "%{$search}%");
                     })
                     ->orWhere('ingredientes', 'LIKE', "%{$search}%")
-                    ->orWhereRaw("CASE 
-                    WHEN tipo_lote = 1 THEN 'Certificado por OC CIDAM' 
-                    WHEN tipo_lote = 2 THEN 'Certificado por otro organismo' 
+                    ->orWhereRaw("CASE
+                    WHEN tipo_lote = 1 THEN 'Certificado por OC CIDAM'
+                    WHEN tipo_lote = 2 THEN 'Certificado por otro organismo'
                 END LIKE ?", ["%{$search}%"]);
-        
+
             })->count();
 
             $data = [];
@@ -142,13 +142,13 @@ class lotesGranelController extends Controller
                 foreach ($LotesGranel as $lote) {
                     $nestedData['id_lote_granel'] = $lote->id_lote_granel ?? 'N/A';
                     $nestedData['fake_id'] = ++$ids ?? 'N/A'; // Incremental ID
-                   
+
                     $razonSocial = $lote->empresa ? $lote->empresa->razon_social : '';
-                    $numeroCliente = 
-                    $lote->empresa->empresaNumClientes[0]->numero_cliente ?? 
-                    $lote->empresa->empresaNumClientes[1]->numero_cliente ?? 
+                    $numeroCliente =
+                    $lote->empresa->empresaNumClientes[0]->numero_cliente ??
+                    $lote->empresa->empresaNumClientes[1]->numero_cliente ??
                     $lote->empresa->empresaNumClientes[2]->numero_cliente;
-    
+
                     $nestedData['id_empresa'] = '<b>'.$numeroCliente . '</b><br>' . $razonSocial;
                     $nestedData['nombre_lote'] = '<span class="fw-bold text-dark h5">'.$lote->nombre_lote.'</span>' ?? 'N/A';
                     $nestedData['tipo_lote'] = $lote->tipo_lote ?? 'N/A';
@@ -304,6 +304,7 @@ class lotesGranelController extends Controller
         $validatedData = $request->validate([
             'id_empresa' => 'required|exists:empresa,id_empresa',
             'nombre_lote' => 'required|string|max:70',
+            'id_tanque' => 'nullable|integer',
             'tipo_lote' => 'required|integer',
             'volumen' => 'required|numeric',
             'cont_alc' => 'required|numeric',
@@ -336,6 +337,7 @@ class lotesGranelController extends Controller
         // Crear una nueva instancia del modelo LotesGranel
         $lote = new LotesGranel();
         $lote->id_empresa = $validatedData['id_empresa'];
+        $lote->id_tanque = $validatedData['id_tanque'];
         $lote->nombre_lote = $validatedData['nombre_lote'];
         $lote->tipo_lote = $validatedData['tipo_lote'];
         $lote->volumen = $validatedData['volumen'];
@@ -523,7 +525,7 @@ class lotesGranelController extends Controller
                 }
                 return null; // Si no hay una guía, devuelves null.
             })->filter(); // Filtras los valores null para que no aparezcan en la colección final.
-            
+
 
             // Obtener la URL del archivo para "otro organismo"
             $archivoUrlOtroOrganismo = $lote->tipo_lote == '2' ? $lote->url_certificado : '';
@@ -582,6 +584,7 @@ class lotesGranelController extends Controller
             $validated = $request->validate([
                 'nombre_lote' => 'required|string|max:255',
                 'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                'id_tanque' => 'nullable|integer',
                 'tipo_lote' => 'required|integer',
                 'id_guia' => 'nullable|array',
                 'id_guia.*' => 'integer|exists:guias,id_guia',
@@ -612,6 +615,7 @@ class lotesGranelController extends Controller
       // Actualizar el lote principal
       $lote->update([
           'id_empresa' => $validated['id_empresa'],
+          'id_tanque' => $validated['id_tanque'],
           'nombre_lote' => $validated['nombre_lote'],
           'tipo_lote' => $validated['tipo_lote'],
           'cont_alc' => $validated['cont_alc'],
