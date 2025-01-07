@@ -37,11 +37,11 @@
                                     <label for="nombre_lote">Nombre del Lote</label>
                                 </div>
                             </div>
-                            
+
                         </div>
                         <!-- Campo para seleccionar lote original -->
                         <div class="row">
-                          <div class="col-md-6">
+                          <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-4">
                                 <select id="tipo_lote" name="tipo_lote" class=" form-select"
                                     data-error-message="Por favor selecciona el tipo de lote">
@@ -52,7 +52,7 @@
                                 <label for="tipo_lote">Tipo de Lote</label>
                             </div>
                         </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-floating form-floating-outline mb-4">
                                     <select id="es_creado_a_partir" name="es_creado_a_partir" class="form-select">
                                         <option value="" disabled selected>¿Creado a partir de otro lote?</option>
@@ -63,6 +63,12 @@
                                         lote?</label>
                                 </div>
                             </div>
+                            <div class="col-md-4 mb-4">
+                              <div class="form-floating form-floating-outline">
+                                  <input type="text" class="form-control" id="id_tanque" name="id_tanque" placeholder="ID del Tanque(s)" aria-label="ID del Tanque" required>
+                                  <label for="id_tanque">ID del Tanque(s)</label>
+                              </div>
+                          </div>
                         </div>
 
 
@@ -336,7 +342,7 @@
 <script>
     function obtenerDatosEmpresa() {
         var empresa = $("#id_empresa").val();
-    
+
 
         // Verifica si el valor de empresa es válido
         if (!empresa) {

@@ -15,7 +15,7 @@
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
   });
- 
+
    if (dt_user_table.length) {
      var dt_user = dt_user_table.DataTable({
        processing: true,
@@ -49,80 +49,18 @@
            }
          },
          {
-            targets: 2,
-            responsivePriority: 1,
-            render: function (data, type, full, meta) {
+          targets: 2,
+          responsivePriority: 1,
+          render: function (data, type, full, meta) {
+              var $fecha = full['fecha'] ?? 'N/A';
+              var $lote_a_granel = full['lote_a_granel'] ?? 'N/A';
 
-                var $fecha = full['fecha'] ?? 'N/A';
-                var $id_tanque = full['id_tanque'] ?? 'N/A';
-                var $lote_a_granel = full['lote_a_granel'] ?? 'N/A';
-                var $operacion_adicional = full['operacion_adicional'] ?? 'N/A';
-                var $categoria = full['categoria'] ?? 'N/A';
-                var $clase = full['clase'] ?? 'N/A';
-                var $ingredientes = full['ingredientes'] ?? 'N/A';
-                var $edad = full['edad'] ?? 'N/A';
-                var $tipo_agave = full['tipo_agave'] ?? 'N/A';
-                var $num_analisis = full['num_analisis'] ?? 'N/A'; 
-                var $num_certificado = full['num_certificado'] ?? 'N/A';
-        
-                return '<span class="fw-bold text-dark small">Fecha: </span>' +
-                       '<span class="small">' + $fecha + '</span>' +
-                       '<br><span class="fw-bold text-dark small">ID del Tanque: </span>' +
-                       '<span class="small">' + $id_tanque + '</span>' +
-                       '<br><span class="fw-bold text-dark small">Lote a Granel: </span>' +
-                       '<span class="small">' + $lote_a_granel + '</span>' +
-                       '<br><span class="fw-bold text-dark small">Operación Adicional: </span>' +
-                       '<span class="small">' + $operacion_adicional + '</span>' +
-                       '<br><span class="fw-bold text-dark small">Categoría: </span>' +
-                       '<span class="small">' + $categoria + '</span>' +
-                       '<br><span class="fw-bold text-dark small">Clase: </span>' +
-                       '<span class="small">' + $clase + '</span>' +
-                       '<br><span class="fw-bold text-dark small">Ingredientes: </span>' +
-                       '<span class="small">' + $ingredientes + '</span>' +
-                       '<br><span class="fw-bold text-dark small">Edad: </span>' +
-                       '<span class="small">' + $edad + '</span>' +
-                       '<br><span class="fw-bold text-dark small">Tipo de Agave: </span>' +
-                       '<span class="small">' + $tipo_agave + '</span>' +
-                       '<br><span class="fw-bold text-dark small">No. de Análisis: </span>' +
-                       '<span class="small">' + $num_analisis + '</span>' +
-                       '<br><span class="fw-bold text-dark small">No. de Certificado: </span>' +
-                       '<span class="small">' + $num_certificado + '</span>';
-                    }
-            },
+              return '<br><span class="fw-bold text-dark small">Lote a Granel: </span>' +
+                     '<span class="small">' + $lote_a_granel + '</span>';
+              }
+          },
             {
                 targets: 3,
-                responsivePriority: 1,
-                render: function (data, type, full, meta) {
-                    var $volumen_inicial = full['volumen_inicial'] ?? 'N/A';
-                    var $alcohol_inicial = full['alcohol_inicial'] ?? 'N/A';
-            
-                    return '<span class="fw-bold text-dark small">Volumen Inicial: </span>' +
-                           '<span class="small">' + $volumen_inicial + '</span>' +
-                           '<br><span class="fw-bold text-dark small">Alcohol Inicial: </span>' +
-                           '<span class="small">' + $alcohol_inicial + '</span>';
-                }
-            },           
-            {
-                targets: 4,
-                responsivePriority: 1,
-                render: function (data, type, full, meta) {
-                    var $procedencia_entrada = full['procedencia_entrada'] ?? 'N/A';
-                    var $volumen_entrada = full['volumen_entrada'] ?? 'N/A';
-                    var $alcohol_entrada = full['alcohol_entrada'] ?? 'N/A';
-                    var $agua_entrada = full['agua_entrada'] ?? 'N/A';
-
-                    return '<span class="fw-bold text-dark small">Procedencia de Entrada: </span>' +
-                        '<span class="small">' + $procedencia_entrada + '</span>' +
-                        '<br><span class="fw-bold text-dark small">Volumen de Entrada: </span>' +
-                        '<span class="small">' + $volumen_entrada + '</span>' +
-                        '<br><span class="fw-bold text-dark small">Alcohol de Entrada: </span>' +
-                        '<span class="small">' + $alcohol_entrada + '</span>' +
-                        '<br><span class="fw-bold text-dark small">Agua de Entrada: </span>' +
-                        '<span class="small">' + $agua_entrada + '</span>';
-                }
-            },
-            {
-                targets: 5,
                 responsivePriority: 1,
                 render: function (data, type, full, meta) {
                     var $volumen_salidas = full['volumen_salidas'] ?? 'N/A';
@@ -138,7 +76,7 @@
                 }
             },
             {
-                targets: 6,
+                targets: 4,
                 responsivePriority: 1,
                 render: function (data, type, full, meta) {
                     var $volumen_final = full['volumen_final'] ?? 'N/A';
@@ -152,7 +90,7 @@
             },
             {
                 // Abre el pdf Bitacora
-                targets: 7,
+                targets: 5,
                 className: 'text-center',
                 render: function (data, type, full, meta) {
                 return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#Pdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
@@ -160,7 +98,7 @@
             },
             {
                 // Actions
-                targets: 8,
+                targets: 6,
                 title: 'Acciones',
                 searchable: false,
                 orderable: false,
@@ -183,7 +121,7 @@
                         '</div>'
                     );
                 }
-            }        
+            }
        ],
        order: [[2, 'desc']],
        dom:
@@ -195,7 +133,7 @@
          '<"col-sm-12 col-md-6"i>' +
          '<"col-sm-12 col-md-6"p>' +
          '>',
-       lengthMenu: [10, 20, 50, 70, 100], 
+       lengthMenu: [10, 20, 50, 70, 100],
        language: {
          sLengthMenu: '_MENU_',
          search: '',
@@ -208,7 +146,7 @@
                  "sPrevious": "Anterior"
                }
        },
- 
+
        // Opciones Exportar Documentos
        buttons: [
          {
@@ -370,7 +308,7 @@
            type: 'column',
            renderer: function (api, rowIdx, columns) {
              var data = $.map(columns, function (col, i) {
-               return col.title !== '' 
+               return col.title !== ''
                  ? '<tr data-dt-row="' +
                      col.rowIndex +
                      '" data-dt-column="' +
@@ -386,13 +324,13 @@
                      '</tr>'
                  : '';
              }).join('');
-             
+
              return data ? $('<table class="table"/><tbody />').append(data) : false;
            }
          }
-       } 
+       }
      });
-   } 
+   }
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
 

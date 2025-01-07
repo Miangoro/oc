@@ -201,6 +201,11 @@ use App\Http\Controllers\pdf_llenado\PdfController;
 use App\Http\Controllers\revision\RevisionPersonalController;
 use App\Http\Controllers\revision\catalogo_personal_seleccion_preguntas_controller;
 use App\Http\Controllers\Bitacoras\BitacoraMezcalController;
+use App\Http\Controllers\Bitacoras\BitacoraProductoMaduracionController;
+use App\Http\Controllers\Bitacoras\BitacoraProcesoElaboracionController;
+use App\Http\Controllers\Bitacoras\BitacoraProductoTerminadoController;
+use App\Http\Controllers\Bitacoras\BitacoraHologramasController;
+
 
 // Main Page Route
 //Route::get('/', [Analytics::class, 'index'])->name('dashboard-analytics');
@@ -835,5 +840,25 @@ Route::get('/bitacora_hologramas', [CartaAsignacionController::class, 'BitacoraH
 // BitacoraMezcal
 Route::get('/bitacoraMezcal', [BitacoraMezcalController::class, 'UserManagement'])->name('bitacora-mezcal');
 Route::resource('/bitacoraMezcal-list', BitacoraMezcalController::class);
+
+// BitacoraMaduracion
+Route::get('/bitacoraProductoMaduracion', [BitacoraProductoMaduracionController::class, 'UserManagement'])->name('bitacoraProductoMaduracion');
+Route::resource('/bitacoraProductoMaduracion-list', BitacoraProductoMaduracionController::class);
+
+
+// BitacoraProcesoElaboracion
+Route::get('/bitacoraProcesoElaboracion', [BitacoraProcesoElaboracionController::class, 'UserManagement'])->name('bitacoraProcesoElaboracion');
+Route::resource('/bitacoraProcesoElaboracion-list', BitacoraProcesoElaboracionController::class);
+
+
+// BitacorProductoTerminado
+Route::get('/bitacoraProductoTerminado', [BitacoraProductoTerminadoController::class, 'UserManagement'])->name('bitacoraProductoTerminado');
+Route::resource('/bitacoraProductoTerminado-list', BitacoraProductoTerminadoController::class);
+
+// BitacorHologramas
+Route::get('/bitacoraHologramas', [BitacoraHologramasController::class, 'UserManagement'])->name('bitacoraHologramas');
+Route::resource('/bitacoraHologramas-list', BitacoraHologramasController::class);
+
+
 
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
