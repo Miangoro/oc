@@ -117,7 +117,7 @@ $(function () {
           render: function (data, type, full, meta) {
               if (full['hasSolicitud']) {
                   return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdfSolicitud cursor-pointer"
-                          data-bs-target="#mostrarPdfDcitamen" data-bs-toggle="modal"
+                          data-bs-target="#mostrarPdfDcitamen1" data-bs-toggle="modal"
                           data-bs-dismiss="modal" data-id="${full['id_predio']}"
                           data-registro="${full['id_empresa']}"></i>`;
               } else {
@@ -136,7 +136,7 @@ $(function () {
             var $id = full['id_guia'];
             if (full['estatus'] === 'Pendiente' || full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"
-                      data-bs-target="#mostrarPdfDcitamen" data-bs-toggle="modal"
+                      data-bs-target="#mostrarPdfDcitamen1" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
                       data-registro="${full['id_empresa']}"></i>`;
             } else {
@@ -152,7 +152,7 @@ $(function () {
           render: function (data, type, full, meta) {
             if (full['estatus'] === 'Inspeccionado' || full['estatus'] === 'Vigente') {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"
-                      data-bs-target="#mostrarPdfDictamen" data-bs-toggle="modal"
+                      data-bs-target="#mostrarPdfDictamen1" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
                       data-registro="${full['id_empresa']}"></i>`;
             } else {
@@ -168,7 +168,7 @@ $(function () {
           render: function (data, type, full, meta) {
             if (full['estatus'] === 'Vigente') {
               return `<i class="ri-file-pdf-2-fill text-danger ri-40px pdf3 cursor-pointer"
-                      data-bs-target="#mostrarPdfDictamenFinal" data-bs-toggle="modal"
+                      data-bs-target="#mostrarPdfDictamen1" data-bs-toggle="modal"
                       data-bs-dismiss="modal" data-id="${full['id_predio']}"
                       data-registro="${full['id_empresa']}"></i>`;
             } else {
@@ -1489,104 +1489,142 @@ $(function () {
   });
 
 
-  //Reciben los datos del pdf
-  $(document).on('click', '.pdf', function () {
-    var id = $(this).data('id');
-    var registro = $(this).data('registro');
-    var iframe = $('#pdfViewerDictamen');
+ // Reciben los datos del PDF
+$(document).on('click', '.pdf', function () {
+  var id = $(this).data('id');
+  var registro = $(this).data('registro');
+  var iframe = $('#pdfViewerDictamen1');
+  var openPdfBtn = $('#openPdfBtnDictamen1'); // Botón para abrir en nueva pestaña
 
-    // Mostrar el spinner y ocultar el iframe
-    $('#loading-spinner').show();
-    iframe.hide();
+  // Mostrar el spinner y ocultar el iframe
+  $('#loading-spinner1').show();
+  iframe.hide();
 
-    iframe.attr('src', '../pre-registro_predios/' + id);
+  // Generar la URL del PDF
+  var pdfUrl = '../pre-registro_predios/' + id;
 
-    $("#titulo_modal_Dictamen").text("Pre-registro de predios de maguey o agave");
-    $("#subtitulo_modal_Dictamen").html(registro);
-    // Abrir el modal
-    $('#mostrarPdfDictamen').modal('show');
-  });
-  // Ocultar el spinner cuando el PDF esté completamente cargado
-  $('#pdfViewerDictamen').on('load', function () {
-    $('#loading-spinner').hide(); // Ocultar el spinner
-    $(this).show(); // Mostrar el iframe con el PDF
-  });
+  // Cargar el PDF en el iframe
+  iframe.attr('src', pdfUrl);
 
-  // Reciben los datos del PDF
-  $(document).on('click', '.pdf2', function () {
-    var id = $(this).data('id');
-    var registro = $(this).data('registro');
-    var iframe = $('#pdfViewerDictamen');
+  // Actualizar el texto y subtítulo del modal
+  $("#titulo_modal_Dictamen1").text("Pre-registro de predios de maguey o agave");
+  $("#subtitulo_modal_Dictamen1").html(registro);
 
-    // Mostrar el spinner y ocultar el iframe
-    $('#loading-spinner').show();
-    iframe.hide();
+  // Actualizar el botón para abrir en nueva pestaña
+  openPdfBtn.attr('href', pdfUrl);
+  openPdfBtn.show(); // Mostrar el botón
 
-    // Cargar el PDF
-    iframe.attr('src', '../inspeccion_geo_referenciacion/' + id);
-    $("#titulo_modal_Dictamen").text("Inspección para la geo-referenciación de los predios de maguey o agave");
-    $("#subtitulo_modal_Dictamen").html(registro);
+  // Abrir el modal
+  $('#mostrarPdfDictamen1').modal('show');
+});
 
-    // Abrir el modal
-    $('#mostrarPdfDictamen').modal('show');
-  });
+// Ocultar el spinner cuando el PDF esté completamente cargado
+$('#pdfViewerDictamen1').on('load', function () {
+  $('#loading-spinner1').hide(); // Ocultar el spinner
+  $(this).show(); // Mostrar el iframe con el PDF
+});
 
-  // Ocultar el spinner cuando el PDF esté completamente cargado
-  $('#pdfViewerDictamen').on('load', function () {
-    $('#loading-spinner').hide(); // Ocultar el spinner
-    $(this).show(); // Mostrar el iframe con el PDF
-  });
+
+// Reciben los datos del PDF
+$(document).on('click', '.pdf2', function () {
+  var id = $(this).data('id');
+  var registro = $(this).data('registro');
+  var iframe = $('#pdfViewerDictamen1');
+  var openPdfBtn = $('#openPdfBtnDictamen1'); // Botón para abrir en nueva pestaña
+
+  // Mostrar el spinner y ocultar el iframe
+  $('#loading-spinner1').show();
+  iframe.hide();
+
+  // Generar la URL del PDF
+  var pdfUrl = '../inspeccion_geo_referenciacion/' + id;
+
+  // Cargar el PDF en el iframe
+  iframe.attr('src', pdfUrl);
+
+  // Actualizar el texto y subtítulo del modal
+  $("#titulo_modal_Dictamen1").text("Inspección para la geo-referenciación de los predios de maguey o agave");
+  $("#subtitulo_modal_Dictamen1").html(registro);
+
+  // Actualizar el botón para abrir en nueva pestaña
+  openPdfBtn.attr('href', pdfUrl);
+  openPdfBtn.show(); // Mostrar el botón
+
+  // Abrir el modal
+  $('#mostrarPdfDictamen1').modal('show');
+});
+
+// Ocultar el spinner cuando el PDF esté completamente cargado
+$('#pdfViewerDictamen1').on('load', function () {
+  $('#loading-spinner1').hide(); // Ocultar el spinner
+  $(this).show(); // Mostrar el iframe con el PDF
+});
 
 
   // Reciben los datos del PDF
   $(document).on('click', '.pdf3', function () {
     var id = $(this).data('id');
     var registro = $(this).data('registro');
-    var iframe = $('#pdfViewerDictamen');
+    var iframe = $('#pdfViewerDictamen1');
+    var openPdfBtn = $('#openPdfBtnDictamen1');
 
     // Mostrar el spinner y ocultar el iframe
-    $('#loading-spinner').show();
+    $('#loading-spinner1').show();
     iframe.hide();
-
+    var pdfUrl = '../Registro_de_Predios_Maguey_Agave/' + id;
     // Cargar el PDF
-    iframe.attr('src', '../Registro_de_Predios_Maguey_Agave/' + id);
-    $("#titulo_modal_Dictamen").text("F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.");
-    $("#subtitulo_modal_Dictamen").html(registro);
-
+    iframe.attr('src', pdfUrl);
+    $("#titulo_modal_Dictamen1").text("F-UV-21-03 Registro de predios de maguey o agave Ed. 4 Vigente.");
+    $("#subtitulo_modal_Dictamen1").html(registro);
+  // Actualizar el botón para abrir en nueva pestaña
+  openPdfBtn.attr('href', pdfUrl);
+  openPdfBtn.show(); // Mostrar el botón
     // Abrir el modal
-    $('#mostrarPdfDictamen').modal('show');
+    $('#mostrarPdfDictamen1').modal('show');
   });
 
   // Ocultar el spinner cuando el PDF esté completamente cargado
-  $('#pdfViewerDictamen').on('load', function () {
-    $('#loading-spinner').hide(); // Ocultar el spinner
+  $('#pdfViewerDictamen1').on('load', function () {
+    $('#loading-spinner1').hide(); // Ocultar el spinner
     $(this).show(); // Mostrar el iframe con el PDF
   });
 
 
-  // Reciben los datos del PDF
-  $(document).on('click', '.pdfSolicitud', function () {
-    var id = $(this).data('id');
-    var registro = $(this).data('registro');
-    var iframe = $('#pdfViewerDictamen');
+// Reciben los datos del PDF
+$(document).on('click', '.pdfSolicitud', function () {
+  var id = $(this).data('id');
+  var registro = $(this).data('registro');
+  var iframe = $('#pdfViewerDictamen1'); // Cambiado a pdfViewerDictamen1
+  var openPdfBtn = $('#openPdfBtnDictamen1'); // Botón para abrir en nueva pestaña
 
-    // Mostrar el spinner y ocultar el iframe
-    $('#loading-spinner').show();
-    iframe.hide();
+  // Mostrar el spinner y ocultar el iframe
+  $('#loading-spinner1').show();
+  iframe.hide();
 
-    // Cargar el PDF
-    iframe.attr('src', '../solicitudServicio/' + id);
-    $("#titulo_modal_Dictamen").text("Inspección para la geo-referenciación de los predios de maguey o agave");
-    $("#subtitulo_modal_Dictamen").html(registro);
-    // Abrir el modal
-    $('#mostrarPdfDictamen').modal('show');
-  });
+  // Generar la URL del PDF
+  var pdfUrl = '../solicitudServicio/' + id;
 
-  // Ocultar el spinner cuando el PDF esté completamente cargado
-  $('#pdfViewerDictamen').on('load', function () {
-    $('#loading-spinner').hide(); // Ocultar el spinner
-    $(this).show(); // Mostrar el iframe con el PDF
-  });
+  // Cargar el PDF en el iframe
+  iframe.attr('src', pdfUrl);
+
+  // Actualizar el texto y subtítulo del modal
+  $("#titulo_modal_Dictamen1").text("Inspección para la geo-referenciación de los predios de maguey o agave");
+  $("#subtitulo_modal_Dictamen1").html(registro);
+
+  // Actualizar el botón para abrir en nueva pestaña
+  openPdfBtn.attr('href', pdfUrl);
+  openPdfBtn.show(); // Mostrar el botón
+
+  // Abrir el modal
+  $('#mostrarPdfDictamen1').modal('show'); // Cambiado a mostrarPdfDictamen1
+});
+
+// Ocultar el spinner cuando el PDF esté completamente cargado
+$('#pdfViewerDictamen1').on('load', function () {
+  $('#loading-spinner1').hide(); // Ocultar el spinner
+  $(this).show(); // Mostrar el iframe con el PDF
+});
+
 
   $(document).ready(function () {
     // Función para agregar una nueva fila de características

@@ -831,7 +831,7 @@ Route::get('/bitacora_revisionPersonal_Granel/{id}', [RevisionPersonalController
 Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCertificado'])->name('Pre-certificado');
 
 // Pdfs Bitacoras
-Route::get('/bitacora_mezcal', [CartaAsignacionController::class, 'BitacoraMezcal'])->name('bitacora_mezcal');
+
 Route::get('/bitacora_maduracion', [CartaAsignacionController::class, 'BitacoraMaduracion'])->name('bitacora_maduracion');
 Route::get('/bitacora_productor', [CartaAsignacionController::class, 'BitacoraProductor'])->name('bitacora_productor');
 Route::get('/bitacora_terminado', [CartaAsignacionController::class, 'BitacoraTerminado'])->name('bitacora_terminado');
@@ -840,6 +840,7 @@ Route::get('/bitacora_hologramas', [CartaAsignacionController::class, 'BitacoraH
 // BitacoraMezcal
 Route::get('/bitacoraMezcal', [BitacoraMezcalController::class, 'UserManagement'])->name('bitacora-mezcal');
 Route::resource('/bitacoraMezcal-list', BitacoraMezcalController::class);
+Route::get('/bitacora_mezcal/{id}', [BitacoraMezcalController::class, 'PDFBitacoraMezcal']);
 
 // BitacoraMaduracion
 Route::get('/bitacoraProductoMaduracion', [BitacoraProductoMaduracionController::class, 'UserManagement'])->name('bitacoraProductoMaduracion');

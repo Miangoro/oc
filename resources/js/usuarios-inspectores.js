@@ -123,7 +123,7 @@ $(function () {
             return '<span class="text-heading fw-medium">' + $pass + '</span>';
           }
         },
-       
+
         {
           // Actions
           targets: -1,
@@ -136,7 +136,7 @@ $(function () {
               '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
               `<a data-id="${full['id']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar inspector</a>` +
-              `<a data-id="${full['id']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar inspector</a>` +             
+              `<a data-id="${full['id']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar inspector</a>` +
               '</div>'
             );
           }
@@ -417,8 +417,8 @@ $(function () {
 
         $("#titulo_modal").text("Carta de asignación de usuario y contraseña para plataforma del OC");
         $("#subtitulo_modal").text(registro);
-        
-      
+
+
 });
 
   // edit record
@@ -431,6 +431,7 @@ $(function () {
       dtrModal.modal('hide');
     }
 
+    $('#statusDnone').removeClass('d-none');
     // changing the title of offcanvas
     $('#offcanvasAddUserLabel').html('Editar usuario');
     $('#registrar-editar').html('Editar');
@@ -440,12 +441,15 @@ $(function () {
       $('#user_id').val(data.id);
       $('#add-user-fullname').val(data.name);
       $('#add-user-email').val(data.email);
+      $('#add-estatus').val(data.estatus).change();
       $('#id_empresa').val(data.id_empresa).prop('selected', true).change();
     });
   });
 
   // changing the title
   $('.add-new').on('click', function () {
+    $('#statusDnone').addClass('d-none');
+    $('#add-estatus').val('Activo').change();
     $('#user_id').val(''); //reseting input field
     $('#offcanvasAddUserLabel').html('Agregar usuario');
     $('#registrar-editar').html('Registrar');

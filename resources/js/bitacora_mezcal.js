@@ -93,7 +93,8 @@
                 targets: 5,
                 className: 'text-center',
                 render: function (data, type, full, meta) {
-                return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#Pdf" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+                  return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-id="${full['id']}" data-bs-target="#mostrarPdfDictamen1" data-bs-toggle="modal" data-bs-dismiss="modal"></i>`;
+
                 }
             },
             {
@@ -110,11 +111,11 @@
                             '</button>' +
                             '<div class="dropdown-menu dropdown-menu-end m-0">' +
                                 // Botón para editar
-                                `<a data-id="${full['id_certificado']}" data-bs-toggle="modal" data-bs-target="#editCertificadoModal" class="dropdown-item edit-record waves-effect text-info">` +
+                                `<a data-id="${full['id']}" data-bs-toggle="modal" data-bs-target="#editCertificadoModal" class="dropdown-item edit-record waves-effect text-info">` +
                                     '<i class="ri-edit-box-line ri-20px text-info"></i> Editar' +
                                 '</a>' +
                                 // Botón para eliminar
-                                `<a data-id="${full['id_certificado']}" class="dropdown-item delete-record waves-effect text-danger">` +
+                                `<a data-id="${full['id']}" class="dropdown-item delete-record waves-effect text-danger">` +
                                     '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar' +
                                 '</a>' +
                             '</div>' +
@@ -333,6 +334,36 @@
    }
 
   //FUNCIONES DEL FUNCIONAMIENTO DEL CRUD//
+
+
+  $(document).on('click', '.pdf', function () {
+    var id = $(this).data('id');
+    var lote = $(this).data('lote_a_granel');
+    console.log('ID seleccionado:', id); // Depuración
+    var iframe = $('#pdfViewerDictamen1');
+    // Mostrar spinner y ocultar iframe
+    $('#loading-spinner1').show();
+    iframe.hide();
+    // Limpia el src del iframe antes de cargar uno nuevo
+    iframe.attr('src', '');
+    // Asigna la nueva ruta
+    iframe.attr('src', '/bitacora_mezcal/' + id);
+    $("#titulo_modal_Dictamen1").text("Bitácora Mezcal a Granel");
+    $("#subtitulo_modal_Dictamen1").html(lote);
+
+    // Abre el modal
+    $('#mostrarPdfDictamen1').modal('show');
+});
+// Oculta el spinner cuando el PDF esté cargado
+$('#pdfViewerDictamen1').on('load', function () {
+    $('#loading-spinner1').hide(); // Ocultar el spinner
+    $(this).show(); // Mostrar el iframe
+});
+// Listener de error (opcional)
+$('#pdfViewerDictamen1').on('error', function () {
+    console.error('Error al cargar el PDF. Verifica la ruta.');
+});
+
 
 //end
 });
