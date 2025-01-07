@@ -17,6 +17,7 @@
     "laravel/sanctum": "^4.0",
     "laravel/tinker": "^2.9",
     "livewire/livewire": "^3.0",
+    "phpoffice/phpspreadsheet": "^3.7",
     "spatie/laravel-activitylog": "^4.8",
     "tecnickcom/tcpdf": "^6.7"
   },

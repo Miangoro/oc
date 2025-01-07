@@ -434,16 +434,23 @@ $(function () {
         ]
       },
       {
-        text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nueva solicitud</span>',
-        className: 'add-new btn btn-primary waves-effect waves-light',
+        text: '<i class="ri-file-excel-2-fill ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Exportar Excel</span>',
+        className: 'btn btn-info waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4  mt-md-0',
         attr: {
-          /*'data-bs-toggle': 'offcanvas',
-          'data-bs-target': '#offcanvasAddUser'*/
+          'data-bs-toggle': 'modal',
+          'data-bs-dismiss': 'modal',
+          'data-bs-target': '#exportarExcel'
+      }
+    },
+    {
+      text: '<i class="ri-add-line ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nueva solicitud</span>',
+      className: 'add-new btn btn-primary waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4  mt-md-0',
+      attr: {
           'data-bs-toggle': 'modal',
           'data-bs-dismiss': 'modal',
           'data-bs-target': '#verSolicitudes'
-        }
       }
+  }
     ],
     // For responsive popup
     responsive: {
@@ -3962,26 +3969,24 @@ $(function () {
     var razon_social = $(this).data('razon-social');
     $('#tipoSolicitud').text(tipoName);
 
-    $.ajax({
+  $.ajax({
       url: `/getDatosSolicitud/${id_solicitud}`,
       type: 'GET',
       dataType: 'json',
       success: function (response) {
-        if (response.success) {
-          $('.domicilioFiscal').text(response.data.empresa.domicilio_fiscal);
-          // Validar si `direccion_completa` no está vacío
-          if (response.data.instalacion) {
-            $('.domicilioInstalacion').text(response.data.instalacion.direccion_completa);
-          } else {
-            // Si está vacío, usar `ubicacion_predio`
-            $('.domicilioInstalacion').text(response.data.predios.ubicacion_predio);
-            $('.nombrePredio').text(response.data.predios.nombre_predio);
-            $('.preregistro').html(
-              "<a target='_Blank' href='/pre-registro_predios/" +
-                response.data.predios.id_predio +
-                "'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>"
-            );
-          }
+
+          if (response.success) {
+
+              $('.domicilioFiscal').text(response.data.empresa.domicilio_fiscal);
+            // Validar si `direccion_completa` no está vacío
+        if (response.data.instalacion) {
+          $('.domicilioInstalacion').text(response.data.instalacion.direccion_completa);
+        } else {
+          // Si está vacío, usar `ubicacion_predio`
+          $('.domicilioInstalacion').text(response.data.predios.ubicacion_predio);
+          $('.nombrePredio').text(response.data.predios.nombre_predio);
+          $(".preregistro").html("<a target='_Blank' href='/pre-registro_predios/"+response.data.predios.id_predio+"'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>");
+        }
 
           var caracteristicas = JSON.parse(response.data.caracteristicas);
 
@@ -3990,19 +3995,19 @@ $(function () {
           $('.guiasTraslado').text(response?.data?.caracteristicas?.guias || 'No disponible');
           $('.nombreLote').text(response?.data?.lote_granel?.nombre_lote || 'No disponible');
 
-          // Validar categoría
-          $('.categoria').text(
-            response?.data?.lote_granel?.categoria?.categoria ||
-              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
-              'No disponible'
-          );
+// Validar categoría
+$('.categoria').text(
+    response?.data?.lote_granel?.categoria?.categoria ||
+    response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
+    'No disponible'
+);
 
-          // Validar clase
-          $('.clase').text(
-            response?.data?.lote_granel?.clase?.clase ||
-              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
-              'No disponible'
-          );
+// Validar clase
+$('.clase').text(
+    response?.data?.lote_granel?.clase?.clase ||
+    response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
+    'No disponible'
+);
 
           $('.cont_alc').text(response?.data?.lote_granel?.cont_alc || 'No disponible');
           $('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
@@ -4011,64 +4016,69 @@ $(function () {
           $('.tipos').text(response?.tipos_agave || 'No disponible');
           $('.tipoAnalisis').text(response?.data?.caracteristicas?.tipo_analisis || 'No disponible');
 
-          // Validar nombre del lote envasado
-          $('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre no disponible');
+// Validar nombre del lote envasado
+$('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre no disponible');
 
-          $('.materialRecipiente').text(caracteristicas.material);
-          $('.capacidadRecipiente').text(caracteristicas.capacidad);
-          $('.numeroRecipiente').text(caracteristicas.num_recipientes);
-          $('.tiempoMaduracion').text(caracteristicas.tiempo_dura);
-          $('.tipoIngreso').text(caracteristicas.tipoIngreso);
-          $('.volumenLiberado').text(caracteristicas.volumen_liberacion);
-          $('.tipoLiberacion').text(caracteristicas.tipoLiberacion);
 
-          // Verificar si 'detalles' existe y es un arreglo
-          if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
-            // Recorrer cada elemento de 'detalles'
-            caracteristicas.detalles.forEach(function (detalle) {
-              // Asumiendo que '.cajasBotellas' es un contenedor de varias cajas, agregamos el texto en cada una
-              $('.cajasBotellas').append(
-                detalle.cantidad_cajas + ' Cajas y ' + detalle.cantidad_botellas + ' Botellas<br>'
-              );
-            });
-          } else {
-            // Si 'detalles' no existe o no es un arreglo
-            $('.cajasBotellas').text('No hay detalles disponibles.');
-          }
+              $('.materialRecipiente').text(caracteristicas.material);
+              $('.capacidadRecipiente').text(caracteristicas.capacidad);
+              $('.numeroRecipiente').text(caracteristicas.num_recipientes);
+              $('.tiempoMaduracion').text(caracteristicas.tiempo_dura);
+              $('.tipoIngreso').text(caracteristicas.tipoIngreso);
+              $('.volumenLiberado').text(caracteristicas.volumen_liberacion);
+              $('.tipoLiberacion').text(caracteristicas.tipoLiberacion);
 
-          // Estructura de configuración para los documentos
-          const documentConfig = [
-            {
-              ids: [45, 66, 113],
-              targetClass: '.comprobantePosesion',
-              noDocMessage: 'No hay comprobante de posesión',
-              condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
-            },
-            {
-              ids: [34],
-              targetClass: '.comprobantePosesion',
-              noDocMessage: 'No hay contrato de arrendamiento',
-              condition: (documento, response) => documento.id_relacion == response.data.id_predio
-            },
-            {
-              ids: [43, 106, 112],
-              targetClass: '.planoDistribucion',
-              noDocMessage: 'No hay plan de distribución',
-              condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
-            },
-            {
-              ids: [76],
-              targetClass: '.csf',
-              noDocMessage: 'No hay CSF',
-              condition: (documento, response) => documento.id_empresa == response.data.id_empresa
-            },
-            {
-              ids: [1],
-              targetClass: '.actaConstitutiva',
-              noDocMessage: 'No hay acta constitutiva',
-              condition: (documento, response) => documento.id_empresa == response.data.id_empresa
+              // Verificar si 'detalles' existe y es un arreglo
+            if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
+              // Recorrer cada elemento de 'detalles'
+              caracteristicas.detalles.forEach(function(detalle) {
+                  // Asumiendo que '.cajasBotellas' es un contenedor de varias cajas, agregamos el texto en cada una
+                  $('.cajasBotellas').append(detalle.cantidad_cajas + " Cajas y " + detalle.cantidad_botellas + " Botellas<br>");
+              });
+            } else {
+              // Si 'detalles' no existe o no es un arreglo
+              $('.cajasBotellas').text('No hay detalles disponibles.');
             }
-          ];
+
+
+// Estructura de configuración para los documentos
+const documentConfig = [
+  {
+      ids: [45, 66, 113],
+      targetClass: '.comprobantePosesion',
+      noDocMessage: 'No hay comprobante de posesión',
+      condition: (documento, response) =>
+          documento.id_relacion == response.data.id_instalacion
+  },
+  {
+    ids: [34],
+    targetClass: '.comprobantePosesion',
+    noDocMessage: 'No hay contrato de arrendamiento',
+    condition: (documento, response) =>
+        documento.id_relacion == response.data.id_predio
+  },
+  {
+      ids: [43, 106, 112],
+      targetClass: '.planoDistribucion',
+      noDocMessage: 'No hay plan de distribución',
+      condition: (documento, response) =>
+          documento.id_relacion == response.data.id_instalacion
+  },
+  {
+      ids: [76],
+      targetClass: '.csf',
+      noDocMessage: 'No hay CSF',
+      condition: (documento, response) =>
+          documento.id_empresa == response.data.id_empresa
+  },
+  {
+      ids: [1],
+      targetClass: '.actaConstitutiva',
+      noDocMessage: 'No hay acta constitutiva',
+      condition: (documento, response) =>
+          documento.id_empresa == response.data.id_empresa
+  }
+];
 
           // Variable para seguimiento de documentos encontrados
           const documentsFound = {};
@@ -4078,17 +4088,17 @@ $(function () {
             documentsFound[config.targetClass] = false;
           });
 
-          // Iterar sobre los documentos
-          $.each(response.documentos, function (index, documento) {
-            documentConfig.forEach(config => {
-              if (
-                config.ids.includes(documento.id_documento) &&
-                config.condition(documento, response) // Usar la condición dinámica
-              ) {
-                const link = $('<a>', {
-                  href: 'files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + documento.url,
-                  target: '_blank'
-                });
+// Iterar sobre los documentos
+$.each(response.documentos, function(index, documento) {
+  documentConfig.forEach(config => {
+      if (
+          config.ids.includes(documento.id_documento) &&
+          config.condition(documento, response) // Usar la condición dinámica
+      ) {
+          const link = $('<a>', {
+              href: 'files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + documento.url,
+              target: '_blank'
+          });
 
                 link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
                 $(config.targetClass).empty().append(link);
@@ -4097,15 +4107,22 @@ $(function () {
             });
           });
 
-          // Mostrar mensajes para documentos no encontrados
-          documentConfig.forEach(config => {
-            if (!documentsFound[config.targetClass]) {
-              $(config.targetClass).text(config.noDocMessage);
-            }
-          });
-        } else {
-          console.warn('No se encontró información para la solicitud.');
-        }
+// Mostrar mensajes para documentos no encontrados
+documentConfig.forEach(config => {
+  if (!documentsFound[config.targetClass]) {
+      $(config.targetClass).text(config.noDocMessage);
+  }
+});
+
+
+
+
+
+
+
+          } else {
+              console.warn('No se encontró información para la solicitud.');
+          }
       },
       error: function (xhr, status, error) {
         console.error('Error al obtener los datos:', error);
