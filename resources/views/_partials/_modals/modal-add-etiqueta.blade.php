@@ -39,6 +39,20 @@
                                 <tbody id="contenidoRango">
 
                                 </tbody>
+                                <tbody>
+                                    <tr>
+                                        <th style="width: 100px"><button type="button"
+                                                class="btn btn-primary add-row-add"> <i class="ri-add-line"></i>
+                                            </button></th>
+                                        <th style="width: 20%">Destino de exportación</th>
+                                        <th>SKU</th>
+                                        <th>Información</th>
+                                        <th>Cont. Neto</th>
+                                        <th>% Alc. Vol.</th>
+                                        <th>Etiqueta</th>
+                                        <th>Corrugado</th>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                         <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">

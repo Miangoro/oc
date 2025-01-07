@@ -12,11 +12,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerPredios2(this.value);" 
-                                    name="id_empresa" class="select2 form-select id_empresa" required>
+                                <select onchange="obtenerPredios2(this.value);" name="id_empresa"
+                                    class="select2 form-select id_empresa" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -32,8 +34,8 @@
                     </div>
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
-                            <select onchange="obtenerDatosPredios(this.value);" class="select2 form-select id_predio" name="id_predio" aria-label="id_predio"
-                                required>
+                            <select onchange="obtenerDatosPredios(this.value);" class="select2 form-select id_predio"
+                                name="id_predio" aria-label="id_predio" required>
                                 <option value="" selected>Lista de predios</option>
                             </select>
                             <label for="id_predio">Domicilio del predio a inspeccionar</label>
@@ -50,7 +52,8 @@
                     </div>
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-150 info_adicional" id="info" placeholder="Información adicional sobre la actividad..."></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-150 info_adicional" id="info"
+                                placeholder="Información adicional sobre la actividad..."></textarea>
                             <label for="comentarios">Información adicional sobre la actividad</label>
                         </div>
                     </div>
@@ -68,54 +71,56 @@
 
 
 <script>
-    function obtenerPredios2(empresa) {  
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
-                // Cargar los detalles en el modal
-                var contenido = "";
-                for (let index = 0; index < response.predios.length; index++) {
-                    contenido = '<option value="' + response.predios[index].id_predio + '">' + response
-                        .predios[index].nombre_predio + ' | ' +  response
-                        .predios[index].ubicacion_predio + '</option>' + contenido;
-                }
-                if (response.predios.length == 0) {
-                    contenido = '<option value="">Sin predios registrados</option>';
-                }
+    function obtenerPredios2(empresa) {
+        if (empresa !== "" && empresa !== null && empresa !== undefined) {
+            $.ajax({
+                url: '/getDatos/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    // Cargar los detalles en el modal
+                    var contenido = "";
+                    for (let index = 0; index < response.predios.length; index++) {
+                        contenido = '<option value="' + response.predios[index].id_predio + '">' + response
+                            .predios[index].nombre_predio + ' | ' + response
+                            .predios[index].ubicacion_predio + '</option>' + contenido;
+                    }
+                    if (response.predios.length == 0) {
+                        contenido = '<option value="">Sin predios registrados</option>';
+                    }
                     $('.id_predio').html(contenido);
-                if (response.predios.length != 0) {
-                    obtenerDatosPredios($(".id_predio").val());
-                }else{
-                    $('.info_adicional').val("");
+                    if (response.predios.length != 0) {
+                        obtenerDatosPredios($(".id_predio").val());
+                    } else {
+                        $('.info_adicional').val("");
+                    }
+
+
+                },
+                error: function() {
+                    //alert('Error al cargar los lotes a granel.');
                 }
-                
-               
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
-            }
-        });
+            });
+        }
     }
 
-    function obtenerDatosPredios(id_predio) {  
-       $.ajax({
-           url: '/domicilios-predios/' + id_predio+'/edit',
-           method: 'GET',
-           success: function(response) {
-               console.log(response);
-               var info_adicional = 
-                        'Predio: '+response.predio.nombre_predio + '. '+
-                        'Punto de referencia: '+response.predio.puntos_referencia + '. '+
-                        'Superficie: '+response.predio.superficie + 'H';
-               $('.info_adicional').val(info_adicional);
-           },
-           error: function() {
-              
-           }
-       });
-   }
+    function obtenerDatosPredios(id_predio) {
+        if (id_predio !== "" && id_predio !== null && id_predio !== undefined) {
+            $.ajax({
+                url: '/domicilios-predios/' + id_predio + '/edit',
+                method: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    var info_adicional =
+                        'Predio: ' + response.predio.nombre_predio + '. ' +
+                        'Punto de referencia: ' + response.predio.puntos_referencia + '. ' +
+                        'Superficie: ' + response.predio.superficie + 'H';
+                    $('.info_adicional').val(info_adicional);
+                },
+                error: function() {
 
-
+                }
+            });
+        }
+    }
 </script>

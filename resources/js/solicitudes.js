@@ -3959,6 +3959,7 @@ $(document).on('click', '.validar-solicitudes', function () {
         } else {
           // Si está vacío, usar `ubicacion_predio`
           $('.domicilioInstalacion').text(response.data.predios.ubicacion_predio);
+          $('.nombrePredio').text(response.data.predios.nombre_predio);
           $(".preregistro").html("<a target='_Blank' href='/pre-registro_predios/"+response.data.predios.id_predio+"'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>");
         }
 
@@ -3966,33 +3967,44 @@ $(document).on('click', '.validar-solicitudes', function () {
 
 
 
-              $('.razonSocial').text(response.data.empresa.razon_social);
-              //console.log(response.data.empresa.razon_social);
-              $('.fechaHora').text(response.fecha_visita_formateada);
-              $('.guiasTraslado').text(response.data.caracteristicas.guias);
-              $('.nombreLote').text(response.data.lote_granel.nombre_lote);
-              if (response.data.lote_granel && response.data.lote_granel.categoria) {
-                $('.categoria').text(response.data.lote_granel.categoria.categoria);
-            } else {
-                $('.categoria').text(response.data.lote_envasado.lotes_envasado_granel[0].lotes_granel[0].categoria.categoria); // O cualquier otro valor por defecto
-            }
-            
-            if (response.data.lote_granel && response.data.lote_granel.clase) {
-                $('.clase').text(response.data.lote_granel.clase.clase);
-            } else {
-                $('.clase').text(response.data.lote_envasado.lotes_envasado_granel[0].lotes_granel[0].clase.clase); // O cualquier otro valor por defecto
-            }
+           $('.razonSocial').text(response?.data?.empresa?.razon_social || 'No disponible');
+$('.fechaHora').text(response?.fecha_visita_formateada || 'No disponible');
+$('.guiasTraslado').text(response?.data?.caracteristicas?.guias || 'No disponible');
+$('.nombreLote').text(response?.data?.lote_granel?.nombre_lote || 'No disponible');
 
-            $('.cont_alc').text(response.data.lote_granel.cont_alc);
-            $('.fq').text(response.data.lote_granel.folio_fq);
-            $('.certificadoGranel').text(response.data.lote_granel.folio_certificado);
+// Validar categoría
+$('.categoria').text(
+    response?.data?.lote_granel?.categoria?.categoria ||
+    response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria || 
+    'No disponible'
+);
+
+// Validar clase
+$('.clase').text(
+    response?.data?.lote_granel?.clase?.clase ||
+    response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase || 
+    'No disponible'
+);
+
+$('.cont_alc').text(response?.data?.lote_granel?.cont_alc || 'No disponible');
+$('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
+$('.certificadoGranel').text(response?.data?.lote_granel?.folio_certificado || 'No disponible');
+
+$('.tipos').text(response?.tipos_agave || 'No disponible');
+$('.tipoAnalisis').text(response?.data?.caracteristicas?.tipo_analisis || 'No disponible');
+
+// Validar nombre del lote envasado
+$('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre no disponible');
 
             
-            
-              $('.tipos').text(response.tipos_agave);
-              $('.tipoAnalisis').text(caracteristicas.tipo_analisis);
-
-              $('.nombreLoteEnvasado').text(response.data.lote_envasado.nombre);
+              $('.materialRecipiente').text(caracteristicas.material);
+              $('.capacidadRecipiente').text(caracteristicas.capacidad);
+              $('.numeroRecipiente').text(caracteristicas.num_recipientes);
+              $('.tiempoMaduracion').text(caracteristicas.tiempo_dura);
+              $('.tipoIngreso').text(caracteristicas.tipoIngreso); 
+              $('.volumenLiberado').text(caracteristicas.volumen_liberacion); 
+              $('.tipoLiberacion').text(caracteristicas.tipoLiberacion); 
+              
               // Verificar si 'detalles' existe y es un arreglo
             if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
               // Recorrer cada elemento de 'detalles'

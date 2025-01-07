@@ -144,46 +144,50 @@
 <script>
     function EditobtenerInstalacionesMuestreo() {
         var empresa = $("#edit_id_empresa_muestreo").val();
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
-                var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                        tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                        '</option>' +
-                        contenido;
-                }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
-                }
-                $('#edit_id_instalacion_muestreo').html(contenido);
-            },
-            error: function() {}
-        });
+        if (empresa !== "" && empresa !== null && empresa !== undefined) {
+            $.ajax({
+                url: '/getDatos/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    var contenido = "";
+                    for (let index = 0; index < response.instalaciones.length; index++) {
+                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+                        contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                            tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                            '</option>' +
+                            contenido;
+                    }
+                    if (response.instalaciones.length == 0) {
+                        contenido = '<option value="">Sin instalaciones registradas</option>';
+                    }
+                    $('#edit_id_instalacion_muestreo').html(contenido);
+                },
+                error: function() {}
+            });
+        }
     }
 
     function editobtenerGranelesMuestreo(empresa) {
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                var contenido = "";
-                for (let index = 0; index < response.lotes_granel.length; index++) {
-                    contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                        response
-                        .lotes_granel[index].nombre_lote + '</option>' + contenido;
-                }
-                if (response.lotes_granel.length == 0) {
-                    contenido = '<option value="">Sin lotes registrados</option>';
-                } else {}
-                $('#edit_id_lote_granel_muestreo').html(contenido);
-            },
-            error: function() {}
-        });
+        if (empresa !== "" && empresa !== null && empresa !== undefined) {
+            $.ajax({
+                url: '/getDatos/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    var contenido = "";
+                    for (let index = 0; index < response.lotes_granel.length; index++) {
+                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
+                            response
+                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
+                    }
+                    if (response.lotes_granel.length == 0) {
+                        contenido = '<option value="">Sin lotes registrados</option>';
+                    } else {}
+                    $('#edit_id_lote_granel_muestreo').html(contenido);
+                },
+                error: function() {}
+            });
+        }
     }
 
     function limpiarTipo(tipo) {
@@ -195,29 +199,32 @@
     }
 
     function editobtenerDatosGranelesMuestreo() {
+       
         var lote_granel_id = $("#edit_id_lote_granel_muestreo").val();
-        $.ajax({
-            url: '/getDatos2/' + lote_granel_id,
-            method: 'GET',
-            success: function(response) {
-                $('#edit_id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :
-                    '');
-                $('#edit_id_clase_muestreo').val(response.clase ? response.clase.clase : '');
-                if (response.tipo && response.tipo.length > 0) {
-                    var tiposConcatenados = response.tipo.map(function(tipo) {
-                        return tipo.nombre + ' (' + tipo.cientifico + ')';
-                    }).join(', '); // Unir con coma
-                    $('#edit_id_tipo_maguey_muestreo').val(tiposConcatenados);
-                } else {
-                    $('#edit_id_tipo_maguey_muestreo').val('');
+        if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
+            $.ajax({
+                url: '/getDatos2/' + lote_granel_id,
+                method: 'GET',
+                success: function(response) {
+                    $('#edit_id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :
+                        '');
+                    $('#edit_id_clase_muestreo').val(response.clase ? response.clase.clase : '');
+                    if (response.tipo && response.tipo.length > 0) {
+                        var tiposConcatenados = response.tipo.map(function(tipo) {
+                            return tipo.nombre + ' (' + tipo.cientifico + ')';
+                        }).join(', '); // Unir con coma
+                        $('#edit_id_tipo_maguey_muestreo').val(tiposConcatenados);
+                    } else {
+                        $('#edit_id_tipo_maguey_muestreo').val('');
+                    }
+                    $('#edit_analisis_muestreo').val(response.lotes_granel.folio_fq);
+                    $('#edit_volumen_muestreo').val(response.lotes_granel.cont_alc);
+                    $('#edit_id_certificado_muestreo').val(response.lotes_granel.folio_certificado);
+                },
+                error: function() {
+                    console.error('Error al obtener los datos del lote granel.');
                 }
-                $('#edit_analisis_muestreo').val(response.lotes_granel.folio_fq);
-                $('#edit_volumen_muestreo').val(response.lotes_granel.cont_alc);
-                $('#edit_id_certificado_muestreo').val(response.lotes_granel.folio_certificado);
-            },
-            error: function() {
-                console.error('Error al obtener los datos del lote granel.');
-            }
-        });
+            });
+        }
     }
 </script>

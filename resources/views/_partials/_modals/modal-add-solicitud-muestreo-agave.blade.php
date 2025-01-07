@@ -12,11 +12,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerInstalacionesMuestreoAgave();" 
-                                    name="id_empresa" class="select2 form-select id_empresa_dic2" required>
+                                <select onchange="obtenerInstalacionesMuestreoAgave();" name="id_empresa"
+                                    class="select2 form-select id_empresa_dic2" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
                                 <label for="id_empresa">Cliente</label>
@@ -32,7 +34,8 @@
                     </div>
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
-                            <select class="select2 form-select" id="id_instalacion_dic2" name="id_instalacion" aria-label="id_instalacion" required>
+                            <select class="select2 form-select" id="id_instalacion_dic2" name="id_instalacion"
+                                aria-label="id_instalacion" required>
                                 <option value="" selected>Lista de instalaciones</option>
                             </select>
                             <label for="id_predio">Domicilio de la instalación de producción</label>
@@ -40,7 +43,8 @@
                     </div>
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
-                            <select multiple class="select2 form-select" id="id_instalacion" name="id_guia" aria-label="id_instalacion" required>
+                            <select multiple class="select2 form-select" id="id_instalacion" name="id_guia"
+                                aria-label="id_instalacion" required>
                                 <option value="" selected>Lista de guías de agave</option>
                             </select>
                             <label for="id_predio">Guías de agave expedidas por OC CIDAM</label>
@@ -48,7 +52,8 @@
                     </div>
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-150" id="comentarios" placeholder="Información adicional sobre la actividad..."></textarea>
+                            <textarea name="info_adicional" class="form-control h-px-150" id="comentarios"
+                                placeholder="Información adicional sobre la actividad..."></textarea>
                             <label for="comentarios">Información adicional sobre la actividad</label>
                         </div>
                     </div>
@@ -69,41 +74,44 @@
     function obtenerInstalacionesMuestreoAgave() {
         var empresa = $(".id_empresa_dic2").val();
 
-        // Hacer una petición AJAX para obtener los detalles de la empresa
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                console.log(response);
-                var contenido = "";
-            for (let index = 0; index < response.instalaciones_produccion.length; index++) {
-                // Limpia el campo tipo usando la función limpiarTipo
-                var tipoLimpio = limpiarTipo(response.instalaciones_produccion[index].tipo);
+        if (empresa !== "" && empresa !== null && empresa !== undefined) {
 
-                contenido = '<option value="' + response.instalaciones_produccion[index].id_instalacion + '">' +
-                    tipoLimpio + ' | ' + response.instalaciones_produccion[index].direccion_completa + '</option>' +
-                    contenido;
-            }
-            if (response.instalaciones_produccion.length == 0) {
-                contenido = '<option value="">Sin instalaciones registradas</option>';
-            }
-            $('#id_instalacion_dic2').html(contenido);
-            },
-            error: function() {
-                //alert('Error al cargar los lotes a granel.');
-            }
-        });
+            // Hacer una petición AJAX para obtener los detalles de la empresa
+            $.ajax({
+                url: '/getDatos/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    console.log(response);
+                    var contenido = "";
+                    for (let index = 0; index < response.instalaciones_produccion.length; index++) {
+                        // Limpia el campo tipo usando la función limpiarTipo
+                        var tipoLimpio = limpiarTipo(response.instalaciones_produccion[index].tipo);
+
+                        contenido = '<option value="' + response.instalaciones_produccion[index]
+                            .id_instalacion + '">' +
+                            tipoLimpio + ' | ' + response.instalaciones_produccion[index]
+                            .direccion_completa + '</option>' +
+                            contenido;
+                    }
+                    if (response.instalaciones_produccion.length == 0) {
+                        contenido = '<option value="">Sin instalaciones registradas</option>';
+                    }
+                    $('#id_instalacion_dic2').html(contenido);
+                },
+                error: function() {
+                    //alert('Error al cargar los lotes a granel.');
+                }
+            });
+        }
     }
     // Función para limpiar el campo tipo
-function limpiarTipo(tipo) {
-    try {
-        // Convierte el JSON string a un array y únelos en una cadena limpia
-        return JSON.parse(tipo).join(', ');
-    } catch (e) {
-        // Si no es JSON válido, regresa el valor original
-        return tipo;
+    function limpiarTipo(tipo) {
+        try {
+            // Convierte el JSON string a un array y únelos en una cadena limpia
+            return JSON.parse(tipo).join(', ');
+        } catch (e) {
+            // Si no es JSON válido, regresa el valor original
+            return tipo;
+        }
     }
-}
-
-
 </script>

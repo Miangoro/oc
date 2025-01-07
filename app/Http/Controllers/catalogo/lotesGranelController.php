@@ -89,7 +89,7 @@ class lotesGranelController extends Controller
             ->orWhereHas('clase', function ($subQuery) use ($search) {
                 $subQuery->where('clase', 'LIKE', "%{$search}%");
             })
-            ->orWhereHas('tipo', function ($subQuery) use ($search) {
+            ->orWhereHas('tipos', function ($subQuery) use ($search) {
                 $subQuery->where('nombre', 'LIKE', "%{$search}%");
             })
             ->orWhere('ingredientes', 'LIKE', "%{$search}%")

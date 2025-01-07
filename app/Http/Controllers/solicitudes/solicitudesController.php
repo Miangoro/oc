@@ -246,11 +246,11 @@ class solicitudesController extends Controller
                     $nestedData['id_lote_granel_barricada'] = 'N/A';
                     $nestedData['nombre_lote_barricada'] = 'N/A';
                 }
-                $nestedData['id_categoria_barricada'] = $caracteristicas['id_categoria_barricada'] ?? 'N/A';
-                $nestedData['id_clase_barricada'] = $caracteristicas['id_clase_barricada'] ?? 'N/A';
-                $nestedData['id_tipo_maguey_barricada'] = $caracteristicas['id_tipo_maguey_barricada'] ?? 'N/A';
-                $nestedData['analisis_barricada'] = $caracteristicas['analisis_barricada'] ?? 'N/A';
-                $nestedData['tipo_lote'] = $caracteristicas['tipo_lote'] ?? 'N/A';
+                $nestedData['id_categoria_barricada'] = $caracteristicas['id_categoria'] ?? 'N/A';
+                $nestedData['id_clase_barricada'] = $caracteristicas['id_clase'] ?? 'N/A';
+                $nestedData['id_tipo_maguey_barricada'] = $caracteristicas['id_tipo_maguey'] ?? 'N/A';
+                $nestedData['analisis_barricada'] = $caracteristicas['analisis'] ?? 'N/A';
+                $nestedData['tipo_lote'] = $caracteristicas['tipoIngreso'] ?? 'N/A';
                 $nestedData['fecha_inicio'] = isset($caracteristicas['fecha_inicio'])
                     ? Carbon::parse($caracteristicas['fecha_inicio'])->format('d/m/Y')
                     : 'N/A';
@@ -268,16 +268,16 @@ class solicitudesController extends Controller
                     $nestedData['id_lote_granel_liberacion'] = 'N/A';
                     $nestedData['nombre_lote_liberacion'] = 'N/A';
                 }
-                $nestedData['id_categoria_liberacion'] = $caracteristicas['id_categoria_liberacion'] ?? 'N/A';
-                $nestedData['id_clase_liberacion'] = $caracteristicas['id_clase_liberacion'] ?? 'N/A';
-                $nestedData['id_tipo_maguey_liberacion'] = $caracteristicas['id_tipo_maguey_liberacion'] ?? 'N/A';
-                $nestedData['analisis_liberacion'] = $caracteristicas['analisis_liberacion'] ?? 'N/A';
-                $nestedData['tipo_lote_lib'] = $caracteristicas['tipo_lote_lib'] ?? 'N/A';
-                $nestedData['fecha_inicio_lib'] = isset($caracteristicas['fecha_inicio_lib'])
-                    ? Carbon::parse($caracteristicas['fecha_inicio_lib'])->format('d/m/Y')
+                $nestedData['id_categoria_liberacion'] = $caracteristicas['id_categoria'] ?? 'N/A';
+                $nestedData['id_clase_liberacion'] = $caracteristicas['id_clase'] ?? 'N/A';
+                $nestedData['id_tipo_maguey_liberacion'] = $caracteristicas['id_tipo_maguey'] ?? 'N/A';
+                $nestedData['analisis_liberacion'] = $caracteristicas['analisis'] ?? 'N/A';
+                $nestedData['tipo_lote_lib'] = $caracteristicas['tipoLiberacion'] ?? 'N/A';
+                $nestedData['fecha_inicio_lib'] = isset($caracteristicas['fecha_inicio'])
+                    ? Carbon::parse($caracteristicas['fecha_inicio'])->format('d/m/Y')
                     : 'N/A';
-                $nestedData['fecha_termino_lib'] = isset($caracteristicas['fecha_termino_lib'])
-                    ? Carbon::parse($caracteristicas['fecha_inicio_lib'])->format('d/m/Y')
+                $nestedData['fecha_termino_lib'] = isset($caracteristicas['fecha_termino'])
+                    ? Carbon::parse($caracteristicas['fecha_termino'])->format('d/m/Y')
                     : 'N/A';
                 //case 10
                 $nestedData['punto_reunion'] = $caracteristicas['punto_reunion'] ?? 'N/A';
@@ -526,20 +526,20 @@ class solicitudesController extends Controller
 
         $InspeccionBarri->caracteristicas = json_encode([
             'id_lote_granel' => $request->id_lote_granel_barricada,
-            'id_categoria_barricada' => $request->id_categoria_barricada,
-            'id_clase_barricada' => $request->id_clase_barricada,
-            'id_tipo_maguey_barricada' => $request->id_tipo_maguey_barricada,
-            'id_edad' => $request->id_edad,
-            'analisis_barricada' => $request->analisis_barricada,
-            'volumen_barricada' => $request->volumen_barricada,
-            'tipo_lote' => $request->tipo_lote,
+            'id_categoria' => $request->id_categoria_barricada,
+            'id_clase' => $request->id_clase_barricada,
+            'id_tipo_maguey' => $request->id_tipo_maguey_barricada,
+            'edad' => $request->id_edad,
+            'analisis' => $request->analisis_barricada,
+            'volumen_ingreso' => $request->volumen_barricada,
+            'tipoIngreso' => $request->tipo_lote,
             'fecha_inicio' => $request->fecha_inicio,
             'fecha_termino' => $request->fecha_termino,
             'material' => $request->material,
             'capacidad' => $request->capacidad,
             'num_recipientes' => $request->num_recipientes,
             'tiempo_dura' => $request->tiempo_dura,
-            'id_certificado_barricada' => $request->id_certificado_barricada,
+            'id_certificado' => $request->id_certificado_barricada,
         ]);
 
         $InspeccionBarri->save();
@@ -573,20 +573,20 @@ class solicitudesController extends Controller
 
         $BarricadaLib->caracteristicas = json_encode([
             'id_lote_granel' => $request->id_lote_granel_liberacion,
-            'id_categoria_liberacion' => $request->id_categoria_liberacion,
-            'id_clase_liberacion' => $request->id_clase_liberacion,
-            'id_tipo_maguey_liberacion' => $request->id_tipo_maguey_liberacion,
-            'id_edad_liberacion' => $request->id_edad_liberacion,
-            'analisis_liberacion' => $request->analisis_liberacion,
+            'id_categoria' => $request->id_categoria_liberacion,
+            'id_clase' => $request->id_clase_liberacion,
+            'id_tipo_maguey' => $request->id_tipo_maguey_liberacion,
+            'edad' => $request->id_edad_liberacion,
+            'analisis' => $request->analisis_liberacion,
             'volumen_liberacion' => $request->volumen_liberacion,
-            'tipo_lote_lib' => $request->tipo_lote_lib,
-            'fecha_inicio_lib' => $request->fecha_inicio_lib,
-            'fecha_termino_lib' => $request->fecha_termino_lib,
-            'material_liberacion' => $request->material_liberacion,
-            'capacidad_liberacion' => $request->capacidad_liberacion,
-            'num_recipientes_lib' => $request->num_recipientes_lib,
-            'tiempo_dura_lib' => $request->tiempo_dura_lib,
-            'id_certificado_liberacion' => $request->id_certificado_liberacion,
+            'tipoLiberacion' => $request->tipo_lote_lib,
+            'fecha_inicio' => $request->fecha_inicio_lib,
+            'fecha_termino' => $request->fecha_termino_lib,
+            'material' => $request->material_liberacion,
+            'capacidad' => $request->capacidad_liberacion,
+            'num_recipientes' => $request->num_recipientes_lib,
+            'tiempo_dura' => $request->tiempo_dura_lib,
+            'id_certificado' => $request->id_certificado_liberacion,
         ]);
 
         $BarricadaLib->save();
@@ -1012,21 +1012,23 @@ class solicitudesController extends Controller
                     'info_adicional' => 'nullable|string'
                 ]);
                 $caracteristicasJson = [
-                    'id_lote_granel_barricada' => $request->id_lote_granel_barricada,
-                    'id_categoria_barricada' => $request->id_categoria_barricada,
-                    'id_clase_barricada' => $request->id_clase_barricada,
-                    'id_tipo_maguey_barricada' => $request->id_tipo_maguey_barricada,
+                    'id_lote_granel' => $request->id_lote_granel_barricada,
+                    'id_categoria' => $request->id_categoria_barricada,
+                    'id_clase' => $request->id_clase_barricada,
+                    'id_tipo_maguey' => $request->id_tipo_maguey_barricada,
                     'id_edad' => $request->id_edad,
-                    'analisis_barricada' => $request->analisis_barricada,
-                    'volumen_barricada' => $request->volumen_barricada,
-                    'tipo_lote' => $request->tipo_lote,
+                    'analisis' => $request->analisis_barricada,
+                    'volumen_ingreso' => $request->volumen_barricada,
+                    'tipoIngreso' => $request->tipo_lote,
                     'fecha_inicio' => $request->fecha_inicio,
                     'fecha_termino' => $request->fecha_termino,
                     'material' => $request->material,
                     'capacidad' => $request->capacidad,
                     'num_recipientes' => $request->num_recipientes,
                     'tiempo_dura' => $request->tiempo_dura,
-                    'id_certificado_barricada' => $request->id_certificado_barricada,
+                    'id_certificado' => $request->id_certificado_barricada,
+
+                   
                 ];
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
@@ -1046,21 +1048,21 @@ class solicitudesController extends Controller
                     'info_adicional' => 'nullable|string'
                 ]);
                 $caracteristicasJson = [
-                    'id_lote_granel_liberacion' => $request->id_lote_granel_liberacion,
-                    'id_categoria_liberacion' => $request->id_categoria_liberacion,
-                    'id_clase_liberacion' => $request->id_clase_liberacion,
-                    'id_tipo_maguey_liberacion' => $request->id_tipo_maguey_liberacion,
-                    'id_edad_liberacion' => $request->id_edad_liberacion,
-                    'analisis_liberacion' => $request->analisis_liberacion,
-                    'volumen_liberacion' => $request->volumen_liberacion,
-                    'tipo_lote_lib' => $request->tipo_lote_lib,
-                    'fecha_inicio_lib' => $request->fecha_inicio_lib,
-                    'fecha_termino_lib' => $request->fecha_termino_lib,
-                    'material_liberacion' => $request->material_liberacion,
-                    'capacidad_liberacion' => $request->capacidad_liberacion,
-                    'num_recipientes_lib' => $request->num_recipientes_lib,
-                    'tiempo_dura_lib' => $request->tiempo_dura_lib,
-                    'id_certificado_liberacion' => $request->id_certificado_liberacion,
+                    'id_lote_granel' => $request->id_lote_granel_liberacion,
+                    'id_categoria' => $request->id_categoria_liberacion,
+                    'id_clase' => $request->id_clase_liberacion,
+                    'id_tipo_maguey' => $request->id_tipo_maguey_liberacion,
+                    'id_edad' => $request->id_edad_liberacion,
+                    'analisis' => $request->analisis_liberacion,
+                    'volumen' => $request->volumen_liberacion,
+                    'tipoLiberacion' => $request->tipo_lote_lib,
+                    'fecha_inicio' => $request->fecha_inicio_lib,
+                    'fecha_termino' => $request->fecha_termino_lib,
+                    'material' => $request->material_liberacion,
+                    'capacidad' => $request->capacidad_liberacion,
+                    'num_recipientes' => $request->num_recipientes_lib,
+                    'tiempo_dura' => $request->tiempo_dura_lib,
+                    'id_certificado' => $request->id_certificado_liberacion,
                 ];
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([

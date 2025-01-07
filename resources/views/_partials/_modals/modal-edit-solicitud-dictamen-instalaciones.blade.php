@@ -20,7 +20,9 @@
                                     data-error-message="por favor selecciona la empresa">
                                     <option value="" disabled selected>Selecciona la empresa</option>
                                     @foreach ($empresas as $empresa)
-                                    <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">
+                                            {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                                            | {{ $empresa->razon_social }}</option>
                                         </option>
                                     @endforeach
                                 </select>
@@ -55,41 +57,41 @@
                     <input type="hidden" id="instalacion_id">
 
                     <div class="row">
-                      <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-6 select2-primary">
-                            <select id="edit_categoria_in" name="categorias[]" class="form-select select2"
-                                data-placeholder="Seleccione una o más categorias" multiple>
-                                @foreach ($categorias as $cate)
-                                    <option value="{{ $cate->id_categoria }}">{{ $cate->categoria }}</option>
-                                @endforeach
-                            </select>
-                            <label for="">Categorías de mezcal</label>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-6 select2-primary">
+                                <select id="edit_categoria_in" name="categorias[]" class="form-select select2"
+                                    data-placeholder="Seleccione una o más categorias" multiple>
+                                    @foreach ($categorias as $cate)
+                                        <option value="{{ $cate->id_categoria }}">{{ $cate->categoria }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="">Categorías de mezcal</label>
+                            </div>
                         </div>
-                      </div>
 
-                      <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-4 select2-primary">
-                            <select id="edit_clases_in" name="clases[]" class="form-select select2"
-                                data-placeholder="Seleccione una o más clases" multiple>
-                                @foreach ($clases as $clase)
-                                    <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
-                                @endforeach
-                            </select>
-                            <label for="">Clases de agave</label>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-4 select2-primary">
+                                <select id="edit_clases_in" name="clases[]" class="form-select select2"
+                                    data-placeholder="Seleccione una o más clases" multiple>
+                                    @foreach ($clases as $clase)
+                                        <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
+                                    @endforeach
+                                </select>
+                                <label for="">Clases de agave</label>
+                            </div>
                         </div>
-                      </div>
 
-                      <!-- Nuevo select para renovación -->
-                      <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-4">
-                            <select id="edit_renovacion_in" name="renovacion" id="renovacion" class="form-select">
-                                <option value="" disabled selected>Seleccione una opción</option>
-                                <option value="si">Sí</option>
-                                <option value="no">No</option>
-                            </select>
-                            <label for="renovacion">¿Es renovación?</label>
+                        <!-- Nuevo select para renovación -->
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-4">
+                                <select id="edit_renovacion_in" name="renovacion" id="renovacion" class="form-select">
+                                    <option value="" disabled selected>Seleccione una opción</option>
+                                    <option value="si">Sí</option>
+                                    <option value="no">No</option>
+                                </select>
+                                <label for="renovacion">¿Es renovación?</label>
+                            </div>
                         </div>
-                      </div>
                     </div>
 
                     <div class="row">
@@ -113,53 +115,55 @@
 
 
 <script>
-function obtenerInstalacion() {
-    var empresa = $(".edit_id_empresa").val();
+    function obtenerInstalacion() {
+        var empresa = $(".edit_id_empresa").val();
+        if (empresa !== "" && empresa !== null && empresa !== undefined) {
 
-    $.ajax({
-        url: '/getDatos/' + empresa,
-        method: 'GET',
-        success: function(response) {
-            var contenido = "";
-            let seleccionado = "";
-            var instalacion_id = $("#instalacion_id").val();
+            $.ajax({
+                url: '/getDatos/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    var contenido = "";
+                    let seleccionado = "";
+                    var instalacion_id = $("#instalacion_id").val();
 
-            for (let index = 0; index < response.instalaciones.length; index++) {
-                // Limpia el campo tipo usando la función limpiarTipo
-                var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+                    for (let index = 0; index < response.instalaciones.length; index++) {
+                        // Limpia el campo tipo usando la función limpiarTipo
+                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
 
-                if (instalacion_id == response.instalaciones[index].id_instalacion) {
-                    seleccionado = "selected";
-                } else {
-                    seleccionado = ""; // Asegúrate de limpiar este valor si no coincide
+                        if (instalacion_id == response.instalaciones[index].id_instalacion) {
+                            seleccionado = "selected";
+                        } else {
+                            seleccionado = ""; // Asegúrate de limpiar este valor si no coincide
+                        }
+
+                        contenido = '<option ' + seleccionado + ' value="' + response.instalaciones[index]
+                            .id_instalacion + '">' +
+                            tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                            '</option>' + contenido;
+                    }
+
+                    if (response.instalaciones.length == 0) {
+                        contenido = '<option value="">Sin instalaciones registradas</option>';
+                    }
+
+                    $('#edit_id_instalacion').html(contenido);
+                },
+                error: function() {
+                    console.error('Error al cargar las instalaciones.');
                 }
-
-                contenido = '<option ' + seleccionado + ' value="' + response.instalaciones[index]
-                    .id_instalacion + '">' +
-                    tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                    '</option>' + contenido;
-            }
-
-            if (response.instalaciones.length == 0) {
-                contenido = '<option value="">Sin instalaciones registradas</option>';
-            }
-
-            $('#edit_id_instalacion').html(contenido);
-        },
-        error: function() {
-            console.error('Error al cargar las instalaciones.');
+            });
         }
-    });
-}
-
-// Reutiliza la función limpiarTipo
-function limpiarTipo(tipo) {
-    try {
-        // Convierte el JSON string a un array y únelos en una cadena limpia
-        return JSON.parse(tipo).join(', ');
-    } catch (e) {
-        // Si no es JSON válido, regresa el valor original
-        return tipo;
     }
-}
+
+    // Reutiliza la función limpiarTipo
+    function limpiarTipo(tipo) {
+        try {
+            // Convierte el JSON string a un array y únelos en una cadena limpia
+            return JSON.parse(tipo).join(', ');
+        } catch (e) {
+            // Si no es JSON válido, regresa el valor original
+            return tipo;
+        }
+    }
 </script>

@@ -219,6 +219,7 @@
 
 <script>
 function cargarDatosCliente() {
+    if (empresa !== "" && empresa !== null && empresa !== undefined) {
     var empresa = $("#id_empresa_solicitud_exportacion").val();
     $.ajax({
         url: '/getDatos/' + empresa,
@@ -234,9 +235,11 @@ function cargarDatosCliente() {
         }
     });
 }
+}
 
 // Función para cargar instalaciones
 function cargarInstalaciones(instalaciones) {
+    if (instalaciones !== "" && instalaciones !== null && instalaciones !== undefined) {
     var contenidoInstalaciones = "";
     for (let index = 0; index < instalaciones.length; index++) {
         var tipoLimpio = limpiarTipo(instalaciones[index].tipo);
@@ -250,9 +253,11 @@ function cargarInstalaciones(instalaciones) {
     }
     $('#id_instalacion_exportacion').html(contenidoInstalaciones);
 }
+}
 
 // Función para cargar direcciones
 function cargarDirecciones(direcciones) {
+    if (direcciones !== "" && direcciones !== null && direcciones !== undefined) {
     var contenidoDirecciones = "";
     for (let index = 0; index < direcciones.length; index++) {
         let destinatario = direcciones[index].destinatario || "Sin destinatario";
@@ -266,6 +271,7 @@ function cargarDirecciones(direcciones) {
     }
     $('#direccion_destinatario_ex').html(contenidoDirecciones);
     //cargarMarcas();
+}
 }
 
 // Función para cargar lotes envasados
@@ -300,6 +306,7 @@ function cargarLotesEnvasado(lotesEnvasado, marcas) {
 
 // Función para cargar lotes a granel
 function cargarLotesGranel(lotesGranel) {
+    if (lotesGranel !== "" && lotesGranel !== null && lotesGranel !== undefined) {
     var contenidoLotesGraneles = "";
     for (let index = 0; index < lotesGranel.length; index++) {
         contenidoLotesGraneles += `
@@ -312,8 +319,10 @@ function cargarLotesGranel(lotesGranel) {
     }
     $('.lotes_granel_export').html(contenidoLotesGraneles);
 }
+}
 
 function cargarDetallesLoteEnvasado(idLoteEnvasado) {
+    if (idLoteEnvasado !== "" && idLoteEnvasado !== null && idLoteEnvasado !== undefined) {
     $.ajax({
         url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
         method: 'GET',
@@ -330,6 +339,7 @@ function cargarDetallesLoteEnvasado(idLoteEnvasado) {
             console.error('Error al cargar el detalle del lote envasado.');
         }
     });
+}
 }
 
 

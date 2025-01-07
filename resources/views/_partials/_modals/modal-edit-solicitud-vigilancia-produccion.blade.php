@@ -191,91 +191,98 @@
 <script>
     function obtenerDatosGranelesedit() {
         var lote_granel_id = $("#edit_id_lote_granel_vig").val();
-        $.ajax({
-            url: `/getDatos2/${lote_granel_id}`,
-            method: 'GET',
-            success: function(response) {
-                if (response && response.lotes_granel) {
-                    $('#edit_id_categoria_vig').val(response.lotes_granel.id_categoria || '');
-                    $('#edit_id_clase_vig').val(response.lotes_granel.id_clase || '');
-                    $('#edit_id_tipo_vig').val(response.lotes_granel.id_tipo || '');
-                    $('#edit_analisis_vig').val(response.lotes_granel.folio_fq || '');
-                    $('#edit_volumen_vig').val(response.lotes_granel.cont_alc || '');
-                }
-                if (response && response.lotes_granel_guias && response.lotes_granel_guias.length > 0) {
-                    var primeraGuia = response.lotes_granel_guias[0].guia || {};
-                    $('#edit_kg_maguey_vig').val(primeraGuia.kg_maguey || '');
-                    $('#edit_cant_pinas_vig').val(primeraGuia.num_comercializadas || '');
-                    $('#edit_art_vig').val(primeraGuia.art || '');
-                    $('#edit_folio_vig').val(primeraGuia.folio || '');
-                    if (primeraGuia.predios) {
-                        $('#edit_nombre_predio_vig').val(primeraGuia.predios.nombre_predio || '');
+        if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
+            $.ajax({
+                url: `/getDatos2/${lote_granel_id}`,
+                method: 'GET',
+                success: function(response) {
+                    if (response && response.lotes_granel) {
+                        $('#edit_id_categoria_vig').val(response.lotes_granel.id_categoria || '');
+                        $('#edit_id_clase_vig').val(response.lotes_granel.id_clase || '');
+                        $('#edit_id_tipo_vig').val(response.lotes_granel.id_tipo || '');
+                        $('#edit_analisis_vig').val(response.lotes_granel.folio_fq || '');
+                        $('#edit_volumen_vig').val(response.lotes_granel.cont_alc || '');
+                    }
+                    if (response && response.lotes_granel_guias && response.lotes_granel_guias.length > 0) {
+                        var primeraGuia = response.lotes_granel_guias[0].guia || {};
+                        $('#edit_kg_maguey_vig').val(primeraGuia.kg_maguey || '');
+                        $('#edit_cant_pinas_vig').val(primeraGuia.num_comercializadas || '');
+                        $('#edit_art_vig').val(primeraGuia.art || '');
+                        $('#edit_folio_vig').val(primeraGuia.folio || '');
+                        if (primeraGuia.predios) {
+                            $('#edit_nombre_predio_vig').val(primeraGuia.predios.nombre_predio || '');
+                        } else {
+                            $('#edit_nombre_predio_vig').val('');
+                        }
                     } else {
+                        $('#edit_kg_maguey_vig').val('');
+                        $('#edit_cant_pinas_vig').val('');
+                        $('#edit_art_vig').val('');
+                        $('#edit_folio_vig').val('');
                         $('#edit_nombre_predio_vig').val('');
                     }
-                } else {
-                    $('#edit_kg_maguey_vig').val('');
-                    $('#edit_cant_pinas_vig').val('');
-                    $('#edit_art_vig').val('');
-                    $('#edit_folio_vig').val('');
-                    $('#edit_nombre_predio_vig').val('');
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error al obtener datos del lote a granel:", error);
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error("Error al obtener datos del lote a granel:", error);
-            }
-        });
+            });
+        }
     }
 
     function obtenerGranelesedit(empresa) {
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                var contenido = "";
-                for (let index = 0; index < response.lotes_granel.length; index++) {
-                    contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                        response
-                        .lotes_granel[index].nombre_lote + '</option>' + contenido;
-                }
-                if (response.lotes_granel.length == 0) {
-                    contenido = '<option value="">Sin lotes registrados</option>';
-                } else {}
-                $('#edit_id_lote_granel_vig').html(contenido);
-            },
-            error: function() {}
-        });
+        if (empresa !== "" && empresa !== null && empresa !== undefined) {
+            $.ajax({
+                url: '/getDatos/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    var contenido = "";
+                    for (let index = 0; index < response.lotes_granel.length; index++) {
+                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
+                            response
+                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
+                    }
+                    if (response.lotes_granel.length == 0) {
+                        contenido = '<option value="">Sin lotes registrados</option>';
+                    } else {}
+                    $('#edit_id_lote_granel_vig').html(contenido);
+                },
+                error: function() {}
+            });
+        }
     }
 
     function obtenerGraneles2(empresa) {
-        $.ajax({
-            url: '/getDatos/' + empresa,
-            method: 'GET',
-            success: function(response) {
-                var contenido = "";
-                for (let index = 0; index < response.instalaciones.length; index++) {
-                    var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
+        if (empresa !== "" && empresa !== null && empresa !== undefined) {
+            $.ajax({
+                url: '/getDatos/' + empresa,
+                method: 'GET',
+                success: function(response) {
+                    var contenido = "";
+                    for (let index = 0; index < response.instalaciones.length; index++) {
+                        var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
 
-                    contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
-                        tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
-                        '</option>' + contenido;
+                        contenido = '<option value="' + response.instalaciones[index].id_instalacion +
+                            '">' +
+                            tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
+                            '</option>' + contenido;
+                    }
+                    if (response.instalaciones.length == 0) {
+                        contenido = '<option value="">Sin instalaciones registradas</option>';
+                    }
+                    $('#edit_id_instalacion_vig').html(contenido);
+                    // Mantener el dato del select
+                    const idInstalacionSeleccionada = $('#edit_id_instalacion_vig').data('selected');
+                    if (idInstalacionSeleccionada) {
+                        $('#edit_id_instalacion_vig')
+                            .val(idInstalacionSeleccionada)
+                            .trigger('change');
+                    }
+                },
+                error: function() {
+                    console.error("Error al cargar las instalaciones.");
                 }
-                if (response.instalaciones.length == 0) {
-                    contenido = '<option value="">Sin instalaciones registradas</option>';
-                }
-                $('#edit_id_instalacion_vig').html(contenido);
-                // Mantener el dato del select
-                const idInstalacionSeleccionada = $('#edit_id_instalacion_vig').data('selected');
-                if (idInstalacionSeleccionada) {
-                    $('#edit_id_instalacion_vig')
-                        .val(idInstalacionSeleccionada)
-                        .trigger('change');
-                }
-            },
-            error: function() {
-                console.error("Error al cargar las instalaciones.");
-            }
-        });
+            });
+        }
     }
 
     function limpiarTipo(tipo) {
