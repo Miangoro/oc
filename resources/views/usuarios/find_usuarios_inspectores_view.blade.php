@@ -74,9 +74,18 @@
           <input type="text" id="add-user-email" class="form-control" placeholder="ana.gmz@example.com" aria-label="ana.gmz@example.com" name="email" />
           <label for="add-user-email">Correo</label>
         </div>
-       
-        
-        
+        <div id="statusDnone" class="d-none">
+          <div class="form-floating form-floating-outline mb-5">
+            <select id="add-estatus" class="form-select" name="estatus" aria-label="Estatus">
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+            </select>
+            <label for="add-estatus">Estatus</label>
+          </div>
+        </div>
+
+
+
         <button type="submit" id="registrar-editar" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
       </form>

@@ -18,12 +18,12 @@ class UsuariosInspectoresController extends Controller
    */
   public function inspectores()
   {
-   
+
 
     return view('usuarios.find_usuarios_inspectores_view');
   }
 
-  
+
 
   /**
    * Display a listing of the resource.
@@ -32,7 +32,7 @@ class UsuariosInspectoresController extends Controller
    */
 
    public function pdfAsignacionUsuario($id)
-    {     Carbon::setLocale('es'); // Establece la localización a español  
+    {     Carbon::setLocale('es'); // Establece la localización a español
         $currentDate = Carbon::now();
 
     // Obtener el día
@@ -42,8 +42,8 @@ class UsuariosInspectoresController extends Controller
         $res = User::with('empresa')->where('id', $id)->first();
         $pdf = Pdf::loadView('pdfs.AsignacionUsuario',['datos'=>$res,'dia'=>$dia,'mes'=>$mes,'anio'=>$anio]);
         return $pdf->stream('F7.1-01-46 Carta de asignación de usuario y contraseña para plataforma del OC Ed. 0, Vigente.pdf');
-        
-  
+
+
     }
 
   public function index(Request $request)
@@ -81,7 +81,7 @@ class UsuariosInspectoresController extends Controller
         ->where("tipo",3)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
-        
+
         ->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
@@ -91,7 +91,7 @@ class UsuariosInspectoresController extends Controller
         ->where("tipo",2)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
-        
+
         ->count();
     }
 
@@ -155,7 +155,10 @@ class UsuariosInspectoresController extends Controller
       // update the value
       $users = User::updateOrCreate(
         ['id' => $userID],
-        ['name' => $request->name, 'email' => $request->email]
+        ['name' => $request->name,
+        'email' => $request->email,
+        'estatus' => $request->estatus,
+        ]
       );
 
       // user updated
@@ -169,7 +172,7 @@ class UsuariosInspectoresController extends Controller
       if (empty($userEmail)) {
         $users = User::updateOrCreate(
           ['id' => $userID],
-          ['name' => $request->name, 'email' => $request->email, 'password_original' => $pass, 'password' => bcrypt($pass),'tipo'=>2]
+          ['name' => $request->name, 'email' => $request->email, 'estatus'=> $request->estatus, 'password_original' => $pass, 'password' => bcrypt($pass),'tipo'=>2]
         );
 
         // user created

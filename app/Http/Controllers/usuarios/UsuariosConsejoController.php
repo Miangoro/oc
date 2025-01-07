@@ -18,12 +18,12 @@ class UsuariosConsejoController extends Controller
    */
   public function inspectores()
   {
-   
+
 
     return view('usuarios.find_usuarios_consejo_view');
   }
 
-  
+
 
   /**
    * Display a listing of the resource.
@@ -33,7 +33,7 @@ class UsuariosConsejoController extends Controller
 
    public function consejo()
    {
-       $User = User::where('tipo', 4)->get(); 
+       $User = User::where('tipo', 4)->get();
        $userCount = $User->count();
        $verified = 5;
        $notVerified = 10;
@@ -84,7 +84,7 @@ class UsuariosConsejoController extends Controller
         ->where("tipo",3)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
-        
+
         ->offset($start)
         ->limit($limit)
         ->orderBy($order, $dir)
@@ -94,7 +94,7 @@ class UsuariosConsejoController extends Controller
         ->where("tipo",2)
         ->orWhere('name', 'LIKE', "%{$search}%")
         ->orWhere('email', 'LIKE', "%{$search}%")
-        
+
         ->count();
     }
 
@@ -157,7 +157,7 @@ class UsuariosConsejoController extends Controller
       // update the value
       $users = User::updateOrCreate(
         ['id' => $userID],
-        ['name' => $request->name, 'email' => $request->email]
+        ['name' => $request->name, 'email' => $request->email, 'estatus' => $request->estatus,]
       );
 
       // user updated
@@ -171,7 +171,7 @@ class UsuariosConsejoController extends Controller
       if (empty($userEmail)) {
         $users = User::updateOrCreate(
           ['id' => $userID],
-          ['name' => $request->name, 'email' => $request->email, 'password_original' => $pass, 'password' => bcrypt($pass),'tipo'=>4]
+          ['name' => $request->name, 'email' => $request->email, 'estatus'=> $request->estatus, 'password_original' => $pass, 'password' => bcrypt($pass),'tipo'=>4]
         );
 
         // user created
