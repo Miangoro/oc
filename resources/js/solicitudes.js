@@ -4,7 +4,6 @@ $(function () {
 
   // Inicializar DataTable
   var dt_instalaciones_table = $('.datatables-solicitudes').DataTable({
-
     processing: true,
     serverSide: true,
     ajax: {
@@ -34,14 +33,14 @@ $(function () {
       { data: 'num_servicio' },
       {
         data: 'razon_social',
-        render: function(data) {
+        render: function (data) {
           return `<span class="fw-bold">${data}</span>`;
         }
       },
       { data: 'fecha_solicitud' },
       {
         data: 'tipo',
-        render: function(data) {
+        render: function (data) {
           return `<span class="fw-bold">${data}</span>`;
         }
       },
@@ -52,6 +51,8 @@ $(function () {
         data: null,
         render: function (data) {
           switch (data.id_tipo) {
+            case 1:
+              return `<br><span class="fw-bold text-dark small">Guías de agave:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>`;
             case 2:
               return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
@@ -151,6 +152,20 @@ $(function () {
               return `<br><span class="fw-bold text-dark small">Punto de reunión:</span><span class="small"> ${data.punto_reunion || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Información adicional:</span><span class="small"> ${data.info_adicional || 'N/A'}</span>`;
+            case 11:
+              return `<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ${data.nombre_lote_inspeccion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_inspeccion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_inspeccion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_inspeccion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Marca:</span><span class="small"> ${data.id_marca || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.volumen_inspeccion || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_inspeccion || 'N/A'}</span>`;
             case 14:
               return `<br><span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.clase || 'N/A'}</span>
                       <br>
@@ -201,7 +216,10 @@ $(function () {
 
           var $output;
           if (foto_inspector != '') {
-            $output = '<div class="avatar-wrapper"><div class="avatar avatar-sm me-3"> <div class="avatar "><img src="storage/' + foto_inspector + '" alt class="rounded-circle"></div></div></div>';
+            $output =
+              '<div class="avatar-wrapper"><div class="avatar avatar-sm me-3"> <div class="avatar "><img src="storage/' +
+              foto_inspector +
+              '" alt class="rounded-circle"></div></div></div>';
           } else {
             $output = '';
           }
@@ -220,16 +238,12 @@ $(function () {
         }
       },
       {
-
         targets: 12,
         className: 'text-center',
         searchable: false,
         orderable: false,
         render: function (data, type, full, meta) {
-
-
           return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['id_solicitud']}"></i>`;
-
         }
       },
       {
@@ -241,16 +255,13 @@ $(function () {
         render: function (data, type, full, meta) {
           return (
             '<div class="d-flex align-items-center gap-50">' +
-
             '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown">' +
             '<i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>' +
             '</button>' +
-
             '<div class="dropdown-menu dropdown-menu-end m-0">' +
-
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2">` +
             '<i class="text-warning ri-user-search-fill"></i>Trazabilidad</a>' +
-`<a
+            `<a
    data-id="${full['id_tipo']}"
    data-id-solicitud="${full['id_solicitud']}"
    data-tipo="${full['tipo']}"
@@ -260,7 +271,6 @@ $(function () {
    class="dropdown-item text-dark waves-effect validar-solicitudes">
    <i class="text-success ri-search-eye-line"></i>Validar solicitud
 </a>` +
-
             `<a
               data-id="${full['id']}"
               data-id-solicitud="${full['id_solicitud']}"
@@ -269,10 +279,8 @@ $(function () {
               data-razon-social="${full['razon_social']}"
               class="cursor-pointer dropdown-item text-dark edit-record-tipo">` +
             '<i class="text-warning ri-edit-fill"></i>Editar</a>' +
-
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud">` +
             '<i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>' +
-
             '</div>' +
             '</div>'
           );
@@ -280,7 +288,8 @@ $(function () {
       }
     ],
     order: [[1, 'desc']],
-    dom: '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
+    dom:
+      '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
       '<"me-5 ms-n2"f>' +
       '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
       '>t' +
@@ -358,7 +367,8 @@ $(function () {
                   if (columnIndex === 8 || columnIndex === 11) {
                     return 'ViewSuspend';
                   }
-                  if (columnIndex === 1) { // Asegúrate de que el índice de columna es el correcto para el ID
+                  if (columnIndex === 1) {
+                    // Asegúrate de que el índice de columna es el correcto para el ID
                     return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
                   }
                   return inner;
@@ -367,22 +377,25 @@ $(function () {
             }
           },
           {
-            extend: 'excel',//extension a descargar
+            extend: 'excel', //extension a descargar
             title: 'Solicitudes de servicio',
             text: '<i class="ri-file-excel-line me-1"></i>Excel',
             className: 'dropdown-item',
-            exportOptions: { //define como se exportan los datos
+            exportOptions: {
+              //define como se exportan los datos
               columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], //N°. de columnas a exportar
-              modifier: { //Incluye todos los datos
-                page: 'all', //Exporta todos los datos de todas las páginas
+              modifier: {
+                //Incluye todos los datos
+                page: 'all' //Exporta todos los datos de todas las páginas
                 //order: 'current' //Mantiene el orden actual
               },
               format: {
-                body: function (inner, rowIndex, columnIndex) {//Personaliza el contenido de las celdas
+                body: function (inner, rowIndex, columnIndex) {
+                  //Personaliza el contenido de las celdas
                   /*if (columnIndex === 8 || columnIndex === 11) { //Reemplaza el contenido de la celda con la cadena return
                     return 'ViewSuspend';
                   }*/
-                  return inner.replace(/<[^>]*>/g, '');//Elimina todas las etiquetas HTML de las columnas
+                  return inner.replace(/<[^>]*>/g, ''); //Elimina todas las etiquetas HTML de las columnas
                 }
               }
             }
@@ -396,7 +409,8 @@ $(function () {
               columns: [0, 1, 2, 3, 4, 5, 6, 7],
               format: {
                 body: function (inner, rowIndex, columnIndex) {
-                  if (columnIndex === 1) { // Asegúrate de que el índice de columna es el correcto para el ID
+                  if (columnIndex === 1) {
+                    // Asegúrate de que el índice de columna es el correcto para el ID
                     return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
                   }
                   return inner;
@@ -416,7 +430,8 @@ $(function () {
                   if (columnIndex === 8 || columnIndex === 11) {
                     return 'ViewSuspend';
                   }
-                  if (columnIndex === 1) { // Asegúrate de que el índice de columna es el correcto para el ID
+                  if (columnIndex === 1) {
+                    // Asegúrate de que el índice de columna es el correcto para el ID
                     return inner.replace(/<[^>]*>/g, ''); // Elimina cualquier HTML del valor
                   }
                   return inner;
@@ -452,18 +467,18 @@ $(function () {
           var data = $.map(columns, function (col, i) {
             return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
               ? '<tr data-dt-row="' +
-              col.rowIndex +
-              '" data-dt-column="' +
-              col.columnIndex +
-              '">' +
-              '<td>' +
-              col.title +
-              ':' +
-              '</td> ' +
-              '<td>' +
-              col.data +
-              '</td>' +
-              '</tr>'
+                  col.rowIndex +
+                  '" data-dt-column="' +
+                  col.columnIndex +
+                  '">' +
+                  '<td>' +
+                  col.title +
+                  ':' +
+                  '</td> ' +
+                  '<td>' +
+                  col.data +
+                  '</td>' +
+                  '</tr>'
               : '';
           }).join('');
 
@@ -472,7 +487,6 @@ $(function () {
       }
     }
   });
-
 
   //Date picker
   $(document).ready(function () {
@@ -485,7 +499,7 @@ $(function () {
   });
 
   var dt_user_table = $('.datatables-solicitudes'),
-    select2Elements = $('.select2')
+    select2Elements = $('.select2');
 
   // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
@@ -498,7 +512,6 @@ $(function () {
     });
   }
   initializeSelect2(select2Elements);
-
 
   // Configuración CSRF para Laravel
   $.ajaxSetup({
@@ -514,7 +527,7 @@ $(function () {
     // Confirmación con SweetAlert
     Swal.fire({
       title: '¿Está seguro?',
-      text: "No podrá revertir este evento",
+      text: 'No podrá revertir este evento',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
@@ -547,7 +560,7 @@ $(function () {
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: 'Hubo un problema al eliminar el registro.',
+              text: 'Hubo un problema al eliminar el registro.'
             });
           }
         });
@@ -563,7 +576,6 @@ $(function () {
       }
     });
   });
-
 
   $(document).ready(function () {
     $(document).on('click', '.edit-record-tipo', function () {
@@ -620,15 +632,18 @@ $(function () {
                 modal.find('#edit_id_lote_granel_vig').val(response.caracteristicas.id_lote_granel);
               } else {
                 modal.find('#edit_id_lote_granel_vig').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_categoria) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_categoria) {
                 modal.find('#edit_id_categoria_vig').val(response.caracteristicas.id_categoria);
               } else {
                 modal.find('#edit_id_categoria_vig').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_clase) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_clase) {
                 modal.find('#edit_id_clase_vig').val(response.caracteristicas.id_clase);
               } else {
                 modal.find('#edit_id_clase_vig').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_tipo_maguey) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_tipo_maguey) {
                 modal.find('#edit_id_tipo_vig').val(response.caracteristicas.id_tipo_maguey);
               } else {
                 modal.find('#edit_id_tipo_vig').val('');
@@ -696,11 +711,13 @@ $(function () {
                 modal.find('#edit_destino_lote').val(response.caracteristicas.destino_lote);
               } else {
                 modal.find('#edit_destino_lote').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_categoria_muestreo) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_categoria_muestreo) {
                 modal.find('#edit_id_categoria_muestreo').val(response.caracteristicas.id_categoria_muestreo);
               } else {
                 modal.find('#edit_id_categoria_muestreo').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_clase_muestreo) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_clase_muestreo) {
                 modal.find('#edit_id_clase_muestreo').val(response.caracteristicas.id_clase_muestreo);
               } else {
                 modal.find('#edit_id_clase_muestreo').val('');
@@ -742,7 +759,8 @@ $(function () {
                 modal.find('#edit_id_categoria_traslado').val(response.caracteristicas.id_categoria_traslado);
               } else {
                 modal.find('#edit_id_categoria_traslado').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_clase_traslado) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_clase_traslado) {
                 modal.find('#edit_id_clase_traslado').val(response.caracteristicas.id_clase_traslado);
               } else {
                 modal.find('#edit_id_clase_traslado').val('');
@@ -771,33 +789,40 @@ $(function () {
                 modal.find('#edit_id_vol_actual').val(response.caracteristicas.id_vol_actual);
               } else {
                 modal.find('#edit_id_vol_actual').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_vol_traslado) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_vol_traslado) {
                 modal.find('#edit_id_vol_traslado').val(response.caracteristicas.id_vol_traslado);
               } else {
                 modal.find('#edit_id_vol_traslado').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_vol_res) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_vol_res) {
                 modal.find('#edit_id_vol_res').val(response.caracteristicas.id_vol_res);
               } else {
                 modal.find('#edit_id_vol_res').val('');
-              } if (response.caracteristicas && response.caracteristicas.analisis_traslado) {
+              }
+              if (response.caracteristicas && response.caracteristicas.analisis_traslado) {
                 modal.find('#edit_analisis_traslado').val(response.caracteristicas.analisis_traslado);
               } else {
                 modal.find('#edit_analisis_traslado').val('');
-              } if (response.caracteristicas && response.caracteristicas.volumen_traslado) {
+              }
+              if (response.caracteristicas && response.caracteristicas.volumen_traslado) {
                 modal.find('#edit_volumen_traslado').val(response.caracteristicas.volumen_traslado);
               } else {
                 modal.find('#edit_volumen_traslado').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_certificado_traslado) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_certificado_traslado) {
                 modal.find('#edit_id_certificado_traslado').val(response.caracteristicas.id_certificado_traslado);
               } else {
                 modal.find('#edit_id_certificado_traslado').val('');
-              } if (response.caracteristicas && response.caracteristicas.instalacion_vigilancia) {
-                modal.find('#edit_instalacion_vigilancia')
-                     .val(response.caracteristicas.instalacion_vigilancia) // Establece el valor
-                     .trigger('change'); // Asegúrate de que select2 lo actualice visualmente
-            } else {
+              }
+              if (response.caracteristicas && response.caracteristicas.instalacion_vigilancia) {
+                modal
+                  .find('#edit_instalacion_vigilancia')
+                  .val(response.caracteristicas.instalacion_vigilancia) // Establece el valor
+                  .trigger('change'); // Asegúrate de que select2 lo actualice visualmente
+              } else {
                 modal.find('#edit_instalacion_vigilancia').val('').trigger('change');
-            }
+              }
 
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
             } else if (id_tipo === 5) {
@@ -815,7 +840,8 @@ $(function () {
                 modal.find('#edit_id_categoria_inspeccion').val(response.caracteristicas.id_categoria_inspeccion);
               } else {
                 modal.find('#edit_id_categoria_inspeccion').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_clase_inspeccion) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_clase_inspeccion) {
                 modal.find('#edit_id_clase_inspeccion').val(response.caracteristicas.id_clase_inspeccion);
               } else {
                 modal.find('#edit_id_clase_inspeccion').val('');
@@ -844,23 +870,28 @@ $(function () {
                 modal.find('#edit_id_tipo_inspeccion').val(response.caracteristicas.id_tipo_inspeccion);
               } else {
                 modal.find('#edit_id_tipo_inspeccion').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_cantidad_bote) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_cantidad_bote) {
                 modal.find('#edit_id_cantidad_bote').val(response.caracteristicas.id_cantidad_bote);
               } else {
                 modal.find('#edit_id_cantidad_bote').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_cantidad_caja) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_cantidad_caja) {
                 modal.find('#edit_id_cantidad_caja').val(response.caracteristicas.id_cantidad_caja);
               } else {
                 modal.find('#edit_id_cantidad_caja').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_inicio_envasado) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_inicio_envasado) {
                 modal.find('#edit_id_inicio_envasado').val(response.caracteristicas.id_inicio_envasado);
               } else {
                 modal.find('#edit_id_inicio_envasado').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_previsto) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_previsto) {
                 modal.find('#edit_id_previsto').val(response.caracteristicas.id_previsto);
               } else {
                 modal.find('#edit_id_previsto').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_certificado_inspeccion) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_certificado_inspeccion) {
                 modal.find('#edit_id_certificado_inspeccion').val(response.caracteristicas.id_certificado_inspeccion);
               } else {
                 modal.find('#edit_id_certificado_inspeccion').val('');
@@ -883,7 +914,8 @@ $(function () {
                 modal.find('#edit_id_categoria_barricada').val(response.caracteristicas.id_categoria_barricada);
               } else {
                 modal.find('#edit_id_categoria_barricada').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_clase_barricada) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_clase_barricada) {
                 modal.find('#edit_id_clase_barricada').val(response.caracteristicas.id_clase_barricada);
               } else {
                 modal.find('#edit_id_clase_barricada').val('');
@@ -912,31 +944,38 @@ $(function () {
                 modal.find('#edit_tipo_lote').val(response.caracteristicas.tipo_lote);
               } else {
                 modal.find('#edit_tipo_lote').val('');
-              } if (response.caracteristicas && response.caracteristicas.fecha_inicio) {
+              }
+              if (response.caracteristicas && response.caracteristicas.fecha_inicio) {
                 modal.find('#edit_fecha_inicio').val(response.caracteristicas.fecha_inicio);
               } else {
                 modal.find('#edit_fecha_inicio').val('');
-              } if (response.caracteristicas && response.caracteristicas.fecha_termino) {
+              }
+              if (response.caracteristicas && response.caracteristicas.fecha_termino) {
                 modal.find('#edit_fecha_termino').val(response.caracteristicas.fecha_termino);
               } else {
                 modal.find('#edit_fecha_termino').val('');
-              } if (response.caracteristicas && response.caracteristicas.material) {
+              }
+              if (response.caracteristicas && response.caracteristicas.material) {
                 modal.find('#edit_material').val(response.caracteristicas.material);
               } else {
                 modal.find('#edit_material').val('');
-              } if (response.caracteristicas && response.caracteristicas.capacidad) {
+              }
+              if (response.caracteristicas && response.caracteristicas.capacidad) {
                 modal.find('#edit_capacidad').val(response.caracteristicas.capacidad);
               } else {
                 modal.find('#edit_capacidad').val('');
-              } if (response.caracteristicas && response.caracteristicas.num_recipientes) {
+              }
+              if (response.caracteristicas && response.caracteristicas.num_recipientes) {
                 modal.find('#edit_num_recipientes').val(response.caracteristicas.num_recipientes);
               } else {
                 modal.find('#edit_num_recipientes').val('');
-              } if (response.caracteristicas && response.caracteristicas.tiempo_dura) {
+              }
+              if (response.caracteristicas && response.caracteristicas.tiempo_dura) {
                 modal.find('#edit_tiempo_dura').val(response.caracteristicas.tiempo_dura);
               } else {
                 modal.find('#edit_tiempo_dura').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_certificado_barricada) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_certificado_barricada) {
                 modal.find('#edit_id_certificado_barricada').val(response.caracteristicas.id_certificado_barricada);
               } else {
                 modal.find('#edit_id_certificado_barricada').val('');
@@ -959,7 +998,8 @@ $(function () {
                 modal.find('#edit_id_categoria_liberacion').val(response.caracteristicas.id_categoria_liberacion);
               } else {
                 modal.find('#edit_id_categoria_liberacion').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_clase_liberacion) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_clase_liberacion) {
                 modal.find('#edit_id_clase_liberacion').val(response.caracteristicas.id_clase_liberacion);
               } else {
                 modal.find('#edit_id_clase_liberacion').val('');
@@ -988,31 +1028,38 @@ $(function () {
                 modal.find('#edit_tipo_lote_lib').val(response.caracteristicas.tipo_lote_lib);
               } else {
                 modal.find('#edit_tipo_lote_lib').val('');
-              } if (response.caracteristicas && response.caracteristicas.fecha_inicio_lib) {
+              }
+              if (response.caracteristicas && response.caracteristicas.fecha_inicio_lib) {
                 modal.find('#edit_fecha_inicio_lib').val(response.caracteristicas.fecha_inicio_lib);
               } else {
                 modal.find('#edit_fecha_inicio_lib').val('');
-              } if (response.caracteristicas && response.caracteristicas.fecha_termino_lib) {
+              }
+              if (response.caracteristicas && response.caracteristicas.fecha_termino_lib) {
                 modal.find('#edit_fecha_termino_lib').val(response.caracteristicas.fecha_termino_lib);
               } else {
                 modal.find('#edit_fecha_termino_lib').val('');
-              } if (response.caracteristicas && response.caracteristicas.material_liberacion) {
+              }
+              if (response.caracteristicas && response.caracteristicas.material_liberacion) {
                 modal.find('#edit_material_liberacion').val(response.caracteristicas.material_liberacion);
               } else {
                 modal.find('#edit_material_liberacion').val('');
-              } if (response.caracteristicas && response.caracteristicas.capacidad_liberacion) {
+              }
+              if (response.caracteristicas && response.caracteristicas.capacidad_liberacion) {
                 modal.find('#edit_capacidad_liberacion').val(response.caracteristicas.capacidad_liberacion);
               } else {
                 modal.find('#edit_capacidad_liberacion').val('');
-              } if (response.caracteristicas && response.caracteristicas.num_recipientes_lib) {
+              }
+              if (response.caracteristicas && response.caracteristicas.num_recipientes_lib) {
                 modal.find('#edit_num_recipientes_lib').val(response.caracteristicas.num_recipientes_lib);
               } else {
                 modal.find('#edit_num_recipientes_lib').val('');
-              } if (response.caracteristicas && response.caracteristicas.tiempo_dura_lib) {
+              }
+              if (response.caracteristicas && response.caracteristicas.tiempo_dura_lib) {
                 modal.find('#edit_tiempo_dura_lib').val(response.caracteristicas.tiempo_dura_lib);
               } else {
                 modal.find('#edit_tiempo_dura_lib').val('');
-              } if (response.caracteristicas && response.caracteristicas.id_certificado_liberacion) {
+              }
+              if (response.caracteristicas && response.caracteristicas.id_certificado_liberacion) {
                 modal.find('#edit_id_certificado_liberacion').val(response.caracteristicas.id_certificado_liberacion);
               } else {
                 modal.find('#edit_id_certificado_liberacion').val('');
@@ -1032,7 +1079,8 @@ $(function () {
               }
               modal.find('#edit_info_adicional_geo').val(response.data.info_adicional);
               // Otros campos específicos para tipo 10
-            } else if (id_tipo === 14) { // Aquí va el tipo correspondiente para tu caso
+            } else if (id_tipo === 14) {
+              // Aquí va el tipo correspondiente para tu caso
               // Llenar los campos del modal con los datos de la solicitud
               modal.find('#edit_id_solicitud').val(id_solicitud);
               modal.find('#edit_id_empresa').val(response.data.id_empresa).trigger('change');
@@ -1070,7 +1118,7 @@ $(function () {
         },
         error: function (xhr, status, error) {
           console.error('Error en la solicitud:', error);
-        },
+        }
       });
     });
   });
@@ -1088,28 +1136,28 @@ $(function () {
     const formUpdate = document.getElementById('editFormTipo10');
     const fvUpdate = FormValidation.formValidation(formUpdate, {
       fields: {
-        'id_empresa': {
+        id_empresa: {
           validators: {
             notEmpty: {
               message: 'Selecciona el cliente.'
             }
           }
         },
-        'fecha_visita': {
+        fecha_visita: {
           validators: {
             notEmpty: {
               message: 'Selecciona la fecha y hora para la inspección.'
             }
           }
         },
-        'id_predio': {
+        id_predio: {
           validators: {
             notEmpty: {
               message: 'Selecciona un predio para la inspección.'
             }
           }
         },
-        'punto_reunion': {
+        punto_reunion: {
           validators: {
             notEmpty: {
               message: 'Introduce la dirección para el punto de reunión.'
@@ -1182,21 +1230,21 @@ $(function () {
     const formDictaminacion = document.getElementById('addEditSolicitud');
     const fvDictaminacion = FormValidation.formValidation(formDictaminacion, {
       fields: {
-        'id_empresa': {
+        id_empresa: {
           validators: {
             notEmpty: {
               message: 'Selecciona el cliente.'
             }
           }
         },
-        'fecha_visita': {
+        fecha_visita: {
           validators: {
             notEmpty: {
               message: 'Selecciona la fecha sugerida para la inspección.'
             }
           }
         },
-        'id_instalacion': {
+        id_instalacion: {
           validators: {
             notEmpty: {
               message: 'Selecciona una instalación.'
@@ -1217,7 +1265,7 @@ $(function () {
             }
           }
         },
-        'renovacion': {
+        renovacion: {
           validators: {
             notEmpty: {
               message: 'Selecciona si es renovación o no.'
@@ -1290,28 +1338,28 @@ $(function () {
     const formUpdate = document.getElementById('editVigilanciaProduccionForm');
     const fvUpdate = FormValidation.formValidation(formUpdate, {
       fields: {
-        'id_empresa': {
+        id_empresa: {
           validators: {
             notEmpty: {
               message: 'Selecciona el cliente.'
             }
           }
         },
-        'fecha_visita': {
+        fecha_visita: {
           validators: {
             notEmpty: {
               message: 'Selecciona la fecha y hora para la inspección.'
             }
           }
         },
-        'id_predio': {
+        id_predio: {
           validators: {
             notEmpty: {
               message: 'Selecciona un predio para la inspección.'
             }
           }
         },
-        'punto_reunion': {
+        punto_reunion: {
           validators: {
             notEmpty: {
               message: 'Introduce la dirección para el punto de reunión.'
@@ -1384,35 +1432,35 @@ $(function () {
     const formUpdate = document.getElementById('editMuestreoLoteAgranelForm');
     const fvUpdate = FormValidation.formValidation(formUpdate, {
       fields: {
-        'id_empresa': {
+        id_empresa: {
           validators: {
             notEmpty: {
               message: 'Selecciona el cliente.'
             }
           }
         },
-        'fecha_visita': {
+        fecha_visita: {
           validators: {
             notEmpty: {
               message: 'Selecciona la fecha y hora para la inspección.'
             }
           }
         },
-        'id_instalacion': {
+        id_instalacion: {
           validators: {
             notEmpty: {
               message: 'Selecciona una instalación.'
             }
           }
         },
-        'id_lote_granel_muestreo': {
+        id_lote_granel_muestreo: {
           validators: {
             notEmpty: {
               message: 'Selecciona un lote a granel.'
             }
           }
         },
-        'destino_lote': {
+        destino_lote: {
           validators: {
             notEmpty: {
               message: 'Selecciona un tipo.'
@@ -1484,35 +1532,35 @@ $(function () {
     const formUpdate = document.getElementById('editVigilanciaTrasladoForm');
     const fvUpdate = FormValidation.formValidation(formUpdate, {
       fields: {
-        'id_empresa': {
+        id_empresa: {
           validators: {
             notEmpty: {
               message: 'Selecciona el cliente.'
             }
           }
         },
-        'fecha_visita': {
+        fecha_visita: {
           validators: {
             notEmpty: {
               message: 'Selecciona la fecha y hora para la inspección.'
             }
           }
         },
-        'id_instalacion': {
+        id_instalacion: {
           validators: {
             notEmpty: {
               message: 'Selecciona una instalación.'
             }
           }
         },
-        'id_lote_granel_traslado': {
+        id_lote_granel_traslado: {
           validators: {
             notEmpty: {
               message: 'Selecciona un lote a granel.'
             }
           }
         },
-        'id_vol_traslado': {
+        id_vol_traslado: {
           validators: {
             notEmpty: {
               message: 'Ingresa el volumen trasladado.'
@@ -1587,35 +1635,35 @@ $(function () {
     const formUpdate = document.getElementById('editInspeccionIngresoBarricadaForm');
     const fvUpdate = FormValidation.formValidation(formUpdate, {
       fields: {
-        'id_empresa': {
+        id_empresa: {
           validators: {
             notEmpty: {
               message: 'Selecciona el cliente.'
             }
           }
         },
-        'fecha_visita': {
+        fecha_visita: {
           validators: {
             notEmpty: {
               message: 'Selecciona la fecha y hora para la inspección.'
             }
           }
         },
-        'id_instalacion': {
+        id_instalacion: {
           validators: {
             notEmpty: {
               message: 'Selecciona una instalación.'
             }
           }
         },
-        'id_lote_granel_barricada': {
+        id_lote_granel_barricada: {
           validators: {
             notEmpty: {
               message: 'Selecciona un lote a granel.'
             }
           }
         },
-        'volumen_barricada': {
+        volumen_barricada: {
           validators: {
             notEmpty: {
               message: 'Ingresa el volumen trasladado.'
@@ -1678,7 +1726,6 @@ $(function () {
     });
   });
 
-
   $(function () {
     // Configuración CSRF para Laravel
     $.ajaxSetup({
@@ -1691,35 +1738,35 @@ $(function () {
     const formUpdate = document.getElementById('editInspeccionEnvasadoForm');
     const fvUpdate = FormValidation.formValidation(formUpdate, {
       fields: {
-        'id_empresa': {
+        id_empresa: {
           validators: {
             notEmpty: {
               message: 'Selecciona el cliente.'
             }
           }
         },
-        'fecha_visita': {
+        fecha_visita: {
           validators: {
             notEmpty: {
               message: 'Selecciona la fecha y hora para la inspección.'
             }
           }
         },
-        'id_instalacion': {
+        id_instalacion: {
           validators: {
             notEmpty: {
               message: 'Selecciona una instalación.'
             }
           }
         },
-        'id_lote_granel_inspeccion': {
+        id_lote_granel_inspeccion: {
           validators: {
             notEmpty: {
               message: 'Selecciona un lote a granel.'
             }
           }
         },
-        'volumen_inspeccion': {
+        volumen_inspeccion: {
           validators: {
             notEmpty: {
               message: 'Ingresa el volumen trasladado.'
@@ -1782,7 +1829,6 @@ $(function () {
     });
   });
 
-
   //metodo para liberacion
   $(function () {
     // Configuración CSRF para Laravel
@@ -1796,35 +1842,35 @@ $(function () {
     const formUpdate = document.getElementById('editInspeccionLiberacionForm');
     const fvUpdate = FormValidation.formValidation(formUpdate, {
       fields: {
-        'id_empresa': {
+        id_empresa: {
           validators: {
             notEmpty: {
               message: 'Selecciona el cliente.'
             }
           }
         },
-        'fecha_visita': {
+        fecha_visita: {
           validators: {
             notEmpty: {
               message: 'Selecciona la fecha y hora para la inspección.'
             }
           }
         },
-        'id_instalacion': {
+        id_instalacion: {
           validators: {
             notEmpty: {
               message: 'Selecciona una instalación.'
             }
           }
         },
-        'id_lote_granel_liberacion': {
+        id_lote_granel_liberacion: {
           validators: {
             notEmpty: {
               message: 'Selecciona un lote a granel.'
             }
           }
         },
-        'volumen_liberacion': {
+        volumen_liberacion: {
           validators: {
             notEmpty: {
               message: 'Ingresa el volumen trasladado.'
@@ -1900,27 +1946,27 @@ $(function () {
     const form3 = document.getElementById('addRegistrarSolicitudMuestreoAgave');
     const fv3 = FormValidation.formValidation(form3, {
       fields: {
-        'id_empresa': {
+        id_empresa: {
           validators: {
             notEmpty: {
               message: 'Selecciona el cliente.'
             }
           }
         },
-        'fecha_visita': {
+        fecha_visita: {
           validators: {
             notEmpty: {
               message: 'Selecciona la fecha sugerida para la inspección.'
             }
           }
         },
-        'punto_reunion': {
+        punto_reunion: {
           validators: {
             notEmpty: {
               message: 'Introduce la dirección para el punto de reunión.'
             }
           }
-        },
+        }
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -1932,7 +1978,6 @@ $(function () {
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
-
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(form3);
@@ -1978,28 +2023,28 @@ $(function () {
     const form = document.getElementById('addRegistrarSolicitud');
     const fv = FormValidation.formValidation(form, {
       fields: {
-        'id_empresa': {
+        id_empresa: {
           validators: {
             notEmpty: {
               message: 'Selecciona el cliente'
             }
           }
         },
-        'fecha_visita': {
+        fecha_visita: {
           validators: {
             notEmpty: {
               message: 'Selecciona la fecha sugerida para la inspección'
             }
           }
         },
-        'id_instalacion': {
+        id_instalacion: {
           validators: {
             notEmpty: {
               message: 'Selecciona la instalación'
             }
           }
         },
-        'renovacion': {
+        renovacion: {
           validators: {
             notEmpty: {
               message: 'Selecciona la opción'
@@ -2031,7 +2076,6 @@ $(function () {
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
-
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(form);
@@ -2073,37 +2117,38 @@ $(function () {
       });
     });
     // Inicializar select2 y manejar eventos de cambio por "name"
-    $('select[name="clases[]"], select[name="categorias[]"], select[name="id_instalacion"], select[name="id_empresa"]').on('change', function () {
+    $(
+      'select[name="clases[]"], select[name="categorias[]"], select[name="id_instalacion"], select[name="id_empresa"]'
+    ).on('change', function () {
       // Revalidar el campo cuando se cambia el valor del select2
       fv.revalidateField($(this).attr('name'));
     });
-
 
     // Inicializar FormValidation para la solicitud de georeferenciacion
     const form2 = document.getElementById('addRegistrarSolicitudGeoreferenciacion');
     const fv2 = FormValidation.formValidation(form2, {
       fields: {
-        'id_empresa': {
+        id_empresa: {
           validators: {
             notEmpty: {
               message: 'Selecciona el cliente.'
             }
           }
         },
-        'fecha_visita': {
+        fecha_visita: {
           validators: {
             notEmpty: {
               message: 'Selecciona la fecha sugerida para la inspección.'
             }
           }
         },
-        'punto_reunion': {
+        punto_reunion: {
           validators: {
             notEmpty: {
               message: 'Introduce la dirección para el punto de reunión.'
             }
           }
-        },
+        }
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -2115,7 +2160,6 @@ $(function () {
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
-
     }).on('core.form.valid', function (e) {
       // Validar el formulario
       var formData = new FormData(form2);
@@ -2156,7 +2200,6 @@ $(function () {
         }
       });
     });
-
   });
 
   //new new
@@ -2172,35 +2215,35 @@ $(function () {
     const form = document.getElementById('editInstalacionForm');
     const fv = FormValidation.formValidation(form, {
       fields: {
-        'id_empresa': {
+        id_empresa: {
           validators: {
             notEmpty: {
               message: 'Selecciona una empresa.'
             }
           }
         },
-        'tipo': {
+        tipo: {
           validators: {
             notEmpty: {
               message: 'Selecciona un tipo de instalación.'
             }
           }
         },
-        'estado': {
+        estado: {
           validators: {
             notEmpty: {
               message: 'Selecciona un estado.'
             }
           }
         },
-        'direccion_completa': {
+        direccion_completa: {
           validators: {
             notEmpty: {
               message: 'Ingrese la dirección completa.'
             }
           }
         },
-        'certificacion': {
+        certificacion: {
           validators: {
             notEmpty: {
               message: 'Selecciona el tipo de certificación.'
@@ -2320,7 +2363,6 @@ $(function () {
             }
           }
         });
-
       } else {
         $('#edit_certificado_otros').addClass('d-none');
 
@@ -2351,7 +2393,9 @@ $(function () {
         $('#edit_direccion').val(instalacion.direccion_completa);
 
         // Verificar si hay valores en los campos adicionales
-        var tieneCertificadoOtroOrganismo = instalacion.folio || instalacion.id_organismo ||
+        var tieneCertificadoOtroOrganismo =
+          instalacion.folio ||
+          instalacion.id_organismo ||
           (instalacion.fecha_emision && instalacion.fecha_emision !== 'N/A') ||
           (instalacion.fecha_vigencia && instalacion.fecha_vigencia !== 'N/A') ||
           data.archivo_url;
@@ -2361,7 +2405,9 @@ $(function () {
           $('#edit_certificado_otros').removeClass('d-none');
 
           $('#edit_folio').val(instalacion.folio || '');
-          $('#edit_id_organismo').val(instalacion.id_organismo || '').trigger('change');
+          $('#edit_id_organismo')
+            .val(instalacion.id_organismo || '')
+            .trigger('change');
           $('#edit_fecha_emision').val(instalacion.fecha_emision !== 'N/A' ? instalacion.fecha_emision : '');
           $('#edit_fecha_vigencia').val(instalacion.fecha_vigencia !== 'N/A' ? instalacion.fecha_vigencia : '');
 
@@ -2426,7 +2472,6 @@ $(function () {
     $('#edit_fecha_emision').val('');
     $('#edit_fecha_vigencia').val('');
   });
-
 
   $(function () {
     $.ajaxSetup({
@@ -2577,7 +2622,6 @@ $(function () {
           rowSelector: function (field, ele) {
             return '.mb-4, .mb-5, .mb-6';
           }
-
         }),
         submitButton: new FormValidation.plugins.SubmitButton(),
         autoFocus: new FormValidation.plugins.AutoFocus()
@@ -2592,7 +2636,6 @@ $(function () {
         processData: false,
         contentType: false,
         success: function (response) {
-
           $('#addVigilanciaProduccion').modal('hide');
           $('#addVigilanciaProduccionForm')[0].reset();
           $('.select2').val(null).trigger('change');
@@ -3095,7 +3138,6 @@ $(function () {
     });
   });
 
-
   //Validar vigilancia en traslado
   const addVigilanciaTrasladoForm = document.getElementById('addVigilanciaTrasladoForm');
   const fvVigilancia = FormValidation.formValidation(addVigilanciaTrasladoForm, {
@@ -3192,7 +3234,6 @@ $(function () {
     });
   });
 
-
   // Manejar el cambio en el tipo de instalación
   $(document).on('change', '#edit_tipo', function () {
     var tipo = $(this).val();
@@ -3269,13 +3310,12 @@ $(function () {
             icon: 'error',
             title: 'Error',
             text: 'Hubo un problema al actualizar los datos.',
-            footer: `<pre>${JSON.stringify(xhr.responseJSON, null, 2)}</pre>`,
+            footer: `<pre>${JSON.stringify(xhr.responseJSON, null, 2)}</pre>`
           });
         }
       });
     });
   });
-
 
   $(document).on('click', '.pdf2', function () {
     var url = $(this).data('url');
@@ -3290,10 +3330,12 @@ $(function () {
     //Cargar el PDF con el ID
     iframe.attr('src', 'solicitud_de_servicio/' + id_solicitud);
     //Configurar el botón para abrir el PDF en una nueva pestaña
-    $("#NewPestana").attr('href', 'solicitud_de_servicio/' + id_solicitud).show();
+    $('#NewPestana')
+      .attr('href', 'solicitud_de_servicio/' + id_solicitud)
+      .show();
 
-    $("#titulo_modal").text("Solicitud de servicios NOM-070-SCFI-2016");
-    $("#subtitulo_modal").text(registro);
+    $('#titulo_modal').text('Solicitud de servicios NOM-070-SCFI-2016');
+    $('#subtitulo_modal').text(registro);
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
       spinner.hide();
@@ -3301,10 +3343,7 @@ $(function () {
     });
   });
 
-
-
   var openedFromFirstModal = false;
-
 
   $('#abrirModalInstalaciones').on('click', function () {
     var clienteSeleccionado = $('#id_empresa_solicitudes').val();
@@ -3314,7 +3353,6 @@ $(function () {
     $('#id_empresa option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
     $('#id_empresa').trigger('change');
     $('#modalAddInstalacion').modal('show');
-
   });
 
   // Al cerrar el segundo modal
@@ -3338,10 +3376,7 @@ $(function () {
       alert(clienteSeleccionado);
 
       $('#addSolicitudDictamen').modal('show');
-
-
     }
-
   });
 
   //Vigilancia boton instalaciones
@@ -3412,7 +3447,6 @@ $(function () {
     });
   });
 
-
   //Muestreo de vigilancia traslado
   $(document).ready(function () {
     let openedFromFirstModal = false;
@@ -3446,7 +3480,6 @@ $(function () {
       }
     });
   });
-
 
   //Muestreo de inpeccion ingreso barricada
   $(document).ready(function () {
@@ -3666,7 +3699,7 @@ $(function () {
         method: 'GET',
         success: function (response) {
           // Lote envasado
-          var contenidoLotesEnvasado = "";
+          var contenidoLotesEnvasado = '';
           var marcas = response.marcas;
 
           for (let index = 0; index < response.lotes_envasado.length; index++) {
@@ -3674,7 +3707,7 @@ $(function () {
             var marcaEncontrada = marcas.find(function (marca) {
               return marca.id_marca === response.lotes_envasado[index].id_marca;
             });
-            var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : "Sin marca";
+            var nombreMarca = marcaEncontrada ? marcaEncontrada.marca : 'Sin marca';
 
             contenidoLotesEnvasado += `
           <option value="${response.lotes_envasado[index].id_lote_envasado}">
@@ -3729,8 +3762,6 @@ $(function () {
       });
     });
 
-
-
     // Eliminar la última sección
     $('#delete-characteristics').click(function () {
       var totalSections = $('#sections-container .card').length; // Total de secciones en el contenedor
@@ -3752,10 +3783,7 @@ $(function () {
         });
       }
     });
-
   });
-
-
 
   /* Enviar formulario store add exportacion */
   $(function () {
@@ -3904,216 +3932,195 @@ $(function () {
     });
   });
 
+  // Mapeo entre IDs de tipo de solicitud y IDs de divs
+  const divsPorSolicitud = {
+    1: ['muestreoAgave'],
+    2: ['vigilanciaProduccion'],
+    4: ['vigilanciaTraslado'],
+    14: ['dictamenInstalaciones'],
+    10: ['georreferencia'],
+    11: ['liberacionPTExportacion'],
+    3: ['muestreoLoteAjustes', 'guiastraslado'],
+    5: ['inspeccionEnvasado'],
+    7: ['inspeccionIngresoBarrica'],
+    9: ['liberacionBarricaVidrio']
+  };
 
-
-
-// Mapeo entre IDs de tipo de solicitud y IDs de divs
-const divsPorSolicitud = {
-  1: ['muestreoAgave'],
-  2: ['vigilanciaProduccion'],
-  4: ['vigilanciaTraslado'],
-  14: ['dictamenInstalaciones'],
-  10: ['georreferencia'],
-  11: ['liberacionPTExportacion'],
-  3: ['muestreoLoteAjustes', 'guiastraslado'],
-  5: ['inspeccionEnvasado'],
-  7: ['inspeccionIngresoBarrica'],
-  9: ['liberacionBarricaVidrio']
-};
-
-// Función para manejar la visibilidad de divs según el tipo de solicitud
-function manejarVisibilidadDivs(idTipo) {
-  // Ocultamos todos los divs
-  Object.values(divsPorSolicitud).flat().forEach(divId => {
-      $(`#${divId}`).addClass('d-none');
-  });
-  const divsMostrar = divsPorSolicitud[idTipo];
-  if (divsMostrar) {
-      divsMostrar.forEach(divId => {
-          $(`#${divId}`).removeClass('d-none');
+  // Función para manejar la visibilidad de divs según el tipo de solicitud
+  function manejarVisibilidadDivs(idTipo) {
+    // Ocultamos todos los divs
+    Object.values(divsPorSolicitud)
+      .flat()
+      .forEach(divId => {
+        $(`#${divId}`).addClass('d-none');
       });
+    const divsMostrar = divsPorSolicitud[idTipo];
+    if (divsMostrar) {
+      divsMostrar.forEach(divId => {
+        $(`#${divId}`).removeClass('d-none');
+      });
+    }
   }
-}
-// Manejar el clic en los enlaces con clase "validar-solicitudes"
-$(document).on('click', '.validar-solicitudes', function () {
-  // Leer los datos desde los atributos data-*
-  var idTipo = $(this).data('id');
-  var id_solicitud = $(this).data('id-solicitud');
-  var tipoName = $(this).data('tipo');
-  var razon_social = $(this).data('razon-social');
-  $('#tipoSolicitud').text(tipoName);
+  // Manejar el clic en los enlaces con clase "validar-solicitudes"
+  $(document).on('click', '.validar-solicitudes', function () {
+    // Leer los datos desde los atributos data-*
+    var idTipo = $(this).data('id');
+    var id_solicitud = $(this).data('id-solicitud');
+    var tipoName = $(this).data('tipo');
+    var razon_social = $(this).data('razon-social');
+    $('#tipoSolicitud').text(tipoName);
 
-
-  $.ajax({
-      url: `/getDatosSolicitud/${id_solicitud}`, 
+    $.ajax({
+      url: `/getDatosSolicitud/${id_solicitud}`,
       type: 'GET',
-      dataType: 'json', 
+      dataType: 'json',
       success: function (response) {
+        if (response.success) {
+          $('.domicilioFiscal').text(response.data.empresa.domicilio_fiscal);
+          // Validar si `direccion_completa` no está vacío
+          if (response.data.instalacion) {
+            $('.domicilioInstalacion').text(response.data.instalacion.direccion_completa);
+          } else {
+            // Si está vacío, usar `ubicacion_predio`
+            $('.domicilioInstalacion').text(response.data.predios.ubicacion_predio);
+            $('.nombrePredio').text(response.data.predios.nombre_predio);
+            $('.preregistro').html(
+              "<a target='_Blank' href='/pre-registro_predios/" +
+                response.data.predios.id_predio +
+                "'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>"
+            );
+          }
 
-          if (response.success) {
-            
-              $('.domicilioFiscal').text(response.data.empresa.domicilio_fiscal);
-            // Validar si `direccion_completa` no está vacío
-        if (response.data.instalacion) {
-          $('.domicilioInstalacion').text(response.data.instalacion.direccion_completa);
-        } else {
-          // Si está vacío, usar `ubicacion_predio`
-          $('.domicilioInstalacion').text(response.data.predios.ubicacion_predio);
-          $('.nombrePredio').text(response.data.predios.nombre_predio);
-          $(".preregistro").html("<a target='_Blank' href='/pre-registro_predios/"+response.data.predios.id_predio+"'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>");
-        }
+          var caracteristicas = JSON.parse(response.data.caracteristicas);
 
-        var caracteristicas = JSON.parse(response.data.caracteristicas);
+          $('.razonSocial').text(response?.data?.empresa?.razon_social || 'No disponible');
+          $('.fechaHora').text(response?.fecha_visita_formateada || 'No disponible');
+          $('.guiasTraslado').text(response?.data?.caracteristicas?.guias || 'No disponible');
+          $('.nombreLote').text(response?.data?.lote_granel?.nombre_lote || 'No disponible');
 
+          // Validar categoría
+          $('.categoria').text(
+            response?.data?.lote_granel?.categoria?.categoria ||
+              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
+              'No disponible'
+          );
 
+          // Validar clase
+          $('.clase').text(
+            response?.data?.lote_granel?.clase?.clase ||
+              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
+              'No disponible'
+          );
 
-           $('.razonSocial').text(response?.data?.empresa?.razon_social || 'No disponible');
-$('.fechaHora').text(response?.fecha_visita_formateada || 'No disponible');
-$('.guiasTraslado').text(response?.data?.caracteristicas?.guias || 'No disponible');
-$('.nombreLote').text(response?.data?.lote_granel?.nombre_lote || 'No disponible');
+          $('.cont_alc').text(response?.data?.lote_granel?.cont_alc || 'No disponible');
+          $('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
+          $('.certificadoGranel').text(response?.data?.lote_granel?.folio_certificado || 'No disponible');
 
-// Validar categoría
-$('.categoria').text(
-    response?.data?.lote_granel?.categoria?.categoria ||
-    response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria || 
-    'No disponible'
-);
+          $('.tipos').text(response?.tipos_agave || 'No disponible');
+          $('.tipoAnalisis').text(response?.data?.caracteristicas?.tipo_analisis || 'No disponible');
 
-// Validar clase
-$('.clase').text(
-    response?.data?.lote_granel?.clase?.clase ||
-    response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase || 
-    'No disponible'
-);
+          // Validar nombre del lote envasado
+          $('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre no disponible');
 
-$('.cont_alc').text(response?.data?.lote_granel?.cont_alc || 'No disponible');
-$('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
-$('.certificadoGranel').text(response?.data?.lote_granel?.folio_certificado || 'No disponible');
+          $('.materialRecipiente').text(caracteristicas.material);
+          $('.capacidadRecipiente').text(caracteristicas.capacidad);
+          $('.numeroRecipiente').text(caracteristicas.num_recipientes);
+          $('.tiempoMaduracion').text(caracteristicas.tiempo_dura);
+          $('.tipoIngreso').text(caracteristicas.tipoIngreso);
+          $('.volumenLiberado').text(caracteristicas.volumen_liberacion);
+          $('.tipoLiberacion').text(caracteristicas.tipoLiberacion);
 
-$('.tipos').text(response?.tipos_agave || 'No disponible');
-$('.tipoAnalisis').text(response?.data?.caracteristicas?.tipo_analisis || 'No disponible');
+          // Verificar si 'detalles' existe y es un arreglo
+          if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
+            // Recorrer cada elemento de 'detalles'
+            caracteristicas.detalles.forEach(function (detalle) {
+              // Asumiendo que '.cajasBotellas' es un contenedor de varias cajas, agregamos el texto en cada una
+              $('.cajasBotellas').append(
+                detalle.cantidad_cajas + ' Cajas y ' + detalle.cantidad_botellas + ' Botellas<br>'
+              );
+            });
+          } else {
+            // Si 'detalles' no existe o no es un arreglo
+            $('.cajasBotellas').text('No hay detalles disponibles.');
+          }
 
-// Validar nombre del lote envasado
-$('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre no disponible');
-
-            
-              $('.materialRecipiente').text(caracteristicas.material);
-              $('.capacidadRecipiente').text(caracteristicas.capacidad);
-              $('.numeroRecipiente').text(caracteristicas.num_recipientes);
-              $('.tiempoMaduracion').text(caracteristicas.tiempo_dura);
-              $('.tipoIngreso').text(caracteristicas.tipoIngreso); 
-              $('.volumenLiberado').text(caracteristicas.volumen_liberacion); 
-              $('.tipoLiberacion').text(caracteristicas.tipoLiberacion); 
-              
-              // Verificar si 'detalles' existe y es un arreglo
-            if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
-              // Recorrer cada elemento de 'detalles'
-              caracteristicas.detalles.forEach(function(detalle) {
-                  // Asumiendo que '.cajasBotellas' es un contenedor de varias cajas, agregamos el texto en cada una
-                  $('.cajasBotellas').append(detalle.cantidad_cajas + " Cajas y " + detalle.cantidad_botellas + " Botellas<br>");
-              });
-            } else {
-              // Si 'detalles' no existe o no es un arreglo
-              $('.cajasBotellas').text('No hay detalles disponibles.');
+          // Estructura de configuración para los documentos
+          const documentConfig = [
+            {
+              ids: [45, 66, 113],
+              targetClass: '.comprobantePosesion',
+              noDocMessage: 'No hay comprobante de posesión',
+              condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
+            },
+            {
+              ids: [34],
+              targetClass: '.comprobantePosesion',
+              noDocMessage: 'No hay contrato de arrendamiento',
+              condition: (documento, response) => documento.id_relacion == response.data.id_predio
+            },
+            {
+              ids: [43, 106, 112],
+              targetClass: '.planoDistribucion',
+              noDocMessage: 'No hay plan de distribución',
+              condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
+            },
+            {
+              ids: [76],
+              targetClass: '.csf',
+              noDocMessage: 'No hay CSF',
+              condition: (documento, response) => documento.id_empresa == response.data.id_empresa
+            },
+            {
+              ids: [1],
+              targetClass: '.actaConstitutiva',
+              noDocMessage: 'No hay acta constitutiva',
+              condition: (documento, response) => documento.id_empresa == response.data.id_empresa
             }
+          ];
 
-            
-// Estructura de configuración para los documentos
-const documentConfig = [
-  {
-      ids: [45, 66, 113],
-      targetClass: '.comprobantePosesion',
-      noDocMessage: 'No hay comprobante de posesión',
-      condition: (documento, response) => 
-          documento.id_relacion == response.data.id_instalacion 
-  },
-  {
-    ids: [34],
-    targetClass: '.comprobantePosesion',
-    noDocMessage: 'No hay contrato de arrendamiento',
-    condition: (documento, response) => 
-        documento.id_relacion == response.data.id_predio
-  },
-  {
-      ids: [43, 106, 112],
-      targetClass: '.planoDistribucion',
-      noDocMessage: 'No hay plan de distribución',
-      condition: (documento, response) => 
-          documento.id_relacion == response.data.id_instalacion
-  },
-  {
-      ids: [76],
-      targetClass: '.csf',
-      noDocMessage: 'No hay CSF',
-      condition: (documento, response) => 
-          documento.id_empresa == response.data.id_empresa
-  },
-  {
-      ids: [1],
-      targetClass: '.actaConstitutiva',
-      noDocMessage: 'No hay acta constitutiva',
-      condition: (documento, response) => 
-          documento.id_empresa == response.data.id_empresa
-  }
-];
+          // Variable para seguimiento de documentos encontrados
+          const documentsFound = {};
 
-// Variable para seguimiento de documentos encontrados
-const documentsFound = {};
-
-// Inicializamos cada grupo como no encontrado
-documentConfig.forEach(config => {
-  documentsFound[config.targetClass] = false;
-});
-
-// Iterar sobre los documentos
-$.each(response.documentos, function(index, documento) {
-  documentConfig.forEach(config => {
-      if (
-          config.ids.includes(documento.id_documento) && 
-          config.condition(documento, response) // Usar la condición dinámica
-      ) {
-          const link = $('<a>', {
-              href: 'files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + documento.url,
-              target: '_blank'
+          // Inicializamos cada grupo como no encontrado
+          documentConfig.forEach(config => {
+            documentsFound[config.targetClass] = false;
           });
 
-          link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
-          $(config.targetClass).empty().append(link);
-          documentsFound[config.targetClass] = true;
-      }
-  });
-});
+          // Iterar sobre los documentos
+          $.each(response.documentos, function (index, documento) {
+            documentConfig.forEach(config => {
+              if (
+                config.ids.includes(documento.id_documento) &&
+                config.condition(documento, response) // Usar la condición dinámica
+              ) {
+                const link = $('<a>', {
+                  href: 'files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + documento.url,
+                  target: '_blank'
+                });
 
-// Mostrar mensajes para documentos no encontrados
-documentConfig.forEach(config => {
-  if (!documentsFound[config.targetClass]) {
-      $(config.targetClass).text(config.noDocMessage);
-  }
-});
+                link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
+                $(config.targetClass).empty().append(link);
+                documentsFound[config.targetClass] = true;
+              }
+            });
+          });
 
-
-
-
-
-        
-              
-          } else {
-              console.warn('No se encontró información para la solicitud.');
-          }
+          // Mostrar mensajes para documentos no encontrados
+          documentConfig.forEach(config => {
+            if (!documentsFound[config.targetClass]) {
+              $(config.targetClass).text(config.noDocMessage);
+            }
+          });
+        } else {
+          console.warn('No se encontró información para la solicitud.');
+        }
       },
       error: function (xhr, status, error) {
-          console.error('Error al obtener los datos:', error);
+        console.error('Error al obtener los datos:', error);
       }
+    });
+
+    // Manejar la visibilidad de divs si aplica
+    manejarVisibilidadDivs(idTipo);
   });
-
-  // Manejar la visibilidad de divs si aplica
-  manejarVisibilidadDivs(idTipo);
 });
-
-
-
-
-
-});
-
-

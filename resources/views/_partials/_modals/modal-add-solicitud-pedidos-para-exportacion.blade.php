@@ -219,8 +219,9 @@
 
 <script>
 function cargarDatosCliente() {
-    if (empresa !== "" && empresa !== null && empresa !== undefined) {
     var empresa = $("#id_empresa_solicitud_exportacion").val();
+    if (empresa !== "" && empresa !== null && empresa !== undefined) {
+    
     $.ajax({
         url: '/getDatos/' + empresa,
         method: 'GET',
