@@ -65,7 +65,7 @@
                             </div>
                             <div class="col-md-4 mb-4">
                               <div class="form-floating form-floating-outline">
-                                  <input type="text" class="form-control" id="id_tanque" name="id_tanque" placeholder="ID del Tanque(s)" aria-label="ID del Tanque" required>
+                                  <input type="text" class="form-control" id="id_tanque" name="id_tanque" placeholder="ID del Tanque(s)" aria-label="ID del Tanque">
                                   <label for="id_tanque">ID del Tanque(s)</label>
                               </div>
                           </div>
