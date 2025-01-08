@@ -6,6 +6,22 @@
     overflow-y: auto; /* Permite el scroll vertical si el contenido excede la altura */
     }
 
+    .select2-container .select2-selection--single {
+    height: 31px !important; /* Altura más pequeña */
+    line-height: 1.5 !important; /* Altura de línea adecuada */
+    font-size: 0.875rem; /* Tamaño de texto */
+    display: flex; /* Para alinear el contenido */
+    align-items: center; /* Centrar verticalmente */
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding: 0 10px !important; /* Ajusta el espacio interior */
+    white-space: nowrap; /* Evita que el texto se corte en varias líneas */
+    overflow: hidden; /* Oculta el texto que excede el espacio */
+    text-overflow: ellipsis; /* Agrega puntos suspensivos si el texto es demasiado largo */
+}
+
+
 </style>
 <div class="modal fade" id="etiquetas" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-custom-size modal-simple modal-add-new-address">

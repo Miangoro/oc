@@ -76,6 +76,8 @@ class getFuncionesController extends Controller
             'lotes_envasado' => $empresa->lotes_envasado(),
             'direcciones_destino' => Destinos::where("id_empresa", $empresa->id_empresa)->where('tipo_direccion', 1)->get(),
             'instalaciones_produccion' => Instalaciones::where('tipo', 'like', '%Productora%')->where("id_empresa", $empresa->id_empresa)->get(),
+            'instalaciones_comercializadora' => Instalaciones::where('tipo', 'like', '%Comercializadora%')->where("id_empresa", $empresa->id_empresa)->get(),
+            'instalaciones_envasadora' => Instalaciones::where('tipo', 'like', '%Envasadora%')->where("id_empresa", $empresa->id_empresa)->get(),
         ]);
     }
 
