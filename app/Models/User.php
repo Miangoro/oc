@@ -30,6 +30,7 @@ class User extends Authenticatable
         'telefono',
         'puesto',
         'estatus',
+        'firma',
         'id_contacto',
         'password',
         'id_empresa',

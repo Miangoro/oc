@@ -44,6 +44,18 @@ $(function () {
         { data: 'email' },
         { data: 'password_original' },
         { data: 'puesto' },
+        {
+          data: 'firma',
+          render: function (data, type, row) {
+              // Si no hay firma (N/A o vacío), muestra un mensaje de "Sin firma"
+              if (data === 'N/A' || !data) {
+                  return `<span class="badge rounded-pill badge text-bg-danger">Sin firma</span>`;
+              }
+
+              // Si hay firma, muestra la imagen con la ruta corregida
+              return `<img src="/storage/firmas/${data}" alt="Firma" style="width: 100px; height: auto;" class="img-thumbnail">`;
+          }
+      },
         { data: 'action' }
       ],
       columnDefs: [
@@ -508,11 +520,15 @@ $(function () {
       autoFocus: new FormValidation.plugins.AutoFocus()
     }
   }).on('core.form.valid', function () {
+    let formData = new FormData(addNewUserForm);
+
     // adding or updating user when form successfully validate
     $.ajax({
-      data: $('#addNewUserForm').serialize(),
+      data: formData,
       url: `${baseUrl}personal-list`,
       type: 'POST',
+      processData: false,  // Evita que jQuery procese los datos del formulario
+      contentType: false,  // Evita que jQuery defina el tipo de contenido (esto permite enviar el archivo)
       success: function (status) {
         dt_user.draw();
         offCanvasForm.offcanvas('hide');
@@ -557,4 +573,5 @@ $(function () {
       });
     });
   }
+
 });
