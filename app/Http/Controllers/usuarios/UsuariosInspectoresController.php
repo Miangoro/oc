@@ -52,8 +52,9 @@ class UsuariosInspectoresController extends Controller
       1 => 'id',
       2 => 'name',
       3 => 'email',
-      4 => 'email_verified_at',
-      5 => 'razon_social',
+      4 => 'firma',
+      5 => 'email_verified_at',
+      6 => 'razon_social',
 
     ];
 
@@ -106,6 +107,7 @@ class UsuariosInspectoresController extends Controller
         $nestedData['fake_id'] = ++$ids;
         $nestedData['name'] = $user->name;
         $nestedData['email'] = $user->email ;
+        $nestedData['firma'] = $user->firma ?? 'N/A';
         $nestedData['password_original'] = $user->password_original ;
         $nestedData['razon_social'] = 'No aplica';
         $nestedData['foto_usuario'] = $user->profile_photo_path ?? '';
@@ -149,39 +151,61 @@ class UsuariosInspectoresController extends Controller
    */
   public function store(Request $request)
   {
-    $userID = $request->id;
+      $userID = $request->id;
 
-    if ($userID) {
-      // update the value
-      $users = User::updateOrCreate(
-        ['id' => $userID],
-        ['name' => $request->name,
-        'email' => $request->email,
-        'estatus' => $request->estatus,
-        ]
-      );
+      // Variable para el path de la firma
+      $firmaPath = null;
 
-      // user updated
-      return response()->json('Modificado');
-    } else {
-      // create new one if email is unique
-      $userEmail = User::where('email', $request->email)->first();
+      // Si se ha subido una firma, procesarla
+      if ($request->hasFile('firma')) {
+          $file = $request->file('firma');
+          if ($file->isValid()) {
+              // Generar nombre único para la firma
+              $fileName = 'firma_' . str_replace(' ', '_', $request->name) . '_' . time() . '.' . $file->getClientOriginalExtension();
 
-      $pass = Str::random(10);
-
-      if (empty($userEmail)) {
-        $users = User::updateOrCreate(
-          ['id' => $userID],
-          ['name' => $request->name, 'email' => $request->email, 'estatus'=> $request->estatus, 'password_original' => $pass, 'password' => bcrypt($pass),'tipo'=>2]
-        );
-
-        // user created
-        return response()->json('Registrado');
-      } else {
-        // user already exist
-        return response()->json(['message' => "ya existe"], 422);
+              // Guardar la firma en la carpeta 'public/firmas'
+              $firmaPath = $file->storeAs('firmas', $fileName, 'public');
+              $firmaPath = basename($firmaPath);  // Guardar solo el nombre del archivo
+          } else {
+              return response()->json(['message' => 'El archivo no es válido'], 422);
+          }
       }
-    }
+
+      if ($userID) {
+          // Si el usuario existe, actualizar los datos
+          $users = User::updateOrCreate(
+              ['id' => $userID],
+              [
+                  'name' => $request->name,
+                  'email' => $request->email,
+                  'estatus' => $request->estatus,
+                  'firma' => $firmaPath,  // Guardar la firma si existe
+              ]
+          );
+
+          return response()->json('Modificado');
+      } else {
+          // Crear nuevo usuario si el correo no existe
+          $userEmail = User::where('email', $request->email)->first();
+
+          $pass = Str::random(10);
+
+          if (empty($userEmail)) {
+              $users = User::create([
+                  'name' => $request->name,
+                  'email' => $request->email,
+                  'estatus' => $request->estatus,
+                  'password_original' => $pass,
+                  'password' => bcrypt($pass),
+                  'tipo' => 2,
+                  'firma' => $firmaPath,  // Guardar la firma si existe
+              ]);
+
+              return response()->json('Registrado');
+          } else {
+              return response()->json(['message' => 'Ya existe'], 422);
+          }
+      }
   }
 
   /**

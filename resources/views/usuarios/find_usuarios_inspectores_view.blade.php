@@ -52,6 +52,7 @@
           <th>Usuario</th>
           <th>Correo</th>
           <th>Contraseña</th>
+          <th>Firma</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -83,7 +84,11 @@
             <label for="add-estatus">Estatus</label>
           </div>
         </div>
-
+        {{-- subir firma --}}
+        <div class="form-floating form-floating-outline mb-5">
+          <input id="subir-firma" type="file" class="form-control" aria-label="Firma" name="firma" accept="image/jpg,png" />
+          <label for="subir-firma">Subir Firma</label>
+        </div>
 
 
         <button type="submit" id="registrar-editar" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>

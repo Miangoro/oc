@@ -53,6 +53,7 @@
           <th>Correo</th>
           <th>Contraseña</th>
           <th>Puesto</th>
+          <th>firma</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -65,7 +66,7 @@
       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body mx-0 flex-grow-0 h-100">
-      <form class="add-new-user pt-0" id="addNewUserForm">
+      <form class="add-new-user pt-0" id="addNewUserForm" enctype="multipart/form-data">
         <input type="hidden" name="id" id="user_id">
         <div class="form-floating form-floating-outline mb-5">
           <input type="text" class="form-control" id="add-user-fullname" placeholder="Ana Gómez" name="name" aria-label="Ana Gómez" />
@@ -88,7 +89,11 @@
             <label for="add-estatus">Estatus</label>
           </div>
         </div>
-
+        {{-- subir firma --}}
+        <div class="form-floating form-floating-outline mb-5">
+          <input id="subir-firma" type="file" class="form-control" aria-label="Firma" name="firma" accept="image/jpg,png" />
+          <label for="subir-firma">Subir Firma</label>
+        </div>
 
         <button type="submit" id="registrar-editar" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
