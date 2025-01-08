@@ -25,6 +25,9 @@ use App\Models\marcas;
 use App\Models\Destinos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+//clase de exportacion
+use App\Exports\SolicitudesExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class solicitudesController extends Controller
 {
@@ -175,7 +178,7 @@ class solicitudesController extends Controller
 
                 $idLoteEnvasado = $caracteristicas['id_lote_envasado'] ?? null;
                 $loteEnvasado = lotes_envasado::find($idLoteEnvasado); // Busca el lote envasado
-                
+
                 $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
                 $nestedData['nombre_lote_envasado'] = $loteEnvasado ? $loteEnvasado->nombre : 'N/A';
                 $nestedData['nombre_predio'] = $caracteristicas['nombre_predio'] ?? 'N/A';
@@ -214,11 +217,11 @@ class solicitudesController extends Controller
                 $nestedData['id_tipo_maguey_liberacion'] = $caracteristicas['id_tipo_maguey'] ?? 'N/A';
                 $nestedData['analisis_liberacion'] = $caracteristicas['analisis'] ?? 'N/A';
                 $nestedData['tipo_lote_lib'] = $caracteristicas['tipoLiberacion'] ?? 'N/A';
-                $nestedData['fecha_inicio_lib'] = isset($caracteristicas['fecha_inicio']) ? Carbon::parse($caracteristicas['fecha_inicio'])->format('d/m/Y') : 'N/A'; 
+                $nestedData['fecha_inicio_lib'] = isset($caracteristicas['fecha_inicio']) ? Carbon::parse($caracteristicas['fecha_inicio'])->format('d/m/Y') : 'N/A';
                 $nestedData['fecha_termino_lib'] = isset($caracteristicas['fecha_termino']) ? Carbon::parse($caracteristicas['fecha_termino'])->format('d/m/Y') : 'N/A';
                 $nestedData['punto_reunion'] = $caracteristicas['punto_reunion'] ?? 'N/A';
                 $nestedData['renovacion'] = $caracteristicas['renovacion'] ?? 'N/A';
-              
+
 
 
                 $data[] = $nestedData;
@@ -595,7 +598,7 @@ class solicitudesController extends Controller
                     // Convertir a JSON y asignarlo
             $solicitud->caracteristicas = json_encode($caracteristicas);
         }
-        
+
 
 
 
@@ -926,7 +929,7 @@ class solicitudesController extends Controller
                         'id_inicio_envasado' => $request->id_inicio_envasado,
                         'id_previsto' => $request->id_previsto,
                         'id_certificado_inspeccion' => $request->id_certificado_inspeccion,
-    
+
                     ];
                     $jsonContent = json_encode($caracteristicasJson);
                     $solicitud->update([
@@ -962,7 +965,7 @@ class solicitudesController extends Controller
                     'tiempo_dura' => $request->tiempo_dura,
                     'id_certificado' => $request->id_certificado_barricada,
 
-                   
+
                 ];
                 $jsonContent = json_encode($caracteristicasJson);
                 $solicitud->update([
@@ -1075,7 +1078,7 @@ class solicitudesController extends Controller
 
     public function obtenerMarcasPorEmpresa($id_marca, $id_direccion)
     {
-        
+
         $marcas = marcas::with('empresa.empresaNumClientes','documentacion_url')->whereJsonContains('etiquetado->id_direccion', $id_direccion)
         ->where('id_marca', $id_marca)
         ->get();
@@ -1280,5 +1283,9 @@ class solicitudesController extends Controller
         return response()->json([
             'detalle' => $lotesGranel->pluck('nombre_lote') // Puedes cambiar 'nombre_lote' por cualquier campo relevante de LotesGranel
         ]);
+    }
+    public function exportar()
+    {
+        return Excel::download(new SolicitudesExport, 'reporte_solicitudes.xlsx');
     }
 }

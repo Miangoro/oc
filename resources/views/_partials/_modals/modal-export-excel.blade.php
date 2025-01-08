@@ -7,7 +7,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-              <form id="reporteForm">
+            <form id="reporteForm" action="{{ route('solicitudes.exportar') }}" method="GET">
                   @csrf
                   <div class="row">
                       <!-- Filtro Cliente -->
@@ -15,6 +15,7 @@
                           <div class="form-floating form-floating-outline mb-4">
                               <select name="id_empresa" class="select2 form-select" data-error-message="por favor selecciona la empresa">
                                   <option value="" disabled selected>Selecciona el cliente</option>
+                                  <option value="" >Todos</option>
                                   @foreach ($empresas as $empresa)
                                       <option value="{{ $empresa->id_empresa }}">
                                           {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}
@@ -28,8 +29,9 @@
                       <!-- Filtro Año -->
                       <div class="col-md-6 mb-4">
                           <div class="form-floating form-floating-outline mb-4">
-                              <select class="form-select" id="anio" name="anio" required>
+                              <select class="form-select" id="anio" name="anio">
                                   <option value="" disabled selected>Seleccione un año</option>
+                                  <option value="" >Todos</option>
                                   <option value="2025">2025</option>
                                   <option value="2024">2024</option>
                                   <option value="2023">2023</option>
@@ -81,7 +83,7 @@
 
                   <!-- Botones del modal -->
                   <div class="col-12 mt-4 d-flex flex-wrap justify-content-end gap-4 row-gap-4">
-                      <button type="submit" class="btn btn-primary">Generar Reporte</button>
+                      <button type="submit"id="generarReporte"  class="btn btn-primary">Generar Reporte</button>
                       <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
                   </div>
               </form>

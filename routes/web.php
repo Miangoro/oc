@@ -754,6 +754,8 @@ Route::post('/exportaciones/storePedidoExportacion', [SolicitudesController::cla
 Route::get('/marcas/{id_marca}/{id_direccion}', [SolicitudesController::class, 'obtenerMarcasPorEmpresa']);
 Route::get('/marcas/{id_empresa}', [lotesEnvasadoController::class, 'obtenerMarcasPorEmpresa']);
 
+Route::get('/solicitudes/exportar', [solicitudesController::class, 'exportar'])->name('solicitudes.exportar');
+
 //catalago equipos
 Route::get('/catalogo/equipos', [catalogoEquiposController::class, 'UserManagement'])->name('catalogo-equipos');
 Route::resource('/equipos-list', catalogoEquiposController::class);

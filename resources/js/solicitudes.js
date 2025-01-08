@@ -164,7 +164,7 @@ $(function () {
               return `<span class="fw-bold text-dark small">
                   ${data.renovacion === 'si' ? 'Es renovación' : 'No es renovación'}
               </span>`;
-          
+
             default:
               return `<br><span class="fw-bold text-dark small">Información no disponible</span>`;
           }
@@ -4132,4 +4132,78 @@ documentConfig.forEach(config => {
     // Manejar la visibilidad de divs si aplica
     manejarVisibilidadDivs(idTipo);
   });
+
+
+
+
+
+
+  $(document).ready(function () {
+    $('#reporteForm').on('submit', function (e) {
+        e.preventDefault(); // Prevenir el envío tradicional del formulario
+
+        const exportUrl = $(this).attr('action'); // Obtener la URL del formulario
+
+        // Mostrar el SweetAlert de "Generando Reporte"
+        Swal.fire({
+            title: 'Generando Reporte...',
+            text: 'Por favor espera mientras se genera el reporte.',
+            icon: 'info',
+            didOpen: () => {
+                Swal.showLoading(); // Muestra el icono de carga
+            },
+            customClass: {
+              confirmButton: false,
+            }
+        });
+
+        // Realizar la solicitud GET para descargar el archivo
+        $.ajax({
+            url: exportUrl,
+            type: 'GET',
+            xhrFields: {
+                responseType: 'blob', // Necesario para manejar la descarga de archivos
+            },
+            success: function (response) {
+                // Crear un enlace para descargar el archivo
+                const link = document.createElement('a');
+                const url = window.URL.createObjectURL(response);
+
+                link.href = url;
+                link.download = 'reporte_solicitudes.xlsx';
+                link.click();
+
+                // Limpiar el objeto URL
+                window.URL.revokeObjectURL(url);
+
+                // Cerrar el modal y mostrar SweetAlert de éxito
+                $('#exportarExcel').modal('hide');
+                Swal.fire({
+                    title: '¡Éxito!',
+                    text: 'El reporte se generó exitosamente.',
+                    icon: 'success',
+                    customClass: {
+                      confirmButton: 'btn btn-success'
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error al generar el reporte:', error);
+
+                // Cerrar el modal y mostrar SweetAlert de error
+                $('#exportarExcel').modal('hide');
+                Swal.fire({
+                    title: '¡Error!',
+                    text: 'Ocurrió un error al generar el reporte.',
+                    icon: 'error',
+                    customClass: {
+                      confirmButton: 'btn btn-danger'
+                    }
+                });
+            },
+        });
+    });
+});
+
+
 });
