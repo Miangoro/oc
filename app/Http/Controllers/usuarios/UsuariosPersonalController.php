@@ -145,27 +145,35 @@ class UsuariosPersonalController extends Controller
       // Variable para el path de la firma
       $firmaPath = null;
 
-    // Manejar la subida de archivo de firma si existe
-    if ($request->hasFile('firma')) {
-        $file = $request->file('firma');
-        if ($file->isValid()) {
-            $fileName = 'firma_' . str_replace(' ', '_', $request->name) . '_' . time() . '.' . $file->getClientOriginalExtension();
-            // Guardar en la carpeta 'public/firmas'
-            $firmaPath = $file->storeAs('firmas', $fileName, 'public');
-            $firmaPath = basename($fileName);
-        } else {
-            return response()->json(['message' => 'El archivo de la firma no es válido'], 400);
-        }
-    }
-
-    if ($userID) {
-      // Obtener el usuario existente
-      $existingUser = User::find($userID);
-
-      // Si no hay nueva firma, mantener la firma existente
-      if (!$firmaPath && $existingUser) {
-          $firmaPath = $existingUser->firma;
+      // Manejar la subida de archivo de firma si existe
+      if ($request->hasFile('firma')) {
+          $file = $request->file('firma');
+          if ($file->isValid()) {
+              $fileName = 'firma_' . str_replace(' ', '_', $request->name) . '_' . time() . '.' . $file->getClientOriginalExtension();
+              // Guardar en la carpeta 'public/firmas'
+              $firmaPath = $file->storeAs('firmas', $fileName, 'public');
+              $firmaPath = basename($fileName);
+          } else {
+              return response()->json(['message' => 'El archivo de la firma no es válido'], 400);
+          }
       }
+
+      if ($userID) {
+          // Obtener el usuario existente
+          $existingUser = User::find($userID);
+
+          // Si se está subiendo una nueva firma, eliminar la firma anterior si existe
+          if ($firmaPath && $existingUser && $existingUser->firma) {
+              $previousFirmaPath = storage_path('app/public/firmas/' . $existingUser->firma);
+              if (file_exists($previousFirmaPath)) {
+                  unlink($previousFirmaPath);  // Eliminar la firma anterior
+              }
+          }
+
+          // Si no hay nueva firma, mantener la firma existente
+          if (!$firmaPath && $existingUser) {
+              $firmaPath = $existingUser->firma;
+          }
 
           $users = User::updateOrCreate(
               ['id' => $userID],
@@ -249,6 +257,28 @@ class UsuariosPersonalController extends Controller
    */
   public function destroy($id)
   {
-    $users = User::where('id', $id)->delete();
+      // Obtener el usuario para verificar si tiene una firma
+      $user = User::find($id);
+
+      if ($user) {
+          // Verificar si el usuario tiene una firma
+          if ($user->firma) {
+              // Ruta de la firma
+              $firmaPath = storage_path('app/public/firmas/' . $user->firma);
+
+              // Eliminar la firma si existe
+              if (file_exists($firmaPath)) {
+                  unlink($firmaPath);
+              }
+          }
+
+          // Eliminar el registro del usuario
+          $user->delete();
+
+          return response()->json(['message' => 'Personal eliminado y firma borrada'], 200);
+      }
+
+      return response()->json(['message' => 'Personal no encontrado'], 404);
   }
+
 }

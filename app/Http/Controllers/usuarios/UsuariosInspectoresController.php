@@ -172,40 +172,50 @@ class UsuariosInspectoresController extends Controller
       }
 
       if ($userID) {
-        // Obtener el usuario existente
-        $existingUser = User::find($userID);
+          // Obtener el inspector existente
+          $existingUser = User::find($userID);
 
-        // Si no hay nueva firma, mantener la firma existente
-        if (!$firmaPath && $existingUser) {
-            $firmaPath = $existingUser->firma;
-        }
-          // Si el usuario existe, actualizar los datos
+          // Si se está subiendo una nueva firma, eliminar la firma anterior si existe
+          if ($firmaPath && $existingUser && $existingUser->firma) {
+              $previousFirmaPath = storage_path('app/public/firmas/' . $existingUser->firma);
+              if (file_exists($previousFirmaPath)) {
+                  unlink($previousFirmaPath);  // Eliminar la firma anterior
+              }
+          }
+
+          // Si no hay nueva firma, mantener la firma existente
+          if (!$firmaPath && $existingUser) {
+              $firmaPath = $existingUser->firma;
+          }
+
+          // Actualizar o crear el inspector
           $users = User::updateOrCreate(
               ['id' => $userID],
               [
                   'name' => $request->name,
                   'email' => $request->email,
                   'estatus' => $request->estatus,
-                  'firma' => $firmaPath,  // Guardar la firma si existe
+                  'firma' => $firmaPath,  // Guardar la ruta de la firma
+                  'tipo' => 2,  // Tipo de inspector
               ]
           );
 
           return response()->json('Modificado');
       } else {
-          // Crear nuevo usuario si el correo no existe
+          // Crear un nuevo inspector si el correo no existe
           $userEmail = User::where('email', $request->email)->first();
 
-          $pass = Str::random(10);
+          if (!$userEmail) {
+              $pass = Str::random(10);
 
-          if (empty($userEmail)) {
               $users = User::create([
                   'name' => $request->name,
                   'email' => $request->email,
                   'estatus' => $request->estatus,
                   'password_original' => $pass,
                   'password' => bcrypt($pass),
-                  'tipo' => 2,
-                  'firma' => $firmaPath,  // Guardar la firma si existe
+                  'tipo' => 2,  // Tipo de inspector
+                  'firma' => $firmaPath,  // Guardar la ruta de la firma si existe
               ]);
 
               return response()->json('Registrado');
@@ -214,6 +224,7 @@ class UsuariosInspectoresController extends Controller
           }
       }
   }
+
 
   /**
    * Display the specified resource.
@@ -257,6 +268,27 @@ class UsuariosInspectoresController extends Controller
    */
   public function destroy($id)
   {
-    $users = User::where('id', $id)->delete();
+    $user = User::find($id);
+
+    if ($user) {
+      // Verificar si el usuario tiene una firma
+      if ($user->firma) {
+          // Ruta de la firma
+          $firmaPath = storage_path('app/public/firmas/' . $user->firma);
+
+          // Eliminar la firma si existe
+          if (file_exists($firmaPath)) {
+              unlink($firmaPath);
+          }
+      }
+
+      // Eliminar el registro del usuario
+      $user->delete();
+
+      return response()->json(['message' => 'Personal eliminado y firma borrada'], 200);
   }
+
+  return response()->json(['message' => 'Personal no encontrado'], 404);
+}
+
 }
