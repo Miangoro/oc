@@ -145,21 +145,28 @@ class UsuariosPersonalController extends Controller
       // Variable para el path de la firma
       $firmaPath = null;
 
-      // Manejar la subida de archivo de firma si existe
-      if ($request->hasFile('firma')) {
-          $file = $request->file('firma');
-          if ($file->isValid()) {
+    // Manejar la subida de archivo de firma si existe
+    if ($request->hasFile('firma')) {
+        $file = $request->file('firma');
+        if ($file->isValid()) {
             $fileName = 'firma_' . str_replace(' ', '_', $request->name) . '_' . time() . '.' . $file->getClientOriginalExtension();
-              // Guardar en la carpeta 'public/firmas'
-              $firmaPath = $file->storeAs('firmas', $fileName, 'public');
-              $firmaPath = basename($fileName);
-          } else {
-              dd('El archivo no es válido');
-          }
+            // Guardar en la carpeta 'public/firmas'
+            $firmaPath = $file->storeAs('firmas', $fileName, 'public');
+            $firmaPath = basename($fileName);
+        } else {
+            return response()->json(['message' => 'El archivo de la firma no es válido'], 400);
+        }
+    }
+
+    if ($userID) {
+      // Obtener el usuario existente
+      $existingUser = User::find($userID);
+
+      // Si no hay nueva firma, mantener la firma existente
+      if (!$firmaPath && $existingUser) {
+          $firmaPath = $existingUser->firma;
       }
 
-      if ($userID) {
-          // Actualizar el registro existente
           $users = User::updateOrCreate(
               ['id' => $userID],
               [

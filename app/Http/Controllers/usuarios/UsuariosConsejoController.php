@@ -174,6 +174,13 @@ class UsuariosConsejoController extends Controller
       }
 
       if ($userID) {
+        // Obtener el usuario existente
+        $existingUser = User::find($userID);
+
+        // Si no hay nueva firma, mantener la firma existente
+        if (!$firmaPath && $existingUser) {
+            $firmaPath = $existingUser->firma;
+        }
           // Si el usuario existe, actualizar los datos
           $users = User::updateOrCreate(
               ['id' => $userID],
