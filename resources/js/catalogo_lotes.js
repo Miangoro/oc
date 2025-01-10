@@ -53,7 +53,6 @@ $(function () {
       { data: '' },
       { data: 'id_lote_granel' },
       { data: 'id_empresa' },
-      { data: 'nombre_lote' },
       {
         data: null,
         searchable: true, orderable: false,
@@ -66,6 +65,7 @@ $(function () {
           }
         }
       },
+      { data: 'nombre_lote' },
       {
         data: null,
         searchable: true,
@@ -85,7 +85,7 @@ $(function () {
 
           // Mostrar los nombres de los lotes de procedencia
           if (row.lote_procedencia != 'No tiene procedencia de otros lotes.') {
-            procedencia = '<br><span class="fw-bold text-dark small">Lote de procedencia:</span><span class="small"> ' + row.lote_procedencia + '</span>';
+            procedencia = '<br><span class="fw-bold text-dark small">Lote de procedencia:</span><span class="small text-primary"> ' + row.lote_procedencia + '</span>';
           }
 
           return '<span class="fw-bold text-dark small">Volumen inicial:</span> <span class="small"> ' + row.volumen +

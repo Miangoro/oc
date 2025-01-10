@@ -223,8 +223,10 @@ class DomiciliosController extends Controller
             ]);
     
             // Obtener información de la empresa
-            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->input('id_empresa'))->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+            $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $request->cliente)->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
     
             // Manejo de archivos si se suben
             if ($request->hasFile('url')) {
@@ -269,7 +271,9 @@ class DomiciliosController extends Controller
             $archivos_urls = $documentacion_urls->pluck('url'); // Obtener todos los URLs de los archivos
     
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $instalacion->id_empresa)->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
     
             return response()->json([
                 'success' => true,
@@ -324,7 +328,9 @@ class DomiciliosController extends Controller
     
             // Obtener número de cliente de la empresa
             $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $request->input('edit_id_empresa'))->first();
-            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+            $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
     
             // Eliminar documentos antiguos antes de actualizar
             $documentacionUrls = Documentacion_url::where('id_relacion', $id)->get();
@@ -392,7 +398,10 @@ class DomiciliosController extends Controller
             })->values();
     
             // Obtener el número de cliente
-            $numeroCliente = $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first();
+
+            $numeroCliente = $instalacion->empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                return !empty($numero);
+            });
     
             return response()->json([
                 'success' => true,

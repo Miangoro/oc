@@ -46,8 +46,8 @@
                         <th></th>
                         <th>#</th>
                         <th>Cliente</th>
-                        <th>No. de lote</th>
                         <th>tipo lote</th>
+                        <th>No. de lote</th>
                         <th>Características</th>
                         <th>FQs</th>
                         <th>%Alc. Vol.</th>

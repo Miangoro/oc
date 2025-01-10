@@ -425,7 +425,7 @@
                         // Añadir nuevas opciones con los lotes obtenidos
                         response.lotes_granel.forEach(function(lote) {
                             var isSelected = selectedLotes[index] == lote.id_lote_granel;
-                            $(this).append(new Option(lote.nombre_lote, lote.id_lote_granel,
+                            $(this).append(new Option(lote.nombre_lote+" ("+lote.cont_alc+"% Alc. Vol.)"+" ("+lote.volumen_restante+" L)", lote.id_lote_granel,
                                 false, isSelected));
                         }, this); // Usar 'this' para referirse al select actual
 
