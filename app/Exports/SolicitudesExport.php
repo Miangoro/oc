@@ -20,96 +20,124 @@ class SolicitudesExport implements FromCollection, WithHeadings, WithEvents, Wit
     /**
     * @return \Illuminate\Support\Collection
     */
+    protected $filtros;
+
+    // Recibir los filtros desde el controlador
+    public function __construct($filtros)
+    {
+        // Asignar filtros con valores predeterminados vacíos si no están definidos
+        $this->filtros = $filtros ?: [
+            'id_empresa' => null,
+            'anio' => null,
+            'estatus' => null,
+            'mes' => null,
+        ];
+    }
+
     public function collection()
     {
-      return solicitudesModel::with('empresa', 'tipo_solicitud', 'instalaciones','predios')->get([
-        'id_solicitud',
-        'id_empresa', //esta deberia ser razon social de la tbala empresas
-        'id_tipo',
-        'folio',
-        'estatus',
-        'fecha_solicitud',
-        'fecha_visita',
-        'id_instalacion',
-        'id_predio',
-        'info_adicional',
-        'caracteristicas'
-    ]);
+        $query = SolicitudesModel::with('empresa', 'tipo_solicitud', 'instalaciones', 'predios');
+
+        // Aplicar filtros según lo que se haya enviado
+        if (isset($this->filtros['id_empresa']) && $this->filtros['id_empresa']) {
+            $query->where('id_empresa', $this->filtros['id_empresa']);
+        }
+
+        if (isset($this->filtros['anio']) && $this->filtros['anio']) {
+            $query->whereYear('fecha_solicitud', $this->filtros['anio']);
+        }
+
+        if (isset($this->filtros['estatus']) && $this->filtros['estatus'] && $this->filtros['estatus'] != 'todos') {
+            $query->where('estatus', $this->filtros['estatus']);
+        }
+
+        if (isset($this->filtros['mes']) && $this->filtros['mes']) {
+            $query->whereMonth('fecha_solicitud', $this->filtros['mes']);
+        }
+
+        return $query->get([
+            'id_solicitud',
+            'id_empresa',
+            'id_tipo',
+            'folio',
+            'estatus',
+            'fecha_solicitud',
+            'fecha_visita',
+            'id_instalacion',
+            'id_predio',
+            'info_adicional',
+            'caracteristicas'
+        ]);
     }
+
     /**
      * Definir los encabezados de la tabla.
      */
     public function headings(): array
     {
         return [
-            ['Reporte de Solicitudes'], // Título del reporte
-            ['ID Solicitud', 'ID Empresa', 'ID Tipo', 'Folio', 'Estatus', 'Fecha Solicitud', 'Fecha Visita', 'ID Instalación' /* domicilio de inspeccion */, 'ID Predio' /* domicilio predio */, 'Información Adicional', 'Características'], // Encabezados de las columnas
+            ['Reporte de Solicitudes'],
+            ['ID Solicitud', 'Empresa', 'Tipo de solicitud', 'Folio', 'Estatus', 'Fecha de Solicitud', 'Fecha de Visita', 'Domicilio de Inspeccion o Predio', 'Información Adicional'],
         ];
     }
     /**
      * Aplicar estilos usando eventos.
-     */    public function map($solicitud): array
+     */
+    // Mapear los datos para la exportación
+    public function map($solicitud): array
     {
-
-      return [
-          $solicitud->id_solicitud, // ID de la solicitud
-          $solicitud->empresa ? $solicitud->empresa->razon_social : 'N/A',
-          $solicitud->tipo_solicitud->tipo, // Tipo de solicitud
-          $solicitud->folio, // Folio de la solicitud
-          $solicitud->estatus, // Estatus de la solicitud
-          Carbon::parse($solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y h:i A'), // Fecha de la solicitud con formato traducido
-          Carbon::parse($solicitud->fecha_visita)->translatedFormat('d \d\e F \d\e Y h:i A'), // Fecha de la visita (formato: dd/mm/yyyy)
-          $solicitud->instalacion->direccion_completa ?? ($solicitud->predios->ubicacion_predio ?? '-----------------'), // ID de la instalación
-          $solicitud->id_predio, // ID del predio
-          $solicitud->info_adicional, // Información adicional
-          $solicitud->caracteristicas, // Características
-      ];
-  }
+        return [
+            $solicitud->id_solicitud,
+            $solicitud->empresa ? $solicitud->empresa->razon_social : 'N/A',
+            $solicitud->tipo_solicitud->tipo,
+            $solicitud->folio,
+            $solicitud->estatus,
+            Carbon::parse($solicitud->fecha_solicitud)->translatedFormat('d \d\e F \d\e Y h:i A'),
+            Carbon::parse($solicitud->fecha_visita)->translatedFormat('d \d\e F \d\e Y h:i A'),
+            $solicitud->instalacion->direccion_completa ?? ($solicitud->predios->ubicacion_predio ?? '-----------------'),
+            $solicitud->info_adicional,
+        ];
+    }
     public function registerEvents(): array
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet->getDelegate();
 
-                // 1. Título principal (A1:K1)
-                $sheet->mergeCells('A1:K1'); // Asegúrate de que el rango cubra todas las columnas
-                $sheet->getStyle('A1:K1')
+                $sheet->mergeCells('A1:I1');
+                $sheet->getStyle('A1:I1')
                     ->getFont()
                     ->setBold(true)
                     ->setSize(14)
-                    ->getColor()->setARGB('000000'); // Color de texto black (código ARGB)
-                $sheet->getStyle('A1:K1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $sheet->getStyle('A1:K1')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
-                $sheet->getStyle('A1:K1')
+                    ->getColor()->setARGB('FFFFFF');
+                $sheet->getStyle('A1:I1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $sheet->getStyle('A1:I1')->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+                $sheet->getStyle('A1:I1')
                     ->getFill()
                     ->setFillType(Fill::FILL_SOLID)
-                    ->getStartColor()->setRGB('4a608f'); // Color de fondo azul
+                    ->getStartColor()->setRGB('008000');
 
-                // 2. Encabezados (A2:K2)
-                $sheet->getStyle('A2:K2')
+                $sheet->getStyle('A2:I2')
                     ->getFont()
                     ->setBold(true)
-                    ->getColor()->setARGB('FFFFFF'); // Color de texto blanco (código ARGB)
-                $sheet->getStyle('A2:K2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
-                $sheet->getStyle('A2:K2')
+                    ->getColor()->setARGB('FFFFFF');
+                $sheet->getStyle('A2:I2')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+                $sheet->getStyle('A2:I2')
                     ->getFill()
                     ->setFillType(Fill::FILL_SOLID)
-                    ->getStartColor()->setRGB('4a608f'); // Color de fondo azul
+                    ->getStartColor()->setRGB('4a608f');
 
-                // 3. Aplicar color de fondo gris claro a las celdas de datos (A3:K{lastRow})
-                $lastRow = $event->sheet->getHighestRow(); // Obtiene la última fila
-                $sheet->getStyle('A3:K' . $lastRow)
+                $lastRow = $event->sheet->getHighestRow();
+                $sheet->getStyle('A3:I' . $lastRow)
                     ->getFill()
                     ->setFillType(Fill::FILL_SOLID)
-                    ->getStartColor()->setRGB('f2f2f2'); // Gris claro para todas las filas de datos
+                    ->getStartColor()->setRGB('f2f2f2');
 
-                // 4. Aplicar bordes y ancho de columnas automáticos
-                foreach (range('A', 'K') as $column) {
+                foreach (range('A', 'I') as $column) {
                     $sheet->getColumnDimension($column)->setAutoSize(true);
                 }
 
-                // 5. Ajuste adicional de bordes (si lo necesitas)
-                $sheet->getStyle('A2:K'.($event->sheet->getHighestRow()))->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+                $sheet->getStyle('A2:I'.($event->sheet->getHighestRow()))->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
             },
         ];
     }

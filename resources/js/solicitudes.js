@@ -4144,6 +4144,9 @@ documentConfig.forEach(config => {
 
         const exportUrl = $(this).attr('action'); // Obtener la URL del formulario
 
+        // Obtener los datos del formulario (filtros)
+        const formData = $(this).serialize(); // serializa los datos del formulario en una cadena de consulta
+
         // Mostrar el SweetAlert de "Generando Reporte"
         Swal.fire({
             title: 'Generando Reporte...',
@@ -4161,6 +4164,7 @@ documentConfig.forEach(config => {
         $.ajax({
             url: exportUrl,
             type: 'GET',
+            data: formData, // Enviar los filtros serializados aquí
             xhrFields: {
                 responseType: 'blob', // Necesario para manejar la descarga de archivos
             },
@@ -4205,5 +4209,12 @@ documentConfig.forEach(config => {
     });
 });
 
+$(document).ready(function () {
+  $('#restablecerFiltros').on('click', function () {
+      $('#reporteForm')[0].reset();
+      $('.select2').val('').trigger('change');
+      console.log('Filtros restablecidos.');
+  });
+});
 
 });

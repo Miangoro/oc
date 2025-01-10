@@ -14,7 +14,7 @@
                       <div class="col-md-6 mb-4">
                           <div class="form-floating form-floating-outline mb-4">
                               <select name="id_empresa" class="select2 form-select" data-error-message="por favor selecciona la empresa">
-                                  <option value="" disabled selected>Selecciona el cliente</option>
+{{--                                   <option value="" disabled selected>Selecciona el cliente</option> --}}
                                   <option value="" >Todos</option>
                                   @foreach ($empresas as $empresa)
                                       <option value="{{ $empresa->id_empresa }}">
@@ -30,7 +30,7 @@
                       <div class="col-md-6 mb-4">
                           <div class="form-floating form-floating-outline mb-4">
                               <select class="form-select" id="anio" name="anio">
-                                  <option value="" disabled selected>Seleccione un año</option>
+{{--                                   <option value="" disabled selected>Seleccione un año</option> --}}
                                   <option value="" >Todos</option>
                                   <option value="2025">2025</option>
                                   <option value="2024">2024</option>
@@ -48,7 +48,7 @@
                       <div class="col-md-6 mb-4">
                           <div class="form-floating form-floating-outline mb-4">
                               <select class="form-select" id="estatus" name="estatus">
-                                  <option value="" disabled selected>Seleccione un estatus</option>
+{{--                                   <option value="" disabled selected>Seleccione un estatus</option> --}}
                                   <option value="todos">Todos</option>
                                   <option value="pendiente">Pendiente</option>
                                   <option value="con_acta">Con acta</option>
@@ -61,8 +61,8 @@
                       <div class="col-md-6 mb-4">
                           <div class="form-floating form-floating-outline mb-4">
                               <select class="form-select" id="mes" name="mes">
-                                  <option value="" disabled selected>Seleccione un mes</option>
-                                  <option value="todos">Todos los meses</option>
+{{--                              <option value="" disabled selected>Seleccione un mes</option> --}}
+                                  <option value="">Todos los meses</option>
                                   <option value="01">Enero</option>
                                   <option value="02">Febrero</option>
                                   <option value="03">Marzo</option>
@@ -82,12 +82,28 @@
                   </div>
 
                   <!-- Botones del modal -->
-                  <div class="col-12 mt-4 d-flex flex-wrap justify-content-end gap-4 row-gap-4">
-                      <button type="submit"id="generarReporte"  class="btn btn-primary">Generar Reporte</button>
-                      <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+                  <div class="col-12 mt-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+                    <!-- Botón Restablecer Filtros a la izquierda -->
+                    <div class="order-1">
+                      <button type="button" id="restablecerFiltros" class="btn btn-info">
+                        <i class="ri-filter-off-fill"></i> Restablecer Filtros
+                      </button>
+                    </div>
+
+                    <!-- Botones Generar Reporte y Cancelar a la derecha -->
+                    <div class="d-flex flex-wrap justify-content-end gap-3 order-2">
+                      <button type="submit" id="generarReporte" class="btn btn-primary">
+                        <i class="ri-file-excel-2-fill"></i> Generar
+                      </button>
+                      <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal" aria-label="Close">Cancelar</button>
+                    </div>
                   </div>
               </form>
           </div>
       </div>
   </div>
 </div>
+<script>
+
+
+</script>

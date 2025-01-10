@@ -1284,8 +1284,12 @@ class solicitudesController extends Controller
             'detalle' => $lotesGranel->pluck('nombre_lote') // Puedes cambiar 'nombre_lote' por cualquier campo relevante de LotesGranel
         ]);
     }
-    public function exportar()
+    public function exportar(Request $request)
     {
-        return Excel::download(new SolicitudesExport, 'reporte_solicitudes.xlsx');
+        // Obtener los valores de los filtros
+        $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes']);
+        // Pasar los filtros a la clase de exportación
+        return Excel::download(new SolicitudesExport($filtros), 'reporte_solicitudes.xlsx');
     }
+
 }
