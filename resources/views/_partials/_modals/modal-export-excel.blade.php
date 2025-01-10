@@ -10,7 +10,7 @@
             <form id="reporteForm" action="{{ route('solicitudes.exportar') }}" method="GET">
                   @csrf
                   <div class="mb-4">
-                    <p class="text-start text-muted">Filtrar Datos</p>
+                    <p class="text-start text-muted"><i class="ri-filter-fill"></i> Filtrar Datos </p>
                 </div>
                   <div class="row">
                       <!-- Filtro Cliente -->
