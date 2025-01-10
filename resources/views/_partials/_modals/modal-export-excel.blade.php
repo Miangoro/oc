@@ -9,6 +9,9 @@
           <div class="modal-body">
             <form id="reporteForm" action="{{ route('solicitudes.exportar') }}" method="GET">
                   @csrf
+                  <div class="mb-4">
+                    <p class="text-start text-muted">Filtrar Datos</p>
+                </div>
                   <div class="row">
                       <!-- Filtro Cliente -->
                       <div class="col-md-6 mb-4">

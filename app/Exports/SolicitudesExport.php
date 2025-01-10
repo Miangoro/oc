@@ -25,36 +25,25 @@ class SolicitudesExport implements FromCollection, WithHeadings, WithEvents, Wit
     // Recibir los filtros desde el controlador
     public function __construct($filtros)
     {
-        // Asignar filtros con valores predeterminados vacíos si no están definidos
-        $this->filtros = $filtros ?: [
-            'id_empresa' => null,
-            'anio' => null,
-            'estatus' => null,
-            'mes' => null,
-        ];
+        $this->filtros = $filtros;
     }
 
     public function collection()
     {
         $query = SolicitudesModel::with('empresa', 'tipo_solicitud', 'instalaciones', 'predios');
-
         // Aplicar filtros según lo que se haya enviado
         if (isset($this->filtros['id_empresa']) && $this->filtros['id_empresa']) {
             $query->where('id_empresa', $this->filtros['id_empresa']);
         }
-
         if (isset($this->filtros['anio']) && $this->filtros['anio']) {
             $query->whereYear('fecha_solicitud', $this->filtros['anio']);
         }
-
         if (isset($this->filtros['estatus']) && $this->filtros['estatus'] && $this->filtros['estatus'] != 'todos') {
             $query->where('estatus', $this->filtros['estatus']);
         }
-
         if (isset($this->filtros['mes']) && $this->filtros['mes']) {
             $query->whereMonth('fecha_solicitud', $this->filtros['mes']);
         }
-
         return $query->get([
             'id_solicitud',
             'id_empresa',

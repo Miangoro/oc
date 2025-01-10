@@ -1286,9 +1286,8 @@ class solicitudesController extends Controller
     }
     public function exportar(Request $request)
     {
-        // Obtener los valores de los filtros
         $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes']);
-        // Pasar los filtros a la clase de exportación
+        // Pasar los filtros a la clase
         return Excel::download(new SolicitudesExport($filtros), 'reporte_solicitudes.xlsx');
     }
 
