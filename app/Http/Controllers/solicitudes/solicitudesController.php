@@ -79,22 +79,7 @@ class solicitudesController extends Controller
 
         if (empty($request->input('search.value'))) {
             // Consulta sin búsqueda
-            $solicitudes = solicitudesModel::with(['tipo_solicitud', 'empresa', 'instalacion'])
-                ->leftJoin('empresa', 'solicitudes.id_empresa', '=', 'empresa.id_empresa')
-                ->leftJoin('solicitudes_tipo', 'solicitudes.id_tipo', '=', 'solicitudes_tipo.id_tipo')
-                ->leftJoin('instalaciones', 'solicitudes.id_instalacion', '=', 'instalaciones.id_instalacion')
-                ->leftJoin('inspecciones', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
-                ->leftJoin('users', 'inspecciones.id_inspector', '=', 'users.id')
-                ->select(
-                    'solicitudes.*',
-                    'empresa.razon_social',
-                    'solicitudes_tipo.tipo',
-                    'instalaciones.direccion_completa',
-                    'solicitudes.estatus',
-                    'inspecciones.num_servicio',
-                    'inspecciones.fecha_servicio',
-                    'users.name as inspector_name'
-                )
+            $solicitudes = solicitudesModel::with(['tipo_solicitud', 'empresa', 'instalacion','inspeccion.inspector'])
                 ->orderBy($order === 'inspector' ? 'inspector_name' : $order, $dir)
                 ->offset($start)
                 ->limit($limit)
@@ -103,10 +88,7 @@ class solicitudesController extends Controller
             // Consulta con búsqueda
             $search = $request->input('search.value');
 
-            $solicitudes = solicitudesModel::with(['tipo_solicitud', 'empresa', 'inspeccion', 'instalacion'])
-                ->leftJoin('inspecciones', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
-                ->leftJoin('users', 'inspecciones.id_inspector', '=', 'users.id')
-                ->leftJoin('empresa', 'solicitudes.id_empresa', '=', 'empresa.id_empresa') // Asegúrate de unir la tabla empresa aquí
+            $solicitudes = solicitudesModel::with(['tipo_solicitud', 'empresa', 'instalacion','inspeccion.inspector'])
                 ->where(function ($query) use ($search) {
                     $query->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
                         ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
@@ -120,17 +102,19 @@ class solicitudesController extends Controller
                         ->orWhereHas('instalacion', function ($q) use ($search) {
                             $q->where('direccion_completa', 'LIKE', "%{$search}%");
                         })
-                        ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
-                        ->orWhere('users.name', 'LIKE', "%{$search}%");
+                        ->orWhereHas('inspeccion', function ($q) use ($search) {
+                            $q->where('num_servicio', 'LIKE', "%{$search}%");
+                        })
+                        ->orWhereHas('inspeccion.inspector', function ($q) use ($search) {
+                            $q->where('name', 'LIKE', "%{$search}%");
+                        });
                 })
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy("solicitudes.id_solicitud", $dir)
                 ->get();
 
-            $totalFiltered = solicitudesModel::with(['tipo_solicitud', 'empresa', 'inspeccion', 'instalacion'])
-                ->leftJoin('inspecciones', 'solicitudes.id_solicitud', '=', 'inspecciones.id_solicitud')
-                ->leftJoin('users', 'inspecciones.id_inspector', '=', 'users.id')
+            $totalFiltered = solicitudesModel::with(['tipo_solicitud', 'empresa', 'instalacion','inspeccion.inspector'])
                 ->where(function ($query) use ($search) {
                     $query->where('solicitudes.id_solicitud', 'LIKE', "%{$search}%")
                         ->orWhere('solicitudes.folio', 'LIKE', "%{$search}%")
@@ -144,8 +128,12 @@ class solicitudesController extends Controller
                         ->orWhereHas('instalacion', function ($q) use ($search) {
                             $q->where('direccion_completa', 'LIKE', "%{$search}%");
                         })
-                        ->orWhere('inspecciones.num_servicio', 'LIKE', "%{$search}%")
-                        ->orWhere('users.name', 'LIKE', "%{$search}%");
+                        ->orWhereHas('inspeccion', function ($q) use ($search) {
+                            $q->where('num_servicio', 'LIKE', "%{$search}%");
+                        })
+                        ->orWhereHas('inspeccion.inspector', function ($q) use ($search) {
+                            $q->where('name', 'LIKE', "%{$search}%");
+                        });
                 })
                 ->count();
         }
