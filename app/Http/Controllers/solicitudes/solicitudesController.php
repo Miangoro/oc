@@ -145,7 +145,7 @@ class solicitudesController extends Controller
             foreach ($solicitudes as $solicitud) {
                 $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids ?? 'N/A';
-                $nestedData['folio'] = '<b class="text-primary">' . $solicitud->folio . '</b>';
+                $nestedData['folio'] = $solicitud->folio;
                 $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['razon_social'] = $solicitud->empresa->razon_social ?? 'N/A';
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud) ?? 'N/A';
@@ -674,6 +674,11 @@ class solicitudesController extends Controller
         $certificado_nacional = '------------';
         $dictaminacion = '------------';
         $renovacion_dictaminacion = '------------';
+        $productor = '----';
+        $envasador = '----';
+        $comercializador = '----';
+
+        $caracteristicas = json_decode($datos->caracteristicas);
 
 
         // Verificar el valor de id_tipo y marcar la opción correspondiente
@@ -732,12 +737,32 @@ class solicitudesController extends Controller
 
         if ($datos->id_tipo == 14) {
             $dictaminacion = 'X';
+            if (isset($caracteristicas->renovacion) && $caracteristicas->renovacion == "si") {
+                $renovacion_dictaminacion = 'X';
+                $dictaminacion = '';
+              
+            }
+
+            $tipos = is_string($datos->instalacion->tipo) 
+                ? json_decode($datos->instalacion->tipo, true) 
+                : $datos->instalacion->tipo;
+
+            // Verificar si es un arreglo válido
+            if (is_array($tipos)) {
+                if (in_array('Productora', $tipos)) {
+                    $productor = 'X';
+                }
+                if (in_array('Envasadora', $tipos)) {
+                    $envasador = 'X';
+                }
+                if (in_array('Comercializadora', $tipos)) {
+                    $comercializador = 'X';
+                }
+            }
+            
         }
 
-        if ($datos->id_tipo == 15) {
-            $renovacion_dictaminacion = 'X';
-        }
-
+       
         $fecha_visita = Helpers::formatearFechaHora($datos->fecha_visita);
 
         $pdf = Pdf::loadView('pdfs.SolicitudDeServicio', compact(
@@ -758,7 +783,10 @@ class solicitudesController extends Controller
             'certificado_nacional',
             'dictaminacion',
             'renovacion_dictaminacion',
-            'fecha_visita'
+            'fecha_visita',
+            'productor',
+            'envasador',
+            'comercializador'
         ))
             ->setPaper([0, 0, 640, 910]);;
         return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');

@@ -6,7 +6,7 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Editar solicitud de georeferenciación</h4>
-                    <p class="address-subtitle"></p>
+                    <p class="solicitud badge bg-primary"></p>
                 </div>
                 <form id="editFormTipo10">
                     <div class="row">
@@ -37,7 +37,7 @@
                     </div>
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
-                            <select class="select2 form-select id_predio" id="edit_id_predio_geo" name="id_predio"
+                            <select onchange="obtenerDatosPredios(this.value);" class="select2 form-select id_predio" id="edit_id_predio_geo" name="id_predio"
                                 aria-label="id_predio" required>
                                 <option value="" disable selected>Lista de predios</option>
                             </select>
@@ -55,7 +55,7 @@
                     </div>
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
-                            <textarea name="info_adicional" class="form-control h-px-150 info_adicional_geo" id="edit_info_adicional_geo"
+                            <textarea name="info_adicional" class="form-control h-px-150 info_adicional" id="edit_info_adicional_geo"
                                 placeholder="Información adicional sobre la actividad..."></textarea>
                             <label for="comentarios">Información adicional sobre la actividad</label>
                         </div>
@@ -94,9 +94,9 @@
                     // Verificar si hay un valor previo en `edit_id_predio`
                     const idPredioPrevio = $('#edit_id_predio_geo').data('selected');
                     if (idPredioPrevio) {
-                        $('#edit_id_predio_geo').val(idPredioPrevio).trigger('change');
+                        $('#edit_id_predio_geo').val(idPredioPrevio);
                     } else if (response.predios.length == 0) {
-                        $('.info_adicional_geo').val("");
+                        $('.info_adicional').val("");
                     }
                 },
                 error: function() {

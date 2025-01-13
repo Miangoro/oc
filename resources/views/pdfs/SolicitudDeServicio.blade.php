@@ -338,11 +338,11 @@
             <td style="width: 50px;padding-top: 0;padding-bottom: 0;">{{ $dictaminacion }}</td>
             <td class="td-no-margins " style="width: 10px; padding-top: 0;padding-bottom: 0;"></td>
             <td style="width: 50px" style="font-weight: bold; padding-top: 0;padding-bottom: 0;">Productor de <br> Mezcal</td>
-            <td style="width: 30px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;">@if($dictaminacion === 'X'){{ $productor }} @else ---- @endif</td>
             <td style="width: 30px; padding-top: 0;padding-bottom: 0;font-weight: bold">Envasador</td>
-            <td style="width: 30px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;">@if($dictaminacion === 'X'){{ $envasador }} @else ---- @endif</td>
             <td style="width: 30px; padding-top: 0;padding-bottom: 0; font-weight: bold" colspan="2">Comercializador</td>
-            <td style="width: 30px; padding-top: 0;padding-bottom: 0;" colspan="2"></td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;" colspan="2">@if($dictaminacion === 'X'){{ $comercializador }} @else ---- @endif</td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
@@ -365,11 +365,11 @@
             <td style="width: 50px;padding-top: 0;padding-bottom: 0;">{{ $renovacion_dictaminacion }}</td>
             <td class="td-no-margins" style="width: 1px; padding-top: 0;padding-bottom: 0;"></td>
             <td style="width: 70px; padding-top: 0;padding-bottom: 0;font-weight: bold" >Productor de <br> Mezcal</td>
-            <td style="width: 20px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 20px; padding-top: 0;padding-bottom: 0;">@if($renovacion_dictaminacion === 'X'){{ $productor }} @else ---- @endif</td>
             <td style="width: 30px; padding-top: 0;padding-bottom: 0;font-weight: bold" >Envasador</td>
-            <td style="width: 30px; padding-top: 0;padding-bottom: 0;"></td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;">@if($renovacion_dictaminacion === 'X'){{ $envasador }} @else ---- @endif</td>
             <td style="width: 30px; padding-top: 0;padding-bottom: 0;font-weight: bold" colspan="2" >Comercializador</td>
-            <td style="width: 30px; padding-top: 0;padding-bottom: 0;" colspan="2"></td>
+            <td style="width: 30px; padding-top: 0;padding-bottom: 0;" colspan="2">@if($renovacion_dictaminacion === 'X'){{ $comercializador }} @else ---- @endif</td>
         </tr>
         <tr>
             <td class="td-margins" colspan="13" style="padding: 2px;"></td>
