@@ -52,7 +52,12 @@ $(function () {
         render: function (data) {
           switch (data.id_tipo) {
             case 1: //Muestreo de agave
-              return `<br><span class="fw-bold text-dark small">Guías de agave:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>`;
+            return `
+            <br>
+            <span class="fw-bold text-dark small">Guías de agave:</span>
+            <span class="small"> ${data.guias || 'N/A'}</span>
+          `;
+
             case 2: //Vigilancia en producción de lote
               return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
@@ -274,7 +279,7 @@ $(function () {
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud">` +
             '<i class="text-info ri-folder-3-fill"></i> Expediente del servicio</a>' +
              // Aquí agregamos la opción de eliminar
-            `<a  data-id="${full['id']}" class="dropdown-item text-danger delete-record">` +
+            `<a  data-id="${full['id']}"   data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">` +
             '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>' +
 
             '</div>' +
@@ -524,9 +529,10 @@ $(function () {
   });
 
   // Eliminar registro
-  $(document).on('click', '.delete-record', function () {
-    var id_instalacion = $(this).data('id');
-
+  $(document).on('click', '.delete-recordes', function () {
+    var id_solicitudes = $(this).data('id-solicitud');
+    console.log(id_solicitudes);
+    $('.modal').modal('hide');
     // Confirmación con SweetAlert
     Swal.fire({
       title: '¿Está seguro?',
@@ -534,6 +540,7 @@ $(function () {
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
       customClass: {
         confirmButton: 'btn btn-primary me-3',
         cancelButton: 'btn btn-label-secondary'
@@ -544,10 +551,9 @@ $(function () {
         // Solicitud de eliminación
         $.ajax({
           type: 'DELETE',
-          url: `${baseUrl}instalaciones/${id_instalacion}`, // Ajusta la URL aquí
+          url: `${baseUrl}solicitudes-lista/${id_solicitudes}`, // Ajusta la URL aquí
           success: function () {
             dt_instalaciones_table.ajax.reload();
-
             // Mostrar mensaje de éxito
             Swal.fire({
               icon: 'success',
@@ -574,7 +580,7 @@ $(function () {
         Swal.fire({
           title: 'Cancelado',
           text: 'La solicitud no ha sido eliminada',
-          icon: 'error',
+          icon: 'info',
           customClass: {
             confirmButton: 'btn btn-success'
           }
@@ -596,7 +602,10 @@ $(function () {
       let modal = null;
 
       // Validamos el tipo y configuramos el modal correspondiente
-      if (id_tipo === 2) {
+      if (id_tipo === 1){
+        modal = $('#editSolicitudMuestreoAgave');
+      }
+       else if (id_tipo === 2) {
         modal = $('#editVigilanciaProduccion');
       } else if (id_tipo === 3) {
         modal = $('#editMuestreoLoteAgranel');
@@ -626,6 +635,20 @@ $(function () {
           if (response.success) {
             // Rellenar campos según el tipo de modal
             const datos = response.data;
+
+            if (id_tipo === 1){
+              modal.find('#edit_id_solicitud_muestr').val(id_solicitud);
+              modal.find('#id_empresa_muestr').val(response.data.id_empresa).trigger('change');
+              modal.find('#fecha_visita_muestr').val(response.data.fecha_visita);
+              modal.find('#id_instalacion_dic23').data('selected', response.data.id_instalacion);
+
+              if (response.caracteristicas && response.caracteristicas.id_guia) {
+                modal.find('#edit_id_guiass').data('selected', response.caracteristicas.id_guia);
+              } else {
+                modal.find('#edit_id_guiass').val('');
+              }
+              modal.find('#edit_info_adicional_muestr').val(response.data.info_adicional);
+            }
 
             if (id_tipo === 2) {
               modal.find('#edit_id_solicitud_vig').val(id_solicitud);
@@ -1930,6 +1953,100 @@ $(function () {
             icon: 'error',
             title: '¡Error!',
             text: 'Error al actualizar la inspección de liberación.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+  });
+
+  //actualizar muestreo lote
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation para la solicitud de muestreo
+    const formDictaminacion = document.getElementById('editRegistrarSolicitudMuestreoAgave');
+    const fvDictaminacion = FormValidation.formValidation(formDictaminacion, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el cliente.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la fecha sugerida para la inspección.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona una instalación.'
+            }
+          }
+        },
+        'id_guia[]': {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona al menos una categoria.'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function (e) {
+      // Validar el formulario
+      var formData = new FormData(formDictaminacion);
+
+      $.ajax({
+        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_muestr').val(),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#editSolicitudMuestreoAgave').modal('hide');
+          $('#editRegistrarSolicitudMuestreoAgave')[0].reset();
+          $('.select2').val(null).trigger('change');
+          $('.datatables-solicitudes').DataTable().ajax.reload();
+          console.log(response);
+
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la solicitud',
             customClass: {
               confirmButton: 'btn btn-danger'
             }

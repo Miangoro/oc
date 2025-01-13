@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerInstalacionesMuestreoAgave(); obtenerlasguias();" name="id_empresa"
+                                <select onchange="obtenerInstalacionesMuestreoAgave(); obtenerlasguias();"  name="id_empresa"
                                     class="select2 form-select id_empresa_dic2" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -43,7 +43,7 @@
                     </div>
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
-                            <select multiple class="select2 form-select guiass" id="id_instalacion" name="id_guia"
+                            <select multiple class="select2 form-select guiass" id="id_instalacion" name="id_guia[]"
                                 aria-label="id_instalacion" required>
                                 <option value="" disabled selected>Lista de guías de agave</option>
                             </select>
