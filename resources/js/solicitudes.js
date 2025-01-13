@@ -252,17 +252,17 @@ $(function () {
             '</button>' +
             '<div class="dropdown-menu dropdown-menu-end m-0">' +
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalTrazabilidad(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2">` +
-            '<i class="text-warning ri-user-search-fill"></i>Trazabilidad</a>' +
+            '<i class="text-warning ri-user-search-fill"></i> Trazabilidad</a>' +
             `<a
-   data-id="${full['id_tipo']}"
-   data-id-solicitud="${full['id_solicitud']}"
-   data-tipo="${full['tipo']}"
-   data-razon-social="${full['razon_social']}"
-   data-bs-toggle="modal"
-   data-bs-target="#addSolicitudValidar"
-   class="dropdown-item text-dark waves-effect validar-solicitudes">
-   <i class="text-success ri-search-eye-line"></i>Validar solicitud
-</a>` +
+            data-id="${full['id_tipo']}"
+            data-id-solicitud="${full['id_solicitud']}"
+            data-tipo="${full['tipo']}"
+            data-razon-social="${full['razon_social']}"
+            data-bs-toggle="modal"
+            data-bs-target="#addSolicitudValidar"
+            class="dropdown-item text-dark waves-effect validar-solicitudes">
+            <i class="text-success ri-search-eye-line"></i> Validar solicitud
+          </a>` +
             `<a
               data-id="${full['id']}"
               data-id-solicitud="${full['id_solicitud']}"
@@ -270,9 +270,13 @@ $(function () {
               data-id-tipo="${full['id_tipo']}"
               data-razon-social="${full['razon_social']}"
               class="cursor-pointer dropdown-item text-dark edit-record-tipo">` +
-            '<i class="text-warning ri-edit-fill"></i>Editar</a>' +
+            '<i class="text-warning ri-edit-fill"></i> Editar</a>' +
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud">` +
-            '<i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>' +
+            '<i class="text-info ri-folder-3-fill"></i> Expediente del servicio</a>' +
+             // Aquí agregamos la opción de eliminar
+            `<a  data-id="${full['id']}" class="dropdown-item text-danger delete-record">` +
+            '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>' +
+
             '</div>' +
             '</div>'
           );
@@ -559,7 +563,10 @@ $(function () {
             Swal.fire({
               icon: 'error',
               title: 'Error',
-              text: 'Hubo un problema al eliminar el registro.'
+              text: 'Hubo un problema al eliminar el registro.',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
             });
           }
         });

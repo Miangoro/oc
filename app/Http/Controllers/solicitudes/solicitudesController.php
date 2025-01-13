@@ -594,9 +594,13 @@ class solicitudesController extends Controller
             $caracteristicas = [
                 'id_guia' => $request->id_guia,
             ];
-
                     // Convertir a JSON y asignarlo
             $solicitud->caracteristicas = json_encode($caracteristicas);
+        }else{
+          $solicitud->caracteristicas = json_encode([
+            'mensaje' => 'sin caracteristicas'
+        ]);
+
         }
 
 
@@ -1289,6 +1293,9 @@ class solicitudesController extends Controller
         $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes']);
         // Pasar los filtros a la clase
         return Excel::download(new SolicitudesExport($filtros), 'reporte_solicitudes.xlsx');
+    }
+    public function delete($id_solicitud){
+
     }
 
 }
