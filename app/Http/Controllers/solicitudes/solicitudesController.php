@@ -22,6 +22,7 @@ use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\tipos;
 use App\Models\marcas;
+use App\Models\guias;
 use App\Models\Destinos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -166,6 +167,17 @@ class solicitudesController extends Controller
 
                 $idLoteEnvasado = $caracteristicas['id_lote_envasado'] ?? null;
                 $loteEnvasado = lotes_envasado::find($idLoteEnvasado); // Busca el lote envasado
+
+                $idLoguiass = $caracteristicas['id_guia'] ?? null;
+                $guias = [];
+                if (!empty($idLoguiass)) {
+                  // Busca las guías relacionadas
+                  $guias = guias::whereIn('id_guia', $idLoguiass)->pluck('folio')->toArray();
+              }
+
+              // Devuelve las guías como una cadena separada por comas
+              $nestedData['guias'] = !empty($guias) ? implode(', ', $guias) : 'N/A';
+
 
                 $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
                 $nestedData['nombre_lote_envasado'] = $loteEnvasado ? $loteEnvasado->nombre : 'N/A';
@@ -582,9 +594,13 @@ class solicitudesController extends Controller
             $caracteristicas = [
                 'id_guia' => $request->id_guia,
             ];
-
                     // Convertir a JSON y asignarlo
             $solicitud->caracteristicas = json_encode($caracteristicas);
+        }else{
+          $solicitud->caracteristicas = json_encode([
+            'mensaje' => 'sin caracteristicas'
+        ]);
+
         }
 
 
@@ -1085,6 +1101,32 @@ class solicitudesController extends Controller
                 ]);
                 break;
 
+                case 'muestreoagave':
+                  $request->validate([
+                      'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                      'fecha_visita' => 'required|date',
+                      'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                      'info_adicional' => 'nullable|string',
+                      'id_guia' => 'nullable|array', // Validación para un arreglo
+                      'id_guia.*' => 'integer|exists:guias,id_guia', // Validación para cada elemento del arreglo
+                  ]);
+
+                  // Preparar el JSON para guardar en `caracteristicas`
+                  $caracteristicas = !empty($request->id_guia)
+                      ? ['id_guia' => $request->id_guia] // Guardar como arreglo si hay guías
+                      : ['mensaje' => 'sin caracteristicas']; // Guardar mensaje si no hay guías
+
+                  // Actualizar los datos de la solicitud
+                  $solicitud->update([
+                      'id_empresa' => $request->id_empresa,
+                      'fecha_visita' => $request->fecha_visita,
+                      'id_instalacion' => $request->id_instalacion,
+                      'info_adicional' => $request->info_adicional,
+                      'caracteristicas' => json_encode($caracteristicas), // Convertir a JSON
+                  ]);
+                  break;
+
+
             default:
                 return response()->json(['success' => false, 'message' => 'Tipo de solicitud no reconocido'], 400);
         }
@@ -1305,6 +1347,16 @@ class solicitudesController extends Controller
         $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes']);
         // Pasar los filtros a la clase
         return Excel::download(new SolicitudesExport($filtros), 'reporte_solicitudes.xlsx');
+    }
+    public function destroy($id_solicitud){
+      try {
+        $solicitud = solicitudesModel::findOrFail($id_solicitud);
+        $solicitud->delete();
+
+        return response()->json(['success' => 'Solcitud eliminada correctamente']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al eliminar la solicitud: ' . $e->getMessage()], 500);
+    }
     }
 
 }
