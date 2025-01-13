@@ -11,7 +11,7 @@ use App\Models\empresa;
 use App\Models\estados;
 use App\Models\instalaciones;
 use App\Models\organismos;
-use App\Models\LotesGranel;
+use App\Models\lotesGranel;
 use App\Models\lotes_envasado;
 use App\Models\solicitudesModel;
 use App\Models\clases;
@@ -39,7 +39,7 @@ class solicitudesController extends Controller
         $estados = estados::all(); // Obtener todos los estados
         $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $organismos = organismos::all(); // Obtener todos los estados
-        $LotesGranel = LotesGranel::all();
+        $LotesGranel = lotesGranel::all();
         $categorias = categorias::all();
         $clases = clases::all();
         $tipos = tipos::all();
