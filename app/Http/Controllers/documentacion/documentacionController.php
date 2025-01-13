@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Documentacion;
 use App\Models\Documentacion_url;
 use App\Models\empresa;
-use App\Models\Instalaciones;
+use App\Models\instalaciones;
 use App\Models\marcas;
 use App\Models\Predios;
 use Illuminate\Http\Request;
@@ -21,7 +21,7 @@ class documentacionController extends Controller
     $productor_agave = Documentacion::where('subtipo', '=', 'Generales Productor')->get();
 
     $empresas = Empresa::with('empresaNumClientes')->where('tipo', 2)->get();
-    $instalaciones = Instalaciones::where('tipo', '=', 2)->get();
+    $instalaciones = instalaciones::where('tipo', '=', 2)->get();
 
     return view("documentacion.documentacion_view", ["documentos" => $documentos, "productor_agave" => $productor_agave, "empresas" => $empresas]);
   }
