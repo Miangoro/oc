@@ -636,9 +636,7 @@ $(function () {
             // Rellenar campos según el tipo de modal
             const datos = response.data;
 
-<<<<<<< HEAD
             $(".solicitud").text(datos.folio);
-=======
             if (id_tipo === 1){
               modal.find('#edit_id_solicitud_muestr').val(id_solicitud);
               modal.find('#id_empresa_muestr').val(response.data.id_empresa).trigger('change');
@@ -652,7 +650,6 @@ $(function () {
               }
               modal.find('#edit_info_adicional_muestr').val(response.data.info_adicional);
             }
->>>>>>> 369aded8b15e4059d93f4cdabfe2bd83d041b675
 
             if (id_tipo === 2) {
               modal.find('#edit_id_solicitud_vig').val(id_solicitud);

@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\categorias;
 use App\Models\empresa;
 use App\Models\estados;
-use App\Models\Instalaciones;
+use App\Models\instalaciones;
 use App\Models\organismos;
 use App\Models\LotesGranel;
 use App\Models\lotes_envasado;
@@ -35,7 +35,7 @@ class solicitudesController extends Controller
     public function UserManagement()
     {
         $solicitudesTipos = solicitudTipo::all();
-        $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
+        $instalaciones = instalaciones::all(); // Obtener todas las instalaciones
         $estados = estados::all(); // Obtener todos los estados
         $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $organismos = organismos::all(); // Obtener todos los estados
