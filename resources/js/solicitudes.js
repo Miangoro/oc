@@ -88,7 +88,7 @@ $(function () {
                       <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.volumen_muestreo || 'N/A'}</span>
                       `;
             case 4:
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote_traslado || 'N/A'}</span>
+              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_traslado || 'N/A'}</span>
                       <br>
@@ -797,6 +797,8 @@ $(function () {
               modal.find('#edit_id_empresa_traslado').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_traslado').data('selected', response.data.id_instalacion);
+              modal.find('#instalacion_id_traslado').val(response.data.id_instalacion);
+              modal.find('#lote_id_traslado').val(response.caracteristicas.id_lote_granel);
 
               if (response.caracteristicas && response.caracteristicas.id_lote_granel_muestreo) {
                 modal.find('#edit_id_lote_granel_traslado').val(response.caracteristicas.id_lote_granel_muestreo);
@@ -4172,7 +4174,10 @@ $('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre n
               $('.tiempoMaduracion').text(caracteristicas.tiempo_dura);
               $('.tipoIngreso').text(caracteristicas.tipoIngreso);
               $('.volumenLiberado').text(caracteristicas.volumen_liberacion);
-              $('.tipoLiberacion').text(caracteristicas.tipoLiberacion);
+              $('.tipoLiberacion').text(caracteristicas.tipoLiberacion); 
+              $('.volumenActual').text(caracteristicas.id_vol_actual); 
+              $('.volumenTrasladado').text(caracteristicas.id_vol_traslado); 
+              $('.volumenSobrante').text(caracteristicas.id_vol_res); 
 
               // Verificar si 'detalles' existe y es un arreglo
             if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {

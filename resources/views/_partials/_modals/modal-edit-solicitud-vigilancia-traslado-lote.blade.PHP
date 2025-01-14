@@ -4,13 +4,15 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Editar Vigilancia en el traslado del lote</h4>
-                    <p class="address-subtitle"></p>
+                    <h4 class="address-title mb-2">Editar vigilancia en el traslado del lote</h4>
+                    <p class="solicitud badge bg-primary"></p>
                 </div>
                 <form id="editVigilanciaTrasladoForm">
                     <input type="hidden" name="id_solicitud" id="edit_id_solicitud_traslado">
                     <input type="hidden" name="form_type" value="vigilanciatraslado">
                     <div class="row">
+                        <input type="hidden" id="instalacion_id_traslado">
+                        <input type="hidden" id="lote_id_traslado">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="edit_id_empresa_traslado"
@@ -56,10 +58,9 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <label for="instalacion_vigilancia">Direccion de destino</label>
+                            <label for="instalacion_vigilancia">Dirección de destino</label>
                         </div>
                     </div>
-                    <p class="address-subtitle" style="color: red">Seleccione un cliente</p>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
@@ -74,30 +75,54 @@
                                 <label for="id_lote_granel_traslado">Lote a granel</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
                                     id="edit_id_categoria_traslado" name="id_categoria_traslado"
                                     placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
-                                <label for="id_categoria_traslado">Ingresa Categoria</label>
+                                <label for="id_categoria_traslado">Categoría de mezcal</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
                                     id="edit_id_clase_traslado" name="id_clase_traslado" placeholder="Ingresa una Clase"
                                     readonly style="pointer-events: none;" />
-                                <label for="id_clase_traslado">Ingresa Clase</label>
+                                <label for="id_clase_traslado">Clase</label>
                             </div>
                         </div>
-                        <div class="col-md-9">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
                                     id="edit_id_tipo_maguey_traslado" name="id_tipo_maguey_traslado[0]"
                                     placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
-                                <label for="id_tipo_maguey_traslado">Ingresa Tipo de Maguey</label>
+                                <label for="id_tipo_maguey_traslado">Tipo de Maguey</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control" id="edit_id_certificado_traslado"
+                                    name="id_certificado_traslado"
+                                    placeholder="Ingresa el Certificado de NOM a granel" />
+                                <label for="id_certificado_traslado">Certificado de NOM a granel</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control" id="edit_analisis_traslado"
+                                    name="analisis_traslado" placeholder="Ingresa Análisis fisicoquímico" />
+                                <label for="analisis_traslado">Análisis fisicoquímico</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="number" class="form-control" id="edit_volumen_traslado"
+                                    name="volumen_traslado" placeholder="Ingresa el volumen" step="0.01" />
+                                <label for="volumen_traslado">%Alc. Vol.</label>
                             </div>
                         </div>
                     </div>
@@ -129,14 +154,14 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_vol_actual" name="id_vol_actual" placeholder="Ingresa una Categoria"
+                                    id="edit_id_vol_actual" name="id_vol_actual" placeholder="Ingresa el volumen actual"
                                     readonly style="pointer-events: none;" />
                                 <label for="id_vol_actual">Volumen actual del lote</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="number" class="form-control " id="edit_id_vol_traslado"
+                                <input onkeyup="obtenerSobrante(this.value)" type="number" class="form-control " id="edit_id_vol_traslado"
                                     name="id_vol_traslado" placeholder="Ingresa una Categoria" step="0.01" />
                                 <label for="id_vol_traslado">Volumen trasladado</label>
                             </div>
@@ -147,30 +172,6 @@
                                     name="id_vol_res" placeholder="Ingresa una Clase" readonly
                                     style="pointer-events: none;" />
                                 <label for="id_vol_res">Volumen sobrante del lote </label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-5">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="edit_analisis_traslado"
-                                    name="analisis_traslado" placeholder="Ingresa Análisis fisicoquímico" />
-                                <label for="analisis_traslado">Ingresa Análisis fisicoquímico</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="number" class="form-control" id="edit_volumen_traslado"
-                                    name="volumen_traslado" placeholder="Ingresa el volumen" step="0.01" />
-                                <label for="volumen_traslado">%Alc. Vol.</label>
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="edit_id_certificado_traslado"
-                                    name="id_certificado_traslado"
-                                    placeholder="Ingresa el Certificado de NOM a granel" />
-                                <label for="id_certificado_traslado">Ingresa Certificado de NOM a granel</label>
                             </div>
                         </div>
                     </div>
@@ -201,11 +202,18 @@
                 url: '/getDatos/' + empresa,
                 method: 'GET',
                 success: function(response) {
-                    console.log(response);
+                    
                     var contenido = "";
+                    let seleccionado = "";
+                    var instalacion_id = $("#instalacion_id_traslado").val();
                     for (let index = 0; index < response.instalaciones.length; index++) {
+                        if (instalacion_id == response.instalaciones[index].id_instalacion) {
+                            seleccionado = "selected";
+                        } else {
+                            seleccionado = "";
+                        }
                         var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-                        contenido = '<option value="' + response.instalaciones[index].id_instalacion +
+                        contenido = '<option ' + seleccionado + ' value="' + response.instalaciones[index].id_instalacion +
                             '">' +
                             tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
                             '</option>' +
@@ -229,6 +237,10 @@
         }
     }
 
+    function obtenerSobrante(trasladado){
+        $('#edit_id_vol_res').val( $('#edit_id_vol_actual').val() - trasladado);
+    }
+
     function editobtenerGranelesTraslado(empresa) {
         if (empresa !== "" && empresa !== null && empresa !== undefined) {
             $.ajax({
@@ -236,8 +248,15 @@
                 method: 'GET',
                 success: function(response) {
                     var contenido = "";
+                    let seleccionado = "";
+                    var lote_id = $("#lote_id_traslado").val();
                     for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
+                        if (lote_id == response.lotes_granel[index].id_lote_granel) {
+                            seleccionado = "selected";
+                        } else {
+                            seleccionado = "";
+                        }
+                        contenido = '<option ' + seleccionado + ' value="' + response.lotes_granel[index].id_lote_granel + '">' +
                             response
                             .lotes_granel[index].nombre_lote + '</option>' + contenido;
                     }

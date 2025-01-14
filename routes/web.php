@@ -865,10 +865,10 @@ Route::get('/bitacoraHologramas', [BitacoraHologramasController::class, 'UserMan
 Route::resource('/bitacoraHologramas-list', BitacoraHologramasController::class);
 
 
-
 Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarSolicitudesDesdeAPI'])->name('insertarSolicitudesDesdeAPI');
 
 
 //Trámites IMPI
 Route::get('tramiteIMPI', [impiController::class, 'UserManagement'])->name('IMPI');
-Route::resource('/tramite', impiController::class);
+Route::resource('tramite', impiController::class);
+

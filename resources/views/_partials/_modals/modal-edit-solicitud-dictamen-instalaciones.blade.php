@@ -5,7 +5,7 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Editar solicitud de dictaminación de instalaciones</h4>
-                    <p class="address-subtitle"></p>
+                    <p class="solicitud badge bg-primary"></p>
                 </div>
                 <form id="addEditSolicitud">
                     @csrf
