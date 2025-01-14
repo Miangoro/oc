@@ -12,7 +12,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
-                                <select onchange="obtenerInstalacionesMuestreoAgave();" name="id_empresa"
+                                <select onchange="obtenerInstalacionesMuestreoAgave(); obtenerlasguias();"  name="id_empresa"
                                     class="select2 form-select id_empresa_dic2" required>
                                     <option value="">Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -43,9 +43,9 @@
                     </div>
                     <div class="row">
                         <div class="form-floating form-floating-outline mb-5">
-                            <select multiple class="select2 form-select" id="id_instalacion" name="id_guia"
+                            <select multiple class="select2 form-select guiass" id="id_instalacion" name="id_guia[]"
                                 aria-label="id_instalacion" required>
-                                <option value="" selected>Lista de guías de agave</option>
+                                <option value="" disabled selected>Lista de guías de agave</option>
                             </select>
                             <label for="id_predio">Guías de agave expedidas por OC CIDAM</label>
                         </div>
@@ -113,5 +113,34 @@
             // Si no es JSON válido, regresa el valor original
             return tipo;
         }
+    }
+
+
+    function obtenerlasguias(){
+      var empresa = $(".id_empresa_dic2").val();
+      if (empresa !== "" && empresa !== null && empresa !== undefined) {
+
+      // Hacer una petición AJAX para obtener los detalles de la empresa
+      $.ajax({
+          url: '/getDatos/' + empresa,
+          method: 'GET',
+          success: function(response) {
+              console.log(response);
+              var contenido = "";
+              for (let index = 0; index < response.guias.length; index++) {
+                  // Limpia el campo tipo usando la función limpiarTipo
+                  contenido = '<option value="' + response.guias[index]
+                      .id_guia + '">' + response.guias[index] .folio + '</option>' + contenido;
+              }
+              if (response.guias.length == 0) {
+                  contenido = '<option value="" disabled selected>Sin guias registradas</option>';
+              }
+              $('.guiass').html(contenido);
+          },
+          error: function() {
+              //alert('Error al cargar los lotes a granel.');
+          }
+      });
+      }
     }
 </script>

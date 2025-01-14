@@ -9,9 +9,9 @@ use App\Http\Controllers\Controller;
 use App\Models\categorias;
 use App\Models\empresa;
 use App\Models\estados;
-use App\Models\Instalaciones;
+use App\Models\instalaciones;
 use App\Models\organismos;
-use App\Models\LotesGranel;
+use App\Models\lotesGranel;
 use App\Models\lotes_envasado;
 use App\Models\solicitudesModel;
 use App\Models\clases;
@@ -22,6 +22,7 @@ use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\tipos;
 use App\Models\marcas;
+use App\Models\guias;
 use App\Models\Destinos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -34,11 +35,11 @@ class solicitudesController extends Controller
     public function UserManagement()
     {
         $solicitudesTipos = solicitudTipo::all();
-        $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
+        $instalaciones = instalaciones::all(); // Obtener todas las instalaciones
         $estados = estados::all(); // Obtener todos los estados
         $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $organismos = organismos::all(); // Obtener todos los estados
-        $LotesGranel = LotesGranel::all();
+        $LotesGranel = lotesGranel::all();
         $categorias = categorias::all();
         $clases = clases::all();
         $tipos = tipos::all();
@@ -145,7 +146,7 @@ class solicitudesController extends Controller
             foreach ($solicitudes as $solicitud) {
                 $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
                 $nestedData['fake_id'] = ++$ids ?? 'N/A';
-                $nestedData['folio'] = '<b class="text-primary">' . $solicitud->folio . '</b>';
+                $nestedData['folio'] = $solicitud->folio;
                 $nestedData['num_servicio'] = $solicitud->inspeccion->num_servicio ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['razon_social'] = $solicitud->empresa->razon_social ?? 'N/A';
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud) ?? 'N/A';
@@ -166,6 +167,17 @@ class solicitudesController extends Controller
 
                 $idLoteEnvasado = $caracteristicas['id_lote_envasado'] ?? null;
                 $loteEnvasado = lotes_envasado::find($idLoteEnvasado); // Busca el lote envasado
+
+                $idLoguiass = $caracteristicas['id_guia'] ?? null;
+                $guias = [];
+                if (!empty($idLoguiass)) {
+                  // Busca las guías relacionadas
+                  $guias = guias::whereIn('id_guia', $idLoguiass)->pluck('folio')->toArray();
+              }
+
+              // Devuelve las guías como una cadena separada por comas
+              $nestedData['guias'] = !empty($guias) ? implode(', ', $guias) : 'N/A';
+
 
                 $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
                 $nestedData['nombre_lote_envasado'] = $loteEnvasado ? $loteEnvasado->nombre : 'N/A';
@@ -582,9 +594,13 @@ class solicitudesController extends Controller
             $caracteristicas = [
                 'id_guia' => $request->id_guia,
             ];
-
                     // Convertir a JSON y asignarlo
             $solicitud->caracteristicas = json_encode($caracteristicas);
+        }else{
+          $solicitud->caracteristicas = json_encode([
+            'mensaje' => 'sin caracteristicas'
+        ]);
+
         }
 
 
@@ -674,6 +690,11 @@ class solicitudesController extends Controller
         $certificado_nacional = '------------';
         $dictaminacion = '------------';
         $renovacion_dictaminacion = '------------';
+        $productor = '----';
+        $envasador = '----';
+        $comercializador = '----';
+
+        $caracteristicas = json_decode($datos->caracteristicas);
 
 
         // Verificar el valor de id_tipo y marcar la opción correspondiente
@@ -732,12 +753,32 @@ class solicitudesController extends Controller
 
         if ($datos->id_tipo == 14) {
             $dictaminacion = 'X';
+            if (isset($caracteristicas->renovacion) && $caracteristicas->renovacion == "si") {
+                $renovacion_dictaminacion = 'X';
+                $dictaminacion = '';
+              
+            }
+
+            $tipos = is_string($datos->instalacion->tipo) 
+                ? json_decode($datos->instalacion->tipo, true) 
+                : $datos->instalacion->tipo;
+
+            // Verificar si es un arreglo válido
+            if (is_array($tipos)) {
+                if (in_array('Productora', $tipos)) {
+                    $productor = 'X';
+                }
+                if (in_array('Envasadora', $tipos)) {
+                    $envasador = 'X';
+                }
+                if (in_array('Comercializadora', $tipos)) {
+                    $comercializador = 'X';
+                }
+            }
+            
         }
 
-        if ($datos->id_tipo == 15) {
-            $renovacion_dictaminacion = 'X';
-        }
-
+       
         $fecha_visita = Helpers::formatearFechaHora($datos->fecha_visita);
 
         $pdf = Pdf::loadView('pdfs.SolicitudDeServicio', compact(
@@ -758,7 +799,10 @@ class solicitudesController extends Controller
             'certificado_nacional',
             'dictaminacion',
             'renovacion_dictaminacion',
-            'fecha_visita'
+            'fecha_visita',
+            'productor',
+            'envasador',
+            'comercializador'
         ))
             ->setPaper([0, 0, 640, 910]);;
         return $pdf->stream('Solicitud de servicios NOM-070-SCFI-2016 F7.1-01-32 Ed10 VIGENTE.pdf');
@@ -1057,6 +1101,32 @@ class solicitudesController extends Controller
                 ]);
                 break;
 
+                case 'muestreoagave':
+                  $request->validate([
+                      'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                      'fecha_visita' => 'required|date',
+                      'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                      'info_adicional' => 'nullable|string',
+                      'id_guia' => 'nullable|array', // Validación para un arreglo
+                      'id_guia.*' => 'integer|exists:guias,id_guia', // Validación para cada elemento del arreglo
+                  ]);
+
+                  // Preparar el JSON para guardar en `caracteristicas`
+                  $caracteristicas = !empty($request->id_guia)
+                      ? ['id_guia' => $request->id_guia] // Guardar como arreglo si hay guías
+                      : ['mensaje' => 'sin caracteristicas']; // Guardar mensaje si no hay guías
+
+                  // Actualizar los datos de la solicitud
+                  $solicitud->update([
+                      'id_empresa' => $request->id_empresa,
+                      'fecha_visita' => $request->fecha_visita,
+                      'id_instalacion' => $request->id_instalacion,
+                      'info_adicional' => $request->info_adicional,
+                      'caracteristicas' => json_encode($caracteristicas), // Convertir a JSON
+                  ]);
+                  break;
+
+
             default:
                 return response()->json(['success' => false, 'message' => 'Tipo de solicitud no reconocido'], 400);
         }
@@ -1277,6 +1347,16 @@ class solicitudesController extends Controller
         $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes']);
         // Pasar los filtros a la clase
         return Excel::download(new SolicitudesExport($filtros), 'reporte_solicitudes.xlsx');
+    }
+    public function destroy($id_solicitud){
+      try {
+        $solicitud = solicitudesModel::findOrFail($id_solicitud);
+        $solicitud->delete();
+
+        return response()->json(['success' => 'Solcitud eliminada correctamente']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al eliminar la solicitud: ' . $e->getMessage()], 500);
+    }
     }
 
 }

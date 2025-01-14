@@ -217,6 +217,7 @@
     @include('_partials._modals.modal-add-solicitud-georeferenciacion')
 
     @include('_partials._modals.modal-add-solicitud-muestreo-agave')
+    @include('_partials._modals.modal-edit-solicitud-muestreo-agave')
 
 
     @include('_partials._modals.modal-export-excel')

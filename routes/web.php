@@ -746,6 +746,7 @@ Route::post('/hologramas/storeInspeccionBarricada', [solicitudesController::clas
 Route::post('/hologramas/storeInspeccionBarricadaLiberacion', [solicitudesController::class, 'storeInspeccionBarricadaLiberacion']);
 Route::post('/hologramas/storeInspeccionEnvasado', [solicitudesController::class, 'storeInspeccionEnvasado']);
 Route::get('/getDetalleLoteTipo/{id_tipo}', [solicitudesController::class, 'getDetalleLoteTipo']);
+Route::delete('/solicitudes-lista/{id_solicitud}', [solicitudesController::class, 'destroy'])->name('solicitudes-list.destroy');
 
 Route::get('/getDetalleLoteEnvasado/{id_lote_envasado}', [solicitudesController::class, 'getDetalleLoteEnvasado']);
 Route::get('/verificar-solicitud', [solicitudesController::class, 'verificarSolicitud'])->name('verificarSolicitud');
