@@ -533,6 +533,7 @@ $(function () {
     var id_solicitudes = $(this).data('id-solicitud');
     console.log(id_solicitudes);
     $('.modal').modal('hide');
+
     // Confirmación con SweetAlert
     Swal.fire({
       title: '¿Está seguro?',
@@ -545,13 +546,27 @@ $(function () {
         confirmButton: 'btn btn-primary me-3',
         cancelButton: 'btn btn-label-secondary'
       },
+      html: `
+        <label for="delete-reason" style="margin-bottom: 5px;">Escriba el motivo de la eliminación:</label>
+        <input id="delete-reason" class="swal2-input" placeholder="Escriba el motivo de la eliminación" required>
+      `,
+      preConfirm: () => {
+        const reason = Swal.getPopup().querySelector('#delete-reason').value
+        if (!reason) {
+          Swal.showValidationMessage('Debe proporcionar un motivo para eliminar');
+          return false;
+        }
+        return reason; // Devuelve el motivo si es válido
+      },
       buttonsStyling: false
     }).then(function (result) {
-      if (result.value) {
+      if (result.isConfirmed) {
+        const reason = result.value; // El motivo ingresado por el usuario
         // Solicitud de eliminación
         $.ajax({
           type: 'DELETE',
           url: `${baseUrl}solicitudes-lista/${id_solicitudes}`, // Ajusta la URL aquí
+          data: { reason: reason }, // Envía el motivo al servidor si es necesario
           success: function () {
             dt_instalaciones_table.ajax.reload();
             // Mostrar mensaje de éxito
@@ -588,6 +603,7 @@ $(function () {
       }
     });
   });
+
 
   $(document).ready(function () {
     $(document).on('click', '.edit-record-tipo', function () {
@@ -1994,13 +2010,6 @@ $(function () {
           validators: {
             notEmpty: {
               message: 'Selecciona una instalación.'
-            }
-          }
-        },
-        'id_guia[]': {
-          validators: {
-            notEmpty: {
-              message: 'Selecciona al menos una categoria.'
             }
           }
         },

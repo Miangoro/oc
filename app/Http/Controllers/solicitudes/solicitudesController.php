@@ -757,11 +757,11 @@ class solicitudesController extends Controller
             if (isset($caracteristicas->renovacion) && $caracteristicas->renovacion == "si") {
                 $renovacion_dictaminacion = 'X';
                 $dictaminacion = '';
-              
+
             }
 
-            $tipos = is_string($datos->instalacion->tipo) 
-                ? json_decode($datos->instalacion->tipo, true) 
+            $tipos = is_string($datos->instalacion->tipo)
+                ? json_decode($datos->instalacion->tipo, true)
                 : $datos->instalacion->tipo;
 
             // Verificar si es un arreglo válido
@@ -776,10 +776,10 @@ class solicitudesController extends Controller
                     $comercializador = 'X';
                 }
             }
-            
+
         }
 
-       
+
         $fecha_visita = Helpers::formatearFechaHora($datos->fecha_visita);
 
         $pdf = Pdf::loadView('pdfs.SolicitudDeServicio', compact(
@@ -1350,14 +1350,14 @@ class solicitudesController extends Controller
         return Excel::download(new SolicitudesExport($filtros), 'reporte_solicitudes.xlsx');
     }
     public function destroy($id_solicitud){
-      try {
+/*       try {
         $solicitud = solicitudesModel::findOrFail($id_solicitud);
         $solicitud->delete();
 
         return response()->json(['success' => 'Solcitud eliminada correctamente']);
     } catch (\Exception $e) {
         return response()->json(['error' => 'Error al eliminar la solicitud: ' . $e->getMessage()], 500);
-    }
+    } */
     }
 
 }
