@@ -13,8 +13,8 @@ class impiController extends Controller
 
     public function UserManagement()
     {
-        //$tramites = Impi::all();
-        return view('Tramite_impi.impi');
+      $tramites = Impi::all();
+      return view('Tramite_impi.find_impi', compact('tramites'));
     }
 
     // Método para mostrar la vista principal de trámites
@@ -25,46 +25,51 @@ class impiController extends Controller
             1 => 'id_impi',
             2 => 'folio',
             3 => 'tramite',
-            4 => 'nombre',
+            4 => 'nombre'
         ];
-
         $search = [];
-        
-        $totalData = Impi::count();
 
-        $totalFiltered = $totalData;
+      $users_temp = Impi::all();
+    $totalData = $users_temp->count();
+
+    $totalFiltered = $totalData;
+
 
     $limit = $request->input('length');
     $start = $request->input('start');
     $order = $columns[$request->input('order.0.column')];
     $dir = $request->input('order.0.dir');
 
-    if (empty($request->input('search.value'))) {
-      $users = Impi::count()
-      ->offset($start)
-        ->limit($limit)
-        ->orderBy($order, $dir)
-        ->get();
-    } else {
-        //BUSCADOR
-            $search = $request->input('search.value');
-      
-            $users = Impi::count('id', 'LIKE', "%{$search}%")
-              ->orWhere('folio', 'LIKE', "%{$search}%")
-              ->orWhere('tramite', 'LIKE', "%{$search}%")
-              ->offset($start)
-              ->limit($limit)
-              ->orderBy($order, $dir)
-              ->get();
-      
-            $totalFiltered = Impi::count('id', 'LIKE', "%{$search}%")
-              ->orWhere('folio', 'LIKE', "%{$search}%")
-              ->orWhere('tramite', 'LIKE', "%{$search}%")
-      
-              ->count();
-          }
+    $search1 = $request->input('search.value');
 
-        $data = [];
+      if (empty($request->input('search.value'))) {
+        //$users = Impi::where("nombre", 2)->offset($start)
+        $users = Impi::where('id_impi', 'LIKE', "%{$request->input('search.value')}%")
+
+        ->offset($start)
+          ->limit($limit)
+          ->orderBy($order, $dir)
+          ->get();
+      } else {
+        $search = $request->input('search.value');
+  
+        $users = Impi::where('id', 'LIKE', "%{$search}%")
+          ->where("nombre", 1)
+          ->orWhere('tramite', 'LIKE', "%{$search}%")
+  
+          ->offset($start)
+          ->limit($limit)
+          ->orderBy($order, $dir)
+          ->get();
+  
+        $totalFiltered = Impi::where('id', 'LIKE', "%{$search}%")
+          ->where("nombre", 1)
+          ->orWhere('tramite', 'LIKE', "%{$search}%")
+          ->count();
+      }
+      $data = [];
+
+
 
         if (!empty($users)) {
             $ids = $start;
@@ -76,26 +81,28 @@ class impiController extends Controller
                 $nestedData['folio'] = $user->folio;
                 $nestedData['tramite'] = $user->tramite;
                 $nestedData['nombre'] = $user->nombre;
-                $data[] = $nestedData;
-            }
-        }
 
-        if ($data) {
-            return response()->json([
-                'draw' => intval($request->input('draw')),
-                'recordsTotal' => intval($totalData),
-                'recordsFiltered' => intval($totalFiltered),
-                'code' => 200,
-                'data' => $data,
-            ]);
-        } else {
-            return response()->json([
-                'message' => 'Internal Server Error',
-                'code' => 500,
-                'data' => [],
-            ]);
-        }
+                $data[] = $nestedData;
+      }
+    }
+
+    if ($data) {
+      return response()->json([
+        'draw' => intval($request->input('draw')),
+        'recordsTotal' => intval($totalData),
+        'recordsFiltered' => intval($totalFiltered),
+        'code' => 200,
+        'data' => $data,
+      ]);
+    } else {
+      return response()->json([
+        'message' => 'Internal Server Error',
+        'code' => 500,
+        'data' => [],
+      ]);
+    }
 }
+
 /*
     public function create()
     {
@@ -153,4 +160,6 @@ class impiController extends Controller
 */
 
 
-}///CONTROLLER
+
+
+}//CONTROLLER

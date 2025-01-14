@@ -20,7 +20,6 @@ class Impi extends Model
         'id_impi',
         'folio', 
         'tramite', 
-        'nombre', 
-        'fecha_registro',
+        'nombre'
     ];
 }

@@ -53,10 +53,12 @@
         <table class="datatables-users table">
             <thead class="table-dark">
                 <tr>
-                    <th>Folio</th>
-                    <th>Nombre tramite</th>
-                    <th>Usuario</th>
-                    <th>Acciones</th>
+                  <th></th>
+                  <th>Id</th>
+                  <th>folio</th>
+                  <th>Tramite</th>
+                  <th>usuario</th>
+                  <th>Acciones</th>
                 </tr>
             </thead>
         </table>
