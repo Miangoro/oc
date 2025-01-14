@@ -278,7 +278,7 @@ class solicitudesController extends Controller
         $VigilanciaProdu->id_instalacion = $request->id_instalacion;
         $VigilanciaProdu->info_adicional = $request->info_adicional;
 
-        $idGuias = $request->has('id_guia') && !empty($request->id_guia) ? $request->id_guia : [];
+        $idGuias = $request->has('id_guias') ? $request->id_guias : [];
 
         $VigilanciaProdu->caracteristicas = json_encode([
             'id_lote_granel' => $request->id_lote_granel,
@@ -292,7 +292,7 @@ class solicitudesController extends Controller
             'cant_pinas' => $request->cant_pinas,
             'art' => $request->art,
             'etapa' => $request->etapa,
-            'id_guia' => $idGuias,
+            'id_guias' => $idGuias,
             'nombre_predio' => $request->nombre_predio,
         ]);
 
@@ -840,35 +840,34 @@ class solicitudesController extends Controller
                     'id_empresa' => 'required|integer|exists:empresa,id_empresa',
                     'fecha_visita' => 'required|date',
                     'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
-                    'info_adicional' => 'nullable|string'
+                    'info_adicional' => 'nullable|string',
+                    'id_guias' => 'nullable|array',
+                    'id_guias.*' => 'integer|exists:guias,id_guia',
+                    'edit_id_tipo_vig' => 'nullable|array',
+                    'edit_id_tipo_vig.*' => 'integer',
                 ]);
-                // Preparar el JSON para guardar en `caracteristicas`
-                $caracteristicasJson = [
-                    'id_lote_granel' => $request->id_lote_granel,
-                    'id_categoria' => $request->id_categoria,
-                    'id_clase' => $request->id_clase,
-                    'id_tipo' => $request->id_tipo,
-                    'analisis' => $request->analisis,
-                    'volumen' => $request->volumen,
-                    'fecha_corte' => $request->fecha_corte,
-                    'kg_maguey' => $request->kg_maguey,
-                    'cant_pinas' => $request->cant_pinas,
-                    'art' => $request->art,
-                    'etapa' => $request->etapa,
-                    'folio' => $request->folio,
-                    'nombre_predio' => $request->nombre_predio,
-                ];
 
-                // Convertir el array a JSON
-                $jsonContent = json_encode($caracteristicasJson);
-
-                // Actualizar datos específicos para georreferenciación
-                $solicitud->update([
+                $caracteristicas = [
+                  'id_lote_granel' => $request->id_lote_granel,
+                  'id_categoria' => $request->id_categoria,
+                  'id_clase' => $request->id_clase,
+                  'id_tipo_maguey' => !empty($request->edit_id_tipo_vig) ? $request->edit_id_tipo_vig : null,
+                  'analisis' => $request->analisis,
+                  'volumen' => $request->volumen,
+                  'fecha_corte' => $request->fecha_corte,
+                  'kg_maguey' => $request->kg_maguey,
+                  'cant_pinas' => $request->cant_pinas,
+                  'art' => $request->art,
+                  'etapa' => $request->etapa,
+                  'id_guias' => !empty($request->id_guias) ? $request->id_guias : null,
+                  'nombre_predio' => $request->nombre_predio,
+              ];
+                  $solicitud->update([
                     'id_empresa' => $request->id_empresa,
                     'fecha_visita' => $request->fecha_visita,
                     'id_instalacion' => $request->id_instalacion,
                     'info_adicional' => $request->info_adicional,
-                    'caracteristicas' => $jsonContent,
+                    'caracteristicas' => json_encode($caracteristicas),
                 ]);
 
                 break;
