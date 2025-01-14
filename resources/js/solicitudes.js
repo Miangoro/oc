@@ -240,7 +240,7 @@ $(function () {
         searchable: false,
         orderable: false,
         render: function (data, type, full, meta) {
-          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['id_solicitud']}"></i>`;
+          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-id="${full['id_solicitud']}" data-registro="${full['folio']}"></i>`;
         }
       },
       {
@@ -636,6 +636,7 @@ $(function () {
             // Rellenar campos según el tipo de modal
             const datos = response.data;
 
+            $(".solicitud").text(datos.folio);
             if (id_tipo === 1){
               modal.find('#edit_id_solicitud_muestr').val(id_solicitud);
               modal.find('#id_empresa_muestr').val(response.data.id_empresa).trigger('change');
@@ -3453,7 +3454,7 @@ $(function () {
       .show();
 
     $('#titulo_modal').text('Solicitud de servicios NOM-070-SCFI-2016');
-    $('#subtitulo_modal').text(registro);
+    $('#subtitulo_modal').html('<p class="solicitud badge bg-primary">'+registro+'</p>');
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
       spinner.hide();
