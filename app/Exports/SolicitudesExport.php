@@ -43,6 +43,11 @@ class SolicitudesExport implements FromCollection, WithHeadings, WithEvents, Wit
         if (isset($this->filtros['mes']) && $this->filtros['mes']) {
             $query->whereMonth('fecha_solicitud', $this->filtros['mes']);
         }
+            // Filtrar por id_soli
+        if (isset($this->filtros['id_soli']) && $this->filtros['id_soli']) {
+          $query->where('id_tipo', $this->filtros['id_soli']);
+        }
+
         $query->orderBy('fecha_solicitud', 'desc');
 
         return $query->get([

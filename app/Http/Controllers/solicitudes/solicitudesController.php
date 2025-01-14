@@ -278,6 +278,7 @@ class solicitudesController extends Controller
         $VigilanciaProdu->id_instalacion = $request->id_instalacion;
         $VigilanciaProdu->info_adicional = $request->info_adicional;
 
+        $idGuias = $request->has('id_guia') && !empty($request->id_guia) ? $request->id_guia : [];
 
         $VigilanciaProdu->caracteristicas = json_encode([
             'id_lote_granel' => $request->id_lote_granel,
@@ -291,7 +292,7 @@ class solicitudesController extends Controller
             'cant_pinas' => $request->cant_pinas,
             'art' => $request->art,
             'etapa' => $request->etapa,
-            'folio' => $request->folio,
+            'id_guia' => $idGuias,
             'nombre_predio' => $request->nombre_predio,
         ]);
 
@@ -1316,7 +1317,7 @@ class solicitudesController extends Controller
     }
     public function exportar(Request $request)
     {
-        $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes']);
+        $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes', 'id_soli']);
         // Pasar los filtros a la clase
         return Excel::download(new SolicitudesExport($filtros), 'reporte_solicitudes.xlsx');
     }

@@ -156,10 +156,12 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="folio" name="folio"
-                            placeholder="Ingrese la guai de traslado">
-                        <label for="folio">No.guia de traslado</label>
-                    </div>
+                      <select multiple class="select2 form-select" id="edit_id_guias_vigiP" name="id_guias[]"
+                          aria-label="id_instalacion">
+                          <option value="" disabled selected>Lista de guías de agave</option>
+                      </select>
+                      <label for="">Guías de agave expedidas por OC CIDAM</label>
+                  </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-floating form-floating-outline mb-5">
@@ -188,7 +190,7 @@
 <script>
     function obtenerDatosGraneles() {
         var lote_granel_id = $("#id_lote_granel").val();
-        if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) { 
+        if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
             $.ajax({
                 url: '/getDatos2/' + lote_granel_id,
                 method: 'GET',
@@ -208,7 +210,7 @@
                         $('#kg_maguey').val(response.lotes_granel_guias[0].guia.kg_maguey);
                         $('#cant_pinas').val(response.lotes_granel_guias[0].guia.num_comercializadas);
                         $('#art').val(response.lotes_granel_guias[0].guia.art);
-                        $('#folio').val(response.lotes_granel_guias[0].guia.folio);
+                        $('#folio').val(response.lotes_granel_guias[0].guia.folio).trigger('change');
 
                         if (response.lotes_granel_guias[0].guia.predios) {
                             $('#nombre_predio').val(response.lotes_granel_guias[0].guia.predios.nombre_predio);
@@ -228,7 +230,7 @@
     }
 
     function obtenerGraneles(empresa) {
-        if (empresa !== "" && empresa !== null && empresa !== undefined) { 
+        if (empresa !== "" && empresa !== null && empresa !== undefined) {
             $.ajax({
                 url: '/getDatos/' + empresa,
                 method: 'GET',
@@ -243,6 +245,22 @@
                         contenido = '<option value="">Sin lotes registrados</option>';
                     } else {}
                     $('#id_lote_granel').html(contenido);
+
+
+                    //guias de traslado
+                    var contenidoGuias = "";
+                    for (let index = 0; index < response.guias.length; index++) {
+                      contenidoGuias = '<option value="' + response.guias[index].id_guia + '">' +
+                            response
+                            .guias[index].folio + '</option>' + contenidoGuias;
+                    }
+                    if (response.guias.length == 0) {
+                      contenidoGuias = '<option value="">Sin guias registrados</option>';
+                    } else {}
+                    $('#edit_id_guias_vigiP').html(contenidoGuias);
+
+
+
                 },
                 error: function() {}
             });
@@ -250,7 +268,7 @@
     }
 
     function obtenerGranelesInsta(empresa) {
-        if (empresa !== "" && empresa !== null && empresa !== undefined) { 
+        if (empresa !== "" && empresa !== null && empresa !== undefined) {
             $.ajax({
                 url: '/getDatos/' + empresa,
                 method: 'GET',

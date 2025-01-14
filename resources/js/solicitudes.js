@@ -2723,13 +2723,6 @@ $(function () {
             }
           }
         },
-        folio: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el número de guía de traslado.'
-            }
-          }
-        },
         nombre_predio: {
           validators: {
             notEmpty: {
@@ -2750,6 +2743,8 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function () {
+      var formDataArray = $(addVigilanciaProduccionForm).serializeArray();
+    console.log('Datos serializados:', formDataArray);
       var formData = new FormData(addVigilanciaProduccionForm);
 
       $.ajax({
