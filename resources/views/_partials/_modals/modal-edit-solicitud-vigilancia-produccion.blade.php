@@ -158,9 +158,11 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-floating form-floating-outline mb-5">
-                        <input type="text" class="form-control" id="edit_folio_vig" name="folio"
-                            placeholder="Ingrese la guai de traslado">
-                        <label for="folio">No.guia de traslado</label>
+                        <!-- Select para seleccionar múltiples guías -->
+                        <select multiple class="select2 form-select" id="edit_edit_id_guias_vigiP" name="id_guias[]">
+
+                        </select>
+                        <label for="edit_edit_id_guias_vigiP">Guías de agave expedidas por OC CIDAM</label>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -199,7 +201,17 @@
                     if (response && response.lotes_granel) {
                         $('#edit_id_categoria_vig').val(response.lotes_granel.id_categoria || '');
                         $('#edit_id_clase_vig').val(response.lotes_granel.id_clase || '');
-                        $('#edit_id_tipo_vig').val(response.lotes_granel.id_tipo || '');
+                        $('#edit_id_tipo_vig').val(response.lotes_granel.id_tipo || '').trigger('change');
+
+                                      // Aquí manejamos los valores del campo de tipos de maguey
+                    const idtiposedit = response.lotes_granel.id_tipo || [];
+                    if (Array.isArray(idtiposedit) && idtiposedit.length > 0) {
+                        // Asignar los valores múltiples de tipo de maguey al select
+                        $('#edit_id_tipo_vig').val(idtiposedit).trigger('change');  // Actualiza los valores de Select2
+                    } else {
+                        $('#edit_id_tipo_vig').val([]).trigger('change');  // Si no hay valores, limpiamos el select
+                    }
+
                         $('#edit_analisis_vig').val(response.lotes_granel.folio_fq || '');
                         $('#edit_volumen_vig').val(response.lotes_granel.cont_alc || '');
                     }
@@ -218,7 +230,7 @@
                         $('#edit_kg_maguey_vig').val('');
                         $('#edit_cant_pinas_vig').val('');
                         $('#edit_art_vig').val('');
-                        $('#edit_folio_vig').val('');
+                        $('#edit_edit_id_guias_vigiP').val('');
                         $('#edit_nombre_predio_vig').val('');
                     }
                 },
@@ -245,6 +257,26 @@
                         contenido = '<option value="">Sin lotes registrados</option>';
                     } else {}
                     $('#edit_id_lote_granel_vig').html(contenido);
+
+                    //guias de traslado
+                    var contenidoGuiass = "";
+                    for (let index = 0; index < response.guias.length; index++) {
+                        contenidoGuiass = '<option value="' + response.guias[index].id_guia + '">' +
+                            response
+                            .guias[index].folio + '</option>' + contenidoGuiass;
+                    }
+                    if (response.guias.length == 0) {
+                        contenidoGuiass = '<option value="">Sin guias registrados</option>';
+                    } else {}
+                    $('#edit_edit_id_guias_vigiP').html(contenidoGuiass);
+
+                    const idguias = $('#edit_edit_id_guias_vigiP').data('selected');
+                    if (idguias) {
+                        $('#edit_edit_id_guias_vigiP').val(idguias).trigger('change');
+                    } else if (response.id_guias.length == 0) {
+                        console.log('no hay se');
+                    }
+
                 },
                 error: function() {}
             });

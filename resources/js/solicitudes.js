@@ -690,10 +690,12 @@ $(function () {
                 modal.find('#edit_id_clase_vig').val('');
               }
               if (response.caracteristicas && response.caracteristicas.id_tipo_maguey) {
-                modal.find('#edit_id_tipo_vig').val(response.caracteristicas.id_tipo_maguey);
-              } else {
-                modal.find('#edit_id_tipo_vig').val('');
-              }
+                const idTipos = response.caracteristicas.id_tipo_maguey; // Asegúrate de que sea un arreglo
+                modal.find('#edit_id_tipo_vig').val(idTipos).trigger('change');  // Asigna los valores seleccionados
+            } else {
+                modal.find('#edit_id_tipo_vig').val([]).trigger('change'); // Si no hay valores, limpia el select
+            }
+
               if (response.caracteristicas && response.caracteristicas.analisis) {
                 modal.find('#edit_analisis_vig').val(response.caracteristicas.analisis);
               } else {
@@ -729,10 +731,10 @@ $(function () {
               } else {
                 modal.find('#edit_etapa_vig').val('');
               }
-              if (response.caracteristicas && response.caracteristicas.folio) {
-                modal.find('#edit_folio_vig').val(response.caracteristicas.folio);
+              if (response.caracteristicas && response.caracteristicas.id_guias) {
+                modal.find('#edit_edit_id_guias_vigiP').data('selected', response.caracteristicas.id_guias);
               } else {
-                modal.find('#edit_folio_vig').val('');
+                modal.find('#edit_edit_id_guias_vigiPs').val('');
               }
               if (response.caracteristicas && response.caracteristicas.nombre_predio) {
                 modal.find('#edit_nombre_predio_vig').val(response.caracteristicas.nombre_predio);
@@ -1426,6 +1428,15 @@ $(function () {
     }).on('core.form.valid', function (e) {
       // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
+
+        // Agregar los valores seleccionados del select múltiple al FormData
+        $('#edit_id_tipo_vig').find('option:selected').each(function () {
+          formData.append('edit_id_tipo_vig[]', $(this).val());
+        });
+
+        $('#edit_edit_id_guias_vigiP').find('option:selected').each(function () {
+          formData.append('id_guias[]', $(this).val());
+        });
 
       // Hacer la solicitud AJAX
       $.ajax({
@@ -2753,9 +2764,16 @@ $(function () {
         autoFocus: new FormValidation.plugins.AutoFocus()
       }
     }).on('core.form.valid', function () {
-      var formDataArray = $(addVigilanciaProduccionForm).serializeArray();
-    console.log('Datos serializados:', formDataArray);
       var formData = new FormData(addVigilanciaProduccionForm);
+
+        // Agregar los valores seleccionados del select múltiple al FormData
+        $('#id_tipo_maguey').find('option:selected').each(function () {
+          formData.append('id_tipo_maguey[]', $(this).val());
+        });
+
+        $('#edit_id_guias_vigiP').find('option:selected').each(function () {
+          formData.append('id_guias[]', $(this).val());
+        });
 
       $.ajax({
         url: '/hologramas/storeVigilanciaProduccion', // Actualiza con la URL correcta
@@ -3324,7 +3342,6 @@ $(function () {
     }
   }).on('core.form.valid', function () {
     const formData = new FormData(addVigilanciaTrasladoForm);
-
     $.ajax({
       url: '/hologramas/storeVigilanciaTraslado', // Cambia a la URL correcta
       type: 'POST',

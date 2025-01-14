@@ -89,7 +89,7 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-5">
-                        <select class="select2 form-select" id="id_tipo_maguey" name="id_tipo_maguey[0]"
+                        <select class="select2 form-select" id="id_tipo_maguey" name="id_tipo_maguey[]"
                             aria-label="id_tipo" multiple>
                             @foreach ($tipos as $tipo)
                                 <option value="{{ $tipo->id_tipo }}">{{ $tipo->nombre }} | {{ $tipo->cientifico }}
@@ -154,15 +154,15 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
-                    <div class="form-floating form-floating-outline mb-5">
-                      <select multiple class="select2 form-select" id="edit_id_guias_vigiP" name="id_guias[]"
-                          aria-label="id_instalacion">
-                          <option value="" disabled selected>Lista de guías de agave</option>
-                      </select>
-                      <label for="">Guías de agave expedidas por OC CIDAM</label>
-                  </div>
+              <div class="col-md-6">
+                <div class="form-floating form-floating-outline mb-5">
+                    <!-- Select para seleccionar múltiples guías -->
+                    <select multiple class="select2 form-select" id="edit_id_guias_vigiP" name="id_guias[]">
+
+                    </select>
+                    <label for="edit_id_guias_vigiP">Guías de agave expedidas por OC CIDAM</label>
                 </div>
+            </div>
                 <div class="col-md-6">
                     <div class="form-floating form-floating-outline mb-5">
                         <input type="text" class="form-control" id="nombre_predio" name="nombre_predio"
@@ -282,7 +282,7 @@
                             contenido;
                     }
                     if (response.instalaciones.length == 0) {
-                        contenido = '<option value="">Sin instalaciones registradas</option>';
+                        contenido = '';
                     }
                     $('.id_instalacion').html(contenido);
                 },
