@@ -49,6 +49,6 @@
     
     @include('_partials/_modals/modal-add-lotesEnvasado')
     @include('_partials/_modals/modal-edit-lotesSKU')
-    @include('_partials._modals/modal-edit-LotesEnvasado')
+    @include('_partials._modals/modal-edit-lotesEnvasado')
     <!-- /Modal -->
 @endsection
