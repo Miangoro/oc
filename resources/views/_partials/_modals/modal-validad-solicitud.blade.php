@@ -685,7 +685,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Volumen
                                             del Lote Actual:</th>
-                                        <td id="volumenLoteActualTraslado"></td>
+                                        <td class="volumenActual"></td>
                                         <td>
                                             <select class="form-control form-control-sm"
                                                 id="cumpleVolumenLoteActualTraslado">
@@ -698,7 +698,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Volumen
                                             Trasladado:</th>
-                                        <td id="volumenTrasladado"></td>
+                                        <td class="volumenTrasladado"></td>
                                         <td>
                                             <select class="form-control form-control-sm" id="cumpleVolumenTrasladado">
                                                 <option disabled selected>Seleccionar</option>
@@ -710,7 +710,7 @@
                                     <tr>
                                         <th class="text-dark fw-bold" style="font-size: 11px;" scope="row">Volumen
                                             Sobrante:</th>
-                                        <td id="volumenSobrante"></td>
+                                        <td class="volumenSobrante"></td>
                                         <td>
                                             <select class="form-control form-control-sm" id="cumpleVolumenSobrante">
                                                 <option disabled selected>Seleccionar</option>

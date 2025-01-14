@@ -471,6 +471,14 @@
         <tr>
             <td class="con-negra" colspan="3" rowspan="3">INFORMACIÓN ADICIONAL SOBRE LA <br> ACTIVIDAD:</td>
             <td class="td-margins" colspan="6">
+                @if($vigilancia_traslado === 'X') 
+                    <b>Identificador de contenedor de salida:</b> {{ $caracteristicas['id_salida']; }}<br> 
+                    <b>Identificador de contenedor de recepción:</b> {{ $caracteristicas['id_contenedor']; }}<br>
+                    <b>Sobrante en contenedor de salida:</b> {{ $caracteristicas['id_vol_res']; }}<br>
+                    <b>Volumen actual del lote:</b> {{ $caracteristicas['id_vol_actual']; }}<br>
+                    <b>Volumen trasladado</b> {{ $caracteristicas['id_vol_traslado']; }}<br>
+                    <b>Volumen sobrante del lote:</b> {{ $caracteristicas['id_sobrante']; }}<br>
+                @endif
                 {{ $datos->info_adicional ?? "------------------------" }}
 
                 {!! $datos->punto_reunion ? "<br><span class='con-negra'>Punto de reunión: </span> {$datos->punto_reunion}" : "" !!}
