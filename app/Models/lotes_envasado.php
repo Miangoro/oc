@@ -35,7 +35,7 @@ class lotes_envasado extends Model
 
     public function Instalaciones()
     {
-        return $this->belongsTo(Instalaciones::class, 'lugar_envasado', 'id_instalacion');
+        return $this->belongsTo(instalaciones::class, 'lugar_envasado', 'id_instalacion');
     }
     
     public function marca(){
