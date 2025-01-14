@@ -14,28 +14,15 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-4">
-                            <div class="form-floating form-floating-outline mb-4">
-                                <select class="select2 form-select" name="id_soli" id="id_soli">
-{{--                                     <option value="" disabled selected>Selecciona una solicitud</option> --}}
-                                    <option value="">Todas</option>
-                                    <option value="1">Muestreo de agave (ART)</option>
-                                    <option value="2">Vigilancia en producción de lote</option>
-                                    <option value="3">Muestreo de lote a granel</option>
-                                    <option value="4">Vigilancia en el traslado del lote</option>
-                                    <option value="5">Inspección de envasado</option>
-                                    <option value="6">Muestreo de lote envasado</option>
-                                    <option value="7">Inspección ingreso a barrica/ contenedor de vidrio</option>
-                                    <option value="8">Liberación de producto terminado nacional</option>
-                                    <option value="9">Inspección de liberación a barrica/contenedor de vidrio
-                                    </option>
-                                    <option value="10">Georreferenciación</option>
-                                    <option value="11">Pedidos para exportación</option>
-                                    <option value="12">Emisión de certificado NOM a granel</option>
-                                    <option value="13">Emisión de certificado venta nacional</option>
-                                    <option value="14">Dictaminación de instalaciones</option>
-                                </select>
-                                <label for="id_soli">Solicitudes</label>
-                            </div>
+                          <div class="form-floating form-floating-outline mb-4">
+                            <select class="select2 form-select" name="id_soli[]" id="id_soli" multiple>
+                                <option value="">Todas</option>
+                                @foreach ($solicitudesTipos as $solicitudTipo)
+                                    <option value="{{ $solicitudTipo->id_tipo }}">{{ $solicitudTipo->tipo }}</option>
+                                @endforeach
+                            </select>
+                            <label for="id_soli">Solicitudes</label>
+                        </div>
                         </div>
                         <!-- Filtro Cliente -->
                         <div class="col-md-6 mb-4">
@@ -135,4 +122,5 @@
         </div>
     </div>
 </div>
-<script></script>
+<script>
+</script>

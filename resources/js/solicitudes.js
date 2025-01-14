@@ -4363,4 +4363,32 @@ $(document).ready(function () {
   });
 });
 
+$(document).ready(function () {
+  $('#id_soli').on('change', function () {
+      var selectedValues = $(this).val(); // Obtener los valores seleccionados
+
+      if (selectedValues && selectedValues.includes("")) {
+          // Si "Todas" es seleccionado
+          $('#id_soli option').each(function () {
+              if ($(this).val() !== "") {
+                  $(this).prop('selected', false); // Deseleccionar otras opciones
+                  $(this).prop('disabled', true); // Deshabilitar otras opciones
+              }
+          });
+      } else {
+          // Si seleccionas cualquier otra opción
+          if (selectedValues && selectedValues.length > 0) {
+              $('#id_soli option[value=""]').prop('disabled', true); // Deshabilitar "Todas"
+          } else {
+              // Si no hay opciones seleccionadas, habilitar todas
+              $('#id_soli option').each(function () {
+                  $(this).prop('disabled', false); // Habilitar todas las opciones
+              });
+          }
+      }
+  });
+});
+
+
+
 });

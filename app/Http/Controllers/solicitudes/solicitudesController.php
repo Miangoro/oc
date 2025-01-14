@@ -1343,11 +1343,12 @@ class solicitudesController extends Controller
         ]);
     }
     public function exportar(Request $request)
-    {
-        $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes', 'id_soli']);
-        // Pasar los filtros a la clase
-        return Excel::download(new SolicitudesExport($filtros), 'reporte_solicitudes.xlsx');
-    }
+      {
+          $filtros = $request->only(['id_empresa', 'anio', 'estatus', 'mes', 'id_soli']);
+          // Pasar los filtros a la clase SolicitudesExport
+          return Excel::download(new SolicitudesExport($filtros), 'reporte_solicitudes.xlsx');
+      }
+
     public function destroy($id_solicitud){
 /*       try {
         $solicitud = solicitudesModel::findOrFail($id_solicitud);
