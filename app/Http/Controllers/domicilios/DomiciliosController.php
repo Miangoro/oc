@@ -5,7 +5,7 @@ namespace App\Http\Controllers\domicilios;
 use App\Helpers\Helpers;
 use App\Http\Controllers\Controller;
 use App\Models\Documentacion_url;
-use App\Models\Instalaciones;
+use App\Models\instalaciones;
 use App\Models\empresa;
 use App\Models\estados;
 use App\Models\organismos;
@@ -19,7 +19,7 @@ class DomiciliosController extends Controller
 {
     public function UserManagement()
     {
-        $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
+        $instalaciones = instalaciones::all(); // Obtener todas las instalaciones
         $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = estados::all(); // Obtener todos los estados
         $organismos = organismos::all(); // Obtener todos los organismos
@@ -46,7 +46,7 @@ class DomiciliosController extends Controller
         $search = [];
       
 
-        $totalData = Instalaciones::whereHas('empresa', function ($query) {
+        $totalData = instalaciones::whereHas('empresa', function ($query) {
             $query->where('tipo', 2);
         })->count();
 
@@ -58,7 +58,7 @@ class DomiciliosController extends Controller
         $dir = $request->input('order.0.dir');
 
         if (empty($request->input('search.value'))) {
-            $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
+            $instalaciones = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
                 })
@@ -68,7 +68,7 @@ class DomiciliosController extends Controller
                 ->get();
         } else {
             $search = $request->input('search.value');
-            $instalaciones = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
+            $instalaciones = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
                 })
@@ -97,7 +97,7 @@ class DomiciliosController extends Controller
                 ->orderBy($order, $dir)
                 ->get();
 
-            $totalFiltered = Instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
+            $totalFiltered = instalaciones::with('empresa', 'estados', 'organismos', 'documentos_certificados_instalaciones')
                 ->whereHas('empresa', function ($query) {
                     $query->where('tipo', 2);
                 })
@@ -162,7 +162,7 @@ class DomiciliosController extends Controller
     public function destroy($id_instalacion)
     {
         try {
-            $instalacion = Instalaciones::findOrFail($id_instalacion);
+            $instalacion = instalaciones::findOrFail($id_instalacion);
             $documentos = Documentacion_url::where('id_relacion', $id_instalacion)->get();
     
             if ($documentos->isNotEmpty()) {
@@ -208,7 +208,7 @@ class DomiciliosController extends Controller
     
         try {
             // Crear la instalación
-            $instalacion = Instalaciones::create([
+            $instalacion = instalaciones::create([
                 'id_empresa' => $request->input('id_empresa'),
                 'tipo' => json_encode($request->input('tipo')), 
                 'estado' => $request->input('estado'),
@@ -264,7 +264,7 @@ class DomiciliosController extends Controller
     public function edit($id_instalacion)
     {
         try {
-            $instalacion = Instalaciones::findOrFail($id_instalacion);
+            $instalacion = instalaciones::findOrFail($id_instalacion);
             
             // Obtener todos los archivos relacionados con la instalación
             $documentacion_urls = Documentacion_url::where('id_relacion', $id_instalacion)->get();
@@ -309,7 +309,7 @@ class DomiciliosController extends Controller
         ]);
     
         try {
-            $instalacion = Instalaciones::findOrFail($id);
+            $instalacion = instalaciones::findOrFail($id);
     
             // Actualizar instalación
             $instalacion->update([
@@ -381,7 +381,7 @@ class DomiciliosController extends Controller
     
         try {
             // Carga la instalación y sus relaciones necesarias
-            $instalacion = Instalaciones::with('empresa.empresaNumClientes', 'documentos')->findOrFail($request->id_instalacion);
+            $instalacion = instalaciones::with('empresa.empresaNumClientes', 'documentos')->findOrFail($request->id_instalacion);
     
             // Definir el filtro de tipos y los documentos válidos
             $tiposPermitidos = [

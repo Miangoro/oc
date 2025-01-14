@@ -48,7 +48,7 @@ class solicitudesModel extends Model
 
     public function instalacion()
     {
-        return $this->hasOne(Instalaciones::class, 'id_instalacion', 'id_instalacion');
+        return $this->hasOne(instalaciones::class, 'id_instalacion', 'id_instalacion');
     }
 
     public function predios()
@@ -67,7 +67,7 @@ class solicitudesModel extends Model
 
     public function instalaciones()
     {
-        return $this->belongsTo(Instalaciones::class, 'id_instalacion', 'id_instalacion');
+        return $this->belongsTo(instalaciones::class, 'id_instalacion', 'id_instalacion');
     }
 
     public function getIdLoteGranelAttribute()
@@ -130,7 +130,7 @@ public function lote_envasado()
 
     public function instalacion_destino()
     {
-        return $this->belongsTo(Instalaciones::class, 'instalacion_vigilancia', 'id_instalacion');
+        return $this->belongsTo(instalaciones::class, 'instalacion_vigilancia', 'id_instalacion');
     }
 
     
@@ -142,7 +142,7 @@ public function lote_envasado()
     public function categorias_mezcal()
     {
         $ids = $this->getAttribute('caracteristicas')['categorias'] ?? [];
-        return Categorias::whereIn('id_categoria', $ids)->get();
+        return categorias::whereIn('id_categoria', $ids)->get();
     }
 
     

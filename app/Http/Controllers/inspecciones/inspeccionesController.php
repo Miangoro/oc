@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Documentacion_url;
-use App\Models\Instalaciones;
+use App\Models\instalaciones;
 use App\Models\empresa;
 use App\Models\estados;
 use App\Models\actas_inspeccion;
@@ -37,7 +37,7 @@ class inspeccionesController extends Controller
 {
     public function UserManagement()
     {
-        $instalaciones = Instalaciones::all(); // Obtener todas las instalaciones
+        $instalaciones = instalaciones::all(); // Obtener todas las instalaciones
         $Predios = Predios::all(); // Obtener todas las instalaciones
         $empresas = empresa::where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
         $estados = estados::all(); // Obtener todos los estados
@@ -176,7 +176,7 @@ class inspeccionesController extends Controller
     public function destroy($id_instalacion)
     {
         try {
-            $instalacion = Instalaciones::findOrFail($id_instalacion);
+            $instalacion = instalaciones::findOrFail($id_instalacion);
             $instalacion->delete();
 
             return response()->json(['success' => 'Instalación eliminada correctamente']);
@@ -190,7 +190,7 @@ class inspeccionesController extends Controller
     {
         try {
             // Obtener la instalación y sus documentos asociados
-            $instalacion = Instalaciones::findOrFail($id_instalacion);
+            $instalacion = instalaciones::findOrFail($id_instalacion);
 
             // Obtener los documentos asociados
             $documentacion_urls = Documentacion_url::where('id_relacion', $id_instalacion)->get();
