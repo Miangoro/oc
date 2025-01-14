@@ -6,7 +6,7 @@ use App\Models\lotes_envasado;
 use App\Models\empresa;
 use App\Models\marcas;
 use App\Models\LotesGranel;
-use App\Models\Instalaciones;
+use App\Models\instalaciones;
 use App\Http\Controllers\Controller;
 use App\Models\lotes_envasado_granel;
 use Illuminate\Http\Request;
@@ -29,7 +29,7 @@ class lotesEnvasadoController extends Controller
         $marcas = marcas::all();
         $lotes_granel = LotesGranel::all();
         $lotes_envasado = lotes_envasado::all();
-        $Instalaciones = Instalaciones::all();
+        $Instalaciones = instalaciones::all();
         $clases = clases::all();
         $categorias = categorias::all();
 
