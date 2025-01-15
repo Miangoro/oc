@@ -52,7 +52,7 @@ $(function () {
         render: function (data) {
           switch (data.id_tipo) {
             case 1: //Muestreo de agave
-            return `
+              return `
             <br>
             <span class="fw-bold text-dark small">Guías de agave:</span>
             <span class="small"> ${data.guias || 'N/A'}</span>
@@ -118,7 +118,7 @@ $(function () {
                       <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_inspeccion || 'N/A'}</span>
                       `;
             case 7:
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote_barricada || 'N/A'}</span>
+              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_barricada || 'N/A'}</span>
                       <br>
@@ -133,6 +133,8 @@ $(function () {
                       <span class="fw-bold text-dark small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
+                       <br>
+                      <span class="fw-bold text-dark small">Volumen ingresado:</span><span class="small"> ${data.volumen_ingresado || 'N/A'}</span>
                       `;
             case 9:
               return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote_liberacion || 'N/A'}</span>
@@ -278,10 +280,9 @@ $(function () {
             '<i class="text-warning ri-edit-fill"></i> Editar</a>' +
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud">` +
             '<i class="text-info ri-folder-3-fill"></i> Expediente del servicio</a>' +
-             // Aquí agregamos la opción de eliminar
+            // Aquí agregamos la opción de eliminar
             `<a  data-id="${full['id']}"   data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">` +
             '<i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>' +
-
             '</div>' +
             '</div>'
           );
@@ -449,17 +450,17 @@ $(function () {
           'data-bs-toggle': 'modal',
           'data-bs-dismiss': 'modal',
           'data-bs-target': '#exportarExcel'
-      }
-    },
-    {
-      text: '<i class="ri-add-line ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nueva solicitud</span>',
-      className: 'add-new btn btn-primary waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4  mt-md-0',
-      attr: {
+        }
+      },
+      {
+        text: '<i class="ri-add-line ri-16px me-0 me-md-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nueva solicitud</span>',
+        className: 'add-new btn btn-primary waves-effect waves-light me-2 mb-2 mb-sm-2 mt-4  mt-md-0',
+        attr: {
           'data-bs-toggle': 'modal',
           'data-bs-dismiss': 'modal',
           'data-bs-target': '#verSolicitudes'
+        }
       }
-  }
     ],
     // For responsive popup
     responsive: {
@@ -551,7 +552,7 @@ $(function () {
         <input id="delete-reason" class="swal2-input" placeholder="Escriba el motivo de la eliminación" required>
       `,
       preConfirm: () => {
-        const reason = Swal.getPopup().querySelector('#delete-reason').value
+        const reason = Swal.getPopup().querySelector('#delete-reason').value;
         if (!reason) {
           Swal.showValidationMessage('Debe proporcionar un motivo para eliminar');
           return false;
@@ -604,7 +605,6 @@ $(function () {
     });
   });
 
-
   $(document).ready(function () {
     $(document).on('click', '.edit-record-tipo', function () {
       // Obtenemos los datos del botón
@@ -618,10 +618,9 @@ $(function () {
       let modal = null;
 
       // Validamos el tipo y configuramos el modal correspondiente
-      if (id_tipo === 1){
+      if (id_tipo === 1) {
         modal = $('#editSolicitudMuestreoAgave');
-      }
-       else if (id_tipo === 2) {
+      } else if (id_tipo === 2) {
         modal = $('#editVigilanciaProduccion');
       } else if (id_tipo === 3) {
         modal = $('#editMuestreoLoteAgranel');
@@ -652,8 +651,8 @@ $(function () {
             // Rellenar campos según el tipo de modal
             const datos = response.data;
 
-            $(".solicitud").text(datos.folio);
-            if (id_tipo === 1){
+            $('.solicitud').text(datos.folio);
+            if (id_tipo === 1) {
               modal.find('#edit_id_solicitud_muestr').val(id_solicitud);
               modal.find('#id_empresa_muestr').val(response.data.id_empresa).trigger('change');
               modal.find('#fecha_visita_muestr').val(response.data.fecha_visita);
@@ -691,10 +690,10 @@ $(function () {
               }
               if (response.caracteristicas && response.caracteristicas.id_tipo_maguey) {
                 const idTipos = response.caracteristicas.id_tipo_maguey; // Asegúrate de que sea un arreglo
-                modal.find('#edit_id_tipo_vig').val(idTipos).trigger('change');  // Asigna los valores seleccionados
-            } else {
+                modal.find('#edit_id_tipo_vig').val(idTipos).trigger('change'); // Asigna los valores seleccionados
+              } else {
                 modal.find('#edit_id_tipo_vig').val([]).trigger('change'); // Si no hay valores, limpia el select
-            }
+              }
 
               if (response.caracteristicas && response.caracteristicas.analisis) {
                 modal.find('#edit_analisis_vig').val(response.caracteristicas.analisis);
@@ -751,7 +750,10 @@ $(function () {
               modal.find('#edit_id_instalacion_muestreo').data('selected', response.data.id_instalacion);
 
               if (response.caracteristicas && response.caracteristicas.id_lote_granel_muestreo) {
-                modal.find('#edit_id_lote_granel_muestreo').val(response.caracteristicas.id_lote_granel_muestreo).trigger('change');
+                modal
+                  .find('#edit_id_lote_granel_muestreo')
+                  .val(response.caracteristicas.id_lote_granel_muestreo)
+                  .trigger('change');
               } else {
                 modal.find('#edit_id_lote_granel_muestreo').val('');
               }
@@ -800,71 +802,22 @@ $(function () {
               modal.find('#instalacion_id_traslado').val(response.data.id_instalacion);
               modal.find('#lote_id_traslado').val(response.caracteristicas.id_lote_granel);
 
-              if (response.caracteristicas && response.caracteristicas.id_lote_granel_muestreo) {
-                modal.find('#edit_id_lote_granel_traslado').val(response.caracteristicas.id_lote_granel_muestreo);
-              } else {
-                modal.find('#edit_id_lote_granel_traslado').val('');
+              if (response.caracteristicas) {
+                modal.find('#edit_id_lote_granel_traslado').val(response.caracteristicas.id_lote_granel || '');
+                modal.find('#edit_id_categoria_traslado').val(response.caracteristicas.id_categoria_traslado || '');
+                modal.find('#edit_id_clase_traslado').val(response.caracteristicas.id_clase_traslado || '');
+                modal.find('#edit_id_tipo_maguey_traslado').val(response.caracteristicas.id_tipo_maguey_traslado || '');
+                modal.find('#edit_id_salida').val(response.caracteristicas.id_salida || '');
+                modal.find('#edit_id_contenedor').val(response.caracteristicas.id_contenedor || '');
+                modal.find('#edit_id_sobrante').val(response.caracteristicas.id_sobrante || '');
+                modal.find('#edit_id_vol_actual').val(response.caracteristicas.id_vol_actual || '');
+                modal.find('#edit_id_vol_traslado').val(response.caracteristicas.id_vol_traslado || '');
+                modal.find('#edit_id_vol_res').val(response.caracteristicas.id_vol_res || '');
+                modal.find('#edit_analisis_traslado').val(response.caracteristicas.analisis_traslado || '');
+                modal.find('#edit_volumen_traslado').val(response.caracteristicas.volumen_traslado || '');
+                modal.find('#edit_id_certificado_traslado').val(response.caracteristicas.id_certificado_traslado || '');
               }
-              if (response.caracteristicas && response.caracteristicas.id_categoria_traslado) {
-                modal.find('#edit_id_categoria_traslado').val(response.caracteristicas.id_categoria_traslado);
-              } else {
-                modal.find('#edit_id_categoria_traslado').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_clase_traslado) {
-                modal.find('#edit_id_clase_traslado').val(response.caracteristicas.id_clase_traslado);
-              } else {
-                modal.find('#edit_id_clase_traslado').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_traslado) {
-                modal.find('#edit_id_tipo_maguey_traslado').val(response.caracteristicas.id_tipo_maguey_traslado);
-              } else {
-                modal.find('#edit_id_tipo_maguey_traslado').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_salida) {
-                modal.find('#edit_id_salida').val(response.caracteristicas.id_salida);
-              } else {
-                modal.find('#edit_id_salida').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_contenedor) {
-                modal.find('#edit_id_contenedor').val(response.caracteristicas.id_contenedor);
-              } else {
-                modal.find('#edit_id_contenedor').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_sobrante) {
-                modal.find('#edit_id_sobrante').val(response.caracteristicas.id_sobrante);
-              } else {
-                modal.find('#edit_id_sobrante').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_vol_actual) {
-                modal.find('#edit_id_vol_actual').val(response.caracteristicas.id_vol_actual);
-              } else {
-                modal.find('#edit_id_vol_actual').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_vol_traslado) {
-                modal.find('#edit_id_vol_traslado').val(response.caracteristicas.id_vol_traslado);
-              } else {
-                modal.find('#edit_id_vol_traslado').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_vol_res) {
-                modal.find('#edit_id_vol_res').val(response.caracteristicas.id_vol_res);
-              } else {
-                modal.find('#edit_id_vol_res').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.analisis_traslado) {
-                modal.find('#edit_analisis_traslado').val(response.caracteristicas.analisis_traslado);
-              } else {
-                modal.find('#edit_analisis_traslado').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.volumen_traslado) {
-                modal.find('#edit_volumen_traslado').val(response.caracteristicas.volumen_traslado);
-              } else {
-                modal.find('#edit_volumen_traslado').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_certificado_traslado) {
-                modal.find('#edit_id_certificado_traslado').val(response.caracteristicas.id_certificado_traslado);
-              } else {
-                modal.find('#edit_id_certificado_traslado').val('');
-              }
+
               if (response.caracteristicas && response.caracteristicas.instalacion_vigilancia) {
                 modal
                   .find('#edit_instalacion_vigilancia')
@@ -953,84 +906,30 @@ $(function () {
               modal.find('#edit_id_empresa_barricada').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_barricada').data('selected', response.data.id_instalacion);
+              modal.find('#instalacion_ingreso').val(response.data.id_instalacion);
+              modal.find('#lote_ingreso').val(response.caracteristicas.id_lote_granel);
 
               // Acceder al campo `punto_reunion` desde `caracteristicas`
-              if (response.caracteristicas && response.caracteristicas.id_lote_granel_barricada) {
-                modal.find('#edit_id_lote_granel_barricada').val(response.caracteristicas.id_lote_granel_barricada);
-              } else {
-                modal.find('#edit_id_lote_granel_barricada').val('');
+              if (response.caracteristicas) {
+                modal.find('#edit_id_lote_granel_barricada').val(response.caracteristicas.id_lote_granel || '');
+                modal.find('#edit_id_categoria_barricada').val(response.caracteristicas.id_categoria || '');
+                modal.find('#edit_id_clase_barricada').val(response.caracteristicas.id_clase || '');
+                modal.find('#edit_id_tipo_maguey_barricada').val(response.caracteristicas.id_tipo_maguey || '');
+                modal.find('#edit_volumen_ingresado').val(response.caracteristicas.volumen_ingresado || '');
+                modal.find('#edit_analisis_barricada').val(response.caracteristicas.analisis || '');
+                modal.find('#edit_alc_vol_barrica').val(response.caracteristicas.alc_vol || '');
+                modal.find('#edit_tipo_lote').val(response.caracteristicas.tipoIngreso || '');
+                modal.find('#edit_fecha_inicio').val(response.caracteristicas.fecha_inicio || '');
+                modal.find('#edit_fecha_termino').val(response.caracteristicas.fecha_termino || '');
+                modal.find('#edit_material').val(response.caracteristicas.material || '');
+                modal.find('#edit_capacidad').val(response.caracteristicas.capacidad || '');
+                modal.find('#edit_num_recipientes').val(response.caracteristicas.num_recipientes || '');
+                modal.find('#edit_tiempo_dura').val(response.caracteristicas.tiempo_dura || '');
+                modal.find('#edit_id_certificado_barricada').val(response.caracteristicas.id_certificado || '');
               }
-              if (response.caracteristicas && response.caracteristicas.id_categoria_barricada) {
-                modal.find('#edit_id_categoria_barricada').val(response.caracteristicas.id_categoria_barricada);
-              } else {
-                modal.find('#edit_id_categoria_barricada').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_clase_barricada) {
-                modal.find('#edit_id_clase_barricada').val(response.caracteristicas.id_clase_barricada);
-              } else {
-                modal.find('#edit_id_clase_barricada').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_barricada) {
-                modal.find('#edit_id_tipo_maguey_barricada').val(response.caracteristicas.id_tipo_maguey_barricada);
-              } else {
-                modal.find('#edit_id_tipo_maguey_barricada').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_edad) {
-                modal.find('#edit_id_edad').val(response.caracteristicas.id_edad);
-              } else {
-                modal.find('#edit_id_edad').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.analisis_barricada) {
-                modal.find('#edit_analisis_barricada').val(response.caracteristicas.analisis_barricada);
-              } else {
-                modal.find('#edit_analisis_barricada').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.volumen_barricada) {
-                modal.find('#edit_volumen_barricada').val(response.caracteristicas.volumen_barricada);
-              } else {
-                modal.find('#edit_volumen_barricada').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.tipo_lote) {
-                modal.find('#edit_tipo_lote').val(response.caracteristicas.tipo_lote);
-              } else {
-                modal.find('#edit_tipo_lote').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.fecha_inicio) {
-                modal.find('#edit_fecha_inicio').val(response.caracteristicas.fecha_inicio);
-              } else {
-                modal.find('#edit_fecha_inicio').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.fecha_termino) {
-                modal.find('#edit_fecha_termino').val(response.caracteristicas.fecha_termino);
-              } else {
-                modal.find('#edit_fecha_termino').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.material) {
-                modal.find('#edit_material').val(response.caracteristicas.material);
-              } else {
-                modal.find('#edit_material').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.capacidad) {
-                modal.find('#edit_capacidad').val(response.caracteristicas.capacidad);
-              } else {
-                modal.find('#edit_capacidad').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.num_recipientes) {
-                modal.find('#edit_num_recipientes').val(response.caracteristicas.num_recipientes);
-              } else {
-                modal.find('#edit_num_recipientes').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.tiempo_dura) {
-                modal.find('#edit_tiempo_dura').val(response.caracteristicas.tiempo_dura);
-              } else {
-                modal.find('#edit_tiempo_dura').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_certificado_barricada) {
-                modal.find('#edit_id_certificado_barricada').val(response.caracteristicas.id_certificado_barricada);
-              } else {
-                modal.find('#edit_id_certificado_barricada').val('');
-              }
+
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
+
               //liberacion inspeccion
             } else if (id_tipo === 9) {
               modal.find('#edit_id_solicitud_liberacion').val(id_solicitud);
@@ -1431,12 +1330,16 @@ $(function () {
       // Obtener los datos del formulario
       var formData = new FormData(formUpdate);
 
-        // Agregar los valores seleccionados del select múltiple al FormData
-        $('#edit_id_tipo_vig').find('option:selected').each(function () {
+      // Agregar los valores seleccionados del select múltiple al FormData
+      $('#edit_id_tipo_vig')
+        .find('option:selected')
+        .each(function () {
           formData.append('edit_id_tipo_vig[]', $(this).val());
         });
 
-        $('#edit_edit_id_guias_vigiP').find('option:selected').each(function () {
+      $('#edit_edit_id_guias_vigiP')
+        .find('option:selected')
+        .each(function () {
           formData.append('id_guias[]', $(this).val());
         });
 
@@ -2025,7 +1928,7 @@ $(function () {
               message: 'Selecciona una instalación.'
             }
           }
-        },
+        }
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -2768,12 +2671,16 @@ $(function () {
     }).on('core.form.valid', function () {
       var formData = new FormData(addVigilanciaProduccionForm);
 
-        // Agregar los valores seleccionados del select múltiple al FormData
-        $('#id_tipo_maguey').find('option:selected').each(function () {
+      // Agregar los valores seleccionados del select múltiple al FormData
+      $('#id_tipo_maguey')
+        .find('option:selected')
+        .each(function () {
           formData.append('id_tipo_maguey[]', $(this).val());
         });
 
-        $('#edit_id_guias_vigiP').find('option:selected').each(function () {
+      $('#edit_id_guias_vigiP')
+        .find('option:selected')
+        .each(function () {
           formData.append('id_guias[]', $(this).val());
         });
 
@@ -3482,7 +3389,7 @@ $(function () {
       .show();
 
     $('#titulo_modal').text('Solicitud de servicios NOM-070-SCFI-2016');
-    $('#subtitulo_modal').html('<p class="solicitud badge bg-primary">'+registro+'</p>');
+    $('#subtitulo_modal').html('<p class="solicitud badge bg-primary">' + registro + '</p>');
     //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
     iframe.on('load', function () {
       spinner.hide();
@@ -4117,24 +4024,26 @@ $(function () {
     var razon_social = $(this).data('razon-social');
     $('#tipoSolicitud').text(tipoName);
 
-  $.ajax({
+    $.ajax({
       url: `/getDatosSolicitud/${id_solicitud}`,
       type: 'GET',
       dataType: 'json',
       success: function (response) {
-
-          if (response.success) {
-
-              $('.domicilioFiscal').text(response.data.empresa.domicilio_fiscal);
-            // Validar si `direccion_completa` no está vacío
-        if (response.data.instalacion) {
-          $('.domicilioInstalacion').text(response.data.instalacion.direccion_completa);
-        } else {
-          // Si está vacío, usar `ubicacion_predio`
-          $('.domicilioInstalacion').text(response.data.predios.ubicacion_predio);
-          $('.nombrePredio').text(response.data.predios.nombre_predio);
-          $(".preregistro").html("<a target='_Blank' href='/pre-registro_predios/"+response.data.predios.id_predio+"'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>");
-        }
+        if (response.success) {
+          $('.domicilioFiscal').text(response.data.empresa.domicilio_fiscal);
+          // Validar si `direccion_completa` no está vacío
+          if (response.data.instalacion) {
+            $('.domicilioInstalacion').text(response.data.instalacion.direccion_completa);
+          } else {
+            // Si está vacío, usar `ubicacion_predio`
+            $('.domicilioInstalacion').text(response.data.predios.ubicacion_predio);
+            $('.nombrePredio').text(response.data.predios.nombre_predio);
+            $('.preregistro').html(
+              "<a target='_Blank' href='/pre-registro_predios/" +
+                response.data.predios.id_predio +
+                "'><i class='ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer'></i></a>"
+            );
+          }
 
           var caracteristicas = JSON.parse(response.data.caracteristicas);
 
@@ -4143,19 +4052,19 @@ $(function () {
           $('.guiasTraslado').text(response?.data?.caracteristicas?.guias || 'No disponible');
           $('.nombreLote').text(response?.data?.lote_granel?.nombre_lote || 'No disponible');
 
-// Validar categoría
-$('.categoria').text(
-    response?.data?.lote_granel?.categoria?.categoria ||
-    response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
-    'No disponible'
-);
+          // Validar categoría
+          $('.categoria').text(
+            response?.data?.lote_granel?.categoria?.categoria ||
+              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.categoria?.categoria ||
+              'No disponible'
+          );
 
-// Validar clase
-$('.clase').text(
-    response?.data?.lote_granel?.clase?.clase ||
-    response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
-    'No disponible'
-);
+          // Validar clase
+          $('.clase').text(
+            response?.data?.lote_granel?.clase?.clase ||
+              response?.data?.lote_envasado?.lotes_envasado_granel?.[0]?.lotes_granel?.[0]?.clase?.clase ||
+              'No disponible'
+          );
 
           $('.cont_alc').text(response?.data?.lote_granel?.cont_alc || 'No disponible');
           $('.fq').text(response?.data?.lote_granel?.folio_fq || 'No disponible');
@@ -4164,72 +4073,68 @@ $('.clase').text(
           $('.tipos').text(response?.tipos_agave || 'No disponible');
           $('.tipoAnalisis').text(response?.data?.caracteristicas?.tipo_analisis || 'No disponible');
 
-// Validar nombre del lote envasado
-$('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre no disponible');
+          // Validar nombre del lote envasado
+          $('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre no disponible');
 
+          $('.materialRecipiente').text(caracteristicas.material);
+          $('.capacidadRecipiente').text(caracteristicas.capacidad);
+          $('.numeroRecipiente').text(caracteristicas.num_recipientes);
+          $('.tiempoMaduracion').text(caracteristicas.tiempo_dura);
+          $('.tipoIngreso').text(caracteristicas.tipoIngreso);
+          $('.volumenLiberado').text(caracteristicas.volumen_liberacion);
+          $('.tipoLiberacion').text(caracteristicas.tipoLiberacion);
+          $('.volumenActual').text(caracteristicas.id_vol_actual);
+          $('.volumenTrasladado').text(caracteristicas.id_vol_traslado);
+          $('.volumenSobrante').text(caracteristicas.id_vol_res);
+          $('.volumenIngresado').text(caracteristicas.volumen_ingresado);
 
-              $('.materialRecipiente').text(caracteristicas.material);
-              $('.capacidadRecipiente').text(caracteristicas.capacidad);
-              $('.numeroRecipiente').text(caracteristicas.num_recipientes);
-              $('.tiempoMaduracion').text(caracteristicas.tiempo_dura);
-              $('.tipoIngreso').text(caracteristicas.tipoIngreso);
-              $('.volumenLiberado').text(caracteristicas.volumen_liberacion);
-              $('.tipoLiberacion').text(caracteristicas.tipoLiberacion);
-              $('.volumenActual').text(caracteristicas.id_vol_actual);
-              $('.volumenTrasladado').text(caracteristicas.id_vol_traslado);
-              $('.volumenSobrante').text(caracteristicas.id_vol_res);
+          // Verificar si 'detalles' existe y es un arreglo
+          if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
+            // Recorrer cada elemento de 'detalles'
+            caracteristicas.detalles.forEach(function (detalle) {
+              // Asumiendo que '.cajasBotellas' es un contenedor de varias cajas, agregamos el texto en cada una
+              $('.cajasBotellas').append(
+                detalle.cantidad_cajas + ' Cajas y ' + detalle.cantidad_botellas + ' Botellas<br>'
+              );
+            });
+          } else {
+            // Si 'detalles' no existe o no es un arreglo
+            $('.cajasBotellas').text('No hay detalles disponibles.');
+          }
 
-              // Verificar si 'detalles' existe y es un arreglo
-            if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {
-              // Recorrer cada elemento de 'detalles'
-              caracteristicas.detalles.forEach(function(detalle) {
-                  // Asumiendo que '.cajasBotellas' es un contenedor de varias cajas, agregamos el texto en cada una
-                  $('.cajasBotellas').append(detalle.cantidad_cajas + " Cajas y " + detalle.cantidad_botellas + " Botellas<br>");
-              });
-            } else {
-              // Si 'detalles' no existe o no es un arreglo
-              $('.cajasBotellas').text('No hay detalles disponibles.');
+          // Estructura de configuración para los documentos
+          const documentConfig = [
+            {
+              ids: [45, 66, 113],
+              targetClass: '.comprobantePosesion',
+              noDocMessage: 'No hay comprobante de posesión',
+              condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
+            },
+            {
+              ids: [34],
+              targetClass: '.comprobantePosesion',
+              noDocMessage: 'No hay contrato de arrendamiento',
+              condition: (documento, response) => documento.id_relacion == response.data.id_predio
+            },
+            {
+              ids: [43, 106, 112],
+              targetClass: '.planoDistribucion',
+              noDocMessage: 'No hay plan de distribución',
+              condition: (documento, response) => documento.id_relacion == response.data.id_instalacion
+            },
+            {
+              ids: [76],
+              targetClass: '.csf',
+              noDocMessage: 'No hay CSF',
+              condition: (documento, response) => documento.id_empresa == response.data.id_empresa
+            },
+            {
+              ids: [1],
+              targetClass: '.actaConstitutiva',
+              noDocMessage: 'No hay acta constitutiva',
+              condition: (documento, response) => documento.id_empresa == response.data.id_empresa
             }
-
-
-// Estructura de configuración para los documentos
-const documentConfig = [
-  {
-      ids: [45, 66, 113],
-      targetClass: '.comprobantePosesion',
-      noDocMessage: 'No hay comprobante de posesión',
-      condition: (documento, response) =>
-          documento.id_relacion == response.data.id_instalacion
-  },
-  {
-    ids: [34],
-    targetClass: '.comprobantePosesion',
-    noDocMessage: 'No hay contrato de arrendamiento',
-    condition: (documento, response) =>
-        documento.id_relacion == response.data.id_predio
-  },
-  {
-      ids: [43, 106, 112],
-      targetClass: '.planoDistribucion',
-      noDocMessage: 'No hay plan de distribución',
-      condition: (documento, response) =>
-          documento.id_relacion == response.data.id_instalacion
-  },
-  {
-      ids: [76],
-      targetClass: '.csf',
-      noDocMessage: 'No hay CSF',
-      condition: (documento, response) =>
-          documento.id_empresa == response.data.id_empresa
-  },
-  {
-      ids: [1],
-      targetClass: '.actaConstitutiva',
-      noDocMessage: 'No hay acta constitutiva',
-      condition: (documento, response) =>
-          documento.id_empresa == response.data.id_empresa
-  }
-];
+          ];
 
           // Variable para seguimiento de documentos encontrados
           const documentsFound = {};
@@ -4239,17 +4144,17 @@ const documentConfig = [
             documentsFound[config.targetClass] = false;
           });
 
-// Iterar sobre los documentos
-$.each(response.documentos, function(index, documento) {
-  documentConfig.forEach(config => {
-      if (
-          config.ids.includes(documento.id_documento) &&
-          config.condition(documento, response) // Usar la condición dinámica
-      ) {
-          const link = $('<a>', {
-              href: 'files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + documento.url,
-              target: '_blank'
-          });
+          // Iterar sobre los documentos
+          $.each(response.documentos, function (index, documento) {
+            documentConfig.forEach(config => {
+              if (
+                config.ids.includes(documento.id_documento) &&
+                config.condition(documento, response) // Usar la condición dinámica
+              ) {
+                const link = $('<a>', {
+                  href: 'files/' + response.data.empresa.empresa_num_clientes[0].numero_cliente + '/' + documento.url,
+                  target: '_blank'
+                });
 
                 link.html('<i class="ri-file-pdf-2-fill text-danger ri-40px pdf2 cursor-pointer"></i>');
                 $(config.targetClass).empty().append(link);
@@ -4258,22 +4163,15 @@ $.each(response.documentos, function(index, documento) {
             });
           });
 
-// Mostrar mensajes para documentos no encontrados
-documentConfig.forEach(config => {
-  if (!documentsFound[config.targetClass]) {
-      $(config.targetClass).text(config.noDocMessage);
-  }
-});
-
-
-
-
-
-
-
-          } else {
-              console.warn('No se encontró información para la solicitud.');
-          }
+          // Mostrar mensajes para documentos no encontrados
+          documentConfig.forEach(config => {
+            if (!documentsFound[config.targetClass]) {
+              $(config.targetClass).text(config.noDocMessage);
+            }
+          });
+        } else {
+          console.warn('No se encontró información para la solicitud.');
+        }
       },
       error: function (xhr, status, error) {
         console.error('Error al obtener los datos:', error);
@@ -4284,116 +4182,108 @@ documentConfig.forEach(config => {
     manejarVisibilidadDivs(idTipo);
   });
 
-
-
-
-
-
   $(document).ready(function () {
     $('#reporteForm').on('submit', function (e) {
-        e.preventDefault(); // Prevenir el envío tradicional del formulario
+      e.preventDefault(); // Prevenir el envío tradicional del formulario
 
-        const exportUrl = $(this).attr('action'); // Obtener la URL del formulario
+      const exportUrl = $(this).attr('action'); // Obtener la URL del formulario
 
-        // Obtener los datos del formulario (filtros)
-        const formData = $(this).serialize(); // serializa los datos del formulario en una cadena de consulta
+      // Obtener los datos del formulario (filtros)
+      const formData = $(this).serialize(); // serializa los datos del formulario en una cadena de consulta
 
-        // Mostrar el SweetAlert de "Generando Reporte"
-        Swal.fire({
-            title: 'Generando Reporte...',
-            text: 'Por favor espera mientras se genera el reporte.',
-            icon: 'info',
-            didOpen: () => {
-                Swal.showLoading(); // Muestra el icono de carga
-            },
+      // Mostrar el SweetAlert de "Generando Reporte"
+      Swal.fire({
+        title: 'Generando Reporte...',
+        text: 'Por favor espera mientras se genera el reporte.',
+        icon: 'info',
+        didOpen: () => {
+          Swal.showLoading(); // Muestra el icono de carga
+        },
+        customClass: {
+          confirmButton: false
+        }
+      });
+
+      // Realizar la solicitud GET para descargar el archivo
+      $.ajax({
+        url: exportUrl,
+        type: 'GET',
+        data: formData, // Enviar los filtros serializados aquí
+        xhrFields: {
+          responseType: 'blob' // Necesario para manejar la descarga de archivos
+        },
+        success: function (response) {
+          // Crear un enlace para descargar el archivo
+          const link = document.createElement('a');
+          const url = window.URL.createObjectURL(response);
+
+          link.href = url;
+          link.download = 'reporte_solicitudes.xlsx';
+          link.click();
+
+          // Limpiar el objeto URL
+          window.URL.revokeObjectURL(url);
+
+          // Cerrar el modal y mostrar SweetAlert de éxito
+          $('#exportarExcel').modal('hide');
+          Swal.fire({
+            title: '¡Éxito!',
+            text: 'El reporte se generó exitosamente.',
+            icon: 'success',
             customClass: {
-              confirmButton: false,
+              confirmButton: 'btn btn-success'
             }
-        });
+          });
+        },
+        error: function (xhr, status, error) {
+          console.error('Error al generar el reporte:', error);
 
-        // Realizar la solicitud GET para descargar el archivo
-        $.ajax({
-            url: exportUrl,
-            type: 'GET',
-            data: formData, // Enviar los filtros serializados aquí
-            xhrFields: {
-                responseType: 'blob', // Necesario para manejar la descarga de archivos
-            },
-            success: function (response) {
-                // Crear un enlace para descargar el archivo
-                const link = document.createElement('a');
-                const url = window.URL.createObjectURL(response);
-
-                link.href = url;
-                link.download = 'reporte_solicitudes.xlsx';
-                link.click();
-
-                // Limpiar el objeto URL
-                window.URL.revokeObjectURL(url);
-
-                // Cerrar el modal y mostrar SweetAlert de éxito
-                $('#exportarExcel').modal('hide');
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: 'El reporte se generó exitosamente.',
-                    icon: 'success',
-                    customClass: {
-                      confirmButton: 'btn btn-success'
-                    }
-                });
-            },
-            error: function (xhr, status, error) {
-                console.error('Error al generar el reporte:', error);
-
-                // Cerrar el modal y mostrar SweetAlert de error
-                $('#exportarExcel').modal('hide');
-                Swal.fire({
-                    title: '¡Error!',
-                    text: 'Ocurrió un error al generar el reporte.',
-                    icon: 'error',
-                    customClass: {
-                      confirmButton: 'btn btn-danger'
-                    }
-                });
-            },
-        });
+          // Cerrar el modal y mostrar SweetAlert de error
+          $('#exportarExcel').modal('hide');
+          Swal.fire({
+            title: '¡Error!',
+            text: 'Ocurrió un error al generar el reporte.',
+            icon: 'error',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
     });
-});
+  });
 
-$(document).ready(function () {
-  $('#restablecerFiltros').on('click', function () {
+  $(document).ready(function () {
+    $('#restablecerFiltros').on('click', function () {
       $('#reporteForm')[0].reset();
       $('.select2').val('').trigger('change');
       console.log('Filtros restablecidos.');
+    });
   });
-});
 
-$(document).ready(function () {
-  $('#id_soli').on('change', function () {
+  $(document).ready(function () {
+    $('#id_soli').on('change', function () {
       var selectedValues = $(this).val(); // Obtener los valores seleccionados
 
-      if (selectedValues && selectedValues.includes("")) {
-          // Si "Todas" es seleccionado
-          $('#id_soli option').each(function () {
-              if ($(this).val() !== "") {
-                  $(this).prop('selected', false); // Deseleccionar otras opciones
-                  $(this).prop('disabled', true); // Deshabilitar otras opciones
-              }
-          });
-      } else {
-          // Si seleccionas cualquier otra opción
-          if (selectedValues && selectedValues.length > 0) {
-              $('#id_soli option[value=""]').prop('disabled', true); // Deshabilitar "Todas"
-          } else {
-              // Si no hay opciones seleccionadas, habilitar todas
-              $('#id_soli option').each(function () {
-                  $(this).prop('disabled', false); // Habilitar todas las opciones
-              });
+      if (selectedValues && selectedValues.includes('')) {
+        // Si "Todas" es seleccionado
+        $('#id_soli option').each(function () {
+          if ($(this).val() !== '') {
+            $(this).prop('selected', false); // Deseleccionar otras opciones
+            $(this).prop('disabled', true); // Deshabilitar otras opciones
           }
+        });
+      } else {
+        // Si seleccionas cualquier otra opción
+        if (selectedValues && selectedValues.length > 0) {
+          $('#id_soli option[value=""]').prop('disabled', true); // Deshabilitar "Todas"
+        } else {
+          // Si no hay opciones seleccionadas, habilitar todas
+          $('#id_soli option').each(function () {
+            $(this).prop('disabled', false); // Habilitar todas las opciones
+          });
+        }
       }
+    });
   });
-});
-
-
-
 });

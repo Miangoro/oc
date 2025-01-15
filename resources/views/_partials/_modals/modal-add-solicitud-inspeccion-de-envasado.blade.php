@@ -4,7 +4,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Inspección de envasado</h4>
+                    <h4 class="address-title mb-2">Registrar solicitud de inspección de envasado</h4>
                     <p class="address-subtitle"></p>
                 </div>
                 <form id="addInspeccionEnvasadoForm">
@@ -12,7 +12,7 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="id_empresa_inspeccion"
-                                    onchange="obtenerInstalacionesInspecciones(); obtenerGranelesInspecciones(this.value);"
+                                    onchange="obtenerInstalacionesInspecciones(); obtenerEnvasadosInspecciones(this.value);"
                                     name="id_empresa" class="id_empresa_inspeccion select2 form-select" required>
                                     <option value="" disabled selected>Selecciona cliente</option>
                                     @foreach ($empresas as $empresa)
@@ -44,67 +44,63 @@
                             </div>
                         </div>
                     </div>
-                    <p class="address-subtitle" style="color: red">Seleccione un cliente</p>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-4">
                             <select onchange="obtenerDatosGranelesInspecciones();" id="id_lote_granel_inspeccion"
                                 name="id_lote_granel_inspeccion" class="select2 form-select">
-                                <option value="" disabled selected>Selecciona lote a granel</option>
-                                @foreach ($LotesGranel as $lotesgra)
-                                    <option value="{{ $lotesgra->id_lote_granel }}">{{ $lotesgra->nombre_lote }}
-                                    </option>
-                                @endforeach
+                                <option value="" disabled selected>Selecciona lote envasado</option>
                             </select>
-                            <label for="id_lote_granel_inspeccion">Lote a granel</label>
+                            <label for="id_lote_granel_inspeccion">Lote envasado</label>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="id_categoria_inspeccion" name="id_categoria_inspeccion"
-                                    placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
-                                <label for="id_categoria_inspeccion">Ingresa Categoria</label>
+                                    id="id_categoria_inspeccion" name="id_categoria_inspeccion" placeholder="Categoría"
+                                    readonly style="pointer-events: none;" />
+                                <label for="id_categoria_inspeccion">Categoría</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="id_clase_inspeccion"
                                     name="id_clase_inspeccion" placeholder="Ingresa una Clase" readonly
                                     style="pointer-events: none;" />
-                                <label for="id_clase_inspeccion">Ingresa Clase</label>
+                                <label for="id_clase_inspeccion">Clase</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control bg-light text-muted"
+                                    id="id_tipo_maguey_inspeccion" name="id_tipo_maguey_inspeccion"
+                                    placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
+                                <label for="id_tipo_maguey_inspeccion">Tipo de Maguey</label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12">
-                        <div class="form-floating form-floating-outline mb-5">
-                            <input type="text" class="form-control bg-light text-muted"
-                                id="id_tipo_maguey_inspeccion" name="id_tipo_maguey_inspeccion"
-                                placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
-                            <label for="id_tipo_maguey_inspeccion">Ingresa Tipo de Maguey</label>
-                        </div>
-                    </div>
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="id_marca"
                                     name="id_marca" placeholder="Ingresa una Categoria" readonly
                                     style="pointer-events: none;" />
-                                <label for="id_marca">Ingresa Marca</label>
+                                <label for="id_marca">Marca</label>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="number" class="form-control" id="volumen_inspeccion"
                                     name="volumen_inspeccion" placeholder="Ingresa el volumen" />
                                 <label for="volumen_inspeccion">%Alc. Vol.</label>
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="analisis_inspeccion"
                                     name="analisis_inspeccion" placeholder="Ingresa Análisis fisicoquímico" />
-                                <label for="analisis_inspeccion">Ingresa Análisis fisicoquímico</label>
+                                <label for="analisis_inspeccion">Análisis fisicoquímico</label>
                             </div>
                         </div>
                     </div>
@@ -137,14 +133,14 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control " id="id_inicio_envasado"
+                                <input type="date" class="form-control " id="id_inicio_envasado"
                                     name="id_inicio_envasado" placeholder="Inicio de envasado" />
                                 <label for="id_inicio_envasado">Inicio de envasado</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control " id="id_previsto" name="id_previsto"
+                                <input type="date" class="form-control " id="id_previsto" name="id_previsto"
                                     placeholder="Termino previsto del envasado" />
                                 <label for="id_previsto">Termino previsto del envasado</label>
                             </div>
@@ -154,7 +150,7 @@
                                 <input type="text" class="form-control" id="id_certificado_inspeccion"
                                     name="id_certificado_inspeccion"
                                     placeholder="Ingresa el Certificado de NOM a granel" />
-                                <label for="id_certificado_inspeccion">Ingresa Certificado de NOM a granel</label>
+                                <label for="id_certificado_inspeccion">Certificado de NOM a granel</label>
                             </div>
                         </div>
                     </div>
@@ -206,19 +202,20 @@
         }
     }
 
-    function obtenerGranelesInspecciones(empresa) {
+    function obtenerEnvasadosInspecciones(empresa) {
         if (empresa !== "" && empresa !== null && empresa !== undefined) {
             $.ajax({
                 url: '/getDatos/' + empresa,
                 method: 'GET',
                 success: function(response) {
                     var contenido = "";
-                    for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
+                    for (let index = 0; index < response.lotes_envasado.length; index++) {
+                        contenido = '<option value="' + response.lotes_envasado[index].id_lote_envasado +
+                            '">' +
                             response
-                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
+                            .lotes_envasado[index].nombre + '</option>' + contenido;
                     }
-                    if (response.lotes_granel.length == 0) {
+                    if (response.lotes_envasado.length == 0) {
                         contenido = '<option value="">Sin lotes registrados</option>';
                     } else {}
                     $('#id_lote_granel_inspeccion').html(contenido);

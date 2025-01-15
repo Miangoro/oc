@@ -221,6 +221,7 @@ class solicitudesController extends Controller
                 $nestedData['fecha_termino_lib'] = isset($caracteristicas['fecha_termino']) ? Carbon::parse($caracteristicas['fecha_termino'])->format('d/m/Y') : 'N/A';
                 $nestedData['punto_reunion'] = $caracteristicas['punto_reunion'] ?? 'N/A';
                 $nestedData['renovacion'] = $caracteristicas['renovacion'] ?? 'N/A';
+                $nestedData['volumen_ingresado'] = $caracteristicas['volumen_ingresado'] ?? 'N/A';
 
 
 
@@ -469,7 +470,7 @@ class solicitudesController extends Controller
             'id_tipo_maguey' => $request->id_tipo_maguey_barricada,
             'edad' => $request->id_edad,
             'analisis' => $request->analisis_barricada,
-            'volumen_ingreso' => $request->volumen_barricada,
+            'alc_vol' => $request->alc_vol_barrica,
             'tipoIngreso' => $request->tipo_lote,
             'fecha_inicio' => $request->fecha_inicio,
             'fecha_termino' => $request->fecha_termino,
@@ -478,6 +479,7 @@ class solicitudesController extends Controller
             'num_recipientes' => $request->num_recipientes,
             'tiempo_dura' => $request->tiempo_dura,
             'id_certificado' => $request->id_certificado_barricada,
+            'volumen_ingresado' => $request->volumen_ingresado,
         ]);
 
         $InspeccionBarri->save();
@@ -987,7 +989,7 @@ class solicitudesController extends Controller
                     'id_tipo_maguey' => $request->id_tipo_maguey_barricada,
                     'id_edad' => $request->id_edad,
                     'analisis' => $request->analisis_barricada,
-                    'volumen_ingreso' => $request->volumen_barricada,
+                    'alc_vol' => $request->alc_vol_barrica,
                     'tipoIngreso' => $request->tipo_lote,
                     'fecha_inicio' => $request->fecha_inicio,
                     'fecha_termino' => $request->fecha_termino,
@@ -996,6 +998,7 @@ class solicitudesController extends Controller
                     'num_recipientes' => $request->num_recipientes,
                     'tiempo_dura' => $request->tiempo_dura,
                     'id_certificado' => $request->id_certificado_barricada,
+                    'volumen_ingresado' => $request->volumen_ingresado,
 
 
                 ];

@@ -10,6 +10,8 @@
                 <form id="editInspeccionIngresoBarricadaForm">
                     <input type="hidden" name="id_solicitud" id="edit_id_solicitud_barricada">
                     <input type="hidden" name="form_type" value="muestreobarricada">
+                    <input type="hidden" id="instalacion_ingreso">
+                    <input type="hidden" id="lote_ingreso">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-6">
@@ -46,7 +48,6 @@
                             </div>
                         </div>
                     </div>
-                    <p class="address-subtitle" style="color: red">Seleccione un cliente</p>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
@@ -64,80 +65,82 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_categoria_barricada" name="id_categoria_barricada"
-                                    placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
-                                <label for="id_categoria_barricada">Ingresa Categoria</label>
+                                <input type="number" class="form-control" id="edit_volumen_ingresado"
+                                    name="volumen_ingresado" placeholder="Volumen ingresado" />
+                                <label for="edit_volumen_ingresado">Volumen ingresado</label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control bg-light text-muted"
+                                    id="edit_id_categoria_barricada" name="id_categoria_barricada"
+                                    placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
+                                <label for="id_categoria_barricada">Categoría de mezcal</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
                                     id="edit_id_clase_barricada" name="id_clase_barricada"
                                     placeholder="Ingresa una Clase" readonly style="pointer-events: none;" />
-                                <label for="id_clase_barricada">Ingresa Clase</label>
+                                <label for="id_clase_barricada">Clase</label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted" id="edit_id_edad"
-                                    name="id_edad" placeholder="Ingresa una Edad" readonly
-                                    style="pointer-events: none;" />
-                                <label for="id_edad">Ingresa Edad</label>
+                                <input type="text" class="form-control bg-light text-muted"
+                                    id="edit_id_tipo_maguey_barricada" name="id_tipo_maguey_barricada"
+                                    placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
+                                <label for="id_tipo_maguey_barricada">Tipo de Maguey</label>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-floating form-floating-outline mb-5">
-                            <input type="text" class="form-control bg-light text-muted"
-                                id="edit_id_tipo_maguey_barricada" name="id_tipo_maguey_barricada"
-                                placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
-                            <label for="id_tipo_maguey_barricada">Ingresa Tipo de Maguey</label>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-5">
+                        <div class="col-md-4">
+                            <div class="form-floating form-floating-outline mb-5">
+                                <input type="text" class="form-control" id="edit_id_certificado_barricada"
+                                    name="id_certificado_barricada" placeholder="Certificado de NOM a granel" />
+                                <label for="id_certificado_barricada">Certificado de NOM a granel </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control" id="edit_analisis_barricada"
                                     name="analisis_barricada" placeholder="Ingresa Análisis fisicoquímico" />
-                                <label for="analisis_barricada">Ingresa Análisis fisicoquímico</label>
+                                <label for="analisis_barricada">Análisis fisicoquímico</label>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="number" class="form-control" id="edit_volumen_barricada"
-                                    name="volumen_barricada" placeholder="Ingresa el volumen" />
-                                <label for="volumen_barricada">%Alc. Vol.</label>
+                                <input type="number" class="form-control" id="edit_alc_vol_barrica"
+                                    name="alc_vol_barrica" placeholder="Ingresa el volumen" />
+                                <label for="edit_alc_vol_barrica">%Alc. Vol.</label>
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="edit_tipo_lote" name="tipo_lote" class="form-select">
                                     <option value="" disabled selected>Selecciona un tipo</option>
-                                    <option value="Ingreso de producto en barrica">Ingreso de producto en barrica
-                                    </option>
-                                    <option value="Ajuste de grado alcohólico">Ingreso de porductos en contenido de
-                                        vidrio</option>
+                                    <option value="Ingreso de producto en barrica">Ingreso de producto en barrica</option>
+                                    <option value="Ingreso de producto en contenedor de vidrio">Ingreso de producto en contenedor de vidrio</option>
                                 </select>
                                 <label for="tipo_lote">Tipo</label>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="date"
                                     id="edit_fecha_inicio" name="fecha_inicio" readonly />
-                                <label for="fecha_inicio">Fecha de inicio ingreso/liberación </label>
+                                <label for="fecha_inicio">Fecha de inicio del ingreso </label>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="date"
                                     id="edit_fecha_termino" name="fecha_termino" readonly />
-                                <label for="fecha_termino">Fecha de término ingreso/liberación
+                                <label for="fecha_termino">Fecha de término del ingreso
                                 </label>
                             </div>
                         </div>
@@ -165,28 +168,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="edit_tiempo_dura" name="tiempo_dura"
-                                    placeholder="Tiempo de maduración" />
-                                <label for="tiempo_dura">Tiempo de maduración</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control" id="edit_id_certificado_barricada"
-                                    name="id_certificado_barricada" placeholder="Certificado de NOM a granel" />
-                                <label for="id_certificado_barricada">Certificado de NOM a granel </label>
-                            </div>
-                        </div>
-                    </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <textarea name="info_adicional" class="form-control h-px-100" id="edit_info_adicional"
                                 placeholder="Observaciones..."></textarea>
-                            <label for="info_adicional">Información adicional sobre la actividad (NO. DE GARRAFAS Y
-                                CONTENEDORES):</label>
+                            <label for="info_adicional">Información adicional sobre la actividad:</label>
                         </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
@@ -208,11 +194,19 @@
                 url: '/getDatos/' + empresa,
                 method: 'GET',
                 success: function(response) {
-                    console.log(response);
+                    
                     var contenido = "";
+                    var contenido = "";
+                    let seleccionado = "";
+                    var instalacion_id = $("#instalacion_ingreso").val();
                     for (let index = 0; index < response.instalaciones.length; index++) {
+                        if (instalacion_id == response.instalaciones[index].id_instalacion) {
+                            seleccionado = "selected";
+                        } else {
+                            seleccionado = "";
+                        }
                         var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-                        contenido = '<option value="' + response.instalaciones[index].id_instalacion +
+                        contenido = '<option ' + seleccionado + ' value="' + response.instalaciones[index].id_instalacion +
                             '">' +
                             tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
                             '</option>' +
@@ -235,8 +229,15 @@
                 method: 'GET',
                 success: function(response) {
                     var contenido = "";
+                    let seleccionado = "";
+                    var lote_id = $("#lote_ingreso").val();
                     for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
+                        if (lote_id == response.lotes_granel[index].id_lote_granel) {
+                            seleccionado = "selected";
+                        } else {
+                            seleccionado = "";
+                        }
+                        contenido = '<option ' + seleccionado + ' value="' + response.lotes_granel[index].id_lote_granel + '">' +
                             response
                             .lotes_granel[index].nombre_lote + '</option>' + contenido;
                     }
@@ -279,7 +280,8 @@
                     }
                     $('#edit_id_edad').val(response.lotes_granel.edad);
                     $('#edit_analisis_barricada').val(response.lotes_granel.folio_fq);
-                    $('#edit_volumen_barricada').val(response.lotes_granel.cont_alc);
+                    $('#edit_alc_vol_barrica').val(response.lotes_granel.cont_alc);
+                    $('#edit_volumen_ingresado').val(response.lotes_granel.volumen_restante);
                 },
                 error: function() {
                     console.error('Error al obtener los datos del lote granel.');

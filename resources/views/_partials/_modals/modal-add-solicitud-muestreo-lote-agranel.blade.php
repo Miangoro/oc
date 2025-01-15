@@ -76,7 +76,7 @@
                                 <input type="text" class="form-control bg-light text-muted"
                                     id="id_categoria_muestreo" name="id_categoria_muestreo"
                                     placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
-                                <label for="id_categoria_muestreo">Ingresa Categoria</label>
+                                <label for="id_categoria_muestreo">Categoría</label>
                             </div>
                         </div>
                         <div class="col-md-6">
