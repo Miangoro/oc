@@ -70,9 +70,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted" value=""
-                                    id="id_categoria_muestreo" placeholder="Ingresa una Categoria" readonly
-                                    style="pointer-events: none;" />
+                                <input type="text" class="form-control bg-light text-muted"
+                                    id="id_categoria_muestreo" name="id_categoria_muestreo"
+                                    placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
                                 <label for="id_categoria_muestreo">Ingresa Categoria</label>
                             </div>
                             <input type="hidden" id="id_categoria_muestreo_id" name="id_categoria_muestreo">

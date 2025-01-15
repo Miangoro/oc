@@ -1114,7 +1114,7 @@
                                             </select>
                                         </td>
                                     </tr>
-                                    <tr>
+                                   <!-- <tr>
                                         <td class="text-dark fw-bold" style="font-size: 11px;">TIEMPO DE MADURACIÓN:</td>
                                         <td class="tiempoMaduracion"></td>
                                         <td>
@@ -1125,7 +1125,7 @@
                                                 <option value="no">No</option>
                                             </select>
                                         </td>
-                                    </tr>
+                                    </tr>-->
                                     <tr>
                                         <td class="text-dark fw-bold" style="font-size: 11px;">TIPO DE INGRESO (BARRICA O VIDRIO):</td>
                                         <td class="tipoIngreso"></td>

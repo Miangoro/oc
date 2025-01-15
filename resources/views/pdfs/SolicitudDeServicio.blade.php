@@ -478,6 +478,13 @@
                     <b>Volumen actual del lote:</b> {{ $caracteristicas['id_vol_actual']; }}<br>
                     <b>Volumen trasladado</b> {{ $caracteristicas['id_vol_traslado']; }}<br>
                     <b>Volumen sobrante del lote:</b> {{ $caracteristicas['id_sobrante']; }}<br>
+                @elseif($ingreso_barrica === 'X') 
+                    <b>Tipo:</b> {{ $caracteristicas['tipoIngreso']; }}<br>
+                    <b>Volumen ingresado:</b> {{ $caracteristicas['volumen_ingresado']; }}<br> 
+                    <b>Fecha de ingreso:</b> {{ $caracteristicas['fecha_inicio']; }} {{ $caracteristicas['fecha_termino']; }}<br>
+                    <b>Material de los recipientes:</b> {{ $caracteristicas['material']; }}<br>
+                    <b>Capacidad de los recipientes:</b> {{ $caracteristicas['capacidad']; }}<br>
+
                 @endif
                 {{ $datos->info_adicional ?? "------------------------" }}
 
