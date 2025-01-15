@@ -187,7 +187,7 @@ class solicitudesController extends Controller
                 $nestedData['folio_caracteristicas'] = $caracteristicas['folio'] ?? 'N/A';
                 $nestedData['etapa'] = $caracteristicas['etapa'] ?? 'N/A';
                 $nestedData['fecha_corte'] = isset($caracteristicas['fecha_corte']) ? Carbon::parse($caracteristicas['fecha_corte'])->format('d/m/Y H:i') : 'N/A';
-                $nestedData['destino_lote'] = $caracteristicas['destino_lote'] ?? 'N/A';
+                $nestedData['id_tipo_maguey_muestreo'] = $caracteristicas['id_tipo_maguey_muestreo'] ?? 'N/A';
                 $nestedData['id_categoria_muestreo'] = $caracteristicas['id_categoria_muestreo'] ?? 'N/A';
                 $nestedData['id_clase_muestreo'] = $caracteristicas['id_clase_muestreo'] ?? 'N/A';
                 $nestedData['analisis_muestreo'] = $caracteristicas['analisis_muestreo'] ?? 'N/A';
@@ -328,7 +328,7 @@ class solicitudesController extends Controller
 
         $MuestreoLote->caracteristicas = json_encode([
             'id_lote_granel' => $request->id_lote_granel_muestreo,
-            'tipo_analisis' => $request->tipo_analisis,
+            'tipo_analisis' => $request->destino_lote,
             'id_categoria_muestreo' => $request->id_categoria_muestreo,
             'id_clase_muestreo' => $request->id_clase_muestreo,
             'id_tipo_maguey_muestreo' => $request->id_tipo_maguey_muestreo,
@@ -882,8 +882,8 @@ class solicitudesController extends Controller
                 ]);
                 // Preparar el JSON para guardar en `caracteristicas`
                 $caracteristicasJson = [
-                    'id_lote_granel_muestreo' => $request->id_lote_granel_muestreo,
-                    'destino_lote' => $request->destino_lote,
+                    'id_lote_granel' => $request->id_lote_granel_muestreo,
+                    'tipo_analisis' => $request->tipo_analisis,
                     'id_categoria_muestreo' => $request->id_categoria_muestreo,
                     'id_clase_muestreo' => $request->id_clase_muestreo,
                     'id_tipo_maguey_muestreo' => $request->id_tipo_maguey_muestreo,

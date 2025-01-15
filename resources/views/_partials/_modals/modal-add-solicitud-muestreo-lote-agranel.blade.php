@@ -63,8 +63,8 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="tipo_analisis" name="destino_lote" class="form-select">
                                     <option value="" disabled selected>Selecciona un tipo</option>
-                                    <option value="Análisis completo">Análisis completo</option>
-                                    <option value="Ajuste de grado alcohólico">Ajuste de grado alcohólico</option>
+                                    <option value="1">Análisis completo</option>{{-- Análisis completo --}}
+                                    <option value="2">Ajuste de grado alcohólico</option>{{-- Ajuste de grado alcohólico --}}
                                 </select>
                                 <label for="destino_lote">Tipo</label>
                             </div>
@@ -91,7 +91,7 @@
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control bg-light text-muted marca"
-                                id="id_tipo_maguey_muestreo" name="id_tipo_maguey_muestreo[0]"
+                                id="id_tipo_maguey_muestreo" name="id_tipo_maguey_muestreo[]"
                                 placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
                             <label for="id_tipo_maguey_muestreo">Ingresa Tipo de Maguey</label>
                         </div>
@@ -141,7 +141,7 @@
 <script>
     function obtenerInstalacionesMuestreo() {
         var empresa = $("#id_empresa_muestreo").val();
-        
+
         if (empresa !== "" && empresa !== null && empresa !== undefined) {
             $.ajax({
                 url: '/getDatos/' + empresa,
@@ -201,33 +201,49 @@
     }
 
     function obtenerDatosGranelesMuestreo() {
-        var lote_granel_id = $("#id_lote_granel_muestreo").val();
-        if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
-            $.ajax({
-                url: '/getDatos2/' + lote_granel_id,
-                method: 'GET',
-                success: function(response) {
-                    $('#id_categoria_muestreo').val(response.categoria ? response.categoria.categoria : '');
-                    $('#id_clase_muestreo').val(response.clase ? response.clase.clase : '');
-                    if (response.tipo && response.tipo.length > 0) {
-                        //Obtener varios tipos
-                        var tiposConcatenados = response.tipo.map(function(tipo) {
-                            return tipo.nombre + ' (' + tipo.cientifico + ')';
-                        }).join(', ');
-                        $('#id_tipo_maguey_muestreo').val(tiposConcatenados);
-                    } else {
-                        $('#id_tipo_maguey_muestreo').val('');
-                    }
-                    $('#analisis_muestreo').val(response.lotes_granel.folio_fq || '');
-                    $('#volumen_muestreo').val(response.lotes_granel.cont_alc || '');
-                    $('#id_certificado_muestreo').val(response.lotes_granel.folio_certificado || '');
-                },
-                error: function() {
-                    console.error('Error al obtener los datos del lote granel.');
+    var lote_granel_id = $("#id_lote_granel_muestreo").val();
+    if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
+        $.ajax({
+            url: '/getDatos2/' + lote_granel_id,
+            method: 'GET',
+            success: function(response) {
+                // Asignar la categoría
+                $('#id_categoria_muestreo').val(response.categoria ? response.categoria.categoria : '');
+
+                // Asignar la clase
+                $('#id_clase_muestreo').val(response.clase ? response.clase.clase : '');
+                $('#id_clase_muestreo_id').val(response.clase ? response.clase.id : ''); // Campo oculto para el ID
+
+                // Asignar los tipos (nombre visible y ID oculto)
+                if (response.tipo && response.tipo.length > 0) {
+                    // Mostrar los nombres concatenados
+                    var tiposNombres = response.tipo.map(function(tipo) {
+                        return tipo.nombre + ' (' + tipo.cientifico + ')';
+                    }).join(', ');
+                    $('#id_tipo_maguey_muestreo').val(tiposNombres);
+
+                    // Guardar los IDs en un campo oculto
+                    var tiposIds = response.tipo.map(function(tipo) {
+                        return tipo.id; // Obtener solo el ID
+                    }).join(','); // Unir IDs separados por comas
+                    $('#id_tipo_maguey_muestreo_ids').val(tiposIds); // Campo oculto para los IDs
+                } else {
+                    $('#id_tipo_maguey_muestreo').val('');
+                    $('#id_tipo_maguey_muestreo_ids').val(''); // Limpiar si no hay datos
                 }
-            });
-        }
+
+                // Otros datos
+                $('#analisis_muestreo').val(response.lotes_granel.folio_fq || '');
+                $('#volumen_muestreo').val(response.lotes_granel.cont_alc || '');
+                $('#id_certificado_muestreo').val(response.lotes_granel.folio_certificado || '');
+            },
+            error: function() {
+                console.error('Error al obtener los datos del lote granel.');
+            }
+        });
     }
+}
+
 
     // Limpiar campos al cerrar el modal
     $('#addMuestreoLoteAgranel').on('hidden.bs.modal', function() {

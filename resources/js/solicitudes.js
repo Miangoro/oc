@@ -73,9 +73,9 @@ $(function () {
                       <span class="small">${data.fecha_corte || 'N/A'}</span>
                       `;
             case 3:
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote_muestreo || 'N/A'}</span>
+              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.destino_lote || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small">${Array.isArray(data.id_tipo_maguey_muestreo) ? data.id_tipo_maguey_muestreo.join(', ') : data.id_tipo_maguey_muestreo || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_muestreo || 'N/A'}</span>
                       <br>
@@ -751,12 +751,12 @@ $(function () {
               modal.find('#edit_id_instalacion_muestreo').data('selected', response.data.id_instalacion);
 
               if (response.caracteristicas && response.caracteristicas.id_lote_granel_muestreo) {
-                modal.find('#edit_id_lote_granel_muestreo').val(response.caracteristicas.id_lote_granel_muestreo);
+                modal.find('#edit_id_lote_granel_muestreo').val(response.caracteristicas.id_lote_granel_muestreo).trigger('change');
               } else {
                 modal.find('#edit_id_lote_granel_muestreo').val('');
               }
-              if (response.caracteristicas && response.caracteristicas.destino_lote) {
-                modal.find('#edit_destino_lote').val(response.caracteristicas.destino_lote);
+              if (response.caracteristicas && response.caracteristicas.tipo_analisis) {
+                modal.find('#edit_destino_lote').val(response.caracteristicas.tipo_analisis).trigger('change');
               } else {
                 modal.find('#edit_destino_lote').val('');
               }
@@ -4174,10 +4174,10 @@ $('.nombreLoteEnvasado').text(response?.data?.lote_envasado?.nombre || 'Nombre n
               $('.tiempoMaduracion').text(caracteristicas.tiempo_dura);
               $('.tipoIngreso').text(caracteristicas.tipoIngreso);
               $('.volumenLiberado').text(caracteristicas.volumen_liberacion);
-              $('.tipoLiberacion').text(caracteristicas.tipoLiberacion); 
-              $('.volumenActual').text(caracteristicas.id_vol_actual); 
-              $('.volumenTrasladado').text(caracteristicas.id_vol_traslado); 
-              $('.volumenSobrante').text(caracteristicas.id_vol_res); 
+              $('.tipoLiberacion').text(caracteristicas.tipoLiberacion);
+              $('.volumenActual').text(caracteristicas.id_vol_actual);
+              $('.volumenTrasladado').text(caracteristicas.id_vol_traslado);
+              $('.volumenSobrante').text(caracteristicas.id_vol_res);
 
               // Verificar si 'detalles' existe y es un arreglo
             if (caracteristicas.detalles && Array.isArray(caracteristicas.detalles)) {

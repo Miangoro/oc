@@ -65,8 +65,8 @@
                             <div class="form-floating form-floating-outline mb-6">
                                 <select id="edit_destino_lote" name="tipo_analisis" class="form-select">
                                     <option value="" disabled selected>Selecciona un tipo</option>
-                                    <option value="Análisis completo">Análisis completo</option>
-                                    <option value="Ajuste de grado alcohólico">Ajuste de grado alcohólico</option>
+                                    <option value="1">Análisis completo</option>
+                                    <option value="2">Ajuste de grado alcohólico</option>
                                 </select>
                                 <label for="destino_lote">Tipo</label>
                             </div>
@@ -199,7 +199,7 @@
     }
 
     function editobtenerDatosGranelesMuestreo() {
-       
+
         var lote_granel_id = $("#edit_id_lote_granel_muestreo").val();
         if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
             $.ajax({
