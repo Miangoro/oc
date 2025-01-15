@@ -187,9 +187,24 @@ class solicitudesController extends Controller
                 $nestedData['folio_caracteristicas'] = $caracteristicas['folio'] ?? 'N/A';
                 $nestedData['etapa'] = $caracteristicas['etapa'] ?? 'N/A';
                 $nestedData['fecha_corte'] = isset($caracteristicas['fecha_corte']) ? Carbon::parse($caracteristicas['fecha_corte'])->format('d/m/Y H:i') : 'N/A';
-                $nestedData['id_tipo_maguey_muestreo'] = $caracteristicas['id_tipo_maguey_muestreo'] ?? 'N/A';
-                $nestedData['id_categoria_muestreo'] = $caracteristicas['id_categoria_muestreo'] ?? 'N/A';
-                $nestedData['id_clase_muestreo'] = $caracteristicas['id_clase_muestreo'] ?? 'N/A';
+                $idTipoMagueyMuestreo = $caracteristicas['id_tipo_maguey_muestreo'] ?? null;
+                 if ($idTipoMagueyMuestreo) {
+                 if (is_array($idTipoMagueyMuestreo)) {
+                    $idTipoMagueyMuestreo = implode(',', $idTipoMagueyMuestreo);
+                    }
+                $idTipoMagueyMuestreoArray = explode(',', $idTipoMagueyMuestreo);
+                $tiposMaguey = tipos::whereIn('id_tipo', $idTipoMagueyMuestreoArray)->pluck('nombre')->toArray();
+                if ($tiposMaguey) {
+                $nestedData['id_tipo_maguey_muestreo'] = implode(', ', $tiposMaguey);
+                  } else {
+                      $nestedData['id_tipo_maguey_muestreo'] = 'N/A';
+                  }
+                  } else {
+                      $nestedData['id_tipo_maguey_muestreo'] = 'N/A';
+                  }
+                // Asumiendo que los IDs siempre están presentes (pero con verificación de claves faltantes)
+                $nestedData['id_categoria_muestreo'] = isset($caracteristicas['id_categoria_muestreo']) ? categorias::find($caracteristicas['id_categoria_muestreo'])->categoria : 'N/A';
+                $nestedData['id_clase_muestreo'] = isset($caracteristicas['id_clase_muestreo']) ? clases::find($caracteristicas['id_clase_muestreo'])->clase : 'N/A';
                 $nestedData['analisis_muestreo'] = $caracteristicas['analisis_muestreo'] ?? 'N/A';
                 $nestedData['volumen_muestreo'] = $caracteristicas['volumen_muestreo'] ?? 'N/A';
                 $nestedData['id_certificado_muestreo'] = $caracteristicas['id_certificado_muestreo'] ?? 'N/A';
@@ -258,6 +273,27 @@ class solicitudesController extends Controller
             ? json_decode($solicitud->caracteristicas, true)
             : null;
 
+      // Verificar si hay características para procesar
+        if ($caracteristicas) {
+          $categoria = isset($caracteristicas['id_categoria_muestreo'])
+              ? categorias::find($caracteristicas['id_categoria_muestreo'])
+              : null;
+          $clase = isset($caracteristicas['id_clase_muestreo'])
+              ? clases::find($caracteristicas['id_clase_muestreo'])
+              : null;
+            $tipoMagueyIds = isset($caracteristicas['id_tipo_maguey_muestreo'][0])
+            ? explode(',', $caracteristicas['id_tipo_maguey_muestreo'][0])
+            : [];
+        $tiposMaguey = tipos::whereIn('id_tipo', $tipoMagueyIds)->get();
+        $tipoMagueyConcatenados = $tiposMaguey->map(function ($tipo) {
+            return $tipo->nombre . ' (' . $tipo->cientifico . ')';
+        })->toArray();
+          $caracteristicas['categoria'] = $categoria->categoria ?? 'N/A';
+          $caracteristicas['clase'] = $clase->clase ?? 'N/A';
+          $caracteristicas['nombre'] = $tipoMagueyConcatenados;
+        }
+
+
         return response()->json([
             'success' => true,
             'data' => $solicitud,
@@ -279,6 +315,7 @@ class solicitudesController extends Controller
         $VigilanciaProdu->info_adicional = $request->info_adicional;
 
         $idGuias = $request->has('id_guias') ? $request->id_guias : [];
+// Los valores ya llegarán como un array directo
 
         $VigilanciaProdu->caracteristicas = json_encode([
             'id_lote_granel' => $request->id_lote_granel,
@@ -325,13 +362,19 @@ class solicitudesController extends Controller
         $MuestreoLote->id_instalacion = $request->id_instalacion;
         $MuestreoLote->info_adicional = $request->info_adicional;
 
+        $idTipoMaguey = $request->id_tipo_maguey_muestreo;
+
+        // Verifica que es un array
+        if (!is_array($idTipoMaguey)) {
+            $idTipoMaguey = [];
+        }
 
         $MuestreoLote->caracteristicas = json_encode([
             'id_lote_granel' => $request->id_lote_granel_muestreo,
             'tipo_analisis' => $request->destino_lote,
             'id_categoria_muestreo' => $request->id_categoria_muestreo,
             'id_clase_muestreo' => $request->id_clase_muestreo,
-            'id_tipo_maguey_muestreo' => $request->id_tipo_maguey_muestreo,
+            'id_tipo_maguey_muestreo' => $idTipoMaguey,
             'analisis_muestreo' => $request->analisis_muestreo,
             'volumen_muestreo' => $request->volumen_muestreo,
             'id_certificado_muestreo' => $request->id_certificado_muestreo,

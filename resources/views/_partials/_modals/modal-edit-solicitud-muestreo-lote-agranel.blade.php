@@ -1,4 +1,4 @@
-<div class="modal fade" id="editMuestreoLoteAgranel" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="editMuestreoLoteAgranel" tabindex="-1">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -76,27 +76,30 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_categoria_muestreo" name="id_categoria_muestreo"
+                                    id="edit_id_categoria_muestreo"
                                     placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
                                 <label for="id_categoria_muestreo">Ingresa Categoria</label>
                             </div>
+                            <input type="hidden" id="edit_id_categoria_muestreo_id" name="id_categoria_muestreo">
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_clase_muestreo" name="id_clase_muestreo" placeholder="Ingresa una Clase"
+                                    id="edit_id_clase_muestreo"  placeholder="Ingresa una Clase"
                                     readonly style="pointer-events: none;" />
                                 <label for="id_clase_muestreo">Ingresa Clase</label>
                             </div>
+                            <input id="edit_id_clase_muestreo_id" type="hidden" name="id_clase_muestreo">
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control bg-light text-muted"
-                                id="edit_id_tipo_maguey_muestreo" name="id_tipo_maguey_muestreo[0]"
+                                id="edit_id_tipo_maguey_muestreo"
                                 placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
                             <label for="id_tipo_maguey_muestreo">Ingresa Tipo de Maguey</label>
                         </div>
+                        <input type="hidden" id="edit_id_tipo_maguey_muestreo_ids" name="id_tipo_maguey_muestreo[0]">
                     </div>
                     <div class="row">
                         <div class="col-md-5">
@@ -162,6 +165,12 @@
                         contenido = '<option value="">Sin instalaciones registradas</option>';
                     }
                     $('#edit_id_instalacion_muestreo').html(contenido);
+                    const idInstalacionSeleccionada = $('#edit_id_instalacion_muestreo').data('selected');
+                    if (idInstalacionSeleccionada) {
+                        $('#edit_id_instalacion_muestreo')
+                            .val(idInstalacionSeleccionada)
+                            .trigger('change');
+                    }
                 },
                 error: function() {}
             });
@@ -184,6 +193,15 @@
                         contenido = '<option value="">Sin lotes registrados</option>';
                     } else {}
                     $('#edit_id_lote_granel_muestreo').html(contenido);
+
+                     // Mantener el dato del select
+                     const idloteSeleccionada = $('#edit_id_lote_granel_muestreo').data('selected');
+                     console.log('el lote seleccionado es el: '+idloteSeleccionada);
+                    if (idloteSeleccionada) {
+                        $('#edit_id_lote_granel_muestreo')
+                            .val(idloteSeleccionada)
+                            .trigger('change');
+                    }
                 },
                 error: function() {}
             });
@@ -206,16 +224,24 @@
                 url: '/getDatos2/' + lote_granel_id,
                 method: 'GET',
                 success: function(response) {
-                    $('#edit_id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :
-                        '');
+                    $('#edit_id_categoria_muestreo').val(response.categoria ? response.categoria.categoria :'');
+                    $('#edit_id_categoria_muestreo_id').val(response.categoria ? response.categoria.id_categoria :'' );
                     $('#edit_id_clase_muestreo').val(response.clase ? response.clase.clase : '');
+                    $('#edit_id_clase_muestreo_id').val(response.clase ? response.clase.id_clase :''); // Campo oculto para el ID
+
                     if (response.tipo && response.tipo.length > 0) {
                         var tiposConcatenados = response.tipo.map(function(tipo) {
                             return tipo.nombre + ' (' + tipo.cientifico + ')';
                         }).join(', '); // Unir con coma
                         $('#edit_id_tipo_maguey_muestreo').val(tiposConcatenados);
+
+                        var tiposIdsEdit = response.tipo.map(function(tipo) {
+                            return tipo.id_tipo; // Obtener solo el ID
+                        });
+                        $('#edit_id_tipo_maguey_muestreo_ids').val(tiposIdsEdit.join(','));
                     } else {
                         $('#edit_id_tipo_maguey_muestreo').val('');
+                        $('#edit_id_tipo_maguey_muestreo_ids').val('');
                     }
                     $('#edit_analisis_muestreo').val(response.lotes_granel.folio_fq);
                     $('#edit_volumen_muestreo').val(response.lotes_granel.cont_alc);

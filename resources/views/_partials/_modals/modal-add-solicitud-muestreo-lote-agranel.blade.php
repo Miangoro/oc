@@ -1,4 +1,4 @@
-<div class="modal fade" id="addMuestreoLoteAgranel" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="addMuestreoLoteAgranel" tabindex="-1">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -51,10 +51,7 @@
                                 <select onchange="obtenerDatosGranelesMuestreo();" id="id_lote_granel_muestreo"
                                     name="id_lote_granel_muestreo" class="select2 form-select">
                                     <option value="" disabled selected>Selecciona lote a granel</option>
-                                    @foreach ($LotesGranel as $lotesgra)
-                                        <option value="{{ $lotesgra->id_lote_granel }}">{{ $lotesgra->nombre_lote }}
-                                        </option>
-                                    @endforeach
+
                                 </select>
                                 <label for="id_lote_granel_muestreo">Lote a granel</label>
                             </div>
@@ -73,28 +70,32 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input type="text" class="form-control bg-light text-muted"
-                                    id="id_categoria_muestreo" name="id_categoria_muestreo"
-                                    placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
+                                <input type="text" class="form-control bg-light text-muted" value=""
+                                    id="id_categoria_muestreo" placeholder="Ingresa una Categoria" readonly
+                                    style="pointer-events: none;" />
                                 <label for="id_categoria_muestreo">Ingresa Categoria</label>
                             </div>
+                            <input type="hidden" id="id_categoria_muestreo_id" name="id_categoria_muestreo">
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="id_clase_muestreo"
-                                    name="id_clase_muestreo" placeholder="Ingresa una Clase" readonly
+                                    name="" placeholder="Ingresa una Clase" readonly
                                     style="pointer-events: none;" />
                                 <label for="id_clase_muestreo">Ingresa Clase</label>
                             </div>
+                            <input type="hidden" id="id_clase_muestreo_id" name="id_clase_muestreo">
+
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control bg-light text-muted marca"
-                                id="id_tipo_maguey_muestreo" name="id_tipo_maguey_muestreo[]"
-                                placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
+                                id="id_tipo_maguey_muestreo" placeholder="Ingresa un tipo de Maguey" readonly
+                                style="pointer-events: none;" />
                             <label for="id_tipo_maguey_muestreo">Ingresa Tipo de Maguey</label>
                         </div>
+                        <input type="hidden" id="id_tipo_maguey_muestreo_ids" name="id_tipo_maguey_muestreo[]">
                     </div>
                     <div class="row">
                         <div class="col-md-5">
@@ -151,7 +152,8 @@
                     var contenido = "";
                     for (let index = 0; index < response.instalaciones.length; index++) {
                         var tipoLimpio = limpiarTipo(response.instalaciones[index].tipo);
-                        contenido = '<option value="' + response.instalaciones[index].id_instalacion + '">' +
+                        contenido = '<option value="' + response.instalaciones[index].id_instalacion +
+                            '">' +
                             tipoLimpio + ' | ' + response.instalaciones[index].direccion_completa +
                             '</option>' +
                             contenido;
@@ -166,28 +168,46 @@
         }
     }
 
-    function obtenerGranelesMuestreo(empresa) {
-        var lote_granel_id = $("#id_lote_granel_muestreo").val();
-            if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
-            $.ajax({
-                url: '/getDatos/' + empresa,
-                method: 'GET',
-                success: function(response) {
-                    var contenido = "";
-                    for (let index = 0; index < response.lotes_granel.length; index++) {
-                        contenido = '<option value="' + response.lotes_granel[index].id_lote_granel + '">' +
-                            response
-                            .lotes_granel[index].nombre_lote + '</option>' + contenido;
-                    }
-                    if (response.lotes_granel.length == 0) {
-                        contenido = '<option value="">Sin lotes registrados</option>';
-                    } else {}
-                    $('#id_lote_granel_muestreo').html(contenido);
-                },
-                error: function() {}
-            });
-        }
+    function obtenerGranelesMuestreo() {
+    // Obtener el ID de la empresa
+    var empresas = $("#id_empresa_muestreo").val();
+
+    console.log('La empresa es: ' + empresas);
+
+    // Validar que el ID de la empresa no esté vacío
+    if (empresas !== "" && empresas !== null && empresas !== undefined) {
+        // Realizar la solicitud AJAX
+        $.ajax({
+            url: '/getDatos/' + empresas,
+            method: 'GET',
+            success: function(response) {
+                var contenido = "";
+
+                // Iterar sobre los lotes a granel recibidos
+                if (response.lotes_granel && response.lotes_granel.length > 0) {
+                    response.lotes_granel.forEach(function(lote) {
+                        contenido += '<option value="' + lote.id_lote_granel + '">' +
+                            lote.nombre_lote + '</option>';
+                    });
+                } else {
+                    contenido = '<option value="">Sin lotes registrados</option>';
+                }
+
+                // Insertar el contenido en el select
+                $('#id_lote_granel_muestreo').html(contenido);
+
+            },
+            error: function(xhr, status, error) {
+                console.error("Error al obtener los lotes a granel:", error);
+                $('#id_lote_granel_muestreo').html('<option value="">Error al cargar lotes</option>');
+            }
+        });
+    } else {
+        console.warn('No se seleccionó ninguna empresa.');
+        $('#id_lote_granel_muestreo').html('<option value="">Seleccione una empresa primero</option>');
     }
+}
+
 
     function limpiarTipo(tipo) {
         if (tipo.startsWith('[') && tipo.endsWith(']')) {
@@ -201,48 +221,52 @@
     }
 
     function obtenerDatosGranelesMuestreo() {
-    var lote_granel_id = $("#id_lote_granel_muestreo").val();
-    if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
-        $.ajax({
-            url: '/getDatos2/' + lote_granel_id,
-            method: 'GET',
-            success: function(response) {
-                // Asignar la categoría
-                $('#id_categoria_muestreo').val(response.categoria ? response.categoria.categoria : '');
+        var lote_granel_id = $("#id_lote_granel_muestreo").val();
+        if (lote_granel_id !== "" && lote_granel_id !== null && lote_granel_id !== undefined) {
+            $.ajax({
+                url: '/getDatos2/' + lote_granel_id,
+                method: 'GET',
+                success: function(response) {
+                    // Asignar la categoría
+                    $('#id_categoria_muestreo').val(response.categoria ? response.categoria.categoria : '');
+                    $('#id_categoria_muestreo_id').val(response.categoria ? response.categoria
+                        .id_categoria : '');
+                    // Asignar la clase
+                    $('#id_clase_muestreo').val(response.clase ? response.clase.clase : '');
+                    $('#id_clase_muestreo_id').val(response.clase ? response.clase.id_clase :
+                    ''); // Campo oculto para el ID
 
-                // Asignar la clase
-                $('#id_clase_muestreo').val(response.clase ? response.clase.clase : '');
-                $('#id_clase_muestreo_id').val(response.clase ? response.clase.id : ''); // Campo oculto para el ID
+                    // Asignar los tipos (nombre visible y ID oculto)
+                    if (response.tipo && response.tipo.length > 0) {
+                        // Mostrar los nombres concatenados en el input visible
+                        var tiposNombres = response.tipo.map(function(tipo) {
+                            return tipo.nombre + ' (' + tipo.cientifico + ')';
+                        }).join(', '); // Esto es para mostrar los nombres de los tipos
+                        $('#id_tipo_maguey_muestreo').val(tiposNombres);
 
-                // Asignar los tipos (nombre visible y ID oculto)
-                if (response.tipo && response.tipo.length > 0) {
-                    // Mostrar los nombres concatenados
-                    var tiposNombres = response.tipo.map(function(tipo) {
-                        return tipo.nombre + ' (' + tipo.cientifico + ')';
-                    }).join(', ');
-                    $('#id_tipo_maguey_muestreo').val(tiposNombres);
+                        // Crear un array de los IDs seleccionados (sin concatenarlos)
+                        var tiposIds = response.tipo.map(function(tipo) {
+                            return tipo.id_tipo; // Obtener solo el ID
+                        });
 
-                    // Guardar los IDs en un campo oculto
-                    var tiposIds = response.tipo.map(function(tipo) {
-                        return tipo.id; // Obtener solo el ID
-                    }).join(','); // Unir IDs separados por comas
-                    $('#id_tipo_maguey_muestreo_ids').val(tiposIds); // Campo oculto para los IDs
-                } else {
-                    $('#id_tipo_maguey_muestreo').val('');
-                    $('#id_tipo_maguey_muestreo_ids').val(''); // Limpiar si no hay datos
+                        // Asignar directamente los IDs separados por coma al campo oculto
+                        $('#id_tipo_maguey_muestreo_ids').val(tiposIds.join(',')); // Unir IDs por coma (sin comillas adicionales)
+                    } else {
+                        // Limpiar ambos campos si no hay datos
+                        $('#id_tipo_maguey_muestreo').val('');
+                        $('#id_tipo_maguey_muestreo_ids').val(''); // Limpiar el campo oculto
+                    }
+                    // Otros datos
+                    $('#analisis_muestreo').val(response.lotes_granel.folio_fq || '');
+                    $('#volumen_muestreo').val(response.lotes_granel.cont_alc || '');
+                    $('#id_certificado_muestreo').val(response.lotes_granel.folio_certificado || '');
+                },
+                error: function() {
+                    console.error('Error al obtener los datos del lote granel.');
                 }
-
-                // Otros datos
-                $('#analisis_muestreo').val(response.lotes_granel.folio_fq || '');
-                $('#volumen_muestreo').val(response.lotes_granel.cont_alc || '');
-                $('#id_certificado_muestreo').val(response.lotes_granel.folio_certificado || '');
-            },
-            error: function() {
-                console.error('Error al obtener los datos del lote granel.');
-            }
-        });
+            });
+        }
     }
-}
 
 
     // Limpiar campos al cerrar el modal

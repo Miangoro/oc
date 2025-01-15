@@ -75,7 +75,7 @@ $(function () {
             case 3:
               return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small">${Array.isArray(data.id_tipo_maguey_muestreo) ? data.id_tipo_maguey_muestreo.join(', ') : data.id_tipo_maguey_muestreo || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small">${data.id_tipo_maguey_muestreo || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_muestreo || 'N/A'}</span>
                       <br>
@@ -749,9 +749,8 @@ $(function () {
               modal.find('#edit_id_empresa_muestreo').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_muestreo').data('selected', response.data.id_instalacion);
-
-              if (response.caracteristicas && response.caracteristicas.id_lote_granel_muestreo) {
-                modal.find('#edit_id_lote_granel_muestreo').val(response.caracteristicas.id_lote_granel_muestreo).trigger('change');
+              if (response.caracteristicas && response.caracteristicas.id_lote_granel) {
+                modal.find('#edit_id_lote_granel_muestreo').data('selected', response.caracteristicas.id_lote_granel).trigger('change');
               } else {
                 modal.find('#edit_id_lote_granel_muestreo').val('');
               }
@@ -761,20 +760,35 @@ $(function () {
                 modal.find('#edit_destino_lote').val('');
               }
               if (response.caracteristicas && response.caracteristicas.id_categoria_muestreo) {
-                modal.find('#edit_id_categoria_muestreo').val(response.caracteristicas.id_categoria_muestreo);
+                modal.find('#edit_id_categoria_muestreo_id').val(response.caracteristicas.id_categoria_muestreo);
               } else {
-                modal.find('#edit_id_categoria_muestreo').val('');
+                modal.find('#edit_id_categoria_muestreo_id').val('');
               }
               if (response.caracteristicas && response.caracteristicas.id_clase_muestreo) {
-                modal.find('#edit_id_clase_muestreo').val(response.caracteristicas.id_clase_muestreo);
+                modal.find('#edit_id_clase_muestreo_id').val(response.caracteristicas.id_clase_muestreo);
               } else {
-                modal.find('#edit_id_clase_muestreo').val('');
+                modal.find('#edit_id_clase_muestreo_id').val('');
               }
               if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_muestreo) {
-                modal.find('#edit_id_tipo_maguey_muestreo').val(response.caracteristicas.id_tipo_maguey_muestreo);
+                modal.find('#edit_id_tipo_maguey_muestreo_ids').val(response.caracteristicas.id_tipo_maguey_muestreo);
               } else {
-                modal.find('#edit_id_tipo_maguey_muestreo').val('');
+                modal.find('#edit_id_tipo_maguey_muestreo_ids').val('');
               }
+
+              if (response.caracteristicas) {
+                // Categoría
+                modal.find('#edit_id_categoria_muestreo').val(response.caracteristicas.categoria || 'N/A');
+
+                // Clase
+                modal.find('#edit_id_clase_muestreo').val(response.caracteristicas.clase || 'N/A');
+
+                // Tipos de Maguey
+                modal.find('#edit_id_tipo_maguey_muestreo').val(
+                    response.caracteristicas.nombre.join(', ') || 'N/A'
+                );
+            }
+
+
               if (response.caracteristicas && response.caracteristicas.analisis_muestreo) {
                 modal.find('#edit_analisis_muestreo').val(response.caracteristicas.analisis_muestreo);
               } else {
