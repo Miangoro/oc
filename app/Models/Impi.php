@@ -25,6 +25,8 @@ class Impi extends Model
         'contrasena',
         'pago',
         'estatus',
-        'observaciones'
+        'observaciones',
     ];
+
+    
 }
