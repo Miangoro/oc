@@ -418,7 +418,7 @@ class lotesGranelController extends Controller
         } else {
             // Concatenar los valores si alguno tiene contenido
             if (!empty($folio_fq_ajuste)) {
-                $folio_fq_Completo .= ' ' . $folio_fq_ajuste;
+                $folio_fq_Completo .= ',' . $folio_fq_ajuste;
             }
             $lote->folio_fq = $folio_fq_Completo;
         }
@@ -629,7 +629,8 @@ class lotesGranelController extends Controller
           'fecha_emision' => $validated['fecha_emision'],
           'fecha_vigencia' => $validated['fecha_vigencia'],
           'volumen' => $validated['volumen'],
-          'volumen_restante' => $validated['volumen']
+          'volumen_restante' => $validated['volumen'],
+        
       ]);
         // Actualizar lotes relacionados solo si hay datos de 'edit_lotes' y 'edit_volumenes'
         if ($request->has('edit_lotes') && $request->has('edit_volumenes')) {
@@ -748,7 +749,7 @@ class lotesGranelController extends Controller
       } else {
           // Concatenar los valores si alguno tiene contenido
           if (!empty($folio_fq_ajuste)) {
-              $folio_fq_Completo .= ' ' . $folio_fq_ajuste;
+              $folio_fq_Completo .= ',' . $folio_fq_ajuste;
           }
           $lote->folio_fq = substr($folio_fq_Completo, 0, 50); // Limitar a 50 caracteres
       }

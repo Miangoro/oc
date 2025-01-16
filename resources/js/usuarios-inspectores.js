@@ -43,6 +43,7 @@ $(function () {
         { data: 'name' },
         { data: 'email' },
         { data: 'password_original' },
+        { data: 'puesto' },
         {
           data: 'firma',
           render: function (data, type, row) {
@@ -455,6 +456,7 @@ $(function () {
       $('#add-user-email').val(data.email);
       $('#add-estatus').val(data.estatus).change();
       $('#id_empresa').val(data.id_empresa).prop('selected', true).change();
+      $('#add-user-puesto').val(data.puesto);
     });
   });
 
@@ -487,6 +489,13 @@ $(function () {
           },
           emailAddress: {
             message: 'Correo inválido'
+          }
+        }
+      },
+      puesto: {
+        validators: {
+          notEmpty: {
+            message: 'Por favor introduce un puesto'
           }
         }
       }

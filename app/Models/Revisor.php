@@ -64,4 +64,13 @@ class Revisor extends Model
     return $documento ? $documento->url : null; // Devuelve solo el atributo `url` o `null` si no hay documento
     }
 
+    public function obtenerDocumentoActa($id_documento, $id_solicitud)
+    {
+    $documento = Documentacion_url::where("id_documento", "=", $id_documento)
+                                  ->where("id_relacion", "=", $id_solicitud)
+                                  ->first(); // Devuelve el primer registro que coincida
+
+    return $documento ? $documento->url : null; // Devuelve solo el atributo `url` o `null` si no hay documento
+    }
+
 }

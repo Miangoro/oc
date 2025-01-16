@@ -22,18 +22,29 @@ class impiController extends Controller
     {
         $columns = [
         //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
-            1 => 'id_impi',
+            /*1 => 'id_impi',
             2 => 'folio',
             3 => 'tramite',
-            4 => 'nombre'
+            4 => 'fecha_solicitud',
+            5 => 'cliente',
+            6 => 'contrasena',
+            7 => 'pago',
+            8 => 'estatus',
+            9 => 'observaciones'*/
+            1 => 'folio',
+            2 => 'tramite',
+            3 => 'fecha_solicitud',
+            4 => 'cliente',
+            5 => 'contrasena',
+            6 => 'pago',
+            7 => 'estatus',
+            8 => 'observaciones'
         ];
         $search = [];
 
-      $users_temp = Impi::all();
-    $totalData = $users_temp->count();
 
-    $totalFiltered = $totalData;
-
+      $totalData = Impi::count();
+      $totalFiltered = $totalData;
 
     $limit = $request->input('length');
     $start = $request->input('start');
@@ -44,7 +55,7 @@ class impiController extends Controller
 
       if (empty($request->input('search.value'))) {
         //$users = Impi::where("nombre", 2)->offset($start)
-        $users = Impi::where('id_impi', 'LIKE', "%{$request->input('search.value')}%")
+        $impi = Impi::where('id_impi', 'LIKE', "%{$request->input('search.value')}%")
 
         ->offset($start)
           ->limit($limit)
@@ -53,7 +64,7 @@ class impiController extends Controller
       } else {
         $search = $request->input('search.value');
   
-        $users = Impi::where('id', 'LIKE', "%{$search}%")
+        $impi = Impi::where('id_impi', 'LIKE', "%{$search}%")
           ->where("nombre", 1)
           ->orWhere('tramite', 'LIKE', "%{$search}%")
   
@@ -62,7 +73,7 @@ class impiController extends Controller
           ->orderBy($order, $dir)
           ->get();
   
-        $totalFiltered = Impi::where('id', 'LIKE', "%{$search}%")
+        $totalFiltered = Impi::where('id_impi', 'LIKE', "%{$search}%")
           ->where("nombre", 1)
           ->orWhere('tramite', 'LIKE', "%{$search}%")
           ->count();
@@ -71,16 +82,21 @@ class impiController extends Controller
 
 
 
-        if (!empty($users)) {
+        if (!empty($impi)) {
             $ids = $start;
 
-            foreach ($users as $user) {
+            foreach ($impi as $impi) {
             //MANDA LOS DATOS AL JS
                 //$nestedData['fake_id'] = ++$ids;
-                $nestedData['id_impi'] = $user->id_impi;
-                $nestedData['folio'] = $user->folio;
-                $nestedData['tramite'] = $user->tramite;
-                $nestedData['nombre'] = $user->nombre;
+                $nestedData['id_impi'] = $impi->id_impi;
+                $nestedData['folio'] = $impi->folio;
+                $nestedData['tramite'] = $impi->tramite;
+                $nestedData['fecha'] = $impi->fecha_solicitud;
+                $nestedData['cliente'] = $impi->cliente;
+                $nestedData['contrasena'] = $impi->contrasena;
+                $nestedData['pago'] = $impi->pago;
+                $nestedData['estatus'] = $impi->estatus;
+                $nestedData['obs'] = $impi->observaciones;
 
                 $data[] = $nestedData;
       }
@@ -103,61 +119,88 @@ class impiController extends Controller
     }
 }
 
-/*
-    public function create()
-    {
-        return view('tramites_impi.create');
-    }
 
+      /*
+        $var = new Impi();
+        //$var->folio = $request->folio;
+        $var->tramite = $request->tramite;
+        $var->fecha_solicitud = $request->fecha_solicitud;
+        $var->cliente = $request->cliente;
+        $var->contrasena = $request->contrasena;
+        $var->pago = $request->pago;
+        $var->estatus = $request->estatus;
+        $var->observaciones = $request->observaciones;
+        $var->save();//guardar en BD
+        */
+    // Función para agregar registro
     public function store(Request $request)
     {
-        $request->validate([
-            'tipo_tramite' => 'required|string|max:255',
-            'numero_solicitud' => 'required|string|max:255',
-            'estado' => 'required|string|in:pendiente,en_proceso,finalizado',
-            'fecha_solicitud' => 'required|date',
+        /*$request->validate([
+            'contrasena' => 'string|max:255',
+            'pago' => 'string|max:255',
+        ]);*/
+
+        try {
+            $var = new Impi();
+            $var->contrasena = $request->contrasena;
+            $var->pago = $request->pago;
+
+            $var->save();//guardar en BD
+
+            return response()->json(['success' => 'Registro agregada correctamente']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al agregar'], 500);
+        }
+    }
+
+
+
+//FUNCION PARA LLENAR EL FORMULARIO
+public function edit($id_impi)
+{
+    try {
+        $var1 = Impi::findOrFail($id_impi);
+
+        //return response()->json($var1);
+        return response()->json([
+            'id_impi' => $var1->id_impi,
+            'tramite' => $var1->tramite,
+            'fecha_solicitud' => $var1->fecha_solicitud,
+            'cliente' => $var1->cliente,
+            'contrasena' => $var1->contrasena,
+            'pago' => $var1->pago,
+            'estatus' => $var1->estatus,
+            'observaciones' => $var1->observaciones,
         ]);
-
-        Impi::create($request->all());
-
-        return redirect()->route('tramites_impi.index');
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al obtener el controller'], 500);
     }
+}
 
-    public function show($id)
-    {
-        $tramite = Impi::findOrFail($id);
-        return view('tramites_impi.show', compact('tramite'));
+//FUNCION PARA EDITAR
+public function update(Request $request, $id_impi) 
+{
+    try {
+        $var2 = Impi::findOrFail($id_impi);
+        $var2->id_impi = $request->id_impi;
+        $var2->tramite = $request->tramite;
+        $var2->fecha_solicitud = $request->fecha_solicitud;
+        $var2->cliente = $request->cliente;
+        $var2->contrasena = $request->contrasena;
+        $var2->pago = $request->pago;
+        $var2->estatus = $request->estatus;
+        $var2->observaciones = $request->observaciones;
+        $var2->save();
+
+        return response()->json(['success' => 'Editado correctamente']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al editar'], 500);
     }
+}
 
-    public function edit($id)
-    {
-        $tramite = Impi::findOrFail($id);
-        return view('tramites_impi.edit', compact('tramite'));
-    }
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'tipo_tramite' => 'required|string|max:255',
-            'numero_solicitud' => 'required|string|max:255',
-            'estado' => 'required|string|in:pendiente,en_proceso,finalizado',
-            'fecha_solicitud' => 'required|date',
-        ]);
 
-        $tramite = Impi::findOrFail($id);
-        $tramite->update($request->all());
 
-        return redirect()->route('tramites_impi.index');
-    }
-
-    public function destroy($id)
-    {
-        $tramite = Impi::findOrFail($id);
-        $tramite->delete();
-
-        return redirect()->route('tramites_impi.index');
-    }
-*/
 
 
 

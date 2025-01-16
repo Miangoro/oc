@@ -156,7 +156,20 @@ class inspeccionesController extends Controller
                 $nestedData['tipo_instalacion'] = $solicitud->instalacion->tipo  ?? 'N/A';
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</span>'; // Maneja el caso donde el organismo sea nulo
+                $nestedData['foto_inspector'] = $solicitud->inspector->profile_photo_path ?? '';
                 $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</span>';
+                $urls = $solicitud->documentacion(69)->pluck('url')->toArray();
+
+            // Comprobamos si $urls está vacío
+            if (empty($urls)) {
+                // Si está vacío, asignamos la etiqueta de "Sin subir"
+                $nestedData['url_acta'] = 'Sin subir';
+            } else {
+                // Si hay URLs, las unimos en una cadena separada por comas
+                $nestedData['url_acta'] = implode(', ', $urls);
+            }
+
+
 
 
 

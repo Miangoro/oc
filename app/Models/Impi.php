@@ -20,6 +20,13 @@ class Impi extends Model
         'id_impi',
         'folio', 
         'tramite', 
-        'nombre'
+        'fecha_solicitud',
+        'cliente',
+        'contrasena',
+        'pago',
+        'estatus',
+        'observaciones',
     ];
+
+    
 }

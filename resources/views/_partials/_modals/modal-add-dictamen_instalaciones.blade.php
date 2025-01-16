@@ -97,6 +97,19 @@
 
                     </div>
 
+                    <div class="row">
+                        <!-- Firmante -->
+                    <div class="form-floating form-floating-outline mb-3">
+                        <select class="select2 form-select" id="id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
+                            <option value="" disabled selected>Seleccione un firmante</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                        <label for="formValidationSelect2">Seleccione un firmante</label>
+                    </div>
+                    </div>
+
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Registrar</button>
                         <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="modal"
