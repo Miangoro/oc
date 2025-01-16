@@ -55,7 +55,7 @@ class UsuariosInspectoresController extends Controller
       4 => 'firma',
       5 => 'email_verified_at',
       6 => 'razon_social',
-
+      7 => 'puesto'
     ];
 
     $search = [];
@@ -110,6 +110,7 @@ class UsuariosInspectoresController extends Controller
         $nestedData['firma'] = $user->firma ?? 'N/A';
         $nestedData['password_original'] = $user->password_original ;
         $nestedData['razon_social'] = 'No aplica';
+        $nestedData['puesto'] = $user->puesto;
         $nestedData['foto_usuario'] = $user->profile_photo_path ?? '';
 
         $data[] = $nestedData;
@@ -197,6 +198,7 @@ class UsuariosInspectoresController extends Controller
                   'estatus' => $request->estatus,
                   'firma' => $firmaPath,  // Guardar la ruta de la firma
                   'tipo' => 2,  // Tipo de inspector
+                  'puesto' => $request->puesto,
               ]
           );
 
@@ -216,6 +218,7 @@ class UsuariosInspectoresController extends Controller
                   'password' => bcrypt($pass),
                   'tipo' => 2,  // Tipo de inspector
                   'firma' => $firmaPath,  // Guardar la ruta de la firma si existe
+                  'puesto' => $request->puesto,
               ]);
 
               return response()->json('Registrado');
