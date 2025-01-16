@@ -870,5 +870,5 @@ Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarS
 
 //Trámites IMPI
 Route::get('tramiteIMPI', [impiController::class, 'UserManagement'])->name('IMPI');
-Route::resource('tramite', impiController::class);
+Route::resource('tramite-list', impiController::class);
 
