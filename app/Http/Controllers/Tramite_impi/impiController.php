@@ -25,7 +25,12 @@ class impiController extends Controller
             1 => 'id_impi',
             2 => 'folio',
             3 => 'tramite',
-            4 => 'nombre'
+            4 => 'fecha_solicitud',
+            5 => 'cliente',
+            6 => 'contrasena',
+            7 => 'pago',
+            8 => 'estatus',
+            9 => 'observaciones'
         ];
         $search = [];
 
@@ -44,7 +49,7 @@ class impiController extends Controller
 
       if (empty($request->input('search.value'))) {
         //$users = Impi::where("nombre", 2)->offset($start)
-        $users = Impi::where('id_impi', 'LIKE', "%{$request->input('search.value')}%")
+        $impi = Impi::where('id_impi', 'LIKE', "%{$request->input('search.value')}%")
 
         ->offset($start)
           ->limit($limit)
@@ -53,7 +58,7 @@ class impiController extends Controller
       } else {
         $search = $request->input('search.value');
   
-        $users = Impi::where('id', 'LIKE', "%{$search}%")
+        $impi = Impi::where('id', 'LIKE', "%{$search}%")
           ->where("nombre", 1)
           ->orWhere('tramite', 'LIKE', "%{$search}%")
   
@@ -71,16 +76,21 @@ class impiController extends Controller
 
 
 
-        if (!empty($users)) {
+        if (!empty($impi)) {
             $ids = $start;
 
-            foreach ($users as $user) {
+            foreach ($impi as $impi) {
             //MANDA LOS DATOS AL JS
                 //$nestedData['fake_id'] = ++$ids;
-                $nestedData['id_impi'] = $user->id_impi;
-                $nestedData['folio'] = $user->folio;
-                $nestedData['tramite'] = $user->tramite;
-                $nestedData['nombre'] = $user->nombre;
+                //$nestedData['id_impi'] = $user->id_impi;
+                $nestedData['folio'] = $impi->folio;
+                $nestedData['tramite'] = $impi->tramite;
+                $nestedData['fecha'] = $impi->fecha_solicitud;
+                $nestedData['cliente'] = $impi->cliente;
+                $nestedData['contrasena'] = $impi->contrasena;
+                $nestedData['pago'] = $impi->pago;
+                $nestedData['estatus'] = $impi->estatus;
+                $nestedData['obs'] = $impi->observaciones;
 
                 $data[] = $nestedData;
       }

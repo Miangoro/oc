@@ -42,22 +42,26 @@
 
 @section('content')
 
-
 <div class="card">
  
-    <div class="card-header pb-0">
-        <h3 class="card-title mb-0">Trámites IMPI</h3>
-    </div>
+  <div class="card-header pb-0">
+    <h3 class="card-title mb-0">Trámites IMPI</h3>
+  </div>
 
     <div class="card-datatable table-responsive">
         <table class="datatables-users table">
             <thead class="table-dark">
                 <tr>
                   <th></th>
-                  <th>Id</th>
+                  {{-- <th>Id</th> --}}
                   <th>folio</th>
                   <th>Tramite</th>
-                  <th>usuario</th>
+                  <th>fecha</th>
+                  <th>cliente</th>
+                  <th>contraseña</th>
+                  <th>pago</th>
+                  <th>estatus</th>
+                  <th>observaciones</th>
                   <th>Acciones</th>
                 </tr>
             </thead>
@@ -65,7 +69,13 @@
     </div>
 
 
+   
+
+
 </div><!--CARD-->
 
+<!-- Modal -->
+@include('_partials/_modals/modal-add-impi')
+<!-- /Modal -->
 
 @endsection
