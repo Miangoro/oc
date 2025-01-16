@@ -26,7 +26,12 @@ class InstalacionesController extends Controller
         $dictamenes = Dictamen_instalaciones::all(); // Obtener todos los datos
         $clases = clases::all();
         $categoria = categorias::all();
-        $inspeccion = inspecciones::all();
+        $inspeccion = inspecciones::whereHas('solicitud.tipo_solicitud', function ($query) {
+            $query->where('id_tipo', 14);
+        })
+        ->orderBy('id_inspeccion', 'desc')
+        ->get();
+        
         $empresa = empresa::all();
         $soli = solicitudesModel::all();
 

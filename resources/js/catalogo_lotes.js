@@ -938,6 +938,11 @@ $(function () {
             $('#edit_cont_alc').val(lote.cont_alc);
             $('#edit_id_categoria').val(lote.id_categoria).trigger('change');
             $('#edit_clase_agave').val(lote.id_clase).trigger('change');
+
+            var fqs = data.lote.folio_fq.split(' ');
+            $('#folio_fq_completo_58').val(fqs[0]);
+            $('#folio_fq_ajuste_58').val(fqs[1]);
+
             // Cargar las opciones estáticas (de $tipos)
             $.each(tipos, function (index, tipo) {
               var option = new Option(tipo.nombre, tipo.id_tipo);
@@ -1012,11 +1017,14 @@ $(function () {
 
           var nombreExtraido = documento.nombre.split('-').pop().trim();
 
+          
+        
+
           // Mostrar el documento completo
           if (documento.tipo.includes('Análisis completo') && documento.url && !documentoCompletoUrlAsignado) {
             var fileNameCompleto = documento.url.split('/').pop();
             archivoUrlDisplayCompleto.html('Documento completo disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameCompleto + '</a>');
-            folioFqCompletoInput.val(nombreExtraido);
+            folioFqCompletoInput.val(fqs);
             documentoCompletoUrlAsignado = true; // Marcar como asignado
             ultimoDocumentoCompletoId = documento.id_documento; // Guardar el ID
           }
@@ -1025,7 +1033,7 @@ $(function () {
           if (documento.tipo.includes('Ajuste de grado') && documento.url && !documentoAjusteUrlAsignado) {
             var fileNameAjuste = documento.url.split('/').pop();
             archivoUrlDisplayAjuste.html('Documento ajuste disponible: <a href="../files/' + data.numeroCliente + '/' + documento.url + '" target="_blank" class="text-primary">' + fileNameAjuste + '</a>');
-            folioFqAjusteInput.val(nombreExtraido);
+            folioFqAjusteInput.val(fqs);
             documentoAjusteUrlAsignado = true; // Marcar como asignado
             ultimoDocumentoAjusteId = documento.id_documento; // Guardar el ID
           }
