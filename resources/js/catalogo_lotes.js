@@ -939,7 +939,7 @@ $(function () {
             $('#edit_id_categoria').val(lote.id_categoria).trigger('change');
             $('#edit_clase_agave').val(lote.id_clase).trigger('change');
 
-            var fqs = data.lote.folio_fq.split(' ');
+            var fqs = data.lote.folio_fq.split(',');
             $('#folio_fq_completo_58').val(fqs[0]);
             $('#folio_fq_ajuste_58').val(fqs[1]);
 
