@@ -37,7 +37,36 @@ $(function () {
       },
       { data: 'direccion_completa' },
       { data: 'fecha_visita' },
-      { data: 'inspector' },
+      {
+        render: function (data, type, full, meta) {
+          var $name = full['inspector'];
+          var foto_inspector = full['foto_inspector'];
+
+          // For Avatar badge
+
+          var $output;
+          if (foto_inspector != '') {
+            $output =
+              '<div class="avatar-wrapper"><div class="avatar avatar-sm me-3"> <div class="avatar "><img src="storage/' +
+              foto_inspector +
+              '" alt class="rounded-circle"></div></div></div>';
+          } else {
+            $output = '';
+          }
+
+          // Creates full output for row
+          var $row_output =
+            '<div class="d-flex justify-content-start align-items-center user-name">' +
+            $output +
+            '<div class="d-flex flex-column">' +
+            '<a href="#" class="text-truncate text-heading"><span class="fw-medium">' +
+            $name +
+            '</span></a>' +
+            '</div>' +
+            '</div>';
+          return $row_output;
+        }
+      },
       { data: 'fecha_servicio' },
       { data: '' },
       { data: 'action' }
@@ -86,7 +115,13 @@ $(function () {
         className: 'text-center',
         render: function (data, type, full, meta) {
           var $id = full['id_inspeccion'];
-          return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_inspeccion']}" data-registro="${full['razon_social']} "></i>`;
+          //return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['id_inspeccion']}" data-registro="${full['razon_social']} "></i>`;
+          if(full['url_acta']=='Sin subir'){
+            return '<span class="badge bg-danger">Sin subir</span>';
+          }else{
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['url_acta']}" data-registro="${full['razon_social']} "></i>`;
+          }
+          
         }
       },
       {
@@ -973,9 +1008,9 @@ $(function () {
     var id_inspeccion = $(this).data('id');
     var registro = $(this).data('registro');
     var iframe = $('#pdfViewer');
-    iframe.attr('src', '../acta_circunstanciada_unidades_produccion/' + id_inspeccion);
+    iframe.attr('src', '/files/' + id_inspeccion);
 
-    $("#titulo_modal").text("Certificado de instalaciones");
+    $("#titulo_modal").text("Acta de inspección");
     $("#subtitulo_modal").text(registro);
   });
   //Añadir row

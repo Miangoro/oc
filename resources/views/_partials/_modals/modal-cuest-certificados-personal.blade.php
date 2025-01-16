@@ -56,20 +56,37 @@
                                                                 @if($pregunta->documentacion?->documentacionUrls)
                                                                     <td>
                                                                         <a target="_blank" href="{{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->isNotEmpty() ? 
-                                                                            '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente . '/' . 
+                                                                            '../files' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente . '/' . 
                                                                             $revisor->obtenerDocumentosClientes($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa) 
                                                                             : 'NA' }}">
                                                                             Ver Documento
                                                                         </a>
                                                                     </td>
                                                                 @elseif($pregunta->filtro == 'cliente')
-                                                                    <td><b>{{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->first()?->numero_cliente ?? 'Sin asignar' }}</b></td>
-                                                                @elseif($pregunta->filtro == 'direccion_fiscal')
-                                                                    <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }}</b></td>
-                                                                @elseif($pregunta->filtro == 'num_certificado')
-                                                                    <td><b>{{ $revisor->certificado->num_certificado ?? 'N/A' }}</b></td>
+                                                                <td><b>
+                                                                    {{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes
+                                                                        ->filter(fn($cliente) => !empty($cliente->numero_cliente))
+                                                                        ->first()?->numero_cliente ?? 'Sin asignar' }}
+                                                                </b></td>
+                                                                
+
                                                                 @elseif($pregunta->filtro == 'nombre_empresa')
                                                                     <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->razon_social ?? 'N/A' }}</b></td>
+
+                                                                @elseif($pregunta->filtro == 'direccion_fiscal')
+                                                                    <td><b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->empresa->domicilio_fiscal ?? 'N/A' }}</b></td>
+
+                                                                @elseif($pregunta->filtro == 'solicitud')
+                                                                    <td>
+                                                                        <b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->folio ?? 'N/A' }}</b>
+                                                                        <a target="_blank" href="/solicitud_de_servicio/{{ $revisor->certificado->dictamen->inspeccione->id_solicitud ?? 'N/A' }}">
+                                                                            Ver Documento
+                                                                        </a>
+                                                                    </td>
+
+                                                                @elseif($pregunta->filtro == 'num_certificado')
+                                                                    <td><b>{{ $revisor->certificado->num_certificado ?? 'N/A' }}</b></td>
+                                                              
                                                                 @elseif($pregunta->filtro == 'domicilio_insta')
                                                                     <td><b>{{ $revisor->certificado->dictamen->instalaciones->direccion_completa ?? 'N/A' }}</b></td>
                                                                 @elseif($pregunta->filtro == 'correo')
@@ -82,6 +99,41 @@
                                                                         <b>{{ $revisor?->certificado?->fecha_vigencia ? Helpers::formatearFecha($revisor->certificado->fecha_vigencia) : 'NA' }}</b><br>
                                                                         <b>{{ $revisor?->certificado?->fecha_vencimiento ? Helpers::formatearFecha($revisor->certificado->fecha_vencimiento) : 'NA' }}</b>
                                                                     </td>
+                                                                @elseif($pregunta->filtro == 'num_dictamen')
+                                                                <td>
+                                                                    @php
+                                                                        $dictamenRutas = [
+                                                                            1 => "/dictamen_productor/",
+                                                                            2 => "/dictamen_envasador/",
+                                                                            3 => "/dictamen_comercializador/",
+                                                                            4 => "/dictamen_almacen/",
+                                                                            5 => "/dictamen_bodega/",
+                                                                        ];
+                                                                        
+                                                                        $tipoDictamen = $revisor->certificado->dictamen->tipo_dictamen ?? null;
+                                                                        $pdf_dictamen = $dictamenRutas[$tipoDictamen] ?? null;
+                                                                    @endphp
+                                                                
+                                                                    <b>{{ $revisor->certificado->dictamen->num_dictamen ?? 'N/A' }}</b>
+                                                                
+                                                                    @if ($pdf_dictamen)
+                                                                        <a target="_blank" href="{{ $pdf_dictamen.$revisor->certificado->dictamen->id_dictamen }}">
+                                                                            Ver Documento
+                                                                        </a>
+                                                                    @else
+                                                                        <span>Documento no disponible</span>
+                                                                    @endif
+                                                                </td>
+
+                                                                @elseif($pregunta->filtro == 'responsable')
+                                                                    <td><b>{{ $revisor->certificado->firmante->name ?? 'N/A' }}</b></td>
+                                                                @elseif($pregunta->filtro == 'direccion_cidam')
+                                                                    <td><b>Kilómetro 8. Antigua carretera a Pátzcuaro, S/N.
+                                                                        Col. Otra no especificada en el catálogo.
+                                                                        C.P. 58341. Morelia, Michoacán. México.</b></td>
+
+                                                                    
+                                                                
                                                                 @else
                                                                     <td>Sin datos</td>
                                                                 @endif

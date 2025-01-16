@@ -145,6 +145,12 @@ public function lote_envasado()
         return categorias::whereIn('id_categoria', $ids)->get();
     }
 
+
+    public function documentacion($id_documento)
+{
+    return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_solicitud')->where('id_documento', $id_documento);
+}
+
     
 
 

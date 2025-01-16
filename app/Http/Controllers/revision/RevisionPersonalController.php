@@ -22,8 +22,21 @@ class RevisionPersonalController extends Controller
         $userId = auth()->id();   
         $EstadisticasInstalaciones = $this->calcularCertificadosInstalaciones($userId); // Estadisticas Instalaciones
         $EstadisticasGranel = $this->calcularCertificadosGranel($userId); // Estadisticas Granel
-        $revisor = Revisor::with('certificado')->where('id_revisor', $userId)->first(); // Autentificado Instalaciones
-        $revisoresGranel = RevisorGranel::with('certificado')->where('id_revisor', $userId)->first(); // Autentificado Granel
+        $revisorQuery = Revisor::with('certificado');
+
+        if ($userId != 1) {
+            $revisorQuery->where('id_revisor', $userId);
+        }
+        
+        $revisor = $revisorQuery->first();
+        
+        $revisoresGranelQuery = RevisorGranel::with('certificado');
+
+        if ($userId != 1) {
+            $revisoresGranelQuery->where('id_revisor', $userId);
+        }
+        
+        $revisoresGranel = $revisoresGranelQuery->first();
         $users = User::where('tipo', 1)->get(); // Select Aprobacion
         $preguntasRevisor = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 1)->get(); // Preguntas Instalaciones
         $preguntasRevisorGranel = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 2)->get(); // Preguntas Granel
@@ -53,7 +66,7 @@ class RevisionPersonalController extends Controller
         $queryRevisorGranel = RevisorGranel::with(['certificado.dictamen']);
 
         // Filtrar por usuario si no es admin (ID 8)
-        if ($userId != 8) {
+        if ($userId != 1) {
             $queryRevisor->where('id_revisor', $userId);
             $queryRevisorGranel->where('id_revisor', $userId);
         }

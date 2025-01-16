@@ -130,10 +130,10 @@
     <!-- Users List Table -->
     <div class="card">
         <div class="card-header pb-0">
-            <h3 class="card-title mb-0">Inspecciones</h3>
+            <h3 class="card-title mb-0 fw-bold">Inspecciones de la Unidad de Inspección</h3>
         </div>
         <div class="card-datatable table-responsive">
-            <table class="datatables-users table">
+            <table style="font-size: 14px !important" class="datatables-users table">
                 <thead class="table-dark">
                     <tr>
                         <th></th>
@@ -147,7 +147,7 @@
                         <th>Fecha y hora de visita estimada</th>
                         <th>Inspector asignado</th>
                         <th>Fecha y hora de inspección</th>
-                        <th>pdf</th>
+                        <th>Acta</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
