@@ -617,6 +617,8 @@ Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name(
 Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('tipos.update');
 
 Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');
+Route::get('/getDatosLoteEnvasado/{idLoteEnvasado}', [getFuncionesController::class, 'getDatosLoteEnvasado']);
+
 Route::get('/getDatos2/{lote_granel}', [getFuncionesController::class, 'getDatos2'])->name('getDatos2');
 Route::get('/getDatosSolicitud/{id_solicitud}', [getFuncionesController::class, 'getDatosSolicitud'])->name('getDatosSolicitud');
 Route::get('/obtenerDocumentosClientes/{id_documento}/{id_cliente}', [getFuncionesController::class, 'obtenerDocumentosClientes'])->name('obtenerDocumentosClientes');
@@ -747,6 +749,8 @@ Route::post('/hologramas/storeInspeccionBarricadaLiberacion', [solicitudesContro
 Route::post('/hologramas/storeInspeccionEnvasado', [solicitudesController::class, 'storeInspeccionEnvasado']);
 Route::get('/getDetalleLoteTipo/{id_tipo}', [solicitudesController::class, 'getDetalleLoteTipo']);
 Route::delete('/solicitudes-lista/{id_solicitud}', [solicitudesController::class, 'destroy'])->name('solicitudes-list.destroy');
+
+Route::post('/registrar-solicitud-lib-prod-term', [solicitudesController::class, 'storeSolicitudLibProdTerm']);
 
 Route::get('/getDetalleLoteEnvasado/{id_lote_envasado}', [solicitudesController::class, 'getDetalleLoteEnvasado']);
 Route::get('/verificar-solicitud', [solicitudesController::class, 'verificarSolicitud'])->name('verificarSolicitud');
