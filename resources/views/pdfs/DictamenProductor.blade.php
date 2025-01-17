@@ -181,7 +181,7 @@
             padding: 0;
             position: absolute;
             right: 50px;
-            top: 790px;
+            top: 775px;
             font-family: 'Arial Negrita' !important;
         }
 
@@ -274,7 +274,29 @@
             <span class="font-lucida-sans-seminegrita">Número de cliente:</span><br>
             (Otorgado por el Organismo Certificador del Centro de Innovación y Desarrollo Agroalimentario de Michoacán A.C.) (CIDAM)
             </td>
-                <td style="text-align: center; vertical-align: middle;">{{ $datos->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente }}</td>
+                <td style="text-align: center; vertical-align: middle;">
+                    @php
+                        // Encuentra el primer número de cliente válido
+                        $numeroCliente = null;
+
+                        if (isset($datos->inspeccione->solicitud->empresa->empresaNumClientes)) {
+                            foreach ($datos->inspeccione->solicitud->empresa->empresaNumClientes as $cliente) {
+                                if (!empty($cliente->numero_cliente)) {
+                                    $numeroCliente = $cliente->numero_cliente;
+                                    break; // Sal del bucle en cuanto encuentres un cliente válido
+                                }
+                            }
+                        }
+                    @endphp
+
+                    <!-- Mostrar el número de cliente encontrado -->
+                    @if($numeroCliente)
+                        <b>{{ $numeroCliente }}</b>
+                    @else
+                        <span>No hay número de cliente disponible.</span>
+                    @endif
+
+                </td>
             </tr>
             <tr>
             <td>
@@ -305,9 +327,9 @@
     </table>
     <p class="text">
     Se dictamina que la <span class="font-lucida-sans-seminegrita">Unidad de producción</span> cuenta con la infraestructura, el equipo y los procesos necesarios
-    para la producción de <span class="font-lucida-sans-seminegrita">Mezcal, clase (s)</span>, requisitos establecidos en la NOM-070-SCFI-2016,
+    para la producción de <span class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', ') }}, clase(s) <u>{{$datos->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', ') }}</u></span>, requisitos establecidos en la NOM-070-SCFI-2016,
     Bebidas alcohólicas-Mezcal-Especificaciones y por el Organismo de Certificación del Centro de Innovación y
-    Desarrollo Agroalimentario de Michoacán A.C. (CIDAM)
+    Desarrollo Agroalimentario de Michoacán A.C. (CIDAM).
    </p>
 
     <p class="text1">Las instalaciones se encuentran en región de los estados y municipios que contempla la resolución mediante el cual se otorga la protección
@@ -322,14 +344,14 @@
     <p class="textx" style="font-size: 10px; margin: 1;">
     <strong>AUTORIZÓ</strong>
     <span style="margin-left: 50px;">
-        <strong>Gerente Técnico Sustituto de la Unidad de Inspección | BTG. Erik Antonio Mejía Vaca</strong>
+        <strong>{{ $datos->firmante->puesto }} | {{ $datos->firmante->name }}</strong>
     </span>
     </p>
 
     <p class="textx" style="font-size: 10px; margin: 1;">
-    <strong>Cadena Origina</strong>
+    <strong>Cadena Original</strong>
     <span style="margin-left: 29px;">
-        <strong>UMG-159/2024|2024-06-26|UMS-1094/2024</strong>
+        <strong>{{ $datos->num_dictamen }}|{{ $datos->fecha_emision }}|{{ $datos->inspeccione->num_servicio }}</strong>
     </span>
     </p>
 

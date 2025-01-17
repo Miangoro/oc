@@ -116,6 +116,10 @@ class solicitudesModel extends Model
     return null;
 }
 
+protected $casts = [
+    'caracteristicas' => 'array',
+];
+
 public function lote_envasado()
 {
     return $this->belongsTo(lotes_envasado::class, 'id_lote_envasado', 'id_lote_envasado');
@@ -141,15 +145,28 @@ public function lote_envasado()
 
     public function categorias_mezcal()
     {
-        $ids = $this->getAttribute('caracteristicas')['categorias'] ?? [];
+        $ids = $this->getAttribute('caracteristicas')['categorias'] ;
         return categorias::whereIn('id_categoria', $ids)->get();
     }
+
+    public function clases_agave()
+    {
+        $ids = $this->getAttribute('caracteristicas')['clases'] ;
+        return clases::whereIn('id_clase', $ids)->get();
+    }
+
+
 
 
     public function documentacion($id_documento)
 {
     return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_solicitud')->where('id_documento', $id_documento);
 }
+
+    public function documentacion_completa()
+    {
+        return $this->hasMany(Documentacion_url::class, 'id_relacion', 'id_solicitud');
+    }
 
     
 

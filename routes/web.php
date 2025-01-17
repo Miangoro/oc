@@ -425,9 +425,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('content.dashboard.dashboards-analytics');
-    })->name('dashboard');
+     Route::get('/dashboard', [Analytics::class, 'index'])->name('dashboard');
 });
 
 //Solicitud de Cliente

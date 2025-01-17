@@ -102,6 +102,77 @@ use Illuminate\Support\Facades\Route;
   </div>
   <!--/ Sessions line chart -->
 
+  <div class="row g-6">
+    <div class="col-sm-6 col-lg-3">
+      <div class="card card-border-shadow-primary h-100">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-2">
+            <div class="avatar me-4">
+              <span class="avatar-initial rounded-3 bg-label-primary"><i class="ri-group-fill ri-24px"></i></span>
+            </div>
+            <h4 class="mb-0">{{ $solicitudesSinInspeccion }}</h4>
+          </div>
+          <h6 class="mb-0 fw-normal">Pendiente de asignar inspector</h6>
+          <p class="mb-0">
+            <span class="me-1 fw-medium">+18.2%</span>
+            <small class="text-muted">than last week</small>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card card-border-shadow-warning h-100">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-2">
+            <div class="avatar me-4">
+              <span class="avatar-initial rounded-3 bg-label-warning"><i class="ri-file-list-fill"></i></span>
+            </div>
+            <h4 class="mb-0">{{ $solicitudesSinActa }}</h4>
+          </div>
+          <h6 class="mb-0 fw-normal">Pendiente de subir acta</h6>
+          <!--<p class="mb-0">
+            <span class="me-1 fw-medium">-8.7%</span>
+            <small class="text-muted">than last week</small>
+          </p>-->
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card card-border-shadow-danger h-100">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-2">
+            <div class="avatar me-4">
+              <span class="avatar-initial rounded-3 bg-label-danger"><i class="ri-close-circle-fill"></i></span>
+            </div>
+            <h4 class="mb-0">27</h4>
+          </div>
+          <h6 class="mb-0 fw-normal">Dictámenes por vencer</h6>
+          <p class="mb-0">
+            <span class="me-1 fw-medium">+4.3%</span>
+            <small class="text-muted">than last week</small>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card card-border-shadow-info h-100">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-2">
+            <div class="avatar me-4">
+              <span class="avatar-initial rounded-3 bg-label-info"><i class='ri-time-line ri-24px'></i></span>
+            </div>
+            <h4 class="mb-0">13</h4>
+          </div>
+          <h6 class="mb-0 fw-normal">Certificados por vencer</h6>
+          <p class="mb-0">
+            <span class="me-1 fw-medium">-2.5%</span>
+            <small class="text-muted">than last week</small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 
 @endsection
