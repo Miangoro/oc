@@ -116,9 +116,6 @@ class solicitudesModel extends Model
     return null;
 }
 
-protected $casts = [
-    'caracteristicas' => 'array',
-];
 
 public function lote_envasado()
 {
@@ -144,16 +141,18 @@ public function lote_envasado()
     }
 
     public function categorias_mezcal()
-    {
-        $ids = $this->getAttribute('caracteristicas')['categorias'] ;
-        return categorias::whereIn('id_categoria', $ids)->get();
-    }
+{
+    $caracteristicas = json_decode($this->attributes['caracteristicas'], true);
+    $ids = $caracteristicas['categorias'] ?? [];
+    return categorias::whereIn('id_categoria', $ids)->get();
+}
 
-    public function clases_agave()
-    {
-        $ids = $this->getAttribute('caracteristicas')['clases'] ;
-        return clases::whereIn('id_clase', $ids)->get();
-    }
+public function clases_agave()
+{
+    $caracteristicas = json_decode($this->attributes['caracteristicas'], true);
+    $ids = $caracteristicas['clases'] ?? [];
+    return clases::whereIn('id_clase', $ids)->get();
+}
 
 
 
