@@ -187,7 +187,8 @@ class solicitudesController extends Controller
                 $nestedData['folio_caracteristicas'] = $caracteristicas['folio'] ?? 'N/A';
                 $nestedData['etapa'] = $caracteristicas['etapa'] ?? 'N/A';
                 $nestedData['fecha_corte'] = isset($caracteristicas['fecha_corte']) ? Carbon::parse($caracteristicas['fecha_corte'])->format('d/m/Y H:i') : 'N/A';
-                $idTipoMagueyMuestreo = $caracteristicas['id_tipo_maguey_muestreo'] ?? null;
+
+                $idTipoMagueyMuestreo = $caracteristicas['id_tipo_maguey'] ?? null;
                  if ($idTipoMagueyMuestreo) {
                  if (is_array($idTipoMagueyMuestreo)) {
                     $idTipoMagueyMuestreo = implode(',', $idTipoMagueyMuestreo);
@@ -195,18 +196,18 @@ class solicitudesController extends Controller
                 $idTipoMagueyMuestreoArray = explode(',', $idTipoMagueyMuestreo);
                 $tiposMaguey = tipos::whereIn('id_tipo', $idTipoMagueyMuestreoArray)->pluck('nombre')->toArray();
                 if ($tiposMaguey) {
-                $nestedData['id_tipo_maguey_muestreo'] = implode(', ', $tiposMaguey);
+                $nestedData['id_tipo_maguey'] = implode(', ', $tiposMaguey);
                   } else {
-                      $nestedData['id_tipo_maguey_muestreo'] = 'N/A';
+                      $nestedData['id_tipo_maguey'] = 'N/A';
                   }
                   } else {
-                      $nestedData['id_tipo_maguey_muestreo'] = 'N/A';
+                      $nestedData['id_tipo_maguey'] = 'N/A';
                   }
+
                 // Asumiendo que los IDs siempre están presentes (pero con verificación de claves faltantes)
-                $nestedData['id_categoria_muestreo'] = isset($caracteristicas['id_categoria_muestreo']) ? categorias::find($caracteristicas['id_categoria_muestreo'])->categoria : 'N/A';
-                $nestedData['id_clase_muestreo'] = isset($caracteristicas['id_clase_muestreo']) ? clases::find($caracteristicas['id_clase_muestreo'])->clase : 'N/A';
-                $nestedData['analisis_muestreo'] = $caracteristicas['analisis_muestreo'] ?? 'N/A';
-                $nestedData['volumen_muestreo'] = $caracteristicas['volumen_muestreo'] ?? 'N/A';
+                $nestedData['id_categoria'] = isset($caracteristicas['id_categoria']) ? categorias::find($caracteristicas['id_categoria'])->categoria : 'N/A';
+                $nestedData['id_clase'] = isset($caracteristicas['id_clase']) ? clases::find($caracteristicas['id_clase'])->clase : 'N/A';
+                $nestedData['cont_alc'] = $caracteristicas['cont_alc'] ?? 'N/A';
                 $nestedData['id_certificado_muestreo'] = $caracteristicas['id_certificado_muestreo'] ?? 'N/A';
                 $nestedData['id_categoria_traslado'] = $caracteristicas['id_categoria_traslado'] ?? 'N/A';
                 $nestedData['id_clase_traslado'] = $caracteristicas['id_clase_traslado'] ?? 'N/A';
@@ -276,14 +277,14 @@ class solicitudesController extends Controller
 
       // Verificar si hay características para procesar
         if ($caracteristicas) {
-          $categoria = isset($caracteristicas['id_categoria_muestreo'])
-              ? categorias::find($caracteristicas['id_categoria_muestreo'])
+          $categoria = isset($caracteristicas['id_categoria'])
+              ? categorias::find($caracteristicas['id_categoria'])
               : null;
-          $clase = isset($caracteristicas['id_clase_muestreo'])
-              ? clases::find($caracteristicas['id_clase_muestreo'])
+          $clase = isset($caracteristicas['id_clase'])
+              ? clases::find($caracteristicas['id_clase'])
               : null;
-            $tipoMagueyIds = isset($caracteristicas['id_tipo_maguey_muestreo'][0])
-            ? explode(',', $caracteristicas['id_tipo_maguey_muestreo'][0])
+            $tipoMagueyIds = isset($caracteristicas['id_tipo_maguey'][0])
+            ? explode(',', $caracteristicas['id_tipo_maguey'][0])
             : [];
         $tiposMaguey = tipos::whereIn('id_tipo', $tipoMagueyIds)->get();
         $tipoMagueyConcatenados = $tiposMaguey->map(function ($tipo) {
@@ -324,7 +325,7 @@ class solicitudesController extends Controller
             'id_clase' => $request->id_clase,
             'id_tipo_maguey' => $request->id_tipo_maguey,
             'analisis' => $request->analisis,
-            'volumen' => $request->volumen,
+            'cont_alc' => $request->volumen,
             'fecha_corte' => $request->fecha_corte,
             'kg_maguey' => $request->kg_maguey,
             'cant_pinas' => $request->cant_pinas,
@@ -373,11 +374,11 @@ class solicitudesController extends Controller
         $MuestreoLote->caracteristicas = json_encode([
             'id_lote_granel' => $request->id_lote_granel_muestreo,
             'tipo_analisis' => $request->destino_lote,
-            'id_categoria_muestreo' => $request->id_categoria_muestreo,
-            'id_clase_muestreo' => $request->id_clase_muestreo,
-            'id_tipo_maguey_muestreo' => $idTipoMaguey,
-            'analisis_muestreo' => $request->analisis_muestreo,
-            'volumen_muestreo' => $request->volumen_muestreo,
+            'id_categoria' => $request->id_categoria_muestreo,
+            'id_clase' => $request->id_clase_muestreo,
+            'id_tipo_maguey' => $idTipoMaguey,
+            'analisis' => $request->analisis_muestreo,
+            'cont_alc' => $request->volumen_muestreo,
             'id_certificado_muestreo' => $request->id_certificado_muestreo,
 
         ]);
@@ -898,7 +899,7 @@ class solicitudesController extends Controller
                   'id_clase' => $request->id_clase,
                   'id_tipo_maguey' => !empty($request->edit_id_tipo_vig) ? $request->edit_id_tipo_vig : null,
                   'analisis' => $request->analisis,
-                  'volumen' => $request->volumen,
+                  'cont_alc' => $request->volumen,
                   'fecha_corte' => $request->fecha_corte,
                   'kg_maguey' => $request->kg_maguey,
                   'cant_pinas' => $request->cant_pinas,
@@ -929,11 +930,11 @@ class solicitudesController extends Controller
                 $caracteristicasJson = [
                     'id_lote_granel' => $request->id_lote_granel_muestreo,
                     'tipo_analisis' => $request->tipo_analisis,
-                    'id_categoria_muestreo' => $request->id_categoria_muestreo,
-                    'id_clase_muestreo' => $request->id_clase_muestreo,
-                    'id_tipo_maguey_muestreo' => $request->id_tipo_maguey_muestreo,
-                    'analisis_muestreo' => $request->analisis_muestreo,
-                    'volumen_muestreo' => $request->volumen_muestreo,
+                    'id_categoria' => $request->id_categoria_muestreo,
+                    'id_clase' => $request->id_clase_muestreo,
+                    'id_tipo_maguey' => $request->id_tipo_maguey_muestreo,
+                    'analisis' => $request->analisis_muestreo,
+                    'cont_alc' => $request->volumen_muestreo,
                     'id_certificado_muestreo' => $request->id_certificado_muestreo,
                 ];
 
@@ -1351,6 +1352,68 @@ class solicitudesController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Pedido registrado.']);
     }
+    public function storeSolicitudLibProdTerm(Request $request){
+        // Validación de datos del formulario
+        $solicitud = new solicitudesModel();
+        $solicitud->folio = Helpers::generarFolioSolicitud();
+        $solicitud->id_empresa = $request->id_empresa;
+        $solicitud->id_tipo = 8;
+        $solicitud->fecha_visita = $request->fecha_visita;
+        //Auth::user()->id;
+        $solicitud->id_instalacion = $request->id_instalacion;
+        $solicitud->info_adicional = $request->info_adicional;
+        // Guardar el nuevo registro en la base de datos
+        $idTipoMaguey = $request->id_tipo;
+
+        // Verifica que es un array
+        if (!is_array($idTipoMaguey)) {
+            $idTipoMaguey = [];
+        }
+
+
+        $caracteristicas = [
+          'id_lote_envasado' =>$request->id_lote_envasado,
+          'id_categoria' => $request->id_categoria,
+          'id_clase' => $request->id_clase,
+          'id_tipo' => $idTipoMaguey,
+          'id_marca' => $request->marca,
+          'cont_alc' => $request->porcentaje_alcohol,
+          'analisis' => $request->analisis_fisicoquimicos,
+          'cantidad_botellas' => $request->cantidad_botellas,
+          'presentacion' => $request->presentacion,
+          'cantidad_pallets' => $request->cantidad_pallets,
+          'cajas_por_pallet' => $request->cajas_por_pallet,
+          'botellas_por_caja' => $request->botellas_por_caja,
+          'hologramas_utilizados' => $request->hologramas_utilizados,
+          'hologramas_mermas' => $request->hologramas_mermas,
+          'certificado_nom_granel' => $request->certificado_nom_granel
+      ];
+            // Convertir el array a JSON y guardarlo en la columna 'caracteristicas'
+            $solicitud->caracteristicas = json_encode($caracteristicas);
+
+
+        $solicitud->save();
+
+        // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
+        $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
+
+        // Notificación 1
+        $data1 = [
+            'title' => 'Nuevo registro de solicitud',
+            'message' => $solicitud->folio . " " . $solicitud->tipo_solicitud->tipo,
+            'url' => 'solicitudes-historial',
+        ];
+
+        // Iterar sobre cada usuario y enviar la notificación
+        foreach ($users as $user) {
+            $user->notify(new GeneralNotification($data1));
+        }
+
+
+        // Retornar una respuesta JSON indicando éxito
+        return response()->json(['success' => 'Solicitud registrada correctamente']);
+    }
+
 
     public function getDetalleLoteEnvasado($id_lote_envasado)
     {

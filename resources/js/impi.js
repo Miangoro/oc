@@ -306,6 +306,7 @@ $.ajaxSetup({
           className: 'add-new btn btn-primary waves-effect waves-light',
           attr: {
             'data-bs-toggle': 'modal',
+            //'data-bs-dismiss': 'modal',
             'data-bs-target': '#addImpi'
           }
           }
@@ -345,8 +346,129 @@ $.ajaxSetup({
         }
     });
   }//fin datatable
- 
- 
+
+
+
+
+// Función para agregar registro
+$('#AgregarImpi').on('submit', function (e) {//id del formulario #addNewCategory
+  e.preventDefault();
+  var formData = $(this).serialize();
+  $.ajax({
+      url: '/enviar',
+      type: 'POST',
+      data: formData,
+      success: function (response) {
+        console.log('si funciona :D', response);
+          $('#addImpi').modal('hide');//id del div que encierra al formulario #offcanvaadduser
+          $('#AgregarImpi')[0].reset();
+
+          // Actualizar la tabla sin reinicializar DataTables
+    //es lo mismo que abajo$('.datatables-users').DataTable().ajax.reload();
+          dt_user.ajax.reload();
+          // Mostrar alerta de éxito
+          Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.success,
+              customClass: {
+                  confirmButton: 'btn btn-success'
+              }
+          });
+      },
+      error: function (xhr) {
+        console.log('Error de error:', xhr.responseText);
+          // Mostrar alerta de error
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al agregar',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      }
+  });
+});  //fin registrar
+
+
+
+// FUNCION PARA EDITAR un registro
+$(document).ready(function() {
+  // Abrir el modal y cargar datos para editar
+  $('.datatables-users').on('click', '.edit-record', function() {
+      var id_impi = $(this).data('id');
+
+      // Realizar la solicitud AJAX para obtener los datos de la clase
+      $.get('/tramite-list/' + id_impi + '/edit', function(data) {
+        
+          // Rellenar el formulario con los datos obtenidos
+          $('#edit_id_impin').val(data.id_impi);
+          $('#edit_fecha_solicitud').val(data.fecha_solicitud);
+          $('#edit_tramite').val(data.tramite);
+          $('#edit_cliente').val(data.cliente);
+          $('#edit_contra').val(data.contrasena);
+          $('#edit_pago').val(data.pago);
+          $('#edit_estatus').val(data.estatus);
+          $('#edit_obs').val(data.observaciones);
+
+
+          // Mostrar el modal de edición
+          $('#editImpi').modal('show');
+      }).fail(function() {
+          Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al obtener los datos',
+              customClass: {
+                  confirmButton: 'btn btn-danger'
+              }
+          });
+      });
+  });
+
+  // Manejar el envío del formulario de edición
+  $('#EditarImpi').on('submit', function(e) {
+      e.preventDefault();
+
+      var formData = $(this).serialize();
+      var id_impi = $('#edit_id_impi').val(); // Obtener el ID de la clase desde el campo oculto
+
+      $.ajax({
+          url: '/tramite-list/' + id_impi,
+          type: 'PUT',
+          data: formData,
+          success: function(response) {
+              $('#editImpi').modal('hide'); // Ocultar el modal de edición "DIV"
+              $('#EditarImpi')[0].reset(); // Limpiar el formulario "FORM"
+              // Mostrar alerta de éxito
+              Swal.fire({
+                  icon: 'success',
+                  title: '¡Éxito!',
+                  text: response.success,
+                  customClass: {
+                      confirmButton: 'btn btn-success'
+                  }
+              });
+              // Recargar los datos en la tabla sin reinicializar DataTables
+              $('.datatables-users').DataTable().ajax.reload();
+          },
+          error: function(xhr) {
+            console.log('Error:', xhr.responseText);
+              // Mostrar alerta de error
+              Swal.fire({
+                  icon: 'error',
+                  title: '¡Error!',
+                  text: 'Error al actualizar',
+                  customClass: {
+                      confirmButton: 'btn btn-danger'
+                  }
+              });
+          }
+      });
+  });
+});
+
 
  
 

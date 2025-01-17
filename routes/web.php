@@ -617,6 +617,8 @@ Route::get('/edit-list/{id_tipo}/edit', [tiposController::class, 'edit'])->name(
 Route::put('/edit-list/{id_tipo}', [tiposController::class, 'update'])->name('tipos.update');
 
 Route::get('/getDatos/{empresa}', [getFuncionesController::class, 'getDatos'])->name('getDatos');
+Route::get('/getDatosLoteEnvasado/{idLoteEnvasado}', [getFuncionesController::class, 'getDatosLoteEnvasado']);
+
 Route::get('/getDatos2/{lote_granel}', [getFuncionesController::class, 'getDatos2'])->name('getDatos2');
 Route::get('/getDatosSolicitud/{id_solicitud}', [getFuncionesController::class, 'getDatosSolicitud'])->name('getDatosSolicitud');
 Route::get('/obtenerDocumentosClientes/{id_documento}/{id_cliente}', [getFuncionesController::class, 'obtenerDocumentosClientes'])->name('obtenerDocumentosClientes');
@@ -757,7 +759,10 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::post('/exportaciones/storePedidoExportacion', 'storePedidoExportacion')->name('exportaciones.storePedidoExportacion');
     Route::get('/marcas/{id_marca}/{id_direccion}', 'obtenerMarcasPorEmpresa');
     Route::get('/solicitudes/exportar', 'exportar')->name('solicitudes.exportar');
+    Route::post('/registrar-solicitud-lib-prod-term','storeSolicitudLibProdTerm');
 });
+
+
 
 
 
@@ -878,4 +883,20 @@ Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarS
 //Trámites IMPI
 Route::get('tramiteIMPI', [impiController::class, 'UserManagement'])->name('IMPI');
 Route::resource('tramite-list', impiController::class);
+//registrar
+Route::post('/enviar', [impiController::class, 'store'])->name('');
+//obtener el editar
+Route::get('tramite-list/{id_impi}/edit', [impiController::class, 'edit'])->name('instalacion.edit');
+//editar
+Route::put('tramite-list/{id_impi}', [impiController::class, 'update'])->name('tipos.update');
+/*
+registrar
+Route::post('insta', [InstalacionesController::class, 'store'])->name('instalacion.store');
+obtener el editar
+Route::get('insta/{id_dictamen}/edit', [InstalacionesController::class, 'edit'])->name('instalacion.edit');
+editar
+Route::put('insta/{id_dictamen}', [InstalacionesController::class, 'update'])->name('tipos.update');
+eliminar
+Route::delete('insta/{id_dictamen}', [InstalacionesController::class, 'destroy'])->name('instalacion.delete');
+*/
 
