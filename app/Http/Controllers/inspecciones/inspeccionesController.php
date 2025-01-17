@@ -162,7 +162,10 @@ class inspeccionesController extends Controller
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</span>'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['foto_inspector'] = $solicitud->inspector->profile_photo_path ?? '';
-                $nestedData['fecha_servicio'] = Helpers::formatearFecha(optional($solicitud->inspeccion)->fecha_servicio) ?? '<span class="badge bg-danger">Sin asignar</span>';
+                $nestedData['fecha_servicio'] = $nestedData['fecha_servicio'] = $solicitud->inspeccion && $solicitud->inspeccion->fecha_servicio
+                ? Helpers::formatearFechaHora($solicitud->inspeccion->fecha_servicio)
+                : '<span class="badge bg-danger">Sin asignar</span>';
+            
                 $urls = $solicitud->documentacion(69)->pluck('url')->toArray();
 
             // Comprobamos si $urls está vacío
@@ -349,6 +352,17 @@ class inspeccionesController extends Controller
             return response()->json($acta);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al obtener el acta por ID'], 500);
+        }
+    }
+
+    public function getInspeccion($id_solicitud)
+    {
+        try {
+            // Aquí obtienes el acta de inspección junto con sus testigos
+            $datos = inspecciones::where('id_solicitud',$id_solicitud)->first();
+            return response()->json(['success' => true, 'data' =>$datos]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al obtener los datos de la inspección'], 500);
         }
     }
     

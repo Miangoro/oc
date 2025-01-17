@@ -701,6 +701,8 @@ Route::middleware(['auth'])->controller(inspeccionesController::class)->group(fu
     Route::get('/orden_de_servicio/{id_inspeccion}', 'pdf_orden_servicio')->name('ordenDeServicio');
     Route::post('/agregar-resultados', 'agregarResultados');
     Route::get('/acta-solicitud/edit/{id_acta}', 'editActa');
+    Route::get('/getInspeccion/{id_solicitud}', 'getInspeccion');
+    
 });
 
 
