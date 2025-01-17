@@ -229,7 +229,7 @@ public function store(Request $request)
         return response()->json(['success' => 'Registro agregado correctamente']);
     } catch (\Exception $e) {
         // Registrar el error en el log
-        \Log::error('Error al agregar el dictamen', ['exception' => $e]);
+        
     
         return response()->json(['error' => 'Ocurrió un error al intentar agregar el registro'], 500);
     }
