@@ -59,8 +59,9 @@
                     <th>No. dictamen</th>
                     <th>No. Servicio</th>
                     <th>Cliente</th>
-                    <th>Domicilio de Instalacion</th>
+                    <th>Domicilio de Instalación</th>
                     <th>Fecha</th>
+                    <th>Días de vigencia</th>
                     <th>Dictamen</th>
                     <th>ACCIONES</th>
                 </tr>
@@ -68,29 +69,6 @@
         </table>
     </div>
 
-
-    <!-- Offcanvas Agregar nuevo tipo 
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasAddUser" aria-labelledby="offcanvasAddUserLabel">
-        <div class="offcanvas-header border-bottom">
-            <h5 id="offcanvasAddUserLabel" class="offcanvas-title">Nuevo Dictamen</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body mx-0 flex-grow-0 h-100">
-            <form class="add-new-user pt-0" id="addNewCategoryForm">
-                @csrf
-                <div class="form-floating form-floating-outline mb-5">
-                    <input type="text" class="form-control" id="nombre" placeholder="Tipo de maguey o agave" name="nombre" aria-label="Nombre" required>
-                    <label for="nombre">Nombre del Tipo</label>
-                </div>
-                <div class="form-floating form-floating-outline mb-5">
-                    <input type="text" class="form-control" id="ciencitico" placeholder="cientifico" name="cientifico" aria-label="Nombre" required>
-                    <label for="cientifico">Nombre 100</label>
-                </div>
-                <button type="submit" class="btn btn-primary me-sm-3 me-1 data-submit">Registrar</button>
-                <button type="reset" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">Cancelar</button>
-            </form>
-        </div>
-    </div>-->
 
 
 

@@ -142,6 +142,11 @@ class inspeccionesController extends Controller
             $ids = $start;
 
             foreach ($solicitudes as $solicitud) {
+                $numeroCliente = 
+                $solicitud->empresa->empresaNumClientes[0]->numero_cliente ?? 
+                $solicitud->empresa->empresaNumClientes[1]->numero_cliente ?? 
+                $solicitud->empresa->empresaNumClientes[2]->numero_cliente;
+                $nestedData['num_cliente'] = $numeroCliente;
                 $nestedData['id_inspeccion'] = $solicitud->inspeccion->id_inspeccion ?? '0';
                 $nestedData['id_empresa'] = $solicitud->empresa->id_empresa ?? '0';
                 $nestedData['id_solicitud'] = $solicitud->id_solicitud ?? 'N/A';
@@ -153,7 +158,7 @@ class inspeccionesController extends Controller
                 $nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($solicitud->fecha_solicitud)  ?? 'N/A';
                 $nestedData['tipo'] = $solicitud->tipo_solicitud->tipo  ?? 'N/A';
                 $nestedData['direccion_completa'] = $solicitud->instalacion->direccion_completa  ?? 'N/A';
-                $nestedData['tipo_instalacion'] = $solicitud->instalacion->tipo  ?? 'N/A';
+                $nestedData['tipo_instalacion'] = $solicitud->instalacion->tipo  ?? '';
                 $nestedData['fecha_visita'] = Helpers::formatearFechaHora($solicitud->fecha_visita)  ?? '<span class="badge bg-danger">Sin asignar</span>';
                 $nestedData['inspector'] = $solicitud->inspector->name ?? '<span class="badge bg-danger">Sin asignar</span>'; // Maneja el caso donde el organismo sea nulo
                 $nestedData['foto_inspector'] = $solicitud->inspector->profile_photo_path ?? '';
@@ -271,26 +276,51 @@ class inspeccionesController extends Controller
     {
 
         $sol = solicitudesModel::find($request->id_solicitud);
-        $numeroCliente = $sol->empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        //$numeroCliente = $sol->empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $sol->empresa->id_empresa)->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
         $mensaje = "";
         // Almacenar nuevos documentos solo si se envían
         if ($request->hasFile('url')) {
             foreach ($request->file('url') as $index => $file) {
-                $filename = $request->nombre_documento[$index] . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
-
-                $documentacion_url = new Documentacion_url();
-                $documentacion_url->id_relacion = $request->id_solicitud;
-                $documentacion_url->id_documento = $request->id_documento[$index];
-                $documentacion_url->nombre_documento = $request->nombre_documento[$index];
-                $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
-                $documentacion_url->id_empresa = $sol->id_empresa;
-                $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index] ?? null; // Usa null si no hay fecha
-                $documentacion_url->save();
-
-                $mensaje = $request->nombre_documento[$index] . ", " . $mensaje;
+                if ($request->id_solicitud) {
+                    // Buscar el registro existente
+                    $documentacion_url = Documentacion_url::where('id_relacion', $request->id_solicitud)
+                        ->where('id_documento', $request->id_documento[$index])
+                        ->first();
+        
+                    // Si existe un registro, elimina el archivo anterior
+                    if ($documentacion_url) {
+                        $existingFilePath = 'uploads/' . $numeroCliente . '/' . $documentacion_url->url;
+                        if (Storage::disk('public')->exists($existingFilePath)) {
+                            Storage::disk('public')->delete($existingFilePath);
+                        }
+                    } else {
+                        // Si no existe, crea una nueva instancia
+                        $documentacion_url = new Documentacion_url();
+                        $documentacion_url->id_relacion = $request->id_solicitud;
+                        $documentacion_url->id_documento = $request->id_documento[$index];
+                        $documentacion_url->id_empresa = $sol->id_empresa;
+                    }
+        
+                    // Procesar el nuevo archivo
+                    $filename = str_replace('/', '-', $request->nombre_documento[$index]) . '_' . time() . '.' . $file->getClientOriginalExtension();
+                    $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+        
+                    // Actualizar los datos del registro
+                    $documentacion_url->nombre_documento = str_replace('/', '-', $request->nombre_documento[$index]);
+                    $documentacion_url->url = $filename; // Guardar solo el nombre del archivo
+                    $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index] ?? null; // Usa null si no hay fecha
+                    $documentacion_url->save();
+        
+                    // Construir el mensaje
+                    $mensaje = str_replace('/', '-', $request->nombre_documento[$index]) . ", " . $mensaje;
+                }
             }
         }
+        
 
         // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
         $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios

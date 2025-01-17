@@ -16,6 +16,7 @@ use App\Models\solicitudesModel;
 use App\Models\User;
 use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Faker\Extension\Helper;
 
 class InstalacionesController extends Controller
@@ -148,10 +149,34 @@ public function index(Request $request)
                 /*$nestedData['fecha_emision'] = $user->fecha_emision;
                 $nestedData['fecha_vigencia'] = $user->fecha_vigencia;*/
                 //$fecha_emision= Helpers::formatearFecha($user->fecha_emision) ?? 'N/A';
-                $fecha_emision = $user->fecha_emision;
-                $fecha_vigencia = $user->fecha_vigencia;
+                $fecha_emision = Helpers::formatearFecha($user->fecha_emision);
+                $fecha_vigencia = Helpers::formatearFecha($user->fecha_vigencia);
                 $nestedData['fechas'] = '<b>Fecha Emisión: </b>' .$fecha_emision. '<br> <b>Fecha Vigencia: </b>' .$fecha_vigencia;
                 $nestedData['direccion_completa'] = $user->inspeccione->solicitud->instalacion->direccion_completa;
+
+
+
+                $fechaActual = Carbon::now()->startOfDay(); // Asegúrate de trabajar solo con fechas, sin horas
+                $fechaVigencia = Carbon::parse($user->fecha_vigencia)->startOfDay();
+                
+                if ($fechaActual->isSameDay($fechaVigencia)) {
+                    $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
+                } else {
+                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
+                
+                    if ($diasRestantes > 0) {
+                        if($diasRestantes > 15){
+                            $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
+                        }else{
+                            $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
+                        }
+                        $nestedData['diasRestantes'] = $res;
+                    } else {
+                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                    }
+                }
+                
+
 
                 $data[] = $nestedData;
             }
@@ -233,7 +258,8 @@ public function edit($id_dictamen)
             'fecha_vigencia' => $var1->fecha_vigencia,
             'id_inspeccion' => $var1->id_inspeccion,
             'categorias' => $categorias,
-            'clases' => $clases
+            'clases' => $clases,
+            'id_firmante' => $var1->id_firmante,
         ]);
     } catch (\Exception $e) {
         return response()->json(['error' => 'Error al obtener el dictamen'], 500);
@@ -253,6 +279,7 @@ public function edit($id_dictamen)
         //'categorias' => 'required|array',
         //'clases' => 'required|array',  
         'id_inspeccion' => 'required|integer',
+        'id_firmante' => 'required|integer',
     ]);
     try {
         $var2 = Dictamen_instalaciones::findOrFail($id_dictamen);
@@ -263,6 +290,7 @@ public function edit($id_dictamen)
         $var2->fecha_vigencia = $request->fecha_vigencia;
         $var2->categorias = $request->categorias;
         $var2->clases = $request->clases;
+        $var2->id_firmante = $request->id_firmante;
         $var2->save();
 
         return response()->json(['success' => 'Editado correctamente']);

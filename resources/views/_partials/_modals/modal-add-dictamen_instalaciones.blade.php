@@ -99,15 +99,15 @@
 
                     <div class="row">
                         <!-- Firmante -->
-                    <div class="form-floating form-floating-outline mb-3">
-                        <select class="select2 form-select" id="id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
-                            <option value="" disabled selected>Seleccione un firmante</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                        <label for="formValidationSelect2">Seleccione un firmante</label>
-                    </div>
+                        <div class="form-floating form-floating-outline mb-3">
+                            <select class="select2 form-select" id="id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
+                                <option value="" disabled selected>Seleccione un firmante</option>
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                            <label for="formValidationSelect2">Seleccione un firmante</label>
+                        </div>
                     </div>
 
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
@@ -191,9 +191,9 @@
                         </div>
 
                     </div>
-                    <div class="row">
+                    <!--<div class="row">
 
-                        <!--<div class="col-md-4">
+                        <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6 select2-primary">
                                 <select id="edit_categorias" name="categorias[]" class="form-select select2"
                                     data-placeholder="Seleccione una o más categorias"
@@ -219,8 +219,21 @@
                                 {{-- <input type="text" class="form-control" id="edit_clases" name="clases"> --}}
                                 <label for="edit_clases">Clases de agave</label>
                             </div>
-                        </div>-->
+                        </div>
 
+                    </div>-->
+
+                    <div class="row">
+                        <!-- Firmante -->
+                        <div class="form-floating form-floating-outline mb-3">
+                            <select class="select2 form-select" id="edit_id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
+                              
+                                @foreach($users as $user)
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                            <label for="formValidationSelect2">Seleccione un firmante</label>
+                        </div>
                     </div>
                     <div class="col-12 mt-6 d-flex flex-wrap justify-content-center gap-4 row-gap-4">
                         <button type="submit" class="btn btn-primary">Editar</button>
