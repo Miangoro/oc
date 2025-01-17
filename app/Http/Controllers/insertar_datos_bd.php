@@ -77,7 +77,7 @@ class insertar_datos_bd extends Controller
                         }
 
                         if ($solicitud['id_inspector'] == 283) {
-                            $solicitud['id_inspector'] = 11; //Amayrany
+                            $solicitud['id_inspector'] = 12; //Amayrany
                         }
 
                         if ($solicitud['id_inspector'] == 123) {
