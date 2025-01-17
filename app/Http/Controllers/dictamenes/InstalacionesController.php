@@ -214,8 +214,8 @@ public function store(Request $request)
         $var->num_dictamen = $request->num_dictamen;
         $var->fecha_emision = $request->fecha_emision;
         $var->fecha_vigencia = $request->fecha_vigencia;
-        $var->categorias = json_encode($request->categorias);
-        $var->clases =  json_encode($request->clases);
+        //$var->categorias = json_encode($request->categorias);
+        //$var->clases =  json_encode($request->clases);
         $var->save();//guardar en BD
 
         return response()->json(['success' => 'Registro agregada correctamente']);
