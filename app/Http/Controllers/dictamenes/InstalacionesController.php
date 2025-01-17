@@ -205,24 +205,35 @@ public function index(Request $request)
 public function store(Request $request)
 {
     try {
+        // Busca la inspección y carga las relaciones necesarias
         $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
-
+    
+        // Verifica si la inspección y las relaciones existen
+        if (!$instalaciones || !$instalaciones->solicitud || !$instalaciones->solicitud->instalacion) {
+            return response()->json(['error' => 'No se encontró la instalación asociada a la inspección'], 404);
+        }
+    
+        // Crear y guardar el nuevo dictamen
         $var = new Dictamen_instalaciones();
         $var->id_inspeccion = $request->id_inspeccion;
         $var->tipo_dictamen = $request->tipo_dictamen;
-        $var->id_instalacion =  $instalaciones->solicitud->instalacion->id_instalacion;
+        $var->id_instalacion = $instalaciones->solicitud->instalacion->id_instalacion;
         $var->num_dictamen = $request->num_dictamen;
         $var->fecha_emision = $request->fecha_emision;
         $var->fecha_vigencia = $request->fecha_vigencia;
         $var->id_firmante = $request->id_firmante;
-        //$var->categorias = json_encode($request->categorias);
-        //$var->clases =  json_encode($request->clases);
-        $var->save();//guardar en BD
-
-        return response()->json(['success' => 'Registro agregada correctamente']);
+        // $var->categorias = json_encode($request->categorias);
+        // $var->clases = json_encode($request->clases);
+        $var->save(); // Guardar en BD
+    
+        return response()->json(['success' => 'Registro agregado correctamente']);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al agregar'], 500);
+        // Registrar el error en el log
+        \Log::error('Error al agregar el dictamen', ['exception' => $e]);
+    
+        return response()->json(['error' => 'Ocurrió un error al intentar agregar el registro'], 500);
     }
+    
 }
 
 
