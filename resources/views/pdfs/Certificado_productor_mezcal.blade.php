@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificado productor demezcal</title>
+    <title>Certificado productor de mezcal</title>
     <style>
     
         body {
@@ -100,6 +100,7 @@
             font-size: 20px;
             text-align: center;
             font-weight: bold;
+            color: #0C1444;
         }
 
         table {
@@ -182,7 +183,7 @@
 
         .foother {
             position: fixed;
-            bottom: -40; 
+            bottom: -30; 
             left: 0; 
             width: 100%; 
             text-align: center; 
@@ -191,10 +192,16 @@
         }
 
         .foother img {
-            margin-top: 40px;
+            margin-top: 20px;
             width: 700px; 
             height: auto;
             display: inline-block;
+        }
+
+        #tabla-principal td{
+        line-height: 5px; /* Asegura que el contenido se ajuste a la altura */
+        overflow: hidden; /* Evita desbordamientos del contenido */
+        border: solid 2.5px;
         }
     </style>
 </head>
@@ -224,7 +231,7 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
 <p class="title2">COMO PRODUCTOR DE MEZCAL A</p>
 <p class="title3">"{{ strtoupper(str_replace(['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú'], ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'], $razon_social)) }}"</p>
 
-<table>
+<table id="tabla-principal">
     <tbody>
         <tr>
             <td class="cell1"><strong>Domicilio Fiscal:</strong></td>
@@ -251,23 +258,23 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
 
 <p class="text">El presente certificado se realiza deacuerdo a la Norma Oficial Mexicana NOM-070-SCFI-2016, Bebidas Alcohólical
 -Mezcal-Especificaciones, en vigor, mediante el esquema de certificación para productos con Denominación de
-Origen, ya que ha demostrado que cumple con el proceso de elaboración de Mezcal y produce la (s) categoría (s) y
-clase (s): <strong>Mézcal Artesanal, Blanco o Joven, Reposado, Añejo</strong></p>
+Origen, ya que ha demostrado que cumple con el proceso de elaboración de Mezcal y produce la (s) categoría(s) <u><b>{{ $categorias }}</b></u> y
+clase (s): <u><b>{{ $clases }}</b></u></p>
 
-<p class="text">Este certificado ampara exclusivamente la producción del productb Mezcal que se realice en las instalaciones
-indicadas a continuacion:</p>
+<p class="text">Este certificado ampara exclusivamente la producción del producto Mezcal que se realice en las instalaciones
+indicadas a continuación:</p>
 
-<p class="text"><strong>Maestro Mezcalero: </strong>{{ $maestro_mezcalero }}<br>
-<strong>Domicilio de la Unidad de Produccíón: </strong>{{  $direccion_completa }}<br>
+<p class="text"><strong>Maestro Mezcalero: </strong>{{ $maestro_mezcalero ?? "----------------------------------" }}<br>
+<strong>Domicilio de la Unidad de Producción: </strong>{{  $direccion_completa }}<br>
 <strong>No. De Autorización para el Uso de la Denominación de Origen Mezcal: </strong>{{ $num_autorizacion }}<br>
 <strong>No. De Dictamen de cumplimiento con la NOM:</strong>  {{ $num_dictamen}} <br>
 <strong>No. De Cliente ante el Organismo Certificador CIDAM A.C:</strong>  {{ $numero_cliente}}
 </p>
 
 <p class="text">Dichas instalaciones cuentan con el equipo requerido para la producción del producto Mezcal y se encuentran
-dentro de los estados y municipios que contempla lafiesolución mediante la cualse otorga la protección prevista
+dentro de los estados y municipios que contempla la Resolución mediante la cual se otorga la protección prevista
 a la Denominación de Origen Mezcal, para ser aplicada a la bebida alcohólica del mismo nombre, publicada el 28
-de Noviembre de L994, así como sus subsecuentes modificaciones.</p>
+de Noviembre de 1994, así como sus subsecuentes modificaciones.</p>
 
 <div class="signature">
     <div class="signature-line"></div>

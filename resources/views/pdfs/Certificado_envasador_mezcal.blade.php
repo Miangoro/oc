@@ -100,6 +100,7 @@
             font-size: 20px;
             text-align: center;
             font-weight: bold;
+            color: #0C1444;
         }
 
         table {
@@ -182,7 +183,7 @@
 
         .foother {
             position: fixed;
-            bottom: -40; 
+            bottom: -30; 
             left: 0; 
             width: 100%; 
             text-align: center; 
@@ -195,6 +196,12 @@
             width: 700px; 
             height: auto;
             display: inline-block;
+        }
+
+        #tabla-principal td{
+        line-height: 5px; /* Asegura que el contenido se ajuste a la altura */
+        overflow: hidden; /* Evita desbordamientos del contenido */
+        border: solid 2.5px;
         }
 
     </style>
@@ -225,7 +232,7 @@ Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C. Acreditad
 <p class="title2">COMO ENVASADOR DE MEZCAL A</p>
 <p class="title3">"{{ strtoupper(str_replace(['á', 'é', 'í', 'ó', 'ú', 'Á', 'É', 'Í', 'Ó', 'Ú'], ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'], $razon_social)) }}"</p>
 
-<table>
+<table id="tabla-principal">
     <tbody>
         <tr>
             <td class="cell1"><strong>Domicilio Fiscal:</strong></td>
@@ -259,8 +266,7 @@ las etapas de comercialización de la Bebida Alcohólica Destilada Denominada Me
 establecido en la NOM-070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones.
 </p>
 
-<p class="text">Esta certificación ampara exclusivamente la comercialización del producto Mezcal, Mezcal Artesanal, Mezcal
-Ancestral, <strong>Clase:</strong> Joven, Madurado en Vidrio, Reposado, Añejo, Abocado con, Destilado con, que se realice en las
+<p class="text">Esta certificación ampara exclusivamente la comercialización del producto <u>{{ $categorias }}</u>,  <strong>Clase:</strong> <u>{{ $clases }}</u>, que se realice en las
 instalaciones indicadas a continuación. <br>
 
 <strong>Domicilio de la unidad de Envasado:</strong> {{$direccion_completa}}<br>
@@ -275,7 +281,7 @@ de Noviembre de l994. así como sus subsecuentes modificaciones.</p>
 <div class="signature">
     <div class="signature-line"></div>
     <div class="signature-name">{{ $nombre_firmante }}</div>
-    <div class="signature-name">Gerente del Organismo Certificador CIDAM</div>
+    <div class="signature-name">Gerente Técnico del Organismo Certificador CIDAM</div>
 </div>
 
 <div class="down">Este cértificado sustituye al: No aplica<br>Certificado como Envasador de Mezcal NOM-070-SCFI-2016 F7.1-01-36<br>Edición 4 Entrada en vigor 12/01/2024 <br>
