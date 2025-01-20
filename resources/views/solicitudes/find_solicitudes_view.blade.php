@@ -215,9 +215,8 @@
     @include('_partials._modals.modal-add-solicitud-emision-certificado-venta-nacional')
     @include('_partials._modals.modal-add-solicitud-inspeccion-emision-certificado-NOM')
     @include('_partials._modals.modal-add-solicitud-georeferenciacion')
-
     @include('_partials._modals.modal-add-solicitud-muestreo-agave')
-    @include('_partials._modals.modal-edit-solicitud-muestreo-agave')
+
 
 
     @include('_partials._modals.modal-export-excel')
@@ -232,6 +231,8 @@
     @include('_partials._modals.modal-edit-solicitud-inspeccion-de-liberacion')
     @include('_partials._modals.modal-edit-solicitud-inspeccion-de-envasado')
     @include('_partials._modals.modal-edit-solicitud-pedidos-para-exportacion')
+    @include('_partials._modals.modal-edit-solicitud-muestreo-agave')
+    @include('_partials._modals.modal-edit-solicitud-liberación-producto-terminado')
 
 
     <!-- /Modal -->

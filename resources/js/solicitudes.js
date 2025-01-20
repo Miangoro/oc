@@ -136,6 +136,19 @@ $(function () {
                        <br>
                       <span class="fw-bold text-dark small">Volumen ingresado:</span><span class="small"> ${data.volumen_ingresado || 'N/A'}</span>
                       `;
+            case 8:
+              return `<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
+                      `;
             case 9:
               return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote_liberacion || 'N/A'}</span>
                       <br>
@@ -630,6 +643,8 @@ $(function () {
         modal = $('#editInspeccionEnvasado');
       } else if (id_tipo === 7) {
         modal = $('#editInspeccionIngresoBarricada');
+      } else if (id_tipo === 8) {
+        modal = $('#editLiberacionProducto');
       } else if (id_tipo === 9) {
         modal = $('#editInspeccionLiberacion');
       } else if (id_tipo === 10) {
@@ -789,8 +804,6 @@ $(function () {
                     response.caracteristicas.nombre.join(', ') || 'N/A'
                 );
             }
-
-
               if (response.caracteristicas && response.caracteristicas.analisis_muestreo) {
                 modal.find('#edit_analisis_muestreo').val(response.caracteristicas.analisis_muestreo);
               } else {
@@ -945,7 +958,38 @@ $(function () {
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
 
               //liberacion inspeccion
-            } else if (id_tipo === 9) {
+            }
+            else if (id_tipo === 8) {
+              modal.find('#edit_id_solicitud_liberacion_terminado').val(id_solicitud);
+              modal.find('#edit_id_empresa_solicitud_lib_ter').val(response.data.id_empresa).trigger('change');
+              modal.find('#edit_fecha_liberacion_terminado').val(response.data.fecha_visita);
+              modal.find('#edit_id_instalacion_lib_ter').data('selected', response.data.id_instalacion).trigger('change');
+
+              if (response.caracteristicas) {
+                modal.find('#edit_id_lote_envasado_lib_ter').data('selected', response.caracteristicas.id_lote_envasado || '');
+                modal.find('#edit_id_categoria_lib_ter').val(response.caracteristicas.categoria || '');
+                modal.find('#edit_id_categoria_lib_ter_id').val(response.caracteristicas.id_categoria || '');
+                modal.find('#edit_id_clase_lib_ter').val(response.caracteristicas.clase || '');
+                modal.find('#edit_id_clase_lib_ter_id').val(response.caracteristicas.id_clase || '');
+                modal.find('#edit_id_tipo_maguey_lib_ter').val(response.caracteristicas.nombre || '');
+                modal.find('#edit_id_tipo_maguey_lib_ter_ids').val(response.caracteristicas.id_tipo_maguey || '');
+                modal.find('#edit_marca_lib_ter').val(response.caracteristicas.marca || '');
+                modal.find('#edit_marca_lib_ter_id').val(response.caracteristicas.id_marca || '');
+                modal.find('#edit_porcentaje_alcohol_lib_ter').val(response.caracteristicas.cont_alc || '');
+                modal.find('#edit_analisis_fisiq_lib_ter').val(response.caracteristicas.analisis || '');
+                modal.find('#edit_can_botellas_lib_ter').val(response.caracteristicas.cantidad_botellas || '');
+                modal.find('#edit_presentacion_lib_ter').val(response.caracteristicas.presentacion || '');
+                modal.find('#edit_can_pallets_lib_ter').val(response.caracteristicas.cantidad_pallets || '');
+                modal.find('#edit_cajas_por_pallet_lib_ter').val(response.caracteristicas.cajas_por_pallet || '');
+                modal.find('#edit_botellas_por_caja_lib_ter').val(response.caracteristicas.botellas_por_caja || '');
+                modal.find('#edit_hologramas_utilizados_lib_ter').val(response.caracteristicas.hologramas_utilizados || '');
+                modal.find('#edit_hologramas_mermas_lib_ter').val(response.caracteristicas.hologramas_mermas || '');
+                modal.find('#edit_certificado_nom_granel_lib_ter').val(response.caracteristicas.certificado_nom_granel || '');
+              }
+
+              modal.find('#edit_comentarios_lib_ter').val(response.data.info_adicional);
+            }
+            else if (id_tipo === 9) {
               modal.find('#edit_id_solicitud_liberacion').val(id_solicitud);
               modal.find('#edit_id_empresa_liberacion').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
@@ -1795,7 +1839,7 @@ $(function () {
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al actualizar la inspección de envasado',
+            text: 'Error al actualizar la solicitud',
             customClass: {
               confirmButton: 'btn btn-danger'
             }
@@ -1900,6 +1944,97 @@ $(function () {
             icon: 'error',
             title: '¡Error!',
             text: 'Error al actualizar la inspección de liberación.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+  });
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation para el formulario de edición
+    const formUpdate = document.getElementById('editLiberacionProductoForm');
+    const fvUpdate = FormValidation.formValidation(formUpdate, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el cliente.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la fecha y hora para la inspección.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona una instalación.'
+            }
+          }
+        },
+        id_lote_envasado: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un lote envasado.'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      // Obtener los datos del formulario
+      var formData = new FormData(formUpdate);
+
+      // Hacer la solicitud AJAX
+      $.ajax({
+        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_liberacion_terminado').val(),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#editLiberacionProducto').modal('hide'); // Oculta el modal
+          $('#editLiberacionProductoForm')[0].reset(); // Resetea el formulario
+          $('.select2').val(null).trigger('change'); // Resetea los select2
+          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la solicitud',
             customClass: {
               confirmButton: 'btn btn-danger'
             }
@@ -2367,6 +2502,99 @@ $(function () {
       });
     });
 
+    $(function () {
+      // Configuración CSRF para Laravel
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+
+      // Inicializar FormValidation para el formulario de edición
+      const formUpdate = document.getElementById('editLiberacionProductoForm');
+      const fvUpdate = FormValidation.formValidation(formUpdate, {
+        fields: {
+          id_empresa: {
+            validators: {
+              notEmpty: {
+                message: 'Selecciona el cliente.'
+              }
+            }
+          },
+          fecha_visita: {
+            validators: {
+              notEmpty: {
+                message: 'Selecciona la fecha y hora para la inspección.'
+              }
+            }
+          },
+          id_instalacion: {
+            validators: {
+              notEmpty: {
+                message: 'Selecciona una instalación.'
+              }
+            }
+          },
+          id_lote_envasado: {
+            validators: {
+              notEmpty: {
+                message: 'Selecciona un lote envasado.'
+              }
+            }
+          },
+        },
+        plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+            eleValidClass: '',
+            eleInvalidClass: 'is-invalid',
+            rowSelector: '.form-floating'
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+      }).on('core.form.valid', function () {
+        // Obtener los datos del formulario
+        var formData = new FormData(formUpdate);
+
+        // Hacer la solicitud AJAX
+        $.ajax({
+          url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_liberacion_terminado').val(),
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+            $('#editLiberacionProducto').modal('hide'); // Oculta el modal
+            $('#editLiberacionProductoForm')[0].reset(); // Resetea el formulario
+            $('.select2').val(null).trigger('change'); // Resetea los select2
+            $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+            Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.message,
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+            });
+          },
+          error: function (xhr) {
+            console.log('Error:', xhr.responseText);
+
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al actualizar la solicitud',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        });
+      });
+    });
+
+
     // Mostrar u ocultar campos adicionales según el tipo de certificación
     $('#edit_certificacion').on('change', function () {
       if ($(this).val() === 'otro_organismo') {
@@ -2438,6 +2666,7 @@ $(function () {
       }
     });
   });
+
 
   //new
   $(document).on('click', '.edit-record', function () {

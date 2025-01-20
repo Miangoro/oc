@@ -173,14 +173,14 @@ class solicitudesController extends Controller
                 if (!empty($idLoguiass)) {
                   // Busca las guías relacionadas
                   $guias = guias::whereIn('id_guia', $idLoguiass)->pluck('folio')->toArray();
-              }
+                }
 
               // Devuelve las guías como una cadena separada por comas
               $nestedData['guias'] = !empty($guias) ? implode(', ', $guias) : 'N/A';
 
 
                 $nestedData['nombre_lote'] = $loteGranel ? $loteGranel->nombre_lote : 'N/A';
-                $nestedData['nombre_lote_envasado'] = $loteEnvasado ? $loteEnvasado->nombre : 'N/A';
+                $nestedData['id_lote_envasado'] = $loteEnvasado ? $loteEnvasado->nombre : 'N/A';
                 $nestedData['nombre_predio'] = $caracteristicas['nombre_predio'] ?? 'N/A';
                 $nestedData['art'] = $caracteristicas['art'] ?? 'N/A';
                 $nestedData['analisis'] = $caracteristicas['analisis'] ?? 'N/A';
@@ -280,6 +280,9 @@ class solicitudesController extends Controller
           $categoria = isset($caracteristicas['id_categoria'])
               ? categorias::find($caracteristicas['id_categoria'])
               : null;
+              $marcas = isset($caracteristicas['id_marca'])
+              ? marcas::find($caracteristicas['id_marca'])
+              : null;
           $clase = isset($caracteristicas['id_clase'])
               ? clases::find($caracteristicas['id_clase'])
               : null;
@@ -292,6 +295,7 @@ class solicitudesController extends Controller
         })->toArray();
           $caracteristicas['categoria'] = $categoria->categoria ?? 'N/A';
           $caracteristicas['clase'] = $clase->clase ?? 'N/A';
+          $caracteristicas['marca'] = $marcas->marca ?? 'N/A';
           $caracteristicas['nombre'] = $tipoMagueyConcatenados;
         }
 
@@ -986,6 +990,41 @@ class solicitudesController extends Controller
                 ]);
                 break;
 
+                case 'LiberacionProductoTerminado':
+                  $request->validate([
+                      'id_empresa' => 'required|integer|exists:empresa,id_empresa',
+                      'fecha_visita' => 'required|date',
+                      'id_instalacion' => 'required|integer|exists:instalaciones,id_instalacion',
+                      'info_adicional' => 'nullable|string'
+                  ]);
+
+                  $caracteristicasJson = [
+                    'id_lote_envasado' => $request->id_lote_envasado,
+                    'id_categoria' => $request->id_categoria,
+                    'id_clase' => $request->id_clase,
+                    'id_tipo_maguey' => $request->id_tipo,
+                    'id_marca' => $request->marca,
+                    'cont_alc' => $request->porcentaje_alcohol,
+                    'analisis' => $request->analisis_fisicoquimicos,
+                    'cantidad_botellas' => $request->cantidad_botellas,
+                    'presentacion' => $request->presentacion,
+                    'cantidad_pallets' => $request->cantidad_pallets,
+                    'cajas_por_pallet' => $request->cajas_por_pallet,
+                    'botellas_por_caja' => $request->botellas_por_caja,
+                    'hologramas_utilizados' => $request->hologramas_utilizados,
+                    'hologramas_mermas' => $request->hologramas_mermas,
+                    'certificado_nom_granel'=> $request->certificado_nom_granel,
+                  ];
+                  $jsonContent = json_encode($caracteristicasJson);
+                  $solicitud->update([
+                      'id_empresa' => $request->id_empresa,
+                      'fecha_visita' => $request->fecha_visita,
+                      'id_instalacion' => $request->id_instalacion,
+                      'info_adicional' => $request->info_adicional,
+                      'caracteristicas' => $jsonContent,
+                  ]);
+                  break;
+
                 case 'inspeccionenvasado':
                     $request->validate([
                         'id_empresa' => 'required|integer|exists:empresa,id_empresa',
@@ -1375,7 +1414,7 @@ class solicitudesController extends Controller
           'id_lote_envasado' =>$request->id_lote_envasado,
           'id_categoria' => $request->id_categoria,
           'id_clase' => $request->id_clase,
-          'id_tipo' => $idTipoMaguey,
+          'id_tipo_maguey' => $idTipoMaguey,
           'id_marca' => $request->marca,
           'cont_alc' => $request->porcentaje_alcohol,
           'analisis' => $request->analisis_fisicoquimicos,
