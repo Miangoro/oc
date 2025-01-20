@@ -109,8 +109,15 @@ class CartaAsignacionController extends Controller
 
     public function Etiqueta()
     {
-        $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
-        return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
+      $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
+      return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
+    }
+
+
+    public function Etiqueta_Granel()
+    {
+      $pdf = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel');
+      return $pdf->stream('Etiqueta para lotes de mezcal a granel');
     }
 
     //Certificados
@@ -323,26 +330,26 @@ class CartaAsignacionController extends Controller
     public function BitacoraMezcal() {
         $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal')->setPaper('letter', 'landscape');
         return $pdf->stream('Bitácora Mezcal a Granel.pdf');
-    }   
+    }
 
     public function BitacoraMaduracion() {
         $pdf = Pdf::loadView('pdfs.Bitacora_Maduracion')->setPaper('letter', 'landscape');
         return $pdf->stream('Bitácora Producto en Maduración.pdf');
-    } 
+    }
 
     public function BitacoraProductor() {
         $pdf = Pdf::loadView('pdfs.Bitacora_Productor')->setPaper('letter', 'landscape');
         return $pdf->stream('Bitácora de Productor.pdf');
-    } 
+    }
 
     public function BitacoraTerminado() {
         $pdf = Pdf::loadView('pdfs.Bitacora_Terminado')->setPaper('letter', 'landscape');
         return $pdf->stream('Bitácora Producto Terminado.pdf');
-    } 
+    }
 
     public function BitacoraHologramas() {
         $pdf = Pdf::loadView('pdfs.Bitacora_Hologramas')->setPaper('letter', 'landscape');
         return $pdf->stream('Bitácora De Hologramas.pdf');
-    } 
+    }
 
 }

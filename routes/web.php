@@ -471,6 +471,8 @@ Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'
 Route::get('/Etiqueta-Muestra', [CartaAsignacionController::class, 'Etiqueta_muestra'])->name('Etiqueta-Muestra');
 Route::get('/Etiqueta-Barrica', [CartaAsignacionController::class, 'Etiqueta_Barrica'])->name('Etiqueta-Barrica');
 
+Route::get('/Etiqueta_lotes_mezcal_granel', [CartaAsignacionController::class, 'Etiqueta_Granel']);
+
 Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion');/*  */
 
 //Certificados de instalaciones
@@ -702,7 +704,7 @@ Route::middleware(['auth'])->controller(inspeccionesController::class)->group(fu
     Route::post('/agregar-resultados', 'agregarResultados');
     Route::get('/acta-solicitud/edit/{id_acta}', 'editActa');
     Route::get('/getInspeccion/{id_solicitud}', 'getInspeccion');
-    
+
 });
 
 

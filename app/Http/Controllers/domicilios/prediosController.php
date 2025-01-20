@@ -141,9 +141,9 @@ class PrediosController extends Controller
                 $nestedData['id_predio'] = $predio->id_predio;
                 $nestedData['fake_id'] = ++$ids;
                 $razonSocial = $predio->empresa ? $predio->empresa->razon_social : '';
-                $numeroCliente = 
-                $predio->empresa->empresaNumClientes[0]->numero_cliente ?? 
-                $predio->empresa->empresaNumClientes[1]->numero_cliente ?? 
+                $numeroCliente =
+                $predio->empresa->empresaNumClientes[0]->numero_cliente ??
+                $predio->empresa->empresaNumClientes[1]->numero_cliente ??
                 $predio->empresa->empresaNumClientes[2]->numero_cliente;
 
                 $nestedData['id_empresa'] = '<b>'.$numeroCliente . '</b><br>' . $razonSocial;
@@ -249,7 +249,7 @@ class PrediosController extends Controller
             $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $validatedData['id_empresa'])->first();
             $empresaNumCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
                 return !empty($numero);
-            }); 
+            });
 
             // Almacenar el documento si se envía
             if ($request->hasFile('url')) {
@@ -317,7 +317,7 @@ class PrediosController extends Controller
                 $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $predio->id_empresa)->first();
                     $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
                         return !empty($numero);
-                    }); 
+                    });
 
                 // Filtrar documentos para obtener solo el documento con id_documento igual a 34
                 $documentos = $predio->documentos->filter(function ($documento) {
@@ -395,7 +395,7 @@ class PrediosController extends Controller
                     $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $validated['id_empresa'])->first();
                     $empresaNumCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
                         return !empty($numero);
-                    }); 
+                    });
                     $directory = $empresaNumCliente;
 
 
@@ -426,7 +426,7 @@ class PrediosController extends Controller
                         }
                     }
                 }
-  
+
 
                 // Actualizar los demás datos del predio
                 $predio->update([
@@ -508,7 +508,7 @@ class PrediosController extends Controller
                     $query->whereNotNull('numero_cliente')->where('numero_cliente', '!=', '');
                 }
             ])->find($id_predio);
-            
+
             $comunal = '___';
             $ejidal = '___';
             $propiedad = '___';
@@ -678,7 +678,7 @@ class PrediosController extends Controller
 
                     // Crear una carpeta con el número de cliente
                     $directory = $empresaNumCliente; // Utiliza el número de cliente
-                    $path = storage_path('app/public/uploads/inspecciones/' . $directory);
+                    $path = storage_path('app/public/uploads/' . $directory);
 
                     // Verificar si la carpeta existe, si no, crearla
                     if (!file_exists($path)) {
@@ -686,7 +686,7 @@ class PrediosController extends Controller
                     }
 
                     // Guardar el archivo en la carpeta correspondiente
-                    $filePath = $file->storeAs('uploads/inspecciones/' . $directory, $filename, 'public');
+                    $filePath = $file->storeAs('uploads/' . $directory, $filename, 'public');
 
                     // Crear una nueva instancia del modelo para guardar la ruta del archivo
                     $documentacion_url = new Documentacion_url();
