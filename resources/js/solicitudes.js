@@ -708,8 +708,8 @@ $(function () {
               } else {
                 modal.find('#edit_analisis_vig').val('');
               }
-              if (response.caracteristicas && response.caracteristicas.volumen) {
-                modal.find('#edit_volumen_vig').val(response.caracteristicas.volumen);
+              if (response.caracteristicas && response.caracteristicas.cont_alc) {
+                modal.find('#edit_volumen_vig').val(response.caracteristicas.cont_alc);
               } else {
                 modal.find('#edit_volumen_vig').val('');
               }
@@ -2188,7 +2188,7 @@ $(function () {
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
-            text: response.message,
+            text: 'Solicitud de muestreo registrado exitosamente.',
             customClass: {
               confirmButton: 'btn btn-success'
             }
@@ -2789,108 +2789,6 @@ $(function () {
             }
           }
         },
-        id_lote_granel: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione un lote agranel.'
-            }
-          }
-        },
-        id_categoria: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una categoría.'
-            }
-          }
-        },
-        id_clase: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una clase.'
-            }
-          }
-        },
-        id_tipo: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione un tipo de maguey.'
-            }
-          }
-        },
-        analisis: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el análisis fisicoquímico.'
-            }
-          }
-        },
-        art: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el porcentaje de alcohol (% Alc. Vol.).'
-            },
-            between: {
-              min: 1,
-              max: Infinity,
-              message: 'El número debe ser superior a 0 y sin negativos'
-            },
-            regexp: {
-              regexp: /^(?!0)\d+$/,
-              message: 'El número no debe comenzar con 0'
-            }
-          }
-        },
-        fecha_corte: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese la fecha y hora de visita.'
-            }
-          }
-        },
-        kg_maguey: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese la cantidad de maguey en kg.'
-            }
-          }
-        },
-        cant_pinas: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese la cantidad de piñas.'
-            }
-          }
-        },
-        art: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el número art'
-            },
-            between: {
-              min: 1,
-              max: Infinity,
-              message: 'El número debe ser superior a 0 y sin negativos'
-            },
-            regexp: {
-              regexp: /^(?!0)\d+$/,
-              message: 'El número no debe comenzar con 0'
-            }
-          }
-        },
-        etapa: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese la etapa del proceso.'
-            }
-          }
-        },
-        nombre_predio: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el nombre del predio.'
-            }
-          }
-        }
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -2988,41 +2886,6 @@ $(function () {
           }
         }
       },
-      destino_lote: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un tipo de destino.'
-          }
-        }
-      },
-      id_categoria: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese una categoría.'
-          }
-        }
-      },
-      id_clase: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese una clase.'
-          }
-        }
-      },
-      tipo_mageuy: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese un tipo de maguey.'
-          }
-        }
-      },
-      analisis: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el análisis fisicoquímico.'
-          }
-        }
-      }
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -3055,7 +2918,7 @@ $(function () {
         Swal.fire({
           icon: 'success',
           title: '¡Éxito!',
-          text: 'Muestreo registrado exitosamente.',
+          text: 'Solicitud de Muestreo registrado exitosamente.',
           customClass: {
             confirmButton: 'btn btn-success'
           }
@@ -3074,6 +2937,7 @@ $(function () {
       }
     });
   });
+
 
   // Validación del formulario Inspección Ingreso Barricada
   const addInspeccionIngresoBarricadaForm = document.getElementById('addInspeccionIngresoBarricadaForm');

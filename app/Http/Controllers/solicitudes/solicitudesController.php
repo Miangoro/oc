@@ -402,7 +402,7 @@ class solicitudesController extends Controller
         foreach ($users as $user) {
             $user->notify(new GeneralNotification($data1));
         }
-        return response()->json(['message' => 'Muestreo de lote registrada exitosamente']);
+        return response()->json(['message' => 'Solcitud de Muestreo registrado exitosamente']);
     }
 
 
@@ -1309,9 +1309,16 @@ class solicitudesController extends Controller
                 'presentacion' => (int)$validated['presentacion'][$i],
             ];
         }
-
         // Incluir los detalles dentro de las características
         $data['detalles'] = $detalles;
+
+
+        // Obtener el número del cliente desde la tabla empresa_num_cliente
+        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $validated['id_empresa'])->first();
+        $empresaNumCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
+
 
         // Guardar la solicitud
         $pedido = new solicitudesModel();
@@ -1323,12 +1330,6 @@ class solicitudesController extends Controller
         $pedido->info_adicional = $validated['info_adicional'];
         $pedido->caracteristicas = json_encode($data);  // Guardar el JSON completo con las características (incluyendo facturas)
         $pedido->save();
-
-        // Obtener el número del cliente desde la tabla empresa_num_cliente
-        $empresa = empresa::with("empresaNumClientes")->where("id_empresa", $validated['id_empresa'])->first();
-        $empresaNumCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
-            return !empty($numero);
-        });
 
         // Almacenar archivos si se enviaron
         if ($request->hasFile('factura_proforma')) {
@@ -1350,6 +1351,7 @@ class solicitudesController extends Controller
                 'id_documento' => 55, // ID de factura
                 'nombre_documento' => 'Factura Proforma',
             ]);
+            $data['factura_proforma'] = $filename;
         }
 
         if ($request->hasFile('factura_proforma_cont')) {
@@ -1371,9 +1373,11 @@ class solicitudesController extends Controller
                 'id_documento' => 55, // ID de factura
                 'nombre_documento' => 'Factura Proforma (Continuación)',
             ]);
+            $data['factura_proforma_cont'] = $filename;
         }
 
-
+        $pedido->caracteristicas = json_encode($data); // Ahora incluye las rutas de los archivos
+        $pedido->save();
         // Obtener varios usuarios (por ejemplo, todos los usuarios con cierto rol o todos los administradores)
         $users = User::whereIn('id', [18, 19, 20])->get(); // IDs de los usuarios
 
