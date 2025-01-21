@@ -23,7 +23,7 @@
                       </div>
                       <div class="col-md-6">
                           <div class="form-floating form-floating-outline mb-6">
-                              <select id="edit_id_empresa_solicitud_exportacion" onchange="cargarDatosCliente();"
+                              <select id="edit_id_empresa_solicitud_exportacion" onchange="editcargarDatosCliente();"
                                   name="id_empresa" class="select2 form-select">
                                   <option value="" disabled selected>Selecciona cliente</option>
                                   @foreach ($empresas as $empresa)
@@ -199,7 +199,7 @@
                   <div class="card mt-4" id="etiquetas_Ex">
                       <div class="card-body table-responsive text-nowrap">
                           <h6 id="encabezado_etiquetas">Elegir Etiquetas y Corrugados</h6>
-                          <table class="table table-striped small table-sm" id="tabla_marcas">
+                          <table class="table table-striped small table-sm" id="edit_tabla_marcas">
                               <thead>
                                   <tr>
                                       <th>Seleccionar</th>
@@ -241,7 +241,7 @@
 
 
 <script>
-  function cargarDatosCliente() {
+  function editcargarDatosCliente() {
       var empresa = $("#edit_id_empresa_solicitud_exportacion").val();
       if (empresa !== "" && empresa !== null && empresa !== undefined) {
 
@@ -249,11 +249,11 @@
               url: '/getDatos/' + empresa,
               method: 'GET',
               success: function(response) {
-                  cargarInstalaciones(response.instalaciones_comercializadora);
-                  cargarInstalacionesEnvasado(response.instalaciones_envasadora);
-                  cargarDirecciones(response.direcciones);
-                  cargarLotesEnvasado(response.lotes_envasado, response.marcas);
-                  cargarLotesGranel(response.lotes_granel);
+                  editcargarInstalaciones(response.instalaciones_comercializadora);
+                  editcargarInstalacionesEnvasado(response.instalaciones_envasadora);
+                  editcargarDirecciones(response.direcciones);
+                  editcargarLotesEnvasado(response.lotes_envasado, response.marcas);
+                  editcargarLotesGranel(response.lotes_granel);
               },
               error: function() {
                   console.error('Error al cargar los datos.');
@@ -263,7 +263,7 @@
   }
 
   // Función para cargar instalaciones
-  function cargarInstalaciones(instalaciones) {
+  function editcargarInstalaciones(instalaciones) {
       if (instalaciones !== "" && instalaciones !== null && instalaciones !== undefined) {
           var contenidoInstalaciones = "";
           for (let index = 0; index < instalaciones.length; index++) {
@@ -280,7 +280,7 @@
       }
   }
 
-  function cargarInstalacionesEnvasado(instalaciones) {
+  function editcargarInstalacionesEnvasado(instalaciones) {
       if (instalaciones !== "" && instalaciones !== null && instalaciones !== undefined) {
           var contenidoInstalaciones = "";
           for (let index = 0; index < instalaciones.length; index++) {
@@ -298,7 +298,7 @@
   }
 
   // Función para cargar direcciones
-  function cargarDirecciones(direcciones) {
+  function editcargarDirecciones(direcciones) {
       if (direcciones !== "" && direcciones !== null && direcciones !== undefined) {
           var contenidoDirecciones = "";
           for (let index = 0; index < direcciones.length; index++) {
@@ -318,7 +318,7 @@
 
   // Función para cargar lotes envasados
   // Función para cargar lotes envasados
-  function cargarLotesEnvasado(lotesEnvasado, marcas) {
+  function editcargarLotesEnvasado(lotesEnvasado, marcas) {
       var contenidoLotes = "";
       for (let index = 0; index < lotesEnvasado.length; index++) {
           var skuLimpio = limpiarSku(lotesEnvasado[index].sku);
@@ -335,19 +335,19 @@
       }
       $('.evasado_export').html(contenidoLotes);
 
-      cargarMarcas();
+      editcargarMarcas();
 
       // Añadir evento change a los select de lotes envasados
       $('.evasado_export').on('change', function() {
           var idLoteEnvasado = $(this).val(); // Obtén el id seleccionado
-          cargarDetallesLoteEnvasado(idLoteEnvasado); // Llamar a la función con el id seleccionado
+          editcargarDetallesLoteEnvasado(idLoteEnvasado); // Llamar a la función con el id seleccionado
 
-          cargarMarcas();
+          editcargarMarcas();
       });
   }
 
   // Función para cargar lotes a granel
-  function cargarLotesGranel(lotesGranel) {
+  function editcargarLotesGranel(lotesGranel) {
       if (lotesGranel !== "" && lotesGranel !== null && lotesGranel !== undefined) {
           var contenidoLotesGraneles = "";
           for (let index = 0; index < lotesGranel.length; index++) {
@@ -363,7 +363,7 @@
       }
   }
 
-  function cargarDetallesLoteEnvasado(idLoteEnvasado) {
+  function editcargarDetallesLoteEnvasado(idLoteEnvasado) {
       if (idLoteEnvasado !== "" && idLoteEnvasado !== null && idLoteEnvasado !== undefined) {
           $.ajax({
               url: '/getDetalleLoteEnvasado/' + idLoteEnvasado,
@@ -408,7 +408,7 @@
 
 
 
-  function cargarMarcas() {
+  function editcargarMarcas() {
       var id_empresa = $('#id_empresa_solicitud_exportacion').val();
       var id_marca = $('.evasado_export').find(':selected').data('id-marca');
 
@@ -462,7 +462,7 @@
                               tbody += `<td>${marca.categoria_nombre[0] || 'N/A'}</td>`;
 
                               // Función para generar enlace a archivos
-                              function generarEnlaceArchivo(marca, idUnico, tipoDocumento) {
+                              function editgenerarEnlaceArchivo(marca, idUnico, tipoDocumento) {
                                   if (marca.documentacion_url && Array.isArray(marca
                                           .documentacion_url)) {
                                       let documento = marca.documentacion_url.find(doc => doc
@@ -479,9 +479,9 @@
                               }
 
                               // Generar enlaces
-                              tbody += generarEnlaceArchivo(marca, marca.etiquetado.id_unico[i],
+                              tbody += editgenerarEnlaceArchivo(marca, marca.etiquetado.id_unico[i],
                                   'Etiquetas');
-                              tbody += generarEnlaceArchivo(marca, marca.etiquetado.id_unico[i],
+                              tbody += editgenerarEnlaceArchivo(marca, marca.etiquetado.id_unico[i],
                                   'Corrugado');
 
                               tbody += '</tr>';
@@ -497,16 +497,16 @@
                   }
 
                   // Agregar las filas a la tabla
-                  $('#tabla_marcas tbody').html(tbody);
+                  $('#edit_tabla_marcas tbody').html(tbody);
               },
               error: function(xhr) {
                   console.error('Error al obtener marcas:', xhr);
-                  $('#tabla_marcas tbody').html(
+                  $('#edit_tabla_marcas tbody').html(
                       '<tr><td colspan="6">Error al cargar los datos</td></tr>');
               }
           });
       } else {
-          $('#tabla_marcas tbody').html('<tr><td colspan="6">Seleccione una empresa para ver los datos</td></tr>');
+          $('#edit_tabla_marcas tbody').html('<tr><td colspan="6">Seleccione una empresa para ver los datos</td></tr>');
       }
   }
 </script>
