@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Tramite_impi;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Helpers\Helpers;
+use Illuminate\Http\Request;
+use App\Notifications\GeneralNotification;
 use App\Models\Impi;
 
 
@@ -22,29 +23,22 @@ class impiController extends Controller
     {
         $columns = [
         //CAMPOS PARA ORDENAR LA TABLA DE INICIO "thead"
-            /*1 => 'id_impi',
-            2 => 'folio',
-            3 => 'tramite',
-            4 => 'fecha_solicitud',
-            5 => 'cliente',
-            6 => 'contrasena',
-            7 => 'pago',
-            8 => 'estatus',
-            9 => 'observaciones'*/
+            //1 => 'id_impi',
             1 => 'folio',
-            2 => 'tramite',
-            3 => 'fecha_solicitud',
-            4 => 'cliente',
+            2 => 'fecha_solicitud',
+            3 => 'cliente',
+            4 => 'tramite',
             5 => 'contrasena',
             6 => 'pago',
-            7 => 'estatus',
-            8 => 'observaciones'
+            7 => '',
+            8 => 'observaciones',
+            9 => 'estatus'
         ];
-        $search = [];
-
-
-      $totalData = Impi::count();
-      $totalFiltered = $totalData;
+        
+    $search = [];
+    
+    $totalData = Impi::count();
+    $totalFiltered = $totalData;
 
     $limit = $request->input('length');
     $start = $request->input('start');
@@ -54,32 +48,69 @@ class impiController extends Controller
     $search1 = $request->input('search.value');
 
       if (empty($request->input('search.value'))) {
+        //ORDENAR EL BUSCADOR "thead"
         //$users = Impi::where("nombre", 2)->offset($start)
         $impi = Impi::where('id_impi', 'LIKE', "%{$request->input('search.value')}%")
-
-        ->offset($start)
+          ->offset($start)
           ->limit($limit)
           ->orderBy($order, $dir)
           ->get();
+
       } else {
+        //BUSCADOR
         $search = $request->input('search.value');
-  
-        $impi = Impi::where('id_impi', 'LIKE', "%{$search}%")
+        /*$impi = Impi::where('id_impi', 'LIKE', "%{$search}%")
           ->where("nombre", 1)
           ->orWhere('tramite', 'LIKE', "%{$search}%")
   
           ->offset($start)
           ->limit($limit)
           ->orderBy($order, $dir)
-          ->get();
+          ->get();*/
+        //Definimos el nombre al valor de "Estatus"
+        $map = [
+            'Pendiente' => 1,
+            'Tramite' => 2,
+            'Tramite favorable' => 3,
+            'Tramite no favorable' => 4,
+            ];
+
+    // Verificar si la búsqueda es uno de los valores mapeados
+        $searchValue = strtolower(trim($search)); //minusculas
+        $searchType = null;
+
+    // Si el término es valor conocido, asignamos el valor corres
+        if (isset($map[$searchValue])) {
+            $searchType = $map[$searchValue];
+        }
+
+    // Consulta con filtros
+        $query = Impi::where('id_impi', 'LIKE', "%{$search}%")
+        ->where("id_impi", 1)
+        ->orWhere('tramite', 'LIKE', "%{$search}%");
+
+    // Si se proporciona un tipo_dictamen válido, filtramos
+        if ($searchType !== null) {
+            $query->where('estatus',  'LIKE', "%{$searchType}%");
+        } else {
+    // Si no se busca por tipo_dictamen, buscamos por otros campos
+            $query->where('id_impi', 'LIKE', "%{$search}%")
+                ->orWhere('tramite', 'LIKE', "%{$search}%")
+                ->orWhere('fecha_solicitud', 'LIKE', "%{$search}%");
+        }
+        $impi = $query->offset($start)
+            ->limit($limit)
+            ->orderBy($order, $dir)
+            ->get();
   
         $totalFiltered = Impi::where('id_impi', 'LIKE', "%{$search}%")
-          ->where("nombre", 1)
+          ->where("id_impi", 1)
           ->orWhere('tramite', 'LIKE', "%{$search}%")
+          ->orWhere('estatus', 'LIKE', "%{$search}%")
           ->count();
       }
-      $data = [];
 
+      $data = [];
 
 
         if (!empty($impi)) {
@@ -90,13 +121,13 @@ class impiController extends Controller
                 //$nestedData['fake_id'] = ++$ids;
                 $nestedData['id_impi'] = $impi->id_impi;
                 $nestedData['folio'] = $impi->folio;
-                $nestedData['tramite'] = $impi->tramite;
-                $nestedData['fecha'] = $impi->fecha_solicitud;
+                $nestedData['fecha_solicitud'] = $impi->fecha_solicitud;
                 $nestedData['cliente'] = $impi->cliente;
+                $nestedData['tramite'] = $impi->tramite;
                 $nestedData['contrasena'] = $impi->contrasena;
                 $nestedData['pago'] = $impi->pago;
+                $nestedData['observaciones'] = $impi->observaciones;
                 $nestedData['estatus'] = $impi->estatus;
-                $nestedData['obs'] = $impi->observaciones;
 
                 $data[] = $nestedData;
       }
@@ -120,38 +151,48 @@ class impiController extends Controller
 }
 
 
-      /*
-        $var = new Impi();
-        //$var->folio = $request->folio;
-        $var->tramite = $request->tramite;
-        $var->fecha_solicitud = $request->fecha_solicitud;
-        $var->cliente = $request->cliente;
-        $var->contrasena = $request->contrasena;
-        $var->pago = $request->pago;
-        $var->estatus = $request->estatus;
-        $var->observaciones = $request->observaciones;
-        $var->save();//guardar en BD
-        */
-    // Función para agregar registro
+ 
+        
+///FUNCION PARA REGISTRAR
     public function store(Request $request)
     {
-        /*$request->validate([
-            'contrasena' => 'string|max:255',
-            'pago' => 'string|max:255',
-        ]);*/
-
+        // $request->validate([
+        //     'contrasena' => 'string|max:255',
+        //     'pago' => 'string|max:255',
+        // ]);
         try {
             $var = new Impi();
+            //$var->folio = $request->folio;
+            $var->fecha_solicitud = $request->fecha_solicitud;
+            $var->cliente = $request->cliente;
+            $var->tramite = $request->tramite;
             $var->contrasena = $request->contrasena;
             $var->pago = $request->pago;
+            $var->observaciones = $request->observaciones;
+            $var->estatus = $request->estatus;
 
             $var->save();//guardar en BD
 
-            return response()->json(['success' => 'Registro agregada correctamente']);
+            return response()->json(['success' => 'Registro agregado correctamente']);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error al agregar'], 500);
         }
     }
+
+
+
+///FUNCION PARA ELIMINAR
+public function destroy($id_impi)
+{
+    try {
+        $eliminar = Impi::findOrFail($id_impi);
+        $eliminar->delete();
+
+        return response()->json(['success' => 'Eliminado correctamente']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Error al eliminar'], 500);
+    }
+}
 
 
 
@@ -160,6 +201,8 @@ public function edit($id_impi)
 {
     try {
         $var1 = Impi::findOrFail($id_impi);
+
+        //$categorias = json_decode($var1->categorias);  //Convertir array
 
         //return response()->json($var1);
         return response()->json([
@@ -171,6 +214,7 @@ public function edit($id_impi)
             'pago' => $var1->pago,
             'estatus' => $var1->estatus,
             'observaciones' => $var1->observaciones,
+            //'categorias' => $categorias,
         ]);
     } catch (\Exception $e) {
         return response()->json(['error' => 'Error al obtener el controller'], 500);
@@ -203,6 +247,4 @@ public function update(Request $request, $id_impi)
 
 
 
-
-
-}//CONTROLLER
+}//fin CONTROLLER

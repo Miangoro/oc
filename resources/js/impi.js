@@ -1,16 +1,26 @@
 /* Page User List */
 'use strict';
 
-// Datatable (jquery)
-$(function () {
-  // Variable declaration for table
-  var dt_user_table = $('.datatables-users'),
-  select2 = $('.select2'),
-  userView = baseUrl + 'app/user/view/account',
-  offCanvasForm = $('#offcanvasAddUser');
+ $(document).ready(function () {
+  $('.datepicker').datepicker({
+    format: 'yyyy-mm-dd',
+    autoclose: true,
+    todayHighlight: true,
+    language: 'es' // Configura el idioma a español
+  });
+});
 
-  ///SELECT2
-  var select2Elements = $('.select2');
+ // Datatable (jquery)
+ $(function () {
+ 
+   // Variable declaration for table
+   var dt_user_table = $('.datatables-users'),
+     select2 = $('.select2'),
+     userView = baseUrl + 'app/user/view/account',
+     offCanvasForm = $('#offcanvasAddUser');
+ 
+
+var select2Elements = $('.select2');
   // Función para inicializar Select2 en elementos específicos
   function initializeSelect2($elements) {
     $elements.each(function () {
@@ -23,373 +33,516 @@ $(function () {
   }
 initializeSelect2(select2Elements);
 
-  //DATE PICKER
-  $(document).ready(function () {
-    $('.datepicker').datepicker({
-      format: 'yyyy-mm-dd',
-      autoclose: true,
-      todayHighlight: true,
-      language: 'es' // Configura el idioma a español
-    });
-  });
 
 // ajax setup
-$.ajaxSetup({
-  headers: {
-    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-  }
-});
+  $.ajaxSetup({
+     headers: {
+       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+     }
+  });
  
+ 
+   //FUNCIONALIDAD DE LA VISTA datatable
+   if (dt_user_table.length) {
+     var dt_user = dt_user_table.DataTable({
+       processing: true,
+       serverSide: true,
+       ajax: {
+         url: baseUrl + 'tramite-list'
+       },
+       columns: [
+         // columns according to JSON
+         { data: '' },
+         { data: 'folio' },
+         { data: 'fecha_solicitud' },
+         { data: 'cliente' },
+         { data: 'tramite' },
+         { data: 'contrasena' },
+         { data: 'pago' },
+         { data: '' },
+         { data: 'observaciones' },
+         { data: 'estatus' },
+         { data: 'action' }
+       ],
+       columnDefs: [
+         {
+           className: 'control',
+           searchable: false,
+           orderable: false,
+           responsivePriority: 2,
+           targets: 0,
+           render: function (data, type, full, meta) {
+             return '';
+           }
+         },
+         {
+           // Tabla 10 (estatus)
+           targets: 9,
+           responsivePriority: 4,
+           render: function (data, type, full, meta) {
+            var $name = full['estatus'];
 
-///FUNCIONALIDAD DE LA VISTA datatable
-  if (dt_user_table.length) {
-      var dt_user = dt_user_table.DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-          url: baseUrl + 'tramite-list'
-          },
-        columns: [
-          // columns according to JSON
-          { data: '' },//responsivo
-          /*{ data: 'id_impi' },*/
-          { data: 'folio' },
-          { data: 'tramite' },
-          { data: 'fecha' },
-          { data: 'cliente' },
-          { data: 'contrasena' },
-          { data: 'pago' },
-          { data: 'estatus' },
-          { data: 'obs' },
-          { data: 'action' }
-        ],
-        columnDefs: [
-          {
-          //COLUMNA OPCION RESPONSIVA
-          targets: 0,
-          className: 'control',
-          searchable: false,
-          orderable: false,
-          responsivePriority: 3,
-          render: function (data, type, full, meta) {
-            return '';
+            if ($name == 1){
+              return '<span class="badge rounded-pill bg-dark">Pendiente</span>';
             }
-          },
-
+            else if($name == 2){ 
+                  return '<span class="badge rounded-pill bg-warning">Tramite</span>';
+            }
+            else if($name == 3){ 
+              return '<span class="badge rounded-pill bg-primary">Tramite favorable</span>';
+            }
+            else if($name == 4){ 
+              return '<span class="badge rounded-pill bg-danger">Tramite no favorable</span>';
+            }
+           }
+         },
+          {
+           // Tabla 7 telefono y correo
+           targets: 7,
+           render: function (data, type, full, meta) {
+             //var $num_dictamen = full['tramite'];
+             return '<span class="fw-bold">Telefono:</span> <br>'+
+              '<span class="fw-bold">Correo:</span>';
+           }
+         }, 
           /*{
-          searchable: false,
-          orderable: false,
-          targets: 1,
-          render: function (data, type, full, meta) {
-            return `<span>${full.fake_id}</span>`;
-            }
-          },
-          {
-          //User full name
-          targets: 1,
-          responsivePriority: 4,
-          render: function (data, type, full, meta) {
-          var $impi = full['id_impi'];
-            return '<span class="user-email">' + $impi + '</span>';
-            }
-          },
-          {
-          // User full name
-          targets: 2,
-          responsivePriority: 4,
-          render: function (data, type, full, meta) {
-          var $name = full['folio'];
-            return '<span class="user-email">' + $name + '</span>';
-            }
-          },
-          {
-          // User email
-          targets: 3,
-          render: function (data, type, full, meta) {
-          var $email = full['tramite'];
-            return '<span class="user-email">' + $email + '</span>';
-            }
-          },
-          {
-          // User email
-          targets: 4,
-          render: function (data, type, full, meta) {
-          var $nombre = full['nombre'];
-            return '<span class="user-email">' + $nombre + '</span>';
-          }
+            // Tabla 5
+            targets: 3,
+            searchable: true,
+            render: function (data, type, full, meta) {
+              var $fech = full['fecha_solicitud'];
+              return '<span class="small">' + $fech + '</span>';
+              }
           },*/
-          
-          {
-          // Actions
-          targets: -1,
-          title: 'Acciones',
-          searchable: false,
-          orderable: false,
-          render: function (data, type, full, meta) {
-            return (
-              /*'<div class="d-flex align-items-center gap-50">' +*/
-              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i>' +
+ 
+         {
+           // Actions
+           targets: -1,
+           title: 'Acciones',
+           searchable: false,
+           orderable: false,
+           render: function (data, type, full, meta) {
+             return (
+              '<div class="d-flex align-items-center gap-50">' +
+              '<button class="btn btn-sm btn-info dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ri-settings-5-fill"></i>&nbsp;Opciones <i class="ri-arrow-down-s-fill ri-20px"></i></button>' +
               '<div class="dropdown-menu dropdown-menu-end m-0">' +
-                `<a data-id="${full['id_impi']}" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddUser" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar </a>` +
-                `<a data-id="${full['id_impi']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar</a>` +
-              '</div> </button>'
-              );
-            }
-          }
-        ],
-        order: [[2, 'desc']],
-        dom:
-          '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
-          '<"me-5 ms-n2"f>' +
-          '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
-          '>t' +
-          '<"row mx-1"' +
-          '<"col-sm-12 col-md-6"i>' +
-          '<"col-sm-12 col-md-6"p>' +
-          '>',
-        lengthMenu: [ 10, 20, 50, 70, 100], //for length of menu
-        language: {
-          sLengthMenu: '_MENU_',
-          search: '',
-          searchPlaceholder: 'Buscar',
-          info: 'Displaying _START_ to _END_ of _TOTAL_ entries'
-        },
-        // Buttons with Dropdown
-        buttons: [
-          {
-            extend: 'collection',
-            className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
-            text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Export </span>',
-            buttons: [
-              {
-                extend: 'print',
-                title: 'Users',
-                text: '<i class="ri-printer-line me-1" ></i>Print',
-                className: 'dropdown-item',
-                exportOptions: {
-                  columns: [1, 2, 3, 4, 5],
-                  // prevent avatar to be print
-                  format: {
-                    body: function (inner, coldex, rowdex) {
-                      if (inner.length <= 0) return inner;
-                      var el = $.parseHTML(inner);
-                      var result = '';
-                      $.each(el, function (index, item) {
-                        if (item.classList !== undefined && item.classList.contains('user-name')) {
-                          result = result + item.lastChild.firstChild.textContent;
-                        } else if (item.innerText === undefined) {
-                          result = result + item.textContent;
-                        } else result = result + item.innerText;
-                      });
-                      return result;
-                    }
-                  }
-                },
-                customize: function (win) {
-                  //customize print view for dark
-                  $(win.document.body)
-                    .css('color', config.colors.headingColor)
-                    .css('border-color', config.colors.borderColor)
-                    .css('background-color', config.colors.body);
-                  $(win.document.body)
-                    .find('table')
-                    .addClass('compact')
-                    .css('color', 'inherit')
-                    .css('border-color', 'inherit')
-                    .css('background-color', 'inherit');
-                }
-              },
-              {
-                extend: 'csv',
-                title: 'Users',
-                text: '<i class="ri-file-text-line me-1" ></i>Csv',
-                className: 'dropdown-item',
-                exportOptions: {
-                  columns: [1, 2, 3, 4, 5],
-                  // prevent avatar to be print
-                  format: {
-                    body: function (inner, coldex, rowdex) {
-                      if (inner.length <= 0) return inner;
-                      var el = $.parseHTML(inner);
-                      var result = '';
-                      $.each(el, function (index, item) {
-                        if (item.classList !== undefined && item.classList.contains('user-name')) {
-                          result = result + item.lastChild.firstChild.textContent;
-                        } else if (item.innerText === undefined) {
-                          result = result + item.textContent;
-                        } else result = result + item.innerText;
-                      });
-                      return result;
-                    }
-                  }
-                }
-              },
-              {
-                extend: 'excel',
-                title: 'Users',
-                text: '<i class="ri-file-excel-line me-1"></i>Excel',
-                className: 'dropdown-item',
-                exportOptions: {
-                  columns: [1, 2, 3, 4, 5],
-                  // prevent avatar to be display
-                  format: {
-                    body: function (inner, coldex, rowdex) {
-                      if (inner.length <= 0) return inner;
-                      var el = $.parseHTML(inner);
-                      var result = '';
-                      $.each(el, function (index, item) {
-                        if (item.classList !== undefined && item.classList.contains('user-name')) {
-                          result = result + item.lastChild.firstChild.textContent;
-                        } else if (item.innerText === undefined) {
-                          result = result + item.textContent;
-                        } else result = result + item.innerText;
-                      });
-                      return result;
-                    }
-                  }
-                }
-              },
-              {
-                extend: 'pdf',
-                title: 'Users',
-                text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
-                className: 'dropdown-item',
-                exportOptions: {
-                  columns: [1, 2, 3, 4, 5],
-                  // prevent avatar to be display
-                  format: {
-                    body: function (inner, coldex, rowdex) {
-                      if (inner.length <= 0) return inner;
-                      var el = $.parseHTML(inner);
-                      var result = '';
-                      $.each(el, function (index, item) {
-                        if (item.classList !== undefined && item.classList.contains('user-name')) {
-                          result = result + item.lastChild.firstChild.textContent;
-                        } else if (item.innerText === undefined) {
-                          result = result + item.textContent;
-                        } else result = result + item.innerText;
-                      });
-                      return result;
-                    }
-                  }
-                }
-              },
-              {
-                extend: 'copy',
-                title: 'Users',
-                text: '<i class="ri-file-copy-line me-1"></i>Copy',
-                className: 'dropdown-item',
-                exportOptions: {
-                  columns: [1, 2, 3, 4, 5],
-                  // prevent avatar to be copy
-                  format: {
-                    body: function (inner, coldex, rowdex) {
-                      if (inner.length <= 0) return inner;
-                      var el = $.parseHTML(inner);
-                      var result = '';
-                      $.each(el, function (index, item) {
-                        if (item.classList !== undefined && item.classList.contains('user-name')) {
-                          result = result + item.lastChild.firstChild.textContent;
-                        } else if (item.innerText === undefined) {
-                          result = result + item.textContent;
-                        } else result = result + item.innerText;
-                      });
-                      return result;
-                    }
-                  }
-                }
-              }
-            ]
-          },
-          {
-          text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Trámite</span>',
-          className: 'add-new btn btn-primary waves-effect waves-light',
-          attr: {
+
+                   `<a data-id="${full['id_impi']}" data-bs-toggle="modal" data-bs-target="#editDictamen" href="javascript:;" class="dropdown-item edit-record"><i class="ri-edit-box-line ri-20px text-info"></i> Editar </a>` +
+                   `<a data-id="${full['id_impi']}" class="dropdown-item delete-record  waves-effect text-danger"><i class="ri-delete-bin-7-line ri-20px text-danger"></i> Eliminar </a>` +
+                  
+                 '<div class="dropdown-menu dropdown-menu-end m-0">' +
+                 '<a href="' + userView + '" class="dropdown-item">View</a>' +
+                 '<a href="javascript:;" class="dropdown-item">Suspend</a>' +
+                 '</div>' +
+               '</div>'
+             );
+           }
+         }
+       ],
+ 
+       order: [[2, 'desc']],
+       dom:
+         '<"card-header d-flex rounded-0 flex-wrap pb-md-0 pt-0"' +
+         '<"me-5 ms-n2"f>' +
+         '<"d-flex justify-content-start justify-content-md-end align-items-baseline"<"dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center gap-4"lB>>' +
+         '>t' +
+         '<"row mx-1"' +
+         '<"col-sm-12 col-md-6"i>' +
+         '<"col-sm-12 col-md-6"p>' +
+         '>',
+       lengthMenu: [10, 20, 50, 70, 100], //for length of menu
+       language: {
+         sLengthMenu: '_MENU_',
+         search: '',
+         searchPlaceholder: 'Buscar',
+         info: 'Mostrar _START_ a _END_ de _TOTAL_ registros',
+         paginate: {
+                 "sFirst":    "Primero",
+                 "sLast":     "Último",
+                 "sNext":     "Siguiente",
+                 "sPrevious": "Anterior"
+               }
+       },
+ 
+       // Opciones Exportar Documentos
+       buttons: [
+         {
+           extend: 'collection',
+           className: 'btn btn-outline-secondary dropdown-toggle me-4 waves-effect waves-light',
+           text: '<i class="ri-upload-2-line ri-16px me-2"></i><span class="d-none d-sm-inline-block">Exportar </span>',
+           buttons: [
+             {
+               extend: 'print',
+               title: 'Categorías de Agave',
+               text: '<i class="ri-printer-line me-1" ></i>Print',
+               className: 'dropdown-item',
+               exportOptions: {
+                 columns: [1, 2, 3],
+                 // prevent avatar to be print
+                 format: {
+                   body: function (inner, coldex, rowdex) {
+                     if (inner.length <= 0) return inner;
+                     var el = $.parseHTML(inner);
+                     var result = '';
+                     $.each(el, function (index, item) {
+                       if (item.classList !== undefined && item.classList.contains('user-name')) {
+                         result = result + item.lastChild.firstChild.textContent;
+                       } else if (item.innerText === undefined) {
+                         result = result + item.textContent;
+                       } else result = result + item.innerText;
+                     });
+                     return result;
+                   }
+                 }
+               },
+               customize: function (win) {
+                 //customize print view for dark
+                 $(win.document.body)
+                   .css('color', config.colors.headingColor)
+                   .css('border-color', config.colors.borderColor)
+                   .css('background-color', config.colors.body);
+                 $(win.document.body)
+                   .find('table')
+                   .addClass('compact')
+                   .css('color', 'inherit')
+                   .css('border-color', 'inherit')
+                   .css('background-color', 'inherit');
+               }
+             },
+             {
+               extend: 'csv',
+               title: 'Users',
+               text: '<i class="ri-file-text-line me-1" ></i>Csv',
+               className: 'dropdown-item',
+               exportOptions: {
+                 columns: [1, 2, 3],
+                 // prevent avatar to be print
+                 format: {
+                   body: function (inner, coldex, rowdex) {
+                     if (inner.length <= 0) return inner;
+                     var el = $.parseHTML(inner);
+                     var result = '';
+                     $.each(el, function (index, item) {
+                       if (item.classList !== undefined && item.classList.contains('user-name')) {
+                         result = result + item.lastChild.firstChild.textContent;
+                       } else if (item.innerText === undefined) {
+                         result = result + item.textContent;
+                       } else result = result + item.innerText;
+                     });
+                     return result;
+                   }
+                 }
+               }
+             },
+             {
+               extend: 'excel',
+               title: 'Categorías de Agave',
+               text: '<i class="ri-file-excel-line me-1"></i>Excel',
+               className: 'dropdown-item',
+               exportOptions: {
+                 columns: [1, 2, 3],
+                 // prevent avatar to be display
+                 format: {
+                   body: function (inner, coldex, rowdex) {
+                     if (inner.length <= 0) return inner;
+                     var el = $.parseHTML(inner);
+                     var result = '';
+                     $.each(el, function (index, item) {
+                       if (item.classList !== undefined && item.classList.contains('user-name')) {
+                         result = result + item.lastChild.firstChild.textContent;
+                       } else if (item.innerText === undefined) {
+                         result = result + item.textContent;
+                       } else result = result + item.innerText;
+                     });
+                     return result;
+                   }
+                 }
+               }
+             },
+             {
+               extend: 'pdf',
+               title: 'Categorías de Agave',
+               text: '<i class="ri-file-pdf-line me-1"></i>Pdf',
+               className: 'dropdown-item',
+               exportOptions: {
+                 columns: [1, 2, 3],
+                 // prevent avatar to be display
+                 format: {
+                   body: function (inner, coldex, rowdex) {
+                     if (inner.length <= 0) return inner;
+                     var el = $.parseHTML(inner);
+                     var result = '';
+                     $.each(el, function (index, item) {
+                       if (item.classList !== undefined && item.classList.contains('user-name')) {
+                         result = result + item.lastChild.firstChild.textContent;
+                       } else if (item.innerText === undefined) {
+                         result = result + item.textContent;
+                       } else result = result + item.innerText;
+                     });
+                     return result;
+                   }
+                 }
+               }
+             },
+             {
+               extend: 'copy',
+               title: 'Categorías de Agave',
+               text: '<i class="ri-file-copy-line me-1"></i>Copy',
+               className: 'dropdown-item',
+               exportOptions: {
+                 columns: [1, 2, 3],
+                 // prevent avatar to be copy
+                 format: {
+                   body: function (inner, coldex, rowdex) {
+                     if (inner.length <= 0) return inner;
+                     var el = $.parseHTML(inner);
+                     var result = '';
+                     $.each(el, function (index, item) {
+                       if (item.classList !== undefined && item.classList.contains('user-name')) {
+                         result = result + item.lastChild.firstChild.textContent;
+                       } else if (item.innerText === undefined) {
+                         result = result + item.textContent;
+                       } else result = result + item.innerText;
+                     });
+                     return result;
+                   }
+                 }
+               }
+             }
+           ]
+         },
+         {
+           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Dictamen</span>',
+           className: 'add-new btn btn-primary waves-effect waves-light',
+           attr: {
             'data-bs-toggle': 'modal',
-            //'data-bs-dismiss': 'modal',
-            'data-bs-target': '#addImpi'
-          }
-          }
-        ],
-        
-        ///PAGINA RESPONSIVA
-        responsive: {
-          details: {
-            display: $.fn.dataTable.Responsive.display.modal({
-              header: function (row) {
-                var data = row.data();
-                return 'Detalles de ' + data['folio'];
-              }
-            }),
-            type: 'column',
-            renderer: function (api, rowIdx, columns) {
-              var data = $.map(columns, function (col, i) {
-                return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
-                  ? '<tr data-dt-row="' +
-                      col.rowIndex +
-                      '" data-dt-column="' +
-                      col.columnIndex +
-                      '">' +
-                      '<td>' +
-                      col.title +
-                      ':' +
-                      '</td> ' +
-                      '<td>' +
-                      col.data +
-                      '</td>' +
-                      '</tr>'
-                  : '';
-              }).join('');
-              return data ? $('<table class="table"/><tbody />').append(data) : false;
+            'data-bs-dismiss': 'modal',
+            'data-bs-target': '#addDictamen'
+           }
+         }
+       ],
+ 
+ ///PAGINA RESPONSIVA
+       responsive: {
+         details: {
+           display: $.fn.dataTable.Responsive.display.modal({
+             header: function (row) {
+               var data = row.data();
+               return 'Detalles de ' + data['id_impi'];
+               //return 'Detalles del ' + 'Dictamen';
+             }
+           }),
+           type: 'column',
+           renderer: function (api, rowIdx, columns) {
+             var data = $.map(columns, function (col, i) {
+               return col.title !== '' // ? Do not show row in modal popup if title is blank (for check box)
+                 ? '<tr data-dt-row="' +
+                     col.rowIndex +
+                     '" data-dt-column="' +
+                     col.columnIndex +
+                     '">' +
+                     '<td>' +
+                     col.title +
+                     ':' +
+                     '</td> ' +
+                     '<td>' +
+                     col.data +
+                     '</td>' +
+                     '</tr>'
+                 : '';
+             }).join('');
+ 
+             return data ? $('<table class="table"/><tbody />').append(data) : false;
+           }
+         }
+       }
+ 
+       
+     });
+   } 
+ 
+ 
+const fv = FormValidation.formValidation(NuevoDictamen, {
+    fields: {
+//valida por name
+      fecha_solicitud: {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una fecha'
+                }
             }
+        },
+        tramite: {
+          validators: {
+              notEmpty: {
+                  message: 'Introduzca el tramite'
+              }
           }
+      },
+        cliente: {
+            validators: {
+                notEmpty: {
+                    message: 'Introduzca el cliente'
+                }
+            }
+        },
+        contrasena: {
+            validators: {
+                notEmpty: {
+                    message: 'Introduzca la contra'
+                }
+            }
+        },
+        pago: {
+            validators: {
+                notEmpty: {
+                    message: 'Introduzca el pago'
+                }
+            }
+        },
+        estatus: {
+          validators: {
+              notEmpty: {
+                  message: 'Seleccione una opcion'
+              }
+          }
+        },
+        /*'categorias[]': {
+            validators: {
+                notEmpty: {
+                    message: 'Seleccione una categoría de agave'
+                }
+            }
+        },*/
+    },
+    plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+            eleValidClass: '',
+            rowSelector: function (field, ele) {
+                return '.mb-4, .mb-5, .mb-6'; // Ajusta según las clases de tus elementos
+            }
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+    }
+}).on('core.form.valid', function (e) {
+
+  var formData = new FormData(NuevoDictamen);
+    $.ajax({
+        url: 'registrar',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          console.log('Funciona :D:', response);
+            $('#addDictamen').modal('hide');//div que encierra al formulario #addDictamen
+            $('#NuevoDictamen')[0].reset();
+  
+            dt_user.ajax.reload();
+            // Mostrar alerta de éxito
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: response.success,
+                customClass: {
+                    confirmButton: 'btn btn-success'
+                }
+            });
+        },
+        error: function (xhr) {
+          console.log('Error por error:', xhr);
+            // Mostrar alerta de error
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: 'Error al subir!',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
         }
     });
-  }//fin datatable
-
-
-
-
-// Función para agregar registro
-$('#AgregarImpi').on('submit', function (e) {//id del formulario #addNewCategory
-  e.preventDefault();
-  var formData = $(this).serialize();
-  $.ajax({
-      url: '/enviar',
-      type: 'POST',
-      data: formData,
-      success: function (response) {
-        console.log('si funciona :D', response);
-          $('#addImpi').modal('hide');//id del div que encierra al formulario #offcanvaadduser
-          $('#AgregarImpi')[0].reset();
-
-          // Actualizar la tabla sin reinicializar DataTables
-    //es lo mismo que abajo$('.datatables-users').DataTable().ajax.reload();
-          dt_user.ajax.reload();
-          // Mostrar alerta de éxito
-          Swal.fire({
-              icon: 'success',
-              title: '¡Éxito!',
-              text: response.success,
-              customClass: {
-                  confirmButton: 'btn btn-success'
-              }
-          });
-      },
-      error: function (xhr) {
-        console.log('Error de error:', xhr.responseText);
-          // Mostrar alerta de error
-          Swal.fire({
-              icon: 'error',
-              title: '¡Error!',
-              text: 'Error al agregar',
-              customClass: {
-                  confirmButton: 'btn btn-danger'
-              }
-          });
-      }
   });
-});  //fin registrar
+
+
+
+///ELIMINAR REGISTRO
+  $(document).on('click', '.delete-record', function () {
+    var id_dictamen = $(this).data('id'); // Obtener el ID del registro
+    var dtrModal = $('.dtr-bs-modal.show');
+
+    // Ocultar modal responsivo en pantalla pequeña si está abierto
+    if (dtrModal.length) {
+        dtrModal.modal('hide');
+    }
+
+    // SweetAlert para confirmar la eliminación
+    Swal.fire({
+        title: '¿Está seguro?',
+        text: 'No podrá revertir este evento',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+            confirmButton: 'btn btn-primary me-3',
+            cancelButton: 'btn btn-label-secondary'
+        },
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            // Enviar solicitud DELETE al servidor
+            $.ajax({
+                type: 'DELETE',
+                url: `${baseUrl}eliminar/${id_dictamen}`,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function () {
+                    // Actualizar la tabla después de eliminar el registro
+                    dt_user.draw();
+
+                    // Mostrar SweetAlert de éxito
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Eliminado!',
+                        text: '¡El registro ha sido eliminada correctamente!',
+                        customClass: {
+                            confirmButton: 'btn btn-success'
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.log(error);
+
+                    // Mostrar SweetAlert de error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo eliminar el registro. Inténtelo más tarde.',
+                        footer: `<pre>${error.responseText}</pre>`,
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            // Acción cancelada, mostrar mensaje informativo
+            Swal.fire({
+                title: 'Cancelado',
+                text: 'La eliminación n ha sido cancelada',
+                icon: 'info',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
+                }
+            });
+        }
+    });
+});
 
 
 
@@ -397,24 +550,25 @@ $('#AgregarImpi').on('submit', function (e) {//id del formulario #addNewCategory
 $(document).ready(function() {
   // Abrir el modal y cargar datos para editar
   $('.datatables-users').on('click', '.edit-record', function() {
-      var id_impi = $(this).data('id');
+      var id_dictamen = $(this).data('id');
 
       // Realizar la solicitud AJAX para obtener los datos de la clase
-      $.get('/tramite-list/' + id_impi + '/edit', function(data) {
+      $.get('/insta2/' + id_dictamen + '/edit', function(data) {
         
           // Rellenar el formulario con los datos obtenidos
-          $('#edit_id_impin').val(data.id_impi);
+          $('#edit_id_impi').val(data.id_impi);
+          $('#edit_tramite').val(data.tramite).prop('selected', true).change();
           $('#edit_fecha_solicitud').val(data.fecha_solicitud);
-          $('#edit_tramite').val(data.tramite);
           $('#edit_cliente').val(data.cliente);
-          $('#edit_contra').val(data.contrasena);
+          $('#edit_contrasena').val(data.contrasena);
           $('#edit_pago').val(data.pago);
-          $('#edit_estatus').val(data.estatus);
-          $('#edit_obs').val(data.observaciones);
-
+          $('#edit_estatus').val(data.estatus).prop('selected', true).change();
+          $('#edit_observaciones').val(data.observaciones);
+          //$('#edit_categorias').val(data.categorias).trigger('change');
+          
 
           // Mostrar el modal de edición
-          $('#editImpi').modal('show');
+          $('#editDictamen').modal('show');
       }).fail(function() {
           Swal.fire({
               icon: 'error',
@@ -428,19 +582,19 @@ $(document).ready(function() {
   });
 
   // Manejar el envío del formulario de edición
-  $('#EditarImpi').on('submit', function(e) {
+  $('#EditarDictamen').on('submit', function(e) {
       e.preventDefault();
 
       var formData = $(this).serialize();
-      var id_impi = $('#edit_id_impi').val(); // Obtener el ID de la clase desde el campo oculto
+      var id_dictamen = $('#edit_id_impi').val(); // Obtener el ID de la clase desde el campo oculto
 
       $.ajax({
-          url: '/tramite-list/' + id_impi,
+          url: '/insta2/' + id_dictamen,
           type: 'PUT',
           data: formData,
           success: function(response) {
-              $('#editImpi').modal('hide'); // Ocultar el modal de edición "DIV"
-              $('#EditarImpi')[0].reset(); // Limpiar el formulario "FORM"
+              $('#editDictamen').modal('hide'); // Ocultar el modal de edición "DIV"
+              $('#EditarDictamen')[0].reset(); // Limpiar el formulario "FORM"
               // Mostrar alerta de éxito
               Swal.fire({
                   icon: 'success',
@@ -470,15 +624,7 @@ $(document).ready(function() {
 });
 
 
- 
 
 
 
-
- 
- 
- });//fin function (jquery)
- 
-
-
-
+});//fin dataquery
