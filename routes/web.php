@@ -833,19 +833,23 @@ Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'st
 Route::post('/certificados/reexpedir/granel', [Certificado_GranelController::class, 'reexpedir'])->name('certificados.reexpedir.granel');
 
 //Revision Personal
-//-Instalaciones-
-Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManagement'])->name('revision-personal');
-Route::resource('/revision-personal-list', RevisionPersonalController::class);
-Route::post('/revisor/registrar-respuestas', [RevisionPersonalController::class, 'registrarRespuestas'])->name('registrar.respuestas');
-Route::get('/revisor/obtener-respuestas/{id_revision}', [RevisionPersonalController::class, 'obtenerRespuestas']);
-Route::get('/get-certificado-url/{id_revision}/{tipo}', [RevisionPersonalController::class, 'getCertificadoUrl']);
-Route::get('/bitacora_revisionPersonal_Instalaciones/{id}', [RevisionPersonalController::class, 'Bitacora_revisionPersonal_Instalaciones']);
-Route::post('/registrar-aprobacion', [RevisionPersonalController::class, 'registrarAprobacion'])->name('registrar.aprobacion');
-Route::get('/aprobacion/{id}', [RevisionPersonalController::class, 'cargarAprobacion']);
-Route::get('/obtener/historial/{id_revision}', [RevisionPersonalController::class, 'cargarHistorial']);
-Route::post('/editar-respuestas', [RevisionPersonalController::class, 'editarRespuestas']);
-//-Granel-
-Route::get('/bitacora_revisionPersonal_Granel/{id}', [RevisionPersonalController::class, 'Bitacora_revisionPersonal_Granel']);
+
+Route::middleware(['auth'])->controller(RevisionPersonalController::class)->group(function () {
+    Route::get('/revision/personal', 'UserManagement')->name('revision-personal');
+    Route::resource('/revision-personal-list', RevisionPersonalController::class);
+    Route::post('/revisor/registrar-respuestas', 'registrarRespuestas')->name('registrar.respuestas');
+    Route::get('/revisor/obtener-respuestas/{id_revision}', 'obtenerRespuestas');
+    Route::get('/get-certificado-url/{id_revision}/{tipo}', 'getCertificadoUrl');
+    Route::get('/bitacora_revisionPersonal_Instalaciones/{id}', 'Bitacora_revisionPersonal_Instalaciones');
+    Route::post('/registrar-aprobacion', 'registrarAprobacion')->name('registrar.aprobacion');
+    Route::get('/aprobacion/{id}', 'cargarAprobacion');
+    Route::get('/obtener/historial/{id_revision}', 'cargarHistorial');
+    Route::post('/editar-respuestas', 'editarRespuestas');
+    // -Granel-
+    Route::get('/bitacora_revisionPersonal_Granel/{id}', 'Bitacora_revisionPersonal_Granel');
+});
+
+
 Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCertificado'])->name('Pre-certificado');
 
 // Pdfs Bitacoras
