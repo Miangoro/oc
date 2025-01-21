@@ -120,11 +120,11 @@ $(function () {
             case 7:
               return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_barricada || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_barricada || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_barricada || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_barricada || 'N/A'}</span>
                       <br>
@@ -135,6 +135,19 @@ $(function () {
                       <span class="fw-bold text-dark small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
                        <br>
                       <span class="fw-bold text-dark small">Volumen ingresado:</span><span class="small"> ${data.volumen_ingresado || 'N/A'}</span>
+                      `;
+            case 8:
+              return `<br><span class="fw-bold text-dark small">Lote envasado:</span><span class="small"> ${data.id_lote_envasado || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
+                      <br>
+                      <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
                       `;
             case 9:
               return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote_liberacion || 'N/A'}</span>
@@ -278,7 +291,7 @@ $(function () {
               data-razon-social="${full['razon_social']}"
               class="cursor-pointer dropdown-item text-dark edit-record-tipo">` +
             '<i class="text-warning ri-edit-fill"></i> Editar</a>' +
-            `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud">` +
+            `<a data-id="${full['id']}" data-bs-toggle="modal"  data-bs-target="#expedienteServicio" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')"  class="dropdown-item expediente-record cursor-pointer">` +
             '<i class="text-info ri-folder-3-fill"></i> Expediente del servicio</a>' +
             // Aquí agregamos la opción de eliminar
             `<a  data-id="${full['id']}"   data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">` +
@@ -497,15 +510,6 @@ $(function () {
     }
   });
 
-  //Date picker
-  $(document).ready(function () {
-    $('.datepicker').datepicker({
-      format: 'yyyy-mm-dd',
-      autoclose: true,
-      todayHighlight: true,
-      language: 'es' // Configura el idioma a español
-    });
-  });
 
   var dt_user_table = $('.datatables-solicitudes'),
     select2Elements = $('.select2');
@@ -604,6 +608,11 @@ $(function () {
       }
     });
   });
+  $(document).on('click', '.open-modal', function () {
+    // Puedes agregar aquí cualquier lógica para obtener datos dinámicamente si lo necesitas.
+    console.log('Modal abierto');
+});
+
 
   $(document).ready(function () {
     $(document).on('click', '.edit-record-tipo', function () {
@@ -630,6 +639,8 @@ $(function () {
         modal = $('#editInspeccionEnvasado');
       } else if (id_tipo === 7) {
         modal = $('#editInspeccionIngresoBarricada');
+      } else if (id_tipo === 8) {
+        modal = $('#editLiberacionProducto');
       } else if (id_tipo === 9) {
         modal = $('#editInspeccionLiberacion');
       } else if (id_tipo === 10) {
@@ -702,8 +713,8 @@ $(function () {
               } else {
                 modal.find('#edit_analisis_vig').val('');
               }
-              if (response.caracteristicas && response.caracteristicas.volumen) {
-                modal.find('#edit_volumen_vig').val(response.caracteristicas.volumen);
+              if (response.caracteristicas && response.caracteristicas.cont_alc) {
+                modal.find('#edit_volumen_vig').val(response.caracteristicas.cont_alc);
               } else {
                 modal.find('#edit_volumen_vig').val('');
               }
@@ -776,21 +787,17 @@ $(function () {
               } else {
                 modal.find('#edit_id_tipo_maguey_muestreo_ids').val('');
               }
-
               if (response.caracteristicas) {
                 // Categoría
                 modal.find('#edit_id_categoria_muestreo').val(response.caracteristicas.categoria || 'N/A');
 
                 // Clase
                 modal.find('#edit_id_clase_muestreo').val(response.caracteristicas.clase || 'N/A');
-
                 // Tipos de Maguey
                 modal.find('#edit_id_tipo_maguey_muestreo').val(
                     response.caracteristicas.nombre.join(', ') || 'N/A'
                 );
             }
-
-
               if (response.caracteristicas && response.caracteristicas.analisis_muestreo) {
                 modal.find('#edit_analisis_muestreo').val(response.caracteristicas.analisis_muestreo);
               } else {
@@ -814,9 +821,10 @@ $(function () {
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_traslado').data('selected', response.data.id_instalacion);
               modal.find('#instalacion_id_traslado').val(response.data.id_instalacion);
-              modal.find('#lote_id_traslado').val(response.caracteristicas.id_lote_granel);
+
 
               if (response.caracteristicas) {
+                modal.find('#lote_id_traslado').val(response.caracteristicas.id_lote_granel || '');
                 modal.find('#edit_id_lote_granel_traslado').val(response.caracteristicas.id_lote_granel || '');
                 modal.find('#edit_id_categoria_traslado').val(response.caracteristicas.id_categoria_traslado || '');
                 modal.find('#edit_id_clase_traslado').val(response.caracteristicas.id_clase_traslado || '');
@@ -923,15 +931,19 @@ $(function () {
               modal.find('#instalacion_ingreso').val(response.data.id_instalacion);
               modal.find('#lote_ingreso').val(response.caracteristicas.id_lote_granel);
 
-              // Acceder al campo `punto_reunion` desde `caracteristicas`
               if (response.caracteristicas) {
                 modal.find('#edit_id_lote_granel_barricada').val(response.caracteristicas.id_lote_granel || '');
-                modal.find('#edit_id_categoria_barricada').val(response.caracteristicas.id_categoria || '');
-                modal.find('#edit_id_clase_barricada').val(response.caracteristicas.id_clase || '');
-                modal.find('#edit_id_tipo_maguey_barricada').val(response.caracteristicas.id_tipo_maguey || '');
+                modal.find('#edit_id_categoria_barricada_id').val(response.caracteristicas.id_categoria || '');
+                modal.find('#edit_id_categoria_barricada').val(response.caracteristicas.categoria || '');
+                modal.find('#edit_id_clase_barricada_id').val(response.caracteristicas.id_clase || '');
+                modal.find('#edit_id_clase_barricada').val(response.caracteristicas.clase || '');
+                modal.find('#edit_id_tipo_maguey_barricada_ids').val(response.caracteristicas.id_tipo_maguey || '');
+                modal.find('#edit_id_tipo_maguey_barricada').val(
+                  response.caracteristicas.nombre.join(', ') || 'N/A'
+              );
                 modal.find('#edit_volumen_ingresado').val(response.caracteristicas.volumen_ingresado || '');
                 modal.find('#edit_analisis_barricada').val(response.caracteristicas.analisis || '');
-                modal.find('#edit_alc_vol_barrica').val(response.caracteristicas.alc_vol || '');
+                modal.find('#edit_alc_vol_barrica').val(response.caracteristicas.cont_alc || '');
                 modal.find('#edit_tipo_lote').val(response.caracteristicas.tipoIngreso || '');
                 modal.find('#edit_fecha_inicio').val(response.caracteristicas.fecha_inicio || '');
                 modal.find('#edit_fecha_termino').val(response.caracteristicas.fecha_termino || '');
@@ -945,7 +957,38 @@ $(function () {
               modal.find('#edit_info_adicional').val(response.data.info_adicional);
 
               //liberacion inspeccion
-            } else if (id_tipo === 9) {
+            }
+            else if (id_tipo === 8) {
+              modal.find('#edit_id_solicitud_liberacion_terminado').val(id_solicitud);
+              modal.find('#edit_id_empresa_solicitud_lib_ter').val(response.data.id_empresa).trigger('change');
+              modal.find('#edit_fecha_liberacion_terminado').val(response.data.fecha_visita);
+              modal.find('#edit_id_instalacion_lib_ter').data('selected', response.data.id_instalacion).trigger('change');
+
+              if (response.caracteristicas) {
+                modal.find('#edit_id_lote_envasado_lib_ter').data('selected', response.caracteristicas.id_lote_envasado || '');
+                modal.find('#edit_id_categoria_lib_ter').val(response.caracteristicas.categoria || '');
+                modal.find('#edit_id_categoria_lib_ter_id').val(response.caracteristicas.id_categoria || '');
+                modal.find('#edit_id_clase_lib_ter').val(response.caracteristicas.clase || '');
+                modal.find('#edit_id_clase_lib_ter_id').val(response.caracteristicas.id_clase || '');
+                modal.find('#edit_id_tipo_maguey_lib_ter').val(response.caracteristicas.nombre || '');
+                modal.find('#edit_id_tipo_maguey_lib_ter_ids').val(response.caracteristicas.id_tipo_maguey || '');
+                modal.find('#edit_marca_lib_ter').val(response.caracteristicas.marca || '');
+                modal.find('#edit_marca_lib_ter_id').val(response.caracteristicas.id_marca || '');
+                modal.find('#edit_porcentaje_alcohol_lib_ter').val(response.caracteristicas.cont_alc || '');
+                modal.find('#edit_analisis_fisiq_lib_ter').val(response.caracteristicas.analisis || '');
+                modal.find('#edit_can_botellas_lib_ter').val(response.caracteristicas.cantidad_botellas || '');
+                modal.find('#edit_presentacion_lib_ter').val(response.caracteristicas.presentacion || '');
+                modal.find('#edit_can_pallets_lib_ter').val(response.caracteristicas.cantidad_pallets || '');
+                modal.find('#edit_cajas_por_pallet_lib_ter').val(response.caracteristicas.cajas_por_pallet || '');
+                modal.find('#edit_botellas_por_caja_lib_ter').val(response.caracteristicas.botellas_por_caja || '');
+                modal.find('#edit_hologramas_utilizados_lib_ter').val(response.caracteristicas.hologramas_utilizados || '');
+                modal.find('#edit_hologramas_mermas_lib_ter').val(response.caracteristicas.hologramas_mermas || '');
+                modal.find('#edit_certificado_nom_granel_lib_ter').val(response.caracteristicas.certificado_nom_granel || '');
+              }
+
+              modal.find('#edit_comentarios_lib_ter').val(response.data.info_adicional);
+            }
+            else if (id_tipo === 9) {
               modal.find('#edit_id_solicitud_liberacion').val(id_solicitud);
               modal.find('#edit_id_empresa_liberacion').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
@@ -1085,6 +1128,7 @@ $(function () {
       });
     });
   });
+
 
   /* formulario para enviar los datos y actualizar */
   $(function () {
@@ -1795,7 +1839,7 @@ $(function () {
           Swal.fire({
             icon: 'error',
             title: '¡Error!',
-            text: 'Error al actualizar la inspección de envasado',
+            text: 'Error al actualizar la solicitud',
             customClass: {
               confirmButton: 'btn btn-danger'
             }
@@ -1900,6 +1944,97 @@ $(function () {
             icon: 'error',
             title: '¡Error!',
             text: 'Error al actualizar la inspección de liberación.',
+            customClass: {
+              confirmButton: 'btn btn-danger'
+            }
+          });
+        }
+      });
+    });
+  });
+  $(function () {
+    // Configuración CSRF para Laravel
+    $.ajaxSetup({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      }
+    });
+
+    // Inicializar FormValidation para el formulario de edición
+    const formUpdate = document.getElementById('editLiberacionProductoForm');
+    const fvUpdate = FormValidation.formValidation(formUpdate, {
+      fields: {
+        id_empresa: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona el cliente.'
+            }
+          }
+        },
+        fecha_visita: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona la fecha y hora para la inspección.'
+            }
+          }
+        },
+        id_instalacion: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona una instalación.'
+            }
+          }
+        },
+        id_lote_envasado: {
+          validators: {
+            notEmpty: {
+              message: 'Selecciona un lote envasado.'
+            }
+          }
+        },
+      },
+      plugins: {
+        trigger: new FormValidation.plugins.Trigger(),
+        bootstrap5: new FormValidation.plugins.Bootstrap5({
+          eleValidClass: '',
+          eleInvalidClass: 'is-invalid',
+          rowSelector: '.form-floating'
+        }),
+        submitButton: new FormValidation.plugins.SubmitButton(),
+        autoFocus: new FormValidation.plugins.AutoFocus()
+      }
+    }).on('core.form.valid', function () {
+      // Obtener los datos del formulario
+      var formData = new FormData(formUpdate);
+
+      // Hacer la solicitud AJAX
+      $.ajax({
+        url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_liberacion_terminado').val(),
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          $('#editLiberacionProducto').modal('hide'); // Oculta el modal
+          $('#editLiberacionProductoForm')[0].reset(); // Resetea el formulario
+          $('.select2').val(null).trigger('change'); // Resetea los select2
+          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+          Swal.fire({
+            icon: 'success',
+            title: '¡Éxito!',
+            text: response.message,
+            customClass: {
+              confirmButton: 'btn btn-success'
+            }
+          });
+        },
+        error: function (xhr) {
+          console.log('Error:', xhr.responseText);
+
+          Swal.fire({
+            icon: 'error',
+            title: '¡Error!',
+            text: 'Error al actualizar la solicitud',
             customClass: {
               confirmButton: 'btn btn-danger'
             }
@@ -2061,7 +2196,7 @@ $(function () {
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
-            text: response.message,
+            text: 'Solicitud de muestreo registrado exitosamente.',
             customClass: {
               confirmButton: 'btn btn-success'
             }
@@ -2367,6 +2502,99 @@ $(function () {
       });
     });
 
+    $(function () {
+      // Configuración CSRF para Laravel
+      $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+      });
+
+      // Inicializar FormValidation para el formulario de edición
+      const formUpdate = document.getElementById('editLiberacionProductoForm');
+      const fvUpdate = FormValidation.formValidation(formUpdate, {
+        fields: {
+          id_empresa: {
+            validators: {
+              notEmpty: {
+                message: 'Selecciona el cliente.'
+              }
+            }
+          },
+          fecha_visita: {
+            validators: {
+              notEmpty: {
+                message: 'Selecciona la fecha y hora para la inspección.'
+              }
+            }
+          },
+          id_instalacion: {
+            validators: {
+              notEmpty: {
+                message: 'Selecciona una instalación.'
+              }
+            }
+          },
+          id_lote_envasado: {
+            validators: {
+              notEmpty: {
+                message: 'Selecciona un lote envasado.'
+              }
+            }
+          },
+        },
+        plugins: {
+          trigger: new FormValidation.plugins.Trigger(),
+          bootstrap5: new FormValidation.plugins.Bootstrap5({
+            eleValidClass: '',
+            eleInvalidClass: 'is-invalid',
+            rowSelector: '.form-floating'
+          }),
+          submitButton: new FormValidation.plugins.SubmitButton(),
+          autoFocus: new FormValidation.plugins.AutoFocus()
+        }
+      }).on('core.form.valid', function () {
+        // Obtener los datos del formulario
+        var formData = new FormData(formUpdate);
+
+        // Hacer la solicitud AJAX
+        $.ajax({
+          url: '/actualizar-solicitudes/' + $('#edit_id_solicitud_liberacion_terminado').val(),
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+            $('#editLiberacionProducto').modal('hide'); // Oculta el modal
+            $('#editLiberacionProductoForm')[0].reset(); // Resetea el formulario
+            $('.select2').val(null).trigger('change'); // Resetea los select2
+            $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+            Swal.fire({
+              icon: 'success',
+              title: '¡Éxito!',
+              text: response.message,
+              customClass: {
+                confirmButton: 'btn btn-success'
+              }
+            });
+          },
+          error: function (xhr) {
+            console.log('Error:', xhr.responseText);
+
+            Swal.fire({
+              icon: 'error',
+              title: '¡Error!',
+              text: 'Error al actualizar la solicitud',
+              customClass: {
+                confirmButton: 'btn btn-danger'
+              }
+            });
+          }
+        });
+      });
+    });
+
+
     // Mostrar u ocultar campos adicionales según el tipo de certificación
     $('#edit_certificacion').on('change', function () {
       if ($(this).val() === 'otro_organismo') {
@@ -2438,6 +2666,7 @@ $(function () {
       }
     });
   });
+
 
   //new
   $(document).on('click', '.edit-record', function () {
@@ -2568,108 +2797,6 @@ $(function () {
             }
           }
         },
-        id_lote_granel: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione un lote agranel.'
-            }
-          }
-        },
-        id_categoria: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una categoría.'
-            }
-          }
-        },
-        id_clase: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione una clase.'
-            }
-          }
-        },
-        id_tipo: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor seleccione un tipo de maguey.'
-            }
-          }
-        },
-        analisis: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el análisis fisicoquímico.'
-            }
-          }
-        },
-        art: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el porcentaje de alcohol (% Alc. Vol.).'
-            },
-            between: {
-              min: 1,
-              max: Infinity,
-              message: 'El número debe ser superior a 0 y sin negativos'
-            },
-            regexp: {
-              regexp: /^(?!0)\d+$/,
-              message: 'El número no debe comenzar con 0'
-            }
-          }
-        },
-        fecha_corte: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese la fecha y hora de visita.'
-            }
-          }
-        },
-        kg_maguey: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese la cantidad de maguey en kg.'
-            }
-          }
-        },
-        cant_pinas: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese la cantidad de piñas.'
-            }
-          }
-        },
-        art: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el número art'
-            },
-            between: {
-              min: 1,
-              max: Infinity,
-              message: 'El número debe ser superior a 0 y sin negativos'
-            },
-            regexp: {
-              regexp: /^(?!0)\d+$/,
-              message: 'El número no debe comenzar con 0'
-            }
-          }
-        },
-        etapa: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese la etapa del proceso.'
-            }
-          }
-        },
-        nombre_predio: {
-          validators: {
-            notEmpty: {
-              message: 'Por favor ingrese el nombre del predio.'
-            }
-          }
-        }
       },
       plugins: {
         trigger: new FormValidation.plugins.Trigger(),
@@ -2767,41 +2894,6 @@ $(function () {
           }
         }
       },
-      destino_lote: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor seleccione un tipo de destino.'
-          }
-        }
-      },
-      id_categoria: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese una categoría.'
-          }
-        }
-      },
-      id_clase: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese una clase.'
-          }
-        }
-      },
-      tipo_mageuy: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese un tipo de maguey.'
-          }
-        }
-      },
-      analisis: {
-        validators: {
-          notEmpty: {
-            message: 'Por favor ingrese el análisis fisicoquímico.'
-          }
-        }
-      }
     },
     plugins: {
       trigger: new FormValidation.plugins.Trigger(),
@@ -2834,7 +2926,7 @@ $(function () {
         Swal.fire({
           icon: 'success',
           title: '¡Éxito!',
-          text: 'Muestreo registrado exitosamente.',
+          text: 'Solicitud de Muestreo registrado exitosamente.',
           customClass: {
             confirmButton: 'btn btn-success'
           }
@@ -2853,6 +2945,7 @@ $(function () {
       }
     });
   });
+
 
   // Validación del formulario Inspección Ingreso Barricada
   const addInspeccionIngresoBarricadaForm = document.getElementById('addInspeccionIngresoBarricadaForm');
@@ -3535,7 +3628,7 @@ $(function () {
       $('#id_empresa_solicitudes option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
       $('#id_empresa_solicitudes').trigger('change');
       obtenerInstalacion();
-      alert(clienteSeleccionado);
+    
 
       $('#addSolicitudDictamen').modal('show');
     }
@@ -4395,3 +4488,23 @@ $(function () {
     });
   });
 });
+
+  //Date picker
+  $(document).ready(function () {
+    const flatpickrDateTime = document.querySelectorAll('.flatpickr-datetime');
+
+    if (flatpickrDateTime.length) { 
+      flatpickrDateTime.forEach((element) => {
+        // Inicializar flatpickr para cada input
+        flatpickr(element, {
+          enableTime: true, // Habilitar selección de tiempo
+          time_24hr: true, // Mostrar tiempo en formato 24 horas
+          dateFormat: 'Y-m-d H:i',
+          locale: 'es',
+          allowInput: true, 
+        });
+      });
+    }
+  });
+
+

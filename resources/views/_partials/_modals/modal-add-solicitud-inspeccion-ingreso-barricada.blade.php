@@ -1,4 +1,4 @@
-<div class="modal fade" id="addInspeccionIngresoBarricada" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="addInspeccionIngresoBarricada" tabindex="-1">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -63,33 +63,36 @@
                         </div>
                     </div>
                     <div class="row">
-                        
+
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="id_categoria_barricada" name="id_categoria_barricada"
+                                    id="id_categoria_barricada" name=""
                                     placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
                                 <label for="id_categoria_barricada">Categoría de mezcal</label>
                             </div>
+                            <input type="hidden" id="id_categoria_barricada_id" name="id_categoria_barricada">
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="id_clase_barricada"
-                                    name="id_clase_barricada" placeholder="Ingresa una Clase" readonly
+                                    name="" placeholder="Ingresa una Clase" readonly
                                     style="pointer-events: none;" />
                                 <label for="id_clase_barricada">Clase</label>
                             </div>
+                            <input type="hidden" id="id_clase_barricada_id" name="id_clase_barricada">
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="id_tipo_maguey_barricada"
-                                    name="id_tipo_maguey_barricada" placeholder="Ingresa un tipo de Maguey" readonly
+                                    name="" placeholder="Ingresa un tipo de Maguey" readonly
                                     style="pointer-events: none;" />
                                 <label for="id_tipo_maguey_barricada">Tipo de Maguey</label>
                             </div>
+                            <input type="hidden" id="id_tipo_maguey_barrica_ids" name="id_tipo_maguey_barricada[]">
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
@@ -245,14 +248,23 @@
                 method: 'GET',
                 success: function(response) {
                     $('#id_categoria_barricada').val(response.categoria ? response.categoria.categoria : '');
+                    $('#id_categoria_barricada_id').val(response.categoria ? response.categoria.id_categoria : '');
                     $('#id_clase_barricada').val(response.clase ? response.clase.clase : '');
+                    $('#id_clase_barricada_id').val(response.clase ? response.clase.id_clase : '');
                     if (response.tipo && response.tipo.length > 0) {
                         var tiposConcatenados = response.tipo.map(function(tipo) {
                             return tipo.nombre + ' (' + tipo.cientifico + ')';
                         }).join(', '); // Unir con coma
                         $('#id_tipo_maguey_barricada').val(tiposConcatenados);
+
+                        // Crear un array de los IDs seleccionados (sin concatenarlos)
+                        var tiposIdss = response.tipo.map(function(tipo) {
+                            return tipo.id_tipo; // Obtener solo el ID
+                        });
+                        $('#id_tipo_maguey_barrica_ids').val(tiposIdss.join(','));
                     } else {
                         $('#id_tipo_maguey_barricada').val('');
+                        $('#id_tipo_maguey_barrica_ids').val('');
                     }
                     $('#id_edad').val(response.lotes_granel.edad);
                     $('#analisis_barricada').val(response.lotes_granel.folio_fq);

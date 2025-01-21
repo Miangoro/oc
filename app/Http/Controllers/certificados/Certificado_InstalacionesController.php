@@ -14,6 +14,8 @@ use App\Models\Revisor;
 use App\Notifications\GeneralNotification;
 //Enviar Correo
 use App\Mail\CorreoCertificado;
+use App\Models\Documentacion_url;
+use App\Models\instalaciones;
 use Illuminate\Support\Facades\Mail; 
 
 class Certificado_InstalacionesController extends Controller
@@ -88,14 +90,18 @@ class Certificado_InstalacionesController extends Controller
             $empresa = $certificado->dictamen->instalaciones->empresa ?? null;
             $razon_social = $empresa->razon_social ?? 'N/A';
             $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
-                ? $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente ?? 'N/A'
-                : 'N/A';
+            ? $empresa->empresaNumClientes
+                ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
+            : 'N/A';
+        
     
             return [
                 'id_certificado' => $certificado->id_certificado,
+                'id_dictamen' => $certificado->id_dictamen,
                 'fake_id' => ++$start,
                 'num_certificado' => $certificado->num_certificado,
                 'razon_social' => $razon_social,
+                'domicilio_instalacion' => $certificado->dictamen->instalaciones->direccion_completa ?? "NA",
                 'numero_cliente' => $numero_cliente,
                 'num_autorizacion' => $certificado->num_autorizacion ?? 'N/A',
                 'fecha_vigencia' => Helpers::formatearFecha($certificado->fecha_vigencia),
@@ -160,6 +166,57 @@ class Certificado_InstalacionesController extends Controller
             'num_autorizacion' => $validatedData['num_autorizacion'] ?: null,
             'id_firmante' => $validatedData['id_firmante']
         ]);
+
+        $id_instalacion = $certificado->dictamen->id_instalacion;
+        $instalaciones = instalaciones::find($id_instalacion);
+        $instalaciones->folio = $certificado->num_certificado;
+        $instalaciones->fecha_emision = $certificado->fecha_vigencia;
+        $instalaciones->fecha_vigencia = $certificado->fecha_vencimiento;
+        $instalaciones->save();
+
+         // Obtener información de la empresa
+       
+         $numeroCliente = $certificado->dictamen->instalaciones->empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+             return !empty($numero);
+         });
+ 
+         // Manejo de archivos si se suben
+   
+             $directory = 'uploads/' . $numeroCliente;
+             $path = storage_path('app/public/' . $directory);
+             if (!file_exists($path)) {
+                 mkdir($path, 0777, true); 
+             }  
+             
+              
+                 $nombreDocumento =  'Certificado '.str_replace('/', '-', $certificado->num_certificado);
+                
+ 
+                 $filename = $nombreDocumento . '_' . str_replace('/', '-', $certificado->num_certificado) .  '.pdf' ;
+                 $filePath = storage_path('app/public/' . $directory . '/' . $filename);
+                 if($certificado->dictamen->tipo_dictamen==1){
+                    $id_documento =127;
+                    $this->pdf_certificado_productor($certificado->id_certificado,true,$filePath);
+                 }
+                 if($certificado->dictamen->tipo_dictamen==2){
+                    $id_documento =128;
+                    $this->pdf_certificado_envasador($certificado->id_certificado,true,$filePath);
+                 }
+                 if($certificado->dictamen->tipo_dictamen==3){
+                    $id_documento =128;
+                    $this->pdf_certificado_comercializador($certificado->id_certificado,true,$filePath);
+                 }
+                    
+                
+ 
+                 $documentacion_url = new Documentacion_url();
+                 $documentacion_url->id_relacion =  $certificado->dictamen->id_instalacion;
+                 $documentacion_url->id_documento = $id_documento ?? null;
+                 $documentacion_url->nombre_documento = $nombreDocumento;  
+                 $documentacion_url->url = $filename;  
+                 $documentacion_url->id_empresa =  $certificado->dictamen->instalaciones->id_empresa;
+                 $documentacion_url->save();
+             
     
         return response()->json([
             'message' => 'Certificado registrado exitosamente',
@@ -217,7 +274,7 @@ class Certificado_InstalacionesController extends Controller
         }
     }
     
-    public function pdf_certificado_productor($id_certificado)       
+    public function pdf_certificado_productor($id_certificado, $guardar = false, $rutaGuardado = null)   
     {
         $datos = Certificados::with([
             'dictamen.inspeccione.solicitud.empresa', 
@@ -227,7 +284,10 @@ class Certificado_InstalacionesController extends Controller
         ])->findOrFail($id_certificado);
 
         $empresa = $datos->dictamen->instalaciones->empresa;
-        $numero_cliente = $empresa->empresaNumClientes->firstWhere('empresa_id', $empresa->id)->numero_cliente;
+        $numero_cliente = $empresa->empresaNumClientes
+        ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))
+        ?->numero_cliente ?? 'N/A';
+    
         $watermarkText = $datos->estatus === 1;
         $leyenda = $datos->estatus === 2;
 
@@ -251,13 +311,22 @@ class Certificado_InstalacionesController extends Controller
             'numero_cliente' => $numero_cliente,
             'nombre_firmante' => $datos->firmante->name,
             'leyenda' => $leyenda,
+            'categorias' => $datos->dictamen->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', '),
+            'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),
         ];
 
-        // Generar y retornar el PDF
-        return Pdf::loadView('pdfs.Certificado_productor_mezcal', $pdfData)->stream('Certificado de productor de mezcal.pdf');
+    if ($guardar && $rutaGuardado) {
+        $pdf = Pdf::loadView('pdfs.Certificado_productor_mezcal', $pdfData);
+        $pdf->save($rutaGuardado);
+        return $rutaGuardado; 
     }
 
-    public function pdf_certificado_envasador($id_certificado)
+    return Pdf::loadView('pdfs.Certificado_productor_mezcal', $pdfData)->stream('Certificado de productor de mezcal.pdf');
+
+       
+    }
+
+    public function pdf_certificado_envasador($id_certificado, $guardar = false, $rutaGuardado = null)   
     {
         $datos = Certificados::with([
             'dictamen.inspeccione.solicitud.instalaciones.empresa',  
@@ -292,13 +361,21 @@ class Certificado_InstalacionesController extends Controller
             'numero_cliente' => $numero_cliente,
             'nombre_firmante' => $datos->firmante->name,
             'leyenda' => $leyenda,
+            'categorias' => $datos->dictamen->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', '),
+            'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),
         ];
+
+        if ($guardar && $rutaGuardado) {
+            $pdf = Pdf::loadView('pdfs.Certificado_envasador_mezcal', $pdfData);
+            $pdf->save($rutaGuardado);
+            return $rutaGuardado; 
+        }
     
         // Generar y retornar el PDF
         return Pdf::loadView('pdfs.Certificado_envasador_mezcal', $pdfData)->stream('Certificado de envasador de mezcal.pdf');
     }
     
-    public function pdf_certificado_comercializador($id_certificado)
+    public function pdf_certificado_comercializador($id_certificado, $guardar = false, $rutaGuardado = null)   
     {
         $datos = Certificados::with([
             'dictamen.inspeccione.solicitud.empresa',  
@@ -332,9 +409,15 @@ class Certificado_InstalacionesController extends Controller
             'numero_cliente' => $numero_cliente,
             'nombre_firmante' => $datos->firmante->name ?? 'Nombre del firmante no disponible',
             'leyenda' => $leyenda,
+            'categorias' => $datos->dictamen->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', '),
+            'clases' => $datos->dictamen->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', '),
         ];
     
-        // Generar y retornar el PDF
+        if ($guardar && $rutaGuardado) {
+            $pdf = Pdf::loadView('pdfs.Certificado_comercializador', $pdfData);
+            $pdf->save($rutaGuardado);
+            return $rutaGuardado; 
+        }
         $pdf = Pdf::loadView('pdfs.Certificado_comercializador', $pdfData);
         return $pdf->stream('Certificado de comercializador.pdf');
     }

@@ -425,9 +425,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('content.dashboard.dashboards-analytics');
-    })->name('dashboard');
+     Route::get('/dashboard', [Analytics::class, 'index'])->name('dashboard');
 });
 
 //Solicitud de Cliente
@@ -472,6 +470,8 @@ Route::get('/lista_verificacion_nom051-mod20200327_solrev005', [CartaAsignacionC
 Route::get('/Etiqueta-2401ESPTOB', [CartaAsignacionController::class, 'Etiqueta'])->name('Etiqueta-2401ESPTOB');
 Route::get('/Etiqueta-Muestra', [CartaAsignacionController::class, 'Etiqueta_muestra'])->name('Etiqueta-Muestra');
 Route::get('/Etiqueta-Barrica', [CartaAsignacionController::class, 'Etiqueta_Barrica'])->name('Etiqueta-Barrica');
+
+Route::get('/Etiqueta_lotes_mezcal_granel', [CartaAsignacionController::class, 'Etiqueta_Granel']);
 
 Route::get('/certificado_de_exportacion', [CartaAsignacionController::class, 'certificadoDeExportacion'])->name('certificadoExportacion');/*  */
 
@@ -695,14 +695,18 @@ Route::get('/documentos/{id}/edit', [DocumentosController::class, 'edit']);
 Route::put('/documentos/{id}', [DocumentosController::class, 'update']);
 
 //Inspecciones
-Route::get('/inspecciones', [inspeccionesController::class, 'UserManagement'])->name('inspecciones');
-Route::resource('inspecciones-list', inspeccionesController::class);
-Route::post('/asignar-inspector', [inspeccionesController::class, 'asignarInspector']);
-Route::get('/oficio_de_comision/{id_inspeccion}', [inspeccionesController::class, 'pdf_oficio_comision'])->name('oficioDeComision');
-Route::get('/orden_de_servicio/{id_inspeccion}', [inspeccionesController::class, 'pdf_orden_servicio'])->name('ordenDeServicio');
-Route::post('/agregar-resultados', [inspeccionesController::class, 'agregarResultados']);
-//update acta
-Route::get('/acta-solicitud/edit/{id_acta}', [inspeccionesController::class, 'editActa']);
+Route::middleware(['auth'])->controller(inspeccionesController::class)->group(function () {
+    Route::get('/inspecciones', 'UserManagement')->name('inspecciones');
+    Route::resource('inspecciones-list', inspeccionesController::class);
+    Route::post('/asignar-inspector', 'asignarInspector');
+    Route::get('/oficio_de_comision/{id_inspeccion}', 'pdf_oficio_comision')->name('oficioDeComision');
+    Route::get('/orden_de_servicio/{id_inspeccion}', 'pdf_orden_servicio')->name('ordenDeServicio');
+    Route::post('/agregar-resultados', 'agregarResultados');
+    Route::get('/acta-solicitud/edit/{id_acta}', 'editActa');
+    Route::get('/getInspeccion/{id_solicitud}', 'getInspeccion');
+
+});
+
 
 //pdf rutas
 Route::post('/acta-unidades', [inspeccionesController::class, 'store'])->name('acta.unidades.store');
@@ -736,31 +740,37 @@ Route::post('/verificar-folios', [solicitudHolograma::class, 'verificarFolios'])
 Route::post('/solicitud_holograma/update/updateActivar', [solicitudHolograma::class, 'updateActivar']);
 
 //Módulo de solicitudes
-Route::get('/solicitudes-historial', [solicitudesController::class, 'UserManagement'])->name('solicitudes-historial');
-Route::resource('/solicitudes-list', solicitudesController::class);
-Route::get('/solicitud_de_servicio/{id_solicitud}', [solicitudesController::class, 'pdf_solicitud_servicios_070'])->name('solicitudservi');
-Route::post('/registrar-solicitud-georeferenciacion', [solicitudesController::class, 'registrarSolicitudGeoreferenciacion'])->name('registrarSolicitudGeoreferenciacion');
-Route::post('/registrar-solicitud-muestreo-agave', [solicitudesController::class, 'registrarSolicitudMuestreoAgave'])->name('registrarSolicitudMuestreoAgave');
-Route::post('/hologramas/storeVigilanciaProduccion', [solicitudesController::class, 'storeVigilanciaProduccion']);
-Route::post('/hologramas/storeMuestreoLote', [solicitudesController::class, 'storeMuestreoLote']);
-Route::post('/hologramas/storeVigilanciaTraslado', [solicitudesController::class, 'storeVigilanciaTraslado']);
-Route::post('/hologramas/storeInspeccionBarricada', [solicitudesController::class, 'storeInspeccionBarricada']);
-Route::post('/hologramas/storeInspeccionBarricadaLiberacion', [solicitudesController::class, 'storeInspeccionBarricadaLiberacion']);
-Route::post('/hologramas/storeInspeccionEnvasado', [solicitudesController::class, 'storeInspeccionEnvasado']);
-Route::get('/getDetalleLoteTipo/{id_tipo}', [solicitudesController::class, 'getDetalleLoteTipo']);
-Route::delete('/solicitudes-lista/{id_solicitud}', [solicitudesController::class, 'destroy'])->name('solicitudes-list.destroy');
+Route::middleware(['auth'])->controller(solicitudesController::class)->group(function () {
+    Route::get('/solicitudes-historial', 'UserManagement')->name('solicitudes-historial');
+    Route::resource('/solicitudes-list', solicitudesController::class);
+    Route::get('/solicitud_de_servicio/{id_solicitud}', 'pdf_solicitud_servicios_070')->name('solicitudservi');
+    Route::post('/registrar-solicitud-georeferenciacion', 'registrarSolicitudGeoreferenciacion')->name('registrarSolicitudGeoreferenciacion');
+    Route::post('/registrar-solicitud-muestreo-agave', 'registrarSolicitudMuestreoAgave')->name('registrarSolicitudMuestreoAgave');
+    Route::post('/hologramas/storeVigilanciaProduccion', 'storeVigilanciaProduccion');
+    Route::post('/hologramas/storeMuestreoLote', 'storeMuestreoLote');
+    Route::post('/hologramas/storeVigilanciaTraslado', 'storeVigilanciaTraslado');
+    Route::post('/hologramas/storeInspeccionBarricada', 'storeInspeccionBarricada');
+    Route::post('/hologramas/storeInspeccionBarricadaLiberacion', 'storeInspeccionBarricadaLiberacion');
+    Route::post('/hologramas/storeInspeccionEnvasado', 'storeInspeccionEnvasado');
+    Route::get('/getDetalleLoteTipo/{id_tipo}', 'getDetalleLoteTipo');
+    Route::delete('/solicitudes-lista/{id_solicitud}', 'destroy')->name('solicitudes-list.destroy');
+    Route::get('/getDetalleLoteEnvasado/{id_lote_envasado}', 'getDetalleLoteEnvasado');
+    Route::get('/verificar-solicitud', 'verificarSolicitud')->name('verificarSolicitud');
+    Route::get('/datos-solicitud/{id_solicitud}',  'obtenerDatosSolicitud')->name('datos.solicitud');
+    Route::post('/actualizar-solicitudes/{id_solicitud}', 'actualizarSolicitudes');
+    Route::post('/exportaciones/storePedidoExportacion', 'storePedidoExportacion')->name('exportaciones.storePedidoExportacion');
+    Route::get('/marcas/{id_marca}/{id_direccion}', 'obtenerMarcasPorEmpresa');
+    Route::get('/solicitudes/exportar', 'exportar')->name('solicitudes.exportar');
+    Route::post('/registrar-solicitud-lib-prod-term','storeSolicitudLibProdTerm');
+});
 
-Route::post('/registrar-solicitud-lib-prod-term', [solicitudesController::class, 'storeSolicitudLibProdTerm']);
 
-Route::get('/getDetalleLoteEnvasado/{id_lote_envasado}', [solicitudesController::class, 'getDetalleLoteEnvasado']);
-Route::get('/verificar-solicitud', [solicitudesController::class, 'verificarSolicitud'])->name('verificarSolicitud');
-Route::get('/datos-solicitud/{id_solicitud}', [solicitudesController::class, 'obtenerDatosSolicitud'])->name('datos.solicitud');
-Route::post('/actualizar-solicitudes/{id_solicitud}', [SolicitudesController::class, 'actualizarSolicitudes']);
-Route::post('/exportaciones/storePedidoExportacion', [SolicitudesController::class, 'storePedidoExportacion'])->name('exportaciones.storePedidoExportacion');
-Route::get('/marcas/{id_marca}/{id_direccion}', [SolicitudesController::class, 'obtenerMarcasPorEmpresa']);
+
+
+
+
+
 Route::get('/marcas/{id_empresa}', [lotesEnvasadoController::class, 'obtenerMarcasPorEmpresa']);
-
-Route::get('/solicitudes/exportar', [solicitudesController::class, 'exportar'])->name('solicitudes.exportar');
 
 //catalago equipos
 Route::get('/catalogo/equipos', [catalogoEquiposController::class, 'UserManagement'])->name('catalogo-equipos');
@@ -823,19 +833,23 @@ Route::post('/asignar-revisor/granel', [Certificado_GranelController::class, 'st
 Route::post('/certificados/reexpedir/granel', [Certificado_GranelController::class, 'reexpedir'])->name('certificados.reexpedir.granel');
 
 //Revision Personal
-//-Instalaciones-
-Route::get('/revision/personal', [RevisionPersonalController::class, 'UserManagement'])->name('revision-personal');
-Route::resource('/revision-personal-list', RevisionPersonalController::class);
-Route::post('/revisor/registrar-respuestas', [RevisionPersonalController::class, 'registrarRespuestas'])->name('registrar.respuestas');
-Route::get('/revisor/obtener-respuestas/{id_revision}', [RevisionPersonalController::class, 'obtenerRespuestas']);
-Route::get('/get-certificado-url/{id_revision}/{tipo}', [RevisionPersonalController::class, 'getCertificadoUrl']);
-Route::get('/bitacora_revisionPersonal_Instalaciones/{id}', [RevisionPersonalController::class, 'Bitacora_revisionPersonal_Instalaciones']);
-Route::post('/registrar-aprobacion', [RevisionPersonalController::class, 'registrarAprobacion'])->name('registrar.aprobacion');
-Route::get('/aprobacion/{id}', [RevisionPersonalController::class, 'cargarAprobacion']);
-Route::get('/obtener/historial/{id_revision}', [RevisionPersonalController::class, 'cargarHistorial']);
-Route::post('/editar-respuestas', [RevisionPersonalController::class, 'editarRespuestas']);
-//-Granel-
-Route::get('/bitacora_revisionPersonal_Granel/{id}', [RevisionPersonalController::class, 'Bitacora_revisionPersonal_Granel']);
+
+Route::middleware(['auth'])->controller(RevisionPersonalController::class)->group(function () {
+    Route::get('/revision/personal', 'UserManagement')->name('revision-personal');
+    Route::resource('/revision-personal-list', RevisionPersonalController::class);
+    Route::post('/revisor/registrar-respuestas', 'registrarRespuestas')->name('registrar.respuestas');
+    Route::get('/revisor/obtener-respuestas/{id_revision}', 'obtenerRespuestas');
+    Route::get('/get-certificado-url/{id_revision}/{tipo}', 'getCertificadoUrl');
+    Route::get('/bitacora_revisionPersonal_Instalaciones/{id}', 'Bitacora_revisionPersonal_Instalaciones');
+    Route::post('/registrar-aprobacion', 'registrarAprobacion')->name('registrar.aprobacion');
+    Route::get('/aprobacion/{id}', 'cargarAprobacion');
+    Route::get('/obtener/historial/{id_revision}', 'cargarHistorial');
+    Route::post('/editar-respuestas', 'editarRespuestas');
+    // -Granel-
+    Route::get('/bitacora_revisionPersonal_Granel/{id}', 'Bitacora_revisionPersonal_Granel');
+});
+
+
 Route::get('/Pre-certificado/{id}', [Certificado_GranelController::class, 'PreCertificado'])->name('Pre-certificado');
 
 // Pdfs Bitacoras

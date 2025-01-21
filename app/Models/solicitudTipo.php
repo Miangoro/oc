@@ -11,4 +11,9 @@ class solicitudTipo extends Model
     protected $primaryKey = 'id_tipo';
 
     use HasFactory;
+
+    protected $fillable = [
+        'tipo',
+        
+    ];
 }

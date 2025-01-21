@@ -32,7 +32,7 @@ $(function () {
       { data: 'fecha_solicitud' },
       {
         data: function (row) {
-          return row.tipo + ' - ' + row.tipo_instalacion; // Concatenar 'tipo' con 'otroDato'
+          return row.tipo + (row.tipo_instalacion ? ' - ' + row.tipo_instalacion : '');
         }
       },
       { data: 'direccion_completa' },
@@ -119,7 +119,7 @@ $(function () {
           if(full['url_acta']=='Sin subir'){
             return '<span class="badge bg-danger">Sin subir</span>';
           }else{
-            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['url_acta']}" data-registro="${full['razon_social']} "></i>`;
+            return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="${full['num_cliente']}/${full['url_acta']}" data-registro="${full['razon_social']} "></i>`;
           }
           
         }
@@ -143,8 +143,8 @@ $(function () {
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalAsignarInspector(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="cursor-pointer dropdown-item validar-solicitud2"><i class="text-warning ri-user-search-fill"></i>Asignar inspector</a>` +
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModalSubirResultados(${full['id_solicitud']},'${escapeHtml(full['num_servicio'])}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-success ri-search-eye-line"></i>Resultados de inspección</a>` +
             `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud"><i class="text-info ri-folder-3-fill"></i>Expediente del servicio</a>` +
-            `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}','${full['direccion_completa']}','${full['tipo_instalacion']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
-            `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="editModalActaProduccion('${full['id_acta']}')" href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px textStatus"></i>Editar Acta</a>` +
+          //  `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="abrirModalActaProduccion('${full['id_inspeccion']}','${full['tipo']}','${full['razon_social']}','${full['id_empresa']}','${full['direccion_completa']}','${full['tipo_instalacion']}')"href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px text-info"></i>Crear Acta</a>` +
+          //  `<a data-id="${full['id_inspeccion']}" data-bs-toggle="modal" onclick="editModalActaProduccion('${full['id_acta']}')" href="javascript:;" class="dropdown-item "><i class="ri-file-pdf-2-fill ri-20px textStatus"></i>Editar Acta</a>` +
 
 
             '</div>' +
@@ -1007,11 +1007,28 @@ $(function () {
   $(document).on('click', '.pdf', function () {
     var id_inspeccion = $(this).data('id');
     var registro = $(this).data('registro');
-    var iframe = $('#pdfViewer');
-    iframe.attr('src', '/files/' + id_inspeccion);
+    
 
-    $("#titulo_modal").text("Acta de inspección");
-    $("#subtitulo_modal").text(registro);
+    
+    var iframe = $('#pdfViewer');
+    var spinner = $('#cargando');
+    //Mostrar el spinner y ocultar el iframe antes de cargar el PDF
+    spinner.show();
+    iframe.hide();
+    
+    //Cargar el PDF con el ID
+      iframe.attr('src', '/files/' + id_inspeccion);
+    //Configurar el botón para abrir el PDF en una nueva pestaña
+      $("#NewPestana").attr('href', '/files/' + id_inspeccion).show();
+
+      $("#titulo_modal").text("Acta de inspección");
+      $("#subtitulo_modal").text(registro);
+
+    //Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+      iframe.on('load', function () {
+        spinner.hide();
+        iframe.show();
+      });
   });
   //Añadir row
 

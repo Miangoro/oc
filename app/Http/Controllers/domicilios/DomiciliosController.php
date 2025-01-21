@@ -393,9 +393,7 @@ class DomiciliosController extends Controller
             ];
     
             // Filtrar los documentos solo si coinciden con los tipos permitidos
-            $documentosFiltrados = $instalacion->documentos->filter(function ($documento) use ($tiposPermitidos) {
-                return in_array($documento->nombre_documento, $tiposPermitidos);
-            })->values();
+            $documentosFiltrados = $instalacion->documentos_certificados_instalaciones;
     
             // Obtener el número de cliente
 

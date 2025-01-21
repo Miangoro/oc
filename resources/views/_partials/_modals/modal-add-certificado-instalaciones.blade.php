@@ -36,16 +36,7 @@
                         <label for="formValidationSelect2">Seleccione un dictamen</label>
                     </div>
 
-                    <!-- Firmante -->
-                    <div class="form-floating form-floating-outline mb-3">
-                        <select class="select2 form-select" id="id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
-                            <option value="" disabled selected>Seleccione un firmante</option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                        <label for="formValidationSelect2">Seleccione un firmante</label>
-                    </div>
+                    
 
                     <!-- Número de Certificado -->
                     <div class="form-floating form-floating-outline mb-3">
@@ -79,6 +70,17 @@
                                 <label for="fecha_vencimiento">Fecha de Vencimiento</label>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Firmante -->
+                    <div class="form-floating form-floating-outline mb-3">
+                        <select class="select2 form-select" id="id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
+                            <option value="" disabled selected>Seleccione un firmante</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                        <label for="formValidationSelect2">Seleccione un firmante</label>
                     </div>
         
                     <!-- Botones -->

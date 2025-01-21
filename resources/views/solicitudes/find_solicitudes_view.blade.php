@@ -12,9 +12,7 @@
     'resources/assets/vendor/libs/animate-css/animate.scss',
     'resources/assets/vendor/libs/sweetalert2/sweetalert2.scss',
     'resources/assets/vendor/libs/flatpickr/flatpickr.scss',
-  'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.scss',
-  'resources/assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.scss',
-  'resources/assets/vendor/libs/jquery-timepicker/jquery-timepicker.scss',
+
     'resources/assets/vendor/libs/pickr/pickr-themes.scss',
    'resources/assets/vendor/libs/spinkit/spinkit.scss'
 ])
@@ -33,16 +31,17 @@
     'resources/assets/vendor/libs/cleavejs/cleave-phone.js',
     'resources/assets/vendor/libs/sweetalert2/sweetalert2.js',
     'resources/assets/vendor/libs/flatpickr/flatpickr.js',
-    'resources/assets/vendor/libs/bootstrap-datepicker/bootstrap-datepicker.js',
-    'resources/assets/vendor/libs/bootstrap-daterangepicker/bootstrap-daterangepicker.js',
-    'resources/assets/vendor/libs/jquery-timepicker/jquery-timepicker.js',
-    'resources/assets/vendor/libs/pickr/pickr.js'
+
+    'resources/assets/vendor/libs/pickr/pickr.js',
+    'resources/assets/vendor/libs/flatpickr/l10n/es.js' // Archivo local del idioma
 ])
 @endsection
 
+
+
 @section('page-script')
 @vite(['resources/js/solicitudes.js'])
-@vite(['resources/assets/js/forms-pickers.js'])
+
 @vite(['resources/js/solicitudes-tipo.js'])
 @vite(['resources/js/instalaciones.js'])
 <script>
@@ -215,9 +214,8 @@
     @include('_partials._modals.modal-add-solicitud-emision-certificado-venta-nacional')
     @include('_partials._modals.modal-add-solicitud-inspeccion-emision-certificado-NOM')
     @include('_partials._modals.modal-add-solicitud-georeferenciacion')
-
     @include('_partials._modals.modal-add-solicitud-muestreo-agave')
-    @include('_partials._modals.modal-edit-solicitud-muestreo-agave')
+
 
 
     @include('_partials._modals.modal-export-excel')
@@ -232,6 +230,8 @@
     @include('_partials._modals.modal-edit-solicitud-inspeccion-de-liberacion')
     @include('_partials._modals.modal-edit-solicitud-inspeccion-de-envasado')
     @include('_partials._modals.modal-edit-solicitud-pedidos-para-exportacion')
+    @include('_partials._modals.modal-edit-solicitud-muestreo-agave')
+    @include('_partials._modals.modal-edit-solicitud-liberación-producto-terminado')
 
 
     <!-- /Modal -->

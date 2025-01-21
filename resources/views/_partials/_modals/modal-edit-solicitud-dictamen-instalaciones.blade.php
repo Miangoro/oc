@@ -49,7 +49,7 @@
                                 </select>
 
                                 <button type="button" class="btn btn-primary" id="abrirModalInstalaciones"><i
-                                        class="ri-add-line"></i> Agregar nueva instalación</button>
+                                        class="ri-add-line"></i> Nueva instalación</button>
 
                             </div>
                         </div>
@@ -58,7 +58,7 @@
 
                     <div class="row">
                         <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-6 select2-primary">
+                            <div class="form-floating form-floating-outline mb-6 select2-dark">
                                 <select id="edit_categoria_in" name="categorias[]" class="form-select select2"
                                     data-placeholder="Seleccione una o más categorias" multiple>
                                     @foreach ($categorias as $cate)
@@ -70,7 +70,7 @@
                         </div>
 
                         <div class="col-md-4">
-                            <div class="form-floating form-floating-outline mb-4 select2-primary">
+                            <div class="form-floating form-floating-outline mb-4 select2-dark">
                                 <select id="edit_clases_in" name="clases[]" class="form-select select2"
                                     data-placeholder="Seleccione una o más clases" multiple>
                                     @foreach ($clases as $clase)

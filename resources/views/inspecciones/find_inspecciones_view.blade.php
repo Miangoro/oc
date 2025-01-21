@@ -201,12 +201,33 @@
     }
 
     function abrirModalAsignarInspector(id_solicitud, tipo, nombre_empresa) {
+    // Asignar valores iniciales
+    $("#id_solicitud").val(id_solicitud);
+    $('.solicitud').text(tipo);
+    $('#nombre_empresa').text(nombre_empresa); // Mostrar nombre de la empresa en el modal
+    $('#asignarInspector').modal('show');
 
-        $("#id_solicitud").val(id_solicitud);
+    $.ajax({
+        url: '/getInspeccion/'+id_solicitud, 
+        method: 'GET', 
+        success: function(response) {
+            if (response.success) {
+                const data = response.data;
+                $("#id_inspector").val(data.id_inspector).change();
+                $("#num_servicio").val(data.num_servicio || '');
+                $("#fecha_servicio").val(data.fecha_servicio || '');
+                $("#observaciones").text(data.observaciones || '');
+            } else {
+                alert('No se pudieron obtener los datos de la solicitud.');
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error en la solicitud:', error);
+            alert('Hubo un error al obtener los datos.');
+        }
+    });
+}
 
-        $('.solicitud').text(tipo);
-        $('#asignarInspector').modal('show');
-    }
 
     function abrirModalActaProduccion(id_inspeccion, tipo, nombre_empresa, id_empresa, direccion_completa,
         tipo_instalacion) {

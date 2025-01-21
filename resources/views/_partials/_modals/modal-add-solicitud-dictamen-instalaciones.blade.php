@@ -41,16 +41,16 @@
                                     <!-- Aquí se llenarán las opciones con instalaciones del cliente -->
                                 </select>
 
-                                <button type="button" class="btn btn-primary" id="abrirModalInstalaciones"><i class="ri-add-line"></i> Agregar nueva instalación</button>
+                                <button type="button" class="btn btn-primary" id="abrirModalInstalaciones"><i class="ri-add-line"></i> Nueva instalación</button>
 
                             </div>
                     </div>
                     </div>
                     <div class="row">
                       <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-6 select2-primary">
+                        <div class="form-floating form-floating-outline mb-6 select2-dark">
                             <select  name="categorias[]" class="form-select select2"
-                                data-placeholder="Seleccione una o más categorias" multiple>
+                                placeholder="Seleccione una o más categorias" multiple>
                                 @foreach ($categorias as $cate)
                                     <option value="{{ $cate->id_categoria }}">{{ $cate->categoria }}</option>
                                 @endforeach
@@ -60,9 +60,9 @@
                       </div>
 
                       <div class="col-md-4">
-                        <div class="form-floating form-floating-outline mb-4 select2-primary">
+                        <div class="form-floating form-floating-outline mb-4 select2-dark">
                             <select name="clases[]" class="form-select select2"
-                                data-placeholder="Seleccione una o más clases" multiple>
+                                placeholder="Seleccione una o más clases" multiple>
                                 @foreach ($clases as $clase)
                                     <option value="{{ $clase->id_clase }}">{{ $clase->clase }}</option>
                                 @endforeach

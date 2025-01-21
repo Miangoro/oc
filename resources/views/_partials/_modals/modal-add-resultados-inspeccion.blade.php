@@ -17,7 +17,7 @@
             </ul>
           </div>-->
           <form id="addResultadosInspeccion" class="row g-5" onsubmit="return false">
-            <input name="id_solicitud" type="text" class="id_solicitud">
+            <input name="id_solicitud" type="hidden" class="id_solicitud">
 
         
 

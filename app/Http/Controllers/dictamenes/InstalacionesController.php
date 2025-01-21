@@ -16,6 +16,7 @@ use App\Models\solicitudesModel;
 use App\Models\User;
 use App\Notifications\GeneralNotification;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Faker\Extension\Helper;
 
 class InstalacionesController extends Controller
@@ -148,10 +149,34 @@ public function index(Request $request)
                 /*$nestedData['fecha_emision'] = $user->fecha_emision;
                 $nestedData['fecha_vigencia'] = $user->fecha_vigencia;*/
                 //$fecha_emision= Helpers::formatearFecha($user->fecha_emision) ?? 'N/A';
-                $fecha_emision = $user->fecha_emision;
-                $fecha_vigencia = $user->fecha_vigencia;
+                $fecha_emision = Helpers::formatearFecha($user->fecha_emision);
+                $fecha_vigencia = Helpers::formatearFecha($user->fecha_vigencia);
                 $nestedData['fechas'] = '<b>Fecha Emisión: </b>' .$fecha_emision. '<br> <b>Fecha Vigencia: </b>' .$fecha_vigencia;
                 $nestedData['direccion_completa'] = $user->inspeccione->solicitud->instalacion->direccion_completa;
+
+
+
+                $fechaActual = Carbon::now()->startOfDay(); // Asegúrate de trabajar solo con fechas, sin horas
+                $fechaVigencia = Carbon::parse($user->fecha_vigencia)->startOfDay();
+                
+                if ($fechaActual->isSameDay($fechaVigencia)) {
+                    $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Hoy se vence este dictamen</span>";
+                } else {
+                    $diasRestantes = $fechaActual->diffInDays($fechaVigencia, false);
+                
+                    if ($diasRestantes > 0) {
+                        if($diasRestantes > 15){
+                            $res = "<span class='badge bg-success'>$diasRestantes días de vigencia.</span>";
+                        }else{
+                            $res = "<span class='badge bg-warning'>$diasRestantes días de vigencia.</span>";
+                        }
+                        $nestedData['diasRestantes'] = $res;
+                    } else {
+                        $nestedData['diasRestantes'] = "<span class='badge bg-danger'>Vencido hace " . abs($diasRestantes) . " días.</span>";
+                    }
+                }
+                
+
 
                 $data[] = $nestedData;
             }
@@ -180,23 +205,35 @@ public function index(Request $request)
 public function store(Request $request)
 {
     try {
+        // Busca la inspección y carga las relaciones necesarias
         $instalaciones = inspecciones::with(['solicitud.instalacion'])->find($request->id_inspeccion);
-
+    
+        // Verifica si la inspección y las relaciones existen
+        if (!$instalaciones || !$instalaciones->solicitud || !$instalaciones->solicitud->instalacion) {
+            return response()->json(['error' => 'No se encontró la instalación asociada a la inspección'], 404);
+        }
+    
+        // Crear y guardar el nuevo dictamen
         $var = new Dictamen_instalaciones();
         $var->id_inspeccion = $request->id_inspeccion;
         $var->tipo_dictamen = $request->tipo_dictamen;
-        $var->id_instalacion =  $instalaciones->solicitud->instalacion->id_instalacion;
+        $var->id_instalacion = $instalaciones->solicitud->instalacion->id_instalacion;
         $var->num_dictamen = $request->num_dictamen;
         $var->fecha_emision = $request->fecha_emision;
         $var->fecha_vigencia = $request->fecha_vigencia;
-        $var->categorias = json_encode($request->categorias);
-        $var->clases =  json_encode($request->clases);
-        $var->save();//guardar en BD
-
-        return response()->json(['success' => 'Registro agregada correctamente']);
+        $var->id_firmante = $request->id_firmante;
+        // $var->categorias = json_encode($request->categorias);
+        // $var->clases = json_encode($request->clases);
+        $var->save(); // Guardar en BD
+    
+        return response()->json(['success' => 'Registro agregado correctamente']);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al agregar'], 500);
+        // Registrar el error en el log
+        
+    
+        return response()->json(['error' => 'Ocurrió un error al intentar agregar el registro'], 500);
     }
+    
 }
 
 
@@ -233,7 +270,8 @@ public function edit($id_dictamen)
             'fecha_vigencia' => $var1->fecha_vigencia,
             'id_inspeccion' => $var1->id_inspeccion,
             'categorias' => $categorias,
-            'clases' => $clases
+            'clases' => $clases,
+            'id_firmante' => $var1->id_firmante,
         ]);
     } catch (\Exception $e) {
         return response()->json(['error' => 'Error al obtener el dictamen'], 500);
@@ -253,6 +291,7 @@ public function edit($id_dictamen)
         //'categorias' => 'required|array',
         //'clases' => 'required|array',  
         'id_inspeccion' => 'required|integer',
+        'id_firmante' => 'required|integer',
     ]);
     try {
         $var2 = Dictamen_instalaciones::findOrFail($id_dictamen);
@@ -263,6 +302,7 @@ public function edit($id_dictamen)
         $var2->fecha_vigencia = $request->fecha_vigencia;
         $var2->categorias = $request->categorias;
         $var2->clases = $request->clases;
+        $var2->id_firmante = $request->id_firmante;
         $var2->save();
 
         return response()->json(['success' => 'Editado correctamente']);
@@ -277,7 +317,7 @@ public function edit($id_dictamen)
     public function dictamen_productor($id_dictamen)
     {   
         $datos = Dictamen_instalaciones::with(['inspeccione.solicitud.empresa.empresaNumClientes', 'instalaciones', 'inspeccione.inspector'])->find($id_dictamen);
-
+        
         $fecha_inspeccion = Helpers::formatearFecha($datos->inspeccione->fecha_servicio);
         $fecha_emision = Helpers::formatearFecha($datos->fecha_emision);
         $fecha_vigencia = Helpers::formatearFecha($datos->fecha_vigencia);

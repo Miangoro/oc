@@ -47,16 +47,17 @@
        columns: [
          { data: '#' },                //0
          { data: 'fake_id' },          //1
-         { data: 'Cliente' },          //2 
-         { data: 'tipo_dictamen' },    //3 
-         { data: 'num_dictamen' },     //4
-         { data: 'num_certificado' },  //5
-         { data: 'maestro_mezcalero' },//6
-         { data: 'fechas' },           //7
-         { data: 'id_revisor' },       //8
-         { data: 'Certificado' },      //9
-         { data: 'estatus' },          //10
-         { data: 'actions'},           //11
+         { data: 'Cliente' },          //2  
+         { data: 'domicilio_instalacion' },          //3
+         { data: 'tipo_dictamen' },    //4 
+         { data: 'num_dictamen' },     //5
+         { data: 'num_certificado' },  //6
+         { data: 'maestro_mezcalero' },//7
+         { data: 'fechas' },           //8
+         { data: 'id_revisor' },       //9
+         { data: 'Certificado' },      //10
+         { data: 'estatus' },          //11
+         { data: 'actions'},           //12
        ],
        columnDefs: [
          {
@@ -91,7 +92,7 @@
           }
         },
          {
-          targets: 3,
+          targets: 4,
           responsivePriority: 4,
           render: function (data, type, full, meta) {
             var $tipoDictamen = parseInt(full['tipo_dictamen']);
@@ -129,28 +130,28 @@
           }     
         },
           {
-           targets: 4,
+           targets: 5,
            render: function (data, type, full, meta) {
              var $num_dictamen = full['num_dictamen'];
              return '<span class="fw-bold">' + $num_dictamen + '</span>';
            }
          }, 
          {
-            targets: 5,
+            targets: 6,
             render: function (data, type, full, meta) {
               var $num_servicio = full['num_certificado'];
               return '<span class="user-email">' + $num_servicio + '</span>';
             }
           },
           {
-            targets: 6,
+            targets: 7,
             render: function (data, type, full, meta) {
               var $maestro_mezcalero = full['maestro_mezcalero'] ?? 'N/A';
               return '<span class="user-email">' + $maestro_mezcalero + '</span>';
             }
           },
           {
-            targets: 7, // Suponiendo que este es el índice de la columna que quieres actualizar
+            targets: 8, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
         
                 // Obtener las fechas de vigencia y vencimiento, o 'N/A' si no están disponibles
@@ -171,7 +172,7 @@
             }
           },   
           {
-            targets: 8,
+            targets: 9,
             render: function (data, type, full, meta) {
                 var id_revisor = full['id_revisor'];   // Obtener el id_revisor
                 var id_revisor2 = full['id_revisor2']; // Obtener el id_revisor2
@@ -204,14 +205,22 @@
           },
           {
             // Abre el pdf del certificado
-            targets: 9,
+            targets: 10,
             className: 'text-center',
             render: function (data, type, full, meta) {
-              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-es="1" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_dictamen']}" data-registro="${full['num_dictamen']} "></i>`;
             }
           },
           {
-            target: 10, // Suponiendo que este es el índice de la columna que quieres actualizar
+            // Abre el pdf del certificado
+            targets: 11,
+            className: 'text-center',
+            render: function (data, type, full, meta) {
+              return `<i style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-es="2" data-bs-target="#PdfDictamenIntalaciones" data-bs-toggle="modal" data-bs-dismiss="modal" data-tipo="${full['tipo_dictamen']}" data-id="${full['id_certificado']}" data-registro="${full['num_certificado']} "></i>`;
+            }
+          },
+          {
+            target: 12, // Suponiendo que este es el índice de la columna que quieres actualizar
             render: function (data, type, full, meta) {
                 var estatus = full['estatus']; // Obtener el estatus del certificado
                 
@@ -240,7 +249,7 @@
         },  
          {
            // Actions
-           targets: 11,
+           targets: 13,
            title: 'Acciones',
            searchable: false,
            orderable: false,
@@ -992,20 +1001,36 @@ $(document).on('click', '.pdf', function () {
   var id = $(this).data('id');
   var registro = $(this).data('registro');
   var tipo = $(this).data('tipo');
+  var es = $(this).data('es');
 
   var tipo_dictamen = '';
   var titulo = '';
 
-  if (tipo == 1 || tipo == 5) { // Productor
-    tipo_dictamen = '../certificado_productor_mezcal/' + id;
-    titulo = "Certificado de productor";
-  } else if (tipo == 2) { // Envasador
-    tipo_dictamen = '../certificado_envasador_mezcal/' + id;
-    titulo = "Certificado de envasador";
-  } else if (tipo == 3 || tipo == 4) { // Comercializador
-    tipo_dictamen = '../certificado_comercializador/' + id;
-    titulo = "Certificado de comercializador";
+  if(es==2){
+    if (tipo == 1 || tipo == 5) { // Productor
+      tipo_dictamen = '../certificado_productor_mezcal/' + id;
+      titulo = "Certificado de productor";
+    } else if (tipo == 2) { // Envasador
+      tipo_dictamen = '../certificado_envasador_mezcal/' + id;
+      titulo = "Certificado de envasador";
+    } else if (tipo == 3 || tipo == 4) { // Comercializador
+      tipo_dictamen = '../certificado_comercializador/' + id;
+      titulo = "Certificado de comercializador";
+    }
+  }else{
+    if (tipo == 1 || tipo == 5) { // Productor
+      tipo_dictamen = '../dictamen_productor/' + id;
+      titulo = "Dictamen de productor";
+    } else if (tipo == 2) { // Envasador
+      tipo_dictamen = '../dictamen_envasador/' + id;
+      titulo = "Dictamen de envasador";
+    } else if (tipo == 3 || tipo == 4) { // Comercializador
+      tipo_dictamen = '../dictamen_comercializador/' + id;
+      titulo = "Dictamen de comercializador";
+    }
   }
+
+
 
   $('#loading-spinner').show();
   $('#pdfViewerDictamen').hide();

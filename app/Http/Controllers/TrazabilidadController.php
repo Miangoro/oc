@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\empresa;
 use App\Models\inspecciones;
-use App\Models\Instalaciones;
+use App\Models\instalaciones;
 use App\Models\solicitudTipo;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -59,7 +59,7 @@ class TrazabilidadController extends Controller
                 : null;
 
             $instalacion = isset($log->properties['attributes']['id_instalacion']) 
-                ? Instalaciones::find($log->properties['attributes']['id_instalacion'])->direccion_completa ?? null 
+                ? instalaciones::find($log->properties['attributes']['id_instalacion'])->direccion_completa ?? null 
                 : null;
 
             $nombre_documento = isset($log->properties['attributes']['nombre_documento']) 

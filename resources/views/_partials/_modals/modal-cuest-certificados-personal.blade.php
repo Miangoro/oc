@@ -53,15 +53,28 @@
                                                                 <td>{{ $contador++ }}</td>
                                                                 <td>{{ $pregunta->pregunta }}</td>
                                             
-                                                                @if($pregunta->documentacion?->documentacionUrls)
+                                                                @if($pregunta->documentacion?->documentacionUrls && $pregunta->id_documento != 69)
                                                                     <td>
                                                                         <a target="_blank" href="{{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->isNotEmpty() ? 
-                                                                            '../files' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente . '/' . 
+                                                                            '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente . '/' . 
                                                                             $revisor->obtenerDocumentosClientes($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa) 
                                                                             : 'NA' }}">
                                                                             Ver Documento
                                                                         </a>
                                                                     </td>
+                                                                @elseif($pregunta->filtro == 'acta')
+                                                                <td>
+                                                                    @if($revisor->obtenerDocumentoActa($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->id_solicitud) )
+                                                                    <b>{{ $revisor->certificado->dictamen->inspeccione->num_servicio }}</b>
+                                                                    <a target="_blank" href="{{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente 
+                                                                        ? '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente . '/' .
+                                                                          $revisor->obtenerDocumentoActa($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->id_solicitud)
+                                                                        : 'NA' }}">
+                                                                        Ver acta
+                                                                    </a>
+                                                                    
+                                                                    @endif
+                                                                </td>
                                                                 @elseif($pregunta->filtro == 'cliente')
                                                                 <td><b>
                                                                     {{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes
@@ -80,7 +93,7 @@
                                                                     <td>
                                                                         <b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->folio ?? 'N/A' }}</b>
                                                                         <a target="_blank" href="/solicitud_de_servicio/{{ $revisor->certificado->dictamen->inspeccione->id_solicitud ?? 'N/A' }}">
-                                                                            Ver Documento
+                                                                            Ver solicitud
                                                                         </a>
                                                                     </td>
 
@@ -118,10 +131,10 @@
                                                                 
                                                                     @if ($pdf_dictamen)
                                                                         <a target="_blank" href="{{ $pdf_dictamen.$revisor->certificado->dictamen->id_dictamen }}">
-                                                                            Ver Documento
+                                                                            Ver dictamen
                                                                         </a>
                                                                     @else
-                                                                        <span>Documento no disponible</span>
+                                                                        <span>Dictamen no disponible</span>
                                                                     @endif
                                                                 </td>
 

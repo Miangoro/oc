@@ -1,4 +1,4 @@
-<div class="modal fade" id="addLiberacionProducto" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="addLiberacionProducto" tabindex="-1">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -69,7 +69,7 @@
                                     class="bg-light text-muted form-control" placeholder="Categoría" />
                                 <label for="categoria" class="text-muted">Categoría</label>
                             </div>
-                            <input type="text" id="id_categoria_lib_ter_id" name="id_categoria">
+                            <input type="hidden" id="id_categoria_lib_ter_id" name="id_categoria">
                         </div>
 
                         <!-- Clase -->
@@ -79,7 +79,7 @@
                                     class="bg-light text-muted form-control" placeholder="Clase" />
                                 <label for="clase" class="text-muted">Clase</label>
                             </div>
-                            <input type="text" id="id_clase_lib_ter_id" name="id_clase">
+                            <input type="hidden" id="id_clase_lib_ter_id" name="id_clase">
                         </div>
                         <!-- Tipo de Maguey -->
                         <div class="col-md-4">
@@ -88,7 +88,7 @@
                                     class="bg-light text-muted  form-control" placeholder="Tipo de Maguey" />
                                 <label for="tipo_maguey" class="text-muted">Tipo de Maguey</label>
                             </div>
-                            <input type="text" id="id_tipo_maguey_lib_ter_ids" name="id_tipo[]">
+                            <input type="hidden" id="id_tipo_maguey_lib_ter_ids" name="id_tipo[]">
                         </div>
                     </div>
 
@@ -100,7 +100,7 @@
                                     class="bg-light text-muted  form-control" placeholder="Marca" />
                                 <label for="marca" class="text-muted">Marca</label>
                             </div>
-                            <input type="text" id="marca_lib_ter_id" name="marca">
+                            <input type="hidden" id="marca_lib_ter_id" name="marca">
                         </div>
                         <!-- % Alc. Vol. -->
                         <div class="col-md-4">
@@ -271,6 +271,7 @@
                     }
                     // Agregar el contenido de los lotes envasado al select correspondiente
                     $('#id_lote_envasado_lib_ter').html(contenidoLotesEnvasado);
+                    
 
                 },
                 error: function() {

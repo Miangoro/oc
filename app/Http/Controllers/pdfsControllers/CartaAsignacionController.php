@@ -109,8 +109,28 @@ class CartaAsignacionController extends Controller
 
     public function Etiqueta()
     {
-        $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
-        return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
+      $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
+      return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
+    }
+
+
+    public function Etiqueta_Granel()
+    {
+        // Renderizar el PDF por primera vez para obtener el total de páginas
+        $pdf = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel');
+        $dompdf = $pdf->getDomPDF();
+        $dompdf->render();
+
+        // Obtener el total de páginas
+        $totalPaginas = $dompdf->get_canvas()->get_page_count();
+
+        // Pasar el total de páginas a la vista para la segunda renderización
+        $pdfFinal = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel', [
+            'totalPaginas' => $totalPaginas
+        ]);
+
+        // Retornar el PDF final
+        return $pdfFinal->stream('Etiqueta para lotes de mezcal a granel.pdf');
     }
 
     //Certificados
@@ -323,26 +343,26 @@ class CartaAsignacionController extends Controller
     public function BitacoraMezcal() {
         $pdf = Pdf::loadView('pdfs.Bitacora_Mezcal')->setPaper('letter', 'landscape');
         return $pdf->stream('Bitácora Mezcal a Granel.pdf');
-    }   
+    }
 
     public function BitacoraMaduracion() {
         $pdf = Pdf::loadView('pdfs.Bitacora_Maduracion')->setPaper('letter', 'landscape');
         return $pdf->stream('Bitácora Producto en Maduración.pdf');
-    } 
+    }
 
     public function BitacoraProductor() {
         $pdf = Pdf::loadView('pdfs.Bitacora_Productor')->setPaper('letter', 'landscape');
         return $pdf->stream('Bitácora de Productor.pdf');
-    } 
+    }
 
     public function BitacoraTerminado() {
         $pdf = Pdf::loadView('pdfs.Bitacora_Terminado')->setPaper('letter', 'landscape');
         return $pdf->stream('Bitácora Producto Terminado.pdf');
-    } 
+    }
 
     public function BitacoraHologramas() {
         $pdf = Pdf::loadView('pdfs.Bitacora_Hologramas')->setPaper('letter', 'landscape');
         return $pdf->stream('Bitácora De Hologramas.pdf');
-    } 
+    }
 
 }

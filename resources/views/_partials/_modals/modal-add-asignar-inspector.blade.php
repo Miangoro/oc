@@ -43,7 +43,7 @@
   
             <div class="col-md-6 col-sm-12">
               <div class="form-floating form-floating-outline">
-                <input type="date" id="fecha_servicio" name="fecha_servicio" class="form-control" placeholder="Fecha y hora de visita" />
+                <input type="datetime-local" id="fecha_servicio" name="fecha_servicio" class="form-control" placeholder="Fecha y hora de visita" />
                 <label for="fecha_servicio">Fecha y hora de visita</label>
               </div>
             </div>

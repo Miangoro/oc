@@ -44,7 +44,6 @@
                             </div>
                         </div>
                     </div>
-                    <p class="address-subtitle" style="color: red">Seleccione un cliente</p>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">

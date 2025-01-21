@@ -101,6 +101,7 @@ $('#edit_fecha_emision').on('change', function() {
          { data: 'razon_social' },
          { data: 'direccion_completa' },
          { data: 'fechas' },
+         { data: 'diasRestantes' },
          { data: '' },
          { data: 'action' }
  
@@ -187,7 +188,7 @@ $('#edit_fecha_emision').on('change', function() {
           },
           {
             // Abre el pdf del dictamen
-            targets: 7,
+            targets: 8,
             searchable: false,
             orderable: false,
             className: 'text-center',
@@ -717,7 +718,9 @@ $(document).ready(function() {
           $('#edit_fecha_vigencia').val(data.fecha_vigencia);
           $('#edit_id_inspeccion').val(data.id_inspeccion).prop('selected', true).change();
           $('#edit_categorias').val(data.categorias).trigger('change');
-          $('#edit_clases').val(data.clases).trigger('change');
+          $('#edit_clases').val(data.clases).trigger('change'); 
+          $('#edit_id_firmante').val(data.id_firmante).prop('selected', true).change();
+          $('#edit_id_firmante').val(data.id_firmante).trigger('change');
 
 
           // Mostrar el modal de edición

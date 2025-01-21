@@ -146,7 +146,7 @@
             padding: 0;
             position: absolute;
             right: 50px;
-            top: 710px;
+            top: 715px;
             font-family: 'Arial Negrita' !important;
         }
 
@@ -216,7 +216,7 @@
     <div class="description1">Unidad de Inspección No. UVNOM-129</div>
     <div class="description2">Centro de Innovación y Desarrollo Agroalimentario de Michoacán, A.C.</div>
     <div class="description3">Acreditados ante la Entidad Mexicana de Acreditación, A.C</div>
-    <div class="textimg font-lucida-sans-seminegrita">No.: UMC-00_/20</div>
+    <div class="textimg font-lucida-sans-seminegrita">No.: <u>{{ $datos->num_dictamen }}</u></div>
     <div class="title">Dictamen de cumplimiento de Instalaciones como <br> comercializador</div>
     <div class="text">
         <p>De acuerdo a lo establecido en los procedimientos internos de la Unidad de Inspección No. UVNOM 129 para
@@ -243,7 +243,7 @@
             </tr>
             <tr>
             <td>
-            <span class="font-lucida-sans-seminegrita">Domicilio de instalaciones del almacen:</span>
+            <span class="font-lucida-sans-seminegrita">Domicilio de instalaciones del almacén:</span>
             </td>
                 <td style="text-align: center; vertical-align: middle;">{{ $datos->instalaciones->direccion_completa }}</td>
             </tr>
@@ -258,8 +258,8 @@
         </tbody>
     </table>
     <p class="text">
-    Se dictamina que la <span class="font-lucida-sans-seminegrita">Unidad de comercialización y/almacen</span> cuenta con la infraestructura, el equipo y los procesos necesarios
-    para el envasado de <span class="font-lucida-sans-seminegrita">Mezcal_______, clase (s)________,</span>, requisitos establecidos en la NOM-070-SCFI-2016,
+    Se dictamina que la <span class="font-lucida-sans-seminegrita">Unidad de comercialización y/almacén</span> cuenta con la infraestructura, el equipo y los procesos necesarios
+    para el envasado de <span class="font-lucida-sans-seminegrita">{{ $datos->inspeccione->solicitud->categorias_mezcal()->pluck('categoria')->implode(', ') }}, clase(s) <u>{{$datos->inspeccione->solicitud->clases_agave()->pluck('clase')->implode(', ') }}</u></span>, requisitos establecidos en la NOM-070-SCFI-2016,
     Bebidas alcohólicas-Mezcal-Especificaciones y por el Organismo de Certificación del Centro de Innovación y
     Desarrollo Agroalimentario de Michoacán A.C. (CIDAM)
    </p>
@@ -281,9 +281,9 @@
     </p>
 
     <p class="textx" style="font-size: 10px; margin: 1;">
-    <strong>Cadena Origina</strong>
+    <strong>Cadena Original</strong>
     <span style="margin-left: 29px;">
-        <strong>UMG-159/2024|2024-06-26|UMS-1094/2024</strong>
+        <strong>{{ $datos->num_dictamen }}|{{ $datos->fecha_emision }}|{{ $datos->inspeccione->num_servicio }}</strong>
     </span>
     </p>
 

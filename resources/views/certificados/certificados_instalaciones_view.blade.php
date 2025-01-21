@@ -40,7 +40,7 @@
 <!-- Users List Table -->
 <div class="card">
     <div class="card-header pb-0">
-        <h3 class="card-title mb-0">Certificados Instalaciones</h3>
+        <h3 class="card-title mb-0">Certificados de instalaciones</h3>
     </div>
     <div class="card-datatable table-responsive">
         <table class="datatables-users table">
@@ -49,12 +49,14 @@
                     <th>#</th>
                     <th>ID</th>
                     <th>Cliente</th>
+                    <th>Domicilio de instalación</th>
                     <th>Instalaciones de</th>
                     <th>No. Dictamen</th>
                     <th>No. Certificado</th>
                     <th>Maestro Mezcalero</th>
                     <th>Fechas</th>
                     <th>Revisor Asignado</th>
+                    <th>Dictamen</th>
                     <th>Certificado</th>
                     <th>Estatus</th>
                     <th>Acciones</th>
