@@ -510,15 +510,6 @@ $(function () {
     }
   });
 
-  //Date picker
-  $(document).ready(function () {
-    $('.datepicker').datepicker({
-      format: 'yyyy-mm-dd',
-      autoclose: true,
-      todayHighlight: true,
-      language: 'es' // Configura el idioma a español
-    });
-  });
 
   var dt_user_table = $('.datatables-solicitudes'),
     select2Elements = $('.select2');
@@ -3765,7 +3756,7 @@ $(function () {
       $('#id_empresa_solicitudes option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
       $('#id_empresa_solicitudes').trigger('change');
       obtenerInstalacion();
-      alert(clienteSeleccionado);
+    
 
       $('#addSolicitudDictamen').modal('show');
     }
@@ -4625,3 +4616,23 @@ $(function () {
     });
   });
 });
+
+  //Date picker
+  $(document).ready(function () {
+    const flatpickrDateTime = document.querySelectorAll('.flatpickr-datetime');
+
+    if (flatpickrDateTime.length) { 
+      flatpickrDateTime.forEach((element) => {
+        // Inicializar flatpickr para cada input
+        flatpickr(element, {
+          enableTime: true, // Habilitar selección de tiempo
+          time_24hr: true, // Mostrar tiempo en formato 24 horas
+          dateFormat: 'Y-m-d H:i',
+          locale: 'es',
+          allowInput: true, 
+        });
+      });
+    }
+  });
+
+

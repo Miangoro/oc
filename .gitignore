@@ -48,68 +48,6 @@ yarn-error.log
 /public/css
 /public/js
 
-<<<<<<< HEAD
 # Ignorar el contenido de la carpeta storage
 /storage/*
-=======
-<<<<<<< HEAD
-/storage/
 
-
-# Ignorar la carpeta phpunit.cache
-.phpunit.cache/
-
-# Ignorar node_modules (dependencias de Node.js)
-node_modules/
-
-# Ignorar los archivos y carpetas generados por Laravel
-/public/build
-/public/hot
-
-# Ignorar las claves y certificados
-/storage/*.key
-
-# Ignorar la carpeta vendor (dependencias de Composer)
-/vendor
-
-# Ignorar los archivos de entorno
-.env
-.env.backup
-.env.production
-
-# Ignorar los resultados de las pruebas PHPUnit
-.phpunit.result.cache
-
-# Ignorar configuraciones de Docker
-docker-compose.override.yml
-
-# Ignorar los archivos de configuración de Homestead
-Homestead.json
-Homestead.yaml
-
-# Ignorar logs de npm y yarn
-npm-debug.log
-yarn-error.log
-
-# Ignorar configuraciones de la herramienta Fleet
-/.fleet
-
-# Ignorar configuraciones de IDEs y editores de texto
-/.idea
-/.vscode
-
-# Asegurar que la carpeta assets pública no se ignore
-!/public/assets
-!/public/assets/*
-
-# Ignorar archivos generados en public
-/public/css
-/public/js
-
-# Ignorar el contenido de la carpeta storage
-/storage/*
-=======
-# Ignorar el contenido de la carpeta storage
-/storage/*
->>>>>>> 1fe233c605e0676a7cf43876957909ea259f4c86
->>>>>>> 4815d073d6f26aa9c1cae7cf70e5abb01a951b05

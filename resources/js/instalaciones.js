@@ -14,14 +14,7 @@ $(function () {
   }
   initializeSelect2(select2Elements);
 
-  $(document).ready(function () {
-    $('.datepicker').datepicker({
-      format: 'yyyy-mm-dd',
-      autoclose: true,
-      todayHighlight: true,
-      language: 'es' 
-    });
-  });
+
 
   var baseUrl = window.location.origin + '/';
   var dt_instalaciones_table = $('.datatables-users').DataTable({
