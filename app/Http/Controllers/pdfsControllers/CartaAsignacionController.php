@@ -116,8 +116,21 @@ class CartaAsignacionController extends Controller
 
     public function Etiqueta_Granel()
     {
-      $pdf = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel');
-      return $pdf->stream('Etiqueta para lotes de mezcal a granel');
+        // Renderizar el PDF por primera vez para obtener el total de páginas
+        $pdf = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel');
+        $dompdf = $pdf->getDomPDF();
+        $dompdf->render();
+
+        // Obtener el total de páginas
+        $totalPaginas = $dompdf->get_canvas()->get_page_count();
+
+        // Pasar el total de páginas a la vista para la segunda renderización
+        $pdfFinal = Pdf::loadView('pdfs.Etiqueta_lotes_mezcal_granel', [
+            'totalPaginas' => $totalPaginas
+        ]);
+
+        // Retornar el PDF final
+        return $pdfFinal->stream('Etiqueta para lotes de mezcal a granel.pdf');
     }
 
     //Certificados
