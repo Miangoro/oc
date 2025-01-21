@@ -1005,7 +1005,8 @@ $(function () {
           $("#subtitulo_modal").text(registro);
     }); */
   $(document).on('click', '.pdf', function () {
- 
+    var id_inspeccion = $(this).data('id');
+    var registro = $(this).data('registro');
     
 
     
