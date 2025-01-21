@@ -50,4 +50,5 @@ yarn-error.log
 
 # Ignorar el contenido de la carpeta storage
 /storage/*
+/public/storage/*
 
