@@ -66,12 +66,13 @@
                                                                 <td>
                                                                     @if($revisor->obtenerDocumentoActa($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->id_solicitud) )
                                                                     <b>{{ $revisor->certificado->dictamen->inspeccione->num_servicio }}</b>
-                                                                    <a target="_blank" href="{{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->isNotEmpty() ? 
-                                                                        '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[1]->numero_cliente . '/' . 
-                                                                        $revisor->obtenerDocumentoActa($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->id_solicitud) 
+                                                                    <a target="_blank" href="{{ $revisor?->certificado?->dictamen?->inspeccione?->solicitud?->empresa?->empresaNumClientes->firstWhere('numero_cliente', '!=', null)?->numero_cliente 
+                                                                        ? '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente . '/' .
+                                                                          $revisor->obtenerDocumentoActa($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->id_solicitud)
                                                                         : 'NA' }}">
                                                                         Ver acta
                                                                     </a>
+                                                                    
                                                                     @endif
                                                                 </td>
                                                                 @elseif($pregunta->filtro == 'cliente')

@@ -827,9 +827,10 @@ $(function () {
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_traslado').data('selected', response.data.id_instalacion);
               modal.find('#instalacion_id_traslado').val(response.data.id_instalacion);
-              modal.find('#lote_id_traslado').val(response.caracteristicas.id_lote_granel);
+              
 
               if (response.caracteristicas) {
+                modal.find('#lote_id_traslado').val(response.caracteristicas.id_lote_granel || '');
                 modal.find('#edit_id_lote_granel_traslado').val(response.caracteristicas.id_lote_granel || '');
                 modal.find('#edit_id_categoria_traslado').val(response.caracteristicas.id_categoria_traslado || '');
                 modal.find('#edit_id_clase_traslado').val(response.caracteristicas.id_clase_traslado || '');
