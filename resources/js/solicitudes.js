@@ -120,11 +120,11 @@ $(function () {
             case 7:
               return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_barricada || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_barricada || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_barricada || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_barricada || 'N/A'}</span>
                       <br>
@@ -291,7 +291,7 @@ $(function () {
               data-razon-social="${full['razon_social']}"
               class="cursor-pointer dropdown-item text-dark edit-record-tipo">` +
             '<i class="text-warning ri-edit-fill"></i> Editar</a>' +
-            `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud">` +
+            `<a data-id="${full['id']}" data-bs-toggle="modal"  data-bs-target="#expedienteServicio" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')"  class="dropdown-item expediente-record cursor-pointer">` +
             '<i class="text-info ri-folder-3-fill"></i> Expediente del servicio</a>' +
             // Aquí agregamos la opción de eliminar
             `<a  data-id="${full['id']}"   data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">` +
@@ -617,6 +617,11 @@ $(function () {
       }
     });
   });
+  $(document).on('click', '.open-modal', function () {
+    // Puedes agregar aquí cualquier lógica para obtener datos dinámicamente si lo necesitas.
+    console.log('Modal abierto');
+});
+
 
   $(document).ready(function () {
     $(document).on('click', '.edit-record-tipo', function () {
@@ -791,14 +796,12 @@ $(function () {
               } else {
                 modal.find('#edit_id_tipo_maguey_muestreo_ids').val('');
               }
-
               if (response.caracteristicas) {
                 // Categoría
                 modal.find('#edit_id_categoria_muestreo').val(response.caracteristicas.categoria || 'N/A');
 
                 // Clase
                 modal.find('#edit_id_clase_muestreo').val(response.caracteristicas.clase || 'N/A');
-
                 // Tipos de Maguey
                 modal.find('#edit_id_tipo_maguey_muestreo').val(
                     response.caracteristicas.nombre.join(', ') || 'N/A'
@@ -827,7 +830,7 @@ $(function () {
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_traslado').data('selected', response.data.id_instalacion);
               modal.find('#instalacion_id_traslado').val(response.data.id_instalacion);
-              
+
 
               if (response.caracteristicas) {
                 modal.find('#lote_id_traslado').val(response.caracteristicas.id_lote_granel || '');
@@ -937,15 +940,19 @@ $(function () {
               modal.find('#instalacion_ingreso').val(response.data.id_instalacion);
               modal.find('#lote_ingreso').val(response.caracteristicas.id_lote_granel);
 
-              // Acceder al campo `punto_reunion` desde `caracteristicas`
               if (response.caracteristicas) {
                 modal.find('#edit_id_lote_granel_barricada').val(response.caracteristicas.id_lote_granel || '');
-                modal.find('#edit_id_categoria_barricada').val(response.caracteristicas.id_categoria || '');
-                modal.find('#edit_id_clase_barricada').val(response.caracteristicas.id_clase || '');
-                modal.find('#edit_id_tipo_maguey_barricada').val(response.caracteristicas.id_tipo_maguey || '');
+                modal.find('#edit_id_categoria_barricada_id').val(response.caracteristicas.id_categoria || '');
+                modal.find('#edit_id_categoria_barricada').val(response.caracteristicas.categoria || '');
+                modal.find('#edit_id_clase_barricada_id').val(response.caracteristicas.id_clase || '');
+                modal.find('#edit_id_clase_barricada').val(response.caracteristicas.clase || '');
+                modal.find('#edit_id_tipo_maguey_barricada_ids').val(response.caracteristicas.id_tipo_maguey || '');
+                modal.find('#edit_id_tipo_maguey_barricada').val(
+                  response.caracteristicas.nombre.join(', ') || 'N/A'
+              );
                 modal.find('#edit_volumen_ingresado').val(response.caracteristicas.volumen_ingresado || '');
                 modal.find('#edit_analisis_barricada').val(response.caracteristicas.analisis || '');
-                modal.find('#edit_alc_vol_barrica').val(response.caracteristicas.alc_vol || '');
+                modal.find('#edit_alc_vol_barrica').val(response.caracteristicas.cont_alc || '');
                 modal.find('#edit_tipo_lote').val(response.caracteristicas.tipoIngreso || '');
                 modal.find('#edit_fecha_inicio').val(response.caracteristicas.fecha_inicio || '');
                 modal.find('#edit_fecha_termino').val(response.caracteristicas.fecha_termino || '');
@@ -1130,6 +1137,7 @@ $(function () {
       });
     });
   });
+
 
   /* formulario para enviar los datos y actualizar */
   $(function () {
