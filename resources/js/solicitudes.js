@@ -150,21 +150,21 @@ $(function () {
                       <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
                       `;
             case 9:
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote_liberacion || 'N/A'}</span>
+              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_liberacion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_liberacion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_liberacion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_liberacion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.tipo_lote_lib || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio_lib || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Fecha término:</span><span class="small"> ${data.fecha_termino_lib || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
                       `;
             case 10:
               return `<br><span class="fw-bold text-dark small">Punto de reunión:</span><span class="small"> ${data.punto_reunion || 'N/A'}</span>

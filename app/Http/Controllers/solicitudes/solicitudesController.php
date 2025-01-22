@@ -228,13 +228,7 @@ class solicitudesController extends Controller
                 $nestedData['tipo_lote'] = $caracteristicas['tipoIngreso'] ?? 'N/A';
                 $nestedData['fecha_inicio'] = isset($caracteristicas['fecha_inicio']) ? Carbon::parse($caracteristicas['fecha_inicio'])->format('d/m/Y') : 'N/A';
                 $nestedData['fecha_termino'] = isset($caracteristicas['fecha_termino']) ? Carbon::parse($caracteristicas['fecha_termino'])->format('d/m/Y') : 'N/A';
-                $nestedData['id_categoria_liberacion'] = $caracteristicas['id_categoria'] ?? 'N/A';
-                $nestedData['id_clase_liberacion'] = $caracteristicas['id_clase'] ?? 'N/A';
-                $nestedData['id_tipo_maguey_liberacion'] = $caracteristicas['id_tipo_maguey'] ?? 'N/A';
-                $nestedData['analisis_liberacion'] = $caracteristicas['analisis'] ?? 'N/A';
                 $nestedData['tipo_lote_lib'] = $caracteristicas['tipoLiberacion'] ?? 'N/A';
-                $nestedData['fecha_inicio_lib'] = isset($caracteristicas['fecha_inicio']) ? Carbon::parse($caracteristicas['fecha_inicio'])->format('d/m/Y') : 'N/A';
-                $nestedData['fecha_termino_lib'] = isset($caracteristicas['fecha_termino']) ? Carbon::parse($caracteristicas['fecha_termino'])->format('d/m/Y') : 'N/A';
                 $nestedData['punto_reunion'] = $caracteristicas['punto_reunion'] ?? 'N/A';
                 $nestedData['renovacion'] = $caracteristicas['renovacion'] ?? 'N/A';
                 $nestedData['volumen_ingresado'] = $caracteristicas['volumen_ingresado'] ?? 'N/A';
