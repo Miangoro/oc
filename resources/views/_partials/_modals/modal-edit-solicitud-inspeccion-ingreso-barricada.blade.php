@@ -248,6 +248,13 @@
                         contenido = '<option value="">Sin lotes registrados</option>';
                     } else {}
                     $('#edit_id_lote_granel_barricada').html(contenido);
+
+                    const idgranellote = $('#edit_id_lote_granel_barricada').data('selected');
+                    if (idgranellote) {
+                        $('#edit_id_lote_granel_barricada').val(idgranellote).trigger('change');
+                    } else if (response.lotes_granel.length == 0) {
+                        console.log('no hay se');
+                    }
                 },
                 error: function() {}
             });

@@ -994,85 +994,37 @@ $(function () {
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_liberacion').data('selected', response.data.id_instalacion);
 
-              // Acceder al campo `punto_reunion` desde `caracteristicas`
-              if (response.caracteristicas && response.caracteristicas.id_lote_granel_liberacion) {
-                modal.find('#edit_id_lote_granel_liberacion').val(response.caracteristicas.id_lote_granel_liberacion);
-              } else {
-                modal.find('#edit_id_lote_granel_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_categoria_liberacion) {
-                modal.find('#edit_id_categoria_liberacion').val(response.caracteristicas.id_categoria_liberacion);
-              } else {
-                modal.find('#edit_id_categoria_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_clase_liberacion) {
-                modal.find('#edit_id_clase_liberacion').val(response.caracteristicas.id_clase_liberacion);
-              } else {
-                modal.find('#edit_id_clase_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_liberacion) {
-                modal.find('#edit_id_tipo_maguey_liberacion').val(response.caracteristicas.id_tipo_maguey_liberacion);
-              } else {
-                modal.find('#edit_id_tipo_maguey_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_edad_liberacion) {
-                modal.find('#edit_id_edad_liberacion').val(response.caracteristicas.id_edad_liberacion);
-              } else {
-                modal.find('#edit_id_edad_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.analisis_liberacion) {
-                modal.find('#edit_analisis_liberacion').val(response.caracteristicas.analisis_liberacion);
-              } else {
-                modal.find('#edit_analisis_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.volumen_liberacion) {
-                modal.find('#edit_volumen_liberacion').val(response.caracteristicas.volumen_liberacion);
-              } else {
-                modal.find('#edit_volumen_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.tipo_lote_lib) {
-                modal.find('#edit_tipo_lote_lib').val(response.caracteristicas.tipo_lote_lib);
-              } else {
-                modal.find('#edit_tipo_lote_lib').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.fecha_inicio_lib) {
-                modal.find('#edit_fecha_inicio_lib').val(response.caracteristicas.fecha_inicio_lib);
-              } else {
-                modal.find('#edit_fecha_inicio_lib').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.fecha_termino_lib) {
-                modal.find('#edit_fecha_termino_lib').val(response.caracteristicas.fecha_termino_lib);
-              } else {
-                modal.find('#edit_fecha_termino_lib').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.material_liberacion) {
-                modal.find('#edit_material_liberacion').val(response.caracteristicas.material_liberacion);
-              } else {
-                modal.find('#edit_material_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.capacidad_liberacion) {
-                modal.find('#edit_capacidad_liberacion').val(response.caracteristicas.capacidad_liberacion);
-              } else {
-                modal.find('#edit_capacidad_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.num_recipientes_lib) {
-                modal.find('#edit_num_recipientes_lib').val(response.caracteristicas.num_recipientes_lib);
-              } else {
-                modal.find('#edit_num_recipientes_lib').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.tiempo_dura_lib) {
-                modal.find('#edit_tiempo_dura_lib').val(response.caracteristicas.tiempo_dura_lib);
-              } else {
-                modal.find('#edit_tiempo_dura_lib').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_certificado_liberacion) {
-                modal.find('#edit_id_certificado_liberacion').val(response.caracteristicas.id_certificado_liberacion);
-              } else {
-                modal.find('#edit_id_certificado_liberacion').val('');
-              }
-              modal.find('#edit_info_adicional').val(response.data.info_adicional);
-              // Otros campos específicos para tipo 10
-            } else if (id_tipo === 10) {
+              // Mapeo de campos de `caracteristicas` a los inputs correspondientes
+              const fields = {
+                  id_lote_granel: '#edit_id_lote_granel_liberacion',
+                  id_categoria: '#edit_id_categoria_liberacion_id',
+                  categoria: '#edit_id_categoria_liberacion',
+                  id_clase: '#edit_id_clase_liberacion_id',
+                  clase: '#edit_id_clase_liberacion',
+                  id_tipo_maguey: '#edit_id_tipo_maguey_liberacion_ids',
+                  nombre: '#edit_id_tipo_maguey_liberacion',
+                  edad: '#edit_id_edad_liberacion',
+                  analisis: '#edit_analisis_liberacion',
+                  cont_alc: '#edit_volumen_liberacion',
+                  tipoLiberacion: '#edit_tipo_lote_lib',
+                  fecha_inicio: '#edit_fecha_inicio_lib',
+                  fecha_termino: '#edit_fecha_termino_lib',
+                  material: '#edit_material_liberacion',
+                  capacidad: '#edit_capacidad_liberacion',
+                  num_recipientes: '#edit_num_recipientes_lib',
+                  tiempo_dura: '#edit_tiempo_dura_lib',
+                  id_certificado: '#edit_id_certificado_liberacion'
+              };
+
+              // Iterar sobre el mapeo y asignar valores
+              Object.entries(fields).forEach(([key, selector]) => {
+                  const value = response.caracteristicas?.[key] || ''; // Asignar '' si no existe
+                  modal.find(selector).val(value);
+              });
+
+              modal.find('#edit_info_adicional').val(response.data.info_adicional || '');
+          }
+           else if (id_tipo === 10) {
               modal.find('#id_solicitud_geo').val(id_solicitud);
               modal.find('#edit_id_empresa_geo').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita_geo').val(response.data.fecha_visita);
@@ -3628,7 +3580,7 @@ $(function () {
       $('#id_empresa_solicitudes option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
       $('#id_empresa_solicitudes').trigger('change');
       obtenerInstalacion();
-    
+
 
       $('#addSolicitudDictamen').modal('show');
     }
@@ -4493,7 +4445,7 @@ $(function () {
   $(document).ready(function () {
     const flatpickrDateTime = document.querySelectorAll('.flatpickr-datetime');
 
-    if (flatpickrDateTime.length) { 
+    if (flatpickrDateTime.length) {
       flatpickrDateTime.forEach((element) => {
         // Inicializar flatpickr para cada input
         flatpickr(element, {
@@ -4501,7 +4453,7 @@ $(function () {
           time_24hr: true, // Mostrar tiempo en formato 24 horas
           dateFormat: 'Y-m-d H:i',
           locale: 'es',
-          allowInput: true, 
+          allowInput: true,
         });
       });
     }

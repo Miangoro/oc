@@ -130,14 +130,14 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="date"
-                                    id="fecha_inicio" name="fecha_inicio" readonly />
+                                    id="fecha_inicio" name="fecha_inicio"  />
                                 <label for="fecha_inicio">Fecha de inicio del ingreso</label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="date"
-                                    id="fecha_termino" name="fecha_termino" readonly />
+                                    id="fecha_termino" name="fecha_termino"  />
                                 <label for="fecha_termino">Fecha de término del ingreso
                                 </label>
                             </div>

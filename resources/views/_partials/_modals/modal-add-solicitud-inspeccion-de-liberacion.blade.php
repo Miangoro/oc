@@ -45,7 +45,6 @@
                             </div>
                         </div>
                     </div>
-                    <p class="address-subtitle" style="color: red">Seleccione un cliente</p>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-4">
@@ -63,20 +62,22 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="id_categoria_liberacion" name="id_categoria_liberacion"
+                                    id="id_categoria_liberacion" name=""
                                     placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
                                 <label for="id_categoria_liberacion">Ingresa Categoria</label>
                             </div>
+                            <input type="hidden" id="id_categoria_liberacion_id" name="id_categoria_liberacion">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted" id="id_clase_liberacion"
-                                    name="id_clase_liberacion" placeholder="Ingresa una Clase" readonly
+                                    name="" placeholder="Ingresa una Clase" readonly
                                     style="pointer-events: none;" />
                                 <label for="id_clase_liberacion">Ingresa Clase</label>
                             </div>
+                            <input type="hidden" id="id_clase_liberacion_id" name="id_clase_liberacion">
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
@@ -90,10 +91,11 @@
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control bg-light text-muted"
-                                id="id_tipo_maguey_liberacion" name="id_tipo_maguey_liberacion"
+                                id="id_tipo_maguey_liberacion" name=""
                                 placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
                             <label for="id_tipo_maguey_liberacion">Ingresa Tipo de Maguey</label>
                         </div>
+                        <input type="hidden" id="id_tipo_maguey_liberacion_ids" name="id_tipo_maguey_liberacion">
                     </div>
                     <div class="row">
                         <div class="col-md-5">
@@ -127,14 +129,14 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="date"
-                                    id="fecha_inicio_lib" name="fecha_inicio_lib" readonly />
+                                    id="fecha_inicio_libe" name="fecha_inicio_lib"  />
                                 <label for="fecha_inicio_lib">Fecha de inicio ingreso/liberación </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="date"
-                                    id="fecha_termino_lib" name="fecha_termino_lib" readonly />
+                                    id="fecha_termino_libe" name="fecha_termino_lib"  />
                                 <label for="fecha_termino_lib">Fecha de término ingreso/liberación
                                 </label>
                             </div>
@@ -261,13 +263,22 @@
                 url: '/getDatos2/' + lote_granel_id,
                 method: 'GET',
                 success: function(response) {
+                    $('#id_categoria_liberacion_id').val(response.categoria ? response.categoria.id_categoria : '');
                     $('#id_categoria_liberacion').val(response.categoria ? response.categoria.categoria : '');
+                    $('#id_clase_liberacion_id').val(response.clase ? response.clase.id_clase : '');
                     $('#id_clase_liberacion').val(response.clase ? response.clase.clase : '');
+
                     if (response.tipo && response.tipo.length > 0) {
                         var tiposConcatenados = response.tipo.map(function(tipo) {
                             return tipo.nombre + ' (' + tipo.cientifico + ')';
                         }).join(', '); // Unir con coma
                         $('#id_tipo_maguey_liberacion').val(tiposConcatenados);
+                         // Crear un array de los IDs seleccionados (sin concatenarlos)
+                         var tiposIdsLib = response.tipo.map(function(tipo) {
+                            return tipo.id_tipo; // Obtener solo el ID
+                        });
+                        $('#id_tipo_maguey_liberacion_ids').val(tiposIdsLib.join(','));
+
                     } else {
                         $('#id_tipo_maguey_liberacion').val('');
                     }
@@ -295,7 +306,7 @@
         $('#analisis_liberacion').val('');
         $('#volumen_liberacion').val('');
         $('#tipo_lote_lib').val('').trigger('change');
-        $('#fecha_inicio_lib').val('');
+        $('#fecha_inicio_libe').val('');
         $('#fecha_termino_lib').val('');
         $('#material_liberacion').val('');
         $('#capacidad_liberacion').val('');
