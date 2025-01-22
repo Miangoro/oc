@@ -291,7 +291,11 @@ $(function () {
               data-razon-social="${full['razon_social']}"
               class="cursor-pointer dropdown-item text-dark edit-record-tipo">` +
             '<i class="text-warning ri-edit-fill"></i> Editar</a>' +
-            `<a data-id="${full['id']}" data-bs-toggle="modal"  data-bs-target="#expedienteServicio" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')"  class="dropdown-item expediente-record cursor-pointer">` +
+            `<a  data-id="${full['id']}"
+              data-id-solicitud="${full['id_solicitud']}"
+              data-tipo="${full['tipo']}"
+              data-id-tipo="${full['id_tipo']}"
+              data-razon-social="${full['razon_social']}" data-bs-toggle="modal"  data-bs-target="#expedienteServicio"  class="dropdown-item expediente-record cursor-pointer">` +
             '<i class="text-info ri-folder-3-fill"></i> Expediente del servicio</a>' +
             // Aquí agregamos la opción de eliminar
             `<a  data-id="${full['id']}"   data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">` +
@@ -618,10 +622,79 @@ $(function () {
       }
     });
   });
+
   $(document).on('click', '.open-modal', function () {
-    // Puedes agregar aquí cualquier lógica para obtener datos dinámicamente si lo necesitas.
-    console.log('Modal abierto');
+    // Ocultar el modal antes de abrir
+    $('.modal').modal('hide');
+
+    var id_solicitud = $('.id_solicitud').text(); // Extrae el texto de ID Solicitud
+    var tipo = $('.tiposs').text(); // Extrae el texto del Tipo
+    console.log(id_solicitud);
+    console.log(tipo);
+
+    // Verificar si el tipo es igual a 3
+    if (tipo === "3") {
+        var url = 'Etiqueta-2401ESPTOB';  // URL de la ruta
+
+        var iframe = $('#pdfViewerDictamen1');
+        var spinner = $('#loading-spinner1');  // Spinner
+        spinner.show();
+        iframe.hide();
+
+        // Asegurarse de que la URL esté bien formada
+        iframe.attr('src', url + '/' + id_solicitud);    // Concatenar la URL con el ID de la solicitud
+
+        // Configurar el botón para abrir el PDF en una nueva pestaña
+        $('#openPdfBtnDictamen1')
+          .attr('href', url + '/' + id_solicitud)
+          .show();
+
+        // Configuración del título y subtítulo del modal
+        $('#titulo_modal_Dictamen1').text('Etiquetas');
+
+        // Obtener el texto del título de la solicitud
+        var solicitudTitleText = $('#solicitud_title').text().trim();
+        $('#subtitulo_modal_Dictamen1').html('<p class="solicitud badge bg-primary"> ' + solicitudTitleText + '</p>');
+
+        // Mostrar el modal
+        $('#modalDictamen').modal('show');
+
+        // Ocultar el spinner y mostrar el iframe cuando el PDF esté cargado
+        iframe.on('load', function () {
+            console.log('PDF cargado en el iframe.');
+            spinner.hide();
+            iframe.show();
+        });
+    } else {
+        console.log("El tipo no es 3. No se cargará el PDF.");
+    }
 });
+
+
+
+$(document).on('click', '.expediente-record', function () {
+  // Accediendo a los valores de los atributos data-
+  var id = $(this).data('id');
+  var id_solicitud = $(this).data('id-solicitud');
+  var tipo = $(this).data('tipo');
+  var id_tipo = $(this).data('id-tipo');
+  var razon_social = $(this).data('razon-social');
+
+  // Ahora puedes hacer lo que necesites con estos valores
+/*   console.log("ID:", id);
+  console.log("ID Solicitud:", id_solicitud);
+  console.log("Tipo:", tipo);
+  console.log("ID Tipo:", id_tipo);
+  console.log("Razón Social:", razon_social); */
+
+  $('#expedienteServicio .id_solicitud').text(id_solicitud);
+  $('#expedienteServicio .tiposs').text(id_tipo);
+  // Aquí puedes utilizar estos datos para abrir un modal, hacer una solicitud AJAX, etc.
+  abrirModal(id_solicitud, tipo, razon_social);
+});
+
+
+
 
 
   $(document).ready(function () {
@@ -4348,12 +4421,9 @@ $(function () {
   $(document).ready(function () {
     $('#reporteForm').on('submit', function (e) {
       e.preventDefault(); // Prevenir el envío tradicional del formulario
-
       const exportUrl = $(this).attr('action'); // Obtener la URL del formulario
-
       // Obtener los datos del formulario (filtros)
       const formData = $(this).serialize(); // serializa los datos del formulario en una cadena de consulta
-
       // Mostrar el SweetAlert de "Generando Reporte"
       Swal.fire({
         title: 'Generando Reporte...',
@@ -4366,12 +4436,11 @@ $(function () {
           confirmButton: false
         }
       });
-
       // Realizar la solicitud GET para descargar el archivo
       $.ajax({
         url: exportUrl,
         type: 'GET',
-        data: formData, // Enviar los filtros serializados aquí
+        data: formData,
         xhrFields: {
           responseType: 'blob' // Necesario para manejar la descarga de archivos
         },
@@ -4379,15 +4448,10 @@ $(function () {
           // Crear un enlace para descargar el archivo
           const link = document.createElement('a');
           const url = window.URL.createObjectURL(response);
-
           link.href = url;
           link.download = 'reporte_solicitudes.xlsx';
           link.click();
-
-          // Limpiar el objeto URL
           window.URL.revokeObjectURL(url);
-
-          // Cerrar el modal y mostrar SweetAlert de éxito
           $('#exportarExcel').modal('hide');
           Swal.fire({
             title: '¡Éxito!',
@@ -4400,8 +4464,6 @@ $(function () {
         },
         error: function (xhr, status, error) {
           console.error('Error al generar el reporte:', error);
-
-          // Cerrar el modal y mostrar SweetAlert de error
           $('#exportarExcel').modal('hide');
           Swal.fire({
             title: '¡Error!',
@@ -4415,7 +4477,7 @@ $(function () {
       });
     });
   });
-
+//funcion para exportar en excel
   $(document).ready(function () {
     $('#restablecerFiltros').on('click', function () {
       $('#reporteForm')[0].reset();

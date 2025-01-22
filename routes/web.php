@@ -762,6 +762,7 @@ Route::middleware(['auth'])->controller(solicitudesController::class)->group(fun
     Route::get('/marcas/{id_marca}/{id_direccion}', 'obtenerMarcasPorEmpresa');
     Route::get('/solicitudes/exportar', 'exportar')->name('solicitudes.exportar');
     Route::post('/registrar-solicitud-lib-prod-term','storeSolicitudLibProdTerm');
+    Route::get('/Etiqueta-2401ESPTOB/{id_solicitud}', 'Etiqueta_240');
 });
 
 
