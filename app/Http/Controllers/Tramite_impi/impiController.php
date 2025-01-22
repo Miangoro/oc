@@ -250,7 +250,7 @@ public function edit($id_impi)
             //'categorias' => $categorias,
         ]);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al obtener el controller'], 500);
+        return response()->json(['error' => 'Error al obtener los datos'], 500);
     }
 }
 

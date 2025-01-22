@@ -340,7 +340,7 @@ initializeSelect2(select2Elements);
            ]
          },
          {
-           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Dictamen</span>',
+           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Trámite</span>',
            className: 'add-new btn btn-primary waves-effect waves-light',
            attr: {
             'data-bs-toggle': 'modal',
@@ -464,7 +464,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
         processData: false,
         contentType: false,
         success: function (response) {
-          console.log('Funciona :D:', response);
+          console.log('Funcionando', response);
             $('#addDictamen').modal('hide');//div que encierra al formulario #addDictamen
             $('#NuevoDictamen')[0].reset();
   
@@ -485,7 +485,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
-                text: 'Error al subir!',
+                text: '¡Error al subir!',
                 customClass: {
                     confirmButton: 'btn btn-danger'
                 }
@@ -536,7 +536,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
                     Swal.fire({
                         icon: 'success',
                         title: '¡Eliminado!',
-                        text: '¡El registro ha sido eliminada correctamente!',
+                        text: '¡El registro ha sido eliminado correctamente!',
                         customClass: {
                             confirmButton: 'btn btn-success'
                         }
@@ -548,7 +548,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
                     // Mostrar SweetAlert de error
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error',
+                        title: '¡Error!',
                         text: 'No se pudo eliminar el registro. Inténtelo más tarde.',
                         footer: `<pre>${error.responseText}</pre>`,
                         customClass: {
@@ -562,7 +562,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
             // Acción cancelada, mostrar mensaje informativo
             Swal.fire({
                 title: 'Cancelado',
-                text: 'La eliminación n ha sido cancelada',
+                text: 'La eliminación ha sido cancelada',
                 icon: 'info',
                 customClass: {
                     confirmButton: 'btn btn-primary'
