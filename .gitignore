@@ -51,4 +51,5 @@ yarn-error.log
 # Ignorar el contenido de la carpeta storage
 /storage/app/public/uploads/*
 /public/storage/app/public/uploads/*
+/public/storage
 

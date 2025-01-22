@@ -174,13 +174,13 @@ class documentacionController extends Controller
           $contenidoDocumentosGenerales = $contenidoDocumentosGenerales . '<tr>
                       <td>' . ($indexD + 1) . '</td>
                       <td class="text-wrap text-break"><b>' . $documento->nombre . '</b></td>
-                      <td class="text-end p-1">
+                      <td  class="text-end p-1">
                           <input class="form-control form-control-sm" type="file" id="file' . $documento->id_documento . '" data-id="' . $documento->id_documento . '" name="url[]">
                                 <input value="' . $documento->id_documento . '" class="form-control" type="hidden" name="id_documento[]">
                                 <input value="' . $documento->nombre . '" class="form-control" type="hidden" name="nombre_documento[]">
                                 <input value="0" class="form-control" type="hidden" name="id_relacion[]">
                       </td>
-                      <td class="text-end fw-medium">   
+                      <td  id="mostrar' . $documento->id_documento . '" class="text-end fw-medium">   
                       
                          ' . $mostrarDocumento . '
                       
@@ -209,7 +209,7 @@ class documentacionController extends Controller
         $contenidoInstalacionesGenerales = '
        
         <div class="table-responsive text-nowrap col-md-12 mb-5 ">
-              <table class="table table-sm table-bordered">
+              <table class="table table-sm table-bordered table-striped">
                 <thead class="bg-secondary text-white">
                   <tr>
                     <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-3"><b>Documentación general</b><br><b style="font-size:12px" class="badge bg-primary">'.$direccion_fiscal.'</b></th>
@@ -275,7 +275,7 @@ foreach ($documentos as $indexD => $documento) {
                   <input value="' . $documento->id_documento . '" class="form-control" type="hidden" name="id_documento[]">
                   <input value="' . $documento->nombre . '" class="form-control" type="hidden" name="nombre_documento[]">'.'<input type="hidden" name="id_relacion[]" value="' . $predio->id_predio . '">'.'
         </td>
-        <td class="text-end fw-medium">   
+        <td id="mostrar' . $documento->id_documento . '" class="text-end fw-medium">   
         
           ' . $mostrarDocumento . '
         
@@ -287,7 +287,7 @@ foreach ($documentos as $indexD => $documento) {
   $contenidoPredios = $contenidoPredios . '
 
 <div class="table-responsive text-nowrap col-md-6 mb-5 ">
-    <table class="table table-sm table-bordered">
+    <table class="table table-sm table-bordered table-striped">
       <thead class="bg-secondary text-white">
         <tr>
           <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-4"><span class="fs-6">Predio:</span><br> <b style="font-size:12px" class="badge bg-primary">' . $predio->nombre_predio . '</b></th>
@@ -350,7 +350,7 @@ if ($act_instalacion != 'Produccion de agave') {
                           <input value="' . $documento->id_documento . '" class="form-control" type="hidden" name="id_documento[]">
                           <input value="' . $documento->nombre . '" class="form-control" type="hidden" name="nombre_documento[]">'.'<input type="hidden" name="id_relacion[]" value="' . $instalacion->id_instalacion . '">'.'
                 </td>
-                <td class="text-end fw-medium">   
+                <td id="mostrar' . $documento->id_documento . '" class="text-end fw-medium">   
                 
                   ' . $mostrarDocumento . '
                 
@@ -362,7 +362,7 @@ if ($act_instalacion != 'Produccion de agave') {
           $contenidoInstalaciones = $contenidoInstalaciones . '
      
       <div class="table-responsive text-nowrap col-md-6 mb-5 ">
-            <table class="table table-sm table-bordered">
+            <table class="table table-sm table-bordered table-striped">
               <thead class="bg-secondary text-white">
                 <tr>
                   <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-4"><span class="fs-6">Instalación:</span><br> <b style="font-size:12px" class="badge bg-primary">' . $instalacion->direccion_completa . '</b></th>
@@ -427,7 +427,7 @@ if ($act_instalacion != 'Produccion de agave') {
                                   <input value="' . $documento->nombre . '" class="form-control" type="hidden" name="nombre_documento[]">
                                  <input type="hidden" name="id_relacion[]" value="' . $marca->id_marca . '">
                         </td>
-                        <td class="text-end fw-medium">   
+                        <td id="mostrar' . $documento->id_documento . '" class="text-end fw-medium">   
                         
                            ' . $mostrarDocumento . '
                         
@@ -449,7 +449,7 @@ if ($act_instalacion != 'Produccion de agave') {
             <div class="table-responsive text-nowrap col-md-6 mb-5 ">
 
            
-                  <table class="table table-sm table-bordered">
+                  <table class="table table-striped table-sm table-bordered">
                     <thead class="bg-secondary text-white">
                       <tr>
                         <th colspan="5" class="bg-transparent border-bottom bg-info text-center text-white fs-6">Marca:<br><b><span style="font-size:12px" class="badge bg-warning">' . $marca->marca . '</span></b></th>
@@ -595,15 +595,19 @@ if ($act_instalacion != 'Produccion de agave') {
     if ($request->hasFile('url')) {
       $numeroCliente = $request->numCliente;
       $i = 0;
+      $uploadedFiles = [];
+      $documento_id = [];
       foreach ($request->file('url') as $index => $file) {
-        $filename = $request->nombre_documento[$index] . '_' . time().$i. '.' . $file->getClientOriginalExtension();
+        $filename = str_replace('/', '-', $request->nombre_documento[$index]) . '_' . time().$i. '.' . $file->getClientOriginalExtension();
         $filePath = $file->storeAs('uploads/' . $numeroCliente, $filename, 'public');
+        $uploadedFiles[] = $filename;
+        $documento_id[] = $request->id_documento[$index];
 
         $documentacion_url = new Documentacion_url();
         $documentacion_url->id_relacion = isset($request->id_relacion[$index]) ? $request->id_relacion[$index] : 0;
 
         $documentacion_url->id_documento = $request->id_documento[$index];
-        $documentacion_url->nombre_documento = $request->nombre_documento[$index];
+        $documentacion_url->nombre_documento = str_replace('/', '-', $request->nombre_documento[$index]);
         $documentacion_url->url = $filename; // Corregido para almacenar solo el nombre del archivo
         $documentacion_url->id_empresa = $request->id_empresa;
         $documentacion_url->fecha_vigencia = $request->fecha_vigencia[$index] ?? null; // Usa null si no hay fecha
@@ -613,6 +617,6 @@ if ($act_instalacion != 'Produccion de agave') {
     }
 
 
-    return response()->json(['success' => $request]);
+    return response()->json(['success' => $request, 'files' => $uploadedFiles,'id_documento' => $documento_id, 'folder'=>$numeroCliente]);
   }
 }
