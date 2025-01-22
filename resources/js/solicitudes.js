@@ -525,6 +525,16 @@ $(function () {
     });
   }
   initializeSelect2(select2Elements);
+//funcion para los datepickers formato año/mes/dia
+  $(document).ready(function () {
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      todayHighlight: true,
+      language: 'es'
+    });
+  });
+
 
   // Configuración CSRF para Laravel
   $.ajaxSetup({

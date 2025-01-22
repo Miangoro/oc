@@ -128,14 +128,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="date"
+                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
                                     id="fecha_inicio_libe" name="fecha_inicio_lib"  />
                                 <label for="fecha_inicio_lib">Fecha de inicio ingreso/liberación </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="date"
+                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
                                     id="fecha_termino_libe" name="fecha_termino_lib"  />
                                 <label for="fecha_termino_lib">Fecha de término ingreso/liberación
                                 </label>
