@@ -75,26 +75,29 @@
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_categoria_barricada" name="id_categoria_barricada"
+                                    id="edit_id_categoria_barricada" name=""
                                     placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
                                 <label for="id_categoria_barricada">Categoría de mezcal</label>
                             </div>
+                            <input type="hidden" id="edit_id_categoria_barricada_id" name="id_categoria_barricada">
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_clase_barricada" name="id_clase_barricada"
+                                    id="edit_id_clase_barricada" name=""
                                     placeholder="Ingresa una Clase" readonly style="pointer-events: none;" />
                                 <label for="id_clase_barricada">Clase</label>
                             </div>
+                            <input type="hidden" id="edit_id_clase_barricada_id" name="id_clase_barricada">
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_tipo_maguey_barricada" name="id_tipo_maguey_barricada"
+                                    id="edit_id_tipo_maguey_barricada" name=""
                                     placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
                                 <label for="id_tipo_maguey_barricada">Tipo de Maguey</label>
                             </div>
+                            <input type="hidden" id="edit_id_tipo_maguey_barricada_ids" name="id_tipo_maguey_barricada">
                         </div>
                     </div>
                     <div class="row">
@@ -131,14 +134,14 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="date"
+                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
                                     id="edit_fecha_inicio" name="fecha_inicio" readonly />
                                 <label for="fecha_inicio">Fecha de inicio del ingreso </label>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="date"
+                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
                                     id="edit_fecha_termino" name="fecha_termino" readonly />
                                 <label for="fecha_termino">Fecha de término del ingreso
                                 </label>
@@ -194,7 +197,7 @@
                 url: '/getDatos/' + empresa,
                 method: 'GET',
                 success: function(response) {
-                    
+
                     var contenido = "";
                     var contenido = "";
                     let seleccionado = "";
@@ -245,6 +248,13 @@
                         contenido = '<option value="">Sin lotes registrados</option>';
                     } else {}
                     $('#edit_id_lote_granel_barricada').html(contenido);
+
+                    const idgranellote = $('#edit_id_lote_granel_barricada').data('selected');
+                    if (idgranellote) {
+                        $('#edit_id_lote_granel_barricada').val(idgranellote).trigger('change');
+                    } else if (response.lotes_granel.length == 0) {
+                        console.log('no hay se');
+                    }
                 },
                 error: function() {}
             });
@@ -269,14 +279,24 @@
                     $('#edit_id_categoria_barricada').val(response.categoria ? response.categoria
                         .categoria :
                         '');
+                        $('#edit_id_categoria_barricada_id').val(response.categoria ? response.categoria
+                        .id_categoria :
+                        '');
                     $('#edit_id_clase_barricada').val(response.clase ? response.clase.clase : '');
+                    $('#edit_id_clase_barricada_id').val(response.clase ? response.clase.id_clase : '');
                     if (response.tipo && response.tipo.length > 0) {
                         var tiposConcatenados = response.tipo.map(function(tipo) {
                             return tipo.nombre + ' (' + tipo.cientifico + ')';
                         }).join(', '); // Unir con coma
                         $('#edit_id_tipo_maguey_barricada').val(tiposConcatenados);
+
+                        var edittiposIdss = response.tipo.map(function(tipo) {
+                            return tipo.id_tipo; // Obtener solo el ID
+                        });
+                        $('#edit_id_tipo_maguey_barricada_ids').val(edittiposIdss.join(','));
                     } else {
                         $('#edit_id_tipo_maguey_barricada').val('');
+                        $('#edit_id_tipo_maguey_barricada_ids').val();
                     }
                     $('#edit_id_edad').val(response.lotes_granel.edad);
                     $('#edit_analisis_barricada').val(response.lotes_granel.folio_fq);

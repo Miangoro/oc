@@ -66,20 +66,22 @@
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_categoria_liberacion" name="id_categoria_liberacion"
+                                    id="edit_id_categoria_liberacion" name=""
                                     placeholder="Ingresa una Categoria" readonly style="pointer-events: none;" />
                                 <label for="id_categoria_liberacion">Ingresa Categoria</label>
                             </div>
+                            <input type="hidden" id="edit_id_categoria_liberacion_id" name="id_categoria_liberacion">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
                                 <input type="text" class="form-control bg-light text-muted"
-                                    id="edit_id_clase_liberacion" name="id_clase_liberacion"
+                                    id="edit_id_clase_liberacion" name=""
                                     placeholder="Ingresa una Clase" readonly style="pointer-events: none;" />
                                 <label for="id_clase_liberacion">Ingresa Clase</label>
                             </div>
+                            <input type="hidden" id="edit_id_clase_liberacion_id" name="id_clase_liberacion">
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
@@ -93,10 +95,11 @@
                     <div class="col-md-12">
                         <div class="form-floating form-floating-outline mb-5">
                             <input type="text" class="form-control bg-light text-muted"
-                                id="edit_id_tipo_maguey_liberacion" name="id_tipo_maguey_liberacion"
+                                id="edit_id_tipo_maguey_liberacion" name=""
                                 placeholder="Ingresa un tipo de Maguey" readonly style="pointer-events: none;" />
                             <label for="id_tipo_maguey_liberacion">Ingresa Tipo de Maguey</label>
                         </div>
+                        <input type="hidden" id="edit_id_tipo_maguey_liberacion_ids" name="id_tipo_maguey_liberacion[]">
                     </div>
                     <div class="row">
                         <div class="col-md-5">
@@ -129,15 +132,15 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="date"
-                                    id="edit_fecha_inicio_lib" name="fecha_inicio_lib" readonly />
+                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
+                                    id="edit_fecha_inicio_lib" name="fecha_inicio_lib" />
                                 <label for="fecha_inicio_lib">Fecha de inicio ingreso/liberación </label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating form-floating-outline mb-5">
-                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="date"
-                                    id="edit_fecha_termino_lib" name="fecha_termino_lib" readonly />
+                                <input placeholder="YYYY-MM-DD" class="form-control datepicker" type="text"
+                                    id="edit_fecha_termino_lib" name="fecha_termino_lib" />
                                 <label for="fecha_termino_lib">Fecha de término ingreso/liberación
                                 </label>
                             </div>
@@ -223,6 +226,14 @@
                         contenido = '<option value="">Sin instalaciones registradas</option>';
                     }
                     $('#edit_id_instalacion_liberacion').html(contenido);
+
+                    const idinstal = $('#edit_id_instalacion_liberacion').data('selected');
+                    if (idinstal) {
+                        $('#edit_id_instalacion_liberacion').val(idinstal).trigger('change');
+                    } else if (response.instalaciones.length == 0) {
+                        console.log('no hay se');
+                    }
+
                 },
                 error: function() {}
             });
@@ -245,6 +256,13 @@
                         contenido = '<option value="">Sin lotes registrados</option>';
                     } else {}
                     $('#edit_id_lote_granel_liberacion').html(contenido);
+
+                    const idgranellotes = $('#edit_id_lote_granel_liberacion').data('selected');
+                    if (idgranellotes) {
+                        $('#edit_id_lote_granel_liberacion').val(idgranellotes).trigger('change');
+                    } else if (response.lotes_granel.length == 0) {
+                        console.log('no hay se');
+                    }
                 },
                 error: function() {}
             });
@@ -269,12 +287,23 @@
                     $('#edit_id_categoria_liberacion').val(response.categoria ? response.categoria
                         .categoria :
                         '');
+                        $('#edit_id_categoria_liberacion_id').val(response.categoria ? response.categoria
+                        .id_categoria :
+                        '');
+
                     $('#edit_id_clase_liberacion').val(response.clase ? response.clase.clase : '');
+                    $('#edit_id_clase_liberacion_id').val(response.clase ? response.clase.id_clase : '');
                     if (response.tipo && response.tipo.length > 0) {
                         var tiposConcatenados = response.tipo.map(function(tipo) {
                             return tipo.nombre + ' (' + tipo.cientifico + ')';
                         }).join(', '); // Unir con coma
                         $('#edit_id_tipo_maguey_liberacion').val(tiposConcatenados);
+
+                        var edittiposIdsLib = response.tipo.map(function(tipo) {
+                            return tipo.id_tipo; // Obtener solo el ID
+                        });
+                        $('#edit_id_tipo_maguey_liberacion_ids').val(edittiposIdsLib.join(','));
+
                     } else {
                         $('#edit_id_tipo_maguey_liberacion').val('');
                     }

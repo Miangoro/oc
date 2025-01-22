@@ -1,5 +1,5 @@
 <!-- Share Project Modal -->
-<div class="modal fade" id="expedienteServicio" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="expedienteServicio" tabindex="-1">
   <div class="modal-dialog modal-lg modal-simple modal-enable-otp modal-dialog-centered">
     <div class="modal-content">
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -7,6 +7,7 @@
         <div class="text-center">
           <h4 class="mb-2">Expediente de inspección</h4>
           <p class="mb-6 nombre_empresa badge bg-primary"></p>
+          <p id="solicitud-id" class="mb-6 badge bg-primary"></p>
         </div>
 
         <div class="card">
@@ -20,13 +21,13 @@
                 </tr>
               </thead>
               <tbody class="table-border-bottom-0">
-                
-                
-                
+
+
+
                 <tr class="table-success">
                   <td><i class="ri-bank-fill ri-22px text-primary me-4"></i><span class="fw-medium">1. Solicitud de servicio</span></td>
                   <td><a target="_Blank" href="solicitudservi/4"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
-                  
+
                  <!-- <td><span class="badge rounded-pill bg-label-warning me-1">Pending</span></td>
                   <td>
                     <div class="dropdown">
@@ -52,14 +53,16 @@
                 </tr>
                 <tr class="table-light">
                   <td><i class="ri-angularjs-line ri-22px text-danger me-4"></i><span class="fw-medium">Etiquetas para muestra</span></td>
-                  <td><a target="_Blank" href="/Etiqueta-2401ESPTOB"><i  class="ri-file-pdf-2-fill ri-40px text-danger"></i></a></td>
+                  <td>        <a href="javascript:void(0);" class="open-modal" data-bs-toggle="modal" data-bs-target="#myModal">
+                    <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
+                </a></td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
-     
+
     </div>
   </div>
 </div>

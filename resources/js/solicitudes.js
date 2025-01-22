@@ -120,11 +120,11 @@ $(function () {
             case 7:
               return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_barricada || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_barricada || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_barricada || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_barricada || 'N/A'}</span>
                       <br>
@@ -150,21 +150,21 @@ $(function () {
                       <span class="fw-bold text-dark small">%Alc. Vol:</span><span class="small"> ${data.cont_alc || 'N/A'}</span>
                       `;
             case 9:
-              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote_liberacion || 'N/A'}</span>
+              return `<br><span class="fw-bold text-dark small">Lote agranel:</span><span class="small"> ${data.nombre_lote || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria_liberacion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Categoría:</span><span class="small"> ${data.id_categoria || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase_liberacion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Clase:</span><span class="small"> ${data.id_clase || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey_liberacion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.id_tipo_maguey || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis_liberacion || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Análisis:</span><span class="small"> ${data.analisis || 'N/A'}</span>
                       <br>
                       <span class="fw-bold text-dark small">Tipo:</span><span class="small"> ${data.tipo_lote_lib || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio_lib || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Fecha inicio:</span><span class="small"> ${data.fecha_inicio || 'N/A'}</span>
                       <br>
-                      <span class="fw-bold text-dark small">Fecha término:</span><span class="small"> ${data.fecha_termino_lib || 'N/A'}</span>
+                      <span class="fw-bold text-dark small">Fecha término:</span><span class="small"> ${data.fecha_termino || 'N/A'}</span>
                       `;
             case 10:
               return `<br><span class="fw-bold text-dark small">Punto de reunión:</span><span class="small"> ${data.punto_reunion || 'N/A'}</span>
@@ -291,7 +291,7 @@ $(function () {
               data-razon-social="${full['razon_social']}"
               class="cursor-pointer dropdown-item text-dark edit-record-tipo">` +
             '<i class="text-warning ri-edit-fill"></i> Editar</a>' +
-            `<a data-id="${full['id']}" data-bs-toggle="modal" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')" href="javascript:;" class="dropdown-item validar-solicitud">` +
+            `<a data-id="${full['id']}" data-bs-toggle="modal"  data-bs-target="#expedienteServicio" onclick="abrirModal(${full['id_solicitud']},'${full['tipo']}','${full['razon_social']}')"  class="dropdown-item expediente-record cursor-pointer">` +
             '<i class="text-info ri-folder-3-fill"></i> Expediente del servicio</a>' +
             // Aquí agregamos la opción de eliminar
             `<a  data-id="${full['id']}"   data-id-solicitud="${full['id_solicitud']}" class="dropdown-item text-danger delete-recordes cursor-pointer">` +
@@ -525,6 +525,16 @@ $(function () {
     });
   }
   initializeSelect2(select2Elements);
+//funcion para los datepickers formato año/mes/dia
+  $(document).ready(function () {
+    $('.datepicker').datepicker({
+      format: 'yyyy-mm-dd',
+      autoclose: true,
+      todayHighlight: true,
+      language: 'es'
+    });
+  });
+
 
   // Configuración CSRF para Laravel
   $.ajaxSetup({
@@ -608,6 +618,11 @@ $(function () {
       }
     });
   });
+  $(document).on('click', '.open-modal', function () {
+    // Puedes agregar aquí cualquier lógica para obtener datos dinámicamente si lo necesitas.
+    console.log('Modal abierto');
+});
+
 
   $(document).ready(function () {
     $(document).on('click', '.edit-record-tipo', function () {
@@ -782,14 +797,12 @@ $(function () {
               } else {
                 modal.find('#edit_id_tipo_maguey_muestreo_ids').val('');
               }
-
               if (response.caracteristicas) {
                 // Categoría
                 modal.find('#edit_id_categoria_muestreo').val(response.caracteristicas.categoria || 'N/A');
 
                 // Clase
                 modal.find('#edit_id_clase_muestreo').val(response.caracteristicas.clase || 'N/A');
-
                 // Tipos de Maguey
                 modal.find('#edit_id_tipo_maguey_muestreo').val(
                     response.caracteristicas.nombre.join(', ') || 'N/A'
@@ -818,7 +831,7 @@ $(function () {
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_traslado').data('selected', response.data.id_instalacion);
               modal.find('#instalacion_id_traslado').val(response.data.id_instalacion);
-              
+
 
               if (response.caracteristicas) {
                 modal.find('#lote_id_traslado').val(response.caracteristicas.id_lote_granel || '');
@@ -928,15 +941,19 @@ $(function () {
               modal.find('#instalacion_ingreso').val(response.data.id_instalacion);
               modal.find('#lote_ingreso').val(response.caracteristicas.id_lote_granel);
 
-              // Acceder al campo `punto_reunion` desde `caracteristicas`
               if (response.caracteristicas) {
                 modal.find('#edit_id_lote_granel_barricada').val(response.caracteristicas.id_lote_granel || '');
-                modal.find('#edit_id_categoria_barricada').val(response.caracteristicas.id_categoria || '');
-                modal.find('#edit_id_clase_barricada').val(response.caracteristicas.id_clase || '');
-                modal.find('#edit_id_tipo_maguey_barricada').val(response.caracteristicas.id_tipo_maguey || '');
+                modal.find('#edit_id_categoria_barricada_id').val(response.caracteristicas.id_categoria || '');
+                modal.find('#edit_id_categoria_barricada').val(response.caracteristicas.categoria || '');
+                modal.find('#edit_id_clase_barricada_id').val(response.caracteristicas.id_clase || '');
+                modal.find('#edit_id_clase_barricada').val(response.caracteristicas.clase || '');
+                modal.find('#edit_id_tipo_maguey_barricada_ids').val(response.caracteristicas.id_tipo_maguey || '');
+                modal.find('#edit_id_tipo_maguey_barricada').val(
+                  response.caracteristicas.nombre.join(', ') || 'N/A'
+              );
                 modal.find('#edit_volumen_ingresado').val(response.caracteristicas.volumen_ingresado || '');
                 modal.find('#edit_analisis_barricada').val(response.caracteristicas.analisis || '');
-                modal.find('#edit_alc_vol_barrica').val(response.caracteristicas.alc_vol || '');
+                modal.find('#edit_alc_vol_barrica').val(response.caracteristicas.cont_alc || '');
                 modal.find('#edit_tipo_lote').val(response.caracteristicas.tipoIngreso || '');
                 modal.find('#edit_fecha_inicio').val(response.caracteristicas.fecha_inicio || '');
                 modal.find('#edit_fecha_termino').val(response.caracteristicas.fecha_termino || '');
@@ -987,85 +1004,37 @@ $(function () {
               modal.find('#edit_fecha_visita').val(response.data.fecha_visita);
               modal.find('#edit_id_instalacion_liberacion').data('selected', response.data.id_instalacion);
 
-              // Acceder al campo `punto_reunion` desde `caracteristicas`
-              if (response.caracteristicas && response.caracteristicas.id_lote_granel_liberacion) {
-                modal.find('#edit_id_lote_granel_liberacion').val(response.caracteristicas.id_lote_granel_liberacion);
-              } else {
-                modal.find('#edit_id_lote_granel_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_categoria_liberacion) {
-                modal.find('#edit_id_categoria_liberacion').val(response.caracteristicas.id_categoria_liberacion);
-              } else {
-                modal.find('#edit_id_categoria_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_clase_liberacion) {
-                modal.find('#edit_id_clase_liberacion').val(response.caracteristicas.id_clase_liberacion);
-              } else {
-                modal.find('#edit_id_clase_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_tipo_maguey_liberacion) {
-                modal.find('#edit_id_tipo_maguey_liberacion').val(response.caracteristicas.id_tipo_maguey_liberacion);
-              } else {
-                modal.find('#edit_id_tipo_maguey_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_edad_liberacion) {
-                modal.find('#edit_id_edad_liberacion').val(response.caracteristicas.id_edad_liberacion);
-              } else {
-                modal.find('#edit_id_edad_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.analisis_liberacion) {
-                modal.find('#edit_analisis_liberacion').val(response.caracteristicas.analisis_liberacion);
-              } else {
-                modal.find('#edit_analisis_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.volumen_liberacion) {
-                modal.find('#edit_volumen_liberacion').val(response.caracteristicas.volumen_liberacion);
-              } else {
-                modal.find('#edit_volumen_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.tipo_lote_lib) {
-                modal.find('#edit_tipo_lote_lib').val(response.caracteristicas.tipo_lote_lib);
-              } else {
-                modal.find('#edit_tipo_lote_lib').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.fecha_inicio_lib) {
-                modal.find('#edit_fecha_inicio_lib').val(response.caracteristicas.fecha_inicio_lib);
-              } else {
-                modal.find('#edit_fecha_inicio_lib').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.fecha_termino_lib) {
-                modal.find('#edit_fecha_termino_lib').val(response.caracteristicas.fecha_termino_lib);
-              } else {
-                modal.find('#edit_fecha_termino_lib').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.material_liberacion) {
-                modal.find('#edit_material_liberacion').val(response.caracteristicas.material_liberacion);
-              } else {
-                modal.find('#edit_material_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.capacidad_liberacion) {
-                modal.find('#edit_capacidad_liberacion').val(response.caracteristicas.capacidad_liberacion);
-              } else {
-                modal.find('#edit_capacidad_liberacion').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.num_recipientes_lib) {
-                modal.find('#edit_num_recipientes_lib').val(response.caracteristicas.num_recipientes_lib);
-              } else {
-                modal.find('#edit_num_recipientes_lib').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.tiempo_dura_lib) {
-                modal.find('#edit_tiempo_dura_lib').val(response.caracteristicas.tiempo_dura_lib);
-              } else {
-                modal.find('#edit_tiempo_dura_lib').val('');
-              }
-              if (response.caracteristicas && response.caracteristicas.id_certificado_liberacion) {
-                modal.find('#edit_id_certificado_liberacion').val(response.caracteristicas.id_certificado_liberacion);
-              } else {
-                modal.find('#edit_id_certificado_liberacion').val('');
-              }
-              modal.find('#edit_info_adicional').val(response.data.info_adicional);
-              // Otros campos específicos para tipo 10
-            } else if (id_tipo === 10) {
+              // Mapeo de campos de `caracteristicas` a los inputs correspondientes
+              const fields = {
+                  id_lote_granel: '#edit_id_lote_granel_liberacion',
+                  id_categoria: '#edit_id_categoria_liberacion_id',
+                  categoria: '#edit_id_categoria_liberacion',
+                  id_clase: '#edit_id_clase_liberacion_id',
+                  clase: '#edit_id_clase_liberacion',
+                  id_tipo_maguey: '#edit_id_tipo_maguey_liberacion_ids',
+                  nombre: '#edit_id_tipo_maguey_liberacion',
+                  edad: '#edit_id_edad_liberacion',
+                  analisis: '#edit_analisis_liberacion',
+                  cont_alc: '#edit_volumen_liberacion',
+                  tipoLiberacion: '#edit_tipo_lote_lib',
+                  fecha_inicio: '#edit_fecha_inicio_lib',
+                  fecha_termino: '#edit_fecha_termino_lib',
+                  material: '#edit_material_liberacion',
+                  capacidad: '#edit_capacidad_liberacion',
+                  num_recipientes: '#edit_num_recipientes_lib',
+                  tiempo_dura: '#edit_tiempo_dura_lib',
+                  id_certificado: '#edit_id_certificado_liberacion'
+              };
+
+              // Iterar sobre el mapeo y asignar valores
+              Object.entries(fields).forEach(([key, selector]) => {
+                  const value = response.caracteristicas?.[key] || ''; // Asignar '' si no existe
+                  modal.find(selector).val(value);
+              });
+
+              modal.find('#edit_info_adicional').val(response.data.info_adicional || '');
+          }
+           else if (id_tipo === 10) {
               modal.find('#id_solicitud_geo').val(id_solicitud);
               modal.find('#edit_id_empresa_geo').val(response.data.id_empresa).trigger('change');
               modal.find('#edit_fecha_visita_geo').val(response.data.fecha_visita);
@@ -1121,6 +1090,7 @@ $(function () {
       });
     });
   });
+
 
   /* formulario para enviar los datos y actualizar */
   $(function () {
@@ -3620,7 +3590,7 @@ $(function () {
       $('#id_empresa_solicitudes option[value="' + clienteSeleccionado + '"]').prop('selected', true); // Marcar la opción seleccionada
       $('#id_empresa_solicitudes').trigger('change');
       obtenerInstalacion();
-    
+
 
       $('#addSolicitudDictamen').modal('show');
     }
@@ -4485,7 +4455,7 @@ $(function () {
   $(document).ready(function () {
     const flatpickrDateTime = document.querySelectorAll('.flatpickr-datetime');
 
-    if (flatpickrDateTime.length) { 
+    if (flatpickrDateTime.length) {
       flatpickrDateTime.forEach((element) => {
         // Inicializar flatpickr para cada input
         flatpickr(element, {
@@ -4493,7 +4463,7 @@ $(function () {
           time_24hr: true, // Mostrar tiempo en formato 24 horas
           dateFormat: 'Y-m-d H:i',
           locale: 'es',
-          allowInput: true, 
+          allowInput: true,
         });
       });
     }

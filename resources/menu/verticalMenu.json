@@ -270,11 +270,13 @@
         }
       ]
     },
+
     {
       "name": "Trámites IMPI",
       "url": "tramiteIMPI",
       "icon": "menu-icon ri-bank-fill",
       "slug": "IMPI"
     }
+    
  ]
 }

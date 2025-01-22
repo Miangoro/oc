@@ -7,9 +7,9 @@
                     <h4 class="address-title mb-2">Validación de la solicitud de servicio</h4>
                     <p id="tipoSolicitud" class="solicitud badge bg-primary fs-4"></p>
                     <div class="datos-importantes">
-                       
 
-                       
+
+
 
 
                     </div>
@@ -528,7 +528,7 @@
                         </div>
                     </div>
 
-              
+
 
                     <div id="vigilanciaTraslado" class="d-none terminado">
                         <div class="datos-importantes">
@@ -1549,7 +1549,7 @@
                     </div>
 
                     <div id="liberacionPTExportacion" class="d-none terminado">
-                       
+
                         <div class="datos-importantes">
                             <table style="font-size: 11px;" class="table table-bordered table-sm">
                                 <thead>
@@ -1729,7 +1729,7 @@
                     </div>
 
                     <div id="georreferencia" class="d-none terminado">
-                       
+
                         <div class="datos-importantes">
                             <table style="font-size: 12px;" class="table table-bordered table-sm">
                                 <thead>
@@ -1832,7 +1832,7 @@
                         </div>
                     </div>
 
-               
+
 
 
                    <!-- <div class="row">

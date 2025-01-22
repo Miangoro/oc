@@ -228,13 +228,7 @@ class solicitudesController extends Controller
                 $nestedData['tipo_lote'] = $caracteristicas['tipoIngreso'] ?? 'N/A';
                 $nestedData['fecha_inicio'] = isset($caracteristicas['fecha_inicio']) ? Carbon::parse($caracteristicas['fecha_inicio'])->format('d/m/Y') : 'N/A';
                 $nestedData['fecha_termino'] = isset($caracteristicas['fecha_termino']) ? Carbon::parse($caracteristicas['fecha_termino'])->format('d/m/Y') : 'N/A';
-                $nestedData['id_categoria_liberacion'] = $caracteristicas['id_categoria'] ?? 'N/A';
-                $nestedData['id_clase_liberacion'] = $caracteristicas['id_clase'] ?? 'N/A';
-                $nestedData['id_tipo_maguey_liberacion'] = $caracteristicas['id_tipo_maguey'] ?? 'N/A';
-                $nestedData['analisis_liberacion'] = $caracteristicas['analisis'] ?? 'N/A';
                 $nestedData['tipo_lote_lib'] = $caracteristicas['tipoLiberacion'] ?? 'N/A';
-                $nestedData['fecha_inicio_lib'] = isset($caracteristicas['fecha_inicio']) ? Carbon::parse($caracteristicas['fecha_inicio'])->format('d/m/Y') : 'N/A';
-                $nestedData['fecha_termino_lib'] = isset($caracteristicas['fecha_termino']) ? Carbon::parse($caracteristicas['fecha_termino'])->format('d/m/Y') : 'N/A';
                 $nestedData['punto_reunion'] = $caracteristicas['punto_reunion'] ?? 'N/A';
                 $nestedData['renovacion'] = $caracteristicas['renovacion'] ?? 'N/A';
                 $nestedData['volumen_ingresado'] = $caracteristicas['volumen_ingresado'] ?? 'N/A';
@@ -518,7 +512,7 @@ class solicitudesController extends Controller
             'id_tipo_maguey' => $request->id_tipo_maguey_barricada,
             'edad' => $request->id_edad,
             'analisis' => $request->analisis_barricada,
-            'alc_vol' => $request->alc_vol_barrica,
+            'cont_alc' => $request->alc_vol_barrica,
             'tipoIngreso' => $request->tipo_lote,
             'fecha_inicio' => $request->fecha_inicio,
             'fecha_termino' => $request->fecha_termino,
@@ -566,7 +560,7 @@ class solicitudesController extends Controller
             'id_tipo_maguey' => $request->id_tipo_maguey_liberacion,
             'edad' => $request->id_edad_liberacion,
             'analisis' => $request->analisis_liberacion,
-            'volumen_liberacion' => $request->volumen_liberacion,
+            'cont_alc' => $request->volumen_liberacion,
             'tipoLiberacion' => $request->tipo_lote_lib,
             'fecha_inicio' => $request->fecha_inicio_lib,
             'fecha_termino' => $request->fecha_termino_lib,
@@ -1072,7 +1066,7 @@ class solicitudesController extends Controller
                     'id_tipo_maguey' => $request->id_tipo_maguey_barricada,
                     'id_edad' => $request->id_edad,
                     'analisis' => $request->analisis_barricada,
-                    'alc_vol' => $request->alc_vol_barrica,
+                    'cont_alc' => $request->alc_vol_barrica,
                     'tipoIngreso' => $request->tipo_lote,
                     'fecha_inicio' => $request->fecha_inicio,
                     'fecha_termino' => $request->fecha_termino,
@@ -1109,7 +1103,7 @@ class solicitudesController extends Controller
                     'id_tipo_maguey' => $request->id_tipo_maguey_liberacion,
                     'id_edad' => $request->id_edad_liberacion,
                     'analisis' => $request->analisis_liberacion,
-                    'volumen' => $request->volumen_liberacion,
+                    'cont_alc' => $request->volumen_liberacion,
                     'tipoLiberacion' => $request->tipo_lote_lib,
                     'fecha_inicio' => $request->fecha_inicio_lib,
                     'fecha_termino' => $request->fecha_termino_lib,

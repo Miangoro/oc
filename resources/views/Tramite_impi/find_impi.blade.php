@@ -53,24 +53,20 @@
             <thead class="table-dark">
                 <tr>
                   <th></th>
-                  {{-- <th>Id</th> --}}
                   <th>folio</th>
-                  <th>Tramite</th>
-                  <th>fecha</th>
+                  <th>fecha de solicitud</th>
                   <th>cliente</th>
+                  <th>Tramite</th>
                   <th>contraseña</th>
-                  <th>pago</th>
-                  <th>estatus</th>
+                  <th>pago IMPI</th>
+                  <th>contacto</th>
                   <th>observaciones</th>
+                  <th>estatus</th>
                   <th>Acciones</th>
                 </tr>
             </thead>
         </table>
     </div>
-
-
-   
-
 
 </div><!--CARD-->
 
