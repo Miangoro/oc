@@ -209,6 +209,11 @@ Swal.fire({
                 showCancelButton: false,
                 showDenyButton: false, 
             });
+            let response = JSON.parse(xhr.responseText);
+            for (let i = 0; i < response.id_documento.length; i++) {
+              $('input[type="file"]').val('');
+                  $("#mostrar"+response.id_documento[i]).html('<i onclick="abrirModal(\'files/' +response.folder+ '/' +response.files[i]+ '\')" style class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer" data-bs-target="#mostrarPdf" data-bs-toggle="modal" data-bs-dismiss="modal" data-id="" data-registro=""></i>');
+              }
         } else {
             Swal.fire({
                 icon: 'error',

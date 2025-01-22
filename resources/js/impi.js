@@ -55,11 +55,11 @@ initializeSelect2(select2Elements);
          { data: '' },
          { data: 'folio' },
          { data: 'fecha_solicitud' },
-         { data: 'cliente' },
+         { data: 'razon_social' },
          { data: 'tramite' },
          { data: 'contrasena' },
          { data: 'pago' },
-         { data: '' },
+         { data: 'contacto' },
          { data: 'observaciones' },
          { data: 'estatus' },
          { data: 'action' }
@@ -76,7 +76,43 @@ initializeSelect2(select2Elements);
            }
          },
          {
-           // Tabla 10 (estatus)
+          // Tabla 3 (empresa y folio)
+          targets: 3,
+          responsivePriority: 1,
+          render: function (data, type, full, meta) {
+            var $razon_social = full['razon_social'] ?? 'N/A';
+            return '<span class="user-email">' + $razon_social + '</span>';
+          }
+        },
+        {
+          // Tabla 4 (tramite)
+          targets: 4,
+          responsivePriority: 4,
+          render: function (data, type, full, meta) {
+           var $tramite = full['tramite'];
+
+           if ($tramite == 1){
+             return '<span style="color:red;">Registro de marca</span>';
+           }
+           else if($tramite == 2){ 
+                 return '<span style="color:red;">Trámite USO DE LA DOM</span>';
+           }
+           else if($tramite == 3){ 
+             return '<span style="color:red;">Inscripción de convenio de correponsabilidad</span>';
+           }
+           else if($tramite == 4){ 
+             return '<span style="color:red;">Licenciamiento de la marca</span>';
+           }
+           else if($tramite == 5){ 
+            return '<span style="color:red;">Cesión de derechos de marca</span>';
+          }
+          else if($tramite == 6){ 
+            return '<span style="color:red;">Declaración de uso de marca</span>';
+          }
+          }
+        },
+         {
+           // Tabla 9 (estatus)
            targets: 9,
            responsivePriority: 4,
            render: function (data, type, full, meta) {
@@ -100,20 +136,12 @@ initializeSelect2(select2Elements);
            // Tabla 7 telefono y correo
            targets: 7,
            render: function (data, type, full, meta) {
-             //var $num_dictamen = full['tramite'];
-             return '<span class="fw-bold">Telefono:</span> <br>'+
-              '<span class="fw-bold">Correo:</span>';
+             var $contacto = full['contacto'];
+             /*return '<span class="fw-bold">Telefono:</span> <br>'+
+              '<span class="fw-bold">Correo:</span>';*/
+              return '<span class="user-email">' + $contacto + '</span>';
            }
          }, 
-          /*{
-            // Tabla 5
-            targets: 3,
-            searchable: true,
-            render: function (data, type, full, meta) {
-              var $fech = full['fecha_solicitud'];
-              return '<span class="small">' + $fech + '</span>';
-              }
-          },*/
  
          {
            // Actions
@@ -312,7 +340,7 @@ initializeSelect2(select2Elements);
            ]
          },
          {
-           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Dictamen</span>',
+           text: '<i class="ri-add-line ri-16px me-0 me-sm-2 align-baseline"></i><span class="d-none d-sm-inline-block">Nuevo Trámite</span>',
            className: 'add-new btn btn-primary waves-effect waves-light',
            attr: {
             'data-bs-toggle': 'modal',
@@ -375,21 +403,21 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
         tramite: {
           validators: {
               notEmpty: {
-                  message: 'Introduzca el tramite'
+                  message: 'Seleccione el trámite'
               }
           }
       },
-        cliente: {
+      id_empresa: {
             validators: {
                 notEmpty: {
-                    message: 'Introduzca el cliente'
+                    message: 'Seleccione el cliente'
                 }
             }
         },
         contrasena: {
             validators: {
                 notEmpty: {
-                    message: 'Introduzca la contra'
+                    message: 'Introduzca una contraseña'
                 }
             }
         },
@@ -403,7 +431,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
         estatus: {
           validators: {
               notEmpty: {
-                  message: 'Seleccione una opcion'
+                  message: 'Seleccione un estatus'
               }
           }
         },
@@ -436,7 +464,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
         processData: false,
         contentType: false,
         success: function (response) {
-          console.log('Funciona :D:', response);
+          console.log('Funcionando', response);
             $('#addDictamen').modal('hide');//div que encierra al formulario #addDictamen
             $('#NuevoDictamen')[0].reset();
   
@@ -457,7 +485,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
             Swal.fire({
                 icon: 'error',
                 title: '¡Error!',
-                text: 'Error al subir!',
+                text: '¡Error al subir!',
                 customClass: {
                     confirmButton: 'btn btn-danger'
                 }
@@ -508,7 +536,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
                     Swal.fire({
                         icon: 'success',
                         title: '¡Eliminado!',
-                        text: '¡El registro ha sido eliminada correctamente!',
+                        text: '¡El registro ha sido eliminado correctamente!',
                         customClass: {
                             confirmButton: 'btn btn-success'
                         }
@@ -520,7 +548,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
                     // Mostrar SweetAlert de error
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error',
+                        title: '¡Error!',
                         text: 'No se pudo eliminar el registro. Inténtelo más tarde.',
                         footer: `<pre>${error.responseText}</pre>`,
                         customClass: {
@@ -534,7 +562,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
             // Acción cancelada, mostrar mensaje informativo
             Swal.fire({
                 title: 'Cancelado',
-                text: 'La eliminación n ha sido cancelada',
+                text: 'La eliminación ha sido cancelada',
                 icon: 'info',
                 customClass: {
                     confirmButton: 'btn btn-primary'
@@ -559,7 +587,7 @@ $(document).ready(function() {
           $('#edit_id_impi').val(data.id_impi);
           $('#edit_tramite').val(data.tramite).prop('selected', true).change();
           $('#edit_fecha_solicitud').val(data.fecha_solicitud);
-          $('#edit_cliente').val(data.cliente);
+          $('#edit_cliente').val(data.id_empresa).prop('selected', true).change();
           $('#edit_contrasena').val(data.contrasena);
           $('#edit_pago').val(data.pago);
           $('#edit_estatus').val(data.estatus).prop('selected', true).change();

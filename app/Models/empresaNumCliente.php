@@ -24,4 +24,8 @@ class empresaNumCliente extends Model
     {
         return $this->hasMany(solicitudHolograma::class, 'id_empresa', 'id_empresa');
     }
+
+    
+
+    
 }

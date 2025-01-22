@@ -146,7 +146,7 @@
             <p>Ingrese a:</p>
     </div>
     <div class="link">
-        <p>https://oc.erpcidam.com/</p>
+        <p>https://occidam.com/</p>
     </div>
     <div class="Datos">
         <p>USUARIO: <b>{{$datos->email}}</b></p>

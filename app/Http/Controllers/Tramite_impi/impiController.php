@@ -7,6 +7,7 @@ use App\Helpers\Helpers;
 use Illuminate\Http\Request;
 use App\Notifications\GeneralNotification;
 use App\Models\Impi;
+use App\Models\empresa;
 
 
 class impiController extends Controller
@@ -15,7 +16,8 @@ class impiController extends Controller
     public function UserManagement()
     {
       $tramites = Impi::all();
-      return view('Tramite_impi.find_impi', compact('tramites'));
+      $empresas = empresa::with('empresaNumClientes')->where('tipo', 2)->get(); // Obtener solo las empresas tipo '2'
+      return view('Tramite_impi.find_impi', compact('tramites', 'empresas'));
     }
 
     // Método para mostrar la vista principal de trámites
@@ -26,7 +28,7 @@ class impiController extends Controller
             //1 => 'id_impi',
             1 => 'folio',
             2 => 'fecha_solicitud',
-            3 => 'cliente',
+            3 => 'id_empresa',
             4 => 'tramite',
             5 => 'contrasena',
             6 => 'pago',
@@ -121,13 +123,26 @@ class impiController extends Controller
                 //$nestedData['fake_id'] = ++$ids;
                 $nestedData['id_impi'] = $impi->id_impi;
                 $nestedData['folio'] = $impi->folio;
-                $nestedData['fecha_solicitud'] = $impi->fecha_solicitud;
-                $nestedData['cliente'] = $impi->cliente;
+                //$nestedData['fecha_solicitud'] = $impi->fecha_solicitud;
+                //$nestedData['fecha_solicitud'] = Helpers::formatearFechaHora($impi->fecha_solicitud) ?? 'N/A';
+                $nestedData['fecha_solicitud'] = Helpers::formatearFecha($impi->fecha_solicitud);
+                $nestedData['id_empresa'] = $impi->id_empresa;
                 $nestedData['tramite'] = $impi->tramite;
                 $nestedData['contrasena'] = $impi->contrasena;
                 $nestedData['pago'] = $impi->pago;
                 $nestedData['observaciones'] = $impi->observaciones;
                 $nestedData['estatus'] = $impi->estatus;
+                //empresa y folio
+                $razonSocial = $impi->empresa ? $impi->empresa->razon_social : '';
+                $numeroCliente = 
+                $impi->empresaNumClientes[0]->numero_cliente ?? 
+                $impi->empresaNumClientes[1]->numero_cliente ?? 
+                $impi->empresaNumClientes[2]->numero_cliente;
+                $nestedData['razon_social'] = '<b>'.$numeroCliente . '</b> <br>' . $razonSocial;
+                //telefono y correo
+                $tel = $impi->empresa->telefono;
+                $email = $impi->empresa->correo;
+                $nestedData['contacto'] = '<b>Teléfono: </b>' .$tel. '<br> <b>Correo: </b>' .$email;
 
                 $data[] = $nestedData;
       }
@@ -161,10 +176,26 @@ class impiController extends Controller
         //     'pago' => 'string|max:255',
         // ]);
         try {
+    // Obtén el último registro para el folio
+    $lastRecord = Impi::orderBy('folio', 'desc')// Ordena por folio de forma descendente
+    ->first();
+    // Si hay registro previo
+    if ( !empty($lastRecord) ) {
+    // Extrae el número del folio y suma 1
+    preg_match('/-(\d+)$/', $lastRecord->folio, $matches);
+    $nextFolioNumber = (int)$matches[1] + 1;
+    } else {
+    // Si no hay registros previos
+    $nextFolioNumber = 1;
+    }
+    // Genera el folio
+    $newFolio = 'TRÁMITE-' . str_pad($nextFolioNumber, 4, '0', STR_PAD_LEFT);
+
             $var = new Impi();
             //$var->folio = $request->folio;
+            $var->folio = $newFolio;
             $var->fecha_solicitud = $request->fecha_solicitud;
-            $var->cliente = $request->cliente;
+            $var->id_empresa = $request->id_empresa;
             $var->tramite = $request->tramite;
             $var->contrasena = $request->contrasena;
             $var->pago = $request->pago;
@@ -178,6 +209,7 @@ class impiController extends Controller
             return response()->json(['error' => 'Error al agregar'], 500);
         }
     }
+
 
 
 
@@ -196,6 +228,7 @@ public function destroy($id_impi)
 
 
 
+
 //FUNCION PARA LLENAR EL FORMULARIO
 public function edit($id_impi)
 {
@@ -209,7 +242,7 @@ public function edit($id_impi)
             'id_impi' => $var1->id_impi,
             'tramite' => $var1->tramite,
             'fecha_solicitud' => $var1->fecha_solicitud,
-            'cliente' => $var1->cliente,
+            'id_empresa' => $var1->id_empresa,
             'contrasena' => $var1->contrasena,
             'pago' => $var1->pago,
             'estatus' => $var1->estatus,
@@ -217,7 +250,7 @@ public function edit($id_impi)
             //'categorias' => $categorias,
         ]);
     } catch (\Exception $e) {
-        return response()->json(['error' => 'Error al obtener el controller'], 500);
+        return response()->json(['error' => 'Error al obtener los datos'], 500);
     }
 }
 
@@ -229,7 +262,7 @@ public function update(Request $request, $id_impi)
         $var2->id_impi = $request->id_impi;
         $var2->tramite = $request->tramite;
         $var2->fecha_solicitud = $request->fecha_solicitud;
-        $var2->cliente = $request->cliente;
+        $var2->id_empresa = $request->id_empresa;
         $var2->contrasena = $request->contrasena;
         $var2->pago = $request->pago;
         $var2->estatus = $request->estatus;

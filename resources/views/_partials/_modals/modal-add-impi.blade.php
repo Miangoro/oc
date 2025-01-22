@@ -7,7 +7,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
-                    <h4 class="address-title mb-2">Crear nuevo IMPI</h4>
+                    <h4 class="address-title mb-2">Registrar nuevo trámite ante el IMPI</h4>
                 </div>
 
                 <form id="NuevoDictamen">
@@ -25,52 +25,45 @@
                                 {{-- <input type="text" class="form-control" id="tramite" placeholder="no. dictamen"
                                     name="tramite" aria-label="Nombre"> --}}
                                 <select id="tramite" class="form-select" name="tramite">
-                                    <option value="" disabled selected>Selecciona una opcion</option>
+                                    <option value="" disabled selected>Selecciona una opción</option>
                                     <option value="1">Registro de marca</option>
                                     <option value="2">Trámite USO DE LA DOM</option>
                                     <option value="3">Inscripción de convenio de correponsabilidad</option>
-                                    <option value="4">Liceciamiento de la marca</option>
+                                    <option value="4">Licenciamiento de marca</option>
                                     <option value="5">Cesión de derechos de marca</option>
                                     <option value="6">Declaración de uso de marca</option>
                                 </select>
-                                <label for="">Tramite</label>
+                                <label for="">Trámite</label>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="number" class="form-control" id="cliente" placeholder="no. dictamen"
-                                    name="cliente" aria-label="Nombre">
-                                <label for="">cliente</label>
-                            </div>
-                        </div>
-
-                        {{-- <div class="col-md-12">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_inspeccion" name="id_inspeccion"
-                                    data-placeholder="Elige un número de servicio" class="form-select select2"
-                                    aria-label="Default select example">
-                                    <option value="" disabled selected>NULL</option>
-                                    @foreach ($inspeccion as $insp)
-                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}</option>
+                                {{-- <input type="number" class="form-control" id="cliente" placeholder="cliente"
+                                    name="id_empresa" aria-label="Nombre">
+                                <label for="">cliente</label> --}}
+                                <select id="cliente" name="id_empresa" class="form-select select2">
+                                    <option value="" disabled selected>Selecciona la empresa</option>
+                                    @foreach ($empresas as $empresa)
+                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
-                                <label for="">No. de servicio</label>
+                                <label for="id_empresa">Empresa</label>
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" id="contrasena" placeholder="no. dictamen"
+                                <input type="text" class="form-control" id="contrasena" placeholder="Contraseña"
                                     name="contrasena" aria-label="Nombre">
-                                <label for="">contraseña</label>
+                                <label for="">Contraseña</label>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="text" class="form-control" id="pago" placeholder="no. dictamen"
+                                <input type="text" class="form-control" id="pago" placeholder="Pago"
                                     name="pago" aria-label="Nombre">
                                 <label for="">Pago</label>
                             </div>
@@ -80,26 +73,17 @@
                             <div class="form-floating form-floating-outline mb-4">
                                 <select class="form-select" id="estatus" name="estatus"
                                     aria-label="Default select example">
-                                    <option value="" disabled selected>Selecciona una opcion</option>
+                                    <option value="" disabled selected>Selecciona una opción</option>
                                     <option value="1">Pendiente</option>
-                                    <option value="2">Tramite</option>
-                                    <option value="3">Tramite favorable</option>
-                                    <option value="4">Tramite no favorable</option>
+                                    <option value="2">Trámite</option>
+                                    <option value="3">Trámite favorable</option>
+                                    <option value="4">Trámite no favorable</option>
                                 </select>
                                 <label for="">Estatus</label>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        {{-- <div class="form-floating form-floating-outline mb-3">
-                            <select class="select2 form-select" id="id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
-                                <option value="" disabled selected>Seleccione un firmante</option>
-                                @foreach($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                @endforeach
-                            </select>
-                            <label for="formValidationSelect2">Seleccione un firmante</label>
-                        </div> --}}
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-12">
                                 <textarea id="observaciones" name="observaciones" class="form-control h-px-150" 
@@ -123,7 +107,7 @@
 
 
 
-<!-- AGREGAR NUEVO TRAMITE MODAL -->
+<!-- EDITAR TRAMITE MODAL -->
 <div class="modal fade" id="editDictamen" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -131,7 +115,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         <div class="modal-body p-0">
             <div class="text-center mb-6">
-                <h4 class="address-title mb-2">EDITAR</h4>
+                <h4 class="address-title mb-2">Editar trámite ante el IMPI</h4>
             </div>
 
             <form id="EditarDictamen">
@@ -140,7 +124,7 @@
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-6">
                         <input id="edit_fecha_solicitud" type="date" class="form-control datepicker" name="fecha_solicitud" 
-                            placeholder="seleccione la fecha">
+                            placeholder="seleccione fecha">
                         <label for="">Fecha de Solicitud</label>
                     </div>
                 </div>
@@ -150,7 +134,7 @@
                             <option value="1">Registro de marca</option>
                             <option value="2">Trámite USO DE LA DOM</option>
                             <option value="3">Inscripción de convenio de correponsabilidad</option>
-                            <option value="4">Liceciamiento de la marca</option>
+                            <option value="4">Licenciamiento de marca</option>
                             <option value="5">Cesión de derechos de marca</option>
                             <option value="6">Declaración de uso de marca</option>
                         </select>
@@ -159,22 +143,33 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-4">
-                        <input id="edit_cliente" type="number" class="form-control" placeholder="Nombre del cliente" aria-label="" name="cliente" />
-                        <label for="">Nombre del cliente</label>
+                        {{-- <input id="edit_cliente" type="number" class="form-control" placeholder="Nombre del cliente" aria-label="" name="id_empresa" />
+                        <label for="">Nombre del cliente</label> --}}
+                        <select id="edit_cliente" name="id_empresa" class="form-select select2">
+                            {{-- <option value="" disabled selected>Selecciona la empresa</option> --}}
+                            @foreach ($empresas as $empresa)
+                                <option value="{{ $empresa->id_empresa }}">
+                                    {{ $empresa->empresaNumClientes[0]->numero_cliente ?? 
+                                    $empresa->empresaNumClientes[1]->numero_cliente }} | 
+                                    {{ $empresa->razon_social }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <label for="id_empresa">Empresa</label>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-4">
-                        <input id="edit_contrasena" type="text" class="form-control" placeholder="Contraseña de impi" aria-label="" name="contrasena" />
-                        <label for="">CONTRASEÑA DE IMPI</label>
+                        <input id="edit_contrasena" type="text" class="form-control" placeholder="Contraseña" aria-label="" name="contrasena" />
+                        <label for="">Contraseña</label>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-4">
-                        <input id="edit_pago" type="text" class="form-control" placeholder="Pago de impi" aria-label="" name="pago" />
-                        <label for="">PAGO DE IMPI</label>
+                        <input id="edit_pago" type="text" class="form-control" placeholder="Pago" aria-label="" name="pago" />
+                        <label for="">Pago</label>
                     </div>
                 </div>
                 <div class="col-md-4">
