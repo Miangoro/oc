@@ -29,7 +29,7 @@
                                     <option value="1">Registro de marca</option>
                                     <option value="2">Trámite USO DE LA DOM</option>
                                     <option value="3">Inscripción de convenio de correponsabilidad</option>
-                                    <option value="4">Liceciamiento de la marca</option>
+                                    <option value="4">Licenciamiento de la marca</option>
                                     <option value="5">Cesión de derechos de marca</option>
                                     <option value="6">Declaración de uso de marca</option>
                                 </select>
@@ -39,25 +39,18 @@
 
                         <div class="col-md-4">
                             <div class="form-floating form-floating-outline mb-6">
-                                <input type="number" class="form-control" id="cliente" placeholder="no. dictamen"
-                                    name="cliente" aria-label="Nombre">
-                                <label for="">cliente</label>
-                            </div>
-                        </div>
-
-                        {{-- <div class="col-md-12">
-                            <div class="form-floating form-floating-outline mb-6">
-                                <select id="id_inspeccion" name="id_inspeccion"
-                                    data-placeholder="Elige un número de servicio" class="form-select select2"
-                                    aria-label="Default select example">
-                                    <option value="" disabled selected>NULL</option>
-                                    @foreach ($inspeccion as $insp)
-                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}</option>
+                                {{-- <input type="number" class="form-control" id="cliente" placeholder="no. dictamen"
+                                    name="id_empresa" aria-label="Nombre">
+                                <label for="">cliente</label> --}}
+                                <select id="cliente" name="id_empresa" class="form-select select2">
+                                    <option value="" disabled selected>Selecciona la empresa</option>
+                                    @foreach ($empresas as $empresa)
+                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }} | {{ $empresa->razon_social }}</option>
                                     @endforeach
                                 </select>
-                                <label for="">No. de servicio</label>
+                                <label for="id_empresa">Empresa</label>
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
@@ -91,15 +84,6 @@
                         </div>
                     </div>
                     <div class="row">
-                        {{-- <div class="form-floating form-floating-outline mb-3">
-                            <select class="select2 form-select" id="id_firmante" name="id_firmante" aria-label="Nombre Firmante" required>
-                                <option value="" disabled selected>Seleccione un firmante</option>
-                                @foreach($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                @endforeach
-                            </select>
-                            <label for="formValidationSelect2">Seleccione un firmante</label>
-                        </div> --}}
                         <div class="col-md-12">
                             <div class="form-floating form-floating-outline mb-12">
                                 <textarea id="observaciones" name="observaciones" class="form-control h-px-150" 
@@ -123,7 +107,7 @@
 
 
 
-<!-- AGREGAR NUEVO TRAMITE MODAL -->
+<!-- EDITAR TRAMITE MODAL -->
 <div class="modal fade" id="editDictamen" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-simple modal-add-new-address">
         <div class="modal-content">
@@ -150,7 +134,7 @@
                             <option value="1">Registro de marca</option>
                             <option value="2">Trámite USO DE LA DOM</option>
                             <option value="3">Inscripción de convenio de correponsabilidad</option>
-                            <option value="4">Liceciamiento de la marca</option>
+                            <option value="4">Licenciamiento de la marca</option>
                             <option value="5">Cesión de derechos de marca</option>
                             <option value="6">Declaración de uso de marca</option>
                         </select>
@@ -159,8 +143,19 @@
                 </div>
                 <div class="col-md-4">
                     <div class="form-floating form-floating-outline mb-4">
-                        <input id="edit_cliente" type="number" class="form-control" placeholder="Nombre del cliente" aria-label="" name="cliente" />
-                        <label for="">Nombre del cliente</label>
+                        {{-- <input id="edit_cliente" type="number" class="form-control" placeholder="Nombre del cliente" aria-label="" name="id_empresa" />
+                        <label for="">Nombre del cliente</label> --}}
+                        <select id="edit_cliente" name="id_empresa" class="form-select select2">
+                            {{-- <option value="" disabled selected>Selecciona la empresa</option> --}}
+                            @foreach ($empresas as $empresa)
+                                <option value="{{ $empresa->id_empresa }}">
+                                    {{ $empresa->empresaNumClientes[0]->numero_cliente ?? 
+                                    $empresa->empresaNumClientes[1]->numero_cliente }} | 
+                                    {{ $empresa->razon_social }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <label for="id_empresa">Empresa</label>
                     </div>
                 </div>
             </div>
