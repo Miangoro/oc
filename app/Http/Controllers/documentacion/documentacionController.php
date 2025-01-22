@@ -201,10 +201,10 @@ class documentacionController extends Controller
         $instalaciones = Instalaciones::where('id_empresa', '=', $id_empresa)->where('tipo', 'like', '%'.$act_instalacion.'%')->get(); //Se va a ocultar los tipo 1 que son para predios
 
         $predios = Predios::where('id_empresa', '=', $id_empresa)
-      ->where('tipo', '!=', 1) // Excluir los de tipo 1
-      ->orderBy('created_at', 'desc') // Ordenar por los más recientes
-      ->take(10) // Limitar a 10 registros
-      ->get();
+     // Excluir los de tipo 1
+    ->orderBy('created_at', 'desc') // Ordenar por los más recientes
+    ->take(10) // Limitar a 10 registros
+    ->get();
 
 
 
