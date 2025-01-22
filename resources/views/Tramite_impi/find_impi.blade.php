@@ -1,6 +1,6 @@
 @extends('layouts/layoutMaster')
 
-@section('title', 'Tramites de IMPI')
+@section('title', 'Trámites IMPI')
 
 <!-- Vendor Styles -->
 @section('vendor-style')
@@ -45,7 +45,7 @@
 <div class="card">
  
   <div class="card-header pb-0">
-    <h3 class="card-title mb-0">Trámites IMPI</h3>
+    <h3 class="card-title mb-0">Historial de Trámites ante el IMPI</h3>
   </div>
 
     <div class="card-datatable table-responsive">
@@ -56,7 +56,7 @@
                   <th>folio</th>
                   <th>fecha de solicitud</th>
                   <th>cliente</th>
-                  <th>Tramite</th>
+                  <th>Trámite</th>
                   <th>contraseña</th>
                   <th>pago IMPI</th>
                   <th>contacto</th>

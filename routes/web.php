@@ -888,12 +888,14 @@ Route::get('/insertarSolicitudesDesdeAPI', [insertar_datos_bd::class, 'insertarS
 
 
 //-------------------Tramite IMPI-------------------
-Route::get('tramiteIMPI', [impiController::class, 'UserManagement'])->name('IMPI');
-Route::resource('tramite-list', impiController::class);
-Route::post('registrar', [impiController::class, 'store'])->name('tramite-create');
-///eliminar
-Route::delete('eliminar/{id_impi}', [impiController::class, 'destroy'])->name('instalacion.delete');
-///obtener el editar
-Route::get('insta2/{id_impi}/edit', [impiController::class, 'edit'])->name('instalacion.edit');
-///editar
-Route::put('insta2/{id_impi}', [impiController::class, 'update'])->name('tipos.update');
+Route::middleware(['auth'])->controller(impiController::class)->group(function () {
+    Route::get('tramiteIMPI', [impiController::class, 'UserManagement'])->name('IMPI');
+    Route::resource('tramite-list', impiController::class);
+    Route::post('registrar', [impiController::class, 'store'])->name('tramite-create');
+    ///eliminar
+    Route::delete('eliminar/{id_impi}', [impiController::class, 'destroy'])->name('instalacion.delete');
+    ///obtener el editar
+    Route::get('insta2/{id_impi}/edit', [impiController::class, 'edit'])->name('instalacion.edit');
+    ///editar
+    Route::put('insta2/{id_impi}', [impiController::class, 'update'])->name('tipos.update');
+});

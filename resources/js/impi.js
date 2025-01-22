@@ -403,21 +403,21 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
         tramite: {
           validators: {
               notEmpty: {
-                  message: 'Introduzca el tramite'
+                  message: 'Seleccione el trámite'
               }
           }
       },
       id_empresa: {
             validators: {
                 notEmpty: {
-                    message: 'Introduzca el cliente'
+                    message: 'Seleccione el cliente'
                 }
             }
         },
         contrasena: {
             validators: {
                 notEmpty: {
-                    message: 'Introduzca la contra'
+                    message: 'Introduzca una contraseña'
                 }
             }
         },
@@ -431,7 +431,7 @@ const fv = FormValidation.formValidation(NuevoDictamen, {
         estatus: {
           validators: {
               notEmpty: {
-                  message: 'Seleccione una opcion'
+                  message: 'Seleccione un estatus'
               }
           }
         },

@@ -176,8 +176,24 @@ class impiController extends Controller
         //     'pago' => 'string|max:255',
         // ]);
         try {
+    // Obtén el último registro para el folio
+    $lastRecord = Impi::orderBy('folio', 'desc')// Ordena por folio de forma descendente
+    ->first();
+    // Si hay registro previo
+    if ( !empty($lastRecord) ) {
+    // Extrae el número del folio y suma 1
+    preg_match('/-(\d+)$/', $lastRecord->folio, $matches);
+    $nextFolioNumber = (int)$matches[1] + 1;
+    } else {
+    // Si no hay registros previos
+    $nextFolioNumber = 1;
+    }
+    // Genera el folio
+    $newFolio = 'TRÁMITE-' . str_pad($nextFolioNumber, 4, '0', STR_PAD_LEFT);
+
             $var = new Impi();
             //$var->folio = $request->folio;
+            $var->folio = $newFolio;
             $var->fecha_solicitud = $request->fecha_solicitud;
             $var->id_empresa = $request->id_empresa;
             $var->tramite = $request->tramite;
