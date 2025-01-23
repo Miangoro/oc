@@ -51,9 +51,9 @@ class insertar_datos_bd_dictamenes extends Controller
                             $id_solicitud = Dictamen_instalaciones::create([
                                 'id_inspeccion'             => $inspecciones->id_inspeccion,
                                 'tipo_dictamen' => match ($solicitud['tipo']) {
-                                    3 => 1,
-                                    4 => 2,
-                                    5 => 3,
+                                    "3" => 1,
+                                    "4" => 2,
+                                    "5" => 3,
                                     default => $solicitud['tipo'], 
                                 },
                                 'id_instalacion'             =>$inspecciones->id_inspeccion,
