@@ -199,7 +199,7 @@
         }
 
         #tabla-principal td{
-        line-height: 5px; /* Asegura que el contenido se ajuste a la altura */
+        line-height: 9px; /* Asegura que el contenido se ajuste a la altura */
         overflow: hidden; /* Evita desbordamientos del contenido */
         border: solid 2.5px;
         }

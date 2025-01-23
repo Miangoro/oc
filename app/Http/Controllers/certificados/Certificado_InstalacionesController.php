@@ -16,7 +16,9 @@ use App\Notifications\GeneralNotification;
 use App\Mail\CorreoCertificado;
 use App\Models\Documentacion_url;
 use App\Models\instalaciones;
+
 use Illuminate\Support\Facades\Mail; 
+use Illuminate\Support\Facades\Storage;
 
 class Certificado_InstalacionesController extends Controller
 {
@@ -192,7 +194,7 @@ class Certificado_InstalacionesController extends Controller
                  $nombreDocumento =  'Certificado '.str_replace('/', '-', $certificado->num_certificado);
                 
  
-                 $filename = $nombreDocumento . '_' . str_replace('/', '-', $certificado->num_certificado) .  '.pdf' ;
+                 $filename = $nombreDocumento .  '.pdf' ;
                  $filePath = storage_path('app/public/' . $directory . '/' . $filename);
                  if($certificado->dictamen->tipo_dictamen==1){
                     $id_documento =127;
@@ -251,6 +253,34 @@ class Certificado_InstalacionesController extends Controller
     
         try {
             $certificado = Certificados::findOrFail($id);
+
+               // Obtener información de la empresa
+       
+                $numeroCliente = $certificado->dictamen->instalaciones->empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                    return !empty($numero);
+                });
+
+
+                $directory = 'uploads/' . $numeroCliente;
+                    $path = storage_path('app/public/' . $directory);
+                    if (!file_exists($path)) {
+                        mkdir($path, 0777, true); 
+                    }  
+             
+                $nombreDocumento =  'Certificado '.str_replace('/', '-', $certificado->num_certificado);
+                $certificado_actual = Documentacion_url::where('nombre_documento', $nombreDocumento)->first();
+               // dd($certificado_actual);
+
+                if ($certificado_actual) {
+                    // Elimina el archivo físico si existe
+                    
+                    if (Storage::exists('public/' . $directory . '/' . $certificado_actual->url)) {
+                        Storage::delete('public/' . $directory . '/' . $certificado_actual->url);
+                    }
+                
+                    // Elimina el registro de la base de datos
+                    $certificado_actual->delete();
+                }
     
             $certificado->id_dictamen = $validatedData['id_dictamen'];
             $certificado->num_certificado = $validatedData['num_certificado'];
@@ -259,8 +289,42 @@ class Certificado_InstalacionesController extends Controller
             $certificado->maestro_mezcalero = $validatedData['maestro_mezcalero'] ?: null;
             $certificado->num_autorizacion = $validatedData['num_autorizacion'] ?: null;
             $certificado->id_firmante = $validatedData['id_firmante']; 
-    
             $certificado->save();
+
+            $id_instalacion = $certificado->dictamen->id_instalacion;
+            $instalaciones = instalaciones::find($id_instalacion);
+            $instalaciones->folio = $certificado->num_certificado;
+            $instalaciones->fecha_emision = $certificado->fecha_vigencia;
+            $instalaciones->fecha_vigencia = $certificado->fecha_vencimiento;
+            $instalaciones->save();
+
+      
+                
+                 $nombreDocumento =  'Certificado '.str_replace('/', '-', $certificado->num_certificado);
+                 $filename = $nombreDocumento.'.pdf' ;
+                 $filePath = storage_path('app/public/' . $directory . '/' . $filename);
+                 if($certificado->dictamen->tipo_dictamen==1){
+                    $id_documento =127;
+                    $this->pdf_certificado_productor($certificado->id_certificado,true,$filePath);
+                 }
+                 if($certificado->dictamen->tipo_dictamen==2){
+                    $id_documento =128;
+                    $this->pdf_certificado_envasador($certificado->id_certificado,true,$filePath);
+                 }
+                 if($certificado->dictamen->tipo_dictamen==3){
+                    $id_documento =128;
+                    $this->pdf_certificado_comercializador($certificado->id_certificado,true,$filePath);
+                 }
+                    
+                
+ 
+                 $documentacion_url = new Documentacion_url();
+                 $documentacion_url->id_relacion =  $certificado->dictamen->id_instalacion;
+                 $documentacion_url->id_documento = $id_documento ?? null;
+                 $documentacion_url->nombre_documento = $nombreDocumento;  
+                 $documentacion_url->url = $filename;  
+                 $documentacion_url->id_empresa =  $certificado->dictamen->instalaciones->id_empresa;
+                 $documentacion_url->save();
     
             return response()->json([
                 'message' => 'Certificado actualizado correctamente.',

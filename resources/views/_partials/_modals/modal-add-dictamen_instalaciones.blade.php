@@ -19,7 +19,7 @@
                                     aria-label="Default select example">
                                     <option value="" disabled selected>NULL</option>
                                     @foreach ($inspeccion as $insp)
-                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}</option>
+                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->folio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}</option>
                                     @endforeach
                                 </select>
                                 <label for="">No. de servicio</label>
@@ -132,6 +132,7 @@
             <div class="modal-body p-0">
                 <div class="text-center mb-6">
                     <h4 class="address-title mb-2">Editar dictamen</h4>
+                    <span id="folio_dictamen" class="badge bg-primary"></span>
                 </div>
 
                 <form id="EditarDictamen">
@@ -144,7 +145,7 @@
                                     aria-label="Default select example">
                                     @foreach ($inspeccion as $insp)
                                         {{-- <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }}</option> --}}
-                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}</option>
+                                        <option value="{{ $insp->id_inspeccion }}">{{ $insp->num_servicio }} | {{ $insp->solicitud->folio }} | {{ $insp->solicitud->instalacion->direccion_completa ?? '' }}</option>
                                     @endforeach
                                 </select>
                                 {{-- <input class="form-control" type="text" id="edit_id_inspeccion" name="id_inspeccion"/> --}}

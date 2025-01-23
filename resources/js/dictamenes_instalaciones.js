@@ -722,6 +722,8 @@ $(document).ready(function() {
           $('#edit_id_firmante').val(data.id_firmante).prop('selected', true).change();
           $('#edit_id_firmante').val(data.id_firmante).trigger('change');
 
+          $('#folio_dictamen').text(data.num_dictamen);
+
 
           // Mostrar el modal de edición
           $('#editDictamen').modal('show');
