@@ -43,7 +43,7 @@ class insertar_datos_bd_dictamenes extends Controller
                     }
                     
 
-                    if ($inspecciones) {
+                    if ($inspecciones AND !empty($inspecciones->id_inspeccion)) {
 
 
 
