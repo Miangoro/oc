@@ -76,7 +76,7 @@ public function index(Request $request)
             //->leftjoin('instalaciones AS ins', 'ins.id_instalacion', '=', 's.id_instalacion')
                 ->offset($start)
                 ->limit($limit)
-                ->orderBy($order, $dir)
+                ->orderBy('num_dictamen', 'DESC')
                 ->get();
                 
         } else {
