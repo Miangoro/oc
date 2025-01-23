@@ -32,9 +32,15 @@ $(function () {
       { data: 'folio' },
       { data: 'num_servicio' },
       {
-        data: 'razon_social',
-        render: function (data) {
-          return `<span class="fw-bold">${data}</span>`;
+        render: function (data, type, full, meta) {
+          var $numero_cliente = full['numero_cliente'];
+          var $razon_social = full['razon_social'];
+          return `
+            <div>
+              <span class="fw-bold">${$numero_cliente}</span><br>
+              <small style="font-size:12px;" class="user-email">${$razon_social}</small>
+            </div>
+          `;
         }
       },
       { data: 'fecha_solicitud' },
@@ -44,7 +50,12 @@ $(function () {
           return `<span class="fw-bold">${data}</span>`;
         }
       },
-      { data: 'direccion_completa' },
+      {
+        data: 'direccion_completa',
+        render: function(data, type, row) {
+            return `<span style="font-size: 12px;">${data}</span>`; // Tamaño en línea
+        }
+      },
       { data: 'fecha_visita' },
       { data: 'inspector' },
       {
@@ -192,7 +203,22 @@ $(function () {
       },
       { data: 'fecha_servicio' },
       { data: '' },
-      { data: 'estatus' },
+      {
+        data: 'estatus',
+        render: function(data, type, row) {
+            // Define las etiquetas para cada estado
+            switch (data) {
+                case 'Pendiente':
+                    return '<span class="badge bg-warning">Pendiente</span>';
+                case 'Con acta':
+                    return '<span class="badge bg-primary">Con acta</span>';
+                case 'Con dictamen':
+                    return '<span class="badge bg-success">Con dictamen</span>';
+                default:
+                    return '<span class="badge bg-secondary">Desconocido</span>';
+            }
+        }
+    },
       { data: 'action' }
     ],
 
@@ -241,7 +267,7 @@ $(function () {
             '<div class="d-flex justify-content-start align-items-center user-name">' +
             $output +
             '<div class="d-flex flex-column">' +
-            '<a href="#" class="text-truncate text-heading"><span class="fw-medium">' +
+            '<a href="#" class="text-truncate text-heading"><span style="font-size: 12px;" class="fw-medium">' +
             $name +
             '</span></a>' +
             '</div>' +
@@ -1550,7 +1576,7 @@ $(document).on('click', '.expediente-record', function () {
           $('#editMuestreoLoteAgranel').modal('hide'); // Oculta el modal
           $('#editMuestreoLoteAgranelForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
-          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
 
           Swal.fire({
             icon: 'success',
@@ -1653,7 +1679,7 @@ $(document).on('click', '.expediente-record', function () {
           $('#editVigilanciaTraslado').modal('hide'); // Oculta el modal
           $('#editVigilanciaTrasladoForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
-          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false); // Recarga la tabla
 
           Swal.fire({
             icon: 'success',
@@ -1756,7 +1782,7 @@ $(document).on('click', '.expediente-record', function () {
           $('#editInspeccionIngresoBarricada').modal('hide'); // Oculta el modal
           $('#editInspeccionIngresoBarricadaForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
-          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false);// Recarga la tabla
 
           Swal.fire({
             icon: 'success',
@@ -1963,7 +1989,7 @@ $(document).on('click', '.expediente-record', function () {
           $('#editInspeccionLiberacion').modal('hide'); // Oculta el modal
           $('#editInspeccionLiberacionForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
-          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false); // Recarga la tabla
 
           Swal.fire({
             icon: 'success',
@@ -2055,7 +2081,7 @@ $(document).on('click', '.expediente-record', function () {
           $('#editLiberacionProducto').modal('hide'); // Oculta el modal
           $('#editLiberacionProductoForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
-          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false); // Recarga la tabla
           Swal.fire({
             icon: 'success',
             title: '¡Éxito!',
@@ -2140,7 +2166,7 @@ $(document).on('click', '.expediente-record', function () {
           $('#editSolicitudMuestreoAgave').modal('hide');
           $('#editRegistrarSolicitudMuestreoAgave')[0].reset();
           $('.select2').val(null).trigger('change');
-          $('.datatables-solicitudes').DataTable().ajax.reload();
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
           console.log(response);
 
           Swal.fire({

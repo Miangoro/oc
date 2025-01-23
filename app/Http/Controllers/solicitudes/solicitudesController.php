@@ -159,6 +159,12 @@ class solicitudesController extends Controller
                 $nestedData['id_tipo'] = $solicitud->tipo_solicitud->id_tipo ?? 'N/A';
                 $nestedData['estatus'] = $solicitud->estatus ?? 'Vacío';
                 $nestedData['info_adicional'] = $solicitud->info_adicional ?? 'Vacío';
+                $empresa = $solicitud->empresa;
+                $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                ? $empresa->empresaNumClientes
+                    ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
+                : 'N/A';
+                $nestedData['numero_cliente'] = $numero_cliente;
 
                 // Decodificar JSON y extraer datos específicos
                 $caracteristicas = json_decode($solicitud->caracteristicas, true);
