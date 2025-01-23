@@ -1506,4 +1506,10 @@ class solicitudesController extends Controller
     } */
     }
 
+    public function Etiqueta_240($id_solicitud)
+    {
+      $pdf = Pdf::loadView('pdfs.Etiqueta-2401ESPTOB');
+      return $pdf->stream('Etiqueta-2401ESPTOB.pdf');
+    }
+
 }

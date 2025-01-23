@@ -7,11 +7,11 @@
         <div class="text-center">
           <h4 class="mb-2">Expediente de inspección</h4>
           <p class="mb-6 nombre_empresa badge bg-primary"></p>
-          <p id="solicitud-id" class="mb-6 badge bg-primary"></p>
+          <p class="mb-6 badge bg-primary"></p>
         </div>
 
         <div class="card">
-          <h5 class="card-header solicitud text-center">Muestreo de lote a granel</h5>
+          <h5 id="solicitud_title"  class="card-header solicitud text-center"></h5>
           <div class="table-responsive text-nowrap">
             <table class="table">
               <thead>
@@ -21,8 +21,8 @@
                 </tr>
               </thead>
               <tbody class="table-border-bottom-0">
-
-
+                <p class="id_solicitud d-none"></p>
+                <p class="tiposs d-none"></p>
 
                 <tr class="table-success">
                   <td><i class="ri-bank-fill ri-22px text-primary me-4"></i><span class="fw-medium">1. Solicitud de servicio</span></td>
@@ -53,9 +53,10 @@
                 </tr>
                 <tr class="table-light">
                   <td><i class="ri-angularjs-line ri-22px text-danger me-4"></i><span class="fw-medium">Etiquetas para muestra</span></td>
-                  <td>        <a href="javascript:void(0);" class="open-modal" data-bs-toggle="modal" data-bs-target="#myModal">
+                  <td><a href="javascript:void(0);" class="open-modal" data-bs-toggle="modal" data-bs-target="#mostrarPdfDictamen1">
                     <i class="ri-file-pdf-2-fill ri-40px text-danger"></i>
-                </a></td>
+                  </a>
+                  </td>
                 </tr>
               </tbody>
             </table>
