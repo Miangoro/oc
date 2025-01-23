@@ -43,7 +43,7 @@ class insertar_datos_bd_dictamenes extends Controller
                     }
                     
 
-                    if ($inspecciones AND !empty($inspecciones->id_inspeccion)) {
+                    if ($inspecciones AND !empty($inspecciones->solicitud->inspeccion->id_instalacion)) {
 
 
 
@@ -56,7 +56,7 @@ class insertar_datos_bd_dictamenes extends Controller
                                     "5" => 3,
                                     default => $solicitud['tipo'], 
                                 },
-                                'id_instalacion'             =>$inspecciones->id_inspeccion,
+                                'id_instalacion'             =>$inspecciones->solicitud->inspeccion->id_instalacion,
                                 'num_dictamen'             => $solicitud['n_dictamen'],
                                 'fecha_emision'   => $solicitud['fecha_emision'],
                                 'fecha_vigencia'   => $solicitud['fecha_vigencia'],
