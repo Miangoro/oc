@@ -153,7 +153,7 @@ public function index(Request $request)
                 $fecha_emision = Helpers::formatearFecha($user->fecha_emision);
                 $fecha_vigencia = Helpers::formatearFecha($user->fecha_vigencia);
                 $nestedData['fechas'] = '<b>Fecha Emisión: </b>' .$fecha_emision. '<br> <b>Fecha Vigencia: </b>' .$fecha_vigencia;
-                $nestedData['direccion_completa'] = $user->inspeccione->solicitud->instalacion->direccion_completa;
+                $nestedData['direccion_completa'] = $user->inspeccione->solicitud->instalacion->direccion_completa ?? 'No encontrada';
 
 
 
