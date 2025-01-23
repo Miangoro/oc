@@ -143,7 +143,7 @@ public function index(Request $request)
                 //$nestedData['fake_id'] = ++$ids;
                 $nestedData['id_dictamen'] = $user->id_dictamen;
                 $nestedData['tipo_dictamen'] = $user->tipo_dictamen;
-                $nestedData['razon_social'] = $user->inspeccione->solicitud->empresa->razon_social;
+                $nestedData['razon_social'] = $user->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
                 $nestedData['num_dictamen'] = $user->num_dictamen;
                 $nestedData['num_servicio'] = $user->inspeccione->num_servicio;
                 $nestedData['folio_solicitud'] = $user->inspeccione->solicitud->folio;
