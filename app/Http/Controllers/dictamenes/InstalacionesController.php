@@ -146,6 +146,7 @@ public function index(Request $request)
                 $nestedData['razon_social'] = $user->inspeccione->solicitud->empresa->razon_social;
                 $nestedData['num_dictamen'] = $user->num_dictamen;
                 $nestedData['num_servicio'] = $user->inspeccione->num_servicio;
+                $nestedData['folio_solicitud'] = $user->inspeccione->solicitud->folio;
                 /*$nestedData['fecha_emision'] = $user->fecha_emision;
                 $nestedData['fecha_vigencia'] = $user->fecha_vigencia;*/
                 //$fecha_emision= Helpers::formatearFecha($user->fecha_emision) ?? 'N/A';

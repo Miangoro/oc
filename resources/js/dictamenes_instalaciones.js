@@ -98,6 +98,7 @@ $('#edit_fecha_emision').on('change', function() {
          { data: 'tipo_dictamen' },
          { data: 'num_dictamen' },
          { data: 'num_servicio' },
+         { data: 'folio_solicitud' },
          { data: 'razon_social' },
          { data: 'direccion_completa' },
          { data: 'fechas' },
@@ -151,7 +152,7 @@ $('#edit_fecha_emision').on('change', function() {
            }
          },
           {
-           // Tabla 3
+           // Tabla 2
            targets: 2,
            render: function (data, type, full, meta) {
              var $num_dictamen = full['num_dictamen'];
@@ -159,11 +160,19 @@ $('#edit_fecha_emision').on('change', function() {
            }
          }, 
          {
-            // Tabla 4
+            // Tabla 3
             targets: 3,
             render: function (data, type, full, meta) {
               var $num_servicio = full['num_servicio'];
               return '<span class="user-email">' + $num_servicio + '</span>';
+            }
+          }, 
+          {
+            // Tabla 4
+            targets: 4,
+            render: function (data, type, full, meta) {
+              var $folio_solicitud = full['folio_solicitud'];
+              return '<span class="user-email">' + $folio_solicitud + '</span>';
             }
           }, 
           /*{
@@ -179,7 +188,7 @@ $('#edit_fecha_emision').on('change', function() {
           },*/
           {
             // Tabla 5
-            targets: 6,
+            targets: 7,
             searchable: true,
             render: function (data, type, full, meta) {
               var $fech = full['fechas'];
@@ -188,7 +197,7 @@ $('#edit_fecha_emision').on('change', function() {
           },
           {
             // Abre el pdf del dictamen
-            targets: 8,
+            targets: 9,
             searchable: false,
             orderable: false,
             className: 'text-center',

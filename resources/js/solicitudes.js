@@ -1447,7 +1447,9 @@ $(document).on('click', '.expediente-record', function () {
           $('#editVigilanciaProduccion').modal('hide'); // Oculta el modal
           $('#editVigilanciaProduccionForm')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
-          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
+        // Recarga la tabla manteniendo la página actual
+        $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
+
           console.log(response);
 
           Swal.fire({
