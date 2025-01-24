@@ -70,14 +70,13 @@ public function index(Request $request)
         if (empty($request->input('search.value'))) {
             // ORDENAR EL BUSCADOR "thead"
             $users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
-    ->offset($start)
-    ->limit($limit)
-    ->orderByRaw("
-        CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC,
-        CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC
-    ")
-    ->get();
-
+            ->offset($start)
+            ->limit($limit)
+            ->orderByRaw("
+                CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
+                CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')
+            ")
+            ->get();
         } else {
             // BUSCADOR
             $search = $request->input('search.value');
