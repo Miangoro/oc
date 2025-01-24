@@ -144,13 +144,14 @@ use Illuminate\Support\Facades\Route;
             <div class="avatar me-4">
               <span class="avatar-initial rounded-3 bg-label-danger"><i class="ri-close-circle-fill"></i></span>
             </div>
-            <h4 class="mb-0">{{ $dictamenesPorVencer }}</h4>
+            <h4 class="mb-0"> 
+
+            @foreach($dictamenesPorVencer AS $dictamen)
+              {{ $dictamen->num_dictamen }}   <small class="text-muted">{{ $dictamen->fecha_vigencia }}</small> <br>
+            @endforeach
+          </h4>
           </div>
           <h6 class="mb-0 fw-normal">Dictámenes por vencer</h6>
-          <p class="mb-0">
-            <span class="me-1 fw-medium">+4.3%</span>
-            <small class="text-muted">than last week</small>
-          </p>
         </div>
       </div>
     </div>

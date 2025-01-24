@@ -20,12 +20,18 @@ class Analytics extends Controller
     })
     ->count();
 
-    $hoy = Carbon::now();
-    $fechaLimite = $hoy->addDays(15);
     
-    $dictamenesPorVencer = Dictamen_instalaciones::whereDate('fecha_vigencia', '>=', $hoy)
-        ->whereDate('fecha_vigencia', '<=', $fechaLimite)
-        ->get();
+   
+
+    $hoy = Carbon::today(); // Solo la fecha, sin hora.
+    $fechaLimite = $hoy->copy()->addDays(15); // Fecha límite en 15 días.
+    
+    $dictamenesPorVencer = Dictamen_instalaciones::whereBetween('fecha_vigencia', [$hoy, $fechaLimite])->get();
+    
+
+    
+
+      
 
 
   
