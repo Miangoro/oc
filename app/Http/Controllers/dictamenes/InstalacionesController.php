@@ -67,71 +67,85 @@ public function index(Request $request)
         $dir = $request->input('order.0.dir');
 
 
-        if ( empty($request->input('search.value'))) {
-        //ORDENAR EL BUSCADOR "thead"
-            //$users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
-            $users = Dictamen_instalaciones::join('inspecciones AS i', 'dictamenes_instalaciones.id_inspeccion', '=', 'i.id_inspeccion')
-            ->leftjoin('solicitudes AS s', 's.id_solicitud', '=', 'i.id_solicitud')
-            ->leftjoin('empresa AS e', 'e.id_empresa', '=', 's.id_empresa')
-            //->leftjoin('instalaciones AS ins', 'ins.id_instalacion', '=', 's.id_instalacion')
+        if (empty($request->input('search.value'))) {
+            // ORDENAR EL BUSCADOR "thead"
+            $users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy('num_dictamen', 'DESC')
                 ->get();
-                
         } else {
-        //BUSCADOR
+            // BUSCADOR
             $search = $request->input('search.value');
-
-        //Definimos el nombre al valor de "tipo_dictamen"
+        
+            // Definimos el nombre al valor de "tipo_dictamen"
             $map = [
                 'productor' => 1,
                 'envasador' => 2,
                 'comercializador' => 3,
                 'almacén y bodega' => 4,
                 'área de maduración' => 5,
-                ];
-
-        // Verificar si la búsqueda es uno de los valores mapeados
-            $searchValue = strtolower(trim($search)); //minusculas
-            $searchType = null;
-
-        // Si el término es valor conocido, asignamos el valor corres
-            if (isset($map[$searchValue])) {
-                $searchType = $map[$searchValue];
-            }
-
-        // Consulta con filtros
-            //$users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
-            $query = Dictamen_instalaciones::join('inspecciones AS i', 'dictamenes_instalaciones.id_inspeccion', '=', 'i.id_inspeccion')
-                ->leftjoin('solicitudes AS s', 's.id_solicitud', '=', 'i.id_solicitud')
-                ->leftjoin('empresa AS e', 'e.id_empresa', '=', 's.id_empresa');
-                //->leftjoin('instalaciones AS ins', 'ins.id_instalacion', '=', 's.id_instalacion');
-
-        // Si se proporciona un tipo_dictamen válido, filtramos
+            ];
+        
+            // Verificar si la búsqueda es uno de los valores mapeados
+            $searchValue = strtolower(trim($search)); // Convertir a minúsculas
+            $searchType = $map[$searchValue] ?? null; // Obtener el valor del mapa si existe
+        
+            // Consulta inicial con relaciones cargadas
+            $query = Dictamen_instalaciones::with('inspeccione.solicitud.empresa');
+        
+            // Filtrar por tipo_dictamen si se proporciona un valor válido
             if ($searchType !== null) {
-                $query->where('tipo_dictamen',  'LIKE', "%{$searchType}%");
+                $query->where('tipo_dictamen', $searchType);
             } else {
-        // Si no se busca por tipo_dictamen, buscamos por otros campos
-                $query->where('id_dictamen', 'LIKE', "%{$search}%")
-                    ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
-                    ->orWhereDate('dictamenes_instalaciones.fecha_emision', 'LIKE', "%{$search}%")
-                    ->orWhere('dictamenes_instalaciones.fecha_vigencia', 'LIKE', "%{$search}%")
-                    ->orWhere('num_servicio', 'LIKE', "%{$search}%")
-                    ->orWhere('razon_social', 'LIKE', "%{$search}%");
-                    //->orWhere('direccion_completa', 'LIKE', "%{$search}%");
+                // Filtrar por otros campos si no es un tipo_dictamen válido
+                $query->where(function ($q) use ($search) {
+                    $q->where('id_dictamen', 'LIKE', "%{$search}%")
+                        ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
+                        ->orWhereDate('dictamenes_instalaciones.fecha_emision', 'LIKE', "%{$search}%")
+                        ->orWhereDate('dictamenes_instalaciones.fecha_vigencia', 'LIKE', "%{$search}%")
+                        ->orWhereHas('inspeccione', function ($q) use ($search) {
+                            $q->where('num_servicio', 'LIKE', "%{$search}%");
+                        })
+                        ->orWhereHas('inspeccione.solicitud.empresa', function ($q) use ($search) {
+                            $q->where('razon_social', 'LIKE', "%{$search}%");
+                        })
+                        ->orWhereHas('inspeccione.solicitud.instalacion', function ($q) use ($search) {
+                            $q->where('direccion_completa', 'LIKE', "%{$search}%");
+                        });
+                });
             }
+        
+            // Obtener resultados con paginación
             $users = $query->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
-
+        
+            // Calcular el total filtrado
             $totalFiltered = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
-                ->where('id_dictamen', 'LIKE', "%{$search}%")
-                ->orWhere('tipo_dictamen', 'LIKE', "%{$search}%")
-                ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
+                ->where(function ($q) use ($search, $searchType) {
+                    if ($searchType !== null) {
+                        $q->where('tipo_dictamen', $searchType);
+                    } else {
+                        $q->where('id_dictamen', 'LIKE', "%{$search}%")
+                            ->orWhere('num_dictamen', 'LIKE', "%{$search}%")
+                            ->orWhereDate('dictamenes_instalaciones.fecha_emision', 'LIKE', "%{$search}%")
+                            ->orWhere('dictamenes_instalaciones.fecha_vigencia', 'LIKE', "%{$search}%")
+                            ->orWhereHas('inspeccione', function ($q) use ($search) {
+                                $q->where('num_servicio', 'LIKE', "%{$search}%");
+                            })
+                            ->orWhereHas('inspeccione.solicitud.empresa', function ($q) use ($search) {
+                                $q->where('razon_social', 'LIKE', "%{$search}%");
+                            })
+                            ->orWhereHas('inspeccione.solicitud.instalacion', function ($q) use ($search) {
+                                $q->where('direccion_completa', 'LIKE', "%{$search}%");
+                            });
+                    }
+                })
                 ->count();
         }
+        
 
         $data = [];
 
