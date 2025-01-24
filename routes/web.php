@@ -638,24 +638,24 @@ Route::get('/editGuias/{run_folio}', [GuiasController::class, 'editGuias']);
 
 /*-------------------Dictamenes de instalaciones-------------------*/
 /*mostrar*/
-Route::get('dictamenes/instalaciones', [InstalacionesController::class, 'UserManagement'])->name('dictamenes-instalaciones');
-Route::resource('insta', InstalacionesController::class);
-/*eliminar*/
-Route::delete('insta/{id_dictamen}', [InstalacionesController::class, 'destroy'])->name('instalacion.delete');
-/*registrar*/
-Route::post('insta', [InstalacionesController::class, 'store'])->name('instalacion.store');
-/*obtener el editar*/
-Route::get('insta/{id_dictamen}/edit', [InstalacionesController::class, 'edit'])->name('instalacion.edit');
-/*editar*/
-Route::put('insta/{id_dictamen}', [InstalacionesController::class, 'update'])->name('tipos.update');
+Route::middleware(['auth'])->controller(InstalacionesController::class)->group(function () {
+    // Rutas principales
+    Route::get('dictamenes/instalaciones', 'UserManagement')->name('dictamenes-instalaciones');
+    Route::resource('insta', InstalacionesController::class);
 
-//Pdfs de dictamen de instalaciones
-Route::get('/dictamen_productor/{id_dictamen}', [InstalacionesController::class, 'dictamen_productor'])->name('dictamen_productor');
-Route::get('/dictamen_envasador/{id_dictamen}', [InstalacionesController::class, 'dictamen_envasador'])->name('dictamen_envasador');
-Route::get('/dictamen_comercializador/{id_dictamen}', [InstalacionesController::class, 'dictamen_comercializador'])->name('dictamen_comercializador');
-Route::get('/dictamen_almacen/{id_dictamen}', [InstalacionesController::class, 'dictamen_almacen'])->name('dictamen_almacen');
-Route::get('/dictamen_maduracion/{id_dictamen}', [InstalacionesController::class, 'dictamen_maduracion'])->name('dictamen_maduracion');
+    // Rutas específicas para eliminar, registrar y editar
+    Route::delete('insta/{id_dictamen}', 'destroy')->name('instalacion.delete');
+    Route::post('insta', 'store')->name('instalacion.store');
+    Route::get('insta/{id_dictamen}/edit', 'edit')->name('instalacion.edit');
+    Route::put('insta/{id_dictamen}', 'update')->name('tipos.update');
 
+    // Rutas para generación de PDFs de dictámenes
+    Route::get('/dictamen_productor/{id_dictamen}', 'dictamen_productor')->name('dictamen_productor');
+    Route::get('/dictamen_envasador/{id_dictamen}', 'dictamen_envasador')->name('dictamen_envasador');
+    Route::get('/dictamen_comercializador/{id_dictamen}', 'dictamen_comercializador')->name('dictamen_comercializador');
+    Route::get('/dictamen_almacen/{id_dictamen}', 'dictamen_almacen')->name('dictamen_almacen');
+    Route::get('/dictamen_maduracion/{id_dictamen}', 'dictamen_maduracion')->name('dictamen_maduracion');
+});
 /*------------------- Dictamenes a granel -------------------*/
 Route::get('/dictamenes/productos', [DictamenGranelController::class, 'UserManagement'])->name('dictamenes-productos');
 Route::resource('/dictamen-granel-list', DictamenGranelController::class);

@@ -54,6 +54,8 @@ class insertar_datos_bd_dictamenes extends Controller
                                     "3" => 1,
                                     "4" => 2,
                                     "5" => 3,
+                                    "6" => 4,
+                                    "7" => 5,
                                     default => $solicitud['tipo'], 
                                 },
                                 'id_instalacion'             =>$inspecciones->solicitud->id_instalacion,
