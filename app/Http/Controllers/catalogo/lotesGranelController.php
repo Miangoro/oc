@@ -204,13 +204,9 @@ class lotesGranelController extends Controller
                       // Obtener el número de cliente
                       $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
 
-                      // Verificar si la empresa tiene asociados números de clientes
-                      if ($empresa && $empresa->empresaNumClientes->isNotEmpty()) {
-                          $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
-                      } else {
-                          // En caso de que no exista el número de cliente, asignar un valor por defecto o manejar el error
-                          $numeroCliente = 'default'; // O puedes dejarlo en null, según el caso
-                      }
+                      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+                        return !empty($numero);
+                    });
 
                       // Ahora puedes usar el número de cliente en la URL
                       if ($lote->tipo_lote == 2 && $documentacion) {
@@ -440,7 +436,9 @@ class lotesGranelController extends Controller
 
         // Obtener el número de cliente
         $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+            return !empty($numero);
+        });
 
         // Almacenar nuevos documentos solo si se envían
         if ($request->hasFile('url')) {
@@ -690,7 +688,9 @@ class lotesGranelController extends Controller
 
       // Obtener el número de cliente
       $empresa = Empresa::with("empresaNumClientes")->where("id_empresa", $lote->id_empresa)->first();
-      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+      $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+        return !empty($numero);
+    });
 
       // Solo eliminar archivos antiguos y guardar nuevos si se han enviado nuevos archivos
       if ($request->hasFile('url')) {
