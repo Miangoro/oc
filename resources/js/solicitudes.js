@@ -1258,8 +1258,8 @@ $(document).on('click', '.expediente-record', function () {
           $('#editClienteModalTipo10').modal('hide'); // Oculta el modal
           $('#editFormTipo10')[0].reset(); // Resetea el formulario
           $('.select2').val(null).trigger('change'); // Resetea los select2
-          $('.datatables-solicitudes').DataTable().ajax.reload(); // Recarga la tabla
-          console.log(response);
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
+          
 
           Swal.fire({
             icon: 'success',
@@ -1365,8 +1365,9 @@ $(document).on('click', '.expediente-record', function () {
           $('#editSolicitudDictamen').modal('hide');
           $('#addEditSolicitud')[0].reset();
           $('.select2').val(null).trigger('change');
-          $('.datatables-solicitudes').DataTable().ajax.reload();
-          console.log(response);
+          
+          $('.datatables-solicitudes').DataTable().ajax.reload(null, false);
+        
 
           Swal.fire({
             icon: 'success',

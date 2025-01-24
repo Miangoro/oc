@@ -62,7 +62,12 @@ class insertar_datos_bd_dictamenes extends Controller
                                 'num_dictamen'             => $solicitud['n_dictamen'],
                                 'fecha_emision'   => $solicitud['fecha_emision'],
                                 'fecha_vigencia'   => $solicitud['fecha_vigencia'],
-                                'id_firmante'             => 9,
+                               'id_firmante' => match ($solicitud['firma']) {
+                                    "../img/Firma Inspector Erik.png" => 9,
+                                    "../img/firma_mario.png" => 14,
+                                    "../img/firma_mayra.png" => 14,
+                                    default => 14, 
+                                },
                             ]);
                            
                         //}
