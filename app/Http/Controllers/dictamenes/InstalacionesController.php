@@ -95,7 +95,9 @@ public function index(Request $request)
             $searchType = $map[$searchValue] ?? null; // Obtener el valor del mapa si existe
         
             // Consulta inicial con relaciones cargadas
-            $query = Dictamen_instalaciones::with('inspeccione.solicitud.empresa');
+            $query = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
+            ->offset($start)
+            ->limit($limit);
         
             // Filtrar por tipo_dictamen si se proporciona un valor válido
             if ($searchType !== null) {
