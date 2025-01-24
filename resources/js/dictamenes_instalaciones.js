@@ -99,7 +99,17 @@ $('#edit_fecha_emision').on('change', function() {
          { data: 'num_dictamen' },
          { data: 'num_servicio' },
          { data: 'folio_solicitud' },
-         { data: 'razon_social' },
+         {
+          data: null, // Se usará null porque combinaremos varios valores
+          render: function(data, type, row) {
+              return `
+              <strong>${data.numero_cliente}</strong><br>
+                  <span style="font-size:11px">${data.razon_social}<span>
+                  
+              `;
+          }
+      },
+      
          { data: 'direccion_completa' },
          { data: 'fechas' },
          { data: 'diasRestantes' },

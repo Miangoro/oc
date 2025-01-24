@@ -70,10 +70,14 @@ public function index(Request $request)
         if (empty($request->input('search.value'))) {
             // ORDENAR EL BUSCADOR "thead"
             $users = Dictamen_instalaciones::with('inspeccione.solicitud.empresa')
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy('num_dictamen', 'DESC')
-                ->get();
+    ->offset($start)
+    ->limit($limit)
+    ->orderByRaw("
+        CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) ASC,
+        CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) ASC
+    ")
+    ->get();
+
         } else {
             // BUSCADOR
             $search = $request->input('search.value');
@@ -157,6 +161,12 @@ public function index(Request $request)
                 //$nestedData['fake_id'] = ++$ids;
                 $nestedData['id_dictamen'] = $user->id_dictamen;
                 $nestedData['tipo_dictamen'] = $user->tipo_dictamen;
+                $empresa = $user->inspeccione->solicitud->empresa;
+                $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+                ? $empresa->empresaNumClientes
+                    ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
+                : 'N/A';
+                $nestedData['numero_cliente'] = $numero_cliente;
                 $nestedData['razon_social'] = $user->inspeccione->solicitud->empresa->razon_social ?? 'No encontrado';
                 $nestedData['num_dictamen'] = $user->num_dictamen;
                 $nestedData['num_servicio'] = $user->inspeccione->num_servicio;
