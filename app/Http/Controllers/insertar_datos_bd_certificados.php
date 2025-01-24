@@ -50,7 +50,7 @@ class insertar_datos_bd_certificados extends Controller
 
                         //if ($solicitud['n_servicio'] ==$inspecciones->n) {
                             $id_solicitud = Certificados::create([
-                                'id_dictamen'             => $dictamenes->id_inspeccion,
+                                'id_dictamen'             => $dictamenes->id_dictamen,
                                 'num_certificado'             => $solicitud['n_certificado'],
                                 'fecha_vigencia'   => $solicitud['fecha_expedicion'],
                                 'fecha_vencimiento'   => $solicitud['fecha_vigencia'],
