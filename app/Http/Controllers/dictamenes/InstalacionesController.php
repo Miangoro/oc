@@ -122,7 +122,9 @@ public function index(Request $request)
             // Obtener resultados con paginación
             $users = $query->offset($start)
                 ->limit($limit)
-                ->orderBy($order, $dir)
+                ->orderByRaw("
+                CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
+                CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')")
                 ->get();
         
             // Calcular el total filtrado
