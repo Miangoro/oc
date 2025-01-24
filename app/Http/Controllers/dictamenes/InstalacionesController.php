@@ -74,7 +74,7 @@ public function index(Request $request)
     ->limit($limit)
     ->orderByRaw("
         CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_dictamen, '-', -1), '/', 1) AS UNSIGNED) ASC,
-        CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) ASC
+        CAST(SUBSTRING_INDEX(num_dictamen, '/', -1) AS UNSIGNED) DESC
     ")
     ->get();
 
