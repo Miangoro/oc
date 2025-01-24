@@ -144,7 +144,7 @@ use Illuminate\Support\Facades\Route;
             <div class="avatar me-4">
               <span class="avatar-initial rounded-3 bg-label-danger"><i class="ri-close-circle-fill"></i></span>
             </div>
-            <h4 class="mb-0">27</h4>
+            <h4 class="mb-0">{{ $dictamenesPorVencer }}</h4>
           </div>
           <h6 class="mb-0 fw-normal">Dictámenes por vencer</h6>
           <p class="mb-0">

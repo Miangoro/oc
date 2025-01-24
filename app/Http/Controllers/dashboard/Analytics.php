@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dictamen_instalaciones;
 use App\Models\solicitudesModel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class Analytics extends Controller
@@ -18,6 +20,13 @@ class Analytics extends Controller
     })
     ->count();
 
+    $hoy = Carbon::now();
+    $fechaLimite = $hoy->addDays(15);
+    
+    $dictamenesPorVencer = Dictamen_instalaciones::whereDate('fecha_vigencia', '>=', $hoy)
+        ->whereDate('fecha_vigencia', '<=', $fechaLimite)
+        ->get();
+
 
   
 
@@ -26,6 +35,6 @@ class Analytics extends Controller
   
   
 
-    return view('content.dashboard.dashboards-analytics',compact('solicitudesSinInspeccion','solicitudesSinActa'));
+    return view('content.dashboard.dashboards-analytics',compact('solicitudesSinInspeccion','solicitudesSinActa','dictamenesPorVencer'));
   }
 }
