@@ -111,13 +111,13 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="date" class="form-control datepicker" id="edit_fecha_emision" name="edit_fecha_emision" aria-label="Fecha de Emisión" readonly>
+                                    <input type="date" class="form-control flatpickr-datetime" id="edit_fecha_emision" name="edit_fecha_emision" aria-label="Fecha de Emisión" readonly>
                                     <label for="edit_fecha_emision">Fecha de Emisión</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating form-floating-outline">
-                                    <input type="date" class="form-control datepicker" id="edit_fecha_vigencia" name="edit_fecha_vigencia" aria-label="Fecha de Vigencia" readonly>
+                                    <input type="date" class="form-control flatpickr-datetime" id="edit_fecha_vigencia" name="edit_fecha_vigencia" aria-label="Fecha de Vigencia" readonly>
                                     <label for="edit_fecha_vigencia">Fecha de Vigencia</label>
                                 </div>
                             </div>

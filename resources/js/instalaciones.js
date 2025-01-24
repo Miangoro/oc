@@ -1274,3 +1274,21 @@ $('#modalVerDocumento').modal('show');
 
 //end
 });
+
+  //Date picker
+  $(document).ready(function () {
+    const flatpickrDateTime = document.querySelectorAll('.flatpickr-datetime');
+
+    if (flatpickrDateTime.length) {
+      flatpickrDateTime.forEach((element) => {
+        // Inicializar flatpickr para cada input
+        flatpickr(element, {
+          enableTime: true, // Habilitar selección de tiempo
+          time_24hr: true, // Mostrar tiempo en formato 24 horas
+          dateFormat: 'Y-m-d',
+          locale: 'es',
+          allowInput: true,
+        });
+      });
+    }
+  });
