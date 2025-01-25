@@ -45,12 +45,14 @@ class insertar_datos_bd_dictamenes extends Controller
 
                     if ($inspecciones AND !empty($inspecciones->solicitud->id_instalacion)) {
 
+                        
 
+                        
 
                         //if ($solicitud['n_servicio'] ==$inspecciones->n) {
                             $id_solicitud = Dictamen_instalaciones::create([
-                                'id_inspeccion'             => $inspecciones->id_inspeccion,
-                                'tipo_dictamen' => match ($solicitud['tipo']) {
+                                'id_inspeccion'   => $inspecciones->id_inspeccion,
+                                'tipo_dictamen'   => match ($solicitud['tipo']) {
                                     "3" => 1,
                                     "4" => 2,
                                     "5" => 3,
@@ -58,18 +60,18 @@ class insertar_datos_bd_dictamenes extends Controller
                                     "7" => 5,
                                     default => $solicitud['tipo'], 
                                 },
-                                'id_instalacion'             =>$inspecciones->solicitud->id_instalacion,
-                                'num_dictamen'             => $solicitud['n_dictamen'],
+                                'id_instalacion'  => $inspecciones->solicitud->id_instalacion,
+                                'num_dictamen'    => $solicitud['n_dictamen'],
                                 'fecha_emision'   => $solicitud['fecha_emision'],
-                                'fecha_vigencia'   => $solicitud['fecha_vigencia'],
-                                match (strtolower(trim($solicitud['firma']))) {
+                                'fecha_vigencia'  => $solicitud['fecha_vigencia'],
+                                'id_firma'        => match (strtolower(trim($solicitud['firma']))) {
                                     "../img/firma inspector erik.png" => 9,
                                     "../img/firma_mario.png" => 14,
                                     "../img/firma_mayra.png" => 14,
                                     default => 14, 
                                 }
-                                
                             ]);
+                            
                            
                         //}
                     }
