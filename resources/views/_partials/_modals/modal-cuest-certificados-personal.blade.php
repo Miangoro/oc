@@ -98,7 +98,7 @@
                                                                     </td>
 
                                                                 @elseif($pregunta->filtro == 'num_certificado')
-                                                                    <td><b>{{ $revisor->certificado->num_certificado ?? 'N/A' }}</b></td>
+                                                                    <td><b class="text-danger">{{ $revisor->certificado->num_certificado ?? 'N/A' }}</b></td>
                                                               
                                                                 @elseif($pregunta->filtro == 'domicilio_insta')
                                                                     <td><b>{{ $revisor->certificado->dictamen->instalaciones->direccion_completa ?? 'N/A' }}</b></td>
