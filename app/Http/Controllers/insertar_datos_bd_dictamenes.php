@@ -45,9 +45,9 @@ class insertar_datos_bd_dictamenes extends Controller
 
                     if ($inspecciones AND !empty($inspecciones->solicitud->id_instalacion)) {
 
-                        $firma = strtolower(trim($solicitud['firma']));
+                        $firma = $solicitud['firma'];
 
-                    if ($firma === "../img/firma inspector erik.png") {
+                    if ($firma === "../img/Firma Inspector Erik.png") {
                         echo $id_firmante = 9;
                     } elseif (in_array($firma, ["../img/firma_mario.png", "../img/firma_mayra.png"])) {
                         echo $id_firmante = 14;
@@ -72,7 +72,7 @@ class insertar_datos_bd_dictamenes extends Controller
                                 'num_dictamen'    => $solicitud['n_dictamen'],
                                 'fecha_emision'   => $solicitud['fecha_emision'],
                                 'fecha_vigencia'  => $solicitud['fecha_vigencia'],
-                                'id_firmante'        => 14,
+                                'id_firmante'        => $id_firmante,
                                 
                             ]);
                             
