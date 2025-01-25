@@ -144,7 +144,7 @@
                                                                     <td><b>Kilómetro 8. Antigua carretera a Pátzcuaro, S/N.
                                                                         Col. Otra no especificada en el catálogo.
                                                                         C.P. 58341. Morelia, Michoacán. México.</b></td>
-                                                                 @elseif($pregunta->filtro == 'direccion_cidam')
+                                                                 @elseif($pregunta->filtro == 'alcance')
                                                                     <td><b> NOM070-SCFI-2016, Bebidas Alcohólicas-Mezcal-Especificaciones.</b></td>
 
                                                                     
