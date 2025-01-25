@@ -64,7 +64,7 @@ class insertar_datos_bd_dictamenes extends Controller
                                 'num_dictamen'    => $solicitud['n_dictamen'],
                                 'fecha_emision'   => $solicitud['fecha_emision'],
                                 'fecha_vigencia'  => $solicitud['fecha_vigencia'],
-                                'id_firma'        => match (strtolower(trim($solicitud['firma']))) {
+                                'id_firmante'        => match (strtolower(trim($solicitud['firma']))) {
                                     "../img/firma inspector erik.png" => 9,
                                     "../img/firma_mario.png" => 14,
                                     "../img/firma_mayra.png" => 14,
