@@ -72,7 +72,7 @@ class insertar_datos_bd_dictamenes extends Controller
                                 'num_dictamen'    => $solicitud['n_dictamen'],
                                 'fecha_emision'   => $solicitud['fecha_emision'],
                                 'fecha_vigencia'  => $solicitud['fecha_vigencia'],
-                                'id_firmante'        => $id_firmante,
+                                'id_firmante'        => 14,
                                 
                             ]);
                             
