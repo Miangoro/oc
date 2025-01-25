@@ -22,6 +22,7 @@ class Dictamen_instalaciones extends Model
         'fecha_vigencia',
         'categorias',
         'clases',
+        'id_firmante'
       ];
 
       // Método para obtener el nombre del registro que sirve para la trazabilidad
