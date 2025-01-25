@@ -50,9 +50,9 @@ class insertar_datos_bd_dictamenes extends Controller
                     if ($firma === "../img/firma inspector erik.png") {
                         echo $id_firmante = 9;
                     } elseif (in_array($firma, ["../img/firma_mario.png", "../img/firma_mayra.png"])) {
-                        $id_firmante = 14;
+                        echo $id_firmante = 14;
                     } else {
-                        $id_firmante = 14;
+                        echo $id_firmante = 14;
                     }
 
                         
