@@ -57,7 +57,8 @@ $(function () {
         { data: 'email' },
         { data: 'telefono' },
         { data: 'password_original' },
-        {
+        { 
+          orderable: false,
           render: function (data, type, full, meta) {
             var $numero_cliente = full['numero_cliente'];
             var $razon_social = full['razon_social'];

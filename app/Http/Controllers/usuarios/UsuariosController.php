@@ -91,24 +91,33 @@ class UsuariosController extends Controller
     $dir = $request->input('order.0.dir');
 
     if (empty($request->input('search.value'))) {
-      $users = User::with('empresa')->where("tipo",3)->offset($start)
-        ->limit($limit)
-        ->orderBy($order, $dir)
-        ->get();
+      $users = User::with('empresa.empresaNumClientes')
+      ->where("tipo", 3)
+      ->whereHas('empresa.empresaNumClientes', function ($query) {
+          $query->orderByRaw("CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(numero_cliente, '-', -2), 'C', 1) AS UNSIGNED) DESC");
+      })
+      ->offset($start)
+      ->limit($limit)
+      ->get();
+
+  
     } else {
       $search = $request->input('search.value');
 
-      $users = User::with('empresa')->where('id', 'LIKE', "%{$search}%")
-        ->where("tipo",3)
-        ->orWhere('name', 'LIKE', "%{$search}%")
-        ->orWhere('email', 'LIKE', "%{$search}%")
-        ->orWhereHas('empresa', function ($query) use ($search) {
-            $query->where('razon_social', 'LIKE', "%{$search}%");
-        })
-        ->offset($start)
-        ->limit($limit)
-        ->orderBy($order, $dir)
-        ->get();
+      $users = User::with('empresa')
+      ->where(function ($query) use ($search) {
+          $query->where('name', 'LIKE', "%{$search}%")
+              ->orWhere('email', 'LIKE', "%{$search}%")
+              ->orWhereHas('empresa', function ($subQuery) use ($search) {
+                  $subQuery->where('razon_social', 'LIKE', "%{$search}%");
+              });
+      })
+      ->where('tipo', 3) // Asegura que 'tipo' sea siempre 3
+      ->offset($start)
+      ->limit($limit)
+      ->orderBy($order, $dir)
+      ->get();
+  
 
       $totalFiltered = User::with('empresa')->where('id', 'LIKE', "%{$search}%")
         ->where("tipo",3)
