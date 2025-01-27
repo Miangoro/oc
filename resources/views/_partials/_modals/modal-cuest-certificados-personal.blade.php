@@ -155,7 +155,7 @@
                                             
                                                                 <td>
                                                                     <select class="form-select form-select-sm" aria-label="Elige la respuesta" name="respuesta[{{ $index }}]">
-                                                                        <option value="" selected>Selecciona</option>
+                                                                        <option value="" selected></option>
                                                                         <option value="1">C</option>
                                                                         <option value="2">NC</option>
                                                                         <option value="3">NA</option>
