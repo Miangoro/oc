@@ -23,7 +23,7 @@
                 </div>
             </div>
 
-            <div class="modal-body d-flex" style="overflow-x: hidden;">
+            <div class="modal-body d-flex" >
                 <!-- Contenido Principal -->
                 <div class="main-content" style="flex: 1; padding: 15px; height: 100vh; display: flex; flex-direction: column; gap: 10px; margin-top: -20px;">
 
@@ -32,7 +32,7 @@
                             <div style="border: 1px solid #8DA399; padding: 20px; border-radius: 5px; margin-bottom: 30px;">
                                 <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                                     <div class="table-container" style="flex: 1; min-width: 250px;">
-                                        <table class="table table-sm table-bordered table-hover table-striped" style="font-size: 12px;">
+                                        <table class="table table-responsive table-sm table-bordered table-hover table-striped" style="font-size: 12px;">
                                             <thead class="table-dark">
                                                 <tr>
                                                     <th style="font-size: 11px;">#</th>
@@ -59,7 +59,7 @@
                                                                         ? '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente . '/' . 
                                                                             $revisor->obtenerDocumentosClientes($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa) 
                                                                             : 'NA' }}">
-                                                                            Ver Documento
+                                                                           <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                                         </a>
                                                                     </td>
                                                                 @elseif($pregunta->filtro == 'acta')
@@ -70,7 +70,7 @@
                                                                         ? '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes->firstWhere('numero_cliente', '!=', null)->numero_cliente . '/' .
                                                                           $revisor->obtenerDocumentoActa($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->id_solicitud)
                                                                         : 'NA' }}">
-                                                                        Ver acta
+                                                                        <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                                     </a>
                                                                     
                                                                     @endif
@@ -93,7 +93,7 @@
                                                                     <td>
                                                                         <b>{{ $revisor->certificado->dictamen->inspeccione->solicitud->folio ?? 'N/A' }}</b>
                                                                         <a target="_blank" href="/solicitud_de_servicio/{{ $revisor->certificado->dictamen->inspeccione->id_solicitud ?? 'N/A' }}">
-                                                                            Ver solicitud
+                                                                            <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                                         </a>
                                                                     </td>
 
@@ -131,7 +131,7 @@
                                                                 
                                                                     @if ($pdf_dictamen)
                                                                         <a target="_blank" href="{{ $pdf_dictamen.$revisor->certificado->dictamen->id_dictamen }}">
-                                                                            Ver dictamen
+                                                                            <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                                         </a>
                                                                     @else
                                                                         <span>Dictamen no disponible</span>
@@ -183,7 +183,7 @@
                                                                             '../files/' . $revisor->certificado->dictamen->inspeccione->solicitud->empresa->empresaNumClientes[0]->numero_cliente . '/' . 
                                                                             $revisor->obtenerDocumentosClientes($pregunta->id_documento, $revisor->certificado->dictamen->inspeccione->solicitud->empresa->id_empresa) 
                                                                             : 'NA' }}">
-                                                                            Ver Documento
+                                                                            <i class="ri-file-pdf-2-fill text-danger ri-40px pdf cursor-pointer"></i>
                                                                         </a>
                                                                     </td>
                                                                 @else

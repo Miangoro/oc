@@ -38,7 +38,7 @@ class RevisionPersonalController extends Controller
         
         $revisoresGranel = $revisoresGranelQuery->first();
         $users = User::where('tipo', 1)->get(); // Select Aprobacion
-        $preguntasRevisor = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 1)->get(); // Preguntas Instalaciones
+        $preguntasRevisor = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 1)->orderBy('id_documento','desc')->get(); // Preguntas Instalaciones
         $preguntasRevisorGranel = preguntas_revision::where('tipo_revisor', 1)->where('tipo_certificado', 2)->get(); // Preguntas Granel
         $noCertificados = (!$revisor || !$revisor->certificado) && (!$revisoresGranel || !$revisoresGranel->certificado); // Alerta si no hay Certificados Asignados al Revisor
  

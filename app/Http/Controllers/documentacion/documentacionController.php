@@ -371,7 +371,7 @@ if ($act_instalacion != 'Produccion de agave') {
         }
           $contenidoInstalaciones = $contenidoInstalaciones . '
      
-      <div class="table-responsive text-nowrap col-md-6 mb-5 ">
+      <div class="table-responsive text-nowrap col-md-12 mb-5 ">
             <table class="table table-sm table-bordered table-striped">
               <thead class="bg-secondary text-white">
                 <tr>
