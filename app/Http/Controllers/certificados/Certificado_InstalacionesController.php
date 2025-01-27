@@ -65,16 +65,11 @@ class Certificado_InstalacionesController extends Controller
             'dictamen.inspeccione.inspector',
             'firmante'
         ])
-        ->when($search, function ($q, $search) {
-            $q->where('num_certificado', 'LIKE', "%{$search}%")
-              ->orWhere('maestro_mezcalero', 'LIKE', "%{$search}%")
-              ->orWhereHas('firmante', function ($q) use ($search) {
-                  $q->where('name', 'LIKE', "%{$search}%");
-              });
-        })
         ->offset($start)
         ->limit($limit)
-       ;
+        ->orderByRaw("
+        CAST(SUBSTRING_INDEX(num_certificado, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
+        CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_certificado, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')");
     
         $certificados = $query->get();
     
