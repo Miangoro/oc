@@ -98,19 +98,23 @@ class UsuariosController extends Controller
       })
       ->offset($start)
       ->limit($limit)
+    
       ->get();
 
   
     } else {
       $search = $request->input('search.value');
 
-      $users = User::with('empresa')
+      $users = User::with('empresa.empresaNumClientes')
       ->where(function ($query) use ($search) {
           $query->where('name', 'LIKE', "%{$search}%")
               ->orWhere('email', 'LIKE', "%{$search}%")
               ->orWhereHas('empresa', function ($subQuery) use ($search) {
                   $subQuery->where('razon_social', 'LIKE', "%{$search}%");
-              });
+              })
+              ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
+                $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
+            });
       })
       ->where('tipo', 3) // Asegura que 'tipo' sea siempre 3
       ->offset($start)
@@ -125,6 +129,9 @@ class UsuariosController extends Controller
         ->orWhere('email', 'LIKE', "%{$search}%")
         ->orWhereHas('empresa', function ($query) use ($search) {
             $query->where('razon_social', 'LIKE', "%{$search}%");
+        })
+        ->orWhereHas('empresa.empresaNumClientes', function ($subQuery) use ($search) {
+          $subQuery->where('numero_cliente', 'LIKE', "%{$search}%");
         })
         ->count();
     }
