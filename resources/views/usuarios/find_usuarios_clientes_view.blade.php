@@ -174,7 +174,9 @@
           <select name="id_empresa" id="id_empresa" class="select2 form-select" data-placeholder="Seleccione el cliente">
             <option value="" disabled selected>NULL</option>
               @foreach ($empresas as $empresa)
-              <option value="{{$empresa->id_empresa}}">{{$empresa->razon_social}}</option>
+                <option value="{{ $empresa->id_empresa }}">
+                {{ $empresa->empresaNumClientes[0]->numero_cliente ?? $empresa->empresaNumClientes[1]->numero_cliente }}
+                | {{ $empresa->razon_social }}</option>
               @endforeach
           </select>
           <label for="country">Cliente</label>

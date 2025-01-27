@@ -133,6 +133,12 @@ class UsuariosController extends Controller
         $nestedData['email'] = $user->email ;
         $nestedData['telefono'] = $user->telefono;
         $nestedData['password_original'] = $user->password_original ;
+        $empresa = $user->empresa;
+          $numero_cliente = $empresa && $empresa->empresaNumClientes->isNotEmpty()
+          ? $empresa->empresaNumClientes
+              ->first(fn($item) => $item->empresa_id === $empresa->id && !empty($item->numero_cliente))?->numero_cliente ?? 'N/A'
+          : 'N/A';
+        $nestedData['numero_cliente'] = $numero_cliente;
         $nestedData['razon_social'] = $user->empresa->razon_social ;
 
         $data[] = $nestedData;

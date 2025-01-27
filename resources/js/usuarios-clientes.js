@@ -57,7 +57,18 @@ $(function () {
         { data: 'email' },
         { data: 'telefono' },
         { data: 'password_original' },
-        { data: 'razon_social' },
+        {
+          render: function (data, type, full, meta) {
+            var $numero_cliente = full['numero_cliente'];
+            var $razon_social = full['razon_social'];
+            return `
+              <div>
+                <span class="fw-bold">${$numero_cliente}</span><br>
+                <small style="font-size:12px;" class="user-email">${$razon_social}</small>
+              </div>
+            `;
+          }
+        },
         { data: 'id' },
         { data: 'action' }
       ],
