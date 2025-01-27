@@ -232,7 +232,7 @@ class RevisionPersonalController extends Controller
     public function obtenerRespuestas($id_revision)
     {
         try {
-            $revisor = Revisor::where('id_revision', $id_revision)->first();
+            $revisor = Revisor::where('id_revision', $id_revision)->first(); 
     
             if (!$revisor) {
                 return response()->json(['message' => 'El registro no fue encontrado.'], 404);

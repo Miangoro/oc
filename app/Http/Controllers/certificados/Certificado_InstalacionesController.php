@@ -74,7 +74,9 @@ class Certificado_InstalacionesController extends Controller
         })
         ->offset($start)
         ->limit($limit)
-        ->orderBy($order, $dir);
+        ->orderByRaw("
+        CAST(SUBSTRING_INDEX(num_certificado, '/', -1) AS UNSIGNED) DESC, -- Ordena el año (parte después de '/')
+        CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(num_certificado, '-', -1), '/', 1) AS UNSIGNED) DESC -- Ordena el consecutivo (parte entre '-' y '/')");
     
         $certificados = $query->get();
     
