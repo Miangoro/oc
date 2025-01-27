@@ -147,7 +147,9 @@ class documentacionController extends Controller
           ->get();
 
         $empresa = empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+          return !empty($numero);
+      });
         $razonSocial = $empresa->razon_social;
         $direccion_fiscal = $empresa->domicilio_fiscal;
 
@@ -192,7 +194,10 @@ class documentacionController extends Controller
        
 
         $empresa = empresa::with('empresaNumClientes')->where('id_empresa', $id_empresa)->first();
-        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first();
+        
+        $numeroCliente = $empresa->empresaNumClientes->pluck('numero_cliente')->first(function ($numero) {
+          return !empty($numero);
+      });
         $razonSocial = $empresa->razon_social;
         $direccion_fiscal = $empresa->domicilio_fiscal;
 
